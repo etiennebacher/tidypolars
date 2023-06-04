@@ -120,3 +120,11 @@ the hood.
 Therefore, there might be minor overhead because we still need to parse
 the expressions and rewrite them in `polars` syntax but this should be
 extremely marginal.
+
+## Am I stuck with `tidypolars`?
+
+No, as said above, `tidypolars` just changes one syntax to another but
+it doesn’t touch the data itself. So if for some reason you want to go
+back to a “raw” `polars` syntax later in your code, you’re free to do so
+because `tidypolars` will always return `DataFrame`s, `LazyFrame`s or
+`Series`.
