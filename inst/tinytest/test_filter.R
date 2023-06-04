@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-pl_iris <- polars::pl$DataFrame(iris)
+pl_iris <- pl$DataFrame(iris)
 
 expect_dim(
   pl_filter(pl_iris, Species == "setosa"),

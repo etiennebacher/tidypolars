@@ -53,3 +53,19 @@ expect_equal(
     to_r(),
   iris$Sepal.Width*2
 )
+
+# Several exprs
+
+out <- pl_mutate(
+  pl_iris,
+  Sepal.Width = Sepal.Width*2,
+  Petal.Width = Petal.Width*3
+)
+
+expect_equal(
+  c(
+    pl_pull(out, Sepal.Width) |> to_r(),
+    pl_pull(out, Petal.Width) |> to_r()
+  ),
+  c(iris$Sepal.Width*2, iris$Petal.Width*3)
+)
