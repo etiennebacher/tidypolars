@@ -25,16 +25,29 @@ pl_mutate <- function(data, ...) {
          call = deparsed)
   })
 
+  # modify expressions:
+  # - replace "var" by "pl$col('var')"
+  # - put the whole expression between parenthesis
+  # - add alias
   out_exprs <- list()
   for (i in seq_along(exprs)) {
-    new_call <- gsub("^pl\\_", "", exprs[[i]]$call)
-    new_call <- gsub(exprs[[i]]$vars_used, "", new_call)
+    tmp <- exprs[[i]]
+
+    new_call <- gsub("^pl\\_", "", tmp$call)
+
+    for (j in seq_along(tmp$vars_used)) {
+      new_call <- gsub(
+        tmp$vars_used[j],
+        paste0("pl$col('", tmp$vars_used[j], "')"),
+        new_call
+      )
+    }
     new_call <- gsub("\\(,", "\\(", new_call)
 
     out_exprs[[i]] <- paste0(
-      "pl$col('", exprs[[i]]$vars_used, "')$",
+      "(",
       new_call,
-      "$alias('", exprs[[i]]$var_name, "')"
+      ")$alias('", tmp$var_name, "')"
     )
   }
 
