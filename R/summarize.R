@@ -1,6 +1,11 @@
 #' @export
 
-pl_mutate <- function(data, ...) {
+pl_summarize <- function(data, ...) {
+
+
+  #### agg() requires groupby()
+
+
 
   check_polars_data(data)
 
@@ -17,7 +22,7 @@ pl_mutate <- function(data, ...) {
     deparsed <- deparse(x_expr)
 
     vars_used <- unlist(lapply(x_expr, as.character))
-    vars_used <- unique(vars_used[which(vars_used %in% pl_colnames(data))])
+    vars_used <- unique(vars_used[which(vars_used %in% data$columns)])
 
     pl_funs <- regmatches(deparsed, gregexpr("pl\\_\\w+", deparsed))
 
@@ -33,13 +38,17 @@ pl_mutate <- function(data, ...) {
 
     out_exprs[[i]] <- paste0(
       "pl$col('", exprs[[i]]$vars_used, "')$",
-      new_call,
-      "$alias('", exprs[[i]]$var_name, "')"
+      new_call
     )
   }
 
   out <- paste(unlist(out_exprs), collapse = ", ") |>
     str2lang()
 
-  data$with_columns(eval(out))
+  print(out)
+
+  if (inherits(data, "DataFrame")) {
+    data$agg(eval(out))
+  }
+
 }

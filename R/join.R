@@ -34,7 +34,7 @@ join_ <- function(x, y, by = NULL, how) {
   check_polars_data(y)
 
   if (is.null(by)) {
-    by <- intersect(x$columns, y$columns)
+    by <- intersect(pl_colnames(x), pl_colnames(y))
   }
 
   if (inherits(x, "DataFrame") && inherits(y, "DataFrame")) {

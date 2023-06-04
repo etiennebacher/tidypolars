@@ -1,3 +1,15 @@
+#' @export
+pl_colnames <- function(x) {
+  if (inherits(x, "DataFrame")) {
+    x$columns
+  } else if (inherits(x, "LazyFrame")) {
+    # TODO: not happy with that because it forces to collect something
+    # that potentially has a lot of operations before
+    # but maybe the optimization performs the slice first so it doesn't matter?
+    x$slice(0, 1)$collect()$columns
+  }
+}
+
 get_dots <- function(...) {
   eval(substitute(alist(...)))
 }

@@ -21,8 +21,5 @@ pl_arrange <- function(data, ...) {
   expr <- paste0("c('", paste(vars, collapse = "', '"), "')") |>
     str2lang()
 
-  if (inherits(data, "DataFrame")) {
-    data$sort(eval(expr), descending = eval(direction))
-  }
-
+  data$sort(eval(expr), descending = eval(direction))
 }
