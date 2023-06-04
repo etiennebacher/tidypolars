@@ -17,7 +17,8 @@ Fairbanks, you’re on the wrong repo. The right one is here:
 
 `polars` (both the Rust source and the R implementation) are amazing
 packages. I won’t argue here for the interest of using `polars`, there
-are already a lot of resources of [its website]().
+are already a lot of resources on [its
+website](https://rpolars.github.io/).
 
 One characteristic of `polars` is that its syntax is 1) extremely
 verbose, and 2) very close to the `pandas` syntax in Python. While this
