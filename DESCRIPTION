@@ -14,3 +14,4 @@ URL: https://github.com/etiennebacher/tidypolars
 BugReports: https://github.com/etiennebacher/tidypolars/issues
 Imports: 
     polars
+Suggests: tinytest

@@ -3,13 +3,16 @@
 pl_filter <- function(data, ...) {
 
   dots <- get_dots(...)
+
+  # extract variable names from the filtering expressions
   vars <- lapply(dots, \(x) {
-    deparsed <- vapply(x, as.character, FUN.VALUE = character(1L))
-    deparsed[which(deparsed %in% colnames(data))]
+    deparsed <- unlist(lapply(x, as.character))
+    deparsed[which(deparsed %in% data$columns)]
   }) |>
     unlist() |>
     unique()
 
+  # build the polars expression
   expr <- as.character(dots)
   for (i in vars) {
     expr <- gsub(i, paste0("pl\\$col('", i, "')"), expr)
@@ -18,6 +21,7 @@ pl_filter <- function(data, ...) {
   expr <- paste(expr, collapse = " & ") |>
     str2lang()
 
+  # perform the expression if eager eval
   if (inherits(data, "DataFrame")) {
     data$filter(eval(expr))
   }
