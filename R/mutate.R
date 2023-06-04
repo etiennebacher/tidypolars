@@ -51,8 +51,6 @@ pl_mutate <- function(data, ...) {
     )
   }
 
-  out <- paste(unlist(out_exprs), collapse = ", ") |>
-    str2lang()
-
-  data$with_columns(eval(out))
+  out <- lapply(out_exprs, str2lang)
+  data$with_columns(lapply(out, eval))
 }

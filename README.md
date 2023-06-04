@@ -56,22 +56,57 @@ pl_test
 
 pl_test |> 
   pl_filter(Species == "setosa") |> 
-  pl_arrange(Sepal.Width, -Sepal.Length) |> 
-  pl_select(starts_with("Sepal"))
-#> shape: (50, 2)
-#> ┌──────────────┬─────────────┐
-#> │ Sepal.Length ┆ Sepal.Width │
-#> │ ---          ┆ ---         │
-#> │ f64          ┆ f64         │
-#> ╞══════════════╪═════════════╡
-#> │ 4.5          ┆ 2.3         │
-#> │ 4.4          ┆ 2.9         │
-#> │ 5.0          ┆ 3.0         │
-#> │ 4.9          ┆ 3.0         │
-#> │ …            ┆ …           │
-#> │ 5.8          ┆ 4.0         │
-#> │ 5.2          ┆ 4.1         │
-#> │ 5.5          ┆ 4.2         │
-#> │ 5.7          ┆ 4.4         │
-#> └──────────────┴─────────────┘
+  pl_arrange(Sepal.Width, -Sepal.Length)
+#> shape: (50, 5)
+#> ┌──────────────┬─────────────┬──────────────┬─────────────┬─────────┐
+#> │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ Species │
+#> │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---     │
+#> │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ cat     │
+#> ╞══════════════╪═════════════╪══════════════╪═════════════╪═════════╡
+#> │ 4.5          ┆ 2.3         ┆ 1.3          ┆ 0.3         ┆ setosa  │
+#> │ 4.4          ┆ 2.9         ┆ 1.4          ┆ 0.2         ┆ setosa  │
+#> │ 5.0          ┆ 3.0         ┆ 1.6          ┆ 0.2         ┆ setosa  │
+#> │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ setosa  │
+#> │ …            ┆ …           ┆ …            ┆ …           ┆ …       │
+#> │ 5.8          ┆ 4.0         ┆ 1.2          ┆ 0.2         ┆ setosa  │
+#> │ 5.2          ┆ 4.1         ┆ 1.5          ┆ 0.1         ┆ setosa  │
+#> │ 5.5          ┆ 4.2         ┆ 1.4          ┆ 0.2         ┆ setosa  │
+#> │ 5.7          ┆ 4.4         ┆ 1.5          ┆ 0.4         ┆ setosa  │
+#> └──────────────┴─────────────┴──────────────┴─────────────┴─────────┘
+
+pl_test |> 
+  pl_mutate(
+    Sepal.Total = Sepal.Length + Sepal.Width,
+    Petal.Total = Petal.Length + Petal.Width
+  ) |> 
+  pl_select(ends_with("Total"))
+#> shape: (150, 2)
+#> ┌─────────────┬─────────────┐
+#> │ Sepal.Total ┆ Petal.Total │
+#> │ ---         ┆ ---         │
+#> │ f64         ┆ f64         │
+#> ╞═════════════╪═════════════╡
+#> │ 8.6         ┆ 1.6         │
+#> │ 7.9         ┆ 1.6         │
+#> │ 7.9         ┆ 1.5         │
+#> │ 7.7         ┆ 1.7         │
+#> │ …           ┆ …           │
+#> │ 8.8         ┆ 6.9         │
+#> │ 9.5         ┆ 7.2         │
+#> │ 9.6         ┆ 7.7         │
+#> │ 8.9         ┆ 6.9         │
+#> └─────────────┴─────────────┘
 ```
+
+# FAQ
+
+## Is `tidypolars` slower than `polars`?
+
+No, or just marginally. The objective of `tidypolars` is *not* to modify
+the data, simply to translate the `tidyverse` syntax to `polars` syntax.
+`polars` is still in charge of doing all the data manipulations under
+the hood.
+
+Therefore, there might be minor overhead because we still need to parse
+the expressions and rewrite them in `polars` syntax but this should be
+extremely marginal.

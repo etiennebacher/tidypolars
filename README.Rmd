@@ -51,7 +51,25 @@ pl_test
 
 pl_test |> 
   pl_filter(Species == "setosa") |> 
-  pl_arrange(Sepal.Width, -Sepal.Length) |> 
-  pl_select(starts_with("Sepal"))
+  pl_arrange(Sepal.Width, -Sepal.Length)
+
+pl_test |> 
+  pl_mutate(
+    Sepal.Total = Sepal.Length + Sepal.Width,
+    Petal.Total = Petal.Length + Petal.Width
+  ) |> 
+  pl_select(ends_with("Total"))
 ```
 
+
+# FAQ
+
+## Is `tidypolars` slower than `polars`?
+
+No, or just marginally. The objective of `tidypolars` is *not* to modify the
+data, simply to translate the `tidyverse` syntax to `polars` syntax. `polars`
+is still in charge of doing all the data manipulations under the hood.
+
+Therefore, there might be minor overhead because we still need to parse the 
+expressions and rewrite them in `polars` syntax but this should be extremely 
+marginal.
