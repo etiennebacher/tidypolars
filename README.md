@@ -3,6 +3,15 @@
 
 # tidypolars
 
+------------------------------------------------------------------------
+
+:warning: If you’re looking for the Python package “tidypolars” by Mark
+Fairbanks, you’re on the wrong repo. The right one is here:
+[markfairbanks/tidypolars](https://github.com/markfairbanks/tidypolars)
+:warning:
+
+------------------------------------------------------------------------
+
 <!-- badges: start -->
 <!-- badges: end -->
 
