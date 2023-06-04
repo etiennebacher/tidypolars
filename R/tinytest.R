@@ -11,5 +11,9 @@ expect_colnames <- function(x, y) {
 #' @export
 #' @keywords internal
 expect_dim <- function(x, y) {
-  expect_equal(dim(x), y)
+  res <- identical(dim(x), y)
+  tinytest(
+    result = res,
+    call = sys.call(sys.parent(1))
+  )
 }

@@ -2,8 +2,14 @@ get_dots <- function(...) {
   eval(substitute(alist(...)))
 }
 
-# Code adapted from {poorman} by Nathan Eastwood [License: MIT]
-# https://github.com/nathaneastwood/poorman/blob/master/R/select_positions.R
+check_polars_data <- function(x) {
+  if (!inherits(x, "DataFrame") && !inherits(x, "LazyFrame")) {
+    stop("The data must be a Polars DataFrame or LazyFrame.")
+  }
+}
+
+# Code adapted from {datawizard}
+# License GPL-3
 
 .select_nse <- function(data, ...) {
   columns <- data$columns

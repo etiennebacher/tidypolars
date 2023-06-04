@@ -2,6 +2,8 @@
 
 pl_arrange <- function(data, ...) {
 
+  check_polars_data(data)
+
   dots <- get_dots(...)
   out_length <- length(dots)
   direction <- rep(FALSE, out_length)

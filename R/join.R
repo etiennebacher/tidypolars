@@ -30,6 +30,9 @@ pl_anti_join <- function(x, y, by = NULL) {
 
 join_ <- function(x, y, by = NULL, how) {
 
+  check_polars_data(x)
+  check_polars_data(y)
+
   if (is.null(by)) {
     by <- intersect(x$columns, y$columns)
   }

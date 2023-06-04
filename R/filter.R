@@ -2,6 +2,8 @@
 
 pl_filter <- function(data, ...) {
 
+  check_polars_data(data)
+
   dots <- get_dots(...)
 
   # extract variable names from the filtering expressions
