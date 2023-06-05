@@ -2,11 +2,9 @@
 
 pl_summarize <- function(data, ...) {
 
-
-  #### agg() requires groupby()
-
-
-
+  if (!inherits(data, "GroupBy")) {
+    stop("`pl_summarize()` only works on grouped data.")
+  }
   check_polars_data(data)
 
   dots <- get_dots(...)
@@ -22,7 +20,7 @@ pl_summarize <- function(data, ...) {
     deparsed <- deparse(x_expr)
 
     vars_used <- unlist(lapply(x_expr, as.character))
-    vars_used <- unique(vars_used[which(vars_used %in% data$columns)])
+    vars_used <- unique(vars_used[which(vars_used %in% pl_colnames(data))])
 
     pl_funs <- regmatches(deparsed, gregexpr("pl\\_\\w+", deparsed))
 
@@ -38,17 +36,16 @@ pl_summarize <- function(data, ...) {
 
     out_exprs[[i]] <- paste0(
       "pl$col('", exprs[[i]]$vars_used, "')$",
-      new_call
+      new_call,
+      "$alias('", exprs[[i]]$var_name, "')"
     )
   }
 
-  out <- paste(unlist(out_exprs), collapse = ", ") |>
+  out <- paste0(
+    "(", paste(unlist(out_exprs), collapse = ", "), ")"
+  ) |>
     str2lang()
 
-  print(out)
-
-  if (inherits(data, "DataFrame")) {
-    data$agg(eval(out))
-  }
+  data$agg(eval(out))
 
 }
