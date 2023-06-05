@@ -87,3 +87,10 @@ No, as said above, `tidypolars` just changes one syntax to another but it doesn'
 touch the data itself. So if for some reason you want to go back to a "raw" 
 `polars` syntax later in your code, you're free to do so because `tidypolars`
 will always return `DataFrame`s, `LazyFrame`s or `Series`.
+
+## Do I still need to load `polars`?
+
+Yes, because `tidypolars` doesn't provide any functions to create `polars`
+`DataFrame` or `LazyFrame`, or to read data. You'll still need to use `polars`
+for this.
+
