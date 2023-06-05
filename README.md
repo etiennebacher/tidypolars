@@ -12,9 +12,6 @@ Fairbanks, you’re on the wrong repo. The right one is here:
 
 ------------------------------------------------------------------------
 
-<!-- badges: start -->
-<!-- badges: end -->
-
 `polars` (both the Rust source and the R implementation) are amazing
 packages. I won’t argue here for the interest of using `polars`, there
 are already a lot of resources on [its
@@ -198,8 +195,26 @@ bench::mark(
 #> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars         77ms   82.4ms     11.9      138KB     0   
-#> 2 tidypolars   80.3ms   85.3ms     11.5      226KB     0   
-#> 3 dplyr       334.5ms  339.1ms      2.95     242MB     2.95
-#> 4 data.table  259.1ms  277.8ms      3.60     273MB     5.40
+#> 1 polars       76.7ms   77.8ms     12.8      138KB     0   
+#> 2 tidypolars   78.5ms   80.6ms     12.4      226KB     0   
+#> 3 dplyr       320.7ms  323.3ms      3.09     242MB     3.09
+#> 4 data.table  220.5ms  270.5ms      3.70     273MB     5.55
+
+bench::mark(
+  polars = pl_test$
+    filter(pl$col("grp") == "a" | pl$col("grp") == "b"),
+  tidypolars = pl_test |> 
+    pl_filter(grp == "a" | grp == "b"),
+  dplyr = test |> 
+    filter(grp %in% c("a", "b")),
+  data.table = dt_test[grp %chin% c("a", "b")],
+  check = FALSE
+)
+#> # A tibble: 4 × 6
+#>   expression      min   median `itr/sec` mem_alloc `gc/sec`
+#>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
+#> 1 polars       47.4ms   60.1ms     16.7       15KB     0   
+#> 2 tidypolars   49.5ms   61.4ms     16.9     11.4KB     0   
+#> 3 dplyr       232.9ms  232.9ms      4.29   281.9MB     8.59
+#> 4 data.table   25.1ms   26.4ms     37.7    100.7MB     4.71
 ```

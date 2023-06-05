@@ -136,5 +136,16 @@ bench::mark(
   data.table = dt_test[, .(x = mean(val1), y = sum(val2)), by = grp],
   check = FALSE
 )
+
+bench::mark(
+  polars = pl_test$
+    filter(pl$col("grp") == "a" | pl$col("grp") == "b"),
+  tidypolars = pl_test |> 
+    pl_filter(grp == "a" | grp == "b"),
+  dplyr = test |> 
+    filter(grp %in% c("a", "b")),
+  data.table = dt_test[grp %chin% c("a", "b")],
+  check = FALSE
+)
 ```
 
