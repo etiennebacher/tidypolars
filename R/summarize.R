@@ -41,11 +41,7 @@ pl_summarize <- function(data, ...) {
     )
   }
 
-  out <- paste0(
-    "(", paste(unlist(out_exprs), collapse = ", "), ")"
-  ) |>
-    str2lang()
-
-  data$agg(eval(out))
+  out <- lapply(out_exprs, str2lang)
+  data$agg(lapply(out, eval))
 
 }

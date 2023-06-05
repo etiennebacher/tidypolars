@@ -134,3 +134,72 @@ because `tidypolars` will always return `DataFrame`s, `LazyFrame`s or
 Yes, because `tidypolars` doesn’t provide any functions to create
 `polars` `DataFrame` or `LazyFrame`, or to read data. You’ll still need
 to use `polars` for this.
+
+## Can I see some benchmarks?
+
+Sure but take them with a grain of salt: these small benchmarks may not
+be representative of real-life scenarios and don’t necessarily use the
+full capacities of other packages (e.g keyed `data.table`s). You should
+refer to [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/)
+for more serious ones.
+
+``` r
+library(polars)
+library(tidypolars)
+library(dplyr)
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
+library(data.table)
+#> 
+#> Attaching package: 'data.table'
+#> The following objects are masked from 'package:dplyr':
+#> 
+#>     between, first, last
+
+test <- data.frame(
+  grp = sample(letters, 1e7, TRUE),
+  val1 = sample(1:1000, 1e7, TRUE),
+  val2 = sample(1:1000, 1e7, TRUE)
+)
+
+pl_test <- pl$DataFrame(test)
+dt_test <- as.data.table(test)
+
+bench::mark(
+  polars = pl_test$
+    groupby("grp")$
+    agg(
+      pl$col('val1')$mean()$alias('x'), 
+      pl$col('val2')$sum()$alias('y')
+    ),
+  tidypolars = pl_test |> 
+    pl_group_by(grp) |> 
+    pl_summarize(
+      x = mean(val1),
+      y = sum(val2)
+    ),
+  dplyr = test |> 
+    group_by(grp) |> 
+    summarize(
+      x = mean(val1),
+      y = sum(val2)
+    ),
+  data.table = dt_test[, .(x = mean(val1), y = sum(val2)), by = grp],
+  check = FALSE
+)
+#> Warning: Some expressions had a GC in every iteration; so filtering is
+#> disabled.
+#> # A tibble: 4 × 6
+#>   expression      min   median `itr/sec` mem_alloc `gc/sec`
+#>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
+#> 1 polars         77ms   82.4ms     11.9      138KB     0   
+#> 2 tidypolars   80.3ms   85.3ms     11.5      226KB     0   
+#> 3 dplyr       334.5ms  339.1ms      2.95     242MB     2.95
+#> 4 data.table  259.1ms  277.8ms      3.60     273MB     5.40
+```

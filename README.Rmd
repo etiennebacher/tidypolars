@@ -22,8 +22,6 @@ you're on the wrong repo. The right one is here: [markfairbanks/tidypolars](http
 
 ---
 
-<!-- badges: start -->
-<!-- badges: end -->
 
 `polars` (both the Rust source and the R implementation) are amazing packages.
 I won't argue here for the interest of using `polars`, there are already a lot 
@@ -93,4 +91,50 @@ will always return `DataFrame`s, `LazyFrame`s or `Series`.
 Yes, because `tidypolars` doesn't provide any functions to create `polars`
 `DataFrame` or `LazyFrame`, or to read data. You'll still need to use `polars`
 for this.
+
+
+## Can I see some benchmarks?
+
+Sure but take them with a grain of salt: these small benchmarks may not be 
+representative of real-life scenarios and don't necessarily use the full capacities
+of other packages (e.g keyed `data.table`s). You should refer to [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/) for more serious ones.
+
+```{r}
+library(polars)
+library(tidypolars)
+library(dplyr)
+library(data.table)
+
+test <- data.frame(
+  grp = sample(letters, 1e7, TRUE),
+  val1 = sample(1:1000, 1e7, TRUE),
+  val2 = sample(1:1000, 1e7, TRUE)
+)
+
+pl_test <- pl$DataFrame(test)
+dt_test <- as.data.table(test)
+
+bench::mark(
+  polars = pl_test$
+    groupby("grp")$
+    agg(
+      pl$col('val1')$mean()$alias('x'), 
+      pl$col('val2')$sum()$alias('y')
+    ),
+  tidypolars = pl_test |> 
+    pl_group_by(grp) |> 
+    pl_summarize(
+      x = mean(val1),
+      y = sum(val2)
+    ),
+  dplyr = test |> 
+    group_by(grp) |> 
+    summarize(
+      x = mean(val1),
+      y = sum(val2)
+    ),
+  data.table = dt_test[, .(x = mean(val1), y = sum(val2)), by = grp],
+  check = FALSE
+)
+```
 
