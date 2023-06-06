@@ -20,6 +20,9 @@ pl_filter <- function(data, ...) {
     tmp <- expr[i]
     OPERATION <- NULL
 
+    # if there are boolean operators we need to split the string by them, do
+    # the syntax conversion separately and add them back
+
     if (grepl("\\|", tmp)) {
       tmp <- strsplit(tmp, "\\|")[[1]] |>
         trimws()
@@ -61,8 +64,8 @@ pl_filter <- function(data, ...) {
 pl_special_filter_expr <- function() {
   c(
     "!is.nan",
-    "is.nan",
     "!is.na",
+    "is.nan",
     "is.na",
     "%in%"
   )
