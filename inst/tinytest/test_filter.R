@@ -46,6 +46,10 @@ expect_dim(
   pl_filter(pl_iris_2, Species == "setosa", !is.na(Species)),
   c(48, 5)
 )
+expect_dim(
+  pl_filter(pl_iris_2, Species == "setosa" | is.na(Species)),
+  c(52, 5)
+)
 
 iris2 <- iris
 iris2[c(3, 8, 58, 133), "Sepal.Length"] <- NaN
@@ -62,4 +66,8 @@ expect_dim(
 expect_dim(
   pl_filter(pl_iris_2, Species == "setosa", !is.nan(Sepal.Length)),
   c(48, 5)
+)
+expect_dim(
+  pl_filter(pl_iris_2, Species == "setosa" | is.nan(Sepal.Length)),
+  c(52, 5)
 )

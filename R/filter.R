@@ -13,23 +13,42 @@ pl_filter <- function(data, ...) {
     unlist() |>
     unique()
 
-  # build the polars expression
   expr <- as.character(dots)
+
   for (i in seq_along(expr)) {
-    has_pl_special_filter <- grepl(
-      paste0(
-        "(", paste(pl_special_filter_expr(), collapse = "|"), ")\\("
-      ),
-      expr[i]
-    )
 
-    if (has_pl_special_filter) {
-      expr[i] <- reorder_filter_expr(expr[i])
+    tmp <- expr[i]
+    OPERATION <- NULL
+
+    if (grepl("\\|", tmp)) {
+      tmp <- strsplit(tmp, "\\|")[[1]] |>
+        trimws()
+      OPERATION <- "|"
+    } else if (grepl("\\&", tmp)) {
+      tmp <- strsplit(tmp, "\\&")[[1]] |>
+        trimws()
+      OPERATION <- "&"
     }
 
-    for (v in vars) {
-      expr[i] <- gsub(v, paste0("pl\\$col('", v, "')"), expr[i])
+    for (j in seq_along(tmp)) {
+      has_pl_special_filter <- grepl(
+        paste0(
+          "(", paste(pl_special_filter_expr(), collapse = "|"), ")\\("
+        ),
+        tmp[j]
+      )
+
+      if (has_pl_special_filter) {
+        tmp[j] <- reorder_filter_expr(tmp[j])
+      }
+
+      for (v in vars) {
+        tmp[j] <- gsub(v, paste0("pl\\$col('", v, "')"), tmp[j])
+      }
     }
+
+    expr[i] <- paste(tmp, collapse = OPERATION)
+
   }
 
   expr <- paste(expr, collapse = " & ") |>
