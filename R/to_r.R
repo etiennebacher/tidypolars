@@ -1,5 +1,9 @@
 #' @export
 
 to_r <- function(data) {
-  data$to_r()
+  if (inherits(data, "DataFrame")) {
+    data$to_data_frame()
+  } else {
+    data$to_r()
+  }
 }
