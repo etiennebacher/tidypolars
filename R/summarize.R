@@ -8,7 +8,6 @@ pl_summarize <- function(data, ...) {
 
   dots <- get_dots(...)
   out_exprs <- rearrange_exprs(data, dots)
-  return(out_exprs)
   out <- lapply(out_exprs, str2lang)
   data$agg(lapply(out, eval))
 }

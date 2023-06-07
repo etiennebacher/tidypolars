@@ -1,5 +1,21 @@
 #' Rearrange classic R expressions in Polars syntax
 
+rearrange_exprs <- function(data, dots) {
+
+  lapply(seq_along(dots), function(x) {
+
+    deparsed <- deparse(dots[[x]])
+    deparsed <- replace_vars_in_expr(data, deparsed)
+
+    new_expr <- rearrange_expr(deparsed)
+    paste0(new_expr, "$alias('", names(dots)[x], "')")
+  })
+
+}
+
+
+#' Rearrange classic R expressions in Polars syntax
+
 rearrange_expr <- function(x) {
 
   new_x <- x
@@ -13,13 +29,15 @@ rearrange_expr <- function(x) {
   for (f in funs$in_polars) {
     full_f <- regmatches(
       new_x,
-      gregexpr(paste0(f, "\\((?<text>[^,]*)\\)"), new_x, perl = TRUE)
+      gregexpr(paste0(f, "\\((?<text>[^ ]*)\\)\\)"), new_x, perl = TRUE)
     )
     full_f2 <- gsub(paste0("^", f, "\\("), "", full_f)
     full_f2 <- gsub("\\)$", "", full_f2)
-    gsub(full_f, full_f2, new_x)
+    full_f2 <- paste0(full_f2, "$", f, "()")
+    new_x <- gsub(paste0(f, "\\((?<text>[^ ]*)\\)\\)"), full_f2, new_x, perl = TRUE)
   }
 
+  paste0("(", new_x, ")")
 
   # Functions that don't have a polars equivalent should go in an apply() call
 }
@@ -29,9 +47,14 @@ rearrange_expr <- function(x) {
 #' In a deparsed expression, find the variable names and add pl$col() around
 #' them
 
-replace_vars_in_expr <- function(data, expression, deparsed) {
-  vars_used <- unlist(lapply(expression, as.character))
-  vars_used <- unique(vars_used[which(vars_used %in% pl_colnames(data))])
+replace_vars_in_expr <- function(data, deparsed) {
+  p <- parse(
+    text = deparsed,
+    keep.source = TRUE
+  )
+  p_d <- getParseData(p)
+  vars_used <- p_d[p_d$token %in% c("SYMBOL"), "text"]
+  vars_used <- vars_used[vars_used %in% pl_colnames(data)]
 
   for (i in vars_used) {
     deparsed <- gsub(i, paste0("pl$col('", i, "')"), deparsed)
