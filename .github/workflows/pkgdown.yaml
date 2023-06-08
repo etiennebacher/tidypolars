@@ -30,10 +30,11 @@ jobs:
         with:
           use-public-rspm: true
 
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::pkgdown, local::.
-          needs: website
+      - name: Dependencies
+        run: |
+          install.packages("polars", repos = "https://rpolars.r-universe.dev")
+          install.packages("pkgdown")
+        shell: Rscript {0}
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
