@@ -41,6 +41,34 @@ expect_equal(
   20
 )
 
+p1 <- pl$DataFrame(
+  x = sample(letters, 20),
+  y = sample(1:100, 20)
+)
+p2 <- pl$DataFrame(
+  x = sample(letters, 20),
+  y = sample(1:100, 20)
+)
+
+expect_equal(
+  pl_bind_rows(p1, p2),
+  pl_bind_rows(list(p1, p2))
+)
+
+p3 <- pl$DataFrame(
+  x = sample(letters, 20),
+  y = sample(1:100, 20)
+)
+p4 <- pl$DataFrame(
+  z = sample(letters, 20),
+  w = sample(1:100, 20)
+)
+
+expect_equal(
+  pl_bind_cols(p3, p4),
+  pl_bind_cols(list(p3, p4))
+)
+
 # for now, error if not the same cols (for bind_rows) or duplicated col names
 # (for bind_cols)
 
