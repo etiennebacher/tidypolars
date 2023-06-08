@@ -2,7 +2,6 @@
 #' @export
 NULL
 
-#' @noRd
 #' List of expressions of Polars
 
 get_polars_expr <- function() {

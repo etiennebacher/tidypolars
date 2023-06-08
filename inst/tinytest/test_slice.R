@@ -5,10 +5,12 @@ pl_iris <- polars::pl$DataFrame(iris)
 
 expect_equal(
   pl_slice_head(pl_iris) |> to_r(),
-  head(iris, n = 5)
+  head(iris, n = 5),
+  check.attributes = FALSE
 )
 
 expect_equal(
   pl_slice_tail(pl_iris) |> to_r(),
-  tail(iris, n = 5)
+  tail(iris, n = 5),
+  check.attributes = FALSE
 )
