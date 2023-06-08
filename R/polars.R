@@ -2,9 +2,10 @@
 #' @export
 NULL
 
-#' List of expressions of Polars
+# List of expressions of Polars
 
 get_polars_expr <- function() {
+
   # rd_files <- list.files("C:\\Users\\etienne\\Desktop\\Divers\\r-polars\\man") |>
   #   tools::file_path_sans_ext()
   # rd_files <- rd_files[grepl("^Expr\\w+", rd_files, ignore.case = FALSE)]
