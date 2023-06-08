@@ -32,6 +32,7 @@ join_ <- function(x, y, by = NULL, how) {
 
   check_polars_data(x)
   check_polars_data(y)
+  check_same_class(x, y)
 
   if (is.null(by)) {
     by <- intersect(pl_colnames(x), pl_colnames(y))
