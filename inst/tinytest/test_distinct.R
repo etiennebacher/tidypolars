@@ -19,15 +19,13 @@ expect_equal(
 
 expect_equal(
   pl_distinct(pl_test, iso_o) |>
-    pl_pull(value) |>
-    to_r(),
+    pl_pull(value),
   c(1, 3, 5)
 )
 
 expect_equal(
   pl_distinct(pl_test, iso_o, keep = "last") |>
-    pl_pull(value) |>
-    to_r(),
+    pl_pull(value),
   c(2, 4, 6)
 )
 

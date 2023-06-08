@@ -7,15 +7,13 @@ test <- pl$DataFrame(
 
 expect_equal(
   pl_separate(test, x, into = c("foo", "foo2"), sep = ".") |>
-    pl_pull(foo) |>
-    to_r(),
+    pl_pull(foo),
   c(NA, "x", "x", "y")
 )
 
 expect_equal(
   pl_separate(test, x, into = c("foo", "foo2"), sep = ".") |>
-    pl_pull(foo2) |>
-    to_r(),
+    pl_pull(foo2),
   c(NA, "y", "z", "z")
 )
 
