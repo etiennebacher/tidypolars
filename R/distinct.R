@@ -1,5 +1,5 @@
 #' @export
-pl_distinct <- function(data, ..., keep = "first") {
+pl_distinct <- function(data, ..., keep = "first", maintain_order = TRUE) {
   check_polars_data(data)
   dots <- get_dots(...)
 
@@ -12,7 +12,6 @@ pl_distinct <- function(data, ..., keep = "first") {
     expr <- NULL
   }
 
-  # TODO: arg maintain_order is not implemented in r-polars
-  data$unique(subset = eval(expr), keep = keep)
+  data$unique(subset = eval(expr), keep = keep, maintain_order = maintain_order)
 }
 
