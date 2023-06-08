@@ -5,6 +5,7 @@ pl_separate <- function(data, col, into, sep = "[^[:alnum:]]+", remove = TRUE) {
   col <- deparse(substitute(col))
 
   into_len <- length(into) - 1
+  # to avoid collision with an existing col
   temp_id <- paste(sample(letters), collapse = "")
 
   data <- data$
