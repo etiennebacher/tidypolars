@@ -22,6 +22,14 @@ you're on the wrong repo. The right one is here: [markfairbanks/tidypolars](http
 
 ---
 
+* [Motivation](#motivation) 
+* [General syntax](#general-syntax) 
+* [Example](#example)
+* [FAQ](#faq)
+
+
+## Motivation
+
 
 `polars` (both the Rust source and the R implementation) are amazing packages.
 I won't argue here for the interest of using `polars`, there are already a lot 
@@ -148,4 +156,3 @@ bench::mark(
   check = FALSE
 )
 ```
-

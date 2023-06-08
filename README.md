@@ -12,6 +12,13 @@ Fairbanks, you’re on the wrong repo. The right one is here:
 
 ------------------------------------------------------------------------
 
+- [Motivation](#motivation)
+- [General syntax](#general-syntax)
+- [Example](#example)
+- [FAQ](#faq)
+
+## Motivation
+
 `polars` (both the Rust source and the R implementation) are amazing
 packages. I won’t argue here for the interest of using `polars`, there
 are already a lot of resources on [its
@@ -195,10 +202,10 @@ bench::mark(
 #> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars       76.7ms   77.8ms     12.8      138KB     0   
-#> 2 tidypolars   78.5ms   80.6ms     12.4      226KB     0   
-#> 3 dplyr       320.7ms  323.3ms      3.09     242MB     3.09
-#> 4 data.table  220.5ms  270.5ms      3.70     273MB     5.55
+#> 1 polars       82.4ms   86.1ms     11.5      139KB     0   
+#> 2 tidypolars   81.6ms   83.8ms     11.7      226KB     0   
+#> 3 dplyr         239ms  240.9ms      4.10     242MB     5.47
+#> 4 data.table  187.2ms  215.9ms      4.43     273MB     2.95
 
 bench::mark(
   polars = pl_test$
@@ -210,11 +217,13 @@ bench::mark(
   data.table = dt_test[grp %chin% c("a", "b")],
   check = FALSE
 )
+#> Warning: Some expressions had a GC in every iteration; so filtering is
+#> disabled.
 #> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars       47.4ms   60.1ms     16.7       15KB     0   
-#> 2 tidypolars   49.5ms   61.4ms     16.9     11.4KB     0   
-#> 3 dplyr       232.9ms  232.9ms      4.29   281.9MB     8.59
-#> 4 data.table   25.1ms   26.4ms     37.7    100.7MB     4.71
+#> 1 polars       42.3ms   45.4ms     21.6     15.1KB     0   
+#> 2 tidypolars   41.7ms   45.6ms     21.9     11.6KB     0   
+#> 3 dplyr       241.7ms  284.1ms      3.52   281.9MB     7.04
+#> 4 data.table   24.4ms   25.4ms     36.2    100.6MB     1.91
 ```
