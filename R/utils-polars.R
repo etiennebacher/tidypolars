@@ -18,3 +18,14 @@ check_polars_data <- function(x) {
     stop("The data must be a Polars DataFrame or LazyFrame.")
   }
 }
+
+check_same_class <- function(x, y) {
+  if (class(x) != class(y)) {
+    stop(
+      paste0(
+        "Both objects must be of the same class. Currently, `x` is a ",
+        class(x), " and `y` is a ", class(y), "."
+      )
+    )
+  }
+}
