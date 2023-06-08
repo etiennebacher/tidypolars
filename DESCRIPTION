@@ -1,11 +1,18 @@
 Package: tidypolars
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Title: Provide the Functionalities of Polars with the Syntax of the Tidyverse
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Etienne",
+           family = "Bacher",
+           role = c("aut", "cre", "cph"),
+           email = "etienne.bacher@protonmail.com")
+Description: Polars is an amazing cross-language tool for manipulating very large
+    data. However, one drawback is that the R implementation has a syntax that
+    will look odd to many R users who are not used to Python syntax. The objective
+    of tidypolars is to improve the ease-of-use of Polars in R by providing
+    functions whose names and syntax are very close to the tidyverse ones, while
+    having very few dependencies.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

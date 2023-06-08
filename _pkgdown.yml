@@ -1,0 +1,29 @@
+url: ~
+template:
+  bootstrap: 5
+
+reference:
+  - title: Polars-specific functions
+    desc: |
+      Functionalities from Polars
+    contents:
+      - pl_collect
+  - title: From `dplyr`
+    desc: |
+      Functions adapted from `dplyr` functions
+    contents:
+      - pl_arrange
+      - pl_bind_cols
+      - pl_bind_rows
+      - pl_distinct
+      - pl_pull
+      - pl_select
+      - pl_slice_head
+      - pl_slice_tail
+  - title: From `tidyr`
+    desc: |
+      Functions adapted from `tidyr` functions
+    contents:
+      - pl_drop_na
+
+
