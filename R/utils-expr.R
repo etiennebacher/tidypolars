@@ -1,4 +1,4 @@
-#' Rearrange classic R expressions in Polars syntax
+# Rearrange classic R expressions in Polars syntax
 
 rearrange_exprs <- function(data, dots) {
 
@@ -14,7 +14,7 @@ rearrange_exprs <- function(data, dots) {
 }
 
 
-#' Rearrange classic R expressions in Polars syntax
+# Rearrange classic R expressions in Polars syntax
 
 rearrange_expr <- function(x) {
 
@@ -44,8 +44,8 @@ rearrange_expr <- function(x) {
 
 
 
-#' In a deparsed expression, find the variable names and add pl$col() around
-#' them
+# In a deparsed expression, find the variable names and add pl$col() around
+# them
 
 replace_vars_in_expr <- function(data, deparsed) {
   p <- parse(
@@ -63,8 +63,8 @@ replace_vars_in_expr <- function(data, deparsed) {
 }
 
 
-#' In a deparsed expression, find the function calls and show which has an
-#' equivalent in polars and which hasn't
+# In a deparsed expression, find the function calls and show which has an
+# equivalent in polars and which hasn't
 
 find_function_call_in_string <- function(x) {
 
