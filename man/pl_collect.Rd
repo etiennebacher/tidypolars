@@ -15,6 +15,6 @@ execution plan, optimizes it in the background and performs it. The result
 is loaded in the R session.
 }
 \examples{
-dat_lazy <- pl$DataFrame(iris)$lazy()
+dat_lazy <- polars::pl$DataFrame(iris)$lazy()
 pl_collect(dat_lazy)
 }

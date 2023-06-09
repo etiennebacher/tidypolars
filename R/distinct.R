@@ -10,11 +10,12 @@
 #'  "last" (last occurrence) or "none" (remove all ofccurences of duplicated
 #'  rows).
 #' @param maintain_order Maintain row order. This is the default but it can
-#'  slow down the process with large datasets and prevents the use of streaming.
+#'  slow down the process with large datasets and it prevents the use of
+#'  streaming.
 #'
 #' @export
 #' @examples
-#' pl_test <- pl$DataFrame(
+#' pl_test <- polars::pl$DataFrame(
 #'   iso_o = rep(c("AA", "AB", "AC"), each = 2),
 #'   iso_d = rep(c("BA", "BB", "BC"), each = 2),
 #'   value = 1:6

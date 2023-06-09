@@ -15,7 +15,7 @@ pl_pull(data, var)
 This returns an R vector and not a Polars Series.
 }
 \examples{
-pl_test <- pl$DataFrame(iris)
+pl_test <- polars::pl$DataFrame(iris)
 pl_pull(pl_test, Sepal.Length)
 pl_pull(pl_test, "Sepal.Length")
 }

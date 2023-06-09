@@ -17,7 +17,8 @@ column numbers, select helpers, etc.}
 rows).}
 
 \item{maintain_order}{Maintain row order. This is the default but it can
-slow down the process with large datasets and prevents the use of streaming.}
+slow down the process with large datasets and it prevents the use of
+streaming.}
 }
 \description{
 By default, duplicates are looked for in all variables. It is possible to
@@ -26,7 +27,7 @@ also possible to keep either the first occurrence, the last occurence or
 remove all duplicates.
 }
 \examples{
-pl_test <- pl$DataFrame(
+pl_test <- polars::pl$DataFrame(
   iso_o = rep(c("AA", "AB", "AC"), each = 2),
   iso_d = rep(c("BA", "BB", "BC"), each = 2),
   value = 1:6

@@ -2,7 +2,7 @@
 % Please edit documentation in R/bind.R
 \name{pl_bind_cols}
 \alias{pl_bind_cols}
-\title{Append multiples Data/LazyFrames next to each other}
+\title{Append multiple Data/LazyFrames next to each other}
 \usage{
 pl_bind_cols(...)
 }
@@ -13,14 +13,14 @@ by name. All Data/LazyFrames must have the same number of rows and there
 mustn't be duplicated column names.}
 }
 \description{
-Append multiples Data/LazyFrames next to each other
+Append multiple Data/LazyFrames next to each other
 }
 \examples{
-p1 <- pl$DataFrame(
+p1 <- polars::pl$DataFrame(
   x = sample(letters, 20),
   y = sample(1:100, 20)
 )
-p2 <- pl$DataFrame(
+p2 <- polars::pl$DataFrame(
   z = sample(letters, 20),
   w = sample(1:100, 20)
 )

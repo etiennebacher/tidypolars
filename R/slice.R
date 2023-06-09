@@ -6,7 +6,7 @@
 #' @rdname pl_slice
 #' @export
 #' @examples
-#' pl_test <- pl$DataFrame(iris)
+#' pl_test <- polars::pl$DataFrame(iris)
 #' pl_slice_head(pl_test, 3)
 #' pl_slice_tail(pl_test, 3)
 

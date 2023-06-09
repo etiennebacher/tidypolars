@@ -1,4 +1,4 @@
-#' Stack multiples Data/LazyFrames on top of each other
+#' Stack multiple Data/LazyFrames on top of each other
 #'
 #' @param ... Polars DataFrames or LazyFrames to combine. Each argument can
 #'  either be a Data/LazyFrame, or a list of Data/LazyFrames. Columns are matched
@@ -7,11 +7,11 @@
 #'
 #' @export
 #' @examples
-#' p1 <- pl$DataFrame(
+#' p1 <- polars::pl$DataFrame(
 #'   x = sample(letters, 20),
 #'   y = sample(1:100, 20)
 #' )
-#' p2 <- pl$DataFrame(
+#' p2 <- polars::pl$DataFrame(
 #'   x = sample(letters, 20),
 #'   y = sample(1:100, 20)
 #' )
@@ -25,7 +25,7 @@ pl_bind_rows <- function(...) {
   concat_(..., how = "vertical")
 }
 
-#' Append multiples Data/LazyFrames next to each other
+#' Append multiple Data/LazyFrames next to each other
 #'
 #' @param ... Polars DataFrames or LazyFrames to combine. Each argument can
 #'  either be a Data/LazyFrame, or a list of Data/LazyFrames. Columns are matched
@@ -34,11 +34,11 @@ pl_bind_rows <- function(...) {
 #'
 #' @export
 #' @examples
-#' p1 <- pl$DataFrame(
+#' p1 <- polars::pl$DataFrame(
 #'   x = sample(letters, 20),
 #'   y = sample(1:100, 20)
 #' )
-#' p2 <- pl$DataFrame(
+#' p2 <- polars::pl$DataFrame(
 #'   z = sample(letters, 20),
 #'   w = sample(1:100, 20)
 #' )
