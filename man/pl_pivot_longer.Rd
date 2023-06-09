@@ -21,3 +21,10 @@ data stored in cell values.}
 \description{
 Pivot Data/LazyFrame from wide to long
 }
+\examples{
+pl_relig_income <- polars::pl$DataFrame(tidypolars::relig_income)
+pl_relig_income
+
+pl_relig_income |>
+  pl_pivot_longer(!religion, names_to = "income", values_to = "count")
+}

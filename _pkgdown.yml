@@ -29,5 +29,11 @@ reference:
       Functions adapted from `tidyr` functions
     contents:
       - pl_drop_na
+      - pl_pivot_longer
+  - title: Datasets
+    desc: |
+      Datasets reexported from various tidyverse packages
+    contents:
+      - relig_income
 
 

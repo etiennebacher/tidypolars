@@ -11,7 +11,8 @@ A dataset with variables:
 column name
 }
 \source{
-<https://www.who.int/teams/global-tuberculosis-programme/data>
+Downloaded from <https://www.pewresearch.org/religion/religious-landscape-study/>
+(downloaded November 2009)
 }
 \usage{
 relig_income

@@ -10,7 +10,7 @@
 #'
 #' @export
 #' @examples
-#' pl_relig_income <- polars::pl$DataFrame(relig_income)
+#' pl_relig_income <- polars::pl$DataFrame(tidypolars::relig_income)
 #' pl_relig_income
 #'
 #' pl_relig_income |>
