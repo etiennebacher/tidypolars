@@ -30,10 +30,12 @@ reference:
     contents:
       - pl_drop_na
       - pl_pivot_longer
+      - pl_pivot_wider
   - title: Datasets
     desc: |
       Datasets reexported from various tidyverse packages
     contents:
+      - fish_encounters
       - relig_income
 
 

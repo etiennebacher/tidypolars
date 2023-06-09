@@ -22,3 +22,46 @@ relig_income <- data.frame(
 )
 
 usethis::use_data(relig_income, overwrite = TRUE)
+
+
+# fish_encounters <- tidyr::fish_encounters |>
+#   constructive::construct()
+
+fish_encounters <- data.frame(
+  fish = factor(rep(
+    c(
+      "4842", "4843", "4844", "4845", "4847", "4848", "4849", "4850", "4851",
+      "4854", "4855", "4857", "4858", "4859", "4861", "4862", "4863", "4864",
+      "4865"
+    ),
+    c(
+      11L, 11L, 11L, 5L, 3L, 4L, 2L, 6L, 2L, 2L, 5L, 9L, 11L, 5L,
+      11L, 9L, 2L, 2L, 3L
+    )
+  )),
+  station = factor(
+    c(
+      "Release", "I80_1", "Lisbon", "Rstr", "Base_TD", "BCE", "BCW", "BCE2", "BCW2",
+      "MAE", "MAW", "Release", "I80_1", "Lisbon", "Rstr", "Base_TD", "BCE", "BCW",
+      "BCE2", "BCW2", "MAE", "MAW", "Release", "I80_1", "Lisbon", "Rstr", "Base_TD",
+      "BCE", "BCW", "BCE2", "BCW2", "MAE", "MAW", "Release", "I80_1", "Lisbon",
+      "Rstr", "Base_TD", "Release", "I80_1", "Lisbon", "Release", "I80_1", "Lisbon",
+      "Rstr", "Release", "I80_1", "Release", "I80_1", "Rstr", "Base_TD", "BCE",
+      "BCW", "Release", "I80_1", "Release", "I80_1", "Release", "I80_1", "Lisbon",
+      "Rstr", "Base_TD", "Release", "I80_1", "Lisbon", "Rstr", "Base_TD", "BCE",
+      "BCW", "BCE2", "BCW2", "Release", "I80_1", "Lisbon", "Rstr", "Base_TD", "BCE",
+      "BCW", "BCE2", "BCW2", "MAE", "MAW", "Release", "I80_1", "Lisbon", "Rstr",
+      "Base_TD", "Release", "I80_1", "Lisbon", "Rstr", "Base_TD", "BCE", "BCW",
+      "BCE2", "BCW2", "MAE", "MAW", "Release", "I80_1", "Lisbon", "Rstr", "Base_TD",
+      "BCE", "BCW", "BCE2", "BCW2", "Release", "I80_1", "Release", "I80_1",
+      "Release", "I80_1", "Lisbon"
+    ),
+    levels = c(
+      "Release", "I80_1", "Lisbon", "Rstr", "Base_TD", "BCE", "BCW", "BCE2", "BCW2",
+      "MAE", "MAW"
+    )
+  ),
+  seen = rep(1L, 114L)
+)
+
+usethis::use_data(fish_encounters, overwrite = TRUE)
