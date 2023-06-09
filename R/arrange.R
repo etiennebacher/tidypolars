@@ -1,4 +1,20 @@
+#' Order rows using column values
+#'
+#' @param data A Polars Data/LazyFrame
+#' @param ... Quoted or unquoted variable names. Select helpers cannot be used.
+#'
 #' @export
+#' @examples
+#' pl_test <- polars::pl$DataFrame(
+#'   x1 = c("a", "a", "b", "a", "c"),
+#'   x2 = c(2, 1, 5, 3, 1),
+#'   value = sample(1:5)
+#' )
+#'
+#' pl_arrange(test, x1)
+#' pl_arrange(test, -"x1")
+#' pl_arrange(test, x1, -x2)
+
 
 pl_arrange <- function(data, ...) {
 
@@ -17,6 +33,14 @@ pl_arrange <- function(data, ...) {
       out
     }) |>
     unlist()
+
+  not_exist <- which(!vars %in% pl_colnames(data))
+  if (length(not_exist) > 0) {
+    vars <- vars[-not_exist]
+    direction <- direction[-not_exist]
+  }
+
+  if (length(vars) == 0) return(data)
 
   expr <- paste0("c('", paste(vars, collapse = "', '"), "')") |>
     str2lang()

@@ -66,12 +66,12 @@ get_dots <- function(...) {
 
 .select_char <- function(data, x) {
   # use colnames because names() doesn't work for matrices
-  columns <- colnames(data)
+  columns <- pl_colnames(data)
   if (length(x) == 1L && x == "all") {
     seq_along(data)
   } else {
     matches <- match(x, columns)
-    if (anyNA(matches) && verbose) {
+    if (anyNA(matches)) {
       warning(
         paste0("Following variable(s) were not found: ",
                toString(x[is.na(matches)]))
