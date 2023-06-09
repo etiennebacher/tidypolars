@@ -21,7 +21,7 @@ pl_test <- polars::pl$DataFrame(
   value = sample(1:5)
 )
 
-pl_arrange(test, x1)
-pl_arrange(test, -"x1")
-pl_arrange(test, x1, -x2)
+pl_arrange(pl_test, x1)
+pl_arrange(pl_test, -"x1")
+pl_arrange(pl_test, x1, -x2)
 }
