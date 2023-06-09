@@ -5,7 +5,7 @@ get_dots <- function(...) {
 # Code adapted from {datawizard}
 # License GPL-3
 
-.select_nse <- function(data, ...) {
+.select_nse_from_dots <- function(data, ...) {
   columns <- data$columns
 
   # avoid conflicts
@@ -16,6 +16,21 @@ get_dots <- function(...) {
 
   selected <- lapply(dots, \(x) .eval_expr(x, data = data)) |>
     unlist() |>
+    unique()
+
+  columns[selected]
+}
+
+.select_nse_from_var <- function(data, var) {
+  columns <- data$columns
+
+  # avoid conflicts
+  conflicting_packages <- .conflicting_packages("poorman")
+  on.exit(.attach_packages(conflicting_packages))
+
+  dots <- str2lang(var)
+
+  selected <- .eval_expr(dots, data) |>
     unique()
 
   columns[selected]
@@ -181,10 +196,12 @@ get_dots <- function(...) {
 
 .eval_call <- function(data, x) {
   type <- deparse(x[[1]])
+
   switch(
     type,
     `:` = .select_seq(x, data),
     `-` = .select_minus(x, data),
+    `!` = .select_bang(x, data),
     `c` = .select_c(x, data),
     `(` = .select_bracket(x, data),
     `[` = .select_square_bracket(x, data),
@@ -192,6 +209,7 @@ get_dots <- function(...) {
     `~` = .select_tilde(x, data),
     "list" = .select_list(x, data),
     "names" = .select_names(x, data),
+    "everything" = .select_all(x, data),
     "starts_with" = ,
     "ends_with" = ,
     "matches" = ,
@@ -216,6 +234,19 @@ get_dots <- function(...) {
 
 # e.g -cyl
 .select_minus <- function(expr, data) {
+  x <- .eval_expr(
+    expr[[2]],
+    data
+  )
+  if (length(x) == 0L) {
+    seq_along(data)
+  } else {
+    x * -1L
+  }
+}
+
+# e.g !cyl
+.select_bang <- function(expr, data) {
   x <- .eval_expr(
     expr[[2]],
     data
@@ -267,6 +298,10 @@ get_dots <- function(...) {
     first_obj,
     data
   )
+}
+
+.select_all <- function(expr, data) {
+  seq_len(ncol(data))
 }
 
 # e.g starts_with("Sep")
@@ -404,7 +439,7 @@ get_dots <- function(...) {
 # error. Returns NULL if can never be evaluated.
 #
 # Custom arg "remove_n_top_env" to remove the first environments which are
-# ".select_nse()" and the other custom functions
+# ".select_nse_from_dots()" and the other custom functions
 .dynEval <- function(x,
                      ifnotfound = stop(gettextf("%s not found", sQuote(x)), domain = NA),
                      minframe = 1L,

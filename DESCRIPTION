@@ -22,3 +22,5 @@ BugReports: https://github.com/etiennebacher/tidypolars/issues
 Imports: 
     polars
 Suggests: tinytest
+Depends: 
+    R (>= 2.10)
