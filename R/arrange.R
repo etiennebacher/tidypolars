@@ -42,8 +42,5 @@ pl_arrange <- function(data, ...) {
 
   if (length(vars) == 0) return(data)
 
-  expr <- paste0("c('", paste(vars, collapse = "', '"), "')") |>
-    str2lang()
-
-  data$sort(eval(expr), descending = eval(direction))
+  data$sort(eval(vars), descending = eval(direction))
 }
