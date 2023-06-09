@@ -13,6 +13,9 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/fish_encounters.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
   </url>
   <url>
@@ -35,6 +38,9 @@
   </url>
   <url>
     <loc>/reference/pl_pivot_longer.html</loc>
+  </url>
+  <url>
+    <loc>/reference/pl_pivot_wider.html</loc>
   </url>
   <url>
     <loc>/reference/pl_pull.html</loc>
