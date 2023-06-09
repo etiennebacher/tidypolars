@@ -12,6 +12,7 @@ reference:
     desc: |
       Functions adapted from `dplyr` functions
     contents:
+      - pl_arrange
       - pl_bind_cols
       - pl_bind_rows
       - pl_distinct
