@@ -1,6 +1,10 @@
 url: ~
 template:
   bootstrap: 5
+  bslib:
+    base_font: {google: "Mukta"}
+    heading_font: {google: "Mukta"}
+    code_font: {google: "JetBrains Mono"}
 
 reference:
   - title: Polars-specific functions
