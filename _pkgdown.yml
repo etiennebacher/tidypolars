@@ -31,6 +31,7 @@ reference:
       - pl_drop_na
       - pl_pivot_longer
       - pl_pivot_wider
+      - pl_replace_na
   - title: Datasets
     desc: |
       Datasets reexported from various tidyverse packages
