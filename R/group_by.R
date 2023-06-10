@@ -9,6 +9,6 @@ pl_group_by <- function(data, ..., maintain_order = TRUE) {
   names <- pl_colnames(data)
   data <- data$groupby(vars, maintain_order = maintain_order)
   attr(data, "pl_colnames") <- names
-
+  attr(data, "pl_grps") <- vars
   data
 }

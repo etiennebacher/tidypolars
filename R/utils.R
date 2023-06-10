@@ -6,7 +6,7 @@ get_dots <- function(...) {
 # License GPL-3
 
 .select_nse_from_dots <- function(data, ...) {
-  columns <- data$columns
+  columns <- pl_colnames(data)
 
   # avoid conflicts
   conflicting_packages <- .conflicting_packages("poorman")
@@ -115,8 +115,8 @@ get_dots <- function(...) {
   is_select_helper <- FALSE
   out <- NULL
 
-  if (x_dep %in% colnames(data)) {
-    matches <- match(x_dep, colnames(data))
+  if (x_dep %in% pl_colnames(data)) {
+    matches <- match(x_dep, pl_colnames(data))
     out <- matches[!is.na(matches)]
   } else {
     new_expr <- tryCatch(
@@ -301,7 +301,7 @@ get_dots <- function(...) {
 }
 
 .select_all <- function(expr, data) {
-  seq_len(ncol(data))
+  seq_len(length(pl_colnames(data)))
 }
 
 # e.g starts_with("Sep")
@@ -328,7 +328,7 @@ get_dots <- function(...) {
     "regex" = collapsed_patterns,
     stop("There is no select helper called '", helper, "'.")
   )
-  grep(rgx, colnames(data))
+  grep(rgx, pl_colnames(data))
 }
 
 # e.g args$select (happens when we use grouped_data (see center.grouped_df()))
