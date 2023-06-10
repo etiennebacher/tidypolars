@@ -18,7 +18,7 @@ converted to the type of the replacement value.**}
 Replace NAs with specified values
 }
 \examples{
-pl_test <- pl$DataFrame(x = c(NA, 1), y = c(2, NA))
+pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 
 # replace all NA with 0
 pl_replace_na(pl_test, 0)
