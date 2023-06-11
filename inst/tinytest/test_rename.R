@@ -1,6 +1,8 @@
 source("helpers.R")
 using("tidypolars")
 
+exit_if_not(packageVersion("polars") > "0.6.1")
+
 pl_test <- polars::pl$DataFrame(mtcars)
 
 test1 <- pl_rename(pl_test, miles_per_gallon = "mpg", n_cyl = "cyl") |>
