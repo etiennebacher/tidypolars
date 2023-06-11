@@ -22,7 +22,7 @@ get_dots <- function(...) {
 }
 
 .select_nse_from_var <- function(data, var) {
-  columns <- data$columns
+  columns <- pl_colnames(data)
 
   # avoid conflicts
   conflicting_packages <- .conflicting_packages("poorman")
