@@ -37,6 +37,9 @@
     <loc>/reference/pl_drop_na.html</loc>
   </url>
   <url>
+    <loc>/reference/pl_fill.html</loc>
+  </url>
+  <url>
     <loc>/reference/pl_pivot_longer.html</loc>
   </url>
   <url>
@@ -44,6 +47,9 @@
   </url>
   <url>
     <loc>/reference/pl_pull.html</loc>
+  </url>
+  <url>
+    <loc>/reference/pl_rename.html</loc>
   </url>
   <url>
     <loc>/reference/pl_replace_na.html</loc>
