@@ -39,9 +39,9 @@ If you use `polars`' lazy API, you need to call `pl_collect()` at the end of the
 chained expression:
 
 ```{r}
-pl_who <- polars::pl$DataFrame(who)$lazy()
+pl_who_l <- pl$DataFrame(who)$lazy()
 
-out <- pl_who |> 
+out <- pl_who_l |> 
   pl_filter(year > 1990) |> 
   pl_drop_na(newrel_f3544) |> 
   pl_select(iso3, year, matches("^newrel(.*)_f"))
