@@ -1,0 +1,74 @@
+---
+title: "Getting started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{getting_started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(polars)
+library(tidypolars)
+
+who <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/tidyr/who.csv")
+```
+
+As said on the homepage, `tidypolars` provides functions that should be look very
+familiar to someone who is used to working with the `tidyverse`. 
+
+Like with the `tidyverse`, you can pipe multiple `tidypolars` functions:
+
+```{r}
+pl_who <- pl$DataFrame(who)
+
+pl_who |> 
+  pl_filter(year > 1990) |> 
+  pl_drop_na(newrel_f3544) |> 
+  pl_select(iso3, year, matches("^newrel(.*)_f"))
+```
+
+If you use `polars`' lazy API, you need to call `pl_collect()` at the end of the 
+chained expression:
+
+```{r}
+pl_who <- polars::pl$DataFrame(who)$lazy()
+
+out <- pl_who |> 
+  pl_filter(year > 1990) |> 
+  pl_drop_na(newrel_f3544) |> 
+  pl_select(iso3, year, matches("^newrel(.*)_f"))
+
+# this just prints the query
+out
+
+# this performs the query
+out |> 
+  pl_collect()
+```
+
+`tidypolars` always return a `DataFrame` or a `LazyFrame` so you can still use
+`polars` original syntax after a chained expression:
+
+```{r}
+out <- pl_who |> 
+  pl_filter(year > 1990) |> 
+  pl_select(iso3, year, matches("^newrel(.*)_f"))
+
+out
+
+out$
+  groupby("iso3", maintain_order = TRUE)$
+  agg(
+    pl$all()$mean()
+  )$
+  sort(c("iso3", "year"))
+```
+

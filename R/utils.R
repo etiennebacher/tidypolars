@@ -325,6 +325,7 @@ get_dots <- function(...) {
     "starts_with" = paste0("^(", collapsed_patterns, ")"),
     "ends_with" = paste0("(", collapsed_patterns, ")$"),
     "contains" = paste0("(", collapsed_patterns, ")"),
+    "matches" = ,
     "regex" = collapsed_patterns,
     stop("There is no select helper called '", helper, "'.")
   )
