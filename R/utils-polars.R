@@ -29,3 +29,11 @@ check_same_class <- function(x, y) {
     )
   }
 }
+
+clone_grouped_data <- function(x) {
+  if (inherits(x, "GroupBy") | inherits(x, "LazyGroupBy")) {
+    x
+  } else {
+    NULL
+  }
+}

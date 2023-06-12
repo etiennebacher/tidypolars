@@ -35,6 +35,8 @@ pl_fill <- function(data, ..., direction = c("down", "up", "downup", "updown")) 
   check_polars_data(data)
   vars <- .select_nse_from_dots(data, ...)
   direction <- match.arg(direction)
+  data2 <- clone_grouped_data(data)
+  grps <- attributes(data2)$pl_grps
 
   expr <- paste0("pl$col('", vars, "')$")
   expr_fill <- switch(
@@ -48,13 +50,11 @@ pl_fill <- function(data, ..., direction = c("down", "up", "downup", "updown")) 
   # the code for grouped data uses $over() inside $with_columns(), which
   # cannot be used with grouped data. Therefore I have to manually ungroup
   # the data
-  # TODO: this is not finished, see TODO in the test_fill
-  if (inherits(data, "GroupBy") | inherits(data, "GroupBy")) {
-    grps <- attributes(data)$pl_grps
-    if (inherits(data, "GroupBy")) {
-      attributes(data)$class <- "DataFrame"
+  if (inherits(data2, "GroupBy") | inherits(data2, "GroupBy")) {
+    if (inherits(data2, "GroupBy")) {
+      attributes(data2)$class <- "DataFrame"
     } else {
-      attributes(data)$class <- "LazyFrame"
+      attributes(data2)$class <- "LazyFrame"
     }
     expr_fill <- paste0(expr_fill, "$over(grps)")
   }
@@ -62,7 +62,17 @@ pl_fill <- function(data, ..., direction = c("down", "up", "downup", "updown")) 
   expr <- paste0(expr, expr_fill)
   final_expr <- paste(expr, collapse = ",")
 
-  paste0("data$with_columns(", final_expr, ")") |>
+  data2 <- paste0("data2$with_columns(", final_expr, ")") |>
     str2lang() |>
     eval()
+
+  if (inherits(data, "DataFrame")) attributes(data)$class <- "GroupBy"
+  if (inherits(data, "LazyFrame")) attributes(data)$class <- "LazyGroupBy"
+
+  if (!is.null(grps)) {
+    data2$groupby(grps)
+  } else {
+    data2
+  }
+
 }

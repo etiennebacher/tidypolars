@@ -17,5 +17,7 @@ pl_pull <- function(data, var) {
   if (!isTRUE(tr)) {
     var <- deparse(substitute(var))
   }
+  if (inherits(data, "GroupBy")) attributes(data)$class <- "DataFrame"
+  if (inherits(data, "LazyGroupBy")) attributes(data)$class <- "LazyFrame"
   data$select(pl$col(var))$to_series()$to_r()
 }
