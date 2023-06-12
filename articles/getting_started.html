@@ -116,9 +116,9 @@ the <code>tidyverse</code>.</p>
 <p>If you use <code>polars</code>’ lazy API, you need to call
 <code><a href="../reference/pl_collect.html">pl_collect()</a></code> at the end of the chained expression:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pl_who</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">who</span><span class="op">)</span><span class="op">$</span><span class="fu">lazy</span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">pl_who_l</span> <span class="op">&lt;-</span> <span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">who</span><span class="op">)</span><span class="op">$</span><span class="fu">lazy</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">out</span> <span class="op">&lt;-</span> <span class="va">pl_who</span> <span class="op">|&gt;</span> </span>
+<span><span class="va">out</span> <span class="op">&lt;-</span> <span class="va">pl_who_l</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">pl_filter</span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/pl_drop_na.html">pl_drop_na</a></span><span class="op">(</span><span class="va">newrel_f3544</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="va">iso3</span>, <span class="va">year</span>, <span class="fu">matches</span><span class="op">(</span><span class="st">"^newrel(.*)_f"</span><span class="op">)</span><span class="op">)</span></span>
@@ -160,10 +160,23 @@ syntax after a chained expression:</p>
 <span>  <span class="fu"><a href="../reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="va">iso3</span>, <span class="va">year</span>, <span class="fu">matches</span><span class="op">(</span><span class="st">"^newrel(.*)_f"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">out</span></span>
-<span><span class="co">#&gt; [1] "polars LazyFrame naive plan: (run ldf$describe_optimized_plan() to see the optimized plan)"</span></span>
-<span><span class="co">#&gt;  SELECT [col("iso3"), col("year"), col("newrel_f014"), col("newrel_f1524"), col("newrel_f2534"), col("newrel_f3544"), col("newrel_f4554"), col("newrel_f5564"), col("newrel_f65")] FROM</span></span>
-<span><span class="co">#&gt;   FILTER [(col("year")) &gt; (1990.0)] FROM</span></span>
-<span><span class="co">#&gt;   DF ["X", "country", "iso2", "iso3"]; PROJECT */61 COLUMNS; SELECTION: "None"</span></span>
+<span><span class="co">#&gt; shape: (4_908, 9)</span></span>
+<span><span class="co">#&gt; ┌──────┬──────┬───────────┬────────────┬───┬────────────┬──────────────┬──────────────┬────────────┐</span></span>
+<span><span class="co">#&gt; │ iso3 ┆ year ┆ newrel_f0 ┆ newrel_f15 ┆ … ┆ newrel_f35 ┆ newrel_f4554 ┆ newrel_f5564 ┆ newrel_f65 │</span></span>
+<span><span class="co">#&gt; │ ---  ┆ ---  ┆ 14        ┆ 24         ┆   ┆ 44         ┆ ---          ┆ ---          ┆ ---        │</span></span>
+<span><span class="co">#&gt; │ str  ┆ i32  ┆ ---       ┆ ---        ┆   ┆ ---        ┆ i32          ┆ i32          ┆ i32        │</span></span>
+<span><span class="co">#&gt; │      ┆      ┆ i32       ┆ i32        ┆   ┆ i32        ┆              ┆              ┆            │</span></span>
+<span><span class="co">#&gt; ╞══════╪══════╪═══════════╪════════════╪═══╪════════════╪══════════════╪══════════════╪════════════╡</span></span>
+<span><span class="co">#&gt; │ AFG  ┆ 1991 ┆ null      ┆ null       ┆ … ┆ null       ┆ null         ┆ null         ┆ null       │</span></span>
+<span><span class="co">#&gt; │ AFG  ┆ 1992 ┆ null      ┆ null       ┆ … ┆ null       ┆ null         ┆ null         ┆ null       │</span></span>
+<span><span class="co">#&gt; │ AFG  ┆ 1993 ┆ null      ┆ null       ┆ … ┆ null       ┆ null         ┆ null         ┆ null       │</span></span>
+<span><span class="co">#&gt; │ AFG  ┆ 1994 ┆ null      ┆ null       ┆ … ┆ null       ┆ null         ┆ null         ┆ null       │</span></span>
+<span><span class="co">#&gt; │ …    ┆ …    ┆ …         ┆ …          ┆ … ┆ …          ┆ …            ┆ …            ┆ …          │</span></span>
+<span><span class="co">#&gt; │ ZWE  ┆ 2010 ┆ null      ┆ null       ┆ … ┆ null       ┆ null         ┆ null         ┆ null       │</span></span>
+<span><span class="co">#&gt; │ ZWE  ┆ 2011 ┆ null      ┆ null       ┆ … ┆ null       ┆ null         ┆ null         ┆ null       │</span></span>
+<span><span class="co">#&gt; │ ZWE  ┆ 2012 ┆ null      ┆ null       ┆ … ┆ null       ┆ null         ┆ null         ┆ null       │</span></span>
+<span><span class="co">#&gt; │ ZWE  ┆ 2013 ┆ 1252      ┆ 2069       ┆ … ┆ 3526       ┆ 1453         ┆ 811          ┆ 725        │</span></span>
+<span><span class="co">#&gt; └──────┴──────┴───────────┴────────────┴───┴────────────┴──────────────┴──────────────┴────────────┘</span></span>
 <span></span>
 <span><span class="va">out</span><span class="op">$</span></span>
 <span>  <span class="fu">groupby</span><span class="op">(</span><span class="st">"iso3"</span>, maintain_order <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span></span>
@@ -171,13 +184,23 @@ syntax after a chained expression:</p>
 <span>    <span class="va">pl</span><span class="op">$</span><span class="fu">all</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">$</span></span>
 <span>  <span class="fu">sort</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3"</span>, <span class="st">"year"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "polars LazyFrame naive plan: (run ldf$describe_optimized_plan() to see the optimized plan)"</span></span>
-<span><span class="co">#&gt; SORT BY [col("iso3"), col("year")]</span></span>
-<span><span class="co">#&gt;   AGGREGATE</span></span>
-<span><span class="co">#&gt;      [col("year").mean(), col("newrel_f014").mean(), col("newrel_f1524").mean(), col("newrel_f2534").mean(), col("newrel_f3544").mean(), col("newrel_f4554").mean(), col("newrel_f5564").mean(), col("newrel_f65").mean()] BY [col("iso3")] FROM</span></span>
-<span><span class="co">#&gt;       SELECT [col("iso3"), col("year"), col("newrel_f014"), col("newrel_f1524"), col("newrel_f2534"), col("newrel_f3544"), col("newrel_f4554"), col("newrel_f5564"), col("newrel_f65")] FROM</span></span>
-<span><span class="co">#&gt;   FILTER [(col("year")) &gt; (1990.0)] FROM</span></span>
-<span><span class="co">#&gt;   DF ["X", "country", "iso2", "iso3"]; PROJECT */61 COLUMNS; SELECTION: "None"</span></span></code></pre></div>
+<span><span class="co">#&gt; shape: (219, 9)</span></span>
+<span><span class="co">#&gt; ┌──────┬────────┬───────────┬────────────┬───┬────────────┬────────────┬──────────────┬────────────┐</span></span>
+<span><span class="co">#&gt; │ iso3 ┆ year   ┆ newrel_f0 ┆ newrel_f15 ┆ … ┆ newrel_f35 ┆ newrel_f45 ┆ newrel_f5564 ┆ newrel_f65 │</span></span>
+<span><span class="co">#&gt; │ ---  ┆ ---    ┆ 14        ┆ 24         ┆   ┆ 44         ┆ 54         ┆ ---          ┆ ---        │</span></span>
+<span><span class="co">#&gt; │ str  ┆ f64    ┆ ---       ┆ ---        ┆   ┆ ---        ┆ ---        ┆ f64          ┆ f64        │</span></span>
+<span><span class="co">#&gt; │      ┆        ┆ f64       ┆ f64        ┆   ┆ f64        ┆ f64        ┆              ┆            │</span></span>
+<span><span class="co">#&gt; ╞══════╪════════╪═══════════╪════════════╪═══╪════════════╪════════════╪══════════════╪════════════╡</span></span>
+<span><span class="co">#&gt; │ ABW  ┆ 2002.0 ┆ null      ┆ 1.0        ┆ … ┆ null       ┆ 1.0        ┆ 2.0          ┆ 2.0        │</span></span>
+<span><span class="co">#&gt; │ AFG  ┆ 2002.0 ┆ 1749.0    ┆ null       ┆ … ┆ null       ┆ null       ┆ null         ┆ null       │</span></span>
+<span><span class="co">#&gt; │ AGO  ┆ 2002.0 ┆ 626.0     ┆ 2644.0     ┆ … ┆ 1671.0     ┆ 991.0      ┆ 481.0        ┆ 314.0      │</span></span>
+<span><span class="co">#&gt; │ AIA  ┆ 2002.0 ┆ 0.0       ┆ 0.0        ┆ … ┆ 0.0        ┆ 0.0        ┆ 0.0          ┆ 0.0        │</span></span>
+<span><span class="co">#&gt; │ …    ┆ …      ┆ …         ┆ …          ┆ … ┆ …          ┆ …          ┆ …            ┆ …          │</span></span>
+<span><span class="co">#&gt; │ YEM  ┆ 2002.0 ┆ 522.0     ┆ 1194.0     ┆ … ┆ 825.0      ┆ 736.0      ┆ 512.0        ┆ 360.0      │</span></span>
+<span><span class="co">#&gt; │ ZAF  ┆ 2002.0 ┆ 18054.0   ┆ 21166.0    ┆ … ┆ 29297.0    ┆ 15910.0    ┆ 7807.0       ┆ 5672.0     │</span></span>
+<span><span class="co">#&gt; │ ZMB  ┆ 2002.0 ┆ 1517.0    ┆ 2709.0     ┆ … ┆ 3752.0     ┆ 1754.0     ┆ 941.0        ┆ 669.0      │</span></span>
+<span><span class="co">#&gt; │ ZWE  ┆ 2002.0 ┆ 1252.0    ┆ 2069.0     ┆ … ┆ 3526.0     ┆ 1453.0     ┆ 811.0        ┆ 725.0      │</span></span>
+<span><span class="co">#&gt; └──────┴────────┴───────────┴────────────┴───┴────────────┴────────────┴──────────────┴────────────┘</span></span></code></pre></div>
   </main>
 </div>
 
