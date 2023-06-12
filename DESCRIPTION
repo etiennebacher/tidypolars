@@ -13,7 +13,7 @@ Description: Polars is an amazing cross-language tool for manipulating very larg
     of tidypolars is to improve the ease-of-use of Polars in R by providing
     functions whose names and syntax are very close to the tidyverse ones, while
     having very few dependencies.
-License: GPL (>= 3)
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3.9000
