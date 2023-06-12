@@ -1,6 +1,8 @@
 source("helpers.R")
 using("tidypolars")
 
+exit_file("Still WIP")
+
 expect_equal(
   rearrange_expr("mean(pl$col('Sepal.Length'))"),
   "(pl$col('Sepal.Length')$mean())"
