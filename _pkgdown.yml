@@ -2,9 +2,9 @@ url: ~
 template:
   bootstrap: 5
   bslib:
-    base_font: {google: "Mukta"}
-    heading_font: {google: "Mukta"}
-    code_font: {google: "JetBrains Mono"}
+    base_font: {google: "Mulish"}
+    heading_font: {google: "Mulish"}
+    code_font: {google: "Fira Code"}
 
 reference:
   - title: Polars-specific functions
