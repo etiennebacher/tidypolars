@@ -62,17 +62,24 @@ pl_fill <- function(data, ..., direction = c("down", "up", "downup", "updown")) 
   expr <- paste0(expr, expr_fill)
   final_expr <- paste(expr, collapse = ",")
 
-  data2 <- paste0("data2$with_columns(", final_expr, ")") |>
+  if (!is.null(data2)) {
+    data2 <- paste0("data2$with_columns(", final_expr, ")") |>
+      str2lang() |>
+      eval()
+
+    if (inherits(data, "DataFrame")) attributes(data)$class <- "GroupBy"
+    if (inherits(data, "LazyFrame")) attributes(data)$class <- "LazyGroupBy"
+
+    if (!is.null(grps)) {
+      return(data2$groupby(grps))
+    } else {
+      return(data2)
+    }
+  }
+
+  # ungrouped data
+  paste0("data$with_columns(", final_expr, ")") |>
     str2lang() |>
     eval()
-
-  if (inherits(data, "DataFrame")) attributes(data)$class <- "GroupBy"
-  if (inherits(data, "LazyFrame")) attributes(data)$class <- "LazyGroupBy"
-
-  if (!is.null(grps)) {
-    data2$groupby(grps)
-  } else {
-    data2
-  }
 
 }
