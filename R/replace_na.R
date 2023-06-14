@@ -46,3 +46,6 @@ pl_replace_na <- function(data, replace) {
   }
 
 }
+
+#' @export
+replace_na.DataFrame <- pl_replace_na

@@ -11,3 +11,6 @@ pl_summarize <- function(data, ...) {
   out <- lapply(out_exprs, str2lang)
   data$agg(lapply(out, eval))
 }
+
+#' @export
+summarize.DataFrame <- pl_summarize

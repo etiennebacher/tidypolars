@@ -22,3 +22,5 @@ pl_drop_na <- function(data, ...) {
   data$drop_nulls(eval(vars))
 }
 
+#' @export
+drop_na.DataFrame <- pl_drop_na

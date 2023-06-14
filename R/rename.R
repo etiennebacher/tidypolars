@@ -46,3 +46,10 @@ pl_rename_with <- function(data, fn, cols = everything(), ...) {
   names(mapping) <- new
   data$rename(mapping)
 }
+
+
+#' @export
+rename.DataFrame <- pl_rename
+
+#' @export
+rename_with.DataFrame <- pl_rename_with

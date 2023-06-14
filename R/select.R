@@ -20,3 +20,6 @@ pl_select <- function(data, ...) {
   vars <- .select_nse_from_dots(data, ...)
   data$select(eval(vars))
 }
+
+#' @export
+select.DataFrame <- pl_select

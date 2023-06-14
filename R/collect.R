@@ -17,3 +17,6 @@ pl_collect <- function(data) {
   }
   data$collect()
 }
+
+#' @export
+collect.DataFrame <- pl_collect

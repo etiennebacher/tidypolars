@@ -27,3 +27,10 @@ pl_ungroup <- function(data) {
   }
   data
 }
+
+
+#' @export
+group_by.DataFrame <- pl_group_by
+
+#' @export
+ungroup.GroupBy <- pl_ungroup

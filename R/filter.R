@@ -60,6 +60,9 @@ pl_filter <- function(data, ...) {
   data$filter(eval(expr))
 }
 
+#' @export
+filter.DataFrame <- pl_filter
+
 
 pl_special_filter_expr <- function() {
   c(

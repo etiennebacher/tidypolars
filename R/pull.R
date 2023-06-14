@@ -21,3 +21,6 @@ pl_pull <- function(data, var) {
   if (inherits(data, "LazyGroupBy")) attributes(data)$class <- "LazyFrame"
   data$select(pl$col(var))$to_series()$to_r()
 }
+
+#' @export
+pull.DataFrame <- pl_pull

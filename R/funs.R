@@ -282,16 +282,6 @@ pl_extend <- function(x, ...) {
   x$extend()
 }
 
-pl_fill <- function(x, ...) {
-  check_empty_dots(...)
-  x$fill()
-}
-
-pl_filter <- function(x, ...) {
-  check_empty_dots(...)
-  x$filter()
-}
-
 pl_finite <- function(x, ...) {
   check_empty_dots(...)
   x$finite()

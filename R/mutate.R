@@ -6,7 +6,9 @@ pl_mutate <- function(data, ...) {
 
   dots <- get_dots(...)
   out_exprs <- rearrange_exprs(data, dots)
+  to_drop <- names(out_exprs[[1]])
 
+  out_exprs <- Filter(Negate(is.null), out_exprs[[2]])
   out_exprs <- unlist(out_exprs)
   out_exprs <- paste(out_exprs, collapse = ", ")
 
@@ -20,12 +22,24 @@ pl_mutate <- function(data, ...) {
     }
 
     out_exprs <- paste0(out_exprs, "$over(", eval(grps), ")")
-    out <- paste0("data$with_columns(", out_exprs, ")$groupby(", grps, ")")
+    out_expr <- paste0("data$with_columns(", out_exprs, ")$groupby(", grps, ")")
   } else {
-    out <- paste0("data$with_columns(", out_exprs, ")")
+    out_expr <- paste0("data$with_columns(", out_exprs, ")")
   }
 
-  out |>
+  out <- out_expr |>
     str2lang() |>
     eval()
+
+  if (length(to_drop) > 0) {
+    out$drop(eval(to_drop))
+  } else {
+    out
+  }
 }
+
+#' @export
+mutate.DataFrame <- pl_mutate
+
+#' @export
+mutate.GroupBy <- pl_mutate

@@ -83,3 +83,6 @@ pl_fill <- function(data, ..., direction = c("down", "up", "downup", "updown")) 
     eval()
 
 }
+
+#' @export
+fill.DataFrame <- pl_fill

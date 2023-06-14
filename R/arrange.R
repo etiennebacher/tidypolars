@@ -44,3 +44,6 @@ pl_arrange <- function(data, ...) {
 
   data$sort(eval(vars), descending = eval(direction))
 }
+
+#' @export
+arrange.DataFrame <- pl_arrange
