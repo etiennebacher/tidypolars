@@ -9,7 +9,7 @@ pl_distinct(data, ..., keep = "first", maintain_order = TRUE)
 \arguments{
 \item{data}{A Polars Data/LazyFrame}
 
-\item{...}{Any expression accepted by `dplyr::select()`: variable names,
+\item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}
 
 \item{keep}{Either "first" (keep the first occurrence of the duplicated row),

@@ -10,7 +10,7 @@ pl_collect(data)
 \item{data}{A Polars LazyFrame}
 }
 \description{
-Polars LazyFrames are not loaded in memory. Running `collect()` checks the
+Polars LazyFrames are not loaded in memory. Running \code{collect()} checks the
 execution plan, optimizes it in the background and performs it. The result
 is loaded in the R session.
 }

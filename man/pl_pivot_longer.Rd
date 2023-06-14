@@ -10,10 +10,10 @@ pl_pivot_longer(data, cols, names_to = "name", values_to = "value")
 \item{data}{A Polars Data/LazyFrame}
 
 \item{cols}{Columns to pivot into longer format. Can be anything accepted by
-`dplyr::select()`.}
+\code{dplyr::select()}.}
 
 \item{names_to}{The (quoted) name of the column that will contain the column
-names specified by `cols`.}
+names specified by \code{cols}.}
 
 \item{values_to}{A string specifying the name of the column to create from the
 data stored in cell values.}

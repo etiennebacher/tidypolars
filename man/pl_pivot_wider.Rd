@@ -10,7 +10,7 @@ pl_pivot_wider(data, id_cols, names_from, values_from, values_fill = NULL)
 \item{data}{A Polars Data/LazyFrame}
 
 \item{id_cols}{Defaults to all columns in data except for the columns specified
-through `names_from` and `values_from`.}
+through \code{names_from} and \code{values_from}.}
 
 \item{names_from}{The (quoted or unquoted) column name whose values will be
 used for the names of the new columns.}

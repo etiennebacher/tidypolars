@@ -11,7 +11,7 @@ reference:
     desc: |
       Functionalities from Polars
     contents:
-      - pl_collect
+      - as_polars
   - title: From `dplyr`
     desc: |
       Functions adapted from `dplyr` functions
@@ -19,7 +19,9 @@ reference:
       - pl_arrange
       - pl_bind_cols
       - pl_bind_rows
+      - pl_collect
       - pl_distinct
+      - pl_mutate
       - pl_pull
       - pl_rename
       - pl_rename_with

@@ -9,10 +9,10 @@ pl_replace_na(data, replace)
 \arguments{
 \item{data}{A Polars Data/LazyFrame}
 
-\item{replace}{Either a scalar that will be used to replace `NA` in all
+\item{replace}{Either a scalar that will be used to replace \code{NA} in all
 columns, or a named list with the column name and the value that will be
-used to replace `NA` in it. **The column type will be automatically
-converted to the type of the replacement value.**}
+used to replace \code{NA} in it. \strong{The column type will be automatically
+converted to the type of the replacement value.}}
 }
 \description{
 Replace NAs with specified values

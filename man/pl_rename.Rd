@@ -12,16 +12,18 @@ pl_rename_with(data, fn, cols = everything(), ...)
 \arguments{
 \item{data}{A Polars Data/LazyFrame}
 
-\item{...}{For `pl_rename()`, one of the following:
-* params like `new_name = "old_name"` to rename selected variables.
-* as above but params wrapped in a list
+\item{...}{For \code{pl_rename()}, one of the following:
+\itemize{
+\item params like \code{new_name = "old_name"} to rename selected variables.
+\item as above but params wrapped in a list
+}
 
- For `pl_rename_with`, additional arguments passed to `fn`.}
+For \code{pl_rename_with}, additional arguments passed to \code{fn}.}
 
 \item{fn}{Function to apply on column names}
 
-\item{cols}{Columns on which to apply `fn`. Can be anything accepted by
-`dplyr::select()`.}
+\item{cols}{Columns on which to apply \code{fn}. Can be anything accepted by
+\code{dplyr::select()}.}
 }
 \description{
 Rename columns

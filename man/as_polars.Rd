@@ -13,7 +13,7 @@ as_polars(data, lazy = FALSE)
 }
 \description{
 This operation is time- and memory-consuming. It should only be used for small
-datasets. Use `polars` original functions to read files instead.
+datasets. Use \code{polars} original functions to read files instead.
 }
 \examples{
 mtcars |>

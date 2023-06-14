@@ -9,7 +9,7 @@ pl_drop_na(data, ...)
 \arguments{
 \item{data}{A Polars Data/LazyFrame}
 
-\item{...}{Any expression accepted by `dplyr::select()`: variable names,
+\item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}
 }
 \description{

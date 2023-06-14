@@ -6,9 +6,11 @@
 \title{Fish encounters}
 \format{
 A dataset with variables:
-* fish: Fish identifier
-* station: Measurement station
-* seen: Was the fish seen? (1 if yes, and true for all rows)
+\itemize{
+\item fish: Fish identifier
+\item station: Measurement station
+\item seen: Was the fish seen? (1 if yes, and true for all rows)
+}
 }
 \source{
 Dataset provided by Myfanwy Johnston; more details at https://fishsciences.github.io/post/visualizing-fish-encounter-histories/
@@ -17,6 +19,6 @@ Dataset provided by Myfanwy Johnston; more details at https://fishsciences.githu
 fish_encounters
 }
 \description{
-This dataset is reexported from `tidyr::fish_encounters`
+This dataset is reexported from \code{tidyr::fish_encounters}
 }
 \keyword{datasets}

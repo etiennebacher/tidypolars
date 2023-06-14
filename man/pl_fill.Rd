@@ -9,7 +9,7 @@ pl_fill(data, ..., direction = c("down", "up", "downup", "updown"))
 \arguments{
 \item{data}{A Polars Data/LazyFrame}
 
-\item{...}{Any expression accepted by `dplyr::select()`: variable names,
+\item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}
 
 \item{direction}{Direction in which to fill missing values. Either "down"
