@@ -206,8 +206,6 @@ get_dots <- function(...) {
     `(` = .select_bracket(x, data),
     `[` = .select_square_bracket(x, data),
     `$` = .select_dollar(x, data),
-    `~` = .select_tilde(x, data),
-    "list" = .select_list(x, data),
     "names" = .select_names(x, data),
     "everything" = .select_all(x, data),
     "starts_with" = ,

@@ -46,7 +46,7 @@ replace_vars_in_expr <- function(data, deparsed) {
     text = deparsed,
     keep.source = TRUE
   )
-  p_d <- getParseData(p)
+  p_d <- utils::getParseData(p)
   vars_used <- p_d[p_d$token %in% c("SYMBOL"), "text"]
   vars_used <- unique(vars_used[vars_used %in% pl_colnames(data)])
 
