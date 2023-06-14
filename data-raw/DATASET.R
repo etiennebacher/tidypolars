@@ -96,7 +96,7 @@ r_polars_funs <- data.frame(
   distinct() |>
   arrange(category, polars_funs, .locale = "en")
 
-usethis::use_data(r_polars_funs, overwrite = TRUE)
+usethis::use_data(r_polars_funs, overwrite = TRUE, internal = TRUE)
 
 
 

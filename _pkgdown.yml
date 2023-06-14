@@ -39,10 +39,9 @@ reference:
       - pl_replace_na
   - title: Datasets
     desc: |
-      Datasets (some are reexported from various tidyverse packages)
+      Datasets reexported from various tidyverse packages
     contents:
       - fish_encounters
       - relig_income
-      - r_polars_funs
 
 

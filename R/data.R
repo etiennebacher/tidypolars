@@ -27,5 +27,3 @@
 #' Dataset provided by Myfanwy Johnston; more details at https://fishsciences.github.io/post/visualizing-fish-encounter-histories/
 "fish_encounters"
 
-#' List of functions in Polars and their equivalent in R
-"r_polars_funs"

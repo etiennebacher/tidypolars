@@ -72,7 +72,7 @@ find_function_call_in_string <- function(x) {
     text = x,
     keep.source = TRUE
   )
-  p_d <- getParseData(p)
+  p_d <- utils::getParseData(p)
 
   function_calls <- p_d[p_d$token %in% c("SYMBOL_FUNCTION_CALL", "'+'", "'-'"), "text"]
 
