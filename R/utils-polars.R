@@ -1,4 +1,3 @@
-#' @export
 pl_colnames <- function(x) {
   if (inherits(x, "DataFrame")) {
     x$columns
@@ -27,6 +26,12 @@ check_same_class <- function(x, y) {
         class(x), " and `y` is a ", class(y), "."
       )
     )
+  }
+}
+
+pl_groups <- function(x) {
+  if (inherits(x, "GroupBy") | inherits(x, "LazyGroupBy")) {
+    attributes(x)$pl_grps
   }
 }
 

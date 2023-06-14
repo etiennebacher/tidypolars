@@ -10,6 +10,21 @@ pl_mean <- function(x, ...) {
   x$mean()
 }
 
+pl_median <- function(x, ...) {
+  check_empty_dots(...)
+  x$median()
+}
+
+pl_min <- function(x, ...) {
+  check_empty_dots(...)
+  x$min()
+}
+
+pl_max <- function(x, ...) {
+  check_empty_dots(...)
+  x$max()
+}
+
 pl_floor <- function(x, ...) {
   check_empty_dots(...)
   x$floor()

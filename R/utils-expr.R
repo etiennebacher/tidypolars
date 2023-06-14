@@ -88,7 +88,7 @@ check_empty_dots <- function(...) {
   if (length(dots) > 0) {
     fn <- deparse(match.call(call = sys.call(sys.parent()))[1])
     fn <- gsub("^pl\\_", "", fn)
-    warning(paste0("When the dataset is a Polars DataFrame or LazyFrame, `", fn, "` only needs one argument. Additional arguments will not be used."), call. = FALSE)
+    warning(paste0("\nWhen the dataset is a Polars DataFrame or LazyFrame, `", fn, "` only needs one argument. Additional arguments will not be used."), call. = FALSE)
   }
 }
 
