@@ -62,3 +62,40 @@ expect_equal(
   ),
   c(iris$Sepal.Width*2, iris$Petal.Width*3)
 )
+
+# grouped data (checked with dplyr)
+
+out <- pl_iris |>
+  pl_group_by(Species) |>
+  pl_mutate(
+    foo = mean(Sepal.Length)
+  )
+
+expect_equal(
+  pl_pull(out, foo) |> unique(),
+  c(5.006, 5.936, 6.588)
+)
+
+out <- polars::pl$DataFrame(mtcars) |>
+  pl_group_by(cyl, am) |>
+  pl_mutate(
+    disp2 = disp / mean(disp)
+  ) |>
+  pl_ungroup()
+
+expect_equal(
+  out |> pl_slice_head(5) |> pl_pull(disp2),
+  c(1.032258, 1.032258, 1.153692, 1.261305, 1.006664),
+  tolerance = 1e5
+)
+
+
+# warning
+
+expect_warning(
+  pl_mutate(pl_iris, foo = mean(Sepal.Length, na.rm = TRUE)),
+  pattern = "Additional arguments will not be used"
+)
+
+
+
