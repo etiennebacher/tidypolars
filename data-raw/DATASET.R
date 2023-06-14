@@ -65,3 +65,49 @@ fish_encounters <- data.frame(
 )
 
 usethis::use_data(fish_encounters, overwrite = TRUE)
+
+
+
+library(dplyr)
+
+rd_files <- list.files(paste0("C:\\Users\\etienne\\Desktop\\Divers\\r-polars\\man")) |>
+  tools::file_path_sans_ext()
+
+rd_files <- rd_files[grepl("^Expr\\w+", rd_files, ignore.case = FALSE)]
+
+expr_category <- gsub("Expr", "", rd_files)
+expr_category <- gsub("_.*", "", expr_category)
+expr_category[expr_category == ""] <- "default"
+
+rd_files <- gsub("Expr(.*)_", "", rd_files)
+
+r_polars_funs <- data.frame(
+  category = expr_category,
+  polars_funs = rd_files,
+  r_funs = rd_files
+) |>
+  mutate(
+    r_funs = case_match(
+      r_funs,
+      "std" ~ "sd",
+      .default = r_funs
+    )
+  ) |>
+  distinct() |>
+  arrange(category, polars_funs, .locale = "en")
+
+usethis::use_data(r_polars_funs, overwrite = TRUE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -21,6 +21,9 @@ replace_funs <- function(x) {
   funs <- find_function_call_in_string(x)
 
   for (f in funs$in_polars) {
+    # sometimes R and polars funs don't have the same name,
+    # e.g R sd() -> polars std()
+    f <- r_polars_funs[r_polars_funs$r_funs == f, "polars_funs"]
     new_x <- gsub(paste0(f, "\\("), paste0("pl_", f, "\\("), new_x)
   }
 
@@ -70,11 +73,11 @@ find_function_call_in_string <- function(x) {
     }
   }
 
-  pl_exprs <- get_polars_expr()
+  pl_exprs <- r_polars_funs
 
   list(
-    in_polars = function_calls[function_calls %in% pl_exprs$expr],
-    not_in_polars = function_calls[!function_calls %in% pl_exprs$expr]
+    in_polars = function_calls[function_calls %in% pl_exprs$r_funs],
+    not_in_polars = function_calls[!function_calls %in% pl_exprs$r_funs]
   )
 
 }
