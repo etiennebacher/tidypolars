@@ -2,12 +2,20 @@
 
 rearrange_exprs <- function(data, dots) {
 
-  lapply(seq_along(dots), function(x) {
+  to_drop <- list()
+
+  out <- lapply(seq_along(dots), function(x) {
+    if (is.null(dots[[x]])) {
+      to_drop[[names(dots)[x]]] <<- 1
+      return(NULL)
+    }
     deparsed <- deparse(dots[[x]])
     deparsed <- replace_vars_in_expr(data, deparsed)
     new_expr <- replace_funs(deparsed)
     paste0(new_expr, "$alias('", names(dots)[x], "')")
   })
+
+  list(to_drop, out)
 
 }
 
