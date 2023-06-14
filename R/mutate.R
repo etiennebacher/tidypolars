@@ -7,10 +7,10 @@ pl_mutate <- function(data, ...) {
   dots <- get_dots(...)
   out_exprs <- rearrange_exprs(data, dots)
 
-  for (i in out_exprs) {
-    data <- data$with_columns(
-      eval(str2lang(i))
-    )
-  }
-  data
+  out_exprs <- unlist(out_exprs)
+  out_exprs <- paste(out_exprs, collapse = ", ")
+
+  paste0("data$with_columns(", out_exprs, ")") |>
+    str2lang() |>
+    eval()
 }

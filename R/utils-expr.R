@@ -3,42 +3,28 @@
 rearrange_exprs <- function(data, dots) {
 
   lapply(seq_along(dots), function(x) {
-
     deparsed <- deparse(dots[[x]])
     deparsed <- replace_vars_in_expr(data, deparsed)
-
-    new_expr <- rearrange_expr(deparsed)
+    new_expr <- replace_funs(deparsed)
     paste0(new_expr, "$alias('", names(dots)[x], "')")
   })
 
 }
 
 
-# Rearrange classic R expressions in Polars syntax
+# Either replace R funs by their Polars equivalent or put the R funs into
+# map() or apply()
 
-rearrange_expr <- function(x) {
+replace_funs <- function(x) {
 
   new_x <- x
-
-  # for each function that has an equivalent in polars, I should
-  # extract the inside of the function (which usually is the first arg) and put
-  # it in front.
-
   funs <- find_function_call_in_string(x)
 
   for (f in funs$in_polars) {
-    full_f <- regmatches(
-      new_x,
-      gregexpr(paste0(f, "\\((?<text>[^ ]*)\\)\\)"), new_x, perl = TRUE)
-    )
-    full_f2 <- gsub(paste0("^", f, "\\("), "", full_f)
-    full_f2 <- gsub("\\)$", "", full_f2)
-    full_f2 <- paste0(full_f2, "$", f, "()")
-    new_x <- gsub(paste0(f, "\\((?<text>[^ ]*)\\)\\)"), full_f2, new_x, perl = TRUE)
+    new_x <- gsub(paste0(f, "\\("), paste0("pl_", f, "\\("), new_x)
   }
 
   paste0("(", new_x, ")")
-
   # Functions that don't have a polars equivalent should go in an apply() call
 }
 
@@ -91,5 +77,18 @@ find_function_call_in_string <- function(x) {
     not_in_polars = function_calls[!function_calls %in% pl_exprs$expr]
   )
 
+}
+
+
+# Used when I convert R functions to polars functions. E.g warn that na.rm = TRUE
+# exists in the R function but will not be used in the polars function.
+
+check_empty_dots <- function(...) {
+  dots <- get_dots(...)
+  if (length(dots) > 0) {
+    fn <- deparse(match.call(call = sys.call(sys.parent(2L)))[1])
+    fn <- gsub("^pl\\_", "", fn)
+    warning(paste0("When the dataset is a Polars DataFrame or LazyFrame, `", fn, "` only needs one argument. Additional arguments will not be used."), call. = FALSE)
+  }
 }
 
