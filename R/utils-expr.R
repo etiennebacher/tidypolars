@@ -32,6 +32,12 @@ replace_funs <- function(x) {
     new_x <- gsub(paste0(f, "\\("), paste0("pl_", f, "\\("), new_x)
   }
 
+  if (length(funs$in_polars) == 0 &&
+      length(funs$not_in_polars) == 0 &&
+      length(new_x) == 1) {
+    new_x <- paste0("pl$lit(", new_x, ")")
+  }
+
   paste0("(", new_x, ")")
   # Functions that don't have a polars equivalent should go in an apply() call
 }

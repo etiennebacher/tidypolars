@@ -47,6 +47,22 @@ expect_equal(
   iris$Sepal.Width*2
 )
 
+# Scalar
+
+expect_equal(
+  pl_mutate(pl_iris, Sepal.Width = 2) |>
+    pl_pull(Sepal.Width) |>
+    unique(),
+  2
+)
+
+expect_equal(
+  pl_mutate(pl_iris, Sepal.Width = "a") |>
+    pl_pull(Sepal.Width) |>
+    unique(),
+  "a"
+)
+
 # Several exprs
 
 out <- pl_mutate(
