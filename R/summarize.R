@@ -1,4 +1,20 @@
+#' Summarize each group down to one row
+#'
+#' `pl_summarize()` returns one row for each combination of grouping variables
+#' (one difference with `dplyr::summarize()` is that `pl_summarize()` only
+#' accepts grouped data). It will contain one column for each grouping variable
+#' and one column for each of the summary statistics that you have specified.
+#'
+#' @param data A Polars Data/LazyFrame
+#' @inheritParams pl_mutate
+#'
 #' @export
+#' @examples
+#' mtcars |>
+#'   as_polars() |>
+#'   pl_group_by(cyl) |>
+#'   pl_summarize(gear = mean(gear), gear2 = sd(gear))
+
 
 pl_summarize <- function(data, ...) {
   if (!inherits(data, "GroupBy")) {
@@ -32,4 +48,10 @@ pl_summarize <- function(data, ...) {
 }
 
 #' @export
-summarize.DataFrame <- pl_summarize
+pl_summarise <- pl_summarize
+
+#' @export
+summarize.GroupBy <- pl_summarize
+
+#' @export
+summarise.GroupBy <- pl_summarize
