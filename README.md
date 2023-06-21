@@ -33,7 +33,7 @@ users that are accustomed so far to either base R, `data.table` or the
 The objective of `tidypolars` is to **provide functions that are very
 close to the `tidyverse` ones** but that call the `polars` functions
 under the hood so that we don’t lose anything of its capacities.
-Morevoer, the objective is to keep `tidypolars` **dependency-free** with
+Moreover, the objective is to keep `tidypolars` **dependency-free** with
 the exception of `polars` itself (which has no dependencies).
 
 ## General syntax
@@ -150,26 +150,13 @@ for more serious ones.
 ``` r
 library(polars)
 library(tidypolars)
-library(dplyr)
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
-library(data.table)
-#> 
-#> Attaching package: 'data.table'
-#> The following objects are masked from 'package:dplyr':
-#> 
-#>     between, first, last
+library(dplyr, warn.conflicts = FALSE)
+library(data.table, warn.conflicts = FALSE)
 
 test <- data.frame(
-  grp = sample(letters, 1e7, TRUE),
-  val1 = sample(1:1000, 1e7, TRUE),
-  val2 = sample(1:1000, 1e7, TRUE)
+  grp = sample(letters, 2*1e7, TRUE),
+  val1 = sample(1:1000, 2*1e7, TRUE),
+  val2 = sample(1:1000, 2*1e7, TRUE)
 )
 
 pl_test <- pl$DataFrame(test)
@@ -202,10 +189,10 @@ bench::mark(
 #> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars       82.4ms   86.1ms     11.5      139KB     0   
-#> 2 tidypolars   81.6ms   83.8ms     11.7      226KB     0   
-#> 3 dplyr         239ms  240.9ms      4.10     242MB     5.47
-#> 4 data.table  187.2ms  215.9ms      4.43     273MB     2.95
+#> 1 polars        162ms    171ms      5.86     139KB     0   
+#> 2 tidypolars    205ms    245ms      4.19     267KB     0   
+#> 3 dplyr         701ms    701ms      1.43     480MB     1.43
+#> 4 data.table    420ms    505ms      1.98     545MB     2.97
 
 bench::mark(
   polars = pl_test$
@@ -222,8 +209,8 @@ bench::mark(
 #> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars       42.3ms   45.4ms     21.6     15.1KB     0   
-#> 2 tidypolars   41.7ms   45.6ms     21.9     11.6KB     0   
-#> 3 dplyr       241.7ms  284.1ms      3.52   281.9MB     7.04
-#> 4 data.table   24.4ms   25.4ms     36.2    100.6MB     1.91
+#> 1 polars       97.4ms  109.3ms      9.03    15.2KB     0   
+#> 2 tidypolars  115.4ms  126.6ms      7.88    11.6KB     0   
+#> 3 dplyr       655.5ms  655.5ms      1.53   563.6MB     3.05
+#> 4 data.table   53.4ms   54.5ms     15.8    222.7MB     1.98
 ```

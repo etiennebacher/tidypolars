@@ -42,7 +42,7 @@ far to either base R, `data.table` or the `tidyverse`.
 
 The objective of `tidypolars` is to **provide functions that are very close to
 the `tidyverse` ones** but that call the `polars` functions under the hood so that
-we don't lose anything of its capacities. Morevoer, the objective is to keep
+we don't lose anything of its capacities. Moreover, the objective is to keep
 `tidypolars` **dependency-free** with the exception of `polars` itself (which
 has no dependencies).
 
@@ -110,13 +110,13 @@ of other packages (e.g keyed `data.table`s). You should refer to [DuckDB benchma
 ```{r}
 library(polars)
 library(tidypolars)
-library(dplyr)
-library(data.table)
+library(dplyr, warn.conflicts = FALSE)
+library(data.table, warn.conflicts = FALSE)
 
 test <- data.frame(
-  grp = sample(letters, 1e7, TRUE),
-  val1 = sample(1:1000, 1e7, TRUE),
-  val2 = sample(1:1000, 1e7, TRUE)
+  grp = sample(letters, 2*1e7, TRUE),
+  val1 = sample(1:1000, 2*1e7, TRUE),
+  val2 = sample(1:1000, 2*1e7, TRUE)
 )
 
 pl_test <- pl$DataFrame(test)
