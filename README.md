@@ -154,9 +154,9 @@ library(dplyr, warn.conflicts = FALSE)
 library(data.table, warn.conflicts = FALSE)
 
 test <- data.frame(
-  grp = sample(letters, 2*1e7, TRUE),
-  val1 = sample(1:1000, 2*1e7, TRUE),
-  val2 = sample(1:1000, 2*1e7, TRUE)
+  grp = sample(letters, 1e7, TRUE),
+  val1 = sample(1:1000, 1e7, TRUE),
+  val2 = sample(1:1000, 1e7, TRUE)
 )
 
 pl_test <- pl$DataFrame(test)
@@ -182,17 +182,18 @@ bench::mark(
       y = sum(val2)
     ),
   data.table = dt_test[, .(x = mean(val1), y = sum(val2)), by = grp],
-  check = FALSE
+  check = FALSE,
+  iterations = 15
 )
 #> Warning: Some expressions had a GC in every iteration; so filtering is
 #> disabled.
 #> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars        162ms    171ms      5.86     139KB     0   
-#> 2 tidypolars    205ms    245ms      4.19     267KB     0   
-#> 3 dplyr         701ms    701ms      1.43     480MB     1.43
-#> 4 data.table    420ms    505ms      1.98     545MB     2.97
+#> 1 polars       88.4ms   92.1ms     10.6      139KB     0   
+#> 2 tidypolars   90.9ms   96.7ms     10.2      267KB     0   
+#> 3 dplyr       280.8ms  307.8ms      3.12     242MB     3.75
+#> 4 data.table  214.1ms  242.5ms      4.11     273MB     4.11
 
 bench::mark(
   polars = pl_test$
@@ -202,15 +203,14 @@ bench::mark(
   dplyr = test |> 
     filter(grp %in% c("a", "b")),
   data.table = dt_test[grp %chin% c("a", "b")],
-  check = FALSE
+  check = FALSE,
+  iterations = 15
 )
-#> Warning: Some expressions had a GC in every iteration; so filtering is
-#> disabled.
 #> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars       97.4ms  109.3ms      9.03    15.2KB     0   
-#> 2 tidypolars  115.4ms  126.6ms      7.88    11.6KB     0   
-#> 3 dplyr       655.5ms  655.5ms      1.53   563.6MB     3.05
-#> 4 data.table   53.4ms   54.5ms     15.8    222.7MB     1.98
+#> 1 polars       50.7ms   61.2ms     16.8     15.2KB     0   
+#> 2 tidypolars   43.9ms   58.6ms     17.4     11.6KB     0   
+#> 3 dplyr       243.8ms  250.2ms      4.00   281.9MB    38.0 
+#> 4 data.table   25.1ms   26.2ms     37.8    100.6MB     2.70
 ```
