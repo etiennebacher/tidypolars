@@ -38,6 +38,11 @@ pl_filter <- function(data, ...) {
       if (has_pl_special_filter) {
         tmp[j] <- reorder_filter_expr(tmp[j])
       }
+
+      if (grepl("%in%", tmp[j])) {
+        tmp[j] <- replace_in_operator(tmp[j])
+      }
+
     }
 
     expr[i] <- paste(tmp, collapse = OPERATION)
@@ -85,4 +90,13 @@ reorder_filter_expr <- function(expr) {
     "is.nan" = "is_nan"
   )
   paste0(var_name, "$", fn_name, "()")
+}
+
+replace_in_operator <- function(expr) {
+  split <- strsplit(expr, "%in%")[[1]] |>
+    trimws()
+  left <- split[1]
+  right <- split[2]
+  new_right <- paste0("$is_in(pl$lit(", right, "))")
+  paste0(left, new_right)
 }

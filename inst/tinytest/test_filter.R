@@ -71,3 +71,36 @@ expect_dim(
   pl_filter(pl_iris_2, Species == "setosa" | is.nan(Sepal.Length)),
   c(52, 5)
 )
+
+# %in% operator
+
+pl_mtcars <- pl$DataFrame(mtcars)
+
+expect_dim(
+  pl_filter(pl_mtcars, cyl %in% 4:5),
+  c(11, 11)
+)
+
+expect_dim(
+  pl_filter(pl_mtcars, cyl %in% 4:5, vs == 1),
+  c(10, 11)
+)
+
+expect_dim(
+  pl_filter(pl_mtcars, cyl %in% 4:5 | carb == 4),
+  c(21, 11)
+)
+
+iris3 <- iris
+iris3$Species <- as.character(iris3$Species)
+pl_iris3 <- pl$DataFrame(iris3)
+
+expect_dim(
+  pl_filter(pl_iris3, Species %in% c("setosa", "virginica")),
+  c(100, 5)
+)
+
+expect_dim(
+  pl_filter(pl_iris3, Species %in% c("setosa", "foo")),
+  c(50, 5)
+)
