@@ -1,6 +1,6 @@
 # Rearrange classic R expressions in Polars syntax
 
-rearrange_exprs <- function(data, dots) {
+rearrange_exprs <- function(data, dots, create_new = TRUE) {
 
   to_drop <- list()
 
@@ -11,8 +11,12 @@ rearrange_exprs <- function(data, dots) {
     }
     deparsed <- deparse(dots[[x]])
     deparsed <- replace_vars_in_expr(data, deparsed)
-    new_expr <- replace_funs(deparsed)
-    paste0(new_expr, "$alias('", names(dots)[x], "')")
+    new_expr <- replace_funs(deparsed, create_new = create_new)
+    if (isTRUE(create_new)) {
+      paste0(new_expr, "$alias('", names(dots)[x], "')")
+    } else {
+      new_expr
+    }
   })
 
   list(to_drop, out)
@@ -23,7 +27,7 @@ rearrange_exprs <- function(data, dots) {
 # Either replace R funs by their Polars equivalent or put the R funs into
 # map() or apply()
 
-replace_funs <- function(x) {
+replace_funs <- function(x, create_new = TRUE) {
 
   new_x <- x
   funs <- find_function_call_in_string(x)
@@ -38,7 +42,11 @@ replace_funs <- function(x) {
     new_x <- paste0("pl$lit(", new_x, ")")
   }
 
-  paste0("(", new_x, ")")
+  if (isTRUE(create_new)) {
+    paste0("(", new_x, ")")
+  } else {
+    new_x
+  }
   # Functions that don't have a polars equivalent should go in an apply() call
 }
 
