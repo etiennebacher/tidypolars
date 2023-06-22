@@ -104,3 +104,20 @@ expect_dim(
   pl_filter(pl_iris3, Species %in% c("setosa", "foo")),
   c(50, 5)
 )
+
+# between()
+
+expect_dim(
+  pl_filter(pl_iris, between(Sepal.Length, 5, 6)),
+  c(67, 5)
+)
+
+expect_dim(
+  pl_filter(pl_iris, between(Sepal.Length, 5, 6), Species == "setosa"),
+  c(30, 5)
+)
+
+expect_dim(
+  pl_filter(pl_iris, between(Sepal.Length, 5, 6, include_bounds = FALSE)),
+  c(51, 5)
+)

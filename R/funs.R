@@ -112,9 +112,9 @@ pl_arr <- function(x, ...) {
   x$arr()
 }
 
-pl_between <- function(x, ...) {
+pl_between <- function(x, left, right, include_bounds = TRUE, ...) {
   check_empty_dots(...)
-  x$between()
+  x$is_between(start = left, end = right, include_bounds = include_bounds)
 }
 
 pl_bin <- function(x, ...) {
