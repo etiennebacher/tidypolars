@@ -31,6 +31,7 @@ reference:
       - pl_slice_head
       - pl_slice_tail
       - pl_summarize
+      - pl_summarise
       - pl_ungroup
   - title: From `tidyr`
     desc: |
