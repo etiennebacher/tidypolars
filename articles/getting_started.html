@@ -83,7 +83,8 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pola-rs/r-polars" class="external-link">polars</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/etiennebacher/tidypolars" class="external-link">tidypolars</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">who</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/tidyr/who.csv"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># who &lt;- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/tidyr/who.csv")</span></span>
+<span><span class="va">who</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"who.csv"</span><span class="op">)</span></span></code></pre></div>
 <p>As said on the homepage, <code>tidypolars</code> provides functions
 that should be look very familiar to someone who is used to working with
 the <code>tidyverse</code>.</p>
@@ -93,7 +94,7 @@ the <code>tidyverse</code>.</p>
 <code class="sourceCode R"><span><span class="va">pl_who</span> <span class="op">&lt;-</span> <span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">who</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">pl_who</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">pl_filter</span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/pl_filter.html">pl_filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/pl_drop_na.html">pl_drop_na</a></span><span class="op">(</span><span class="va">newrel_f3544</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="va">iso3</span>, <span class="va">year</span>, <span class="fu">matches</span><span class="op">(</span><span class="st">"^newrel(.*)_f"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; shape: (183, 9)</span></span>
@@ -119,7 +120,7 @@ the <code>tidyverse</code>.</p>
 <code class="sourceCode R"><span><span class="va">pl_who_l</span> <span class="op">&lt;-</span> <span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">who</span><span class="op">)</span><span class="op">$</span><span class="fu">lazy</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">out</span> <span class="op">&lt;-</span> <span class="va">pl_who_l</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">pl_filter</span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/pl_filter.html">pl_filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/pl_drop_na.html">pl_drop_na</a></span><span class="op">(</span><span class="va">newrel_f3544</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="va">iso3</span>, <span class="va">year</span>, <span class="fu">matches</span><span class="op">(</span><span class="st">"^newrel(.*)_f"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -156,7 +157,7 @@ the <code>tidyverse</code>.</p>
 syntax after a chained expression:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="va">pl_who</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">pl_filter</span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/pl_filter.html">pl_filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="va">iso3</span>, <span class="va">year</span>, <span class="fu">matches</span><span class="op">(</span><span class="st">"^newrel(.*)_f"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">out</span></span>

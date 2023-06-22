@@ -65,12 +65,12 @@
 
 <dt>cols</dt>
 <dd><p>Columns to pivot into longer format. Can be anything accepted by
-`dplyr::select()`.</p></dd>
+<code>dplyr::select()</code>.</p></dd>
 
 
 <dt>names_to</dt>
 <dd><p>The (quoted) name of the column that will contain the column
-names specified by `cols`.</p></dd>
+names specified by <code>cols</code>.</p></dd>
 
 
 <dt>values_to</dt>
@@ -81,7 +81,7 @@ data stored in cell values.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">pl_relig_income</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="fu">tidypolars</span><span class="fu">::</span><span class="va"><a href="relig_income.html">relig_income</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">pl_relig_income</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">relig_income</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pl_relig_income</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (18, 11)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────────────────┬───────┬─────────┬─────────┬───┬──────────┬───────────┬───────┬──────────────┐</span>

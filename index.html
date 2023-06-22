@@ -92,12 +92,12 @@
 </h2>
 <p><code>polars</code> (both the Rust source and the R implementation) are amazing packages. I won’t argue here for the interest of using <code>polars</code>, there are already a lot of resources on <a href="https://rpolars.github.io/" class="external-link">its website</a>.</p>
 <p>One characteristic of <code>polars</code> is that its syntax is 1) extremely verbose, and 2) very close to the <code>pandas</code> syntax in Python. While this makes it quite easy to read, it is <strong>yet another syntax to learn</strong> for R users that are accustomed so far to either base R, <code>data.table</code> or the <code>tidyverse</code>.</p>
-<p>The objective of <code>tidypolars</code> is to <strong>provide functions that are very close to the <code>tidyverse</code> ones</strong> but that call the <code>polars</code> functions under the hood so that we don’t lose anything of its capacities. Morevoer, the objective is to keep <code>tidypolars</code> <strong>dependency-free</strong> with the exception of <code>polars</code> itself (which has no dependencies).</p>
+<p>The objective of <code>tidypolars</code> is to <strong>provide functions that are very close to the <code>tidyverse</code> ones</strong> but that call the <code>polars</code> functions under the hood so that we don’t lose anything of its capacities. Moreover, the objective is to keep <code>tidypolars</code> <strong>dependency-free</strong> with the exception of <code>polars</code> itself (which has no dependencies).</p>
 </div>
 <div class="section level2">
 <h2 id="general-syntax">General syntax<a class="anchor" aria-label="anchor" href="#general-syntax"></a>
 </h2>
-<p>Overall, you only need to add <code>pl_</code> as a prefix to the <code>tidyverse</code> function you’re used to. For example, <code>dplyr::mutate()</code> modifies classic <code>R</code> dataframes, and <code>tidypolars::pl_mutate()</code> modifies <code>polars</code>’ <code>DataFrame</code>s and <code>LazyFrame</code>s.</p>
+<p>Overall, you only need to add <code>pl_</code> as a prefix to the <code>tidyverse</code> function you’re used to. For example, <code>dplyr::mutate()</code> modifies classic <code>R</code> dataframes, and <code><a href="reference/pl_mutate.html">tidypolars::pl_mutate()</a></code> modifies <code>polars</code>’ <code>DataFrame</code>s and <code>LazyFrame</code>s.</p>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
@@ -126,7 +126,7 @@
 <span><span class="co">#&gt; └──────────────┴─────────────┴──────────────┴─────────────┴───────────┘</span></span>
 <span></span>
 <span><span class="va">pl_test</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">pl_filter</span><span class="op">(</span><span class="va">Species</span> <span class="op">==</span> <span class="st">"setosa"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/pl_filter.html">pl_filter</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">==</span> <span class="st">"setosa"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/pl_arrange.html">pl_arrange</a></span><span class="op">(</span><span class="va">Sepal.Width</span>, <span class="op">-</span><span class="va">Sepal.Length</span><span class="op">)</span></span>
 <span><span class="co">#&gt; shape: (50, 5)</span></span>
 <span><span class="co">#&gt; ┌──────────────┬─────────────┬──────────────┬─────────────┬─────────┐</span></span>
@@ -146,7 +146,7 @@
 <span><span class="co">#&gt; └──────────────┴─────────────┴──────────────┴─────────────┴─────────┘</span></span>
 <span></span>
 <span><span class="va">pl_test</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">pl_mutate</span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="reference/pl_mutate.html">pl_mutate</a></span><span class="op">(</span></span>
 <span>    Sepal.Total <span class="op">=</span> <span class="va">Sepal.Length</span> <span class="op">+</span> <span class="va">Sepal.Width</span>,</span>
 <span>    Petal.Total <span class="op">=</span> <span class="va">Petal.Length</span> <span class="op">+</span> <span class="va">Petal.Width</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -195,21 +195,8 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pola-rs/r-polars" class="external-link">polars</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/etiennebacher/tidypolars" class="external-link">tidypolars</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     filter, lag</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'data.table'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:dplyr':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     between, first, last</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  grp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="fl">1e7</span>, <span class="cn">TRUE</span><span class="op">)</span>,</span>
@@ -228,8 +215,8 @@
 <span>      <span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">'val2'</span><span class="op">)</span><span class="op">$</span><span class="fu">sum</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">alias</span><span class="op">(</span><span class="st">'y'</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>  tidypolars <span class="op">=</span> <span class="va">pl_test</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu">pl_group_by</span><span class="op">(</span><span class="va">grp</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu">pl_summarize</span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="reference/pl_group_by.html">pl_group_by</a></span><span class="op">(</span><span class="va">grp</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="reference/pl_summarize.html">pl_summarize</a></span><span class="op">(</span></span>
 <span>      x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">val1</span><span class="op">)</span>,</span>
 <span>      y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">val2</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
@@ -240,37 +227,37 @@
 <span>      y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">val2</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>  data.table <span class="op">=</span> <span class="va">dt_test</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">val1</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">val2</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">grp</span><span class="op">]</span>,</span>
-<span>  check <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  check <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  iterations <span class="op">=</span> <span class="fl">15</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Some expressions had a GC in every iteration; so filtering is</span></span>
 <span><span class="co">#&gt; disabled.</span></span>
 <span><span class="co">#&gt; # A tibble: 4 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars       82.4ms   86.1ms     11.5      139KB     0   </span></span>
-<span><span class="co">#&gt; 2 tidypolars   81.6ms   83.8ms     11.7      226KB     0   </span></span>
-<span><span class="co">#&gt; 3 dplyr         239ms  240.9ms      4.10     242MB     5.47</span></span>
-<span><span class="co">#&gt; 4 data.table  187.2ms  215.9ms      4.43     273MB     2.95</span></span>
+<span><span class="co">#&gt; 1 polars       88.4ms   92.1ms     10.6      139KB     0   </span></span>
+<span><span class="co">#&gt; 2 tidypolars   90.9ms   96.7ms     10.2      267KB     0   </span></span>
+<span><span class="co">#&gt; 3 dplyr       280.8ms  307.8ms      3.12     242MB     3.75</span></span>
+<span><span class="co">#&gt; 4 data.table  214.1ms  242.5ms      4.11     273MB     4.11</span></span>
 <span></span>
 <span><span class="fu">bench</span><span class="fu">::</span><span class="fu">mark</span><span class="op">(</span></span>
 <span>  polars <span class="op">=</span> <span class="va">pl_test</span><span class="op">$</span></span>
 <span>    <span class="fu">filter</span><span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"grp"</span><span class="op">)</span> <span class="op">==</span> <span class="st">"a"</span> <span class="op">|</span> <span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"grp"</span><span class="op">)</span> <span class="op">==</span> <span class="st">"b"</span><span class="op">)</span>,</span>
 <span>  tidypolars <span class="op">=</span> <span class="va">pl_test</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu">pl_filter</span><span class="op">(</span><span class="va">grp</span> <span class="op">==</span> <span class="st">"a"</span> <span class="op">|</span> <span class="va">grp</span> <span class="op">==</span> <span class="st">"b"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="reference/pl_filter.html">pl_filter</a></span><span class="op">(</span><span class="va">grp</span> <span class="op">==</span> <span class="st">"a"</span> <span class="op">|</span> <span class="va">grp</span> <span class="op">==</span> <span class="st">"b"</span><span class="op">)</span>,</span>
 <span>  dplyr <span class="op">=</span> <span class="va">test</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">grp</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  data.table <span class="op">=</span> <span class="va">dt_test</span><span class="op">[</span><span class="va">grp</span> <span class="op">%chin%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span><span class="op">]</span>,</span>
-<span>  check <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  check <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  iterations <span class="op">=</span> <span class="fl">15</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Some expressions had a GC in every iteration; so filtering is</span></span>
-<span><span class="co">#&gt; disabled.</span></span>
 <span><span class="co">#&gt; # A tibble: 4 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars       42.3ms   45.4ms     21.6     15.1KB     0   </span></span>
-<span><span class="co">#&gt; 2 tidypolars   41.7ms   45.6ms     21.9     11.6KB     0   </span></span>
-<span><span class="co">#&gt; 3 dplyr       241.7ms  284.1ms      3.52   281.9MB     7.04</span></span>
-<span><span class="co">#&gt; 4 data.table   24.4ms   25.4ms     36.2    100.6MB     1.91</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 polars       50.7ms   61.2ms     16.8     15.2KB     0   </span></span>
+<span><span class="co">#&gt; 2 tidypolars   43.9ms   58.6ms     17.4     11.6KB     0   </span></span>
+<span><span class="co">#&gt; 3 dplyr       243.8ms  250.2ms      4.00   281.9MB    38.0 </span></span>
+<span><span class="co">#&gt; 4 data.table   25.1ms   26.2ms     37.8    100.6MB     2.70</span></span></code></pre></div>
 </div>
 </div>
 
