@@ -3,17 +3,31 @@ using("tidypolars")
 
 exit_file("Still WIP")
 
+pl_iris <- pl$DataFrame(iris)
+
 expect_equal(
-  rearrange_expr("mean(pl$col('Sepal.Length'))"),
-  "(pl$col('Sepal.Length')$mean())"
+  build_polars_expr(
+    pl_iris,
+    list(x = str2lang("mean(Sepal.Length)"))
+  ),
+  list(
+    out_expr = "data$agg((pl_mean(pl$col('Sepal.Length')))$alias('x'))",
+    to_drop = NULL
+  )
 )
 
 expect_equal(
-  rearrange_expr("mean(pl$col('Sepal.Length')) + sum(pl$col('Petal.Length'))"),
-  "(pl$col('Sepal.Length')$mean() + pl$col('Petal.Length')$sum())"
-)
-
-expect_equal(
-  rearrange_expr("1 + sum(pl$col('Petal.Length'))"),
-  "(1 + pl$col('Petal.Length')$sum())"
+  build_polars_expr(
+    pl_iris,
+    list(
+      x = str2lang("mean(Sepal.Length)"),
+      y = str2lang("sd(Sepal.Length, na.rm = TRUE)"),
+      Petal.Length = NULL,
+      foo = NULL
+    )
+  ),
+  list(
+    out_expr = "data$agg((pl_mean(pl$col('Sepal.Length')))$alias('x'), (pl_sd(pl$col('Sepal.Length'), na.rm = TRUE))$alias('y'))",
+    to_drop = c("Petal.Length", "foo")
+  )
 )

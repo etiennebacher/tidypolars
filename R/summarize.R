@@ -23,25 +23,14 @@ pl_summarize <- function(data, ...) {
   check_polars_data(data)
 
   dots <- get_dots(...)
-  out_exprs <- rearrange_exprs(data, dots)
-  to_drop <- names(out_exprs[[1]])
+  out_expr <- build_polars_expr(data, dots)
 
-  out_exprs <- Filter(Negate(is.null), out_exprs[[2]])
-  out_exprs <- unlist(out_exprs)
-  out_exprs <- paste(out_exprs, collapse = ", ")
-
-  # deal with groups
-  grps <- paste0("'", pl_groups(data), "'")
-  mo <- attributes(data)$private$maintain_order
-  grps <- paste(grps, collapse = ", ")
-  out_expr <- paste0("data$agg(", out_exprs, ")$groupby(", grps, ", maintain_order = ", mo, ")")
-
-  out <- out_expr |>
+  out <- out_expr$out_expr |>
     str2lang() |>
     eval()
 
-  if (length(to_drop) > 0) {
-    out$drop(eval(to_drop))
+  if (length(out_expr$to_drop) > 0) {
+    out$drop(eval(out_expr$to_drop))
   } else {
     out
   }
@@ -55,3 +44,33 @@ summarize.GroupBy <- pl_summarize
 
 #' @export
 summarise.GroupBy <- pl_summarize
+
+
+build_polars_expr <- function(data, dots) {
+  out_exprs <- rearrange_exprs(data, dots)
+  to_drop <- names(out_exprs[[1]])
+
+  out_exprs <- Filter(Negate(is.null), out_exprs[[2]])
+  out_exprs <- unlist(out_exprs)
+  out_exprs <- paste(out_exprs, collapse = ", ")
+
+  # deal with groups
+  grps <- paste0("'", pl_groups(data), "'")
+  mo <- attributes(data)$private$maintain_order
+  grps <- paste(grps, collapse = ", ")
+
+  out_expr <- paste0("data$agg(", out_exprs, ")")
+  if (length(grps) > 1 || (length(grps) == 1 & grps != "''")) {
+    out_expr <- paste0(
+      out_expr, "$groupby(", grps, ", maintain_order = ", mo, ")"
+    )
+  }
+
+  return(
+    list(
+      out_expr = out_expr,
+      to_drop = to_drop
+    )
+  )
+
+}

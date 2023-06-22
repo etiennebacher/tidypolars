@@ -18,6 +18,8 @@ get_dots <- function(...) {
     unlist() |>
     unique()
 
+  selected <- selected[!is.na(selected)]
+
   columns[selected]
 }
 
