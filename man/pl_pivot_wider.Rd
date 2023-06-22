@@ -27,7 +27,7 @@ all these columns will be converted to character.}
 Pivot Data/LazyFrame from long to wide
 }
 \examples{
-pl_fish_encounters <- polars::pl$DataFrame(tidypolars::fish_encounters)
+pl_fish_encounters <- polars::pl$DataFrame(fish_encounters)
 
 pl_fish_encounters |>
   pl_pivot_wider(names_from = station, values_from = seen)

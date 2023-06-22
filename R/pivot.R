@@ -10,7 +10,7 @@
 #'
 #' @export
 #' @examples
-#' pl_relig_income <- polars::pl$DataFrame(tidypolars::relig_income)
+#' pl_relig_income <- polars::pl$DataFrame(relig_income)
 #' pl_relig_income
 #'
 #' pl_relig_income |>
@@ -47,7 +47,7 @@ pl_pivot_longer <- function(data, cols, names_to = "name", values_to = "value") 
 #'
 #' @export
 #' @examples
-#' pl_fish_encounters <- polars::pl$DataFrame(tidypolars::fish_encounters)
+#' pl_fish_encounters <- polars::pl$DataFrame(fish_encounters)
 #'
 #' pl_fish_encounters |>
 #'   pl_pivot_wider(names_from = station, values_from = seen)
