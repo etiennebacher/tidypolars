@@ -38,6 +38,7 @@ pl_group_by <- function(data, ..., maintain_order = TRUE) {
   data
 }
 
+#' @rdname pl_group_by
 #' @export
 
 pl_ungroup <- function(data) {
@@ -52,10 +53,3 @@ pl_ungroup <- function(data) {
   }
   data
 }
-
-
-#' @export
-group_by.DataFrame <- pl_group_by
-
-#' @export
-ungroup.GroupBy <- pl_ungroup

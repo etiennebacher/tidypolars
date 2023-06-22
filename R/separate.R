@@ -23,6 +23,3 @@ pl_separate <- function(data, col, into, sep = "[^[:alnum:]]+", remove = TRUE) {
 
   data
 }
-
-#' @export
-separate.DataFrame <- pl_separate

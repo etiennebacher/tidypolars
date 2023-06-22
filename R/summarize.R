@@ -39,13 +39,6 @@ pl_summarize <- function(data, ...) {
 #' @export
 pl_summarise <- pl_summarize
 
-#' @export
-summarize.GroupBy <- pl_summarize
-
-#' @export
-summarise.GroupBy <- pl_summarize
-
-
 build_polars_expr <- function(data, dots) {
   out_exprs <- rearrange_exprs(data, dots)
   to_drop <- names(out_exprs[[1]])

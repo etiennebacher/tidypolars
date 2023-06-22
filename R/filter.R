@@ -13,7 +13,7 @@
 #'
 #' @export
 #' @examples
-#' test <- polars::pl$DataFrame(iris)
+#' pl_iris <- polars::pl$DataFrame(iris)
 #'
 #' pl_filter(pl_iris, Sepal.Length < 5 & Species == "setosa")
 #'
@@ -21,13 +21,14 @@
 #'
 #' pl_filter(pl_iris, Species == "setosa" | is.na(Species))
 #'
+#' pl_filter(pl_iris, between(Sepal.Length, 5, 6, include_bounds = FALSE))
+#'
 #' iris2 <- iris
 #' iris2$Species <- as.character(iris2$Species)
 #' iris2 |>
 #'   as_polars() |>
 #'   pl_filter(Species %in% c("setosa", "virginica"))
 #'
-#' pl_filter(pl_iris, between(Sepal.Length, 5, 6, include_bounds = FALSE))
 
 pl_filter <- function(data, ...) {
 
@@ -103,9 +104,6 @@ pl_filter <- function(data, ...) {
     out
   }
 }
-
-#' @export
-filter.DataFrame <- pl_filter
 
 
 pl_special_filter_expr <- function() {

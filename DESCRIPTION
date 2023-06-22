@@ -21,14 +21,15 @@ Roxygen: list(markdown = TRUE)
 URL: https://github.com/etiennebacher/tidypolars
 BugReports: https://github.com/etiennebacher/tidypolars/issues
 Imports: 
-    dplyr,
     polars,
-    tidyr,
     utils
 Suggests: 
     knitr,
     rmarkdown,
     tinytest
+Enhances:
+    dplyr,
+    tidyr
 Depends: 
     R (>= 2.10)
 VignetteBuilder: knitr

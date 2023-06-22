@@ -83,9 +83,3 @@ pl_mutate <- function(data, ...) {
     out
   }
 }
-
-#' @export
-mutate.DataFrame <- pl_mutate
-
-#' @export
-mutate.GroupBy <- pl_mutate

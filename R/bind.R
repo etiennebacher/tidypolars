@@ -73,10 +73,3 @@ concat_ <- function(..., how) {
 
   pl$concat(dots, how = how)
 }
-
-#' @export
-bind_cols.DataFrame <- pl_bind_cols
-
-#' @export
-bind_rows.DataFrame <- pl_bind_rows
-

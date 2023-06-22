@@ -2,9 +2,12 @@
 % Please edit documentation in R/group_by.R
 \name{pl_group_by}
 \alias{pl_group_by}
+\alias{pl_ungroup}
 \title{Group by one or more variables}
 \usage{
 pl_group_by(data, ..., maintain_order = TRUE)
+
+pl_ungroup(data)
 }
 \arguments{
 \item{data}{A Polars Data/LazyFrame}

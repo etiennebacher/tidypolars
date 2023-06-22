@@ -22,5 +22,3 @@ pl_pull <- function(data, var) {
   data$select(pl$col(var))$to_series()$to_r()
 }
 
-#' @export
-pull.DataFrame <- pl_pull

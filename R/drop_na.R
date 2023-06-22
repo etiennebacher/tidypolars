@@ -21,6 +21,3 @@ pl_drop_na <- function(data, ...) {
   vars <- .select_nse_from_dots(data, ...)
   data$drop_nulls(eval(vars))
 }
-
-#' @export
-drop_na.DataFrame <- pl_drop_na

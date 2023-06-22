@@ -18,7 +18,8 @@ knitr::opts_chunk$set(
 library(polars)
 library(tidypolars)
 
-who <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/tidyr/who.csv")
+# who <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/tidyr/who.csv")
+who <- read.csv("who.csv")
 ```
 
 As said on the homepage, `tidypolars` provides functions that should be look very

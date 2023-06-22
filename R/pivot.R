@@ -90,10 +90,3 @@ pl_pivot_wider <- function(data, id_cols, names_from, values_from,
   }
 }
 
-
-
-#' @export
-pivot_longer.DataFrame <- pl_pivot_longer
-
-#' @export
-pivot_wider.DataFrame <- pl_pivot_wider

@@ -49,22 +49,3 @@ join_ <- function(x, y, by = NULL, how) {
   }
 
 }
-
-
-#' @export
-left_join.DataFrame <- pl_left_join
-
-#' @export
-right_join.DataFrame <- pl_right_join
-
-#' @export
-full_join.DataFrame <- pl_full_join
-
-#' @export
-semi_join.DataFrame <- pl_semi_join
-
-#' @export
-anti_join.DataFrame <- pl_anti_join
-
-#' @export
-inner_join.DataFrame <- pl_inner_join

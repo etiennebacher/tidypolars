@@ -19,9 +19,3 @@ pl_slice_tail <- function(data, n = 5) {
 pl_slice_head <- function(data, n = 5) {
   data$slice(offset = 0, length = n)
 }
-
-#' @export
-slice_head.DataFrame <- pl_slice_head
-
-#' @export
-slice_tail.DataFrame <- pl_slice_tail
