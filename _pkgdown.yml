@@ -21,6 +21,7 @@ reference:
       - pl_bind_rows
       - pl_collect
       - pl_distinct
+      - pl_filter
       - pl_mutate
       - pl_pull
       - pl_rename
