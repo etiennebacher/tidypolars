@@ -50,7 +50,7 @@ pl_fill <- function(data, ..., direction = c("down", "up", "downup", "updown")) 
   # the code for grouped data uses $over() inside $with_columns(), which
   # cannot be used with grouped data. Therefore I have to manually ungroup
   # the data
-  if (inherits(data2, "GroupBy") | inherits(data2, "GroupBy")) {
+  if (inherits(data2, "GroupBy") | inherits(data2, "LazyGroupBy")) {
     if (inherits(data2, "GroupBy")) {
       attributes(data2)$class <- "DataFrame"
     } else {

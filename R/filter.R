@@ -63,24 +63,45 @@ pl_filter <- function(data, ...) {
         ),
         tmp[j]
       )
-
       if (has_pl_special_filter) {
         tmp[j] <- reorder_filter_expr(tmp[j])
       }
-
       if (grepl("%in%", tmp[j])) {
         tmp[j] <- replace_in_operator(tmp[j])
       }
-
     }
 
     expr[i] <- paste(tmp, collapse = OPERATION)
   }
 
-  expr <- paste(expr, collapse = " & ") |>
-    str2lang()
+  expr <- paste(expr, collapse = " & ")
 
-  data$filter(eval(expr))
+  # the code for grouped data uses $over() inside $filter(), which
+  # cannot be used with grouped data. Therefore I have to manually ungroup
+  # the data
+  is_grouped <- !is.null(attributes(data)$pl_grps)
+  mo <- attributes(data)$private$maintain_order
+
+  if (is_grouped) {
+    data2 <- clone_grouped_data(data)
+    grps <- attributes(data2)$pl_grps
+    if (inherits(data2, "GroupBy")) {
+      attributes(data2)$class <- "DataFrame"
+    } else {
+      attributes(data2)$class <- "LazyFrame"
+    }
+    expr <- paste0(expr, "$over(grps)")
+  }
+
+  expr <- str2lang(expr)
+
+  out <- data$filter(eval(expr))
+
+  if (is_grouped) {
+    out$groupby(grps, maintain_order = mo)
+  } else {
+    out
+  }
 }
 
 #' @export

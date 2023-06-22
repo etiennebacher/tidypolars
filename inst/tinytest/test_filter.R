@@ -121,3 +121,17 @@ expect_dim(
   pl_filter(pl_iris, between(Sepal.Length, 5, 6, include_bounds = FALSE)),
   c(51, 5)
 )
+
+# with grouped data
+
+by_cyl <- mtcars |>
+  as_polars() |>
+  pl_group_by(cyl)
+
+expect_equal(
+  by_cyl |>
+    pl_filter(disp == max(disp)) |>
+    pl_pull(mpg),
+  c(21.4, 24.4, 10.4)
+)
+
