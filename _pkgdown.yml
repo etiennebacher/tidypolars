@@ -22,6 +22,7 @@ reference:
       - pl_collect
       - pl_distinct
       - pl_filter
+      - pl_group_by
       - pl_mutate
       - pl_pull
       - pl_rename
