@@ -59,8 +59,16 @@ concat_ <- function(..., how) {
 
   if (dots_is_a_single_list) dots <- unlist(dots)
 
-  if (any(vapply(dots, \(y) !inherits(y, "DataFrame"), FUN.VALUE = logical(1L)))) {
-    stop("Some elements in `...` are not a DataFrame.")
+  all_dataframe <- all(vapply(dots, \(y) {
+    inherits(y, "DataFrame")
+  }, FUN.VALUE = logical(1L)))
+
+  all_lazyframe <- all(vapply(dots, \(y) {
+    inherits(y, "LazyFrame")
+  }, FUN.VALUE = logical(1L)))
+
+  if (!all_lazyframe && !all_dataframe) {
+    stop("All elements in `...` must be of the same class (either DataFrame or LazyFrame).")
   }
 
   pl$concat(dots, how = how)
