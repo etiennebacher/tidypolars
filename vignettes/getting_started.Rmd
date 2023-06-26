@@ -22,6 +22,18 @@ library(tidypolars)
 who <- read.csv("who.csv")
 ```
 
+```{r echo=FALSE}
+if (packageVersion("polars") < "0.6.1") {
+  pl_colnames <- function(x) {
+    if (inherits(x, "DataFrame")) {
+      x$columns
+    } else if (inherits(x, "LazyFrame")) {
+      x$slice(0, 1)$collect()$columns
+    }
+  }
+} 
+```
+
 As said on the homepage, `tidypolars` provides functions that should be look very
 familiar to someone who is used to working with the `tidyverse`. 
 
