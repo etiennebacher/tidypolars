@@ -17,7 +17,7 @@
     registerS3method("slice_tail", "DataFrame", pl_slice_tail, envir = asNamespace("dplyr"))
     registerS3method("summarize", "GroupBy", pl_summarize, envir = asNamespace("dplyr"))
     registerS3method("summarise", "GroupBy", pl_summarise, envir = asNamespace("dplyr"))
-    registerS3method("ungroup", "DataFrame", pl_ungroup, envir = asNamespace("dplyr"))
+    registerS3method("ungroup", "GroupBy", pl_ungroup, envir = asNamespace("dplyr"))
   }
   if(requireNamespace("tidyr", quietly = TRUE)) {
     registerS3method("drop_na", "DataFrame", pl_drop_na, envir = asNamespace("tidyr"))

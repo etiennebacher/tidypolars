@@ -10,38 +10,35 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  eval = packageVersion("polars") > "0.6.1"
 )
 ```
+
+We're going to use the dataset `who` provided in `tidyr` but we need to convert it to the `polars` format.
 
 ```{r setup}
 library(polars)
 library(tidypolars)
 
 # who <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/tidyr/who.csv")
-who <- read.csv("who.csv")
+pl_who <- as_polars(read.csv("who.csv"))
 ```
 
-```{r echo=FALSE}
-if (packageVersion("polars") < "0.6.1") {
-  pl_colnames <- function(x) {
-    if (inherits(x, "DataFrame")) {
-      x$columns
-    } else if (inherits(x, "LazyFrame")) {
-      x$slice(0, 1)$collect()$columns
-    }
-  }
-} 
-```
+The objective of `tidypolars` is to provide functions whose syntax is close to
+the `tidyverse` while keeping the number of dependencies very low. Therefore, it
+can be used in two ways depending on whether you already the `tidyverse` or not.
 
-As said on the homepage, `tidypolars` provides functions that should be look very
-familiar to someone who is used to working with the `tidyverse`. 
+## You don't use the `tidyverse`
+
+`tidypolars` provides two types of functions: some that replicate functions from 
+the `tidyverse` and some that are "unique" to `polars`. The former are always
+prefixed with `pl_`. For example, `tidypolars::pl_filter()` is equivalent to 
+`dplyr::filter()`.
 
 Like with the `tidyverse`, you can pipe multiple `tidypolars` functions:
 
 ```{r}
-pl_who <- pl$DataFrame(who)
-
 pl_who |> 
   pl_filter(year > 1990) |> 
   pl_drop_na(newrel_f3544) |> 
@@ -52,7 +49,7 @@ If you use `polars`' lazy API, you need to call `pl_collect()` at the end of the
 chained expression:
 
 ```{r}
-pl_who_l <- pl$DataFrame(who)$lazy()
+pl_who_l <- as_polars(read.csv("who.csv"), lazy = TRUE)
 
 out <- pl_who_l |> 
   pl_filter(year > 1990) |> 
@@ -85,3 +82,45 @@ out$
   sort(c("iso3", "year"))
 ```
 
+The code above only depends on `polars` and some `R` core packages.
+
+## You already use the `tidyverse`
+
+While the syntax above is very close to the `tidyverse` one, it can be tedious to
+add the prefix `pl_` to every function. Therefore, if you already load `dplyr` or
+other `tidyverse` packages in your code, you simply need to use `as_polars()` on 
+your data (or read it with `polars` functions). The rest of the code doesn't need
+to change at all. 
+
+Here's an example of some `dplyr` code:
+
+```{r}
+library(dplyr, warn.conflicts = FALSE)
+
+starwars |> 
+  select(name, height, mass, species, sex) |> 
+  mutate(
+    BMI = mass / ((height/100) ^2)
+  ) |> 
+  select(BMI, everything()) |> 
+  rename_with(.fn = toupper)
+```
+
+You can simply use a `polars` dataset instead, without changing anything (apart
+from the argument name in `rename_with()`):
+
+```{r}
+library(tidypolars)
+
+starwars |> 
+  as_polars() |> 
+  select(name, height, mass, species, sex) |> 
+  mutate(
+    BMI = mass / ((height/100) ^2)
+  ) |> 
+  select(BMI, everything()) |> 
+  rename_with(fn = toupper)
+```
+
+**NOTE:** if you want to use the same functions as the `tidyverse` ones, you 
+**must** load `dplyr` or the related packages first.
