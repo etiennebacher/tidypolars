@@ -36,6 +36,7 @@ pl_summarize <- function(data, ...) {
   }
 }
 
+#' @rdname pl_summarize
 #' @export
 pl_summarise <- pl_summarize
 

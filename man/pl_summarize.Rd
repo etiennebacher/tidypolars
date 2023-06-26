@@ -2,9 +2,12 @@
 % Please edit documentation in R/summarize.R
 \name{pl_summarize}
 \alias{pl_summarize}
+\alias{pl_summarise}
 \title{Summarize each group down to one row}
 \usage{
 pl_summarize(data, ...)
+
+pl_summarise(data, ...)
 }
 \arguments{
 \item{data}{A Polars Data/LazyFrame}
