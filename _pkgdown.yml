@@ -12,6 +12,7 @@ reference:
       Functionalities from Polars
     contents:
       - as_polars
+      - make_unique_id
   - title: From `dplyr`
     desc: |
       Functions adapted from `dplyr` functions
