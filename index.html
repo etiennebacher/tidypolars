@@ -97,7 +97,7 @@
 <div class="section level2">
 <h2 id="general-syntax">General syntax<a class="anchor" aria-label="anchor" href="#general-syntax"></a>
 </h2>
-<p>Overall, you only need to add <code>pl_</code> as a prefix to the <code>tidyverse</code> function you’re used to. For example, <code>dplyr::mutate()</code> modifies classic <code>R</code> dataframes, and <code><a href="reference/pl_mutate.html">tidypolars::pl_mutate()</a></code> modifies <code>polars</code>’ <code>DataFrame</code>s and <code>LazyFrame</code>s.</p>
+<p>Overall, you only need to add <code>pl_</code> as a prefix to the <code>tidyverse</code> function you’re used to. For example, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate()</a></code> modifies classic <code>R</code> dataframes, and <code><a href="reference/pl_mutate.html">tidypolars::pl_mutate()</a></code> modifies <code>polars</code>’ <code>DataFrame</code>s and <code>LazyFrame</code>s.</p>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
@@ -221,8 +221,8 @@
 <span>      y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">val2</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>  dplyr <span class="op">=</span> <span class="va">test</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu">group_by</span><span class="op">(</span><span class="va">grp</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu">summarize</span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">grp</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
 <span>      x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">val1</span><span class="op">)</span>,</span>
 <span>      y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">val2</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
@@ -246,7 +246,7 @@
 <span>  tidypolars <span class="op">=</span> <span class="va">pl_test</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu"><a href="reference/pl_filter.html">pl_filter</a></span><span class="op">(</span><span class="va">grp</span> <span class="op">==</span> <span class="st">"a"</span> <span class="op">|</span> <span class="va">grp</span> <span class="op">==</span> <span class="st">"b"</span><span class="op">)</span>,</span>
 <span>  dplyr <span class="op">=</span> <span class="va">test</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">grp</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">grp</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  data.table <span class="op">=</span> <span class="va">dt_test</span><span class="op">[</span><span class="va">grp</span> <span class="op">%chin%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span><span class="op">]</span>,</span>
 <span>  check <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  iterations <span class="op">=</span> <span class="fl">15</span></span>

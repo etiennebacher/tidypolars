@@ -99,14 +99,31 @@ depending on whether you already the <code>tidyverse</code> or not.</p>
 replicate functions from the <code>tidyverse</code> and some that are
 “unique” to <code>polars</code>. The former are always prefixed with
 <code>pl_</code>. For example, <code><a href="../reference/pl_filter.html">tidypolars::pl_filter()</a></code> is
-equivalent to <code>dplyr::filter()</code>.</p>
+equivalent to <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter()</a></code>.</p>
 <p>Like with the <code>tidyverse</code>, you can pipe multiple
 <code>tidypolars</code> functions:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pl_who</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/pl_filter.html">pl_filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/pl_drop_na.html">pl_drop_na</a></span><span class="op">(</span><span class="va">newrel_f3544</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="va">iso3</span>, <span class="va">year</span>, <span class="fu">matches</span><span class="op">(</span><span class="st">"^newrel(.*)_f"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="va">iso3</span>, <span class="va">year</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">matches</a></span><span class="op">(</span><span class="st">"^newrel(.*)_f"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; shape: (183, 9)</span></span>
+<span><span class="co">#&gt; ┌──────┬──────┬───────────┬────────────┬───┬────────────┬──────────────┬──────────────┬────────────┐</span></span>
+<span><span class="co">#&gt; │ iso3 ┆ year ┆ newrel_f0 ┆ newrel_f15 ┆ … ┆ newrel_f35 ┆ newrel_f4554 ┆ newrel_f5564 ┆ newrel_f65 │</span></span>
+<span><span class="co">#&gt; │ ---  ┆ ---  ┆ 14        ┆ 24         ┆   ┆ 44         ┆ ---          ┆ ---          ┆ ---        │</span></span>
+<span><span class="co">#&gt; │ str  ┆ i32  ┆ ---       ┆ ---        ┆   ┆ ---        ┆ i32          ┆ i32          ┆ i32        │</span></span>
+<span><span class="co">#&gt; │      ┆      ┆ i32       ┆ i32        ┆   ┆ i32        ┆              ┆              ┆            │</span></span>
+<span><span class="co">#&gt; ╞══════╪══════╪═══════════╪════════════╪═══╪════════════╪══════════════╪══════════════╪════════════╡</span></span>
+<span><span class="co">#&gt; │ ALB  ┆ 2013 ┆ 5         ┆ 28         ┆ … ┆ 13         ┆ 18           ┆ 14           ┆ 34         │</span></span>
+<span><span class="co">#&gt; │ DZA  ┆ 2013 ┆ 50        ┆ 861        ┆ … ┆ 377        ┆ 267          ┆ 205          ┆ 352        │</span></span>
+<span><span class="co">#&gt; │ AND  ┆ 2013 ┆ 0         ┆ 0          ┆ … ┆ 1          ┆ 0            ┆ 0            ┆ 0          │</span></span>
+<span><span class="co">#&gt; │ AGO  ┆ 2013 ┆ 626       ┆ 2644       ┆ … ┆ 1671       ┆ 991          ┆ 481          ┆ 314        │</span></span>
+<span><span class="co">#&gt; │ …    ┆ …    ┆ …         ┆ …          ┆ … ┆ …          ┆ …            ┆ …            ┆ …          │</span></span>
+<span><span class="co">#&gt; │ VNM  ┆ 2013 ┆ 78        ┆ 1916       ┆ … ┆ 1671       ┆ 1715         ┆ 1954         ┆ 3110       │</span></span>
+<span><span class="co">#&gt; │ YEM  ┆ 2013 ┆ 522       ┆ 1194       ┆ … ┆ 825        ┆ 736          ┆ 512          ┆ 360        │</span></span>
+<span><span class="co">#&gt; │ ZMB  ┆ 2013 ┆ 1517      ┆ 2709       ┆ … ┆ 3752       ┆ 1754         ┆ 941          ┆ 669        │</span></span>
+<span><span class="co">#&gt; │ ZWE  ┆ 2013 ┆ 1252      ┆ 2069       ┆ … ┆ 3526       ┆ 1453         ┆ 811          ┆ 725        │</span></span>
+<span><span class="co">#&gt; └──────┴──────┴───────────┴────────────┴───┴────────────┴──────────────┴──────────────┴────────────┘</span></span></code></pre></div>
 <p>If you use <code>polars</code>’ lazy API, you need to call
 <code><a href="../reference/pl_collect.html">pl_collect()</a></code> at the end of the chained expression:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -115,30 +132,86 @@ equivalent to <code>dplyr::filter()</code>.</p>
 <span><span class="va">out</span> <span class="op">&lt;-</span> <span class="va">pl_who_l</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/pl_filter.html">pl_filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/pl_drop_na.html">pl_drop_na</a></span><span class="op">(</span><span class="va">newrel_f3544</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="va">iso3</span>, <span class="va">year</span>, <span class="fu">matches</span><span class="op">(</span><span class="st">"^newrel(.*)_f"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="va">iso3</span>, <span class="va">year</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">matches</a></span><span class="op">(</span><span class="st">"^newrel(.*)_f"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># this just prints the query</span></span>
 <span><span class="va">out</span></span>
+<span><span class="co">#&gt; [1] "polars LazyFrame naive plan: (run ldf$describe_optimized_plan() to see the optimized plan)"</span></span>
+<span><span class="co">#&gt;  SELECT [col("iso3"), col("year"), col("newrel_f014"), col("newrel_f1524"), col("newrel_f2534"), col("newrel_f3544"), col("newrel_f4554"), col("newrel_f5564"), col("newrel_f65")] FROM</span></span>
+<span><span class="co">#&gt;   FILTER col("newrel_f3544").is_not_null().fold([true]) FROM</span></span>
+<span><span class="co">#&gt;   FILTER [(col("year")) &gt; (1990.0)] FROM</span></span>
+<span><span class="co">#&gt;   DF ["X", "country", "iso2", "iso3"]; PROJECT */61 COLUMNS; SELECTION: "None"</span></span>
 <span></span>
 <span><span class="co"># this performs the query</span></span>
 <span><span class="va">out</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/pl_collect.html">pl_collect</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/pl_collect.html">pl_collect</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; shape: (183, 9)</span></span>
+<span><span class="co">#&gt; ┌──────┬──────┬───────────┬────────────┬───┬────────────┬──────────────┬──────────────┬────────────┐</span></span>
+<span><span class="co">#&gt; │ iso3 ┆ year ┆ newrel_f0 ┆ newrel_f15 ┆ … ┆ newrel_f35 ┆ newrel_f4554 ┆ newrel_f5564 ┆ newrel_f65 │</span></span>
+<span><span class="co">#&gt; │ ---  ┆ ---  ┆ 14        ┆ 24         ┆   ┆ 44         ┆ ---          ┆ ---          ┆ ---        │</span></span>
+<span><span class="co">#&gt; │ str  ┆ i32  ┆ ---       ┆ ---        ┆   ┆ ---        ┆ i32          ┆ i32          ┆ i32        │</span></span>
+<span><span class="co">#&gt; │      ┆      ┆ i32       ┆ i32        ┆   ┆ i32        ┆              ┆              ┆            │</span></span>
+<span><span class="co">#&gt; ╞══════╪══════╪═══════════╪════════════╪═══╪════════════╪══════════════╪══════════════╪════════════╡</span></span>
+<span><span class="co">#&gt; │ ALB  ┆ 2013 ┆ 5         ┆ 28         ┆ … ┆ 13         ┆ 18           ┆ 14           ┆ 34         │</span></span>
+<span><span class="co">#&gt; │ DZA  ┆ 2013 ┆ 50        ┆ 861        ┆ … ┆ 377        ┆ 267          ┆ 205          ┆ 352        │</span></span>
+<span><span class="co">#&gt; │ AND  ┆ 2013 ┆ 0         ┆ 0          ┆ … ┆ 1          ┆ 0            ┆ 0            ┆ 0          │</span></span>
+<span><span class="co">#&gt; │ AGO  ┆ 2013 ┆ 626       ┆ 2644       ┆ … ┆ 1671       ┆ 991          ┆ 481          ┆ 314        │</span></span>
+<span><span class="co">#&gt; │ …    ┆ …    ┆ …         ┆ …          ┆ … ┆ …          ┆ …            ┆ …            ┆ …          │</span></span>
+<span><span class="co">#&gt; │ VNM  ┆ 2013 ┆ 78        ┆ 1916       ┆ … ┆ 1671       ┆ 1715         ┆ 1954         ┆ 3110       │</span></span>
+<span><span class="co">#&gt; │ YEM  ┆ 2013 ┆ 522       ┆ 1194       ┆ … ┆ 825        ┆ 736          ┆ 512          ┆ 360        │</span></span>
+<span><span class="co">#&gt; │ ZMB  ┆ 2013 ┆ 1517      ┆ 2709       ┆ … ┆ 3752       ┆ 1754         ┆ 941          ┆ 669        │</span></span>
+<span><span class="co">#&gt; │ ZWE  ┆ 2013 ┆ 1252      ┆ 2069       ┆ … ┆ 3526       ┆ 1453         ┆ 811          ┆ 725        │</span></span>
+<span><span class="co">#&gt; └──────┴──────┴───────────┴────────────┴───┴────────────┴──────────────┴──────────────┴────────────┘</span></span></code></pre></div>
 <p><code>tidypolars</code> always return a <code>DataFrame</code> or a
 <code>LazyFrame</code> so you can still use <code>polars</code> original
 syntax after a chained expression:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="va">pl_who</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/pl_filter.html">pl_filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="va">iso3</span>, <span class="va">year</span>, <span class="fu">matches</span><span class="op">(</span><span class="st">"^newrel(.*)_f"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="va">iso3</span>, <span class="va">year</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">matches</a></span><span class="op">(</span><span class="st">"^newrel(.*)_f"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">out</span></span>
+<span><span class="co">#&gt; shape: (4_908, 9)</span></span>
+<span><span class="co">#&gt; ┌──────┬──────┬───────────┬────────────┬───┬────────────┬──────────────┬──────────────┬────────────┐</span></span>
+<span><span class="co">#&gt; │ iso3 ┆ year ┆ newrel_f0 ┆ newrel_f15 ┆ … ┆ newrel_f35 ┆ newrel_f4554 ┆ newrel_f5564 ┆ newrel_f65 │</span></span>
+<span><span class="co">#&gt; │ ---  ┆ ---  ┆ 14        ┆ 24         ┆   ┆ 44         ┆ ---          ┆ ---          ┆ ---        │</span></span>
+<span><span class="co">#&gt; │ str  ┆ i32  ┆ ---       ┆ ---        ┆   ┆ ---        ┆ i32          ┆ i32          ┆ i32        │</span></span>
+<span><span class="co">#&gt; │      ┆      ┆ i32       ┆ i32        ┆   ┆ i32        ┆              ┆              ┆            │</span></span>
+<span><span class="co">#&gt; ╞══════╪══════╪═══════════╪════════════╪═══╪════════════╪══════════════╪══════════════╪════════════╡</span></span>
+<span><span class="co">#&gt; │ AFG  ┆ 1991 ┆ null      ┆ null       ┆ … ┆ null       ┆ null         ┆ null         ┆ null       │</span></span>
+<span><span class="co">#&gt; │ AFG  ┆ 1992 ┆ null      ┆ null       ┆ … ┆ null       ┆ null         ┆ null         ┆ null       │</span></span>
+<span><span class="co">#&gt; │ AFG  ┆ 1993 ┆ null      ┆ null       ┆ … ┆ null       ┆ null         ┆ null         ┆ null       │</span></span>
+<span><span class="co">#&gt; │ AFG  ┆ 1994 ┆ null      ┆ null       ┆ … ┆ null       ┆ null         ┆ null         ┆ null       │</span></span>
+<span><span class="co">#&gt; │ …    ┆ …    ┆ …         ┆ …          ┆ … ┆ …          ┆ …            ┆ …            ┆ …          │</span></span>
+<span><span class="co">#&gt; │ ZWE  ┆ 2010 ┆ null      ┆ null       ┆ … ┆ null       ┆ null         ┆ null         ┆ null       │</span></span>
+<span><span class="co">#&gt; │ ZWE  ┆ 2011 ┆ null      ┆ null       ┆ … ┆ null       ┆ null         ┆ null         ┆ null       │</span></span>
+<span><span class="co">#&gt; │ ZWE  ┆ 2012 ┆ null      ┆ null       ┆ … ┆ null       ┆ null         ┆ null         ┆ null       │</span></span>
+<span><span class="co">#&gt; │ ZWE  ┆ 2013 ┆ 1252      ┆ 2069       ┆ … ┆ 3526       ┆ 1453         ┆ 811          ┆ 725        │</span></span>
+<span><span class="co">#&gt; └──────┴──────┴───────────┴────────────┴───┴────────────┴──────────────┴──────────────┴────────────┘</span></span>
 <span></span>
 <span><span class="va">out</span><span class="op">$</span></span>
 <span>  <span class="fu">groupby</span><span class="op">(</span><span class="st">"iso3"</span>, maintain_order <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span></span>
 <span>  <span class="fu">agg</span><span class="op">(</span></span>
 <span>    <span class="va">pl</span><span class="op">$</span><span class="fu">all</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">$</span></span>
-<span>  <span class="fu">sort</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3"</span>, <span class="st">"year"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">sort</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3"</span>, <span class="st">"year"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; shape: (219, 9)</span></span>
+<span><span class="co">#&gt; ┌──────┬────────┬───────────┬────────────┬───┬────────────┬────────────┬──────────────┬────────────┐</span></span>
+<span><span class="co">#&gt; │ iso3 ┆ year   ┆ newrel_f0 ┆ newrel_f15 ┆ … ┆ newrel_f35 ┆ newrel_f45 ┆ newrel_f5564 ┆ newrel_f65 │</span></span>
+<span><span class="co">#&gt; │ ---  ┆ ---    ┆ 14        ┆ 24         ┆   ┆ 44         ┆ 54         ┆ ---          ┆ ---        │</span></span>
+<span><span class="co">#&gt; │ str  ┆ f64    ┆ ---       ┆ ---        ┆   ┆ ---        ┆ ---        ┆ f64          ┆ f64        │</span></span>
+<span><span class="co">#&gt; │      ┆        ┆ f64       ┆ f64        ┆   ┆ f64        ┆ f64        ┆              ┆            │</span></span>
+<span><span class="co">#&gt; ╞══════╪════════╪═══════════╪════════════╪═══╪════════════╪════════════╪══════════════╪════════════╡</span></span>
+<span><span class="co">#&gt; │ ABW  ┆ 2002.0 ┆ null      ┆ 1.0        ┆ … ┆ null       ┆ 1.0        ┆ 2.0          ┆ 2.0        │</span></span>
+<span><span class="co">#&gt; │ AFG  ┆ 2002.0 ┆ 1749.0    ┆ null       ┆ … ┆ null       ┆ null       ┆ null         ┆ null       │</span></span>
+<span><span class="co">#&gt; │ AGO  ┆ 2002.0 ┆ 626.0     ┆ 2644.0     ┆ … ┆ 1671.0     ┆ 991.0      ┆ 481.0        ┆ 314.0      │</span></span>
+<span><span class="co">#&gt; │ AIA  ┆ 2002.0 ┆ 0.0       ┆ 0.0        ┆ … ┆ 0.0        ┆ 0.0        ┆ 0.0          ┆ 0.0        │</span></span>
+<span><span class="co">#&gt; │ …    ┆ …      ┆ …         ┆ …          ┆ … ┆ …          ┆ …          ┆ …            ┆ …          │</span></span>
+<span><span class="co">#&gt; │ YEM  ┆ 2002.0 ┆ 522.0     ┆ 1194.0     ┆ … ┆ 825.0      ┆ 736.0      ┆ 512.0        ┆ 360.0      │</span></span>
+<span><span class="co">#&gt; │ ZAF  ┆ 2002.0 ┆ 18054.0   ┆ 21166.0    ┆ … ┆ 29297.0    ┆ 15910.0    ┆ 7807.0       ┆ 5672.0     │</span></span>
+<span><span class="co">#&gt; │ ZMB  ┆ 2002.0 ┆ 1517.0    ┆ 2709.0     ┆ … ┆ 3752.0     ┆ 1754.0     ┆ 941.0        ┆ 669.0      │</span></span>
+<span><span class="co">#&gt; │ ZWE  ┆ 2002.0 ┆ 1252.0    ┆ 2069.0     ┆ … ┆ 3526.0     ┆ 1453.0     ┆ 811.0        ┆ 725.0      │</span></span>
+<span><span class="co">#&gt; └──────┴────────┴───────────┴────────────┴───┴────────────┴────────────┴──────────────┴────────────┘</span></span></code></pre></div>
 <p>The code above only depends on <code>polars</code> and some
 <code>R</code> core packages.</p>
 </div>
@@ -157,26 +230,56 @@ change at all.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">starwars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">select</span><span class="op">(</span><span class="va">name</span>, <span class="va">height</span>, <span class="va">mass</span>, <span class="va">species</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">height</span>, <span class="va">mass</span>, <span class="va">species</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    BMI <span class="op">=</span> <span class="va">mass</span> <span class="op">/</span> <span class="op">(</span><span class="op">(</span><span class="va">height</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span> <span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">select</span><span class="op">(</span><span class="va">BMI</span>, <span class="fu">everything</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">rename_with</span><span class="op">(</span>.fn <span class="op">=</span> <span class="va">toupper</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">BMI</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename_with</a></span><span class="op">(</span>.fn <span class="op">=</span> <span class="va">toupper</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 87 × 6</span></span></span>
+<span><span class="co">#&gt;      BMI NAME               HEIGHT  MASS SPECIES SEX   </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  26.0 Luke Skywalker        172    77 Human   male  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  26.9 C-3PO                 167    75 Droid   none  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  34.7 R2-D2                  96    32 Droid   none  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  33.3 Darth Vader           202   136 Human   male  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  21.8 Leia Organa           150    49 Human   female</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  37.9 Owen Lars             178   120 Human   male  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  27.5 Beru Whitesun lars    165    75 Human   female</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  34.0 R5-D4                  97    32 Droid   none  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  25.1 Biggs Darklighter     183    84 Human   male  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  23.2 Obi-Wan Kenobi        182    77 Human   male  </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 77 more rows</span></span></span></code></pre></div>
 <p>You can simply use a <code>polars</code> dataset instead, without
 changing anything (apart from the argument name in
-<code>rename_with()</code>):</p>
+<code><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename_with()</a></code>):</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/etiennebacher/tidypolars" class="external-link">tidypolars</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">starwars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">select</span><span class="op">(</span><span class="va">name</span>, <span class="va">height</span>, <span class="va">mass</span>, <span class="va">species</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">height</span>, <span class="va">mass</span>, <span class="va">species</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    BMI <span class="op">=</span> <span class="va">mass</span> <span class="op">/</span> <span class="op">(</span><span class="op">(</span><span class="va">height</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span> <span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">select</span><span class="op">(</span><span class="va">BMI</span>, <span class="fu">everything</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">rename_with</span><span class="op">(</span>fn <span class="op">=</span> <span class="va">toupper</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">BMI</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename_with</a></span><span class="op">(</span>fn <span class="op">=</span> <span class="va">toupper</span><span class="op">)</span></span>
+<span><span class="co">#&gt; shape: (87, 6)</span></span>
+<span><span class="co">#&gt; ┌───────────┬────────────────┬────────┬───────┬─────────┬────────┐</span></span>
+<span><span class="co">#&gt; │ BMI       ┆ NAME           ┆ HEIGHT ┆ MASS  ┆ SPECIES ┆ SEX    │</span></span>
+<span><span class="co">#&gt; │ ---       ┆ ---            ┆ ---    ┆ ---   ┆ ---     ┆ ---    │</span></span>
+<span><span class="co">#&gt; │ f64       ┆ str            ┆ i32    ┆ f64   ┆ str     ┆ str    │</span></span>
+<span><span class="co">#&gt; ╞═══════════╪════════════════╪════════╪═══════╪═════════╪════════╡</span></span>
+<span><span class="co">#&gt; │ 26.027582 ┆ Luke Skywalker ┆ 172    ┆ 77.0  ┆ Human   ┆ male   │</span></span>
+<span><span class="co">#&gt; │ 26.892323 ┆ C-3PO          ┆ 167    ┆ 75.0  ┆ Droid   ┆ none   │</span></span>
+<span><span class="co">#&gt; │ 34.722222 ┆ R2-D2          ┆ 96     ┆ 32.0  ┆ Droid   ┆ none   │</span></span>
+<span><span class="co">#&gt; │ 33.330066 ┆ Darth Vader    ┆ 202    ┆ 136.0 ┆ Human   ┆ male   │</span></span>
+<span><span class="co">#&gt; │ …         ┆ …              ┆ …      ┆ …     ┆ …       ┆ …      │</span></span>
+<span><span class="co">#&gt; │ null      ┆ Poe Dameron    ┆ null   ┆ null  ┆ Human   ┆ male   │</span></span>
+<span><span class="co">#&gt; │ null      ┆ BB8            ┆ null   ┆ null  ┆ Droid   ┆ none   │</span></span>
+<span><span class="co">#&gt; │ null      ┆ Captain Phasma ┆ null   ┆ null  ┆ null    ┆ null   │</span></span>
+<span><span class="co">#&gt; │ 16.528926 ┆ Padmé Amidala  ┆ 165    ┆ 45.0  ┆ Human   ┆ female │</span></span>
+<span><span class="co">#&gt; └───────────┴────────────────┴────────┴───────┴─────────┴────────┘</span></span></code></pre></div>
 <p><strong>NOTE:</strong> if you want to use the same functions as the
 <code>tidyverse</code> ones, you <strong>must</strong> load
 <code>dplyr</code> or the related packages first.</p>
