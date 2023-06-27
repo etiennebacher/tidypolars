@@ -36,7 +36,7 @@ jobs:
             "https://github.com/pola-rs/r-polars/releases/latest/download/polars__x86_64-pc-linux-gnu.gz",
             repos = NULL
           )
-          install.packages("pkgdown")
+          install.packages(c("pkgdown", "dplyr", "tidyr"))
         shell: Rscript {0}
 
       - name: Build site
