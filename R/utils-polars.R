@@ -1,7 +1,7 @@
 pl_colnames <- function(x) {
 
   # temp hack while polars devel version is not available in binary
-  if (packageVersion("polars") > "0.6.1") {
+  if (packageVersion("polars") > "0.6.1.9000") {
     if (inherits(x, "DataFrame") | inherits(x, "LazyFrame")) {
       x$columns
     } else if (inherits(x, "GroupBy") | inherits(x, "LazyGroupBy")) {
