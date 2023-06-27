@@ -10,8 +10,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  eval = packageVersion("polars") > "0.6.1"
+  comment = "#>"
 )
 ```
 
