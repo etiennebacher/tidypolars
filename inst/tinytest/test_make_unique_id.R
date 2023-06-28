@@ -14,12 +14,12 @@ expect_equal(
 
 expect_colnames(
   make_unique_id(test, am, gear),
-  c(pl_colnames(test), "hash")
+  c(test$columns, "hash")
 )
 
 expect_colnames(
   make_unique_id(test, am, gear, new_col = "foo"),
-  c(pl_colnames(test), "foo")
+  c(test$columns, "foo")
 )
 
 mtcars2 <- mtcars
@@ -30,3 +30,4 @@ expect_error(
   make_unique_id(test2, am, gear),
   "Column `hash` already exists"
 )
+

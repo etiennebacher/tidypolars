@@ -43,6 +43,7 @@ reference:
       - pl_pivot_longer
       - pl_pivot_wider
       - pl_replace_na
+      - pl_separate
   - title: Datasets
     desc: |
       Datasets reexported from various tidyverse packages

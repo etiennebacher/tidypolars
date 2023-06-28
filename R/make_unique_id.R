@@ -12,7 +12,7 @@
 make_unique_id <- function(data, ..., new_col = "hash") {
   check_polars_data(data)
   if ("hash" %in% pl_colnames(data)) {
-    stop("Column `hash` already exists. Please use a new name for the argument `new_col`.")
+    stop("Column `hash` already exists. Please use a new name with the argument `new_col`.")
   }
   vars <- .select_nse_from_dots(data, ...)
   if (length(vars) == 0) vars <- pl_colnames(data)
