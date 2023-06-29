@@ -82,6 +82,21 @@ expect_dim(
 )
 
 expect_dim(
+  pl_filter(pl_mtcars, cyl %in% 4:5 & am %in% 1),
+  c(8, 11)
+)
+
+expect_dim(
+  pl_filter(pl_mtcars, cyl %in% 4:5, am %in% 1),
+  c(8, 11)
+)
+
+expect_dim(
+  pl_filter(pl_mtcars, cyl %in% 4:5 | am %in% 1),
+  c(16, 11)
+)
+
+expect_dim(
   pl_filter(pl_mtcars, cyl %in% 4:5, vs == 1),
   c(10, 11)
 )

@@ -54,6 +54,10 @@ pl_filter <- function(data, ...) {
       tmp <- strsplit(tmp, "\\|")[[1]] |>
         trimws()
       OPERATION <- "|"
+    } else if (grepl("\\&", tmp)) {
+      tmp <- strsplit(tmp, "\\&")[[1]] |>
+        trimws()
+      OPERATION <- "&"
     }
 
     # deal with special functions is.na, is.nan, etc.
