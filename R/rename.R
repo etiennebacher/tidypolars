@@ -37,7 +37,7 @@ pl_rename <- function(data, ...) {
 #' @rdname pl_rename
 #' @export
 
-pl_rename_with <- function(data, fn, cols = everything(), ...) {
+pl_rename_with <- function(data, fn, cols = "all", ...) {
   check_polars_data(data)
   cols <- deparse(substitute(cols))
   to_replace <- .select_nse_from_var(data, cols)

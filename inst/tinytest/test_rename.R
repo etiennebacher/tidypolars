@@ -1,8 +1,6 @@
 source("helpers.R")
 using("tidypolars")
 
-exit_if_not(packageVersion("polars") > "0.6.1")
-
 pl_test <- polars::pl$DataFrame(mtcars)
 
 test1 <- pl_rename(pl_test, miles_per_gallon = "mpg", n_cyl = "cyl") |>
@@ -28,6 +26,13 @@ expect_true("MPG" %in% test3)
 expect_true("CYL" %in% test3)
 expect_false("mpg" %in% test3)
 expect_false("cyl" %in% test3)
+
+test3bis <- pl_rename_with(pl_test, toupper) |>
+  pl_colnames()
+
+expect_true("DISP" %in% test3bis)
+expect_true("DRAT" %in% test3bis)
+expect_false("mpg" %in% test3bis)
 
 test4 <- pl_rename_with(pl_test, toupper, contains("p")) |>
   pl_colnames()
