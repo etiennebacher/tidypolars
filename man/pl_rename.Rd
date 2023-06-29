@@ -7,7 +7,7 @@
 \usage{
 pl_rename(data, ...)
 
-pl_rename_with(data, fn, cols = everything(), ...)
+pl_rename_with(data, fn, cols = "all", ...)
 }
 \arguments{
 \item{data}{A Polars Data/LazyFrame}
