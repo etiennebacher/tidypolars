@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 ---
 
-:warning: If you're looking for the Python package "tidypolars" by Mark Fairbanks,
+:warning: If you're looking for the Python package "tidypolars",
 you're on the wrong repo. The right one is here: [markfairbanks/tidypolars](https://github.com/markfairbanks/tidypolars) :warning:
 
 ---

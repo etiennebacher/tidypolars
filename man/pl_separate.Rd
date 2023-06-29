@@ -9,7 +9,7 @@ pl_separate(data, col, into, sep = "[^[:alnum:]]+", remove = TRUE)
 \arguments{
 \item{data}{A Polars Data/LazyFrame}
 
-\item{col}{Column to expand}
+\item{col}{Column to split}
 
 \item{into}{Character vector containing the names of new variables to create.
 Use \code{NA} to omit the variable in the output.}

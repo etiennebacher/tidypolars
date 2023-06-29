@@ -4,7 +4,7 @@
 #' possible.
 #'
 #' @param data A Polars Data/LazyFrame
-#' @param col Column to expand
+#' @param col Column to split
 #' @param into Character vector containing the names of new variables to create.
 #' Use `NA` to omit the variable in the output.
 #' @param sep String that is used to split the column.

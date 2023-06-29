@@ -5,8 +5,8 @@
 
 ------------------------------------------------------------------------
 
-:warning: If you’re looking for the Python package “tidypolars” by Mark
-Fairbanks, you’re on the wrong repo. The right one is here:
+:warning: If you’re looking for the Python package “tidypolars”, you’re
+on the wrong repo. The right one is here:
 [markfairbanks/tidypolars](https://github.com/markfairbanks/tidypolars)
 :warning:
 
@@ -190,10 +190,10 @@ bench::mark(
 #> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars       88.4ms   92.1ms     10.6      139KB     0   
-#> 2 tidypolars   90.9ms   96.7ms     10.2      267KB     0   
-#> 3 dplyr       280.8ms  307.8ms      3.12     242MB     3.75
-#> 4 data.table  214.1ms  242.5ms      4.11     273MB     4.11
+#> 1 polars       79.2ms   84.8ms     11.8      139KB    0    
+#> 2 tidypolars   89.5ms  100.4ms      9.62     250KB    0.641
+#> 3 dplyr       247.7ms  289.6ms      3.18     242MB    3.39 
+#> 4 data.table  172.1ms  199.4ms      4.94     273MB    4.94
 
 bench::mark(
   polars = pl_test$
@@ -209,8 +209,8 @@ bench::mark(
 #> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars       50.7ms   61.2ms     16.8     15.2KB     0   
-#> 2 tidypolars   43.9ms   58.6ms     17.4     11.6KB     0   
-#> 3 dplyr       243.8ms  250.2ms      4.00   281.9MB    38.0 
-#> 4 data.table   25.1ms   26.2ms     37.8    100.6MB     2.70
+#> 1 polars       38.7ms   42.4ms     22.9     15.3KB     0   
+#> 2 tidypolars   43.7ms   45.6ms     21.5     37.3KB     0   
+#> 3 dplyr       258.5ms  258.5ms      3.87   281.9MB    61.9 
+#> 4 data.table   25.5ms   28.4ms     35.5    100.6MB     2.54
 ```
