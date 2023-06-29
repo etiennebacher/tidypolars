@@ -25,6 +25,12 @@
     <loc>/reference/as_polars.html</loc>
   </url>
   <url>
+    <loc>/reference/expect_colnames.html</loc>
+  </url>
+  <url>
+    <loc>/reference/expect_dim.html</loc>
+  </url>
+  <url>
     <loc>/reference/fish_encounters.html</loc>
   </url>
   <url>
@@ -44,6 +50,9 @@
   </url>
   <url>
     <loc>/reference/pl_collect.html</loc>
+  </url>
+  <url>
+    <loc>/reference/pl_colnames.html</loc>
   </url>
   <url>
     <loc>/reference/pl_distinct.html</loc>
@@ -80,6 +89,9 @@
   </url>
   <url>
     <loc>/reference/pl_select.html</loc>
+  </url>
+  <url>
+    <loc>/reference/pl_separate.html</loc>
   </url>
   <url>
     <loc>/reference/pl_slice.html</loc>
