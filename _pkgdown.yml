@@ -13,6 +13,7 @@ reference:
     contents:
       - as_polars
       - make_unique_id
+      - pl_colnames
   - title: From `dplyr`
     desc: |
       Functions adapted from `dplyr` functions
