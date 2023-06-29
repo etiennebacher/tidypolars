@@ -30,6 +30,7 @@ reference:
       - pl_rename
       - pl_rename_with
       - pl_select
+      - pl_separate
       - pl_slice_head
       - pl_slice_tail
       - pl_summarize
