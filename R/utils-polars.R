@@ -1,3 +1,9 @@
+#' Get column names of a Polars Data/LazyFrame
+#'
+#' @param x A Polars Data/LazyFrame or GroupBy/LazyGroupBy
+#'
+#' @return A character vector with the column names
+#' @export
 pl_colnames <- function(x) {
 
   # temp hack while polars devel version is not available in binary
