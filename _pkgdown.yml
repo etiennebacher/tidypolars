@@ -18,10 +18,12 @@ reference:
     desc: |
       Functions adapted from `dplyr` functions
     contents:
+      - pl_add_count
       - pl_arrange
       - pl_bind_cols
       - pl_bind_rows
       - pl_collect
+      - pl_count
       - pl_distinct
       - pl_filter
       - pl_group_by

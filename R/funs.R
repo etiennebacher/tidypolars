@@ -177,11 +177,6 @@ pl_cosh <- function(x, ...) {
   x$cosh()
 }
 
-pl_count <- function(x, ...) {
-  check_empty_dots(...)
-  x$count()
-}
-
 pl_counts <- function(x, ...) {
   check_empty_dots(...)
   x$counts()
