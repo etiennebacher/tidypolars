@@ -6,7 +6,7 @@
 #' @param name Name of the new column.
 #'
 #' @export
-#' @examples
+#' @examplesIf packageVersion("polars") >= "0.6.2"
 #' test <- polars::pl$DataFrame(mtcars)
 #' pl_count(test, cyl)
 #'
@@ -40,13 +40,9 @@ count_ <- function(data, vars, sort, name, new_col = FALSE) {
         pl$count()$alias(name)
       )
     } else {
-      # TODO: need r-polars to accept a vector in $over() otherwise I need to use
-      # dirty tricks like this
-      expr <- paste0("data$with_columns(
-        pl$count()$alias(name)$over('", paste(eval(vars), collapse = "', '"), "')
-      )")
-      out <- str2lang(expr) |>
-        eval()
+      out <- data$with_columns(
+        pl$count()$alias(name)$over(vars)
+      )
     }
   } else {
     if (length(vars) == 0) {
