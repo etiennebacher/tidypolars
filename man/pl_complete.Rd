@@ -9,11 +9,8 @@ pl_complete(data, ...)
 \arguments{
 \item{data}{A Polars Data/LazyFrame}
 
-\item{...}{
-  Arguments passed on to \code{\link[=pl_select]{pl_select}}
-  \describe{
-    \item{\code{}}{}
-  }}
+\item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
+column numbers, select helpers, etc.}
 }
 \description{
 Turns implicit missing values into explicit missing values. This is useful

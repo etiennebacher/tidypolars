@@ -5,7 +5,7 @@
 #' work with grouped data yet.
 #'
 #' @param data A Polars Data/LazyFrame
-#' @inheritDotParams pl_select
+#' @inheritParams pl_select
 #'
 #' @export
 #' @examplesIf packageVersion("polars") >= "0.6.2"
