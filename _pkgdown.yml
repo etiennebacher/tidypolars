@@ -42,6 +42,7 @@ reference:
     desc: |
       Functions adapted from `tidyr` functions
     contents:
+      - pl_complete
       - pl_drop_na
       - pl_fill
       - pl_pivot_longer

@@ -24,6 +24,7 @@
     registerS3method("ungroup", "GroupBy", pl_ungroup, envir = asNamespace("dplyr"))
   }
   if(requireNamespace("tidyr", quietly = TRUE)) {
+    registerS3method("complete", "DataFrame", pl_complete, envir = asNamespace("tidyr"))
     registerS3method("drop_na", "DataFrame", pl_drop_na, envir = asNamespace("tidyr"))
     registerS3method("fill", "DataFrame", pl_fill, envir = asNamespace("tidyr"))
     registerS3method("pivot_longer", "DataFrame", pl_pivot_longer, envir = asNamespace("tidyr"))
