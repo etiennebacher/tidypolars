@@ -132,6 +132,31 @@ pl_by <- function(x, ...) {
   x$by()
 }
 
+pl_case_when <- function(...) {
+  dots <- get_dots(...)
+
+  if (!".default" %in% names(dots)) {
+    dots[[length(dots) + 1]] <- NA
+    names(dots)[length(dots)] <- ".default"
+  }
+
+  exprs <- lapply(seq_along(dots), \(x) {
+    dep <- safe_deparse(dots[[x]])
+
+    if (x == length(dots)) {
+      return(paste0("$otherwise(", dep, ")"))
+    }
+    spl <- strsplit(dep, "~")[[1]] |>
+      trimws()
+    paste0("$when(", spl[1], ")$then(", spl[2], ")")
+  }) |>
+    paste(collapse = "")
+
+  paste0("pl", exprs) |>
+    str2lang() |>
+    eval()
+}
+
 pl_cast <- function(x, ...) {
   check_empty_dots(...)
   x$cast()
@@ -306,6 +331,12 @@ pl_head <- function(x, ...) {
   check_empty_dots(...)
   x$head()
 }
+
+pl_ifelse <- function(cond, yes, no) {
+  pl$when(cond)$then(yes)$otherwise(no)
+}
+
+pl_if_else <- pl_ifelse
 
 pl_in <- function(x, ...) {
   check_empty_dots(...)

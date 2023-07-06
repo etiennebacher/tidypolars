@@ -9,7 +9,7 @@ rearrange_exprs <- function(data, dots, create_new = TRUE) {
       to_drop[[names(dots)[x]]] <<- 1
       return(NULL)
     }
-    deparsed <- deparse(dots[[x]])
+    deparsed <- safe_deparse(dots[[x]])
     deparsed <- replace_vars_in_expr(data, deparsed)
     new_expr <- replace_funs(deparsed, create_new = create_new)
     if (isTRUE(create_new)) {
@@ -32,7 +32,7 @@ replace_funs <- function(x, create_new = TRUE) {
   new_x <- x
   funs <- find_function_call_in_string(x)
 
-  for (f in funs$in_polars) {
+  for (f in unique(funs$in_polars)) {
     new_x <- gsub(paste0(f, "\\("), paste0("pl_", f, "\\("), new_x)
   }
 
