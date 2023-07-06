@@ -1,0 +1,104 @@
+---
+title: "FAQ"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{FAQ}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tidypolars)
+```
+
+
+# FAQ
+
+## Is `tidypolars` slower than `polars`?
+
+No, or just marginally. The objective of `tidypolars` is *not* to modify the
+data, simply to translate the `tidyverse` syntax to `polars` syntax. `polars`
+is still in charge of doing all the data manipulations under the hood.
+
+Therefore, there might be minor overhead because we still need to parse the 
+expressions and rewrite them in `polars` syntax but this should be extremely 
+marginal.
+
+## Am I stuck with `tidypolars`?
+
+No, as said above, `tidypolars` just changes one syntax to another but it doesn't
+touch the data itself. So if for some reason you want to go back to a "raw" 
+`polars` syntax later in your code, you're free to do so because `tidypolars`
+will always return `DataFrame`s, `LazyFrame`s or `Series`.
+
+## Do I still need to load `polars`?
+
+Yes, because `tidypolars` doesn't provide any functions to create `polars`
+`DataFrame` or `LazyFrame`, or to read data. You'll still need to use `polars`
+for this.
+
+
+## Can I see some benchmarks?
+
+Sure but take them with a grain of salt: these small benchmarks may not be 
+representative of real-life scenarios and don't necessarily use the full capacities
+of other packages (e.g keyed `data.table`s). You should refer to [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/) for more serious ones.
+
+```{r}
+library(polars)
+library(tidypolars)
+library(dplyr, warn.conflicts = FALSE)
+library(data.table, warn.conflicts = FALSE)
+
+test <- data.frame(
+  grp = sample(letters, 1e7, TRUE),
+  val1 = sample(1:1000, 1e7, TRUE),
+  val2 = sample(1:1000, 1e7, TRUE)
+)
+
+pl_test <- pl$DataFrame(test)
+dt_test <- as.data.table(test)
+
+bench::mark(
+  polars = pl_test$
+    groupby("grp")$
+    agg(
+      pl$col('val1')$mean()$alias('x'), 
+      pl$col('val2')$sum()$alias('y')
+    ),
+  tidypolars = pl_test |> 
+    pl_group_by(grp) |> 
+    pl_summarize(
+      x = mean(val1),
+      y = sum(val2)
+    ),
+  dplyr = test |> 
+    group_by(grp) |> 
+    summarize(
+      x = mean(val1),
+      y = sum(val2)
+    ),
+  data.table = dt_test[, .(x = mean(val1), y = sum(val2)), by = grp],
+  check = FALSE,
+  iterations = 15
+)
+
+bench::mark(
+  polars = pl_test$
+    filter(pl$col("grp") == "a" | pl$col("grp") == "b"),
+  tidypolars = pl_test |> 
+    pl_filter(grp == "a" | grp == "b"),
+  dplyr = test |> 
+    filter(grp %in% c("a", "b")),
+  data.table = dt_test[grp %chin% c("a", "b")],
+  check = FALSE,
+  iterations = 15
+)
+```

@@ -15,7 +15,6 @@ on the wrong repo. The right one is here:
 - [Motivation](#motivation)
 - [General syntax](#general-syntax)
 - [Example](#example)
-- [FAQ](#faq)
 
 ## Motivation
 
@@ -45,172 +44,113 @@ function you’re used to. For example, `dplyr::mutate()` modifies classic
 
 ## Example
 
+`tidypolars` makes it easier for R users to use `polars`:
+
 ``` r
 library(polars)
 library(tidypolars)
 
-pl_test <- pl$DataFrame(iris)
-pl_test
+# polars syntax
+pl$DataFrame(iris)$
+  select(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))$
+  with_columns(
+    pl$when(
+      (pl$col("Petal.Length") / pl$col("Petal.Width") > 3)
+    )$then("long")$
+      otherwise("large")$
+      alias("petal_type")
+  )
 #> shape: (150, 5)
-#> ┌──────────────┬─────────────┬──────────────┬─────────────┬───────────┐
-#> │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ Species   │
-#> │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---       │
-#> │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ cat       │
-#> ╞══════════════╪═════════════╪══════════════╪═════════════╪═══════════╡
-#> │ 5.1          ┆ 3.5         ┆ 1.4          ┆ 0.2         ┆ setosa    │
-#> │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ setosa    │
-#> │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ setosa    │
-#> │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ setosa    │
-#> │ …            ┆ …           ┆ …            ┆ …           ┆ …         │
-#> │ 6.3          ┆ 2.5         ┆ 5.0          ┆ 1.9         ┆ virginica │
-#> │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ virginica │
-#> │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ virginica │
-#> │ 5.9          ┆ 3.0         ┆ 5.1          ┆ 1.8         ┆ virginica │
-#> └──────────────┴─────────────┴──────────────┴─────────────┴───────────┘
+#> ┌──────────────┬─────────────┬──────────────┬─────────────┬────────────┐
+#> │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ petal_type │
+#> │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---        │
+#> │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ str        │
+#> ╞══════════════╪═════════════╪══════════════╪═════════════╪════════════╡
+#> │ 5.1          ┆ 3.5         ┆ 1.4          ┆ 0.2         ┆ long       │
+#> │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ long       │
+#> │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ long       │
+#> │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ long       │
+#> │ …            ┆ …           ┆ …            ┆ …           ┆ …          │
+#> │ 6.3          ┆ 2.5         ┆ 5.0          ┆ 1.9         ┆ large      │
+#> │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ large      │
+#> │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ large      │
+#> │ 5.9          ┆ 3.0         ┆ 5.1          ┆ 1.8         ┆ large      │
+#> └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘
 
-pl_test |> 
-  pl_filter(Species == "setosa") |> 
-  pl_arrange(Sepal.Width, -Sepal.Length)
-#> shape: (50, 5)
-#> ┌──────────────┬─────────────┬──────────────┬─────────────┬─────────┐
-#> │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ Species │
-#> │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---     │
-#> │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ cat     │
-#> ╞══════════════╪═════════════╪══════════════╪═════════════╪═════════╡
-#> │ 4.5          ┆ 2.3         ┆ 1.3          ┆ 0.3         ┆ setosa  │
-#> │ 4.4          ┆ 2.9         ┆ 1.4          ┆ 0.2         ┆ setosa  │
-#> │ 5.0          ┆ 3.0         ┆ 1.6          ┆ 0.2         ┆ setosa  │
-#> │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ setosa  │
-#> │ …            ┆ …           ┆ …            ┆ …           ┆ …       │
-#> │ 5.8          ┆ 4.0         ┆ 1.2          ┆ 0.2         ┆ setosa  │
-#> │ 5.2          ┆ 4.1         ┆ 1.5          ┆ 0.1         ┆ setosa  │
-#> │ 5.5          ┆ 4.2         ┆ 1.4          ┆ 0.2         ┆ setosa  │
-#> │ 5.7          ┆ 4.4         ┆ 1.5          ┆ 0.4         ┆ setosa  │
-#> └──────────────┴─────────────┴──────────────┴─────────────┴─────────┘
-
-pl_test |> 
+# tidypolars syntax
+iris |> 
+  as_polars() |> 
+  pl_select(starts_with("Sep", "Pet")) |> 
   pl_mutate(
-    Sepal.Total = Sepal.Length + Sepal.Width,
-    Petal.Total = Petal.Length + Petal.Width
-  ) |> 
-  pl_select(ends_with("Total"))
-#> shape: (150, 2)
-#> ┌─────────────┬─────────────┐
-#> │ Sepal.Total ┆ Petal.Total │
-#> │ ---         ┆ ---         │
-#> │ f64         ┆ f64         │
-#> ╞═════════════╪═════════════╡
-#> │ 8.6         ┆ 1.6         │
-#> │ 7.9         ┆ 1.6         │
-#> │ 7.9         ┆ 1.5         │
-#> │ 7.7         ┆ 1.7         │
-#> │ …           ┆ …           │
-#> │ 8.8         ┆ 6.9         │
-#> │ 9.5         ┆ 7.2         │
-#> │ 9.6         ┆ 7.7         │
-#> │ 8.9         ┆ 6.9         │
-#> └─────────────┴─────────────┘
+    petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+  )
+#> shape: (150, 5)
+#> ┌──────────────┬─────────────┬──────────────┬─────────────┬────────────┐
+#> │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ petal_type │
+#> │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---        │
+#> │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ str        │
+#> ╞══════════════╪═════════════╪══════════════╪═════════════╪════════════╡
+#> │ 5.1          ┆ 3.5         ┆ 1.4          ┆ 0.2         ┆ long       │
+#> │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ long       │
+#> │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ long       │
+#> │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ long       │
+#> │ …            ┆ …           ┆ …            ┆ …           ┆ …          │
+#> │ 6.3          ┆ 2.5         ┆ 5.0          ┆ 1.9         ┆ large      │
+#> │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ large      │
+#> │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ large      │
+#> │ 5.9          ┆ 3.0         ┆ 5.1          ┆ 1.8         ┆ large      │
+#> └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘
 ```
 
-# FAQ
-
-## Is `tidypolars` slower than `polars`?
-
-No, or just marginally. The objective of `tidypolars` is *not* to modify
-the data, simply to translate the `tidyverse` syntax to `polars` syntax.
-`polars` is still in charge of doing all the data manipulations under
-the hood.
-
-Therefore, there might be minor overhead because we still need to parse
-the expressions and rewrite them in `polars` syntax but this should be
-extremely marginal.
-
-## Am I stuck with `tidypolars`?
-
-No, as said above, `tidypolars` just changes one syntax to another but
-it doesn’t touch the data itself. So if for some reason you want to go
-back to a “raw” `polars` syntax later in your code, you’re free to do so
-because `tidypolars` will always return `DataFrame`s, `LazyFrame`s or
-`Series`.
-
-## Do I still need to load `polars`?
-
-Yes, because `tidypolars` doesn’t provide any functions to create
-`polars` `DataFrame` or `LazyFrame`, or to read data. You’ll still need
-to use `polars` for this.
-
-## Can I see some benchmarks?
-
-Sure but take them with a grain of salt: these small benchmarks may not
-be representative of real-life scenarios and don’t necessarily use the
-full capacities of other packages (e.g keyed `data.table`s). You should
-refer to [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/)
-for more serious ones.
+And it still as fast as original `polars` syntax:
 
 ``` r
-library(polars)
-library(tidypolars)
-library(dplyr, warn.conflicts = FALSE)
-library(data.table, warn.conflicts = FALSE)
+library(dplyr)
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
 
-test <- data.frame(
-  grp = sample(letters, 1e7, TRUE),
-  val1 = sample(1:1000, 1e7, TRUE),
-  val2 = sample(1:1000, 1e7, TRUE)
-)
-
-pl_test <- pl$DataFrame(test)
-dt_test <- as.data.table(test)
+large_iris <- data.table::rbindlist(rep(list(iris), 100000))
 
 bench::mark(
-  polars = pl_test$
-    groupby("grp")$
-    agg(
-      pl$col('val1')$mean()$alias('x'), 
-      pl$col('val2')$sum()$alias('y')
-    ),
-  tidypolars = pl_test |> 
-    pl_group_by(grp) |> 
-    pl_summarize(
-      x = mean(val1),
-      y = sum(val2)
-    ),
-  dplyr = test |> 
-    group_by(grp) |> 
-    summarize(
-      x = mean(val1),
-      y = sum(val2)
-    ),
-  data.table = dt_test[, .(x = mean(val1), y = sum(val2)), by = grp],
+  polars = {
+    pl$DataFrame(large_iris)$
+      select(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))$
+      with_columns(
+        pl$when(
+          (pl$col("Petal.Length") / pl$col("Petal.Width") > 3)
+        )$then("long")$
+          otherwise("large")$
+          alias("petal_type")
+      )
+  }, 
+  tidypolars = {
+    large_iris |> 
+      as_polars() |> 
+      pl_select(starts_with("Sep", "Pet")) |> 
+      pl_mutate(
+        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+      )
+  },
+  dplyr = {
+    large_iris |> 
+      select(starts_with(c("Sep", "Pet"))) |> 
+      mutate(
+        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+      )
+  },
   check = FALSE,
-  iterations = 15
+  iterations = 10
 )
-#> Warning: Some expressions had a GC in every iteration; so filtering is
-#> disabled.
-#> # A tibble: 4 × 6
+#> # A tibble: 3 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars       79.2ms   84.8ms     11.8      139KB    0    
-#> 2 tidypolars   89.5ms  100.4ms      9.62     250KB    0.641
-#> 3 dplyr       247.7ms  289.6ms      3.18     242MB    3.39 
-#> 4 data.table  172.1ms  199.4ms      4.94     273MB    4.94
-
-bench::mark(
-  polars = pl_test$
-    filter(pl$col("grp") == "a" | pl$col("grp") == "b"),
-  tidypolars = pl_test |> 
-    pl_filter(grp == "a" | grp == "b"),
-  dplyr = test |> 
-    filter(grp %in% c("a", "b")),
-  data.table = dt_test[grp %chin% c("a", "b")],
-  check = FALSE,
-  iterations = 15
-)
-#> # A tibble: 4 × 6
-#>   expression      min   median `itr/sec` mem_alloc `gc/sec`
-#>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars       38.7ms   42.4ms     22.9     15.3KB     0   
-#> 2 tidypolars   43.7ms   45.6ms     21.5     37.3KB     0   
-#> 3 dplyr       258.5ms  258.5ms      3.87   281.9MB    61.9 
-#> 4 data.table   25.5ms   28.4ms     35.5    100.6MB     2.54
+#> 1 polars        1.67s    1.76s     0.567     629MB     3.40
+#> 2 tidypolars    1.73s    1.83s     0.547     629MB     2.01
+#> 3 dplyr         3.58s    3.58s     0.280     918MB     3.91
 ```
