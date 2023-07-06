@@ -24,6 +24,7 @@ Imports:
     polars,
     utils
 Suggests: 
+    bench,
     data.table,
     dplyr,
     knitr,
