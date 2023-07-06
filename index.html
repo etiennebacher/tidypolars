@@ -53,6 +53,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="articles/faq.html">FAQ</a>
     <a class="dropdown-item" href="articles/getting_started.html">Getting started</a>
   </div>
 </li>
@@ -85,7 +86,6 @@
 <li><a href="#motivation">Motivation</a></li>
 <li><a href="#general-syntax">General syntax</a></li>
 <li><a href="#example">Example</a></li>
-<li><a href="#faq">FAQ</a></li>
 </ul>
 <div class="section level2">
 <h2 id="motivation">Motivation<a class="anchor" aria-label="anchor" href="#motivation"></a>
@@ -102,165 +102,105 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
+<p><code>tidypolars</code> makes it easier for R users to use <code>polars</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pola-rs/r-polars" class="external-link">polars</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/etiennebacher/tidypolars" class="external-link">tidypolars</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">pl_test</span> <span class="op">&lt;-</span> <span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span>
-<span><span class="va">pl_test</span></span>
+<span><span class="co"># polars syntax</span></span>
+<span><span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">$</span></span>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sepal.Length"</span>, <span class="st">"Sepal.Width"</span>, <span class="st">"Petal.Length"</span>, <span class="st">"Petal.Width"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span></span>
+<span>  <span class="fu">with_columns</span><span class="op">(</span></span>
+<span>    <span class="va">pl</span><span class="op">$</span><span class="fu">when</span><span class="op">(</span></span>
+<span>      <span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"Petal.Length"</span><span class="op">)</span> <span class="op">/</span> <span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span><span class="op">)</span></span>
+<span>    <span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="st">"long"</span><span class="op">)</span><span class="op">$</span></span>
+<span>      <span class="fu">otherwise</span><span class="op">(</span><span class="st">"large"</span><span class="op">)</span><span class="op">$</span></span>
+<span>      <span class="fu">alias</span><span class="op">(</span><span class="st">"petal_type"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="co">#&gt; shape: (150, 5)</span></span>
-<span><span class="co">#&gt; ┌──────────────┬─────────────┬──────────────┬─────────────┬───────────┐</span></span>
-<span><span class="co">#&gt; │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ Species   │</span></span>
-<span><span class="co">#&gt; │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---       │</span></span>
-<span><span class="co">#&gt; │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ cat       │</span></span>
-<span><span class="co">#&gt; ╞══════════════╪═════════════╪══════════════╪═════════════╪═══════════╡</span></span>
-<span><span class="co">#&gt; │ 5.1          ┆ 3.5         ┆ 1.4          ┆ 0.2         ┆ setosa    │</span></span>
-<span><span class="co">#&gt; │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ setosa    │</span></span>
-<span><span class="co">#&gt; │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ setosa    │</span></span>
-<span><span class="co">#&gt; │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ setosa    │</span></span>
-<span><span class="co">#&gt; │ …            ┆ …           ┆ …            ┆ …           ┆ …         │</span></span>
-<span><span class="co">#&gt; │ 6.3          ┆ 2.5         ┆ 5.0          ┆ 1.9         ┆ virginica │</span></span>
-<span><span class="co">#&gt; │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ virginica │</span></span>
-<span><span class="co">#&gt; │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ virginica │</span></span>
-<span><span class="co">#&gt; │ 5.9          ┆ 3.0         ┆ 5.1          ┆ 1.8         ┆ virginica │</span></span>
-<span><span class="co">#&gt; └──────────────┴─────────────┴──────────────┴─────────────┴───────────┘</span></span>
+<span><span class="co">#&gt; ┌──────────────┬─────────────┬──────────────┬─────────────┬────────────┐</span></span>
+<span><span class="co">#&gt; │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ petal_type │</span></span>
+<span><span class="co">#&gt; │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---        │</span></span>
+<span><span class="co">#&gt; │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ str        │</span></span>
+<span><span class="co">#&gt; ╞══════════════╪═════════════╪══════════════╪═════════════╪════════════╡</span></span>
+<span><span class="co">#&gt; │ 5.1          ┆ 3.5         ┆ 1.4          ┆ 0.2         ┆ long       │</span></span>
+<span><span class="co">#&gt; │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ long       │</span></span>
+<span><span class="co">#&gt; │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ long       │</span></span>
+<span><span class="co">#&gt; │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ long       │</span></span>
+<span><span class="co">#&gt; │ …            ┆ …           ┆ …            ┆ …           ┆ …          │</span></span>
+<span><span class="co">#&gt; │ 6.3          ┆ 2.5         ┆ 5.0          ┆ 1.9         ┆ large      │</span></span>
+<span><span class="co">#&gt; │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ large      │</span></span>
+<span><span class="co">#&gt; │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ large      │</span></span>
+<span><span class="co">#&gt; │ 5.9          ┆ 3.0         ┆ 5.1          ┆ 1.8         ┆ large      │</span></span>
+<span><span class="co">#&gt; └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘</span></span>
 <span></span>
-<span><span class="va">pl_test</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/pl_filter.html">pl_filter</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">==</span> <span class="st">"setosa"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/pl_arrange.html">pl_arrange</a></span><span class="op">(</span><span class="va">Sepal.Width</span>, <span class="op">-</span><span class="va">Sepal.Length</span><span class="op">)</span></span>
-<span><span class="co">#&gt; shape: (50, 5)</span></span>
-<span><span class="co">#&gt; ┌──────────────┬─────────────┬──────────────┬─────────────┬─────────┐</span></span>
-<span><span class="co">#&gt; │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ Species │</span></span>
-<span><span class="co">#&gt; │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---     │</span></span>
-<span><span class="co">#&gt; │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ cat     │</span></span>
-<span><span class="co">#&gt; ╞══════════════╪═════════════╪══════════════╪═════════════╪═════════╡</span></span>
-<span><span class="co">#&gt; │ 4.5          ┆ 2.3         ┆ 1.3          ┆ 0.3         ┆ setosa  │</span></span>
-<span><span class="co">#&gt; │ 4.4          ┆ 2.9         ┆ 1.4          ┆ 0.2         ┆ setosa  │</span></span>
-<span><span class="co">#&gt; │ 5.0          ┆ 3.0         ┆ 1.6          ┆ 0.2         ┆ setosa  │</span></span>
-<span><span class="co">#&gt; │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ setosa  │</span></span>
-<span><span class="co">#&gt; │ …            ┆ …           ┆ …            ┆ …           ┆ …       │</span></span>
-<span><span class="co">#&gt; │ 5.8          ┆ 4.0         ┆ 1.2          ┆ 0.2         ┆ setosa  │</span></span>
-<span><span class="co">#&gt; │ 5.2          ┆ 4.1         ┆ 1.5          ┆ 0.1         ┆ setosa  │</span></span>
-<span><span class="co">#&gt; │ 5.5          ┆ 4.2         ┆ 1.4          ┆ 0.2         ┆ setosa  │</span></span>
-<span><span class="co">#&gt; │ 5.7          ┆ 4.4         ┆ 1.5          ┆ 0.4         ┆ setosa  │</span></span>
-<span><span class="co">#&gt; └──────────────┴─────────────┴──────────────┴─────────────┴─────────┘</span></span>
-<span></span>
-<span><span class="va">pl_test</span> <span class="op">|&gt;</span> </span>
+<span><span class="co"># tidypolars syntax</span></span>
+<span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="fu">starts_with</span><span class="op">(</span><span class="st">"Sep"</span>, <span class="st">"Pet"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/pl_mutate.html">pl_mutate</a></span><span class="op">(</span></span>
-<span>    Sepal.Total <span class="op">=</span> <span class="va">Sepal.Length</span> <span class="op">+</span> <span class="va">Sepal.Width</span>,</span>
-<span>    Petal.Total <span class="op">=</span> <span class="va">Petal.Length</span> <span class="op">+</span> <span class="va">Petal.Width</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="fu">ends_with</span><span class="op">(</span><span class="st">"Total"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; shape: (150, 2)</span></span>
-<span><span class="co">#&gt; ┌─────────────┬─────────────┐</span></span>
-<span><span class="co">#&gt; │ Sepal.Total ┆ Petal.Total │</span></span>
-<span><span class="co">#&gt; │ ---         ┆ ---         │</span></span>
-<span><span class="co">#&gt; │ f64         ┆ f64         │</span></span>
-<span><span class="co">#&gt; ╞═════════════╪═════════════╡</span></span>
-<span><span class="co">#&gt; │ 8.6         ┆ 1.6         │</span></span>
-<span><span class="co">#&gt; │ 7.9         ┆ 1.6         │</span></span>
-<span><span class="co">#&gt; │ 7.9         ┆ 1.5         │</span></span>
-<span><span class="co">#&gt; │ 7.7         ┆ 1.7         │</span></span>
-<span><span class="co">#&gt; │ …           ┆ …           │</span></span>
-<span><span class="co">#&gt; │ 8.8         ┆ 6.9         │</span></span>
-<span><span class="co">#&gt; │ 9.5         ┆ 7.2         │</span></span>
-<span><span class="co">#&gt; │ 9.6         ┆ 7.7         │</span></span>
-<span><span class="co">#&gt; │ 8.9         ┆ 6.9         │</span></span>
-<span><span class="co">#&gt; └─────────────┴─────────────┘</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level1">
-<h1 id="faq">FAQ<a class="anchor" aria-label="anchor" href="#faq"></a>
-</h1>
-<div class="section level2">
-<h2 id="is-tidypolars-slower-than-polars">Is <code>tidypolars</code> slower than <code>polars</code>?<a class="anchor" aria-label="anchor" href="#is-tidypolars-slower-than-polars"></a>
-</h2>
-<p>No, or just marginally. The objective of <code>tidypolars</code> is <em>not</em> to modify the data, simply to translate the <code>tidyverse</code> syntax to <code>polars</code> syntax. <code>polars</code> is still in charge of doing all the data manipulations under the hood.</p>
-<p>Therefore, there might be minor overhead because we still need to parse the expressions and rewrite them in <code>polars</code> syntax but this should be extremely marginal.</p>
-</div>
-<div class="section level2">
-<h2 id="am-i-stuck-with-tidypolars">Am I stuck with <code>tidypolars</code>?<a class="anchor" aria-label="anchor" href="#am-i-stuck-with-tidypolars"></a>
-</h2>
-<p>No, as said above, <code>tidypolars</code> just changes one syntax to another but it doesn’t touch the data itself. So if for some reason you want to go back to a “raw” <code>polars</code> syntax later in your code, you’re free to do so because <code>tidypolars</code> will always return <code>DataFrame</code>s, <code>LazyFrame</code>s or <code>Series</code>.</p>
-</div>
-<div class="section level2">
-<h2 id="do-i-still-need-to-load-polars">Do I still need to load <code>polars</code>?<a class="anchor" aria-label="anchor" href="#do-i-still-need-to-load-polars"></a>
-</h2>
-<p>Yes, because <code>tidypolars</code> doesn’t provide any functions to create <code>polars</code> <code>DataFrame</code> or <code>LazyFrame</code>, or to read data. You’ll still need to use <code>polars</code> for this.</p>
-</div>
-<div class="section level2">
-<h2 id="can-i-see-some-benchmarks">Can I see some benchmarks?<a class="anchor" aria-label="anchor" href="#can-i-see-some-benchmarks"></a>
-</h2>
-<p>Sure but take them with a grain of salt: these small benchmarks may not be representative of real-life scenarios and don’t necessarily use the full capacities of other packages (e.g keyed <code>data.table</code>s). You should refer to <a href="https://duckdblabs.github.io/db-benchmark/" class="external-link">DuckDB benchmarks</a> for more serious ones.</p>
+<span>    petal_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="op">(</span><span class="va">Petal.Length</span> <span class="op">/</span> <span class="va">Petal.Width</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span>, <span class="st">"long"</span>, <span class="st">"large"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; shape: (150, 5)</span></span>
+<span><span class="co">#&gt; ┌──────────────┬─────────────┬──────────────┬─────────────┬────────────┐</span></span>
+<span><span class="co">#&gt; │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ petal_type │</span></span>
+<span><span class="co">#&gt; │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---        │</span></span>
+<span><span class="co">#&gt; │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ str        │</span></span>
+<span><span class="co">#&gt; ╞══════════════╪═════════════╪══════════════╪═════════════╪════════════╡</span></span>
+<span><span class="co">#&gt; │ 5.1          ┆ 3.5         ┆ 1.4          ┆ 0.2         ┆ long       │</span></span>
+<span><span class="co">#&gt; │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ long       │</span></span>
+<span><span class="co">#&gt; │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ long       │</span></span>
+<span><span class="co">#&gt; │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ long       │</span></span>
+<span><span class="co">#&gt; │ …            ┆ …           ┆ …            ┆ …           ┆ …          │</span></span>
+<span><span class="co">#&gt; │ 6.3          ┆ 2.5         ┆ 5.0          ┆ 1.9         ┆ large      │</span></span>
+<span><span class="co">#&gt; │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ large      │</span></span>
+<span><span class="co">#&gt; │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ large      │</span></span>
+<span><span class="co">#&gt; │ 5.9          ┆ 3.0         ┆ 5.1          ┆ 1.8         ┆ large      │</span></span>
+<span><span class="co">#&gt; └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘</span></span></code></pre></div>
+<p>And it’s still as fast as the original <code>polars</code> syntax:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pola-rs/r-polars" class="external-link">polars</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/etiennebacher/tidypolars" class="external-link">tidypolars</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  grp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="fl">1e7</span>, <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>  val1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="fl">1e7</span>, <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>  val2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="fl">1e7</span>, <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
+<span><span class="va">large_iris</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">rbindlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="fl">100000</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">pl_test</span> <span class="op">&lt;-</span> <span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">test</span><span class="op">)</span></span>
-<span><span class="va">dt_test</span> <span class="op">&lt;-</span> <span class="fu">as.data.table</span><span class="op">(</span><span class="va">test</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">bench</span><span class="fu">::</span><span class="fu">mark</span><span class="op">(</span></span>
-<span>  polars <span class="op">=</span> <span class="va">pl_test</span><span class="op">$</span></span>
-<span>    <span class="fu">groupby</span><span class="op">(</span><span class="st">"grp"</span><span class="op">)</span><span class="op">$</span></span>
-<span>    <span class="fu">agg</span><span class="op">(</span></span>
-<span>      <span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">'val1'</span><span class="op">)</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">alias</span><span class="op">(</span><span class="st">'x'</span><span class="op">)</span>, </span>
-<span>      <span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">'val2'</span><span class="op">)</span><span class="op">$</span><span class="fu">sum</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">alias</span><span class="op">(</span><span class="st">'y'</span><span class="op">)</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>  tidypolars <span class="op">=</span> <span class="va">pl_test</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="reference/pl_group_by.html">pl_group_by</a></span><span class="op">(</span><span class="va">grp</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="reference/pl_summarize.html">pl_summarize</a></span><span class="op">(</span></span>
-<span>      x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">val1</span><span class="op">)</span>,</span>
-<span>      y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">val2</span><span class="op">)</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>  dplyr <span class="op">=</span> <span class="va">test</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">grp</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
-<span>      x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">val1</span><span class="op">)</span>,</span>
-<span>      y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">val2</span><span class="op">)</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>  data.table <span class="op">=</span> <span class="va">dt_test</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">val1</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">val2</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">grp</span><span class="op">]</span>,</span>
+<span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
+<span>  polars <span class="op">=</span> <span class="op">{</span></span>
+<span>    <span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">large_iris</span><span class="op">)</span><span class="op">$</span></span>
+<span>      <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sepal.Length"</span>, <span class="st">"Sepal.Width"</span>, <span class="st">"Petal.Length"</span>, <span class="st">"Petal.Width"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span></span>
+<span>      <span class="fu">with_columns</span><span class="op">(</span></span>
+<span>        <span class="va">pl</span><span class="op">$</span><span class="fu">when</span><span class="op">(</span></span>
+<span>          <span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"Petal.Length"</span><span class="op">)</span> <span class="op">/</span> <span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span><span class="op">)</span></span>
+<span>        <span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="st">"long"</span><span class="op">)</span><span class="op">$</span></span>
+<span>          <span class="fu">otherwise</span><span class="op">(</span><span class="st">"large"</span><span class="op">)</span><span class="op">$</span></span>
+<span>          <span class="fu">alias</span><span class="op">(</span><span class="st">"petal_type"</span><span class="op">)</span></span>
+<span>      <span class="op">)</span></span>
+<span>  <span class="op">}</span>, </span>
+<span>  tidypolars <span class="op">=</span> <span class="op">{</span></span>
+<span>    <span class="va">large_iris</span> <span class="op">|&gt;</span> </span>
+<span>      <span class="fu"><a href="reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>      <span class="fu"><a href="reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"Sep"</span>, <span class="st">"Pet"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>      <span class="fu"><a href="reference/pl_mutate.html">pl_mutate</a></span><span class="op">(</span></span>
+<span>        petal_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="op">(</span><span class="va">Petal.Length</span> <span class="op">/</span> <span class="va">Petal.Width</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span>, <span class="st">"long"</span>, <span class="st">"large"</span><span class="op">)</span></span>
+<span>      <span class="op">)</span></span>
+<span>  <span class="op">}</span>,</span>
+<span>  dplyr <span class="op">=</span> <span class="op">{</span></span>
+<span>    <span class="va">large_iris</span> <span class="op">|&gt;</span> </span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sep"</span>, <span class="st">"Pet"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>        petal_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="op">(</span><span class="va">Petal.Length</span> <span class="op">/</span> <span class="va">Petal.Width</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span>, <span class="st">"long"</span>, <span class="st">"large"</span><span class="op">)</span></span>
+<span>      <span class="op">)</span></span>
+<span>  <span class="op">}</span>,</span>
 <span>  check <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  iterations <span class="op">=</span> <span class="fl">15</span></span>
+<span>  iterations <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Some expressions had a GC in every iteration; so filtering is</span></span>
-<span><span class="co">#&gt; disabled.</span></span>
-<span><span class="co">#&gt; # A tibble: 4 × 6</span></span>
+<span><span class="co">#&gt; # A tibble: 3 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars       79.2ms   84.8ms     11.8      139KB    0    </span></span>
-<span><span class="co">#&gt; 2 tidypolars   89.5ms  100.4ms      9.62     250KB    0.641</span></span>
-<span><span class="co">#&gt; 3 dplyr       247.7ms  289.6ms      3.18     242MB    3.39 </span></span>
-<span><span class="co">#&gt; 4 data.table  172.1ms  199.4ms      4.94     273MB    4.94</span></span>
-<span></span>
-<span><span class="fu">bench</span><span class="fu">::</span><span class="fu">mark</span><span class="op">(</span></span>
-<span>  polars <span class="op">=</span> <span class="va">pl_test</span><span class="op">$</span></span>
-<span>    <span class="fu">filter</span><span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"grp"</span><span class="op">)</span> <span class="op">==</span> <span class="st">"a"</span> <span class="op">|</span> <span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"grp"</span><span class="op">)</span> <span class="op">==</span> <span class="st">"b"</span><span class="op">)</span>,</span>
-<span>  tidypolars <span class="op">=</span> <span class="va">pl_test</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="reference/pl_filter.html">pl_filter</a></span><span class="op">(</span><span class="va">grp</span> <span class="op">==</span> <span class="st">"a"</span> <span class="op">|</span> <span class="va">grp</span> <span class="op">==</span> <span class="st">"b"</span><span class="op">)</span>,</span>
-<span>  dplyr <span class="op">=</span> <span class="va">test</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">grp</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  data.table <span class="op">=</span> <span class="va">dt_test</span><span class="op">[</span><span class="va">grp</span> <span class="op">%chin%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span><span class="op">]</span>,</span>
-<span>  check <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  iterations <span class="op">=</span> <span class="fl">15</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 4 × 6</span></span>
-<span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
-<span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars       38.7ms   42.4ms     22.9     15.3KB     0   </span></span>
-<span><span class="co">#&gt; 2 tidypolars   43.7ms   45.6ms     21.5     37.3KB     0   </span></span>
-<span><span class="co">#&gt; 3 dplyr       258.5ms  258.5ms      3.87   281.9MB    61.9 </span></span>
-<span><span class="co">#&gt; 4 data.table   25.5ms   28.4ms     35.5    100.6MB     2.54</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 polars        1.88s    2.07s     0.482     629MB     2.89</span></span>
+<span><span class="co">#&gt; 2 tidypolars    1.86s    1.91s     0.491     629MB     1.80</span></span>
+<span><span class="co">#&gt; 3 dplyr         3.81s    3.81s     0.263     918MB     3.68</span></span></code></pre></div>
 </div>
 </div>
-
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
