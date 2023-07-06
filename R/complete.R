@@ -23,17 +23,19 @@ pl_complete <- function(data, ...) {
   check_polars_data(data)
 
   dots <- .select_nse_from_dots(data, ...)
-  left <- list()
-  for (i in seq_along(dots)) {
-    if (i == 1) {
-      left[[1]] <- data$select(dots[i])$unique()
-    } else {
-      left[[1]] <- left[[1]]$join(
-        data$select(dots[i])$unique(),
-        how = 'cross'
-      )$unique()
-    }
+  if (length(dots) < 2) return(data)
+
+  start <- "data$select(dots[1])$unique()"
+  chain <- vector("list", length = length(dots) - 1)
+
+  for (i in 2:length(dots)) {
+    chain[[i]] <- paste0("$join(data$select(dots[", i, "])$unique(), how = 'cross')")
   }
 
-  left[[1]]$join(data, how='left', on = dots)$sort(dots)
+  paste0(
+    start, paste(unlist(chain), collapse = ""),
+    "$sort(dots)$join(data, on = dots, how = 'left')"
+  ) |>
+    str2lang() |>
+    eval()
 }
