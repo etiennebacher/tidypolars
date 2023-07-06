@@ -96,8 +96,8 @@ r_polars_funs <- data.frame(
   distinct() |>
   rows_insert(
     tibble(
-      polars_funs = c("ifelse", "ifelse", "case_when"),
-      r_funs = c("ifelse", "if_else", "case_when")
+      polars_funs = c("ifelse", "ifelse", "case_when", "case_match"),
+      r_funs = c("ifelse", "if_else", "case_when", "case_match")
     )
   ) |>
   arrange(category, polars_funs, .locale = "en")

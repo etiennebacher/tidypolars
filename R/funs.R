@@ -132,6 +132,35 @@ pl_by <- function(x, ...) {
   x$by()
 }
 
+
+pl_case_match <- function(x, ...) {
+  dots <- get_dots(...)
+
+  if (!".default" %in% names(dots)) {
+    dots[[length(dots) + 1]] <- NA
+    names(dots)[length(dots)] <- ".default"
+  }
+
+  exprs <- lapply(seq_along(dots), \(x) {
+    dep <- safe_deparse(dots[[x]])
+    if (x == length(dots)) {
+      return(paste0("$otherwise(", dep, ")"))
+    }
+
+    spl <- strsplit(dep, "~")[[1]] |>
+      trimws()
+
+    paste0("$when(x$is_in(pl$lit(", spl[1], ")))$then(", spl[2], ")")
+  }) |>
+    paste(collapse = "")
+
+  paste0("pl", exprs) |>
+    str2lang() |>
+    eval()
+}
+
+
+
 pl_case_when <- function(...) {
   dots <- get_dots(...)
 

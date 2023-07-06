@@ -21,6 +21,21 @@ expect_equal(
 )
 
 
+# TODO fix %in%
+# expect_equal(
+#   test |>
+#     pl_mutate(
+#       y = case_when(
+#         x1 %in% 'a' ~ "foo",
+#         x2 == 3 ~ "bar",
+#         .default = "hi there"
+#       )
+#     ) |>
+#     pl_pull(y),
+#   c("foo", "foo", "hi there", "foo", "hi there")
+# )
+
+
 # no default
 
 expect_equal(

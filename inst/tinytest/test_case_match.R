@@ -1,0 +1,48 @@
+source("helpers.R")
+using("tidypolars")
+
+test <- pl$DataFrame(
+  x1 = c("a", "a", "b", "a", "c"),
+  x2 = c(2, 1, 5, 3, 1),
+  value = sample(1:5)
+)
+
+expect_equal(
+  test |>
+    pl_mutate(
+      y = case_match(
+        x1,
+        'a' ~ "foo",
+        'b' ~ "bar",
+        .default = "hi there"
+      )
+    ) |>
+    pl_pull(y),
+  c("foo", "foo", "bar", "foo", "hi there")
+)
+
+expect_equal(
+  test |>
+    pl_mutate(
+      y = case_match(
+        x1,
+        c('a', 'c') ~ "foo",
+        'b' ~ "bar"
+      )
+    ) |>
+    pl_pull(y),
+  c("foo", "foo", "bar", "foo", "foo")
+)
+
+expect_equal(
+  test |>
+    pl_mutate(
+      y = case_match(
+        x2,
+        1:3 ~ "foo",
+        .default = "bar"
+      )
+    ) |>
+    pl_pull(y),
+  c("foo", "foo", "bar", "foo", "foo")
+)
