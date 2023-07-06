@@ -24,6 +24,8 @@ Imports:
     polars,
     utils
 Suggests: 
+    data.table,
+    dplyr,
     knitr,
     rmarkdown,
     tinytest
