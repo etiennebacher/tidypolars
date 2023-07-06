@@ -80,10 +80,10 @@ iris |>
   )
 ```
 
-And it still as fast as original `polars` syntax:
+And it's still as fast as the original `polars` syntax:
 
 ```{r}
-library(dplyr)
+library(dplyr, warn.conflicts = FALSE)
 
 large_iris <- data.table::rbindlist(rep(list(iris), 100000))
 

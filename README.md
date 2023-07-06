@@ -102,18 +102,10 @@ iris |>
 #> └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘
 ```
 
-And it still as fast as original `polars` syntax:
+And it’s still as fast as the original `polars` syntax:
 
 ``` r
-library(dplyr)
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
+library(dplyr, warn.conflicts = FALSE)
 
 large_iris <- data.table::rbindlist(rep(list(iris), 100000))
 
@@ -150,7 +142,7 @@ bench::mark(
 #> # A tibble: 3 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars        1.67s    1.76s     0.567     629MB     3.40
-#> 2 tidypolars    1.73s    1.83s     0.547     629MB     2.01
-#> 3 dplyr         3.58s    3.58s     0.280     918MB     3.91
+#> 1 polars        1.88s    2.07s     0.482     629MB     2.89
+#> 2 tidypolars    1.86s    1.91s     0.491     629MB     1.80
+#> 3 dplyr         3.81s    3.81s     0.263     918MB     3.68
 ```
