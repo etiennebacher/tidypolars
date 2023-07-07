@@ -64,10 +64,15 @@ replace_vars_in_expr <- function(.data, deparsed) {
   vars_used <- p_d[p_d$token %in% c("SYMBOL"), "text"]
   vars_used <- unique(vars_used[vars_used %in% pl_colnames(.data)])
 
+  p_d_2 <- p_d
   for (i in vars_used) {
-    deparsed <- gsub(i, paste0("pl$col('", i, "')"), deparsed)
+    p_d_2[p_d_2$text == i, "text"] <- paste0("pl$col('", i, "')")
   }
-  deparsed
+
+  # just prettier when I need to see the expression to debug
+  # p_d_2[p_d_2$text == ",", "text"] <- ", "
+
+  paste(p_d_2$text, collapse = "")
 }
 
 
