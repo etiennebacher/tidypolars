@@ -4,10 +4,10 @@
 \alias{pl_distinct}
 \title{Remove duplicated rows in a Data/LazyFrame}
 \usage{
-pl_distinct(data, ..., keep = "first", maintain_order = TRUE)
+pl_distinct(.data, ..., keep = "first", maintain_order = TRUE)
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}

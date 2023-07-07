@@ -4,10 +4,10 @@
 \alias{pl_drop_na}
 \title{Drop missing values}
 \usage{
-pl_drop_na(data, ...)
+pl_drop_na(.data, ...)
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}

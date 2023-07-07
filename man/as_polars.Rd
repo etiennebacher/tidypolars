@@ -4,10 +4,10 @@
 \alias{as_polars}
 \title{Convert an R dataframe to a Polars Data/LazyFrame}
 \usage{
-as_polars(data, lazy = FALSE)
+as_polars(.data, lazy = FALSE)
 }
 \arguments{
-\item{data}{An R dataframe.}
+\item{.data}{An R dataframe.}
 
 \item{lazy}{Convert the data to lazy format.}
 }

@@ -4,10 +4,10 @@
 \alias{pl_separate}
 \title{Separate a character column into multiple columns based on a substring}
 \usage{
-pl_separate(data, col, into, sep = "[^[:alnum:]]+", remove = TRUE)
+pl_separate(.data, col, into, sep = "[^[:alnum:]]+", remove = TRUE)
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{col}{Column to split}
 

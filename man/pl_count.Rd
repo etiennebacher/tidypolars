@@ -5,12 +5,12 @@
 \alias{pl_add_count}
 \title{Count the observations in each group}
 \usage{
-pl_count(data, ..., sort = FALSE, name = "n")
+pl_count(.data, ..., sort = FALSE, name = "n")
 
-pl_add_count(data, ..., sort = FALSE, name = "n")
+pl_add_count(.data, ..., sort = FALSE, name = "n")
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}

@@ -4,10 +4,10 @@
 \alias{pl_complete}
 \title{Complete a data frame with missing combinations of data}
 \usage{
-pl_complete(data, ...)
+pl_complete(.data, ...)
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}

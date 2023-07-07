@@ -5,12 +5,12 @@
 \alias{pl_slice_head}
 \title{Subset the first or last rows of a Data/LazyFrame}
 \usage{
-pl_slice_tail(data, n = 5)
+pl_slice_tail(.data, n = 5)
 
-pl_slice_head(data, n = 5)
+pl_slice_head(.data, n = 5)
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{n}{The number of rows to select from the start or the end of the data.}
 }

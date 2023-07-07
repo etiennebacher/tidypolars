@@ -1,6 +1,6 @@
 #' Rename columns
 #'
-#' @param data A Polars Data/LazyFrame
+#' @param .data A Polars Data/LazyFrame
 #' @param ... For `pl_rename()`, one of the following:
 #' * params like `new_name = "old_name"` to rename selected variables.
 #' * as above but params wrapped in a list
@@ -29,20 +29,20 @@
 #'
 #' pl_rename_with(pl_test_2, \(x) tolower(gsub(".", "_", x, fixed = TRUE)))
 
-pl_rename <- function(data, ...) {
-  check_polars_data(data)
-  data$rename(...)
+pl_rename <- function(.data, ...) {
+  check_polars_data(.data)
+  .data$rename(...)
 }
 
 #' @rdname pl_rename
 #' @export
 
-pl_rename_with <- function(data, fn, cols = "all", ...) {
-  check_polars_data(data)
+pl_rename_with <- function(.data, fn, cols = "all", ...) {
+  check_polars_data(.data)
   cols <- deparse(substitute(cols))
-  to_replace <- .select_nse_from_var(data, cols)
+  to_replace <- .select_nse_from_var(.data, cols)
   new <- do.call(fn, list(to_replace, ...))
   mapping <- as.list(to_replace)
   names(mapping) <- new
-  data$rename(mapping)
+  .data$rename(mapping)
 }

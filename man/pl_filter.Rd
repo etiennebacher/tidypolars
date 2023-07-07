@@ -4,10 +4,10 @@
 \alias{pl_filter}
 \title{Keep rows that match a condition}
 \usage{
-pl_filter(data, ...)
+pl_filter(.data, ...)
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{...}{Expressions that return a logical value, and are defined in terms
 of the variables in the data. If multiple expressions are included, they

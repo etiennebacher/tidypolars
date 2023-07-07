@@ -16,8 +16,8 @@
 #' pl_drop_na(pl_tmp)
 #' pl_drop_na(pl_tmp, hp, mpg)
 
-pl_drop_na <- function(data, ...) {
-  check_polars_data(data)
-  vars <- .select_nse_from_dots(data, ...)
-  data$drop_nulls(eval(vars))
+pl_drop_na <- function(.data, ...) {
+  check_polars_data(.data)
+  vars <- .select_nse_from_dots(.data, ...)
+  .data$drop_nulls(eval(vars))
 }

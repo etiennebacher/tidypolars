@@ -4,10 +4,10 @@
 \alias{pl_collect}
 \title{Collect a LazyFrame}
 \usage{
-pl_collect(data)
+pl_collect(.data)
 }
 \arguments{
-\item{data}{A Polars LazyFrame}
+\item{.data}{A Polars LazyFrame}
 }
 \description{
 Polars LazyFrames are not loaded in memory. Running \code{collect()} checks the

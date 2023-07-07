@@ -4,10 +4,10 @@
 \alias{pl_pull}
 \title{Extract a variable of a Data/LazyFrame}
 \usage{
-pl_pull(data, var)
+pl_pull(.data, var)
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{var}{A quoted or unquoted variable name}
 }

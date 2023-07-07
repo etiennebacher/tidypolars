@@ -5,12 +5,12 @@
 \alias{pl_summarise}
 \title{Summarize each group down to one row}
 \usage{
-pl_summarize(data, ...)
+pl_summarize(.data, ...)
 
-pl_summarise(data, ...)
+pl_summarise(.data, ...)
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{...}{Name-value pairs. The name gives the name of the column in
 the output. The value can be:

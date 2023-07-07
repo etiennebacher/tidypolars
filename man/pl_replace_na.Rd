@@ -4,10 +4,10 @@
 \alias{pl_replace_na}
 \title{Replace NAs with specified values}
 \usage{
-pl_replace_na(data, replace)
+pl_replace_na(.data, replace)
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{replace}{Either a scalar that will be used to replace \code{NA} in all
 columns, or a named list with the column name and the value that will be

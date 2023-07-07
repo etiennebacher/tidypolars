@@ -4,10 +4,10 @@
 \alias{pl_arrange}
 \title{Order rows using column values}
 \usage{
-pl_arrange(data, ...)
+pl_arrange(.data, ...)
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{...}{Quoted or unquoted variable names. Select helpers cannot be used.}
 }

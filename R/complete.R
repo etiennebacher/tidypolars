@@ -4,7 +4,7 @@
 #' for completing missing combinations of data. Note that this function doesn't
 #' work with grouped data yet.
 #'
-#' @param data A Polars Data/LazyFrame
+#' @param .data A Polars Data/LazyFrame
 #' @inheritParams pl_select
 #'
 #' @export
@@ -18,17 +18,17 @@
 #'
 #' pl_complete(test, country, year)
 
-pl_complete <- function(data, ...) {
+pl_complete <- function(.data, ...) {
 
-  check_polars_data(data)
+  check_polars_data(.data)
 
-  dots <- .select_nse_from_dots(data, ...)
-  if (length(dots) < 2) return(data)
+  dots <- .select_nse_from_dots(.data, ...)
+  if (length(dots) < 2) return(.data)
 
   # TODO: remove this ifelse at some point
   if (packageVersion("polars") > "0.7.0") {
 
-    start <- "data$select(pl$col(dots)$unique()$sort()$implode())"
+    start <- ".data$select(pl$col(dots)$unique()$sort()$implode())"
     chain <- vector("list", length = length(dots) - 1)
 
     for (i in 1:length(dots)) {
@@ -37,23 +37,23 @@ pl_complete <- function(data, ...) {
 
     paste0(
       start, paste(unlist(chain), collapse = ""),
-      "$join(data, on = dots, how = 'left')"
+      "$join(.data, on = dots, how = 'left')"
     ) |>
       str2lang() |>
       eval()
 
   } else {
 
-    start <- "data$select(dots[1])$unique()"
+    start <- ".data$select(dots[1])$unique()"
     chain <- vector("list", length = length(dots) - 1)
 
     for (i in 2:length(dots)) {
-      chain[[i]] <- paste0("$join(data$select(dots[", i, "])$unique(), how = 'cross')")
+      chain[[i]] <- paste0("$join(.data$select(dots[", i, "])$unique(), how = 'cross')")
     }
 
     paste0(
       start, paste(unlist(chain), collapse = ""),
-      "$sort(dots)$join(data, on = dots, how = 'left')"
+      "$sort(dots)$join(.data, on = dots, how = 'left')"
     ) |>
       str2lang() |>
       eval()

@@ -4,10 +4,10 @@
 \alias{pl_fill}
 \title{Fill in missing values with previous or next value}
 \usage{
-pl_fill(data, ..., direction = c("down", "up", "downup", "updown"))
+pl_fill(.data, ..., direction = c("down", "up", "downup", "updown"))
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}

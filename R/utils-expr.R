@@ -1,6 +1,6 @@
 # Rearrange classic R expressions in Polars syntax
 
-rearrange_exprs <- function(data, dots, create_new = TRUE) {
+rearrange_exprs <- function(.data, dots, create_new = TRUE) {
 
   to_drop <- list()
 
@@ -10,7 +10,7 @@ rearrange_exprs <- function(data, dots, create_new = TRUE) {
       return(NULL)
     }
     deparsed <- safe_deparse(dots[[x]])
-    deparsed <- replace_vars_in_expr(data, deparsed)
+    deparsed <- replace_vars_in_expr(.data, deparsed)
     new_expr <- replace_funs(deparsed, create_new = create_new)
     if (isTRUE(create_new)) {
       paste0(new_expr, "$alias('", names(dots)[x], "')")
@@ -55,14 +55,14 @@ replace_funs <- function(x, create_new = TRUE) {
 # In a deparsed expression, find the variable names and add pl$col() around
 # them
 
-replace_vars_in_expr <- function(data, deparsed) {
+replace_vars_in_expr <- function(.data, deparsed) {
   p <- parse(
     text = deparsed,
     keep.source = TRUE
   )
   p_d <- utils::getParseData(p)
   vars_used <- p_d[p_d$token %in% c("SYMBOL"), "text"]
-  vars_used <- unique(vars_used[vars_used %in% pl_colnames(data)])
+  vars_used <- unique(vars_used[vars_used %in% pl_colnames(.data)])
 
   for (i in vars_used) {
     deparsed <- gsub(i, paste0("pl$col('", i, "')"), deparsed)

@@ -1,6 +1,6 @@
 #' Select columns from a Data/LazyFrame
 #'
-#' @param data A Polars Data/LazyFrame
+#' @param .data A Polars Data/LazyFrame
 #' @param ... Any expression accepted by `dplyr::select()`: variable names,
 #'  column numbers, select helpers, etc.
 #'
@@ -15,8 +15,8 @@
 #' pl_select(pl_iris, starts_with("Sepal"))
 #' pl_select(pl_iris, -ends_with("Length"))
 
-pl_select <- function(data, ...) {
-  check_polars_data(data)
-  vars <- .select_nse_from_dots(data, ...)
-  data$select(eval(vars))
+pl_select <- function(.data, ...) {
+  check_polars_data(.data)
+  vars <- .select_nse_from_dots(.data, ...)
+  .data$select(eval(vars))
 }

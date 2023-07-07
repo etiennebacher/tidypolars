@@ -5,12 +5,12 @@
 \alias{pl_ungroup}
 \title{Group by one or more variables}
 \usage{
-pl_group_by(data, ..., maintain_order = TRUE)
+pl_group_by(.data, ..., maintain_order = TRUE)
 
-pl_ungroup(data)
+pl_ungroup(.data)
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{...}{Variables to group by (used in \code{pl_group_by()} only).}
 

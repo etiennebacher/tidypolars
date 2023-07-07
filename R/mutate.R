@@ -5,7 +5,7 @@
 #' delete columns (by setting their value to NULL).
 #'
 #'
-#' @param data A Polars Data/LazyFrame
+#' @param .data A Polars Data/LazyFrame
 #' @param ... Name-value pairs. The name gives the name of the column in
 #'   the output. The value can be:
 #'   * A vector the same length as the current group (or the whole data
@@ -46,31 +46,31 @@
 #'   )
 
 
-pl_mutate <- function(data, ...) {
+pl_mutate <- function(.data, ...) {
 
-  check_polars_data(data)
+  check_polars_data(.data)
 
   dots <- get_dots(...)
-  out_exprs <- rearrange_exprs(data, dots)
+  out_exprs <- rearrange_exprs(.data, dots)
   to_drop <- names(out_exprs[[1]])
 
   out_exprs <- Filter(Negate(is.null), out_exprs[[2]])
   out_exprs <- unlist(out_exprs)
   out_exprs <- paste(out_exprs, collapse = ", ")
 
-  if (inherits(data, "GroupBy") || inherits(data, "LazyGroupBy")) {
-    grps <- paste0("'", pl_groups(data), "'")
+  if (inherits(.data, "GroupBy") || inherits(.data, "LazyGroupBy")) {
+    grps <- paste0("'", pl_groups(.data), "'")
     grps <- paste(grps, collapse = ", ")
-    if (inherits(data, "GroupBy")) {
-      class(data) <- "DataFrame"
-    } else if (inherits(data, "LazyGroupBy")) {
-      class(data) <- "LazyFrame"
+    if (inherits(.data, "GroupBy")) {
+      class(.data) <- "DataFrame"
+    } else if (inherits(.data, "LazyGroupBy")) {
+      class(.data) <- "LazyFrame"
     }
 
     out_exprs <- paste0(out_exprs, "$over(", eval(grps), ")")
-    out_expr <- paste0("data$with_columns(", out_exprs, ")$groupby(", grps, ")")
+    out_expr <- paste0(".data$with_columns(", out_exprs, ")$groupby(", grps, ")")
   } else {
-    out_expr <- paste0("data$with_columns(", out_exprs, ")")
+    out_expr <- paste0(".data$with_columns(", out_exprs, ")")
   }
 
   out <- out_expr |>

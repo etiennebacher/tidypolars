@@ -5,8 +5,8 @@ get_dots <- function(...) {
 # Code adapted from {datawizard}
 # License GPL-3
 
-.select_nse_from_dots <- function(data, ...) {
-  columns <- pl_colnames(data)
+.select_nse_from_dots <- function(.data, ...) {
+  columns <- pl_colnames(.data)
 
   # avoid conflicts
   conflicting_packages <- .conflicting_packages("poorman")
@@ -14,7 +14,7 @@ get_dots <- function(...) {
 
   dots <- get_dots(...)
 
-  selected <- lapply(dots, \(x) .eval_expr(x, data = data)) |>
+  selected <- lapply(dots, \(x) .eval_expr(x, .data = .data )) |>
     unlist() |>
     unique()
 
@@ -23,8 +23,8 @@ get_dots <- function(...) {
   columns[selected]
 }
 
-.select_nse_from_var <- function(data, var) {
-  columns <- pl_colnames(data)
+.select_nse_from_var <- function(.data, var) {
+  columns <- pl_colnames(.data)
 
   # avoid conflicts
   conflicting_packages <- .conflicting_packages("poorman")
@@ -32,7 +32,7 @@ get_dots <- function(...) {
 
   dots <- str2lang(var)
 
-  selected <- .eval_expr(dots, data) |>
+  selected <- .eval_expr(dots, .data) |>
     unique()
 
   columns[selected]
@@ -48,7 +48,7 @@ get_dots <- function(...) {
 # * cyl:gear -> function (`:`) so find which function it is, then get the
 #   position for each variable, then evaluate the function with the positions
 
-.eval_expr <- function(x, data) {
+.eval_expr <- function(x, .data) {
   if (is.null(x)) {
     return(NULL)
   }
@@ -59,9 +59,9 @@ get_dots <- function(...) {
     type,
     "integer" = x,
     "double" = as.integer(x),
-    "character" = .select_char(data, x),
-    "symbol" = .select_symbol(data, x),
-    "language" = .eval_call(data, x),
+    "character" = .select_char(.data, x),
+    "symbol" = .select_symbol(.data, x),
+    "language" = .eval_call(.data, x),
     stop(
       paste0(
         "Expressions of type <",
@@ -81,11 +81,11 @@ get_dots <- function(...) {
 # - character that should be regex-ed on variable names
 # - special word "all" to return all vars
 
-.select_char <- function(data, x) {
+.select_char <- function(.data, x) {
   # use colnames because names() doesn't work for matrices
-  columns <- pl_colnames(data)
+  columns <- pl_colnames(.data)
   if (length(x) == 1L && x == "all") {
-    seq_along(data)
+    seq_along(.data)
   } else {
     matches <- match(x, columns)
     if (anyNA(matches)) {
@@ -111,14 +111,14 @@ get_dots <- function(...) {
 # value but it errors because the function doesn't exist then it means that
 # it is a select helper that we grab from the error message.
 
-.select_symbol <- function(data, x) {
+.select_symbol <- function(.data, x) {
   try_eval <- try(eval(x), silent = TRUE)
   x_dep <- deparse(x)
   is_select_helper <- FALSE
   out <- NULL
 
-  if (x_dep %in% pl_colnames(data)) {
-    matches <- match(x_dep, pl_colnames(data))
+  if (x_dep %in% pl_colnames(.data)) {
+    matches <- match(x_dep, pl_colnames(.data))
     out <- matches[!is.na(matches)]
   } else {
     new_expr <- tryCatch(
@@ -167,16 +167,16 @@ get_dots <- function(...) {
       new_expr <- str2lang(unlist(new_expr, use.names = FALSE))
       out <- .eval_expr(
         new_expr,
-        data = data
+        .data = .data
       )
     } else if (length(new_expr) == 1L && is.function(new_expr)) {
-      out <- which(vapply(data, new_expr, FUN.VALUE = logical(1L)))
+      out <- which(vapply(.data, new_expr, FUN.VALUE = logical(1L)))
     } else {
       out <- unlist(
         lapply(
           new_expr,
           .eval_expr,
-          data = data
+          .data = .data
         ),
         use.names = FALSE
       )
@@ -187,8 +187,8 @@ get_dots <- function(...) {
   # function (e.g `colnames`). Vector of names have the priority on functions
   # so function evaluation is delayed at the max.
   if (is.null(out) && is.function(try_eval)) {
-    cols <- names(data)
-    out <- which(vapply(data, x, FUN.VALUE = logical(1L)))
+    cols <- names(.data)
+    out <- which(vapply(.data, x, FUN.VALUE = logical(1L)))
   }
 
   out
@@ -196,116 +196,116 @@ get_dots <- function(...) {
 
 # Dispatch expressions to various select helpers according to the function call.
 
-.eval_call <- function(data, x) {
+.eval_call <- function(.data, x) {
   type <- deparse(x[[1]])
 
   switch(
     type,
-    `:` = .select_seq(x, data),
-    `-` = .select_minus(x, data),
-    `!` = .select_bang(x, data),
-    `c` = .select_c(x, data),
-    `(` = .select_bracket(x, data),
-    `[` = .select_square_bracket(x, data),
-    `$` = .select_dollar(x, data),
-    "names" = .select_names(x, data),
-    "everything" = .select_all(x, data),
+    `:` = .select_seq(x, .data),
+    `-` = .select_minus(x, .data),
+    `!` = .select_bang(x, .data),
+    `c` = .select_c(x, .data),
+    `(` = .select_bracket(x, .data),
+    `[` = .select_square_bracket(x, .data),
+    `$` = .select_dollar(x, .data),
+    "names" = .select_names(x, .data),
+    "everything" = .select_all(x, .data),
     "starts_with" = ,
     "ends_with" = ,
     "matches" = ,
     "contains" = ,
-    "regex" = .select_helper(x, data),
-    .select_context(x, data)
+    "regex" = .select_helper(x, .data),
+    .select_context(x, .data)
   )
 }
 
 # e.g 1:3, or gear:cyl
-.select_seq <- function(expr, data) {
+.select_seq <- function(expr, .data) {
   x <- .eval_expr(
     expr[[2]],
-    data = data
+    .data = .data
   )
   y <- .eval_expr(
     expr[[3]],
-    data = data
+    .data = .data
   )
   x:y
 }
 
 # e.g -cyl
-.select_minus <- function(expr, data) {
+.select_minus <- function(expr, .data) {
   x <- .eval_expr(
     expr[[2]],
-    data
+    .data
   )
   if (length(x) == 0L) {
-    seq_along(data)
+    seq_along(.data)
   } else {
     x * -1L
   }
 }
 
 # e.g !cyl
-.select_bang <- function(expr, data) {
+.select_bang <- function(expr, .data) {
   x <- .eval_expr(
     expr[[2]],
-    data
+    .data
   )
   if (length(x) == 0L) {
-    seq_along(data)
+    seq_along(.data)
   } else {
     x * -1L
   }
 }
 
 # e.g c("gear", "cyl")
-.select_c <- function(expr, data) {
+.select_c <- function(expr, .data) {
   lst_expr <- as.list(expr)
   lst_expr[[1]] <- NULL
   unlist(
     lapply(
       lst_expr,
       .eval_expr,
-      data
+      .data
     ),
     use.names = FALSE
   )
 }
 
 # e.g -(gear:cyl)
-.select_bracket <- function(expr, data) {
+.select_bracket <- function(expr, .data) {
   .eval_expr(
     expr[[2]],
-    data
+    .data
   )
 }
 
 # e.g myvector[3]
-.select_square_bracket <- function(expr, data) {
+.select_square_bracket <- function(expr, .data) {
   first_obj <- .eval_expr(
     expr[[2]],
-    data
+    .data
   )
   .eval_expr(
     first_obj[eval(expr[[3]])],
-    data
+    .data
   )
 }
 
-.select_names <- function(expr, data) {
+.select_names <- function(expr, .data) {
   first_obj <- .dynEval(expr, inherits = FALSE, minframe = 0L)
   .eval_expr(
     first_obj,
-    data
+    .data
   )
 }
 
-.select_all <- function(expr, data) {
-  seq_len(length(pl_colnames(data)))
+.select_all <- function(expr, .data) {
+  seq_len(length(pl_colnames(.data)))
 }
 
 # e.g starts_with("Sep")
-.select_helper <- function(expr, data) {
+.select_helper <- function(expr, .data) {
   lst_expr <- as.list(expr)
 
   # need this if condition to distinguish between starts_with("Sep") (that we
@@ -329,11 +329,11 @@ get_dots <- function(...) {
     "regex" = collapsed_patterns,
     stop("There is no select helper called '", helper, "'.")
   )
-  grep(rgx, pl_colnames(data))
+  grep(rgx, pl_colnames(.data))
 }
 
 # e.g args$select (happens when we use grouped_data (see center.grouped_df()))
-.select_dollar <- function(expr, data) {
+.select_dollar <- function(expr, .data) {
   first_obj <-
     .dynGet(
       expr[[2]],
@@ -346,26 +346,26 @@ get_dots <- function(...) {
   }
   .eval_expr(
     first_obj[[deparse(expr[[3]])]],
-    data
+    .data
   )
 }
 
 
 # e.g is.numeric()
-.select_context <- function(expr, data) {
+.select_context <- function(expr, .data) {
   x_dep <- deparse(expr)
   if (endsWith(x_dep, "()")) {
     new_expr <- gsub("\\(\\)$", "", x_dep)
     new_expr <- str2lang(new_expr)
     .eval_expr(
       new_expr,
-      data = data
+      .data = .data
     )
   } else {
     out <- .dynEval(expr, inherits = FALSE, minframe = 0L)
     .eval_expr(
       out,
-      data = data
+      .data = .data
     )
   }
 }

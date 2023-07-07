@@ -4,10 +4,10 @@
 \alias{make_unique_id}
 \title{Create a column with unique id per row values}
 \usage{
-make_unique_id(data, ..., new_col = "hash")
+make_unique_id(.data, ..., new_col = "hash")
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}

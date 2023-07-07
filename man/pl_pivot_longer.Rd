@@ -4,10 +4,10 @@
 \alias{pl_pivot_longer}
 \title{Pivot Data/LazyFrame from wide to long}
 \usage{
-pl_pivot_longer(data, cols, names_to = "name", values_to = "value")
+pl_pivot_longer(.data, cols, names_to = "name", values_to = "value")
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{cols}{Columns to pivot into longer format. Can be anything accepted by
 \code{dplyr::select()}.}

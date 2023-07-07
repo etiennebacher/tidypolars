@@ -4,10 +4,10 @@
 \alias{pl_select}
 \title{Select columns from a Data/LazyFrame}
 \usage{
-pl_select(data, ...)
+pl_select(.data, ...)
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}

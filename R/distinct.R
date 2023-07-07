@@ -24,10 +24,10 @@
 #' pl_distinct(pl_test)
 #' pl_distinct(pl_test, iso_o)
 
-pl_distinct <- function(data, ..., keep = "first", maintain_order = TRUE) {
-  check_polars_data(data)
-  vars <- .select_nse_from_dots(data, ...)
-  if (length(vars) == 0) vars <- pl_colnames(data)
-  data$unique(subset = eval(vars), keep = keep, maintain_order = maintain_order)
+pl_distinct <- function(.data, ..., keep = "first", maintain_order = TRUE) {
+  check_polars_data(.data)
+  vars <- .select_nse_from_dots(.data, ...)
+  if (length(vars) == 0) vars <- pl_colnames(.data)
+  .data$unique(subset = eval(vars), keep = keep, maintain_order = maintain_order)
 }
 

@@ -5,7 +5,7 @@
 #' conditions. Note that when a condition evaluates to NA the row will be
 #' dropped, unlike base subsetting with `[`.
 #'
-#' @param data A Polars Data/LazyFrame
+#' @param .data A Polars Data/LazyFrame
 #' @param ... Expressions that return a logical value, and are defined in terms
 #' of the variables in the data. If multiple expressions are included, they
 #' will be combined with the & operator. Only rows for which all conditions
@@ -30,12 +30,12 @@
 #'   pl_filter(Species %in% c("setosa", "virginica"))
 #'
 
-pl_filter <- function(data, ...) {
+pl_filter <- function(.data, ...) {
 
-  check_polars_data(data)
+  check_polars_data(.data)
   dots <- get_dots(...)
 
-  expr <- rearrange_exprs(data, dots, create_new = FALSE)[[2]] |>
+  expr <- rearrange_exprs(.data, dots, create_new = FALSE)[[2]] |>
     unlist()
 
   if (length(expr) == 1) {
@@ -84,23 +84,23 @@ pl_filter <- function(data, ...) {
   # the code for grouped data uses $over() inside $filter(), which
   # cannot be used with grouped data. Therefore I have to manually ungroup
   # the data
-  is_grouped <- !is.null(attributes(data)$pl_grps)
-  mo <- attributes(data)$private$maintain_order
+  grps <- attributes(.data)$pl_grps
+  is_grouped <- !is.null(grps)
+  mo <- attributes(.data)$private$maintain_order
 
   if (is_grouped) {
-    data2 <- clone_grouped_data(data)
-    grps <- attributes(data2)$pl_grps
-    if (inherits(data2, "GroupBy")) {
-      attributes(data2)$class <- "DataFrame"
+    .data2 <- clone_grouped_data(.data)
+    if (inherits(.data2, "GroupBy")) {
+      attributes(.data2)$class <- "DataFrame"
     } else {
-      attributes(data2)$class <- "LazyFrame"
+      attributes(.data2)$class <- "LazyFrame"
     }
     expr <- paste0(expr, "$over(grps)")
   }
 
   expr <- str2lang(expr)
 
-  out <- data$filter(eval(expr))
+  out <- .data$filter(eval(expr))
 
   if (is_grouped) {
     out$groupby(grps, maintain_order = mo)

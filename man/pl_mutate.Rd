@@ -4,10 +4,10 @@
 \alias{pl_mutate}
 \title{Create, modify, and delete columns}
 \usage{
-pl_mutate(data, ...)
+pl_mutate(.data, ...)
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{...}{Name-value pairs. The name gives the name of the column in
 the output. The value can be:

@@ -5,12 +5,12 @@
 \alias{pl_rename_with}
 \title{Rename columns}
 \usage{
-pl_rename(data, ...)
+pl_rename(.data, ...)
 
-pl_rename_with(data, fn, cols = "all", ...)
+pl_rename_with(.data, fn, cols = "all", ...)
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{.data}{A Polars Data/LazyFrame}
 
 \item{...}{For \code{pl_rename()}, one of the following:
 \itemize{
