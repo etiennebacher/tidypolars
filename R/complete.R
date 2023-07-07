@@ -25,17 +25,37 @@ pl_complete <- function(data, ...) {
   dots <- .select_nse_from_dots(data, ...)
   if (length(dots) < 2) return(data)
 
-  start <- "data$select(dots[1])$unique()"
-  chain <- vector("list", length = length(dots) - 1)
+  # TODO: remove this ifelse at some point
+  if (packageVersion("polars") > "0.7.0") {
 
-  for (i in 2:length(dots)) {
-    chain[[i]] <- paste0("$join(data$select(dots[", i, "])$unique(), how = 'cross')")
+    start <- "data$select(pl$col(dots)$unique()$sort()$implode())"
+    chain <- vector("list", length = length(dots) - 1)
+
+    for (i in 1:length(dots)) {
+      chain[[i]] <- paste0("$explode(dots[", i, "])")
+    }
+
+    paste0(
+      start, paste(unlist(chain), collapse = ""),
+      "$join(data, on = dots, how = 'left')"
+    ) |>
+      str2lang() |>
+      eval()
+
+  } else {
+
+    start <- "data$select(dots[1])$unique()"
+    chain <- vector("list", length = length(dots) - 1)
+
+    for (i in 2:length(dots)) {
+      chain[[i]] <- paste0("$join(data$select(dots[", i, "])$unique(), how = 'cross')")
+    }
+
+    paste0(
+      start, paste(unlist(chain), collapse = ""),
+      "$sort(dots)$join(data, on = dots, how = 'left')"
+    ) |>
+      str2lang() |>
+      eval()
   }
-
-  paste0(
-    start, paste(unlist(chain), collapse = ""),
-    "$sort(dots)$join(data, on = dots, how = 'left')"
-  ) |>
-    str2lang() |>
-    eval()
 }
