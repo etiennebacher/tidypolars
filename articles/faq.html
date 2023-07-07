@@ -45,6 +45,7 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/faq.html">FAQ</a>
     <a class="dropdown-item" href="../articles/getting_started.html">Getting started</a>
+    <a class="dropdown-item" href="../articles/parsing-expressions.html">Parsing expressions</a>
   </div>
 </li>
       </ul>
@@ -166,10 +167,10 @@ for more serious ones.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 6</span></span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars        142ms    251ms      3.91     565KB    0    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars    193ms    234ms      3.40     451KB    0.227</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> dplyr         368ms    405ms      2.37     242MB    2.37 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> data.table    297ms    314ms      2.97     273MB    2.97</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars        121ms    138ms      6.97     565KB    0    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars    158ms    195ms      4.99     451KB    0.333</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> dplyr         356ms    398ms      2.43     242MB    2.43 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> data.table    300ms    317ms      2.97     273MB    2.97</span></span>
 <span></span>
 <span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
 <span>  polars <span class="op">=</span> <span class="va">pl_test</span><span class="op">$</span></span>
@@ -185,10 +186,10 @@ for more serious ones.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 6</span></span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars       74.5ms   83.4ms     10.8    162.7KB     0   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars   80.3ms   87.1ms      9.81    40.2KB     0   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> dplyr       338.8ms  338.8ms      2.95   281.9MB    59.0 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> data.table   41.7ms   50.6ms     20.1    100.6MB     1.43</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars       77.5ms   85.5ms     10.8    163.7KB     0   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars   78.8ms   87.5ms     11.1     40.2KB     0   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> dplyr       333.2ms  333.2ms      3.00   281.9MB    60.0 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> data.table   42.6ms   49.7ms     20.1    100.6MB     1.43</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
