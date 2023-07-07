@@ -77,32 +77,32 @@ pl_apply <- function(x, ...) {
   x$apply()
 }
 
-pl_arccos <- function(x, ...) {
+pl_acos <- function(x, ...) {
   check_empty_dots(...)
   x$arccos()
 }
 
-pl_arccosh <- function(x, ...) {
+pl_acosh <- function(x, ...) {
   check_empty_dots(...)
   x$arccosh()
 }
 
-pl_arcsin <- function(x, ...) {
+pl_asin <- function(x, ...) {
   check_empty_dots(...)
   x$arcsin()
 }
 
-pl_arcsinh <- function(x, ...) {
+pl_asinh <- function(x, ...) {
   check_empty_dots(...)
   x$arcsinh()
 }
 
-pl_arctan <- function(x, ...) {
+pl_atan <- function(x, ...) {
   check_empty_dots(...)
   x$arctan()
 }
 
-pl_arctanh <- function(x, ...) {
+pl_atanh <- function(x, ...) {
   check_empty_dots(...)
   x$arctanh()
 }
@@ -577,9 +577,10 @@ pl_sample <- function(x, ...) {
   x$sample()
 }
 
-pl_shift <- function(x, ...) {
+pl_lag <- function(x, n = 1, k = NULL, ...) {
   check_empty_dots(...)
-  x$shift()
+  if (!is.null(k)) n <- k
+  x$shift(n)
 }
 
 pl_shuffle <- function(x, ...) {

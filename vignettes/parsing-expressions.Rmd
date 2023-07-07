@@ -1,0 +1,96 @@
+---
+title: "Parsing expressions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Parsing expressions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Some functions are quite easy to translate in Polars syntax, such as `distinct()`
+(which calls `$unique()` under the hood). Things are more challenging when we
+try to convert classic R expressions to Polars expressions to use them in 
+`mutate()` or `summarize()`. This article walks you through the process of 
+converting these expressions, so that you can understand the strengths and 
+weaknesses of `tidypolars`.
+
+
+## Why should we use Polars expressions?
+
+Polars provides a way to evaluate custom functions using `$apply()` or `$map()`.
+However, **this is strongly discouraged** and people should use Polars' numerous
+built-in functions, that are optimized and parallelized (most of the time) 
+internally.
+
+Therefore, there seems to be a conflict between the two objectives of `tidypolars`:
+
+* provide Polars performance
+* keep using R and `tidyverse` syntax
+
+
+## How does `tidypolars` work with expressions? 
+
+We need to parse expressions that R users provide and convert them to Polars 
+syntax. To do so, `tidypolars` works in several steps.
+
+The main tools in this rewriting process are `parse()` and `getParseData()`. For
+example, suppose we have this string that contains an expression that a user wants
+to pass in `pl_mutate()`:
+
+```{r}
+expr <- "mean(Petal.Length) / sum(Sepal.Width)"
+```
+
+Using `parse()` and `getParseData()`, we can represent this as a table with each
+element:
+
+```{r}
+parsed <- parse(text = expr, keep.source = TRUE)
+p_d <- utils::getParseData(parsed)
+p_d
+```
+
+In particular, we are interested in the columns `token` and `text`. To get variable
+names and replace them with `pl$col(varname)`, we keep only `token == SYMBOL` and 
+then we check which `text` values match the column names of our data. 
+
+We can also extract function calls with `token == SYMBOL_FUNCTION_CALL`. For each
+function call, we check whether there's a Polars equivalent. If there is 
+one, we prefix the function call with `pl_`. For example, `mean(x)` will be 
+transformed as `pl_mean(x)`, which is defined as a very short function that
+returns the Polars expression `x$mean()`.
+
+Finally, one last challenge is that R functions and their Polars equivalent 
+do not necessarily have the same arguments. For example, `mean()` has an argument
+`na.rm` to drop missing values. In Polars, this is done automatically. Overall,
+when some elements of the R function are not used by Polars, it will generate
+a message of the form:
+
+```r
+When the dataset is a Polars DataFrame or LazyFrame, `mean()` only needs 
+one argument. Additional arguments will not be used. 
+
+```
+
+Now, you know how `tidypolars` converts R expressions into Polars expressions.
+
+
+## Drawback
+
+A drawback of this approach is that `tidypolars` can only work with the functions
+it was programmed to know. For example, it recognizes `ifelse()` but if this
+`ifelse()` is buried in a custom function that you defined elsewhere,
+it is not possible to convert it to Polars syntax so you will lose the 
+performance gains here.
+
+
+## List of base R and `tidyverse` functions supported by `tidypolars` 
+
+

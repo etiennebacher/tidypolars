@@ -90,6 +90,14 @@ r_polars_funs <- data.frame(
     r_funs = case_match(
       r_funs,
       "std" ~ "sd",
+      "arccos" ~ "acos",
+      "arccosh" ~ "acosh",
+      "arcsin" ~ "asin",
+      "arcsinh" ~ "asinh",
+      "arctan" ~ "atan",
+      "arctanh" ~ "atanh",
+      "ceil" ~ "ceiling",
+      "shift" ~ "lag",
       .default = r_funs
     )
   ) |>
