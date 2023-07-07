@@ -216,6 +216,11 @@ pl_clip <- function(x, ...) {
   x$clip()
 }
 
+pl_coalesce <- function(..., default = NULL) {
+  dots <- get_dots(...)
+  pl$coalesce(..., default)
+}
+
 pl_constant <- function(x, ...) {
   check_empty_dots(...)
   x$constant()
