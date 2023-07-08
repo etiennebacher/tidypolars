@@ -2,6 +2,8 @@
 
 export()
 export(as_polars)
+export(describe_optimized_plan)
+export(describe_plan)
 export(expect_colnames)
 export(expect_dim)
 export(make_unique_id)
