@@ -94,3 +94,56 @@ performance gains here.
 ## List of base R and `tidyverse` functions supported by `tidypolars` 
 
 
+```{r echo=FALSE, message=FALSE}
+library(dplyr)
+library(knitr)
+out <- tribble(
+  ~Package, ~Function,
+  "base", "abs",
+  "base", "acos", 
+  "base", "acosh", 
+  "base", "asin",
+  "base", "asinh", 
+  "base", "atan", 
+  "base", "atanh",
+  "base", "ceiling",
+  "base", "cos", 
+  "base", "cosh",
+  "base", "cummin",
+  "base", "cumsum", 
+  "base", "exp", 
+  "base", "floor",
+  "stats / dplyr", "lag",
+  "base", "log", 
+  "base", "log10",
+  "base", "max", 
+  "base", "mean", 
+  "stats", "median", 
+  "base", "min",
+  "base", "rank",
+  "base", "round",
+  "base", "sin", 
+  "base", "sinh", 
+  "base", "sort",  
+  "base", "sqrt", 
+  "stats", "sd", 
+  "base", "tan", 
+  "base", "tanh",
+  "base", "tolower",
+  "base", "toupper",
+  "stats", "var",
+  "dplyr", "first",
+  "dplyr", "last",
+  "stringr", "str_ends",
+  "stringr", "str_extract",
+  "stringr", "str_starts",
+  "stringr", "str_to_lower",
+  "stringr", "str_to_upper",
+) |> 
+  arrange(Package)
+
+rows <- seq_len(nrow(out) %/% 2)
+kable(list(out[rows,], matrix(numeric(), nrow=0, ncol=1),
+           out[-rows, ])) 
+```
+
