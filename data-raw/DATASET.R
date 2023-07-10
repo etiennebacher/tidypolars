@@ -79,7 +79,8 @@ expr_category <- gsub("Expr", "", rd_files)
 expr_category <- gsub("_.*", "", expr_category)
 expr_category[expr_category == ""] <- "default"
 
-rd_files <- gsub("Expr(.*)_", "", rd_files)
+# drop everything before first underscore
+rd_files <- gsub("^[^_]*_", "", rd_files)
 
 r_polars_funs <- data.frame(
   category = expr_category,
@@ -98,14 +99,19 @@ r_polars_funs <- data.frame(
       "arctanh" ~ "atanh",
       "ceil" ~ "ceiling",
       "shift" ~ "lag",
+      "is_between" ~ "between",
       .default = r_funs
     )
   ) |>
   distinct() |>
   rows_insert(
-    tibble(
-      polars_funs = c("ifelse", "ifelse", "case_when", "case_match", "coalesce"),
-      r_funs = c("ifelse", "if_else", "case_when", "case_match", "coalesce")
+    tribble(
+      ~polars_funs, ~r_funs,
+      "ifelse", "ifelse",
+      "ifelse", "if_else",
+      "case_when", "case_when",
+      "case_match", "case_match",
+      "coalesce", "coalesce"
     )
   ) |>
   arrange(category, polars_funs, .locale = "en")
