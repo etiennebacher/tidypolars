@@ -14,9 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# FAQ
-
-## Is `tidypolars` slower than `polars`?
+# Is `tidypolars` slower than `polars`?
 
 No, or just marginally. The objective of `tidypolars` is *not* to modify the
 data, simply to translate the `tidyverse` syntax to `polars` syntax. `polars`
@@ -26,21 +24,21 @@ Therefore, there might be minor overhead because we still need to parse the
 expressions and rewrite them in `polars` syntax (see the [Parsing expressions](https://etiennebacher.github.io/tidypolars/articles/parsing-expressions.html)
 vignette) but this should be extremely marginal.
 
-## Am I stuck with `tidypolars`?
+# Am I stuck with `tidypolars`?
 
 No, `tidypolars` will always return `DataFrame`s, `LazyFrame`s or `Series`.
 Therefore, if at some point you want to use `polars` because you need more
 control or because you want to reduce your number of dependencies, you can
 easily do so.
 
-## Do I still need to load `polars`?
+# Do I still need to load `polars`?
 
 Yes, because `tidypolars` doesn't provide any functions to create `polars`
 `DataFrame` or `LazyFrame` or to read data. You'll still need to use `polars`
 for this.
 
 
-## Can I see some benchmarks?
+# Can I see some benchmarks?
 
 Sure but take them with a grain of salt: these small benchmarks may not be 
 representative of real-life scenarios and don't necessarily use the full capacities
