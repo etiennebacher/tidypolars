@@ -14,11 +14,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(tidypolars)
-```
-
-
 # FAQ
 
 ## Is `tidypolars` slower than `polars`?
@@ -28,20 +23,20 @@ data, simply to translate the `tidyverse` syntax to `polars` syntax. `polars`
 is still in charge of doing all the data manipulations under the hood.
 
 Therefore, there might be minor overhead because we still need to parse the 
-expressions and rewrite them in `polars` syntax but this should be extremely 
-marginal.
+expressions and rewrite them in `polars` syntax (see the [Parsing expressions](https://etiennebacher.github.io/tidypolars/articles/parsing-expressions.html)
+vignette) but this should be extremely marginal.
 
 ## Am I stuck with `tidypolars`?
 
-No, as said above, `tidypolars` just changes one syntax to another but it doesn't
-touch the data itself. So if for some reason you want to go back to a "raw" 
-`polars` syntax later in your code, you're free to do so because `tidypolars`
-will always return `DataFrame`s, `LazyFrame`s or `Series`.
+No, `tidypolars` will always return `DataFrame`s, `LazyFrame`s or `Series`.
+Therefore, if at some point you want to use `polars` because you need more
+control or because you want to reduce your number of dependencies, you can
+easily do so.
 
 ## Do I still need to load `polars`?
 
 Yes, because `tidypolars` doesn't provide any functions to create `polars`
-`DataFrame` or `LazyFrame`, or to read data. You'll still need to use `polars`
+`DataFrame` or `LazyFrame` or to read data. You'll still need to use `polars`
 for this.
 
 
@@ -50,6 +45,8 @@ for this.
 Sure but take them with a grain of salt: these small benchmarks may not be 
 representative of real-life scenarios and don't necessarily use the full capacities
 of other packages (e.g keyed `data.table`s). You should refer to [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/) for more serious ones.
+The benchmarks below are mostly useful to show that `polars` and `tidypolars`
+are equivalent in terms of performance.
 
 ```{r}
 library(polars)
