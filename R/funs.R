@@ -32,7 +32,7 @@ pl_sum <- function(x, ...) {
   x$sum()
 }
 
-pl_sd <- function(x, ddof = 1, ...) {
+pl_std <- function(x, ddof = 1, ...) {
   check_empty_dots(...)
   x$std(ddof = ddof)
 }
@@ -82,27 +82,27 @@ pl_approx_unique <- function(x, ...) {
   x$approx_unique()
 }
 
-pl_acos <- function(x) {
+pl_arccos <- function(x) {
   x$arccos()
 }
 
-pl_acosh <- function(x) {
+pl_arccosh <- function(x) {
   x$arccosh()
 }
 
-pl_asin <- function(x) {
+pl_arcsin <- function(x) {
   x$arcsin()
 }
 
-pl_asinh <- function(x) {
+pl_arcsinh <- function(x) {
   x$arcsinh()
 }
 
-pl_atan <- function(x) {
+pl_arctan <- function(x) {
   x$arctan()
 }
 
-pl_atanh <- function(x) {
+pl_arctanh <- function(x) {
   x$arctanh()
 }
 
@@ -141,7 +141,7 @@ pl_forward_fill <- function(x, ...) {
   x$forward_fill()
 }
 
-pl_between <- function(x, left, right, include_bounds = TRUE, ...) {
+pl_is_between <- function(x, left, right, include_bounds = TRUE, ...) {
   check_empty_dots(...)
   x$is_between(start = left, end = right, include_bounds = include_bounds)
 }
@@ -214,7 +214,7 @@ pl_cat <- function(x, ...) {
   x$cat()
 }
 
-pl_ceiling <- function(x, ...) {
+pl_ceil <- function(x, ...) {
   check_empty_dots(...)
   x$ceil()
 }
@@ -622,7 +622,7 @@ pl_sample <- function(x, ...) {
   x$sample()
 }
 
-pl_lag <- function(x, n = 1, k = NULL, ...) {
+pl_shift <- function(x, n = 1, k = NULL, ...) {
   check_empty_dots(...)
   if (!is.null(k)) n <- k
   x$shift(n)
@@ -1095,6 +1095,16 @@ pl_dt_year <- function(x, ...) {
   x$dt$year()
 }
 
+pl_ymd_hms <- function(x, ...) {
+  check_empty_dots(...)
+  x$str$strptime(pl$Datetime("ms"), "%Y-%m-%d %H:%M:%S", strict = FALSE)
+}
+
+pl_ymd_hm <- function(x, ...) {
+  check_empty_dots(...)
+  x$str$strptime(pl$Datetime("ms"), "%Y-%m-%d %H:%M", strict = FALSE)
+}
+
 
 ###### STRING FUNCTIONS
 
@@ -1170,7 +1180,7 @@ pl_str_length <- function(x, ...) {
   x$str$n_chars()
 }
 
-pl_nchar <- pl_str_length
+pl_str_n_chars <- pl_str_length
 
 pl_str_parse_int <- function(x, ...) {
   check_empty_dots(...)
@@ -1197,7 +1207,7 @@ pl_str_rstrip <- function(x, ...) {
   x$str$rstrip()
 }
 
-pl_str_sub <- function(x, start, end = NULL, ...) {
+pl_str_slice <- function(x, start, end = NULL, ...) {
   check_empty_dots(...)
   # polars is 0-indexed
   if (start > 0) start <- start - 1

@@ -70,7 +70,13 @@ usethis::use_data(fish_encounters, overwrite = TRUE)
 
 library(dplyr)
 
-rd_files <- list.files(paste0("C:\\Users\\etienne\\Desktop\\Divers\\r-polars\\man")) |>
+if (.Platform$OS.type == "unix") {
+  rd_files <- list.files("/home/etienne/Bureau/Git/not_my_packages/r-polars/man")
+} else {
+  rd_files <- list.files("C:\\Users\\etienne\\Desktop\\Divers\\r-polars\\man")
+}
+
+rd_files <- rd_files |>
   tools::file_path_sans_ext()
 
 rd_files <- rd_files[grepl("^Expr\\w+", rd_files, ignore.case = FALSE)]
@@ -109,6 +115,11 @@ r_polars_funs <- data.frame(
       category == "Str" & r_funs == "slice" ~ "str_sub",
       category == "Str" & r_funs == "extract" ~ "str_extract",
       .default = r_funs
+    ),
+    polars_funs = case_when(
+      category == "DT" ~ paste0("dt_", polars_funs),
+      category == "Str" ~ paste0("str_", polars_funs),
+      .default = polars_funs
     )
   ) |>
   distinct() |>
@@ -124,25 +135,14 @@ r_polars_funs <- data.frame(
       "toupper", "str_to_upper",
       "tolower", "tolower",
       "tolower", "str_to_lower",
-      "ends", "str_ends",
-      "starts", "str_starts",
-      "length", "str_length",
+      "str_ends", "str_ends",
+      "str_starts", "str_starts",
+      "str_length", "str_length",
+      "ymd_hms", "ymd_hms",
+      "ymd_hm", "ymd_hm"
     )
   ) |>
   arrange(category, polars_funs, .locale = "en")
 
 usethis::use_data(r_polars_funs, overwrite = TRUE, internal = TRUE)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
