@@ -141,8 +141,8 @@ out <- tribble(
   "`stringr`", "`str_replace`",
   "`stringr`", "`str_replace_all`",
   "`stringr`", "`str_starts`",
-  "`stringr`", "`str_starts`",
   "`stringr`", "`str_sub`",
+  "`stringr`", "`str_to_lower`",
   "`stringr`", "`str_to_upper`",
 ) |> 
   arrange(Package)
