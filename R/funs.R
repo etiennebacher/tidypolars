@@ -77,33 +77,27 @@ pl_apply <- function(x, ...) {
   x$apply()
 }
 
-pl_acos <- function(x, ...) {
-  check_empty_dots(...)
+pl_acos <- function(x) {
   x$arccos()
 }
 
-pl_acosh <- function(x, ...) {
-  check_empty_dots(...)
+pl_acosh <- function(x) {
   x$arccosh()
 }
 
-pl_asin <- function(x, ...) {
-  check_empty_dots(...)
+pl_asin <- function(x) {
   x$arcsin()
 }
 
-pl_asinh <- function(x, ...) {
-  check_empty_dots(...)
+pl_asinh <- function(x) {
   x$arcsinh()
 }
 
-pl_atan <- function(x, ...) {
-  check_empty_dots(...)
+pl_atan <- function(x) {
   x$arctan()
 }
 
-pl_atanh <- function(x, ...) {
-  check_empty_dots(...)
+pl_atanh <- function(x) {
   x$arctanh()
 }
 
@@ -226,13 +220,11 @@ pl_constant <- function(x, ...) {
   x$constant()
 }
 
-pl_cos <- function(x, ...) {
-  check_empty_dots(...)
+pl_cos <- function(x) {
   x$cos()
 }
 
-pl_cosh <- function(x, ...) {
-  check_empty_dots(...)
+pl_cosh <- function(x) {
   x$cosh()
 }
 
@@ -658,13 +650,11 @@ pl_take <- function(x, ...) {
   x$take()
 }
 
-pl_tan <- function(x, ...) {
-  check_empty_dots(...)
+pl_tan <- function(x) {
   x$tan()
 }
 
-pl_tanh <- function(x, ...) {
-  check_empty_dots(...)
+pl_tanh <- function(x) {
   x$tanh()
 }
 

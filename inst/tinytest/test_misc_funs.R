@@ -29,7 +29,10 @@ for (i in c(
   "last", "log", "log10",
   "max", "mean", "median", "min",
   "rank",
-  "round", "sin", "sinh", "sort",  "sqrt", "sd", "tan", "tanh", "var"
+  "round",
+  # TODO: sign fails for same reason as cumprod
+  # "sign",
+  "sin", "sinh", "sort",  "sqrt", "sd", "tan", "tanh", "var"
 )) {
 
   if (i %in% c("acos", "asin", "atan", "atanh", "ceiling", "cos", "floor",
