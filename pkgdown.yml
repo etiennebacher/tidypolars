@@ -3,7 +3,7 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   faq: faq.html
-  getting_started: getting_started.html
   parsing-expressions: parsing-expressions.html
-last_built: 2023-07-10T08:21Z
+  tidypolars: tidypolars.html
+last_built: 2023-07-10T10:19Z
 
