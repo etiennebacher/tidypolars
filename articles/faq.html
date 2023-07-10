@@ -166,10 +166,10 @@ terms of performance.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 6</span></span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars        124ms    151ms      5.87     565KB    0    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars    161ms    215ms      4.66     469KB    0.311</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> dplyr         403ms    450ms      2.10     242MB    2.10 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> data.table    329ms    353ms      2.66     273MB    2.66</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars        133ms    174ms      5.88     565KB    0    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars    184ms    275ms      3.81     470KB    0.254</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> dplyr         370ms    418ms      2.32     242MB    2.32 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> data.table    307ms    324ms      2.85     273MB    2.85</span></span>
 <span></span>
 <span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
 <span>  polars <span class="op">=</span> <span class="va">pl_test</span><span class="op">$</span></span>
@@ -185,10 +185,10 @@ terms of performance.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 6</span></span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars        113ms  152.8ms      5.94   163.7KB     0   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars    119ms  161.2ms      6.26    41.1KB     0   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> dplyr         381ms  381.4ms      2.62   281.9MB    52.4 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> data.table     46ms   57.4ms     14.3    100.6MB     1.02</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars        110ms  115.6ms      7.60   163.7KB     0   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars    108ms  120.9ms      7.31    41.1KB     0   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> dplyr         286ms  286.1ms      3.50   281.9MB    69.9 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> data.table     42ms   52.8ms     17.0    100.6MB     1.22</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
