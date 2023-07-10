@@ -109,6 +109,8 @@ r_polars_funs <- data.frame(
       "replace" ~ "str_replace",
       "replace_all" ~ "str_replace_all",
       "n_chars" ~ "nchar",
+      "weekday" ~ "wday",
+      "ordinal_day" ~ "yday",
       .default = r_funs
     ),
     r_funs = case_when(
@@ -123,7 +125,7 @@ r_polars_funs <- data.frame(
     )
   ) |>
   distinct() |>
-  rows_insert(
+  bind_rows(
     tribble(
       ~polars_funs, ~r_funs,
       "ifelse", "ifelse",
@@ -139,7 +141,8 @@ r_polars_funs <- data.frame(
       "str_starts", "str_starts",
       "str_length", "str_length",
       "ymd_hms", "ymd_hms",
-      "ymd_hm", "ymd_hm"
+      "ymd_hm", "ymd_hm",
+      "dt_day", "mday"
     )
   ) |>
   arrange(category, polars_funs, .locale = "en")

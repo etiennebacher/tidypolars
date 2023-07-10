@@ -1080,6 +1080,8 @@ pl_dt_week <- function(x, ...) {
   x$dt$week()
 }
 
+# TODO: check the day of weekstart (lubridate starts the
+# week on sunday, polars on monday)
 pl_dt_weekday <- function(x, ...) {
   check_empty_dots(...)
   x$dt$weekday()

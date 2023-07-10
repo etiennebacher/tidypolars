@@ -34,9 +34,12 @@ replace_funs <- function(x, create_new = TRUE) {
 
   for (f in unique(funs$in_polars)) {
     replacement <- r_polars_funs[r_polars_funs$r_funs == f, "polars_funs"]
+
     # a bit hacky but usually when two functions have the same name we want
     # to prefer the one from Polars "default" namespace
-    if (length(replacement) > 1) replacement <- replacement[1]
+    if (length(replacement) > 1) {
+      replacement <- replacement[1]
+    }
     new_x <- gsub(paste0(f, "\\("), paste0("pl_", replacement, "\\("), new_x)
   }
 
