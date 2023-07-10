@@ -1098,36 +1098,6 @@ pl_dt_year <- function(x, ...) {
 
 ###### STRING FUNCTIONS
 
-pl_str_slice <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$slice()
-}
-
-pl_str_contains <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$contains()
-}
-
-pl_str_decode <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$decode()
-}
-
-pl_str_encode <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$encode()
-}
-
-pl_str_ends_with <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$ends_with()
-}
-
-pl_str_starts_with <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$starts_with()
-}
-
 pl_str_concat <- function(x, ...) {
   check_empty_dots(...)
   x$str$concat()
@@ -1153,14 +1123,16 @@ pl_str_encode <- function(x, ...) {
   x$str$encode()
 }
 
-pl_str_ends_with <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$ends_with()
+pl_str_ends <- function(x, pattern, negate = FALSE) {
+  if (isTRUE(negate)) {
+    x$str$ends_with(pl$lit(pattern))$is_not()
+  } else {
+    x$str$ends_with(pl$lit(pattern))
+  }
 }
 
-pl_str_extract <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$extract()
+pl_str_extract <- function(x, pattern, group = 0) {
+  x$str$extract(pattern, group)
 }
 
 pl_str_extract_all <- function(x, ...) {
@@ -1243,9 +1215,12 @@ pl_str_splitn <- function(x, ...) {
   x$str$splitn()
 }
 
-pl_str_starts_with <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$starts_with()
+pl_str_starts <- function(x, pattern, negate = FALSE) {
+  if (isTRUE(negate)) {
+    x$str$starts_with(pl$lit(pattern))$is_not()
+  } else {
+    x$str$starts_with(pl$lit(pattern))
+  }
 }
 
 pl_str_str_explode <- function(x, ...) {
@@ -1263,15 +1238,19 @@ pl_str_strptime <- function(x, ...) {
   x$str$strptime()
 }
 
-pl_str_to_lowercase <- function(x, ...) {
+pl_str_to_lower <- function(x, ...) {
   check_empty_dots(...)
   x$str$to_lowercase()
 }
 
-pl_str_to_uppercase <- function(x, ...) {
+pl_tolower <- pl_str_to_lower
+
+pl_str_to_upper <- function(x, ...) {
   check_empty_dots(...)
   x$str$to_uppercase()
 }
+
+pl_toupper <- pl_str_to_upper
 
 pl_str_zfill <- function(x, ...) {
   check_empty_dots(...)

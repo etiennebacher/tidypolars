@@ -100,6 +100,7 @@ r_polars_funs <- data.frame(
       "ceil" ~ "ceiling",
       "shift" ~ "lag",
       "is_between" ~ "between",
+      "extract" ~ "str_extract",
       .default = r_funs
     )
   ) |>
@@ -111,7 +112,13 @@ r_polars_funs <- data.frame(
       "ifelse", "if_else",
       "case_when", "case_when",
       "case_match", "case_match",
-      "coalesce", "coalesce"
+      "coalesce", "coalesce",
+      "toupper", "toupper",
+      "toupper", "str_to_upper",
+      "tolower", "tolower",
+      "tolower", "str_to_lower",
+      "ends", "str_ends",
+      "starts", "str_starts"
     )
   ) |>
   arrange(category, polars_funs, .locale = "en")
