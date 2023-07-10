@@ -1,0 +1,125 @@
+---
+title: "Getting started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{getting_started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+We're going to use the dataset `who` provided in `tidyr` but we need to convert it to the `polars` format.
+
+```{r setup}
+library(polars)
+library(tidypolars)
+
+# who <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/tidyr/who.csv")
+pl_who <- as_polars(read.csv("who.csv"))
+```
+
+The objective of `tidypolars` is to provide functions whose syntax is close to
+the `tidyverse` while keeping the number of dependencies very low. Therefore, it
+can be used in two ways depending on whether you already the `tidyverse` or not.
+
+## You don't use the `tidyverse`
+
+`tidypolars` provides two types of functions: some that replicate functions from 
+the `tidyverse` and some that are "unique" to `polars`. The former are always
+prefixed with `pl_`. For example, `tidypolars::pl_filter()` is equivalent to 
+`dplyr::filter()`.
+
+Like with the `tidyverse`, you can pipe multiple `tidypolars` functions:
+
+```{r}
+pl_who |> 
+  pl_filter(year > 1990) |> 
+  pl_drop_na(newrel_f3544) |> 
+  pl_select(iso3, year, matches("^newrel(.*)_f"))
+```
+
+If you use `polars`' lazy API, you need to call `pl_collect()` at the end of the 
+chained expression:
+
+```{r}
+pl_who_l <- as_polars(read.csv("who.csv"), lazy = TRUE)
+
+out <- pl_who_l |> 
+  pl_filter(year > 1990) |> 
+  pl_drop_na(newrel_f3544) |> 
+  pl_select(iso3, year, matches("^newrel(.*)_f"))
+
+# this just prints the query
+out
+
+# this performs the query
+out |> 
+  pl_collect()
+```
+
+`tidypolars` always return a `DataFrame` or a `LazyFrame` so you can still use
+`polars` original syntax after a chained expression:
+
+```{r}
+out <- pl_who |> 
+  pl_filter(year > 1990) |> 
+  pl_select(iso3, year, matches("^newrel(.*)_f"))
+
+out
+
+out$
+  groupby("iso3", maintain_order = TRUE)$
+  agg(
+    pl$all()$mean()
+  )$
+  sort(c("iso3", "year"))
+```
+
+The code above only depends on `polars` and some `R` core packages.
+
+## You already use the `tidyverse`
+
+While the syntax above is very close to the `tidyverse` one, it can be tedious to
+add the prefix `pl_` to every function. Therefore, if you already load `dplyr` or
+other `tidyverse` packages in your code, you simply need to use `as_polars()` on 
+your data (or read it with `polars` functions). The rest of the code doesn't need
+to change at all. 
+
+Here's an example of some `dplyr` code:
+
+```{r}
+library(dplyr, warn.conflicts = FALSE)
+
+starwars |> 
+  select(name, height, mass, species, sex) |> 
+  mutate(
+    BMI = mass / ((height/100) ^2)
+  ) |> 
+  select(BMI, everything()) |> 
+  rename_with(.fn = toupper)
+```
+
+You can simply use a `polars` dataset instead, without changing anything (apart
+from the argument name in `rename_with()`):
+
+```{r}
+library(tidypolars)
+
+starwars |> 
+  as_polars() |> 
+  select(name, height, mass, species, sex) |> 
+  mutate(
+    BMI = mass / ((height/100) ^2)
+  ) |> 
+  select(BMI, everything()) |> 
+  rename_with(fn = toupper)
+```
+
+**NOTE:** if you want to use the same functions as the `tidyverse` ones, you 
+**must** load `dplyr` or the related packages first.

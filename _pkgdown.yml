@@ -6,6 +6,11 @@ template:
     heading_font: {google: "Mulish"}
     code_font: {google: "Fira Code"}
 
+navbar:
+  structure:
+    left:  [intro, articles, reference, news]
+    right: [search, github]
+
 reference:
   - title: Polars-specific functions
     desc: |
