@@ -84,11 +84,8 @@
     
     
 <div class="section level2">
-<h2 id="faq">FAQ<a class="anchor" aria-label="anchor" href="#faq"></a>
+<h2 id="is-tidypolars-slower-than-polars">Is <code>tidypolars</code> slower than <code>polars</code>?<a class="anchor" aria-label="anchor" href="#is-tidypolars-slower-than-polars"></a>
 </h2>
-<div class="section level3">
-<h3 id="is-tidypolars-slower-than-polars">Is <code>tidypolars</code> slower than <code>polars</code>?<a class="anchor" aria-label="anchor" href="#is-tidypolars-slower-than-polars"></a>
-</h3>
 <p>No, or just marginally. The objective of <code>tidypolars</code> is
 <em>not</em> to modify the data, simply to translate the
 <code>tidyverse</code> syntax to <code>polars</code> syntax.
@@ -99,26 +96,26 @@ parse the expressions and rewrite them in <code>polars</code> syntax
 (see the <a href="https://etiennebacher.github.io/tidypolars/articles/parsing-expressions.html" class="external-link">Parsing
 expressions</a> vignette) but this should be extremely marginal.</p>
 </div>
-<div class="section level3">
-<h3 id="am-i-stuck-with-tidypolars">Am I stuck with <code>tidypolars</code>?<a class="anchor" aria-label="anchor" href="#am-i-stuck-with-tidypolars"></a>
-</h3>
+<div class="section level2">
+<h2 id="am-i-stuck-with-tidypolars">Am I stuck with <code>tidypolars</code>?<a class="anchor" aria-label="anchor" href="#am-i-stuck-with-tidypolars"></a>
+</h2>
 <p>No, <code>tidypolars</code> will always return
 <code>DataFrame</code>s, <code>LazyFrame</code>s or <code>Series</code>.
 Therefore, if at some point you want to use <code>polars</code> because
 you need more control or because you want to reduce your number of
 dependencies, you can easily do so.</p>
 </div>
-<div class="section level3">
-<h3 id="do-i-still-need-to-load-polars">Do I still need to load <code>polars</code>?<a class="anchor" aria-label="anchor" href="#do-i-still-need-to-load-polars"></a>
-</h3>
+<div class="section level2">
+<h2 id="do-i-still-need-to-load-polars">Do I still need to load <code>polars</code>?<a class="anchor" aria-label="anchor" href="#do-i-still-need-to-load-polars"></a>
+</h2>
 <p>Yes, because <code>tidypolars</code> doesn’t provide any functions to
 create <code>polars</code> <code>DataFrame</code> or
 <code>LazyFrame</code> or to read data. You’ll still need to use
 <code>polars</code> for this.</p>
 </div>
-<div class="section level3">
-<h3 id="can-i-see-some-benchmarks">Can I see some benchmarks?<a class="anchor" aria-label="anchor" href="#can-i-see-some-benchmarks"></a>
-</h3>
+<div class="section level2">
+<h2 id="can-i-see-some-benchmarks">Can I see some benchmarks?<a class="anchor" aria-label="anchor" href="#can-i-see-some-benchmarks"></a>
+</h2>
 <p>Sure but take them with a grain of salt: these small benchmarks may
 not be representative of real-life scenarios and don’t necessarily use
 the full capacities of other packages (e.g keyed
@@ -169,10 +166,10 @@ terms of performance.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 6</span></span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars        137ms    147ms      6.47     565KB    0    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars    179ms    193ms      4.80     460KB    0.320</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> dplyr         399ms    443ms      2.20     242MB    2.20 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> data.table    311ms    344ms      2.81     273MB    2.81</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars        126ms    234ms      3.90     565KB    0    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars    154ms    283ms      3.47     460KB    0.231</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> dplyr         422ms    522ms      1.88     242MB    1.88 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> data.table    301ms    439ms      2.25     273MB    2.25</span></span>
 <span></span>
 <span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
 <span>  polars <span class="op">=</span> <span class="va">pl_test</span><span class="op">$</span></span>
@@ -188,11 +185,10 @@ terms of performance.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 6</span></span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars         75ms   81.7ms     12.2    163.7KB     0   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars   79.7ms   89.2ms     11.2     40.9KB     0   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> dplyr       341.3ms  341.3ms      2.93   281.9MB    58.6 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> data.table   44.3ms   51.7ms     18.7    100.6MB     1.33</span></span></code></pre></div>
-</div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars       94.3ms  147.5ms      6.46   163.7KB     0   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars  115.5ms  128.6ms      7.27    40.9KB     0   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> dplyr       336.5ms  336.5ms      2.97   281.9MB    59.4 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> data.table     43ms   50.3ms     19.2    100.6MB     1.37</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
