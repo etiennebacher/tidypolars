@@ -1165,24 +1165,26 @@ pl_str_lstrip <- function(x, ...) {
   x$str$lstrip()
 }
 
-pl_str_n_chars <- function(x, ...) {
+pl_str_length <- function(x, ...) {
   check_empty_dots(...)
   x$str$n_chars()
 }
+
+pl_nchar <- pl_str_length
 
 pl_str_parse_int <- function(x, ...) {
   check_empty_dots(...)
   x$str$parse_int()
 }
 
-pl_str_replace <- function(x, ...) {
+pl_str_replace <- function(x, pattern, replacement, ...) {
   check_empty_dots(...)
-  x$str$replace()
+  x$str$replace(pattern, replacement)
 }
 
-pl_str_replace_all <- function(x, ...) {
+pl_str_replace_all <- function(x, pattern, replacement, ...) {
   check_empty_dots(...)
-  x$str$replace_all()
+  x$str$replace_all(pattern, replacement)
 }
 
 pl_str_rjust <- function(x, ...) {
@@ -1195,9 +1197,11 @@ pl_str_rstrip <- function(x, ...) {
   x$str$rstrip()
 }
 
-pl_str_slice <- function(x, ...) {
+pl_str_sub <- function(x, start, end = NULL, ...) {
   check_empty_dots(...)
-  x$str$slice()
+  # polars is 0-indexed
+  if (start > 0) start <- start - 1
+  x$str$slice(start, end)
 }
 
 pl_str_split <- function(x, ...) {

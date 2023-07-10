@@ -6,12 +6,14 @@ library(stringr)
 
 test_df <- data.frame(
   x1 = c("heLLo there", "it's mE"),
-  x2 = c("apples x4", "bag of flour")
+  x2 = c("apples x4", "bag of flour"),
+  x3 = c("\u6c49\u5b57", "\U0001f60a"),
+  x4 = c("\u00fc", "u\u0308")
 )
 
 test <- pl$DataFrame(test_df)
 
-for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper")) {
+for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper", "nchar")) {
 
   pol <- paste0("pl_mutate(test, foo = ", i, "(x1))") |>
     str2lang() |>
@@ -75,3 +77,105 @@ expect_equal(
   mutate(test_df, foo = str_extract(x2, "([a-z]+) of ([a-z]+)", group = 2)) |>
     pull(foo)
 )
+
+expect_equal(
+  pl_mutate(test, foo = str_length(x2)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_length(x2)) |>
+    pull(foo)
+)
+
+expect_equal(
+  pl_mutate(test, foo = str_length(x3)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_length(x3)) |>
+    pull(foo)
+)
+
+expect_equal(
+  pl_mutate(test, foo = str_length(x4)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_length(x4)) |>
+    pull(foo)
+)
+
+expect_equal(
+  pl_mutate(test, foo = str_replace(x1, "[aeiou]", "-")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_replace(x1, "[aeiou]", "-")) |>
+    pull(foo)
+)
+
+expect_equal(
+  pl_mutate(test, foo = str_replace(x1, "[aeiou]", "")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_replace(x1, "[aeiou]", "")) |>
+    pull(foo)
+)
+
+# TODO:
+# expect_equal(
+#   pl_mutate(test, foo = str_replace(x1, "[aeiou]", "\\1\\1")) |>
+#     pl_pull(foo),
+#   mutate(test_df, foo = str_replace(x1, "([aeiou])", "\\1\\1")) |>
+#     pull(foo)
+# )
+
+expect_equal(
+  pl_mutate(test, foo = str_replace(x1, "[aeiou]", c("1", "2"))) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_replace(x1, "[aeiou]", c("1", "2"))) |>
+    pull(foo)
+)
+
+# TODO:
+# expect_equal(
+#   pl_mutate(test, foo = str_replace(x1, c("a", "e"), "-")) |>
+#     pl_pull(foo),
+#   mutate(test_df, foo = str_replace(x1, c("a", "e"), "-")) |>
+#     pull(foo)
+# )
+
+expect_equal(
+  pl_mutate(test, foo = str_replace_all(x1, "[aeiou]", "-")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_replace_all(x1, "[aeiou]", "-")) |>
+    pull(foo)
+)
+
+# TODO:
+# expect_equal(
+#   pl_mutate(test, foo = str_replace_all(x1, "[aeiou]", toupper)) |>
+#     pl_pull(foo),
+#   mutate(test_df, foo = str_replace_all(x1, "[aeiou]", toupper)) |>
+#     pull(foo)
+# )
+
+expect_equal(
+  pl_mutate(test, foo = str_sub(x1, 1, 5)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_sub(x1, 1, 5)) |>
+    pull(foo)
+)
+
+expect_equal(
+  pl_mutate(test, foo = str_sub(x1, -1)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_sub(x1, -1)) |>
+    pull(foo)
+)
+
+expect_equal(
+  pl_mutate(test, foo = str_sub(x1, 0)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_sub(x1, 0)) |>
+    pull(foo)
+)
+
+# TODO
+# expect_equal(
+#   pl_mutate(test, foo = str_sub(x1, -10, -2)) |>
+#     pl_pull(foo),
+#   mutate(test_df, foo = str_sub(x1, -10, -2)) |>
+#     pull(foo)
+# )
