@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-exit_if_not(packageVersion("polars") >= "0.6.2")
+exit_if_not(utils::packageVersion("polars") >= "0.6.2")
 
 test <- polars::pl$DataFrame(mtcars)
 
