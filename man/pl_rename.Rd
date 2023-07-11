@@ -29,7 +29,7 @@ For \code{pl_rename_with}, additional arguments passed to \code{fn}.}
 Rename columns
 }
 \examples{
-\dontshow{if (packageVersion("polars") > "0.6.1") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (utils::packageVersion("polars") > "0.6.1") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pl_test <- polars::pl$DataFrame(mtcars)
 
 pl_rename(pl_test, miles_per_gallon = "mpg", horsepower = "hp")

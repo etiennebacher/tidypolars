@@ -18,7 +18,7 @@ for completing missing combinations of data. Note that this function doesn't
 work with grouped data yet.
 }
 \examples{
-\dontshow{if (packageVersion("polars") >= "0.6.2") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (utils::packageVersion("polars") >= "0.6.2") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 test <- polars::pl$DataFrame(
   country = c("France", "France", "UK", "UK", "Spain"),
   year = c(2020, 2021, 2019, 2020, 2022),
