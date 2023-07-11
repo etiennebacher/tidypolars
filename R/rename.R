@@ -12,7 +12,7 @@
 #'
 #' @rdname pl_rename
 #' @export
-#' @examplesIf packageVersion("polars") > "0.6.1"
+#' @examplesIf utils::packageVersion("polars") > "0.6.1"
 #' pl_test <- polars::pl$DataFrame(mtcars)
 #'
 #' pl_rename(pl_test, miles_per_gallon = "mpg", horsepower = "hp")

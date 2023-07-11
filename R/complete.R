@@ -8,7 +8,7 @@
 #' @inheritParams pl_select
 #'
 #' @export
-#' @examplesIf packageVersion("polars") >= "0.6.2"
+#' @examplesIf utils::packageVersion("polars") >= "0.6.2"
 #' test <- polars::pl$DataFrame(
 #'   country = c("France", "France", "UK", "UK", "Spain"),
 #'   year = c(2020, 2021, 2019, 2020, 2022),
@@ -26,7 +26,7 @@ pl_complete <- function(.data, ...) {
   if (length(dots) < 2) return(.data)
 
   # TODO: remove this ifelse at some point
-  if (packageVersion("polars") > "0.7.0") {
+  if (utils::packageVersion("polars") > "0.7.0") {
 
     start <- ".data$select(pl$col(dots)$unique()$sort()$implode())"
     chain <- vector("list", length = length(dots) - 1)

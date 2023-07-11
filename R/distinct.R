@@ -14,7 +14,7 @@
 #'  streaming.
 #'
 #' @export
-#' @examplesIf packageVersion("polars") > "0.6.1"
+#' @examplesIf utils::packageVersion("polars") > "0.6.1"
 #' pl_test <- polars::pl$DataFrame(
 #'   iso_o = rep(c("AA", "AB", "AC"), each = 2),
 #'   iso_d = rep(c("BA", "BB", "BC"), each = 2),
