@@ -1,0 +1,19 @@
+.navbar {
+  background-color: #0B7189 !important;
+}
+.navbar-brand, .nav-link {
+  color: #C2CCD6 !important;
+}
+.navbar-brand:hover, .nav-text, .nav-link:hover {
+  color: white !important;
+}
+#dropdown-articles, .navbar-light .navbar-nav .active > .nav-link {
+	color: #C2CCD6 !important;
+	background: #0B7189;
+}
+#dropdown-articles:hover, .navbar-light .navbar-nav .active > .nav-link:hover {
+	color: white !important;
+}
+#toc > .nav a.nav-link {
+	color: inherit !important;
+}
