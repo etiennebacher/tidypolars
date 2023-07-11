@@ -19,6 +19,12 @@ pl_pull <- function(.data, var) {
   }
   if (inherits(.data, "GroupBy")) attributes(.data)$class <- "DataFrame"
   if (inherits(.data, "LazyGroupBy")) attributes(.data)$class <- "LazyFrame"
+
+  # for testing only
+  if (inherits(.data, "LazyFrame") && Sys.getenv("TIDYPOLARS_TEST") == "TRUE") {
+    return(.data$select(pl$col(var))$collect()$to_series()$to_r())
+  }
+
   .data$select(pl$col(var))$to_series()$to_r()
 }
 
