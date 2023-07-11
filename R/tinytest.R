@@ -3,6 +3,9 @@
 #' @export
 #' @keywords internal
 expect_colnames <- function(x, y) {
+  if (inherits(x, "LazyFrame")) {
+    x <- x$collect()
+  }
   res <- identical(x$columns, y)
   tinytest::tinytest(
     result = res,
@@ -15,6 +18,9 @@ expect_colnames <- function(x, y) {
 #' @export
 #' @keywords internal
 expect_dim <- function(x, y) {
+  if (inherits(x, "LazyFrame")) {
+    x <- x$collect()
+  }
   res <- identical(dim(x), y)
   tinytest::tinytest(
     result = res,
@@ -36,4 +42,9 @@ expect_equal_lazy <- function(x, y, ...) {
     call = sys.call(sys.parent(1)),
     ...
   )
+}
+
+test_all_tidypolars <- function() {
+  source("tests/tinytest/setup.R")
+  tinytest::test_all(testdir = "tests/tinytest")
 }
