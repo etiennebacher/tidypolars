@@ -36,7 +36,10 @@ expect_equal_lazy <- function(x, y, ...) {
   if (inherits(x, "LazyFrame")) {
     x <- x$collect()
   }
-  res <- all.equal(x, y)
+  if (inherits(y, "LazyFrame")) {
+    y <- y$collect()
+  }
+  res <- all.equal(x, y, ...)
   tinytest::tinytest(
     result = res,
     call = sys.call(sys.parent(1)),
