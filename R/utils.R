@@ -85,7 +85,7 @@ get_dots <- function(...) {
   # use colnames because names() doesn't work for matrices
   columns <- pl_colnames(.data)
   if (length(x) == 1L && x == "all") {
-    seq_along(.data)
+    seq_len(length(columns))
   } else {
     matches <- match(x, columns)
     if (anyNA(matches)) {
