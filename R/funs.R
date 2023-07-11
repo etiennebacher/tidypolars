@@ -1120,9 +1120,9 @@ pl_str_contains <- function(x, ...) {
   x$str$contains()
 }
 
-pl_str_count_match <- function(x, ...) {
+pl_str_count_match <- function(x, pattern = "", ...) {
   check_empty_dots(...)
-  x$str$count_match()
+  x$str$count_match(pattern)
 }
 
 pl_str_decode <- function(x, ...) {
@@ -1273,4 +1273,14 @@ pl_str_zfill <- function(x, ...) {
   x$str$zfill()
 }
 
+# not in polars
+pl_str_remove <- function(x, pattern, ...) {
+  check_empty_dots(...)
+  x$str$replace(pattern, "")
+}
 
+# not in polars
+pl_str_remove_all <- function(x, pattern, ...) {
+  check_empty_dots(...)
+  x$str$replace_all(pattern, "")
+}

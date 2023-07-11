@@ -8,7 +8,8 @@ test_df <- data.frame(
   x1 = c("heLLo there", "it's mE"),
   x2 = c("apples x4", "bag of flour"),
   x3 = c("\u6c49\u5b57", "\U0001f60a"),
-  x4 = c("\u00fc", "u\u0308")
+  x4 = c("\u00fc", "u\u0308"),
+  x5 = c("a.", "...")
 )
 
 test <- pl$DataFrame(test_df)
@@ -151,6 +152,29 @@ expect_equal(
 #     pull(foo)
 # )
 
+
+expect_equal(
+  pl_mutate(test, foo = str_remove(x1, "[aeiou]")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_remove(x1, "[aeiou]")) |>
+    pull(foo)
+)
+
+expect_equal(
+  pl_mutate(test, foo = str_remove(x2, "[[:digit:]]")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_remove(x2, "[[:digit:]]")) |>
+    pull(foo)
+)
+
+expect_equal(
+  pl_mutate(test, foo = str_remove_all(x1, "[aeiou]")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_remove_all(x1, "[aeiou]")) |>
+    pull(foo)
+)
+
+
 expect_equal(
   pl_mutate(test, foo = str_sub(x1, 1, 5)) |>
     pl_pull(foo),
@@ -172,10 +196,32 @@ expect_equal(
     pull(foo)
 )
 
-# TODO
+# TODO:
 # expect_equal(
 #   pl_mutate(test, foo = str_sub(x1, -10, -2)) |>
 #     pl_pull(foo),
 #   mutate(test_df, foo = str_sub(x1, -10, -2)) |>
+#     pull(foo)
+# )
+
+expect_equal(
+  pl_mutate(test, foo = str_count(x1, "[aeiou]")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_count(x1, "[aeiou]")) |>
+    pull(foo)
+)
+
+expect_equal(
+  pl_mutate(test, foo = str_count(x5, ".")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_count(x5, ".")) |>
+    pull(foo)
+)
+
+# TODO:
+# expect_equal(
+#   pl_mutate(test, foo = str_count(x5, ".")) |>
+#     pl_pull(foo),
+#   mutate(test_df, foo = str_count(x5, fixed("."))) |>
 #     pull(foo)
 # )

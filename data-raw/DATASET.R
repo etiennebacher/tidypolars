@@ -106,6 +106,7 @@ r_polars_funs <- data.frame(
       "ceil" ~ "ceiling",
       "shift" ~ "lag",
       "is_between" ~ "between",
+      "count_match" ~ "str_count",
       "replace" ~ "str_replace",
       "replace_all" ~ "str_replace_all",
       "n_chars" ~ "nchar",
@@ -140,6 +141,8 @@ r_polars_funs <- data.frame(
       "str_ends", "str_ends",
       "str_starts", "str_starts",
       "str_length", "str_length",
+      "str_remove", "str_remove",
+      "str_remove_all", "str_remove_all",
       "ymd_hms", "ymd_hms",
       "ymd_hm", "ymd_hm",
       "dt_day", "mday"
