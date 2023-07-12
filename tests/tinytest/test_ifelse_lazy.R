@@ -18,13 +18,16 @@ expect_equal_lazy(
   c("foo", "foo", "bar", "foo", "bar")
 )
 
-# TODO: errors when different types
-# expect_equal_lazy(
-#   test |>
-#     pl_mutate(y = ifelse(x1 == 1, "foo", "bar")) |>
-#     pl_pull(y),
-#   rep("bar", 5)
-# )
+# errors when different types
+# different behavior than from classic R (e.g iris$Species == 1
+# returns all FALSE)
+# I think it's better like this because it forces the user to
+# be clear about data types
+expect_error_lazy(
+  test |>
+    pl_mutate(y = ifelse(x1 == 1, "foo", "bar")),
+  "cannot compare"
+)
 
 expect_equal_lazy(
   test |>
@@ -33,13 +36,19 @@ expect_equal_lazy(
   c("hello", "hello", "b", "hello", "c")
 )
 
-# safe with dplyr::if_else()
+# same with dplyr::if_else()
 
 expect_equal_lazy(
   test |>
     pl_mutate(y = if_else(x1 == 'a', "foo", "bar")) |>
     pl_pull(y),
   c("foo", "foo", "bar", "foo", "bar")
+)
+
+expect_error_lazy(
+  test |>
+    pl_mutate(y = if_else(x1 == 1, "foo", "bar")) ,
+  "cannot compare"
 )
 
 expect_equal_lazy(
