@@ -30,7 +30,7 @@ mtcars2 <- mtcars
 mtcars2$hash <- 1
 test2 <- pl$LazyFrame(mtcars2)
 
-expect_error(
+expect_error_lazy(
   make_unique_id(test2, am, gear),
   "Column `hash` already exists"
 )

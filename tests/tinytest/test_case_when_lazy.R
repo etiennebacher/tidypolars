@@ -24,21 +24,31 @@ expect_equal_lazy(
   c("foo", "foo", "hi there", "foo", "hi there")
 )
 
+expect_equal_lazy(
+  test |>
+    pl_mutate(
+      y = case_when(
+        x1 %in% 'a' ~ "foo",
+        x2 == 3 ~ "bar",
+        .default = "hi there"
+      )
+    ) |>
+    pl_pull(y),
+  c("foo", "foo", "hi there", "foo", "hi there")
+)
 
-# TODO fix %in%
-# expect_equal_lazy(
-#   test |>
-#     pl_mutate(
-#       y = case_when(
-#         x1 %in% 'a' ~ "foo",
-#         x2 == 3 ~ "bar",
-#         .default = "hi there"
-#       )
-#     ) |>
-#     pl_pull(y),
-#   c("foo", "foo", "hi there", "foo", "hi there")
-# )
-
+expect_equal_lazy(
+  test |>
+    pl_mutate(
+      y = case_when(
+        x1 %in% 'a' & x2 == 2 ~ "foo",
+        x2 == 3 ~ "bar",
+        .default = "hi there"
+      )
+    ) |>
+    pl_pull(y),
+  c("foo", "hi there", "hi there", "bar", "hi there")
+)
 
 # no default
 

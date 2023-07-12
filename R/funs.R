@@ -195,6 +195,7 @@ pl_case_when <- function(...) {
     }
     spl <- strsplit(dep, "~")[[1]] |>
       trimws()
+    spl[1] <- parse_boolean_exprs(spl[1])
     paste0("$when(", spl[1], ")$then(", spl[2], ")")
   }) |>
     paste(collapse = "")
