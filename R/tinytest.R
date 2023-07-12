@@ -47,6 +47,14 @@ expect_equal_lazy <- function(x, y, ...) {
   )
 }
 
+#' `tinytest` helper
+#'
+#' @export
+#' @keywords internal
+expect_error_lazy <- function(current, pattern, ...) {
+  tinytest::expect_error(current$collect(), pattern, ...)
+}
+
 test_all_tidypolars <- function() {
   source("tests/tinytest/setup.R")
   tinytest::test_all(testdir = "tests/tinytest")
