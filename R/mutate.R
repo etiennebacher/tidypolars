@@ -67,7 +67,7 @@ pl_mutate <- function(.data, ...) {
       class(.data) <- "LazyFrame"
     }
 
-    out_exprs <- paste0(out_exprs, "$over(", eval(grps), ")")
+    out_exprs <- paste0(out_exprs, "$over(", grps, ")")
     out_expr <- paste0(".data$with_columns(", out_exprs, ")$groupby(", grps, ")")
   } else {
     out_expr <- paste0(".data$with_columns(", out_exprs, ")")
@@ -78,7 +78,7 @@ pl_mutate <- function(.data, ...) {
     eval()
 
   if (length(to_drop) > 0) {
-    out$drop(eval(to_drop))
+    out$drop(to_drop)
   } else {
     out
   }

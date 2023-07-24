@@ -26,7 +26,7 @@ pl_replace_na <- function(.data, replace) {
 
   if (is_scalar) {
     .data$with_columns(
-      pl$all()$fill_null(eval(replace))
+      pl$all()$fill_null(replace)
     )
   } else if (is.list(replace)) {
     exprs <- list()

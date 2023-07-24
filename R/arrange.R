@@ -42,5 +42,5 @@ pl_arrange <- function(.data, ...) {
 
   if (length(vars) == 0) return(.data)
 
-  .data$sort(eval(vars), descending = eval(direction))
+  .data$sort(vars, descending = direction)
 }

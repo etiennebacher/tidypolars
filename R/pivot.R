@@ -27,7 +27,7 @@ pl_pivot_longer <- function(.data, cols, names_to = "name", values_to = "value")
   .data$melt(
     id_vars = id_vars, value_vars = value_vars,
     variable_name = names_to, value_name = values_to
-  )$sort(eval(id_vars))
+  )$sort(id_vars)
 
 }
 
@@ -76,14 +76,14 @@ pl_pivot_wider <- function(.data, id_cols, names_from, values_from,
     as.character()
 
   .data <- .data$pivot(
-    values = eval(value_vars),
-    columns = eval(names_vars),
-    index = eval(id_vars)
+    values = value_vars,
+    columns = names_vars,
+    index = id_vars
   )
 
   if (!is.null(values_fill)) {
     .data$with_columns(
-      pl$col(eval(to_fill))$fill_null(values_fill)
+      pl$col(to_fill)$fill_null(values_fill)
     )
   } else {
     .data

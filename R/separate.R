@@ -29,10 +29,10 @@ pl_separate <- function(.data, col, into, sep = "[^[:alnum:]]+", remove = TRUE) 
   .data <- .data$
     with_columns(
       pl$col(col)$cast(pl$Utf8)$
-        str$split_exact(eval(sep), into_len)$
-        alias(eval(temp_id))$
+        str$split_exact(sep, into_len)$
+        alias(temp_id)$
         struct$
-        rename_fields(eval(into))
+        rename_fields(into)
     )$unnest(temp_id)
 
   if (isTRUE(remove)) {

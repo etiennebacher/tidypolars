@@ -30,7 +30,7 @@ pl_summarize <- function(.data, ...) {
     eval()
 
   if (length(out_expr$to_drop) > 0) {
-    out$drop(eval(out_expr$to_drop))
+    out$drop(out_expr$to_drop)
   } else {
     out
   }

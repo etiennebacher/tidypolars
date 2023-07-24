@@ -19,5 +19,5 @@
 pl_drop_na <- function(.data, ...) {
   check_polars_data(.data)
   vars <- .select_nse_from_dots(.data, ...)
-  .data$drop_nulls(eval(vars))
+  .data$drop_nulls(vars)
 }

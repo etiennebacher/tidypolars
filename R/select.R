@@ -18,5 +18,5 @@
 pl_select <- function(.data, ...) {
   check_polars_data(.data)
   vars <- .select_nse_from_dots(.data, ...)
-  .data$select(eval(vars))
+  .data$select(vars)
 }
