@@ -46,6 +46,9 @@
     registerS3method("pull", "DataFrame", pl_pull, envir = asNamespace("dplyr"))
     registerS3method("pull", "LazyFrame", pl_pull, envir = asNamespace("dplyr"))
 
+    registerS3method("relocate", "DataFrame", pl_relocate, envir = asNamespace("dplyr"))
+    registerS3method("relocate", "LazyFrame", pl_relocate, envir = asNamespace("dplyr"))
+
     registerS3method("rename", "DataFrame", pl_rename, envir = asNamespace("dplyr"))
     registerS3method("rename", "LazyFrame", pl_rename, envir = asNamespace("dplyr"))
 

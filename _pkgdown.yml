@@ -37,6 +37,7 @@ reference:
       - pl_group_by
       - pl_mutate
       - pl_pull
+      - pl_relocate
       - pl_rename
       - pl_rename_with
       - pl_select
