@@ -4,6 +4,26 @@ rearrange_exprs <- function(.data, dots, create_new = TRUE) {
 
   to_drop <- list()
 
+  # if there's an across expression, I "explode" it e.g
+  #   'across(contains("a"), mean)'
+  # becomes
+  #   'carb = mean(carb),
+  #    am = mean(am),
+  #    gear = mean(gear),
+  #    drat = mean(drat)'
+  for (i in seq_along(dots)) {
+    expr <- dots[[i]]
+    deparsed <- safe_deparse(expr)
+    is_across_expr <- startsWith(deparsed, "across(")
+    if (is_across_expr) {
+      dots[[i]] <- unnest_across_expr(expr, .data)
+    }
+  }
+
+  if (any(vapply(dots, is.list, FUN.VALUE = logical(1L)))) {
+    dots <- unlist(dots, recursive = FALSE)
+  }
+
   out <- lapply(seq_along(dots), function(x) {
     if (is.null(dots[[x]])) {
       to_drop[[names(dots)[x]]] <<- 1
@@ -126,3 +146,42 @@ check_empty_dots <- function(...) {
   }
 }
 
+unnest_across_expr <- function(expr, .data) {
+
+  if (".cols" %in% names(expr)) {
+    .cols <- expr[[".cols"]]
+  } else {
+    .cols <- expr[[2]]
+  }
+
+  if (".fns" %in% names(expr)) {
+    .fns <- expr[[".fns"]]
+  } else {
+    .fns <- expr[[3]]
+  }
+
+  if (".names" %in% names(expr)) {
+    .names <- expr[[".names"]]
+  } else if (length(expr) >= 4) {
+    .names <- expr[[4]]
+  } else {
+    .names <- NULL
+  }
+
+  .cols <- pl_colnames(.data)[.eval_expr(.cols, .data = .data )]
+
+  if (length(.fns) == 1) { # just a function name, e.g .fns = mean
+    out <- vector("list", length = length(.cols))
+    for (i in .cols) {
+      out[[i]] <- paste0(.fns, "(", i, ")") |>
+        str2lang()
+    }
+  } else if (length(.fns) == 2) { # anonymous function, e.g .fns = ~mean(.x)
+
+  } else { # function that I can't convert to polars, e.g .fns = function(x) mean(x)
+
+  }
+
+  unlist(out)
+
+}
