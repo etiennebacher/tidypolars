@@ -1,8 +1,6 @@
 source("helpers.R")
 using("tidypolars")
 
-exit_if_not(utils::packageVersion("polars") > "0.6.1")
-
 pl_test <- pl$DataFrame(
   iso_o = rep(c("AA", "AB", "AC"), each = 2),
   iso_d = rep(c("BA", "BB", "BC"), each = 2),

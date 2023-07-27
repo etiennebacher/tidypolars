@@ -6,7 +6,7 @@
 #' @param name Name of the new column.
 #'
 #' @export
-#' @examplesIf utils::packageVersion("polars") >= "0.6.2"
+#' @examples
 #' test <- polars::pl$DataFrame(mtcars)
 #' pl_count(test, cyl)
 #'

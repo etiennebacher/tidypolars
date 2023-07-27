@@ -29,9 +29,8 @@ Suggests:
     data.table,
     dplyr,
     knitr,
+    lubridate,
     rmarkdown,
+    tidyr,
     tinytest
-Enhances:
-    dplyr,
-    tidyr
 VignetteBuilder: knitr

@@ -23,7 +23,6 @@ column numbers, select helpers, etc.}
 Count the observations in each group
 }
 \examples{
-\dontshow{if (utils::packageVersion("polars") >= "0.6.2") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 test <- polars::pl$DataFrame(mtcars)
 pl_count(test, cyl)
 
@@ -32,5 +31,4 @@ pl_count(test, cyl, am)
 pl_count(test, cyl, am, sort = TRUE, name = "count")
 
 pl_add_count(test, cyl, am, sort = TRUE, name = "count")
-\dontshow{\}) # examplesIf}
 }

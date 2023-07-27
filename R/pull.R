@@ -22,7 +22,7 @@ pl_pull <- function(.data, var) {
 
   # for testing only
   if (inherits(.data, "LazyFrame") && Sys.getenv("TIDYPOLARS_TEST") == "TRUE") {
-    return(.data$select(pl$col(var))$collect()$to_series()$to_r())
+    return(.data$collect()$select(pl$col(var))$to_series()$to_r())
   }
 
   .data$select(pl$col(var))$to_series()$to_r()

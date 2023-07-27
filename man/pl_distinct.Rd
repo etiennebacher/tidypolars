@@ -27,7 +27,6 @@ also possible to keep either the first occurrence, the last occurence or
 remove all duplicates.
 }
 \examples{
-\dontshow{if (utils::packageVersion("polars") > "0.6.1") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pl_test <- polars::pl$DataFrame(
   iso_o = rep(c("AA", "AB", "AC"), each = 2),
   iso_d = rep(c("BA", "BB", "BC"), each = 2),
@@ -36,5 +35,4 @@ pl_test <- polars::pl$DataFrame(
 
 pl_distinct(pl_test)
 pl_distinct(pl_test, iso_o)
-\dontshow{\}) # examplesIf}
 }

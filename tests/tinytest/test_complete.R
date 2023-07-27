@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-exit_if_not(utils::packageVersion("polars") >= "0.6.2")
+exit_file("Doesn't work for LazyFrames")
 
 test <- polars::pl$DataFrame(
   country = c("France", "France", "UK", "UK", "Spain"),

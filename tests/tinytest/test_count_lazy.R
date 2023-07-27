@@ -5,8 +5,6 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-exit_if_not(utils::packageVersion("polars") >= "0.6.2")
-
 test <- polars::pl$LazyFrame(mtcars)
 
 expect_equal_lazy(
