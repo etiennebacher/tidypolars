@@ -101,9 +101,22 @@ column numbers, select helpers, etc.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────────┴────────┴───────┘</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">pl_complete</span><span class="op">(</span><span class="va">test</span>, <span class="va">country</span>, <span class="va">year</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> syntax error: explode is not a method/attribute of the class DataFrame </span>
-<span class="r-err co"><span class="r-pr">#&gt;</span>  when calling method:</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span>  pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (12, 3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────────┬────────┬───────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ country ┆ year   ┆ value │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---     ┆ ---    ┆ ---   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ str     ┆ f64    ┆ f64   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════════╪════════╪═══════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ France  ┆ 2019.0 ┆ null  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ France  ┆ 2020.0 ┆ 1.0   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ France  ┆ 2021.0 ┆ 2.0   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ France  ┆ 2022.0 ┆ null  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ …       ┆ …      ┆ …     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ UK      ┆ 2019.0 ┆ 3.0   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ UK      ┆ 2020.0 ┆ 4.0   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ UK      ┆ 2021.0 ┆ null  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ UK      ┆ 2022.0 ┆ null  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └─────────┴────────┴───────┘</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
