@@ -86,30 +86,61 @@
 <hr>
 <p><span class="emoji" data-emoji="warning">⚠️</span> If you’re looking for the Python package “tidypolars”, you’re on the wrong repo. The right one is here: <a href="https://github.com/markfairbanks/tidypolars" class="external-link">markfairbanks/tidypolars</a> <span class="emoji" data-emoji="warning">⚠️</span></p>
 <hr>
-<ul>
-<li><a href="#motivation">Motivation</a></li>
-<li><a href="#general-syntax">General syntax</a></li>
-<li><a href="#example">Example</a></li>
-</ul>
-<div class="section level2">
+<!-- * [Motivation](#motivation)  --><!-- * [General syntax](#general-syntax)  --><!-- * [Example](#example) --><div class="section level2">
 <h2 id="motivation">Motivation<a class="anchor" aria-label="anchor" href="#motivation"></a>
 </h2>
 <p><code>polars</code> (both the Rust source and the R implementation) are amazing packages. I won’t argue here for the interest of using <code>polars</code>, there are already a lot of resources on <a href="https://rpolars.github.io/" class="external-link">its website</a>.</p>
 <p>One characteristic of <code>polars</code> is that its syntax is 1) extremely verbose, and 2) very close to the <code>pandas</code> syntax in Python. While this makes it quite easy to read, it is <strong>yet another syntax to learn</strong> for R users that are accustomed so far to either base R, <code>data.table</code> or the <code>tidyverse</code>.</p>
-<p>The objective of <code>tidypolars</code> is to <strong>provide functions that are very close to the <code>tidyverse</code> ones</strong> but that call the <code>polars</code> functions under the hood so that we don’t lose anything of its capacities. Moreover, the objective is to keep <code>tidypolars</code> <strong>dependency-free</strong> with the exception of <code>polars</code> itself (which has no dependencies).</p>
-</div>
-<div class="section level2">
-<h2 id="general-syntax">General syntax<a class="anchor" aria-label="anchor" href="#general-syntax"></a>
-</h2>
-<p>Overall, you only need to add <code>pl_</code> as a prefix to the <code>tidyverse</code> function you’re used to. For example, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate()</a></code> modifies classic <code>R</code> dataframes, and <code><a href="reference/pl_mutate.html">tidypolars::pl_mutate()</a></code> modifies <code>polars</code>’ <code>DataFrame</code>s and <code>LazyFrame</code>s.</p>
+<p>The objective of <code>tidypolars</code> is to <strong>provide functions that are very close to the <code>tidyverse</code> ones</strong> but that call the <code>polars</code> functions under the hood so that we don’t lose any of its capacities. Moreover, the objective is to keep <code>tidypolars</code> <strong>dependency-free</strong> with the exception of <code>polars</code> itself (which has no dependencies).</p>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p><code>tidypolars</code> makes it easier for R users to use <code>polars</code>:</p>
+<p>Suppose you already have some code that uses <code>dplyr</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sep"</span>, <span class="st">"Pet"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    petal_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="op">(</span><span class="va">Petal.Length</span> <span class="op">/</span> <span class="va">Petal.Width</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span>, <span class="st">"long"</span>, <span class="st">"large"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width petal_type</span></span>
+<span><span class="co">#&gt; 1          5.1         3.5          1.4         0.2       long</span></span>
+<span><span class="co">#&gt; 2          4.9         3.0          1.4         0.2       long</span></span>
+<span><span class="co">#&gt; 3          4.7         3.2          1.3         0.2       long</span></span>
+<span><span class="co">#&gt; 4          4.6         3.1          1.5         0.2       long</span></span>
+<span><span class="co">#&gt; 5          5.0         3.6          1.4         0.2       long</span></span>
+<span><span class="co">#&gt; 6          5.4         3.9          1.7         0.4       long</span></span></code></pre></div>
+<p>With <code>tidypolars</code>, you can provide a Polars <code>DataFrame</code> or <code>LazyFrame</code> and keep the exact same code:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/etiennebacher/tidypolars" class="external-link">tidypolars</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"Sep"</span>, <span class="st">"Pet"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    petal_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="op">(</span><span class="va">Petal.Length</span> <span class="op">/</span> <span class="va">Petal.Width</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span>, <span class="st">"long"</span>, <span class="st">"large"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; shape: (6, 5)</span></span>
+<span><span class="co">#&gt; ┌──────────────┬─────────────┬──────────────┬─────────────┬────────────┐</span></span>
+<span><span class="co">#&gt; │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ petal_type │</span></span>
+<span><span class="co">#&gt; │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---        │</span></span>
+<span><span class="co">#&gt; │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ str        │</span></span>
+<span><span class="co">#&gt; ╞══════════════╪═════════════╪══════════════╪═════════════╪════════════╡</span></span>
+<span><span class="co">#&gt; │ 5.1          ┆ 3.5         ┆ 1.4          ┆ 0.2         ┆ long       │</span></span>
+<span><span class="co">#&gt; │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ long       │</span></span>
+<span><span class="co">#&gt; │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ long       │</span></span>
+<span><span class="co">#&gt; │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ long       │</span></span>
+<span><span class="co">#&gt; │ 5.0          ┆ 3.6         ┆ 1.4          ┆ 0.2         ┆ long       │</span></span>
+<span><span class="co">#&gt; │ 5.4          ┆ 3.9         ┆ 1.7          ┆ 0.4         ┆ long       │</span></span>
+<span><span class="co">#&gt; └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘</span></span></code></pre></div>
+<p>If you’re used to the <code>tidyverse</code> functions and syntax, this will feel much easier to read than the pure <code>polars</code> syntax:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pola-rs/r-polars" class="external-link">polars</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/etiennebacher/tidypolars" class="external-link">tidypolars</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: le package 'polars' a été compilé avec la version R 4.3.1</span></span>
 <span></span>
 <span><span class="co"># polars syntax</span></span>
 <span><span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">$</span></span>
@@ -136,73 +167,45 @@
 <span><span class="co">#&gt; │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ large      │</span></span>
 <span><span class="co">#&gt; │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ large      │</span></span>
 <span><span class="co">#&gt; │ 5.9          ┆ 3.0         ┆ 5.1          ┆ 1.8         ┆ large      │</span></span>
-<span><span class="co">#&gt; └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘</span></span>
-<span></span>
-<span><span class="co"># tidypolars syntax</span></span>
-<span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="fu">starts_with</span><span class="op">(</span><span class="st">"Sep"</span>, <span class="st">"Pet"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/pl_mutate.html">pl_mutate</a></span><span class="op">(</span></span>
-<span>    petal_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="op">(</span><span class="va">Petal.Length</span> <span class="op">/</span> <span class="va">Petal.Width</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span>, <span class="st">"long"</span>, <span class="st">"large"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; shape: (150, 5)</span></span>
-<span><span class="co">#&gt; ┌──────────────┬─────────────┬──────────────┬─────────────┬────────────┐</span></span>
-<span><span class="co">#&gt; │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ petal_type │</span></span>
-<span><span class="co">#&gt; │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---        │</span></span>
-<span><span class="co">#&gt; │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ str        │</span></span>
-<span><span class="co">#&gt; ╞══════════════╪═════════════╪══════════════╪═════════════╪════════════╡</span></span>
-<span><span class="co">#&gt; │ 5.1          ┆ 3.5         ┆ 1.4          ┆ 0.2         ┆ long       │</span></span>
-<span><span class="co">#&gt; │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ long       │</span></span>
-<span><span class="co">#&gt; │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ long       │</span></span>
-<span><span class="co">#&gt; │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ long       │</span></span>
-<span><span class="co">#&gt; │ …            ┆ …           ┆ …            ┆ …           ┆ …          │</span></span>
-<span><span class="co">#&gt; │ 6.3          ┆ 2.5         ┆ 5.0          ┆ 1.9         ┆ large      │</span></span>
-<span><span class="co">#&gt; │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ large      │</span></span>
-<span><span class="co">#&gt; │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ large      │</span></span>
-<span><span class="co">#&gt; │ 5.9          ┆ 3.0         ┆ 5.1          ┆ 1.8         ┆ large      │</span></span>
 <span><span class="co">#&gt; └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘</span></span></code></pre></div>
-<p>And it’s still as fast as the original <code>polars</code> syntax:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">large_iris</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">rbindlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="fl">100000</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
-<span>  polars <span class="op">=</span> <span class="op">{</span></span>
-<span>    <span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">large_iris</span><span class="op">)</span><span class="op">$</span></span>
-<span>      <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sepal.Length"</span>, <span class="st">"Sepal.Width"</span>, <span class="st">"Petal.Length"</span>, <span class="st">"Petal.Width"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span></span>
-<span>      <span class="fu">with_columns</span><span class="op">(</span></span>
-<span>        <span class="va">pl</span><span class="op">$</span><span class="fu">when</span><span class="op">(</span></span>
-<span>          <span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"Petal.Length"</span><span class="op">)</span> <span class="op">/</span> <span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span><span class="op">)</span></span>
-<span>        <span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="st">"long"</span><span class="op">)</span><span class="op">$</span></span>
-<span>          <span class="fu">otherwise</span><span class="op">(</span><span class="st">"large"</span><span class="op">)</span><span class="op">$</span></span>
-<span>          <span class="fu">alias</span><span class="op">(</span><span class="st">"petal_type"</span><span class="op">)</span></span>
-<span>      <span class="op">)</span></span>
-<span>  <span class="op">}</span>, </span>
-<span>  tidypolars <span class="op">=</span> <span class="op">{</span></span>
-<span>    <span class="va">large_iris</span> <span class="op">|&gt;</span> </span>
-<span>      <span class="fu"><a href="reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>      <span class="fu"><a href="reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"Sep"</span>, <span class="st">"Pet"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>      <span class="fu"><a href="reference/pl_mutate.html">pl_mutate</a></span><span class="op">(</span></span>
-<span>        petal_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="op">(</span><span class="va">Petal.Length</span> <span class="op">/</span> <span class="va">Petal.Width</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span>, <span class="st">"long"</span>, <span class="st">"large"</span><span class="op">)</span></span>
-<span>      <span class="op">)</span></span>
-<span>  <span class="op">}</span>,</span>
-<span>  dplyr <span class="op">=</span> <span class="op">{</span></span>
-<span>    <span class="va">large_iris</span> <span class="op">|&gt;</span> </span>
-<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sep"</span>, <span class="st">"Pet"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>        petal_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="op">(</span><span class="va">Petal.Length</span> <span class="op">/</span> <span class="va">Petal.Width</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span>, <span class="st">"long"</span>, <span class="st">"large"</span><span class="op">)</span></span>
-<span>      <span class="op">)</span></span>
-<span>  <span class="op">}</span>,</span>
-<span>  check <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  iterations <span class="op">=</span> <span class="fl">10</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 3 × 6</span></span>
-<span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
-<span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars        1.88s    2.07s     0.482     629MB     2.89</span></span>
-<span><span class="co">#&gt; 2 tidypolars    1.86s    1.91s     0.491     629MB     1.80</span></span>
-<span><span class="co">#&gt; 3 dplyr         3.81s    3.81s     0.263     918MB     3.68</span></span></code></pre></div>
+<!-- Don't be worry about losing performance compared to the pure `polars` syntax, -->
+<!-- `tidypolars` is just as fast: -->
+<!-- ```{r} -->
+<!-- library(dplyr, warn.conflicts = FALSE) -->
+<!-- large_iris <- data.table::rbindlist(rep(list(iris), 100000)) -->
+<!-- bench::mark( -->
+<!--   polars = { -->
+<!--     pl$DataFrame(large_iris)$ -->
+<!--       select(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))$ -->
+<!--       with_columns( -->
+<!--         pl$when( -->
+<!--           (pl$col("Petal.Length") / pl$col("Petal.Width") > 3) -->
+<!--         )$then("long")$ -->
+<!--           otherwise("large")$ -->
+<!--           alias("petal_type") -->
+<!--       ) -->
+<!--   },  -->
+<!--   tidypolars = { -->
+<!--     large_iris |>  -->
+<!--       as_polars() |>  -->
+<!--       pl_select(starts_with("Sep", "Pet")) |>  -->
+<!--       pl_mutate( -->
+<!--         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large") -->
+<!--       ) -->
+<!--   }, -->
+<!--   dplyr = { -->
+<!--     large_iris |>  -->
+<!--       select(starts_with(c("Sep", "Pet"))) |>  -->
+<!--       mutate( -->
+<!--         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large") -->
+<!--       ) -->
+<!--   }, -->
+<!--   check = FALSE, -->
+<!--   iterations = 10 -->
+<!-- ) -->
+<!-- ``` -->
+<p>Finally, if you want to use <code>polars</code> because it’s low-dependency (regarding how many R packages it imports), then <code>tidypolars</code> is also for you!</p>
+<p>All functions above can be used separately from any <code>tidyverse</code> package by adding the <code>pl_</code> prefix. For example, you can use <code><a href="reference/pl_mutate.html">pl_mutate()</a></code> or <code><a href="reference/pl_filter.html">pl_filter()</a></code> like the other functions without having to download and import <code>tidyverse</code> packages.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
