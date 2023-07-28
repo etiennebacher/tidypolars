@@ -22,9 +22,9 @@ you're on the wrong repo. The right one is here: [markfairbanks/tidypolars](http
 
 ---
 
-* [Motivation](#motivation) 
-* [General syntax](#general-syntax) 
-* [Example](#example)
+<!-- * [Motivation](#motivation)  -->
+<!-- * [General syntax](#general-syntax)  -->
+<!-- * [Example](#example) -->
 
 
 ## Motivation
@@ -41,24 +41,46 @@ far to either base R, `data.table` or the `tidyverse`.
 
 The objective of `tidypolars` is to **provide functions that are very close to
 the `tidyverse` ones** but that call the `polars` functions under the hood so that
-we don't lose anything of its capacities. Moreover, the objective is to keep
+we don't lose any of its capacities. Moreover, the objective is to keep
 `tidypolars` **dependency-free** with the exception of `polars` itself (which
 has no dependencies).
 
 
-## General syntax
-
-Overall, you only need to add `pl_` as a prefix to the `tidyverse` function you're
-used to. For example, `dplyr::mutate()` modifies classic `R` dataframes, and 
-`tidypolars::pl_mutate()` modifies `polars`' `DataFrame`s and `LazyFrame`s.
-
 ## Example
 
-`tidypolars` makes it easier for R users to use `polars`:
+Suppose you already have some code that uses `dplyr`:
+
+```{r}
+library(dplyr, warn.conflicts = FALSE)
+
+iris |> 
+  select(starts_with(c("Sep", "Pet"))) |> 
+  mutate(
+    petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+  ) |> 
+  head()
+```
+
+With `tidypolars`, you can provide a Polars `DataFrame` or `LazyFrame` and keep 
+the exact same code:
+
+```{r}
+library(tidypolars)
+
+iris |> 
+  as_polars() |> 
+  select(starts_with("Sep", "Pet")) |> 
+  mutate(
+    petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+  ) |> 
+  head()
+```
+
+If you're used to the `tidyverse` functions and syntax, this will feel much 
+easier to read than the pure `polars` syntax:
 
 ```{r}
 library(polars)
-library(tidypolars)
 
 # polars syntax
 pl$DataFrame(iris)$
@@ -70,51 +92,51 @@ pl$DataFrame(iris)$
       otherwise("large")$
       alias("petal_type")
   )
-
-# tidypolars syntax
-iris |> 
-  as_polars() |> 
-  pl_select(starts_with("Sep", "Pet")) |> 
-  pl_mutate(
-    petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-  )
 ```
 
-And it's still as fast as the original `polars` syntax:
+<!-- Don't be worry about losing performance compared to the pure `polars` syntax, -->
+<!-- `tidypolars` is just as fast: -->
 
-```{r}
-library(dplyr, warn.conflicts = FALSE)
+<!-- ```{r} -->
+<!-- library(dplyr, warn.conflicts = FALSE) -->
 
-large_iris <- data.table::rbindlist(rep(list(iris), 100000))
+<!-- large_iris <- data.table::rbindlist(rep(list(iris), 100000)) -->
 
-bench::mark(
-  polars = {
-    pl$DataFrame(large_iris)$
-      select(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))$
-      with_columns(
-        pl$when(
-          (pl$col("Petal.Length") / pl$col("Petal.Width") > 3)
-        )$then("long")$
-          otherwise("large")$
-          alias("petal_type")
-      )
-  }, 
-  tidypolars = {
-    large_iris |> 
-      as_polars() |> 
-      pl_select(starts_with("Sep", "Pet")) |> 
-      pl_mutate(
-        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-      )
-  },
-  dplyr = {
-    large_iris |> 
-      select(starts_with(c("Sep", "Pet"))) |> 
-      mutate(
-        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-      )
-  },
-  check = FALSE,
-  iterations = 10
-)
-```
+<!-- bench::mark( -->
+<!--   polars = { -->
+<!--     pl$DataFrame(large_iris)$ -->
+<!--       select(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))$ -->
+<!--       with_columns( -->
+<!--         pl$when( -->
+<!--           (pl$col("Petal.Length") / pl$col("Petal.Width") > 3) -->
+<!--         )$then("long")$ -->
+<!--           otherwise("large")$ -->
+<!--           alias("petal_type") -->
+<!--       ) -->
+<!--   },  -->
+<!--   tidypolars = { -->
+<!--     large_iris |>  -->
+<!--       as_polars() |>  -->
+<!--       pl_select(starts_with("Sep", "Pet")) |>  -->
+<!--       pl_mutate( -->
+<!--         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large") -->
+<!--       ) -->
+<!--   }, -->
+<!--   dplyr = { -->
+<!--     large_iris |>  -->
+<!--       select(starts_with(c("Sep", "Pet"))) |>  -->
+<!--       mutate( -->
+<!--         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large") -->
+<!--       ) -->
+<!--   }, -->
+<!--   check = FALSE, -->
+<!--   iterations = 10 -->
+<!-- ) -->
+<!-- ``` -->
+
+Finally, if you want to use `polars` because it's low-dependency (regarding how
+many R packages it imports), then `tidypolars` is also for you!
+
+All functions above can be used separately from any `tidyverse` package by adding
+the `pl_` prefix. For example, you can use `pl_mutate()` or `pl_filter()` like
+the other functions without having to download and import `tidyverse` packages.
