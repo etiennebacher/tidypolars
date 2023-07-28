@@ -4,6 +4,26 @@ rearrange_exprs <- function(.data, dots, create_new = TRUE) {
 
   to_drop <- list()
 
+  # if there's an across expression, I "explode" it e.g
+  #   'across(contains("a"), mean)'
+  # becomes
+  #   'carb = mean(carb),
+  #    am = mean(am),
+  #    gear = mean(gear),
+  #    drat = mean(drat)'
+  for (i in seq_along(dots)) {
+    expr <- dots[[i]]
+    deparsed <- safe_deparse(expr)
+    is_across_expr <- startsWith(deparsed, "across(")
+    if (is_across_expr) {
+      dots[[i]] <- unnest_across_expr(expr, .data)
+    }
+  }
+
+  if (any(vapply(dots, is.list, FUN.VALUE = logical(1L)))) {
+    dots <- unlist(dots, recursive = FALSE)
+  }
+
   out <- lapply(seq_along(dots), function(x) {
     if (is.null(dots[[x]])) {
       to_drop[[names(dots)[x]]] <<- 1
@@ -126,3 +146,63 @@ check_empty_dots <- function(...) {
   }
 }
 
+unnest_across_expr <- function(expr, .data) {
+
+  if (".cols" %in% names(expr)) {
+    .cols <- expr[[".cols"]]
+  } else {
+    .cols <- expr[[2]]
+  }
+
+  if (".fns" %in% names(expr)) {
+    .fns <- expr[[".fns"]]
+  } else {
+    .fns <- expr[[3]]
+  }
+
+  if (".names" %in% names(expr)) {
+    .names <- expr[[".names"]]
+  } else if (length(expr) >= 4) {
+    .names <- expr[[4]]
+  } else {
+    .names <- NULL
+  }
+
+  .cols <- pl_colnames(.data)[.eval_expr(.cols, .data = .data )]
+  out <- vector("list", length = length(.cols))
+  names(out) <- .cols
+
+  if (length(.fns) == 1) { # just a function name, e.g .fns = mean
+    for (i in .cols) {
+      out[[i]] <- paste0(.fns, "(", i, ")") |>
+        str2lang()
+    }
+  } else if (length(.fns) == 2) { # anonymous function, e.g .fns = ~mean(.x)
+    dep <- safe_deparse(.fns[[2]])
+    for (i in .cols) {
+      out[[i]] <- gsub("\\(\\.x,", paste0("\\(", i, ","), dep)
+      out[[i]] <- gsub("\\(\\.x\\)", paste0("\\(", i, "\\)"), out[[i]])
+      out[[i]] <- gsub(",\\.x\\),", paste0(",", i, "\\)"), out[[i]])
+      out[[i]] <- str2lang(out[[i]])
+    }
+  } else { # TODO: function that I can't convert to polars, e.g .fns = function(x) mean(x)
+    stop("Anonymous functions are not supported in `across()` for now.")
+  }
+
+  # modify names of new variables if necessary
+  if (!is.null(.names)) {
+    if (grepl("{\\.fn}", .names, perl = TRUE) && length(.fns) > 2) {
+      stop("Can't use `{.fn}` in argument `.names` of `across()` with anonymous functions.")
+    }
+    if (length(.fns) == 2) {
+      .fns <- .fns[[2]][1]
+    }
+    for (i in seq_along(out)) {
+      new_name <- gsub("{\\.col}", .cols[[i]], .names, perl = TRUE)
+      new_name <- gsub("{\\.fn}", .fns, new_name, perl = TRUE)
+      names(out)[[i]] <- new_name
+    }
+  }
+
+  unlist(out)
+}

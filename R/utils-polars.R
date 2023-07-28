@@ -14,7 +14,7 @@ pl_colnames <- function(x) {
 
 check_polars_data <- function(x) {
   if (!inherits(x, "DataFrame") && !inherits(x, "LazyFrame")
-      && !inherits(x, "GroupBy")) {
+      && !inherits(x, "GroupBy") && !inherits(x, "LazyGroupBy")) {
     stop("The data must be a Polars DataFrame or LazyFrame.")
   }
 }
