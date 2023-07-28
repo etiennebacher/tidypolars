@@ -29,7 +29,6 @@ For \code{pl_rename_with}, additional arguments passed to \code{fn}.}
 Rename columns
 }
 \examples{
-\dontshow{if (utils::packageVersion("polars") > "0.6.1") (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pl_test <- polars::pl$DataFrame(mtcars)
 
 pl_rename(pl_test, miles_per_gallon = "mpg", horsepower = "hp")
@@ -45,5 +44,4 @@ pl_test_2 <- polars::pl$DataFrame(iris)
 pl_rename_with(pl_test_2, function(x) tolower(gsub(".", "_", x, fixed = TRUE)))
 
 pl_rename_with(pl_test_2, \(x) tolower(gsub(".", "_", x, fixed = TRUE)))
-\dontshow{\}) # examplesIf}
 }

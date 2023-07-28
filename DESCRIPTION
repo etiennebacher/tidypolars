@@ -20,6 +20,7 @@ RoxygenNote: 7.2.3.9000
 Roxygen: list(markdown = TRUE)
 URL: https://github.com/etiennebacher/tidypolars
 BugReports: https://github.com/etiennebacher/tidypolars/issues
+Depends: R (>= 4.1.0)
 Imports: 
     polars,
     utils
@@ -28,11 +29,8 @@ Suggests:
     data.table,
     dplyr,
     knitr,
+    lubridate,
     rmarkdown,
+    tidyr,
     tinytest
-Enhances:
-    dplyr,
-    tidyr
-Depends: 
-    R (>= 2.10)
 VignetteBuilder: knitr
