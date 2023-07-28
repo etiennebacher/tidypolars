@@ -169,19 +169,24 @@ unnest_across_expr <- function(expr, .data) {
   }
 
   .cols <- pl_colnames(.data)[.eval_expr(.cols, .data = .data )]
+  out <- vector("list", length = length(.cols))
 
   if (length(.fns) == 1) { # just a function name, e.g .fns = mean
-    out <- vector("list", length = length(.cols))
     for (i in .cols) {
       out[[i]] <- paste0(.fns, "(", i, ")") |>
         str2lang()
     }
   } else if (length(.fns) == 2) { # anonymous function, e.g .fns = ~mean(.x)
-
-  } else { # function that I can't convert to polars, e.g .fns = function(x) mean(x)
-
+    dep <- safe_deparse(.fns[[2]])
+    for (i in .cols) {
+      out[[i]] <- gsub("\\(\\.x,", paste0("\\(", i, ","), dep)
+      out[[i]] <- gsub("\\(\\.x\\)", paste0("\\(", i, "\\)"), out[[i]])
+      out[[i]] <- gsub(",\\.x\\),", paste0(",", i, "\\)"), out[[i]])
+      out[[i]] <- str2lang(out[[i]])
+    }
+  } else { # TODO: function that I can't convert to polars, e.g .fns = function(x) mean(x)
+    stop("Anonymous functions are not supported in `across()` for now.")
   }
 
   unlist(out)
-
 }
