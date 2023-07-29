@@ -86,7 +86,7 @@
 <hr>
 <p><span class="emoji" data-emoji="warning">⚠️</span> If you’re looking for the Python package “tidypolars”, you’re on the wrong repo. The right one is here: <a href="https://github.com/markfairbanks/tidypolars" class="external-link">markfairbanks/tidypolars</a> <span class="emoji" data-emoji="warning">⚠️</span></p>
 <hr>
-<!-- * [Motivation](#motivation)  --><!-- * [General syntax](#general-syntax)  --><!-- * [Example](#example) --><div class="section level2">
+<div class="section level2">
 <h2 id="motivation">Motivation<a class="anchor" aria-label="anchor" href="#motivation"></a>
 </h2>
 <p><code>polars</code> (both the Rust source and the R implementation) are amazing packages. I won’t argue here for the interest of using <code>polars</code>, there are already a lot of resources on <a href="https://rpolars.github.io/" class="external-link">its website</a>.</p>
@@ -119,7 +119,7 @@
 <span></span>
 <span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"Sep"</span>, <span class="st">"Pet"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sep"</span>, <span class="st">"Pet"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    petal_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="op">(</span><span class="va">Petal.Length</span> <span class="op">/</span> <span class="va">Petal.Width</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span>, <span class="st">"long"</span>, <span class="st">"large"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
