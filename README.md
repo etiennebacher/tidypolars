@@ -12,6 +12,22 @@ on the wrong repo. The right one is here:
 
 ------------------------------------------------------------------------
 
+## Installation
+
+`tidypolars` is built on `polars`, which is not available on CRAN for
+now. To install `polars`, follow [these
+instructions](https://rpolars.github.io/#install).
+
+Then, you can install `tidypolars` with `remotes` or `pak`:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("etiennebacher/tidypolars")
+
+# install.packages("pak")
+pak::pkg_install("etiennebacher/tidypolars")
+```
+
 ## Motivation
 
 `polars` (both the Rust source and the R implementation) are amazing
@@ -116,42 +132,52 @@ pl$DataFrame(iris)$
 #> └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘
 ```
 
-<!-- Don't be worry about losing performance compared to the pure `polars` syntax, -->
-<!-- `tidypolars` is just as fast: -->
-<!-- ```{r} -->
-<!-- library(dplyr, warn.conflicts = FALSE) -->
-<!-- large_iris <- data.table::rbindlist(rep(list(iris), 100000)) -->
-<!-- bench::mark( -->
-<!--   polars = { -->
-<!--     pl$DataFrame(large_iris)$ -->
-<!--       select(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))$ -->
-<!--       with_columns( -->
-<!--         pl$when( -->
-<!--           (pl$col("Petal.Length") / pl$col("Petal.Width") > 3) -->
-<!--         )$then("long")$ -->
-<!--           otherwise("large")$ -->
-<!--           alias("petal_type") -->
-<!--       ) -->
-<!--   },  -->
-<!--   tidypolars = { -->
-<!--     large_iris |>  -->
-<!--       as_polars() |>  -->
-<!--       pl_select(starts_with("Sep", "Pet")) |>  -->
-<!--       pl_mutate( -->
-<!--         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large") -->
-<!--       ) -->
-<!--   }, -->
-<!--   dplyr = { -->
-<!--     large_iris |>  -->
-<!--       select(starts_with(c("Sep", "Pet"))) |>  -->
-<!--       mutate( -->
-<!--         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large") -->
-<!--       ) -->
-<!--   }, -->
-<!--   check = FALSE, -->
-<!--   iterations = 10 -->
-<!-- ) -->
-<!-- ``` -->
+Don’t worry about losing performance compared to the pure `polars`
+syntax, `tidypolars` is just as fast:
+
+``` r
+large_iris <- data.table::rbindlist(rep(list(iris), 50000))
+large_iris_pl <- as_polars(large_iris)
+
+bench::mark(
+  polars = {
+    large_iris_pl$
+      select(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))$
+      with_columns(
+        pl$when(
+          (pl$col("Petal.Length") / pl$col("Petal.Width") > 3)
+        )$then("long")$
+          otherwise("large")$
+          alias("petal_type")
+      )
+  },
+  tidypolars = {
+    large_iris_pl |>
+      as_polars() |>
+      pl_select(starts_with("Sep", "Pet")) |>
+      pl_mutate(
+        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+      )
+  },
+  dplyr = {
+    large_iris |>
+      select(starts_with(c("Sep", "Pet"))) |>
+      mutate(
+        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+      )
+  },
+  check = FALSE,
+  iterations = 10
+)
+#> Warning: Some expressions had a GC in every iteration; so filtering is
+#> disabled.
+#> # A tibble: 3 × 6
+#>   expression      min   median `itr/sec` mem_alloc `gc/sec`
+#>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
+#> 1 polars        424ms  434.5ms     2.30     13.2KB     0   
+#> 2 tidypolars    438ms 505.39ms     2.01     55.8KB     0   
+#> 3 dplyr            1s    1.18s     0.854     458MB     1.97
+```
 
 Finally, if you want to use `polars` because it’s low-dependency
 (regarding how many R packages it imports), then `tidypolars` is also

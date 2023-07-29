@@ -22,6 +22,22 @@ you're on the wrong repo. The right one is here: [markfairbanks/tidypolars](http
 
 ---
 
+## Installation
+
+`tidypolars` is built on `polars`, which is not available on CRAN for now. To 
+install `polars`, follow [these instructions](https://rpolars.github.io/#install).
+
+Then, you can install `tidypolars` with `remotes` or `pak`:
+
+```{r eval=FALSE}
+# install.packages("remotes")
+remotes::install_github("etiennebacher/tidypolars")
+
+# install.packages("pak")
+pak::pkg_install("etiennebacher/tidypolars")
+```
+
+
 ## Motivation
 
 
@@ -89,45 +105,44 @@ pl$DataFrame(iris)$
   )
 ```
 
-<!-- Don't be worry about losing performance compared to the pure `polars` syntax, -->
-<!-- `tidypolars` is just as fast: -->
+Don't worry about losing performance compared to the pure `polars` syntax,
+`tidypolars` is just as fast:
 
-<!-- ```{r} -->
-<!-- library(dplyr, warn.conflicts = FALSE) -->
+```{r}
+large_iris <- data.table::rbindlist(rep(list(iris), 50000))
+large_iris_pl <- as_polars(large_iris)
 
-<!-- large_iris <- data.table::rbindlist(rep(list(iris), 100000)) -->
-
-<!-- bench::mark( -->
-<!--   polars = { -->
-<!--     pl$DataFrame(large_iris)$ -->
-<!--       select(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))$ -->
-<!--       with_columns( -->
-<!--         pl$when( -->
-<!--           (pl$col("Petal.Length") / pl$col("Petal.Width") > 3) -->
-<!--         )$then("long")$ -->
-<!--           otherwise("large")$ -->
-<!--           alias("petal_type") -->
-<!--       ) -->
-<!--   },  -->
-<!--   tidypolars = { -->
-<!--     large_iris |>  -->
-<!--       as_polars() |>  -->
-<!--       pl_select(starts_with("Sep", "Pet")) |>  -->
-<!--       pl_mutate( -->
-<!--         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large") -->
-<!--       ) -->
-<!--   }, -->
-<!--   dplyr = { -->
-<!--     large_iris |>  -->
-<!--       select(starts_with(c("Sep", "Pet"))) |>  -->
-<!--       mutate( -->
-<!--         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large") -->
-<!--       ) -->
-<!--   }, -->
-<!--   check = FALSE, -->
-<!--   iterations = 10 -->
-<!-- ) -->
-<!-- ``` -->
+bench::mark(
+  polars = {
+    large_iris_pl$
+      select(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))$
+      with_columns(
+        pl$when(
+          (pl$col("Petal.Length") / pl$col("Petal.Width") > 3)
+        )$then("long")$
+          otherwise("large")$
+          alias("petal_type")
+      )
+  },
+  tidypolars = {
+    large_iris_pl |>
+      as_polars() |>
+      pl_select(starts_with("Sep", "Pet")) |>
+      pl_mutate(
+        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+      )
+  },
+  dplyr = {
+    large_iris |>
+      select(starts_with(c("Sep", "Pet"))) |>
+      mutate(
+        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+      )
+  },
+  check = FALSE,
+  iterations = 10
+)
+```
 
 Finally, if you want to use `polars` because it's low-dependency (regarding how
 many R packages it imports), then `tidypolars` is also for you!
