@@ -314,6 +314,7 @@ get_dots <- function(...) {
     collapsed_patterns <-
       .dynGet(lst_expr[[2]], inherits = FALSE, minframe = 0L)
   } else {
+    lst_expr[[2]] <- eval(lst_expr[[2]])
     collapsed_patterns <-
       paste(unlist(lst_expr[2:length(lst_expr)]), collapse = "|")
   }

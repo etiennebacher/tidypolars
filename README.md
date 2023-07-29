@@ -12,10 +12,6 @@ on the wrong repo. The right one is here:
 
 ------------------------------------------------------------------------
 
-<!-- * [Motivation](#motivation)  -->
-<!-- * [General syntax](#general-syntax)  -->
-<!-- * [Example](#example) -->
-
 ## Motivation
 
 `polars` (both the Rust source and the R implementation) are amazing
@@ -65,7 +61,7 @@ library(tidypolars)
 
 iris |> 
   as_polars() |> 
-  select(starts_with("Sep", "Pet")) |> 
+  select(starts_with(c("Sep", "Pet"))) |> 
   mutate(
     petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
   ) |> 
