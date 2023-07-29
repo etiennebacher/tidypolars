@@ -37,3 +37,27 @@ expect_colnames(
   pl_select(pl_iris, -5),
   c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
 )
+
+selection <- c("Sepal.Length", "Sepal.Width")
+
+expect_colnames(
+  pl_select(pl_iris, all_of(selection)),
+  c("Sepal.Length", "Sepal.Width")
+)
+
+expect_colnames(
+  pl_select(pl_iris, any_of(selection)),
+  c("Sepal.Length", "Sepal.Width")
+)
+
+bad_selection <- c("Sepal.Length", "Sepal.Width", "foo")
+
+expect_error(
+  pl_select(pl_iris, all_of(bad_selection)),
+  "do not correspond to any column names"
+)
+
+expect_colnames(
+  pl_select(pl_iris, any_of(bad_selection)),
+  c("Sepal.Length", "Sepal.Width")
+)

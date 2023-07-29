@@ -42,4 +42,28 @@ expect_colnames(
   c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
 )
 
+selection <- c("Sepal.Length", "Sepal.Width")
+
+expect_colnames(
+  pl_select(pl_iris, all_of(selection)),
+  c("Sepal.Length", "Sepal.Width")
+)
+
+expect_colnames(
+  pl_select(pl_iris, any_of(selection)),
+  c("Sepal.Length", "Sepal.Width")
+)
+
+bad_selection <- c("Sepal.Length", "Sepal.Width", "foo")
+
+expect_error_lazy(
+  pl_select(pl_iris, all_of(bad_selection)),
+  "do not correspond to any column names"
+)
+
+expect_colnames(
+  pl_select(pl_iris, any_of(bad_selection)),
+  c("Sepal.Length", "Sepal.Width")
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

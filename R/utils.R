@@ -81,14 +81,14 @@ get_dots <- function(...) {
 # - character that should be regex-ed on variable names
 # - special word "all" to return all vars
 
-.select_char <- function(.data, x) {
+.select_char <- function(.data, x, verbose = TRUE) {
   # use colnames because names() doesn't work for matrices
   columns <- pl_colnames(.data)
   if (length(x) == 1L && x == "all") {
     seq_len(length(columns))
   } else {
     matches <- match(x, columns)
-    if (anyNA(matches)) {
+    if (isTRUE(verbose) && anyNA(matches)) {
       warning(
         paste0("Following variable(s) were not found: ",
                toString(x[is.na(matches)]))
@@ -215,6 +215,8 @@ get_dots <- function(...) {
     "matches" = ,
     "contains" = ,
     "regex" = .select_helper(x, .data),
+    "all_of" = ,
+    "any_of" = .select_vector(x, .data),
     .select_context(x, .data)
   )
 }
@@ -302,6 +304,18 @@ get_dots <- function(...) {
 
 .select_all <- function(expr, .data) {
   seq_len(length(pl_colnames(.data)))
+}
+
+.select_vector <- function(expr, .data) {
+  lst_expr <- as.list(expr)
+  vars <- .dynGet(lst_expr[[2]], inherits = FALSE, minframe = 0L)
+  if (lst_expr[[1]] == "all_of" && !all(vars %in% pl_colnames(.data))) {
+    stop(
+      paste0("In `all_of()`: some elements of `", safe_deparse(lst_expr[[2]]),
+             "`` do not correspond to any column names.")
+    )
+  }
+  .select_char(.data, vars, verbose = FALSE)
 }
 
 # e.g starts_with("Sep")
