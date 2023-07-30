@@ -208,6 +208,7 @@ get_dots <- function(...) {
     `(` = .select_bracket(x, .data),
     "last_col" = .select_last(x, .data),
     "everything" = .select_all(x, .data),
+    "num_range" = .select_num_range(x, .data),
     "starts_with" = ,
     "ends_with" = ,
     "matches" = ,
@@ -299,6 +300,46 @@ get_dots <- function(...) {
 # e.g everything()
 .select_all <- function(expr, .data) {
   seq_len(length(pl_colnames(.data)))
+}
+
+# e.g num_range("x", 2:5)
+.select_num_range <- function(expr, .data) {
+  lst_expr <- as.list(expr)
+  if ("prefix" %in% names(lst_expr)) {
+    prefix <- lst_expr$prefix
+  } else {
+    prefix <- lst_expr[[2]]
+  }
+  if ("range" %in% names(lst_expr)) {
+    range <- eval(lst_expr$range)
+  } else {
+    range <- eval(lst_expr[[3]])
+  }
+  if ("suffix" %in% names(lst_expr)) {
+    suffix <- lst_expr$suffix
+  } else {
+    suffix <- ""
+  }
+  if ("width" %in% names(lst_expr)) {
+    width <- lst_expr$width
+  } else {
+    width <- 1
+  }
+
+  if (width != 1) {
+    range <- as.character(range)
+    nchar_range <- nchar(range)
+    n_rep <- width - nchar_range
+    # TODO: there has to be a better way than this loop
+    for (i in seq_along(n_rep)) {
+      range[i] <- paste0(rep("0", n_rep[i]), range[i])
+    }
+  }
+
+  vars <- paste0(prefix, range)
+  vars <- paste0(vars, suffix)
+
+  .select_char(.data, vars, verbose = FALSE)
 }
 
 # e.g all_of(x) or any_of(x)

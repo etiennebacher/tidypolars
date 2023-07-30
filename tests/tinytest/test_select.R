@@ -86,3 +86,18 @@ expect_colnames(
   pl_select(pl_iris, 1:last_col(3)),
   c("Sepal.Length", "Sepal.Width")
 )
+
+test <- polars::pl$DataFrame(
+  x1 = "a", x2 = 1, x3 = "b", y = 2,
+  x01 = "a", x02 = 1, x03 = "b"
+)
+
+expect_colnames(
+  pl_select(test, num_range("x", 2:3)),
+  c("x2", "x3")
+)
+
+expect_colnames(
+  pl_select(test, num_range("x", 2:3, width = 2)),
+  c("x02", "x03")
+)
