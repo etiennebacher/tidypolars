@@ -122,7 +122,7 @@ get_dots <- function(...) {
     out <- matches[!is.na(matches)]
   } else {
     new_expr <- tryCatch(
-      .dynGet(x, inherits = FALSE, minframe = 0L),
+      dynGet(x, inherits = FALSE, minframe = 0L),
       error = function(e) {
         # if starts_with() et al. don't exist
         fn <- deparse(e$call)
@@ -151,7 +151,7 @@ get_dots <- function(...) {
     )
 
     # when "x" is a function arg which is itself a function call to evaluate,
-    # .dynGet can return "x" infinitely so we try to evaluate this arg
+    # dynGet can return "x" infinitely so we try to evaluate this arg
     # see #414
     if (!is.null(new_expr) && deparse(new_expr) == "x") {
       new_expr <-
@@ -345,7 +345,7 @@ get_dots <- function(...) {
 # e.g all_of(x) or any_of(x)
 .select_vector <- function(expr, .data) {
   lst_expr <- as.list(expr)
-  vars <- .dynGet(lst_expr[[2]], inherits = FALSE, minframe = 0L)
+  vars <- dynGet(lst_expr[[2]], inherits = FALSE, minframe = 0L)
   if (lst_expr[[1]] == "all_of" && !all(vars %in% pl_colnames(.data))) {
     stop(
       paste0("In `all_of()`: some elements of `", safe_deparse(lst_expr[[2]]),
@@ -384,7 +384,7 @@ get_dots <- function(...) {
   # can use directly) and starts_with(i) (where we need to get i)
   if (length(lst_expr) == 2L && typeof(lst_expr[[2]]) == "symbol") {
     collapsed_patterns <-
-      .dynGet(lst_expr[[2]], inherits = FALSE, minframe = 0L)
+      dynGet(lst_expr[[2]], inherits = FALSE, minframe = 0L)
   } else {
     lst_expr[[2]] <- eval(lst_expr[[2]])
     collapsed_patterns <-
@@ -465,31 +465,7 @@ get_dots <- function(...) {
   }
 }
 
-# Almost identical to dynGet(). The difference is that we deparse the expression
-# because get0() allows symbol only since R 4.1.0
-.dynGet <- function(x,
-                    ifnotfound = stop(gettextf("%s not found", sQuote(x)), domain = NA),
-                    minframe = 1L,
-                    inherits = FALSE) {
-  x <- deparse(x)
-  n <- sys.nframe()
-  myObj <- structure(list(.b = as.raw(7)), foo = 47L)
-  while (n > minframe) {
-    n <- n - 1L
-    env <- sys.frame(n)
-    r <-
-      get0(x,
-           envir = env,
-           inherits = inherits,
-           ifnotfound = myObj)
-    if (!identical(r, myObj)) {
-      return(r)
-    }
-  }
-  ifnotfound
-}
-
-# Similar to .dynGet() but instead of getting an object from the environment,
+# Similar to dynGet() but instead of getting an object from the environment,
 # we try to evaluate an expression. It stops as soon as the evaluation doesn't
 # error. Returns NULL if can never be evaluated.
 #
