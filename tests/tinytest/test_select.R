@@ -61,3 +61,18 @@ expect_colnames(
   pl_select(pl_iris, any_of(bad_selection)),
   c("Sepal.Length", "Sepal.Width")
 )
+
+expect_colnames(
+  pl_select(pl_iris, where(is.numeric)),
+  c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
+)
+
+expect_colnames(
+  pl_select(pl_iris, where(is.factor)),
+  "Species"
+)
+
+expect_error(
+  pl_select(pl_iris, where(~ mean(.x) > 3.5)),
+  "can only take `is.*` functions"
+)

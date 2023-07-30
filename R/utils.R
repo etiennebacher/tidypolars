@@ -217,6 +217,7 @@ get_dots <- function(...) {
     "regex" = .select_helper(x, .data),
     "all_of" = ,
     "any_of" = .select_vector(x, .data),
+    "where" = .select_where(x, .data),
     .select_context(x, .data)
   )
 }
@@ -315,6 +316,28 @@ get_dots <- function(...) {
              "`` do not correspond to any column names.")
     )
   }
+  .select_char(.data, vars, verbose = FALSE)
+}
+
+.select_where <- function(expr, .data) {
+  lst_expr <- as.list(expr)
+  fn <- safe_deparse(lst_expr[[2]])
+
+  if (!startsWith(fn, "is.")) {
+    stop("`where()` can only take `is.*` functions (like `is.numeric`).")
+  }
+
+  vars <- switch(
+    fn,
+    "is.character" = is_polars_character(.data$schema),
+    "is.numeric" = is_polars_numeric(.data$schema),
+    "is.factor" = is_polars_factor(.data$schema),
+    "is.logical" = is_polars_logical(.data$schema),
+    "is.Date" = is_polars_date(.data$schema)
+  )
+
+  vars <- names(which(vars))
+
   .select_char(.data, vars, verbose = FALSE)
 }
 
@@ -481,4 +504,36 @@ safe_deparse <- function (x, ...) {
   }
   paste0(sapply(deparse(x, width.cutoff = 500), trimws, simplify = TRUE),
          collapse = " ")
+}
+
+is_polars_numeric <- function(schema) {
+  vapply(schema, \(x) {
+    x == polars::pl$Float32 | x == polars::pl$Float64 |
+      x == polars::pl$UInt8 | x == polars::pl$UInt16 | x == polars::pl$UInt32 | x == polars::pl$UInt64 |
+      x == polars::pl$Int8  |x == polars::pl$Int16 | x == polars::pl$Int32 | x == polars::pl$Int64
+  }, FUN.VALUE = logical(1L))
+}
+
+is_polars_factor <- function(schema) {
+  vapply(schema, \(x) {
+    x == polars::pl$Categorical
+  }, FUN.VALUE = logical(1L))
+}
+
+is_polars_character <- function(schema) {
+  vapply(schema, \(x) {
+    x == polars::pl$Utf8
+  }, FUN.VALUE = logical(1L))
+}
+
+is_polars_logical <- function(schema) {
+  vapply(schema, \(x) {
+    x == polars::pl$Boolean
+  }, FUN.VALUE = logical(1L))
+}
+
+is_polars_date <- function(schema) {
+  vapply(schema, \(x) {
+    x == polars::pl$Date | x == polars::pl$Time
+  }, FUN.VALUE = logical(1L))
 }
