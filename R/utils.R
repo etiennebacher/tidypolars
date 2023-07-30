@@ -194,7 +194,7 @@ get_dots <- function(...) {
   out
 }
 
-# Dispatch expressions to various select helpers according to the function call.
+# Dispatch expressions to various select helpers according to the function call
 
 .eval_call <- function(.data, x) {
   type <- deparse(x[[1]])
@@ -206,9 +206,7 @@ get_dots <- function(...) {
     `!` = .select_bang(x, .data),
     `c` = .select_c(x, .data),
     `(` = .select_bracket(x, .data),
-    `[` = .select_square_bracket(x, .data),
-    `$` = .select_dollar(x, .data),
-    "names" = .select_names(x, .data),
+    "last_col" = .select_last(x, .data),
     "everything" = .select_all(x, .data),
     "starts_with" = ,
     "ends_with" = ,
@@ -283,30 +281,27 @@ get_dots <- function(...) {
   )
 }
 
-# e.g myvector[3]
-.select_square_bracket <- function(expr, .data) {
-  first_obj <- .eval_expr(
-    expr[[2]],
-    .data
-  )
-  .eval_expr(
-    first_obj[eval(expr[[3]])],
-    .data
-  )
+# e.g last_col()
+.select_last <- function(expr, .data) {
+  lst_expr <- as.list(expr)
+  if (length(lst_expr) == 1) { # last_col()
+    ncol(.data)
+  } else { # last_col(offset = 1)
+    if ("offset" %in% names(lst_expr)) {
+      offset <- lst_expr$offset
+    } else {
+      offset <- lst_expr[[2]]
+    }
+    ncol(.data) - offset
+  }
 }
 
-.select_names <- function(expr, .data) {
-  first_obj <- .dynEval(expr, inherits = FALSE, minframe = 0L)
-  .eval_expr(
-    first_obj,
-    .data
-  )
-}
-
+# e.g everything()
 .select_all <- function(expr, .data) {
   seq_len(length(pl_colnames(.data)))
 }
 
+# e.g all_of(x) or any_of(x)
 .select_vector <- function(expr, .data) {
   lst_expr <- as.list(expr)
   vars <- .dynGet(lst_expr[[2]], inherits = FALSE, minframe = 0L)
@@ -319,6 +314,7 @@ get_dots <- function(...) {
   .select_char(.data, vars, verbose = FALSE)
 }
 
+# e.g where(is.numeric)
 .select_where <- function(expr, .data) {
   lst_expr <- as.list(expr)
   fn <- safe_deparse(lst_expr[[2]])
@@ -336,9 +332,7 @@ get_dots <- function(...) {
     "is.Date" = is_polars_date(.data$schema)
   )
 
-  vars <- names(which(vars))
-
-  .select_char(.data, vars, verbose = FALSE)
+  which(vars)
 }
 
 # e.g starts_with("Sep")
@@ -369,25 +363,6 @@ get_dots <- function(...) {
   )
   grep(rgx, pl_colnames(.data))
 }
-
-# e.g args$select (happens when we use grouped_data (see center.grouped_df()))
-.select_dollar <- function(expr, .data) {
-  first_obj <-
-    .dynGet(
-      expr[[2]],
-      ifnotfound = NULL,
-      inherits = FALSE,
-      minframe = 0L
-    )
-  if (is.null(first_obj)) {
-    first_obj <- .dynEval(expr[[2]], inherits = FALSE, minframe = 0L)
-  }
-  .eval_expr(
-    first_obj[[deparse(expr[[3]])]],
-    .data
-  )
-}
-
 
 # e.g is.numeric()
 .select_context <- function(expr, .data) {

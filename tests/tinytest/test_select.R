@@ -76,3 +76,13 @@ expect_error(
   pl_select(pl_iris, where(~ mean(.x) > 3.5)),
   "can only take `is.*` functions"
 )
+
+expect_colnames(
+  pl_select(pl_iris, last_col(3)),
+  "Sepal.Width"
+)
+
+expect_colnames(
+  pl_select(pl_iris, 1:last_col(3)),
+  c("Sepal.Length", "Sepal.Width")
+)

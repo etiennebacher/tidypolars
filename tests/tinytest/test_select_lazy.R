@@ -81,4 +81,14 @@ expect_error_lazy(
   "can only take `is.*` functions"
 )
 
+expect_colnames(
+  pl_select(pl_iris, last_col(3)),
+  "Sepal.Width"
+)
+
+expect_colnames(
+  pl_select(pl_iris, 1:last_col(3)),
+  c("Sepal.Length", "Sepal.Width")
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
