@@ -127,7 +127,7 @@ bench::mark(
   tidypolars = {
     large_iris_pl |>
       as_polars() |>
-      pl_select(starts_with("Sep", "Pet")) |>
+      pl_select(starts_with(c("Sep", "Pet"))) |>
       pl_mutate(
         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
       )
@@ -143,10 +143,3 @@ bench::mark(
   iterations = 10
 )
 ```
-
-Finally, if you want to use `polars` because it's low-dependency (regarding how
-many R packages it imports), then `tidypolars` is also for you!
-
-All functions above can be used separately from any `tidyverse` package by adding
-the `pl_` prefix. For example, you can use `pl_mutate()` or `pl_filter()` like
-the other functions without having to download and import `tidyverse` packages.
