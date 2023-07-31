@@ -52,7 +52,8 @@ expect_colnames(
 
 bad_selection <- c("Sepal.Length", "Sepal.Width", "foo")
 
-# TODO: tinytest doesn't recognize rlang errors?
+# TODO: tinytest doesn't recognize rlang errors because they don't have the
+# same structure
 expect_error(
   pl_select(pl_iris, all_of(bad_selection)),
   ""

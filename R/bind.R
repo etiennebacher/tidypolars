@@ -68,7 +68,7 @@ concat_ <- function(..., how) {
   }, FUN.VALUE = logical(1L)))
 
   if (!all_lazyframe && !all_dataframe) {
-    stop("All elements in `...` must be of the same class (either DataFrame or LazyFrame).")
+    rlang::abort("All elements in `...` must be of the same class (either DataFrame or LazyFrame).")
   }
 
   pl$concat(dots, how = how)

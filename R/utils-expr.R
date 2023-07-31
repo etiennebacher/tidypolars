@@ -142,7 +142,7 @@ check_empty_dots <- function(...) {
   if (length(dots) > 0) {
     fn <- deparse(match.call(call = sys.call(sys.parent()))[1])
     fn <- gsub("^pl\\_", "", fn)
-    warning(paste0("\nWhen the dataset is a Polars DataFrame or LazyFrame, `", fn, "` only needs one argument. Additional arguments will not be used."), call. = FALSE)
+    rlang::warn(paste0("\nWhen the dataset is a Polars DataFrame or LazyFrame, `", fn, "` only needs one argument. Additional arguments will not be used."))
   }
 }
 
@@ -187,13 +187,13 @@ unnest_across_expr <- function(expr, .data) {
       out[[i]] <- str2lang(out[[i]])
     }
   } else { # TODO: function that I can't convert to polars, e.g .fns = function(x) mean(x)
-    stop("Anonymous functions are not supported in `across()` for now.")
+    rlang::abort("Anonymous functions are not supported in `across()` for now.")
   }
 
   # modify names of new variables if necessary
   if (!is.null(.names)) {
     if (grepl("{\\.fn}", .names, perl = TRUE) && length(.fns) > 2) {
-      stop("Can't use `{.fn}` in argument `.names` of `across()` with anonymous functions.")
+      rlang::abort("Can't use `{.fn}` in argument `.names` of `across()` with anonymous functions.")
     }
     if (length(.fns) == 2) {
       .fns <- .fns[[2]][1]

@@ -22,7 +22,7 @@
 
 describe_plan <- function(.data) {
   if (!inherits(.data, "LazyFrame")) {
-    stop(
+    rlang::abort(
       paste("`describe_plan()` only works on a LazyFrame.",
             "The current data is of class ", class(.data))
     )
@@ -35,7 +35,7 @@ describe_plan <- function(.data) {
 
 describe_optimized_plan <- function(.data) {
   if (!inherits(.data, "LazyFrame")) {
-    stop(
+    rlang::abort(
       paste("`describe_optimized_plan()` only works on a LazyFrame.",
             "The current data is of class ", class(.data))
     )

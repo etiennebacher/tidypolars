@@ -103,3 +103,19 @@ expect_error(
   pl_bind_cols(l4),
   "already exists"
 )
+
+l5 <- list(
+  data.frame(
+    x = sample(letters, 20),
+    y = sample(1:100, 20)
+  ),
+  polars::pl$DataFrame(
+    y = sample(letters, 20),
+    z = sample(1:100, 20)
+  )
+)
+
+expect_error(
+  pl_bind_cols(l5),
+  "must be of the same class"
+)
