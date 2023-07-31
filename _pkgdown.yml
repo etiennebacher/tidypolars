@@ -34,12 +34,16 @@ reference:
       - pl_count
       - pl_distinct
       - pl_filter
+      - pl_full_join
       - pl_group_by
+      - pl_inner_join
+      - pl_left_join
       - pl_mutate
       - pl_pull
       - pl_relocate
       - pl_rename
       - pl_rename_with
+      - pl_right_join
       - pl_select
       - pl_separate
       - pl_slice_head
