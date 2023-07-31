@@ -26,6 +26,7 @@ tidyselect_named_arg <- function(.data, cols) {
 #' Because the data used in selection is only a 1-row slice, where() can only
 #' be used to select depending on the type of columns, not on operations (like
 #' mean(), etc.)
+#' @noRd
 check_where_arg <- function(...) {
   exprs <- get_dots(...)
   for (i in seq_along(exprs)) {
