@@ -17,6 +17,28 @@
 
 pl_select <- function(.data, ...) {
   check_polars_data(.data)
-  vars <- .select_nse_from_dots(.data, ...)
+  if (inherits(.data, "LazyFrame")) {
+    data <- .data$slice(1)$collect()$to_data_frame()
+  } else {
+    data <- .data$slice(1)$to_data_frame()
+  }
+  check_where_arg(...)
+  vars <- names(tidyselect::eval_select(rlang::expr(c(...)), data))
   .data$select(vars)
+}
+
+#' Because the data used in pl_select() is only a 1-row slice, where() can only
+#' be used to select depending on the type of columns, not on operations (like
+#' mean(), etc.)
+check_where_arg <- function(...) {
+  exprs <- get_dots(...)
+  for (i in seq_along(exprs)) {
+    tmp <- safe_deparse(exprs[[i]])
+    if (!startsWith(tmp, "where(")) next
+    tmp <- gsub("^where\\(", "", tmp)
+    tmp <- gsub("\\)$", "", tmp)
+    if (!startsWith(tmp, "is.")) {
+      rlang::abort("`where()` can only take `is.*` functions (like `is.numeric`).")
+    }
+  }
 }
