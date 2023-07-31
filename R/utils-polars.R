@@ -37,7 +37,7 @@ pl_groups <- function(x) {
 }
 
 clone_grouped_data <- function(x) {
-  if (inherits(x, "GroupBy") | inherits(x, "LazyGroupBy")) {
+  if (inherits(x, "GroupBy") || inherits(x, "LazyGroupBy")) {
     x
   } else {
     NULL

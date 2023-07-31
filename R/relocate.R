@@ -41,16 +41,14 @@ pl_relocate <- function(.data, ..., .before = NULL, .after = NULL) {
     .before <- names_data[1]
     where <- "BEFORE"
   } else if (!missing(.before) && missing(.after)) {
-    .before <- deparse(substitute(.before))
-    .before <- .select_nse_from_var(.data, .before)
+    .before <- tidyselect_named_arg(.data, rlang::enquo(.before))
     where <- "BEFORE"
   } else if (missing(.before) && !missing(.after)) {
-    .after <- deparse(substitute(.after))
-    .after <- .select_nse_from_var(.data, .after)
+    .after <- tidyselect_named_arg(.data, rlang::enquo(.after))
     where <- "AFTER"
   }
 
-  vars <- .select_nse_from_dots(.data, ...)
+  vars <- tidyselect_dots(.data, ...)
   if (length(vars) == 0) return(.data)
 
   not_moving <- setdiff(names_data, vars)

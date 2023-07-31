@@ -33,7 +33,7 @@
 pl_fill <- function(.data, ..., direction = c("down", "up", "downup", "updown")) {
 
   check_polars_data(.data)
-  vars <- .select_nse_from_dots(.data, ...)
+  vars <- tidyselect_dots(.data, ...)
   direction <- match.arg(direction)
   .data2 <- clone_grouped_data(.data)
   grps <- attributes(.data2)$pl_grps

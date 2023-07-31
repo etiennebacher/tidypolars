@@ -26,7 +26,7 @@
 
 pl_distinct <- function(.data, ..., keep = "first", maintain_order = TRUE) {
   check_polars_data(.data)
-  vars <- .select_nse_from_dots(.data, ...)
+  vars <- tidyselect_dots(.data, ...)
   if (length(vars) == 0) vars <- pl_colnames(.data)
   .data$unique(subset = vars, keep = keep, maintain_order = maintain_order)
 }

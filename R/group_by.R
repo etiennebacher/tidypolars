@@ -27,7 +27,7 @@
 
 pl_group_by <- function(.data, ..., maintain_order = FALSE) {
   check_polars_data(.data)
-  vars <- .select_nse_from_dots(.data, ...)
+  vars <- tidyselect_dots(.data, ...)
 
   # we can't access column names on a "GroupBy" object so I save them as an
   # attribute before

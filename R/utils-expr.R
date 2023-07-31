@@ -168,7 +168,8 @@ unnest_across_expr <- function(expr, .data) {
     .names <- NULL
   }
 
-  .cols <- pl_colnames(.data)[.eval_expr(.cols, .data = .data )]
+  .cols <- tidyselect_named_arg(.data, .cols)
+
   out <- vector("list", length = length(.cols))
   names(out) <- .cols
 
