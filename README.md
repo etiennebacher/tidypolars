@@ -102,7 +102,6 @@ much easier to read than the pure `polars` syntax:
 
 ``` r
 library(polars)
-#> Warning: le package 'polars' a été compilé avec la version R 4.3.1
 
 # polars syntax
 pl$DataFrame(iris)$
@@ -154,7 +153,7 @@ bench::mark(
   tidypolars = {
     large_iris_pl |>
       as_polars() |>
-      pl_select(starts_with("Sep", "Pet")) |>
+      pl_select(starts_with(c("Sep", "Pet"))) |>
       pl_mutate(
         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
       )
@@ -174,16 +173,7 @@ bench::mark(
 #> # A tibble: 3 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars        424ms  434.5ms     2.30     13.2KB     0   
-#> 2 tidypolars    438ms 505.39ms     2.01     55.8KB     0   
-#> 3 dplyr            1s    1.18s     0.854     458MB     1.97
+#> 1 polars     190.95ms 241.22ms     4.09     13.2KB    0    
+#> 2 tidypolars 216.74ms 244.83ms     3.77     65.7KB    0.377
+#> 3 dplyr         1.86s    1.91s     0.520     458MB    1.14
 ```
-
-Finally, if you want to use `polars` because it’s low-dependency
-(regarding how many R packages it imports), then `tidypolars` is also
-for you!
-
-All functions above can be used separately from any `tidyverse` package
-by adding the `pl_` prefix. For example, you can use `pl_mutate()` or
-`pl_filter()` like the other functions without having to download and
-import `tidyverse` packages.

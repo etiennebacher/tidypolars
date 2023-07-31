@@ -40,26 +40,20 @@ for this.
 
 # Can I see some benchmarks?
 
-Sure but take them with a grain of salt: these small benchmarks may not be 
-representative of real-life scenarios and don't necessarily use the full capacities
-of other packages (e.g keyed `data.table`s). You should refer to [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/) for more serious ones.
+Making accurate benchmarks of data wrangling tools is difficult and I won't try
+to do it here. You should refer to [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/).
 The benchmarks below are mostly useful to show that `polars` and `tidypolars`
 are equivalent in terms of performance.
 
 ```{r}
 library(polars)
 library(tidypolars)
-library(dplyr, warn.conflicts = FALSE)
-library(data.table, warn.conflicts = FALSE)
 
-test <- data.frame(
+pl_test <- pl$DataFrame(
   grp = sample(letters, 1e7, TRUE),
   val1 = sample(1:1000, 1e7, TRUE),
   val2 = sample(1:1000, 1e7, TRUE)
 )
-
-pl_test <- pl$DataFrame(test)
-dt_test <- as.data.table(test)
 
 bench::mark(
   polars = pl_test$
@@ -74,13 +68,6 @@ bench::mark(
       x = mean(val1),
       y = sum(val2)
     ),
-  dplyr = test |> 
-    group_by(grp) |> 
-    summarize(
-      x = mean(val1),
-      y = sum(val2)
-    ),
-  data.table = dt_test[, .(x = mean(val1), y = sum(val2)), by = grp],
   check = FALSE,
   iterations = 15
 )
@@ -90,9 +77,6 @@ bench::mark(
     filter(pl$col("grp") == "a" | pl$col("grp") == "b"),
   tidypolars = pl_test |> 
     pl_filter(grp == "a" | grp == "b"),
-  dplyr = test |> 
-    filter(grp %in% c("a", "b")),
-  data.table = dt_test[grp %chin% c("a", "b")],
   check = FALSE,
   iterations = 15
 )

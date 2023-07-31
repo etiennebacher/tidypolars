@@ -32,7 +32,7 @@ pl_relocate <- function(.data, ..., .before = NULL, .after = NULL) {
   check_polars_data(.data)
 
   if (!missing(.before) && !missing(.after)) {
-    stop("You can specify either `.before` or `.after` but not both.")
+    rlang::abort("You can specify either `.before` or `.after` but not both.")
   }
 
   names_data <- pl_colnames(.data)
@@ -41,16 +41,14 @@ pl_relocate <- function(.data, ..., .before = NULL, .after = NULL) {
     .before <- names_data[1]
     where <- "BEFORE"
   } else if (!missing(.before) && missing(.after)) {
-    .before <- deparse(substitute(.before))
-    .before <- .select_nse_from_var(.data, .before)
+    .before <- tidyselect_named_arg(.data, rlang::enquo(.before))
     where <- "BEFORE"
   } else if (missing(.before) && !missing(.after)) {
-    .after <- deparse(substitute(.after))
-    .after <- .select_nse_from_var(.data, .after)
+    .after <- tidyselect_named_arg(.data, rlang::enquo(.after))
     where <- "AFTER"
   }
 
-  vars <- .select_nse_from_dots(.data, ...)
+  vars <- tidyselect_dots(.data, ...)
   if (length(vars) == 0) return(.data)
 
   not_moving <- setdiff(names_data, vars)
@@ -58,7 +56,7 @@ pl_relocate <- function(.data, ..., .before = NULL, .after = NULL) {
   if (where == "BEFORE") {
     limit <- which(names_data == .before) - 1
     if (length(limit) == 0) {
-      stop("The column specified in `.before` doesn't exist in the dataset.")
+      rlang::abort("The column specified in `.before` doesn't exist in the dataset.")
     }
     lhs <- names_data[seq_len(limit)]
     lhs <- lhs[which(lhs %in% not_moving)]
@@ -68,7 +66,7 @@ pl_relocate <- function(.data, ..., .before = NULL, .after = NULL) {
   } else if (where == "AFTER") {
     limit <- which(names_data == .after)
     if (length(limit) == 0) {
-      stop("The column specified in `.after` doesn't exist in the dataset.")
+      rlang::abort("The column specified in `.after` doesn't exist in the dataset.")
     }
     lhs <- names_data[seq_len(limit)]
     lhs <- lhs[which(lhs %in% not_moving)]

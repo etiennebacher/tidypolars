@@ -26,7 +26,7 @@ expect_colnames(
 
 # select helpers are also available
 expect_colnames(
-  test |> pl_relocate(contains("[aeiouy]")),
+  test |> pl_relocate(matches("[aeiouy]")),
   c("cyl", "disp", "drat", "qsec", "am", "gear", "carb", "mpg", "hp", "wt", "vs")
 )
 
@@ -37,11 +37,11 @@ expect_error_lazy(
 )
 expect_error_lazy(
   test |> pl_relocate(mpg, .before = foo),
-  "doesn't exist"
+  ""
 )
 expect_error_lazy(
   test |> pl_relocate(mpg, .after = foo),
-  "doesn't exist"
+  ""
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

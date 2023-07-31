@@ -30,9 +30,9 @@ expect_equal_lazy(
   28
 )
 
-expect_equal_lazy(
+expect_error_lazy(
   pl_drop_na(pl_tmp, foo) |> nrow(),
-  pl_drop_na(pl_tmp) |> nrow()
+  ""
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

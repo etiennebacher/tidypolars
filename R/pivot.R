@@ -21,8 +21,7 @@ pl_pivot_longer <- function(.data, cols, names_to = "name", values_to = "value")
   check_polars_data(.data)
 
   data_names <- pl_colnames(.data)
-  cols <- deparse(substitute(cols))
-  value_vars <- .select_nse_from_var(.data, var = cols)
+  value_vars <- tidyselect_named_arg(.data, rlang::enquo(cols))
   id_vars <- data_names[!data_names %in% value_vars]
   .data$melt(
     id_vars = id_vars, value_vars = value_vars,
@@ -65,10 +64,8 @@ pl_pivot_wider <- function(.data, id_cols, names_from, values_from,
   check_polars_data(.data)
 
   data_names <- pl_colnames(.data)
-  values_from <- deparse(substitute(values_from))
-  names_from <- deparse(substitute(names_from))
-  value_vars <- .select_nse_from_var(.data, values_from)
-  names_vars <- .select_nse_from_var(.data, names_from)
+  value_vars <- tidyselect_named_arg(.data, rlang::enquo(values_from))
+  names_vars <- tidyselect_named_arg(.data, rlang::enquo(names_from))
   id_vars <- data_names[!data_names %in% c(value_vars, names_vars)]
 
   to_fill <- pl_pull(.data, names_vars) |>

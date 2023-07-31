@@ -26,7 +26,7 @@ expect_equal(
   28
 )
 
-expect_equal(
+expect_error(
   pl_drop_na(pl_tmp, foo) |> nrow(),
-  pl_drop_na(pl_tmp) |> nrow()
+  ""
 )

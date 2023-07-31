@@ -11,8 +11,7 @@ Description: Polars is an amazing cross-language tool for manipulating very larg
     data. However, one drawback is that the R implementation has a syntax that
     will look odd to many R users who are not used to Python syntax. The objective
     of tidypolars is to improve the ease-of-use of Polars in R by providing
-    functions whose names and syntax are very close to the tidyverse ones, while
-    having very few dependencies.
+    tidyverse syntax to polars.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -23,6 +22,8 @@ BugReports: https://github.com/etiennebacher/tidypolars/issues
 Depends: R (>= 4.1.0)
 Imports: 
     polars,
+    rlang,
+    tidyselect,
     utils
 Suggests: 
     bench,
