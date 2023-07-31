@@ -143,16 +143,17 @@ expect_dim(
 
 # with grouped data
 
-by_cyl <- mtcars |>
-  as_polars() |>
+by_cyl <- polars::pl$LazyFrame(mtcars) |>
   pl_group_by(cyl)
 
-expect_equal_lazy(
-  by_cyl |>
-    pl_filter(disp == max(disp)) |>
-    pl_pull(mpg),
-  c(21.4, 24.4, 10.4)
-)
+# TODO: uncomment this when https://github.com/pola-rs/r-polars/issues/338 is
+# solved
+# expect_equal_lazy(
+#   by_cyl |>
+#     pl_filter(disp == max(disp)) |>
+#     pl_pull(mpg),
+#   c(21.4, 24.4, 10.4)
+# )
 
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

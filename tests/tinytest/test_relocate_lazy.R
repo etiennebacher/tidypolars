@@ -5,7 +5,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-test <- as_polars(mtcars)
+test <- polars::pl$LazyFrame(mtcars)
 
 expect_colnames(
   test |> pl_relocate(hp, vs, .before = cyl),

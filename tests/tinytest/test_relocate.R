@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-test <- as_polars(mtcars)
+test <- polars::pl$DataFrame(mtcars)
 
 expect_colnames(
   test |> pl_relocate(hp, vs, .before = cyl),
