@@ -64,7 +64,7 @@ where operations are performed "by group". <code>pl_ungroup()</code> removes gro
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pl_group_by</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, maintain_order <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pl_group_by</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, maintain_order <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">pl_ungroup</span><span class="op">(</span><span class="va">.data</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -80,9 +80,9 @@ where operations are performed "by group". <code>pl_ungroup()</code> removes gro
 
 
 <dt>maintain_order</dt>
-<dd><p>Maintain row order. This is the default but it can
-slow down the process with large datasets and it prevents the use of
-streaming.</p></dd>
+<dd><p>Maintain row order. For performance reasons, this is
+<code>FALSE</code> by default). Setting it to <code>TRUE</code> can slow down the process with
+large datasets and prevents the use of streaming.</p></dd>
 
 </dl></div>
 
@@ -112,7 +112,7 @@ streaming.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> groups: [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "cyl"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> maintain order:  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> maintain order:  FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">by_cyl</span> <span class="op">|&gt;</span> <span class="fu"><a href="pl_summarize.html">pl_summarise</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  disp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span>,</span></span>
@@ -124,14 +124,14 @@ streaming.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ ---        ┆ ---        │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64        ┆ f64        │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪════════════╪════════════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 183.314286 ┆ 122.285714 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 105.136364 ┆ 82.636364  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 353.1      ┆ 209.214286 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 183.314286 ┆ 122.285714 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴────────────┴────────────┘</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> groups: [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "cyl"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> maintain order:  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> maintain order:  FALSE</span>
 <span class="r-in"><span><span class="va">by_cyl</span> <span class="op">|&gt;</span> <span class="fu"><a href="pl_filter.html">pl_filter</a></span><span class="op">(</span><span class="va">disp</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 11)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────┬─────┬───────┬───────┬───┬─────┬─────┬──────┬──────┐</span>
@@ -146,7 +146,7 @@ streaming.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> groups: [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "cyl"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> maintain order:  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> maintain order:  FALSE</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
