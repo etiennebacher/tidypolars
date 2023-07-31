@@ -40,26 +40,23 @@ pak::pkg_install("etiennebacher/tidypolars")
 
 ## Motivation
 
-
 `polars` (both the Rust source and the R implementation) are amazing packages.
 I won't argue here for the interest of using `polars`, there are already a lot 
 of resources on [its website](https://rpolars.github.io/).
 
-One characteristic of `polars` is that its syntax is 1) extremely verbose, and 
-2) very close to the `pandas` syntax in Python. While this makes it quite easy
-to read, it is **yet another syntax to learn** for R users that are accustomed so
-far to either base R, `data.table` or the `tidyverse`.
+One characteristic of `polars` is that its syntax is 1) quite verbose, and 
+2) very close to the `pandas` syntax in Python. While this makes it easy
+to read, it is **yet another syntax to learn** for R users that are accustomed 
+so far to either base R, `data.table` or the `tidyverse`.
 
 The objective of `tidypolars` is to **provide functions that are very close to
-the `tidyverse` ones** but that call the `polars` functions under the hood so that
-we don't lose any of its capacities. Moreover, the objective is to keep
-`tidypolars` **dependency-free** with the exception of `polars` itself (which
-has no dependencies).
+the `tidyverse` ones** but that call the `polars` functions under the hood so 
+that we don't lose any of its capacities. 
 
 
 ## Example
 
-Suppose you already have some code that uses `dplyr`:
+Suppose that you already have some code that uses `dplyr`:
 
 ```{r}
 library(dplyr, warn.conflicts = FALSE)
@@ -69,6 +66,7 @@ iris |>
   mutate(
     petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
   ) |> 
+  filter(between(Sepal.Length, 4.5, 5.5)) |> 
   head()
 ```
 
@@ -84,6 +82,7 @@ iris |>
   mutate(
     petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
   ) |> 
+  filter(between(Sepal.Length, 4.5, 5.5)) |> 
   head()
 ```
 
@@ -102,7 +101,9 @@ pl$DataFrame(iris)$
     )$then("long")$
       otherwise("large")$
       alias("petal_type")
-  )
+  )$
+  filter(pl$col("Sepal.Length")$is_between(4.5, 5.5))$
+  head(6)
 ```
 
 Don't worry about losing performance compared to the pure `polars` syntax,
@@ -110,7 +111,7 @@ Don't worry about losing performance compared to the pure `polars` syntax,
 
 ```{r}
 large_iris <- data.table::rbindlist(rep(list(iris), 50000))
-large_iris_pl <- as_polars(large_iris)
+large_iris_pl <- as_polars(large_iris, lazy = TRUE)
 
 bench::mark(
   polars = {
@@ -122,22 +123,26 @@ bench::mark(
         )$then("long")$
           otherwise("large")$
           alias("petal_type")
-      )
+      )$
+      filter(pl$col("Sepal.Length")$is_between(4.5, 5.5))$
+      collect()
   },
   tidypolars = {
     large_iris_pl |>
-      as_polars() |>
-      pl_select(starts_with(c("Sep", "Pet"))) |>
-      pl_mutate(
+      select(starts_with(c("Sep", "Pet"))) |>
+      mutate(
         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-      )
+      ) |> 
+      filter(between(Sepal.Length, 4.5, 5.5)) |> 
+      collect()
   },
   dplyr = {
     large_iris |>
       select(starts_with(c("Sep", "Pet"))) |>
       mutate(
         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-      )
+      ) |>
+      filter(between(Sepal.Length, 4.5, 5.5))
   },
   check = FALSE,
   iterations = 10

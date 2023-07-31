@@ -35,21 +35,18 @@ packages. I won’t argue here for the interest of using `polars`, there
 are already a lot of resources on [its
 website](https://rpolars.github.io/).
 
-One characteristic of `polars` is that its syntax is 1) extremely
-verbose, and 2) very close to the `pandas` syntax in Python. While this
-makes it quite easy to read, it is **yet another syntax to learn** for R
-users that are accustomed so far to either base R, `data.table` or the
-`tidyverse`.
+One characteristic of `polars` is that its syntax is 1) quite verbose,
+and 2) very close to the `pandas` syntax in Python. While this makes it
+easy to read, it is **yet another syntax to learn** for R users that are
+accustomed so far to either base R, `data.table` or the `tidyverse`.
 
 The objective of `tidypolars` is to **provide functions that are very
 close to the `tidyverse` ones** but that call the `polars` functions
-under the hood so that we don’t lose any of its capacities. Moreover,
-the objective is to keep `tidypolars` **dependency-free** with the
-exception of `polars` itself (which has no dependencies).
+under the hood so that we don’t lose any of its capacities.
 
 ## Example
 
-Suppose you already have some code that uses `dplyr`:
+Suppose that you already have some code that uses `dplyr`:
 
 ``` r
 library(dplyr, warn.conflicts = FALSE)
@@ -59,6 +56,7 @@ iris |>
   mutate(
     petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
   ) |> 
+  filter(between(Sepal.Length, 4.5, 5.5)) |> 
   head()
 #>   Sepal.Length Sepal.Width Petal.Length Petal.Width petal_type
 #> 1          5.1         3.5          1.4         0.2       long
@@ -81,6 +79,7 @@ iris |>
   mutate(
     petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
   ) |> 
+  filter(between(Sepal.Length, 4.5, 5.5)) |> 
   head()
 #> shape: (6, 5)
 #> ┌──────────────┬─────────────┬──────────────┬─────────────┬────────────┐
@@ -112,8 +111,10 @@ pl$DataFrame(iris)$
     )$then("long")$
       otherwise("large")$
       alias("petal_type")
-  )
-#> shape: (150, 5)
+  )$
+  filter(pl$col("Sepal.Length")$is_between(4.5, 5.5))$
+  head(6)
+#> shape: (6, 5)
 #> ┌──────────────┬─────────────┬──────────────┬─────────────┬────────────┐
 #> │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ petal_type │
 #> │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---        │
@@ -123,11 +124,8 @@ pl$DataFrame(iris)$
 #> │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ long       │
 #> │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ long       │
 #> │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ long       │
-#> │ …            ┆ …           ┆ …            ┆ …           ┆ …          │
-#> │ 6.3          ┆ 2.5         ┆ 5.0          ┆ 1.9         ┆ large      │
-#> │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ large      │
-#> │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ large      │
-#> │ 5.9          ┆ 3.0         ┆ 5.1          ┆ 1.8         ┆ large      │
+#> │ 5.0          ┆ 3.6         ┆ 1.4          ┆ 0.2         ┆ long       │
+#> │ 5.4          ┆ 3.9         ┆ 1.7          ┆ 0.4         ┆ long       │
 #> └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘
 ```
 
@@ -136,7 +134,7 @@ syntax, `tidypolars` is just as fast:
 
 ``` r
 large_iris <- data.table::rbindlist(rep(list(iris), 50000))
-large_iris_pl <- as_polars(large_iris)
+large_iris_pl <- as_polars(large_iris, lazy = TRUE)
 
 bench::mark(
   polars = {
@@ -148,22 +146,26 @@ bench::mark(
         )$then("long")$
           otherwise("large")$
           alias("petal_type")
-      )
+      )$
+      filter(pl$col("Sepal.Length")$is_between(4.5, 5.5))$
+      collect()
   },
   tidypolars = {
     large_iris_pl |>
-      as_polars() |>
-      pl_select(starts_with(c("Sep", "Pet"))) |>
-      pl_mutate(
+      select(starts_with(c("Sep", "Pet"))) |>
+      mutate(
         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-      )
+      ) |> 
+      filter(between(Sepal.Length, 4.5, 5.5)) |> 
+      collect()
   },
   dplyr = {
     large_iris |>
       select(starts_with(c("Sep", "Pet"))) |>
       mutate(
         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-      )
+      ) |>
+      filter(between(Sepal.Length, 4.5, 5.5))
   },
   check = FALSE,
   iterations = 10
@@ -173,7 +175,7 @@ bench::mark(
 #> # A tibble: 3 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     190.95ms 241.22ms     4.09     13.2KB    0    
-#> 2 tidypolars 216.74ms 244.83ms     3.77     65.7KB    0.377
-#> 3 dplyr         1.86s    1.91s     0.520     458MB    1.14
+#> 1 polars     102.92ms 116.07ms     8.70     25.7KB    0    
+#> 2 tidypolars 117.57ms 139.43ms     6.52    103.2KB    0.652
+#> 3 dplyr         2.09s    2.21s     0.445   916.7MB    1.69
 ```
