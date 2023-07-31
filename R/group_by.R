@@ -44,12 +44,9 @@ pl_group_by <- function(.data, ..., maintain_order = FALSE) {
 pl_ungroup <- function(.data) {
   if (inherits(.data, "GroupBy")) {
     class(.data) <- "DataFrame"
-    attributes(.data)$pl_grps <- NULL
-  } else {
-    if (inherits(.data, "LazyGroupBy")) {
-      class(.data) <- "LazyFrame"
-      attributes(.data)$pl_grps <- NULL
-    }
+  } else if (inherits(.data, "LazyGroupBy")) {
+    class(.data) <- "LazyFrame"
   }
+  attributes(.data)$pl_grps <- NULL
   .data
 }
