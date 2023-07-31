@@ -5,7 +5,7 @@
 \alias{pl_ungroup}
 \title{Group by one or more variables}
 \usage{
-pl_group_by(.data, ..., maintain_order = TRUE)
+pl_group_by(.data, ..., maintain_order = FALSE)
 
 pl_ungroup(.data)
 }
@@ -14,9 +14,9 @@ pl_ungroup(.data)
 
 \item{...}{Variables to group by (used in \code{pl_group_by()} only).}
 
-\item{maintain_order}{Maintain row order. This is the default but it can
-slow down the process with large datasets and it prevents the use of
-streaming.}
+\item{maintain_order}{Maintain row order. For performance reasons, this is
+\code{FALSE} by default). Setting it to \code{TRUE} can slow down the process with
+large datasets and prevents the use of streaming.}
 }
 \description{
 Most data operations are done on groups defined by variables. \code{pl_group_by()}

@@ -6,9 +6,9 @@
 #'
 #' @param .data A Polars Data/LazyFrame
 #' @param ... Variables to group by (used in `pl_group_by()` only).
-#' @param maintain_order Maintain row order. This is the default but it can
-#' slow down the process with large datasets and it prevents the use of
-#' streaming.
+#' @param maintain_order Maintain row order. For performance reasons, this is
+#' `FALSE` by default). Setting it to `TRUE` can slow down the process with
+#' large datasets and prevents the use of streaming.
 #'
 #' @export
 #' @examples
@@ -25,7 +25,7 @@
 #' by_cyl |> pl_filter(disp == max(disp))
 #'
 
-pl_group_by <- function(.data, ..., maintain_order = TRUE) {
+pl_group_by <- function(.data, ..., maintain_order = FALSE) {
   check_polars_data(.data)
   vars <- .select_nse_from_dots(.data, ...)
 

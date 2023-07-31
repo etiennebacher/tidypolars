@@ -50,7 +50,7 @@ count_ <- function(.data, vars, sort, name, new_col = FALSE) {
         pl$count()$alias(name)
       )
     } else {
-      out <- .data$groupby(vars, maintain_order = TRUE)$agg(
+      out <- .data$groupby(vars, maintain_order = FALSE)$agg(
         pl$count()$alias(name)
       )
     }
