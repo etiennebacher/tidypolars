@@ -38,7 +38,7 @@
 #'
 #' pl_full_join(test, test2)
 #'
-#' #' Show how the arg 'suffix' works:
+#' # Show how the arg 'suffix' works:
 #' test2 <- polars::pl$DataFrame(
 #'   x = c(1, 2, 4),
 #'   y = c(1, 2, 4),
