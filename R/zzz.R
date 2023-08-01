@@ -4,6 +4,14 @@
 
   if(requireNamespace("dplyr", quietly = TRUE)) {
 
+    registerS3method("add_count", "DataFrame", pl_add_count, envir = asNamespace("dplyr"))
+    registerS3method("add_count", "GroupBy", pl_add_count, envir = asNamespace("dplyr"))
+    registerS3method("add_count", "LazyFrame", pl_add_count, envir = asNamespace("dplyr"))
+    registerS3method("add_count", "LazyGroupBy", pl_add_count, envir = asNamespace("dplyr"))
+
+    registerS3method("anti_join", "DataFrame", pl_anti_join, envir = asNamespace("dplyr"))
+    registerS3method("anti_join", "LazyFrame", pl_anti_join, envir = asNamespace("dplyr"))
+
     registerS3method("arrange", "DataFrame", pl_arrange, envir = asNamespace("dplyr"))
     registerS3method("arrange", "GroupBy", pl_arrange, envir = asNamespace("dplyr"))
     registerS3method("arrange", "LazyFrame", pl_arrange, envir = asNamespace("dplyr"))
@@ -23,10 +31,8 @@
     registerS3method("count", "LazyFrame", pl_count, envir = asNamespace("dplyr"))
     registerS3method("count", "LazyGroupBy", pl_count, envir = asNamespace("dplyr"))
 
-    registerS3method("add_count", "DataFrame", pl_add_count, envir = asNamespace("dplyr"))
-    registerS3method("add_count", "GroupBy", pl_add_count, envir = asNamespace("dplyr"))
-    registerS3method("add_count", "LazyFrame", pl_add_count, envir = asNamespace("dplyr"))
-    registerS3method("add_count", "LazyGroupBy", pl_add_count, envir = asNamespace("dplyr"))
+    registerS3method("cross_join", "DataFrame", pl_cross_join, envir = asNamespace("dplyr"))
+    registerS3method("cross_join", "LazyFrame", pl_cross_join, envir = asNamespace("dplyr"))
 
     registerS3method("distinct", "DataFrame", pl_distinct, envir = asNamespace("dplyr"))
     registerS3method("distinct", "LazyFrame", pl_distinct, envir = asNamespace("dplyr"))
@@ -36,8 +42,17 @@
     registerS3method("filter", "LazyFrame", pl_filter, envir = asNamespace("dplyr"))
     registerS3method("filter", "LazyGroupBy", pl_filter, envir = asNamespace("dplyr"))
 
+    registerS3method("full_join", "DataFrame", pl_full_join, envir = asNamespace("dplyr"))
+    registerS3method("full_join", "LazyFrame", pl_full_join, envir = asNamespace("dplyr"))
+
     registerS3method("group_by", "DataFrame", pl_group_by, envir = asNamespace("dplyr"))
     registerS3method("group_by", "LazyFrame", pl_group_by, envir = asNamespace("dplyr"))
+
+    registerS3method("inner_join", "DataFrame", pl_inner_join, envir = asNamespace("dplyr"))
+    registerS3method("inner_join", "LazyFrame", pl_inner_join, envir = asNamespace("dplyr"))
+
+    registerS3method("left_join", "DataFrame", pl_left_join, envir = asNamespace("dplyr"))
+    registerS3method("left_join", "LazyFrame", pl_left_join, envir = asNamespace("dplyr"))
 
     registerS3method("mutate", "DataFrame", pl_mutate, envir = asNamespace("dplyr"))
     registerS3method("mutate", "GroupBy", pl_mutate, envir = asNamespace("dplyr"))
@@ -56,8 +71,14 @@
     registerS3method("rename_with", "DataFrame", pl_rename_with, envir = asNamespace("dplyr"))
     registerS3method("rename_with", "LazyFrame", pl_rename_with, envir = asNamespace("dplyr"))
 
+    registerS3method("right_join", "DataFrame", pl_right_join, envir = asNamespace("dplyr"))
+    registerS3method("right_join", "LazyFrame", pl_right_join, envir = asNamespace("dplyr"))
+
     registerS3method("select", "DataFrame", pl_select, envir = asNamespace("dplyr"))
     registerS3method("select", "LazyFrame", pl_select, envir = asNamespace("dplyr"))
+
+    registerS3method("semi_join", "DataFrame", pl_semi_join, envir = asNamespace("dplyr"))
+    registerS3method("semi_join", "LazyFrame", pl_semi_join, envir = asNamespace("dplyr"))
 
     registerS3method("slice_head", "DataFrame", pl_slice_head, envir = asNamespace("dplyr"))
     registerS3method("slice_head", "GroupBy", pl_slice_head, envir = asNamespace("dplyr"))
