@@ -63,18 +63,35 @@ replace_funs <- function(x, create_new = TRUE) {
     new_x <- gsub(paste0(f, "\\("), paste0("pl_", replacement, "\\("), new_x)
   }
 
+  contains_in <- grepl("%in%", new_x, perl = TRUE)
+  is_preceded_by_casewhen <- grepl("(?=.*case\\_when\\()(.*%in%)", new_x, perl = TRUE)
+
+  if (contains_in && !is_preceded_by_casewhen) {
+    new_x <- parse_boolean_exprs(new_x)
+  } else {
+    can_return <<- TRUE
+  }
+
   if (length(funs$in_polars) == 0 &&
       length(funs$not_in_polars) == 0 &&
       length(new_x) == 1) {
     new_x <- paste0("pl$lit(", new_x, ")")
   }
 
-  if (isTRUE(create_new)) {
-    paste0("(", new_x, ")")
+  is_polars_expr <- inherits(
+    try(eval(str2lang(new_x)), silent = TRUE),
+    "Expr"
+  )
+
+  if (is_polars_expr || can_return) {
+    if (isTRUE(create_new)) {
+      paste0("(", new_x, ")")
+    } else {
+      new_x
+    }
   } else {
-    new_x
+    rlang::abort("Can't evaluate expression")
   }
-  # Functions that don't have a polars equivalent should go in an apply() call
 }
 
 
@@ -114,7 +131,11 @@ find_function_call_in_string <- function(x) {
   )
   p_d <- utils::getParseData(p)
 
-  function_calls <- p_d[p_d$token %in% c("SYMBOL_FUNCTION_CALL", "'+'", "'-'"), "text"]
+  function_calls <- p_d[
+    p_d$token %in% c("SYMBOL_FUNCTION_CALL", "'+'", "'-'") |
+      p_d$text == "%in%",
+    "text"
+  ]
 
   if ("col" %in% function_calls) {
     char_before_call <- regmatches(p, gregexpr(".[col]", p))[[1]]
@@ -145,6 +166,8 @@ check_empty_dots <- function(...) {
     rlang::warn(paste0("\nWhen the dataset is a Polars DataFrame or LazyFrame, `", fn, "` only needs one argument. Additional arguments will not be used."))
   }
 }
+
+# Convert an across() call to a list of calls
 
 unnest_across_expr <- function(expr, .data) {
 

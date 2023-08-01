@@ -39,6 +39,20 @@ expect_equal(
   iris$Sepal.Width > iris$Sepal.Length & iris$Petal.Width > iris$Petal.Length
 )
 
+# %in% operator
+
+test <- pl$DataFrame(
+  x1 = c("a", "a", "foo", "a", "c"),
+  x2 = c(2, 1, 5, 3, 1),
+  value = sample(1:5)
+)
+
+expect_equal(
+  pl_mutate(test, x = x1 %in% letters) |>
+    pl_pull(x),
+  c(TRUE, TRUE, FALSE, TRUE, TRUE)
+)
+
 # Overwrite existing vars
 
 expect_equal(
@@ -114,4 +128,16 @@ expect_warning(
 )
 
 
+# custom function that returns Polars expression
 
+foo <- function(x, y) {
+  tmp <- x$mean()
+  tmp2 <- y$mean()
+  tmp + tmp2
+}
+
+expect_equal(
+  pl_mutate(pl_iris, x = foo(Sepal.Length, Petal.Length)) |>
+    pl_pull(x),
+  rep(mean(iris$Sepal.Length) + mean(iris$Petal.Length), nrow(iris))
+)

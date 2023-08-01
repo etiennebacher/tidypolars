@@ -112,6 +112,10 @@ r_polars_funs <- data.frame(
       "n_chars" ~ "nchar",
       "weekday" ~ "wday",
       "ordinal_day" ~ "yday",
+      "is_nan" ~ "is.nan",
+      "is_null" ~ "is.na",
+      "is_finite" ~ "is.finite",
+      "is_infinite" ~ "is.infinite",
       .default = r_funs
     ),
     r_funs = case_when(
