@@ -25,7 +25,7 @@ You could also read the file with other packages and then convert it with
 
 Here, we're going to use the `who` dataset that is available in the `tidyr` 
 package. I import it both as a classic R `data.frame` and as a Polars `DataFrame`
-so that we compare `dplyr` and `tidypolars` functions directly.
+so that we can easily compare `dplyr` and `tidypolars` functions.
 
 ```{r setup}
 library(polars)
