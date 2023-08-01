@@ -1,3 +1,4 @@
+# nocov start
 # https://stackoverflow.com/questions/76475424/conditionally-provide-methods-for-generics-from-another-package/
 .onLoad <- function(libname, pkgname) {
 
@@ -106,3 +107,4 @@
     registerS3method("unite", "LazyFrame", pl_unite, envir = asNamespace("tidyr"))
   }
 }
+# nocov end

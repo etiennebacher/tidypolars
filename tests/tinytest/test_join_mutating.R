@@ -16,8 +16,7 @@ test2 <- polars::pl$DataFrame(
 )
 
 expect_equal(
-  test |>
-    pl_left_join(test2),
+  pl_left_join(test, test2),
   pl$DataFrame(
     x = 1:3, y = 1:3,
     z = 1:3, z2 = c(4, 5, NA)
@@ -25,8 +24,7 @@ expect_equal(
 )
 
 expect_equal(
-  test |>
-    pl_right_join(test2),
+  pl_right_join(test, test2),
   pl$DataFrame(
     x = 1:2, y = 1:2,
     z = 1:2, z2 = c(4, 5)
@@ -34,8 +32,7 @@ expect_equal(
 )
 
 expect_equal(
-  test |>
-    pl_full_join(test2),
+  pl_full_join(test, test2),
   pl$DataFrame(
     x = c(1, 2, 3, 4), y = c(1, 2, 3, 4),
     z = c(1, 2, 3, NA), z2 = c(4, 5, NA, 7)
@@ -43,8 +40,7 @@ expect_equal(
 )
 
 expect_equal(
-  test |>
-    pl_inner_join(test2),
+  pl_inner_join(test, test2),
   pl$DataFrame(
     x = c(1, 2), y = c(1, 2),
     z = c(1, 2), z2 = c(4, 5)
@@ -60,20 +56,36 @@ test2 <- polars::pl$DataFrame(
 )
 
 expect_colnames(
-  test |>
-    pl_left_join(test2, by = c("x", "y")),
+  pl_left_join(test, test2, by = c("x", "y")),
   c("x", "y", "z.x", "z.y")
 )
 
 expect_colnames(
-  test |>
-    pl_left_join(test2, by = c("x", "y"), suffix = c(".hi", ".hello")),
+  pl_left_join(test, test2, by = c("x", "y"), suffix = c(".hi", ".hello")),
   c("x", "y", "z.hi", "z.hello")
 )
 
 expect_error(
-  test |>
-    pl_left_join(test2, by = c("x", "y"), suffix = c(".hi")),
+  pl_left_join(test, test2, by = c("x", "y"), suffix = c(".hi")),
+  ""
+)
+
+
+# input class
+
+if (Sys.getenv("TIDYPOLARS_TEST") == "TRUE") {
+  Sys.setenv('TIDYPOLARS_TEST' = FALSE)
+  exit_file("Manual exit")
+}
+
+test2 <- polars::pl$LazyFrame(
+  x = c(1, 2, 4),
+  y = c(1, 2, 4),
+  z = c(4, 5, 7)
+)
+
+expect_error(
+  pl_left_join(test, test2),
   ""
 )
 

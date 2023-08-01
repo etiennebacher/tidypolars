@@ -26,6 +26,14 @@ expect_colnames(
   c(test$columns, "foo")
 )
 
+expect_equal_lazy(
+  make_unique_id(test) |>
+    pl_pull(hash) |>
+    unique() |>
+    length(),
+  32
+)
+
 mtcars2 <- mtcars
 mtcars2$hash <- 1
 test2 <- pl$LazyFrame(mtcars2)

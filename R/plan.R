@@ -20,6 +20,7 @@
 #'
 #' describe_optimized_plan(query)
 
+# nocov start
 describe_plan <- function(.data) {
   if (!inherits(.data, "LazyFrame")) {
     rlang::abort(
@@ -42,3 +43,4 @@ describe_optimized_plan <- function(.data) {
   }
   .data$describe_optimized_plan()
 }
+# nocov end

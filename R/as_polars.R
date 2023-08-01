@@ -11,10 +11,12 @@
 #' mtcars |>
 #'   as_polars()
 
+# nocov start
 as_polars <- function(.data, lazy = FALSE) {
   if (isTRUE(lazy)) {
-    pl$DataFrame(.data)$lazy()
+    pl$LazyFrame(.data)
   } else {
     pl$DataFrame(.data)
   }
 }
+# nocov end
