@@ -14,112 +14,118 @@ knitr::opts_chunk$set(
 )
 ```
 
-We're going to use the dataset `who` provided in `tidyr` but we need to convert it to the `polars` format.
+The first thing to do before using `tidypolars` is to get some data as a Polars
+`DataFrame` or `LazyFrame`. You can read a CSV file with `polars::pl$read_csv()`
+(to import it as a `DataFrame`) or with `polars::pl$scan_csv()` (to import it
+as a `LazyFrame`).
+
+You could also read the file with other packages and then convert it with
+`as_polars()` (with the argument `lazy = TRUE` if you want to make it a 
+`LazyFrame`). 
+
+Here, we're going to use the `who` dataset that is available in the `tidyr` 
+package. I import it both as a classic R `data.frame` and as a Polars `DataFrame`
+so that we compare `dplyr` and `tidypolars` functions directly.
 
 ```{r setup}
 library(polars)
 library(tidypolars)
 
-# who <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/tidyr/who.csv")
-pl_who <- as_polars(read.csv("who.csv"))
+link <- "https://vincentarelbundock.github.io/Rdatasets/csv/tidyr/who.csv"
+
+who_df <- read.csv(link)
+who_pl <- pl$read_csv(link, null_values = "NA")
 ```
 
 The objective of `tidypolars` is to provide functions whose syntax is close to
-the `tidyverse` while keeping the number of dependencies very low. Therefore, it
+the `tidyverse` while keeping the number of dependencies quite low. Therefore, it
 can be used in two ways depending on whether you already the `tidyverse` or not.
-
-## You don't use the `tidyverse`
-
-`tidypolars` provides two types of functions: some that replicate functions from 
-the `tidyverse` and some that are "unique" to `polars`. The former are always
-prefixed with `pl_`. For example, `tidypolars::pl_filter()` is equivalent to 
-`dplyr::filter()`.
-
-Like with the `tidyverse`, you can pipe multiple `tidypolars` functions:
-
-```{r}
-pl_who |> 
-  pl_filter(year > 1990) |> 
-  pl_drop_na(newrel_f3544) |> 
-  pl_select(iso3, year, matches("^newrel(.*)_f"))
-```
-
-If you use `polars`' lazy API, you need to call `pl_collect()` at the end of the 
-chained expression:
-
-```{r}
-pl_who_l <- as_polars(read.csv("who.csv"), lazy = TRUE)
-
-out <- pl_who_l |> 
-  pl_filter(year > 1990) |> 
-  pl_drop_na(newrel_f3544) |> 
-  pl_select(iso3, year, matches("^newrel(.*)_f"))
-
-# this just prints the query
-out
-
-# this performs the query
-out |> 
-  pl_collect()
-```
-
-`tidypolars` always return a `DataFrame` or a `LazyFrame` so you can still use
-`polars` original syntax after a chained expression:
-
-```{r}
-out <- pl_who |> 
-  pl_filter(year > 1990) |> 
-  pl_select(iso3, year, matches("^newrel(.*)_f"))
-
-out
-
-out$
-  groupby("iso3", maintain_order = TRUE)$
-  agg(
-    pl$all()$mean()
-  )$
-  sort(c("iso3", "year"))
-```
-
-The code above only depends on `polars` and some `R` core packages.
 
 ## You already use the `tidyverse`
 
-While the syntax above is very close to the `tidyverse` one, it can be tedious to
-add the prefix `pl_` to every function. Therefore, if you already load `dplyr` or
-other `tidyverse` packages in your code, you simply need to use `as_polars()` on 
-your data (or read it with `polars` functions). The rest of the code doesn't need
-to change at all. 
+If you already load `dplyr` or other `tidyverse` packages in your code, you can
+use the same code on a Polars `DataFrame` and it should work (if it doesn't,
+feel free to [open an issue](https://github.com/etiennebacher/tidypolars/issues)).
 
-Here's an example of some `dplyr` code:
+Here's an example of some `dplyr` and `tidyr` code on the classic R `data.frame`:
 
 ```{r}
 library(dplyr, warn.conflicts = FALSE)
+library(tidyr, warn.conflicts = FALSE)
 
-starwars |> 
-  select(name, height, mass, species, sex) |> 
-  mutate(
-    BMI = mass / ((height/100) ^2)
-  ) |> 
-  select(BMI, everything()) |> 
-  rename_with(.fn = toupper)
+who_df |> 
+  filter(year > 1990) |> 
+  drop_na(newrel_f3544) |> 
+  select(iso3, year, matches("^newrel(.*)_f")) |> 
+  arrange(iso3, year) |> 
+  rename_with(.fn = toupper) |> 
+  head()
 ```
 
-You can simply use a `polars` dataset instead, without changing anything (apart
-from the argument name in `rename_with()`):
+We can simply use our Polars dataset instead:
 
 ```{r}
-library(tidypolars)
-
-starwars |> 
-  as_polars() |> 
-  select(name, height, mass, species, sex) |> 
-  mutate(
-    BMI = mass / ((height/100) ^2)
-  ) |> 
-  select(BMI, everything()) |> 
-  rename_with(fn = toupper)
+who_pl |> 
+  filter(year > 1990) |> 
+  drop_na(newrel_f3544) |> 
+  select(iso3, year, matches("^newrel(.*)_f")) |> 
+  arrange(iso3, year) |> 
+  rename_with(.fn = toupper) |> 
+  head()
 ```
 
+If you use Polars lazy API, you need to call `collect()` at the end of the 
+chained expression to evaluate the query:
+
+```{r}
+who_pl_lazy <- pl$scan_csv(link, null_values = "NA")
+
+who_pl_lazy |> 
+  filter(year > 1990) |> 
+  drop_na(newrel_f3544) |> 
+  select(iso3, year, matches("^newrel(.*)_f")) |> 
+  arrange(iso3, year) |> 
+  rename_with(.fn = toupper) |> 
+  collect() |> 
+  head()
+```
+
+
 **NOTE:** if you want to use the same functions as the `tidyverse` ones, you 
-**must** load `dplyr` or the related packages first.
+**must** load `dplyr` or the related packages (loading `tidypolars` alone is 
+not enough).
+
+
+## You don't want to use the `tidyverse`
+
+As we saw above, it is extremely easy to use a `tidyverse` pipeline on some 
+Polars data. However, maybe you would like to have access to this syntax without
+importing `dplyr` or other packages (this could be the case if you want to use 
+`tidypolars` inside a package for example). 
+
+To do so, you can prefix the function calls with `pl_`, so that you would use
+`pl_filter()` instead of `filter()` for instance. These functions have exactly
+the same functionalities. Taking the example from above, you could have a script
+where you only load `tidypolars` and run:
+
+```{r}
+who_pl |> 
+  pl_filter(year > 1990) |> 
+  pl_drop_na(newrel_f3544) |> 
+  pl_select(iso3, year, matches("^newrel(.*)_f")) |> 
+  pl_arrange(iso3, year) |> 
+  pl_rename_with(.fn = toupper) |> 
+  head()
+```
+
+## About dependencies
+
+If you care about dependencies (if you'd like to use `tidypolars` in a package 
+for instance), `tidypolars` uses `polars` (no R package dependencies) and 
+`tidyselect`, which is a low-level, widely tested package that has very rarely
+breaking changes:
+
+```{r}
+tools::package_dependencies("tidyselect", recursive = TRUE)
+```
+
