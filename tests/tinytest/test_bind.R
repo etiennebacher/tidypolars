@@ -117,5 +117,5 @@ l5 <- list(
 
 expect_error(
   pl_bind_cols(l5),
-  "must be of the same class"
+  "must be either"
 )

@@ -57,17 +57,21 @@ concat_ <- function(..., how) {
   dots <- lapply(dots, \(x) eval(x, envir = parent.frame(4L)))
   dots_is_a_single_list <- one_el && is.list(dots)
 
-  if (dots_is_a_single_list) dots <- unlist(dots)
+  if (dots_is_a_single_list) dots <- unlist(dots, recursive = FALSE)
 
-  all_dataframe <- all(vapply(dots, \(y) {
-    inherits(y, "DataFrame")
+  any_not_polars <- any(vapply(dots, \(y) {
+    !inherits(y, "DataFrame") && !inherits(y, "LazyFrame")
   }, FUN.VALUE = logical(1L)))
 
-  all_lazyframe <- all(vapply(dots, \(y) {
-    inherits(y, "LazyFrame")
+  if (any_not_polars) {
+    rlang::abort("All elements in `...` must be either DataFrames or LazyFrames).")
+  }
+
+  all_df_or_lf <- all(vapply(dots, \(y) {
+    inherits(y, "DataFrame") || inherits(y, "LazyFrame")
   }, FUN.VALUE = logical(1L)))
 
-  if (!all_lazyframe && !all_dataframe) {
+  if (!all_df_or_lf) {
     rlang::abort("All elements in `...` must be of the same class (either DataFrame or LazyFrame).")
   }
 
