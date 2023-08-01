@@ -6,8 +6,8 @@
 #' * as above but params wrapped in a list
 #'
 #'  For `pl_rename_with`, additional arguments passed to `fn`.
-#' @param fn Function to apply on column names
-#' @param cols Columns on which to apply `fn`. Can be anything accepted by
+#' @param .fn Function to apply on column names
+#' @param .cols Columns on which to apply `fn`. Can be anything accepted by
 #'   `dplyr::select()`.
 #'
 #' @rdname pl_rename
@@ -37,10 +37,10 @@ pl_rename <- function(.data, ...) {
 #' @rdname pl_rename
 #' @export
 
-pl_rename_with <- function(.data, fn, cols = everything(), ...) {
+pl_rename_with <- function(.data, .fn, .cols = everything(), ...) {
   check_polars_data(.data)
-  to_replace <- tidyselect_named_arg(.data, rlang::enquo(cols))
-  new <- do.call(fn, list(to_replace, ...))
+  to_replace <- tidyselect_named_arg(.data, rlang::enquo(.cols))
+  new <- do.call(.fn, list(to_replace, ...))
   mapping <- as.list(to_replace)
   names(mapping) <- new
   .data$rename(mapping)

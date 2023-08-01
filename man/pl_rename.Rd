@@ -7,7 +7,7 @@
 \usage{
 pl_rename(.data, ...)
 
-pl_rename_with(.data, fn, cols = everything(), ...)
+pl_rename_with(.data, .fn, .cols = everything(), ...)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
@@ -20,9 +20,9 @@ pl_rename_with(.data, fn, cols = everything(), ...)
 
 For \code{pl_rename_with}, additional arguments passed to \code{fn}.}
 
-\item{fn}{Function to apply on column names}
+\item{.fn}{Function to apply on column names}
 
-\item{cols}{Columns on which to apply \code{fn}. Can be anything accepted by
+\item{.cols}{Columns on which to apply \code{fn}. Can be anything accepted by
 \code{dplyr::select()}.}
 }
 \description{
