@@ -5,6 +5,9 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
+# TODO: remove this when r-polars 0.8.0 is released
+exit_if(is_ci())
+
 test <- polars::pl$LazyFrame(
   country = c("France", "France", "UK", "UK", "Spain"),
   year = c(2020, 2021, 2019, 2020, 2022),
@@ -27,6 +30,11 @@ expect_equal_lazy(
     pl_slice_head(4) |>
     pl_pull(value),
   c(NA, 1, 2, NA)
+)
+
+expect_equal_lazy(
+  pl_complete(test, country),
+  test
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
