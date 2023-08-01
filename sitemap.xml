@@ -31,9 +31,6 @@
     <loc>/reference/as_polars.html</loc>
   </url>
   <url>
-    <loc>/reference/classic-joins.html</loc>
-  </url>
-  <url>
     <loc>/reference/describe_plan.html</loc>
   </url>
   <url>
@@ -49,6 +46,9 @@
     <loc>/reference/expect_error_lazy.html</loc>
   </url>
   <url>
+    <loc>/reference/filtering-joins.html</loc>
+  </url>
+  <url>
     <loc>/reference/fish_encounters.html</loc>
   </url>
   <url>
@@ -56,6 +56,9 @@
   </url>
   <url>
     <loc>/reference/make_unique_id.html</loc>
+  </url>
+  <url>
+    <loc>/reference/mutating-joins.html</loc>
   </url>
   <url>
     <loc>/reference/pl_arrange.html</loc>
@@ -77,6 +80,9 @@
   </url>
   <url>
     <loc>/reference/pl_count.html</loc>
+  </url>
+  <url>
+    <loc>/reference/pl_cross_join.html</loc>
   </url>
   <url>
     <loc>/reference/pl_distinct.html</loc>
