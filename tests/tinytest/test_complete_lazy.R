@@ -5,8 +5,6 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-exit_file("Doesn't work for LazyFrames")
-
 test <- polars::pl$LazyFrame(
   country = c("France", "France", "UK", "UK", "Spain"),
   year = c(2020, 2021, 2019, 2020, 2022),

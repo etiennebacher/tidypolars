@@ -26,7 +26,7 @@ pl_complete <- function(.data, ...) {
   if (length(vars) < 2) return(.data)
 
   # TODO: remove this ifelse at some point
-  if (utils::packageVersion("polars") >= "0.8.0") {
+  if (utils::packageVersion("polars") > "0.7.0") {
 
     start <- ".data$select(pl$col(vars)$unique()$sort()$implode())"
     chain <- vector("list", length = length(vars) - 1)
