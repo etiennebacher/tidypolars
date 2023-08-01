@@ -130,7 +130,7 @@ expect_warning(
 
 # custom function that returns Polars expression
 
-foo <- function(x, y) {
+foo <<- function(x, y) {
   tmp <- x$mean()
   tmp2 <- y$mean()
   tmp + tmp2
