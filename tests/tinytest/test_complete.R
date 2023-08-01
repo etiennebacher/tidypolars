@@ -2,7 +2,7 @@ source("helpers.R")
 using("tidypolars")
 
 # TODO: remove this when r-polars 0.8.0 is released
-exit_if(is_ci())
+exit_file("Doesn't work for LazyFrames")
 
 test <- polars::pl$DataFrame(
   country = c("France", "France", "UK", "UK", "Spain"),
