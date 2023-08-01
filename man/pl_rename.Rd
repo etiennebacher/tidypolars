@@ -37,7 +37,7 @@ pl_rename(pl_test, list(miles_per_gallon = "mpg", horsepower = "hp"))
 
 pl_rename(pl_test, `Miles per gallon` = "mpg", `Horse power` = "hp")
 
-pl_rename_with(pl_test, toupper, cols = contains("p"))
+pl_rename_with(pl_test, toupper, .cols = contains("p"))
 
 pl_test_2 <- polars::pl$DataFrame(iris)
 
