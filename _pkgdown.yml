@@ -27,11 +27,13 @@ reference:
       Functions adapted from `dplyr` functions
     contents:
       - pl_add_count
+      - pl_anti_join
       - pl_arrange
       - pl_bind_cols
       - pl_bind_rows
       - pl_collect
       - pl_count
+      - pl_cross_join
       - pl_distinct
       - pl_filter
       - pl_full_join
@@ -45,6 +47,7 @@ reference:
       - pl_rename_with
       - pl_right_join
       - pl_select
+      - pl_semi_join
       - pl_separate
       - pl_slice_head
       - pl_slice_tail

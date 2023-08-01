@@ -5,7 +5,7 @@
 \alias{pl_right_join}
 \alias{pl_full_join}
 \alias{pl_inner_join}
-\title{Join DataFrames or LazyFrames}
+\title{Mutating joins}
 \usage{
 pl_left_join(x, y, by = NULL, suffix = c(".x", ".y"))
 
@@ -18,20 +18,20 @@ pl_inner_join(x, y, by = NULL, suffix = c(".x", ".y"))
 \arguments{
 \item{x, y}{Two Polars Data/LazyFrames}
 
-\item{by}{Variables to join by. If \code{NULL}, the default, *_join() will perform
-a natural join, using all variables in common across x and y. A message lists
-the variables so that you can check they're correct; suppress the message by
-supplying by explicitly.}
+\item{by}{Variables to join by. If \code{NULL}, the default, \verb{*_join()} will
+perform a natural join, using all variables in common across \code{x} and \code{y}. A
+message lists the variables so that you can check they're correct; suppress
+the message by supplying \code{by} explicitly.}
 
 \item{suffix}{If there are non-joined duplicate variables in \code{x} and \code{y},
 these suffixes will be added to the output to disambiguate them. Should be a
 character vector of length 2.}
 }
 \description{
-Join DataFrames or LazyFrames
+Mutating joins add columns from \code{y} to \code{x}, matching observations based on
+the keys.
 }
 \examples{
-
 test <- polars::pl$DataFrame(
   x = c(1, 2, 3),
   y = c(1, 2, 3),
@@ -54,7 +54,7 @@ pl_inner_join(test, test2)
 
 pl_full_join(test, test2)
 
-# Show how the arg 'suffix' works:
+#' Show how the arg 'suffix' works:
 test2 <- polars::pl$DataFrame(
   x = c(1, 2, 4),
   y = c(1, 2, 4),
