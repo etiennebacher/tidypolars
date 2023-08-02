@@ -87,14 +87,40 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p><code>tidypolars</code> is built on <code>polars</code>, which is not available on CRAN for now. To install <code>polars</code>, follow <a href="https://rpolars.github.io/#install" class="external-link">these instructions</a>.</p>
-<p>Then, you can install <code>tidypolars</code> with <code>remotes</code> or <code>pak</code>:</p>
+<p><code>tidypolars</code> is built on <code>polars</code>, which is not available on CRAN. This implies that <code>tidypolars</code> also can’t be on CRAN.</p>
+<p>That said, you can install <code>tidypolars</code> with <code>remotes</code> or <code>pak</code>. Depending on your OS, the procedure is slightly different.</p>
+<div class="section level3">
+<h3 id="windows-or-macos">Windows or macOS<a class="anchor" aria-label="anchor" href="#windows-or-macos"></a>
+</h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"etiennebacher/tidypolars"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span></span>
+<span>  <span class="st">"etiennebacher/tidypolars"</span>, </span>
+<span>  repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://rpolars.r-universe.dev"</span>, <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"repos"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># OR </span></span>
 <span></span>
 <span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu">repo_add</span><span class="op">(</span><span class="st">"https://rpolars.r-universe.dev"</span><span class="op">)</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu">pkg_install</span><span class="op">(</span><span class="st">"etiennebacher/tidypolars"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="linux">Linux<a class="anchor" aria-label="anchor" href="#linux"></a>
+</h3>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span></span>
+<span>  <span class="st">"etiennebacher/tidypolars"</span>, </span>
+<span>  repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://rpolars.r-universe.dev/bin/linux/jammy/4.3"</span>, <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"repos"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># OR </span></span>
+<span></span>
+<span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu">repo_add</span><span class="op">(</span><span class="st">"https://rpolars.r-universe.dev/bin/linux/jammy/4.3"</span><span class="op">)</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu">pkg_install</span><span class="op">(</span><span class="st">"etiennebacher/tidypolars"</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="motivation">Motivation<a class="anchor" aria-label="anchor" href="#motivation"></a>
@@ -107,7 +133,7 @@
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>Suppose that you already have some code that uses <code>dplyr</code>:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
@@ -125,7 +151,7 @@
 <span><span class="co">#&gt; 5          5.0         3.6          1.4         0.2       long</span></span>
 <span><span class="co">#&gt; 6          5.4         3.9          1.7         0.4       long</span></span></code></pre></div>
 <p>With <code>tidypolars</code>, you can provide a Polars <code>DataFrame</code> or <code>LazyFrame</code> and keep the exact same code:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.tidypolars.etiennebacher.com/" class="external-link">tidypolars</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
@@ -150,8 +176,9 @@
 <span><span class="co">#&gt; │ 5.4          ┆ 3.9         ┆ 1.7          ┆ 0.4         ┆ long       │</span></span>
 <span><span class="co">#&gt; └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘</span></span></code></pre></div>
 <p>If you’re used to the <code>tidyverse</code> functions and syntax, this will feel much easier to read than the pure <code>polars</code> syntax:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pola-rs/r-polars" class="external-link">polars</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: le package 'polars' a été compilé avec la version R 4.3.1</span></span>
 <span></span>
 <span><span class="co"># polars syntax</span></span>
 <span><span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">$</span></span>
@@ -179,7 +206,7 @@
 <span><span class="co">#&gt; │ 5.4          ┆ 3.9         ┆ 1.7          ┆ 0.4         ┆ long       │</span></span>
 <span><span class="co">#&gt; └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘</span></span></code></pre></div>
 <p>Don’t worry about losing performance compared to the pure <code>polars</code> syntax, <code>tidypolars</code> is just as fast:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">large_iris</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">rbindlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="fl">50000</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">large_iris_pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="va">large_iris</span>, lazy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
@@ -222,9 +249,9 @@
 <span><span class="co">#&gt; # A tibble: 3 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars     102.92ms 116.07ms     8.70     25.7KB    0    </span></span>
-<span><span class="co">#&gt; 2 tidypolars 117.57ms 139.43ms     6.52    103.2KB    0.652</span></span>
-<span><span class="co">#&gt; 3 dplyr         2.09s    2.21s     0.445   916.7MB    1.69</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 polars      162.6ms 169.58ms     5.39     25.6KB     0   </span></span>
+<span><span class="co">#&gt; 2 tidypolars  190.8ms 206.73ms     4.74     96.2KB     0   </span></span>
+<span><span class="co">#&gt; 3 dplyr          1.1s    1.24s     0.799   916.7MB     3.04</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
