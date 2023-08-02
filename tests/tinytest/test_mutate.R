@@ -53,6 +53,12 @@ expect_equal(
   c(TRUE, TRUE, FALSE, TRUE, TRUE)
 )
 
+expect_equal(
+  pl_mutate(test, x = x1 %in% letters & x2 < 3) |>
+    pl_pull(x),
+  c(TRUE, TRUE, FALSE, FALSE, TRUE)
+)
+
 # Overwrite existing vars
 
 expect_equal(
