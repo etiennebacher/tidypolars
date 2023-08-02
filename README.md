@@ -14,8 +14,8 @@ on the wrong repo. The right one is here:
 
 ## Installation
 
-`tidypolars` is built on `polars`, which is not available on CRAN for
-now. This means that `tidypolars` can’t be on CRAN for now.
+`tidypolars` is built on `polars`, which is not available on CRAN. This
+implies that `tidypolars` also can’t be on CRAN.
 
 That said, you can install `tidypolars` with `remotes` or `pak`.
 Depending on your OS, the procedure is slightly different.
@@ -200,7 +200,7 @@ bench::mark(
 #> # A tibble: 3 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     163.43ms 172.99ms     5.68     25.6KB     0   
-#> 2 tidypolars  192.9ms  227.7ms     4.15     96.2KB     0   
-#> 3 dplyr         1.15s    1.29s     0.731   916.7MB     2.78
+#> 1 polars      162.6ms 169.58ms     5.39     25.6KB     0   
+#> 2 tidypolars  190.8ms 206.73ms     4.74     96.2KB     0   
+#> 3 dplyr          1.1s    1.24s     0.799   916.7MB     3.04
 ```

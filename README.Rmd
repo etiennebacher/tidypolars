@@ -24,8 +24,8 @@ you're on the wrong repo. The right one is here: [markfairbanks/tidypolars](http
 
 ## Installation
 
-`tidypolars` is built on `polars`, which is not available on CRAN for now. This
-means that `tidypolars` can't be on CRAN for now. 
+`tidypolars` is built on `polars`, which is not available on CRAN. This implies 
+that `tidypolars` also can't be on CRAN. 
 
 That said, you can install `tidypolars` with `remotes` or `pak`. Depending on
 your OS, the procedure is slightly different.
