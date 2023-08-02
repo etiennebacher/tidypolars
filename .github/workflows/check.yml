@@ -45,7 +45,7 @@ jobs:
           )
         shell: Rscript {0}
       - name: Package Dependencies
-        run: R -q -e 'remotes::install_deps(".", dependencies=TRUE)'
+        run: R -q -e 'remotes::install_deps(".", dependencies=TRUE, repos = c("https://rpolars.r-universe.dev/", getOption("repos")))'
       - name: Build Package
         run: R CMD build --no-build-vignettes --no-manual .
       - name: Check Package
