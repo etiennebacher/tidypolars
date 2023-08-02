@@ -17,7 +17,7 @@
 
 
 pl_summarize <- function(.data, ...) {
-  if (!inherits(.data, "GroupBy")) {
+  if (!inherits(.data, "GroupBy") && !inherits(.data, "LazyGroupBy")) {
     rlang::abort("`pl_summarize()` only works on grouped data.")
   }
   check_polars_data(.data)
