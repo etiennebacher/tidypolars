@@ -36,7 +36,7 @@ jobs:
         run: R -q -e 'sessionInfo()'
       - name: System Dependencies
         # can be used to install e.g. cmake or other build dependencies
-        run: |apt update -qq && apt install --yes --no-install-recommends libcurl-dev
+        run: apt update -qq && apt install --yes --no-install-recommends libcurl-dev
       - name: Install Polars
         run: |
           install.packages(
