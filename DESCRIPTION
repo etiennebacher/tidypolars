@@ -35,5 +35,5 @@ Suggests:
     tidyr,
     tinytest
 Remotes:
-    pola-rs/r-polars
+    pola-rs/r-polars@v0.7.0
 VignetteBuilder: knitr
