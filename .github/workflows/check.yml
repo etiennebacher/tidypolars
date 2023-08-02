@@ -37,15 +37,8 @@ jobs:
       #- name: System Dependencies
       #  # can be used to install e.g. cmake or other build dependencies
       #  run: apt update -qq && apt install --yes --no-install-recommends cmake git
-      - name: Install Polars
-        run: |
-          install.packages(
-            "https://github.com/pola-rs/r-polars/releases/latest/download/polars__x86_64-pc-linux-gnu.gz",
-            repos = NULL
-          )
-        shell: Rscript {0}
       - name: Package Dependencies
-        run: R -q -e 'remotes::install_deps(".", dependencies=TRUE)'
+        run: R -q -e 'remotes::install_deps(".", repos = c("https://rpolars.r-universe.dev/bin/linux/jammy/4.3", getOption("repos")), dependencies=TRUE)'
       - name: Build Package
         run: R CMD build --no-build-vignettes --no-manual .
       - name: Check Package
