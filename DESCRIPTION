@@ -21,7 +21,7 @@ URL: https://www.tidypolars.etiennebacher.com/, https://etiennebacher.r-universe
 BugReports: https://github.com/etiennebacher/tidypolars/issues
 Depends: R (>= 4.1.0)
 Imports: 
-    polars,
+    r-polars,
     rlang,
     tidyselect,
     utils
