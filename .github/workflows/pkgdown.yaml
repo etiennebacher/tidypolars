@@ -20,7 +20,7 @@ concurrency:
 
 jobs:
   pkgdown:
-    runs-on: {os: ubuntu-latest,   r: 'release'}
+    runs-on: ubuntu-latest
 
     container:
       image: rocker/r2u:latest
