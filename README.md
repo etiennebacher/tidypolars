@@ -15,16 +15,40 @@ on the wrong repo. The right one is here:
 ## Installation
 
 `tidypolars` is built on `polars`, which is not available on CRAN for
-now. To install `polars`, follow [these
-instructions](https://rpolars.github.io/#install).
+now. This means that `tidypolars` can’t be on CRAN for now.
 
-Then, you can install `tidypolars` with `remotes` or `pak`:
+That said, you can install `tidypolars` with `remotes` or `pak`.
+Depending on your OS, the procedure is slightly different.
+
+### Windows or macOS
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("etiennebacher/tidypolars")
+remotes::install_github(
+  "etiennebacher/tidypolars", 
+  repos = c("https://rpolars.r-universe.dev", getOption("repos"))
+)
+
+# OR 
 
 # install.packages("pak")
+pak::repo_add("https://rpolars.r-universe.dev")
+pak::pkg_install("etiennebacher/tidypolars")
+```
+
+### Linux
+
+``` r
+# install.packages("remotes")
+remotes::install_github(
+  "etiennebacher/tidypolars", 
+  repos = c("https://rpolars.r-universe.dev/bin/linux/jammy/4.3", getOption("repos"))
+)
+
+# OR 
+
+# install.packages("pak")
+pak::repo_add("https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
 pak::pkg_install("etiennebacher/tidypolars")
 ```
 
@@ -101,6 +125,7 @@ much easier to read than the pure `polars` syntax:
 
 ``` r
 library(polars)
+#> Warning: le package 'polars' a été compilé avec la version R 4.3.1
 
 # polars syntax
 pl$DataFrame(iris)$
@@ -175,7 +200,7 @@ bench::mark(
 #> # A tibble: 3 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     102.92ms 116.07ms     8.70     25.7KB    0    
-#> 2 tidypolars 117.57ms 139.43ms     6.52    103.2KB    0.652
-#> 3 dplyr         2.09s    2.21s     0.445   916.7MB    1.69
+#> 1 polars     163.43ms 172.99ms     5.68     25.6KB     0   
+#> 2 tidypolars  192.9ms  227.7ms     4.15     96.2KB     0   
+#> 3 dplyr         1.15s    1.29s     0.731   916.7MB     2.78
 ```
