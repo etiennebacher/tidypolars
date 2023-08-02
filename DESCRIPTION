@@ -34,4 +34,6 @@ Suggests:
     rmarkdown,
     tidyr,
     tinytest
+Remotes:
+    pola-rs/r-polars
 VignetteBuilder: knitr
