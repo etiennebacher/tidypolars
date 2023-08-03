@@ -230,3 +230,17 @@ unnest_across_expr <- function(expr, .data) {
 
   unlist(out)
 }
+
+
+
+build_polars_exprs <- function(.data, ...) {
+  dots <- get_dots(...)
+  exprs <- rearrange_exprs(.data, dots)
+  to_drop <- names(exprs[[1]])
+
+  exprs <- Filter(Negate(is.null), exprs[[2]])
+  exprs <- unlist(exprs)
+  exprs <- paste(exprs, collapse = ", ")
+
+  list(exprs = exprs, to_drop = to_drop)
+}

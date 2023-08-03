@@ -28,14 +28,9 @@ pl_summarize <- function(.data, ...) {
     rlang::abort("`pl_summarize()` only works on grouped data.")
   }
 
-  dots <- get_dots(...)
-
-  exprs <- rearrange_exprs(.data, dots)
-  to_drop <- names(exprs[[1]])
-
-  exprs <- Filter(Negate(is.null), exprs[[2]])
-  exprs <- unlist(exprs)
-  exprs <- paste(exprs, collapse = ", ")
+  polars_exprs <- build_polars_exprs(.data, ...)
+  exprs <- polars_exprs$exprs
+  to_drop <- polars_exprs$to_drop
 
   if (!is.null(mo)) {
     out_expr <- ".data$groupby(grps, maintain_order = mo)$agg("
