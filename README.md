@@ -17,19 +17,23 @@ on the wrong repo. The right one is here:
 `tidypolars` is built on `polars`, which is not available on CRAN. This
 implies that `tidypolars` also can’t be on CRAN.
 
-That said, you can install `tidypolars` with `remotes` or `pak`.
+That said, there are still several ways to install `tidypolars`.
 Depending on your OS, the procedure is slightly different.
 
 ### Windows or macOS
 
 ``` r
+install.packages('tidypolars', repos = c('https://etiennebacher.r-universe.dev'))
+
+#### OR
+
 # install.packages("remotes")
 remotes::install_github(
   "etiennebacher/tidypolars", 
   repos = c("https://rpolars.r-universe.dev", getOption("repos"))
 )
 
-# OR 
+#### OR
 
 # install.packages("pak")
 pak::repo_add("https://rpolars.r-universe.dev")
@@ -45,7 +49,7 @@ remotes::install_github(
   repos = c("https://rpolars.r-universe.dev/bin/linux/jammy/4.3", getOption("repos"))
 )
 
-# OR 
+#### OR
 
 # install.packages("pak")
 pak::repo_add("https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
@@ -125,7 +129,6 @@ much easier to read than the pure `polars` syntax:
 
 ``` r
 library(polars)
-#> Warning: le package 'polars' a été compilé avec la version R 4.3.1
 
 # polars syntax
 pl$DataFrame(iris)$
@@ -200,7 +203,7 @@ bench::mark(
 #> # A tibble: 3 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars      162.6ms 169.58ms     5.39     25.6KB     0   
-#> 2 tidypolars  190.8ms 206.73ms     4.74     96.2KB     0   
-#> 3 dplyr          1.1s    1.24s     0.799   916.7MB     3.04
+#> 1 polars        101ms 108.29ms     9.11     25.7KB    0    
+#> 2 tidypolars 109.67ms 149.61ms     6.61    123.2KB    0.661
+#> 3 dplyr         2.14s    2.23s     0.438   916.7MB    1.88
 ```

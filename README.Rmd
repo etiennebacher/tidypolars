@@ -27,19 +27,23 @@ you're on the wrong repo. The right one is here: [markfairbanks/tidypolars](http
 `tidypolars` is built on `polars`, which is not available on CRAN. This implies 
 that `tidypolars` also can't be on CRAN. 
 
-That said, you can install `tidypolars` with `remotes` or `pak`. Depending on
+That said, there are still several ways to install `tidypolars`. Depending on
 your OS, the procedure is slightly different.
 
 ### Windows or macOS
 
 ```{r eval=FALSE}
+install.packages('tidypolars', repos = c('https://etiennebacher.r-universe.dev'))
+
+#### OR
+
 # install.packages("remotes")
 remotes::install_github(
   "etiennebacher/tidypolars", 
   repos = c("https://rpolars.r-universe.dev", getOption("repos"))
 )
 
-# OR 
+#### OR
 
 # install.packages("pak")
 pak::repo_add("https://rpolars.r-universe.dev")
@@ -55,7 +59,7 @@ remotes::install_github(
   repos = c("https://rpolars.r-universe.dev/bin/linux/jammy/4.3", getOption("repos"))
 )
 
-# OR 
+#### OR
 
 # install.packages("pak")
 pak::repo_add("https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
