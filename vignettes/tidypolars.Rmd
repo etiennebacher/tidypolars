@@ -125,7 +125,10 @@ for instance), `tidypolars` uses `polars` (no R package dependencies) and
 `tidyselect`, which is a low-level, widely tested package that has very rarely
 breaking changes:
 
-```{r}
+```{.r}
 tools::package_dependencies("tidyselect", recursive = TRUE)
+#> $tidyselect
+#> [1] "cli"       "glue"      "lifecycle" "rlang"     "vctrs"     "withr"     "utils"     "methods"  
+#> [9] "graphics"  "grDevices" "stats" 
 ```
 
