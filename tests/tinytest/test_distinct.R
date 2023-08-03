@@ -7,14 +7,14 @@ pl_test <- pl$DataFrame(
   value = 1:6
 )
 
-expect_equal(
-  pl_distinct(pl_test) |> nrow(),
-  6
+expect_dim(
+  pl_distinct(pl_test),
+  c(6, 3)
 )
 
-expect_equal(
-  pl_distinct(pl_test, iso_o) |> nrow(),
-  3
+expect_dim(
+  pl_distinct(pl_test, iso_o),
+  c(3, 3)
 )
 
 expect_equal(
@@ -29,7 +29,7 @@ expect_equal(
   c(2, 4, 6)
 )
 
-expect_equal(
-  pl_distinct(pl_test, iso_o, keep = "none") |> nrow(),
-  0
+expect_dim(
+  pl_distinct(pl_test, iso_o, keep = "none"),
+  c(0, 3)
 )

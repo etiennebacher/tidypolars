@@ -41,7 +41,8 @@ expect_equal_lazy <- function(x, y, ...) {
   }
   tinytest::expect_equal(
     x, y,
-    call = sys.call(sys.parent(2))
+    call = sys.call(sys.parent(2)),
+    ...
   )
 }
 

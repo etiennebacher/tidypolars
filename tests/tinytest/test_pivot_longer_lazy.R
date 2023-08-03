@@ -12,7 +12,7 @@ out <- pl_relig_income |>
 
 # basic checks
 
-expect_equal_lazy(dim(out), c(180, 3))
+expect_dim(out, c(180, 3))
 expect_colnames(out, c("religion", "income", "count"))
 
 

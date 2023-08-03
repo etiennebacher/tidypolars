@@ -33,10 +33,9 @@ expect_equal_lazy(
   c(names(mtcars), "count")
 )
 
-expect_equal_lazy(
-  pl_add_count(test, cyl, am, sort = TRUE, name = "count") |>
-    nrow(),
-  32
+expect_dim(
+  pl_add_count(test, cyl, am, sort = TRUE, name = "count"),
+  c(32, 12)
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

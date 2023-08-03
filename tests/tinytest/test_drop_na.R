@@ -6,27 +6,27 @@ tmp[1:3, "mpg"] <- NA
 tmp[4, "hp"] <- NA
 pl_tmp <- polars::pl$DataFrame(tmp)
 
-expect_equal(
-  pl_drop_na(pl_tmp, drat) |> nrow(),
-  32
+expect_dim(
+  pl_drop_na(pl_tmp, drat),
+  c(32, 11)
 )
 
-expect_equal(
-  pl_drop_na(pl_tmp, hp) |> nrow(),
-  31
+expect_dim(
+  pl_drop_na(pl_tmp, hp),
+  c(31, 11)
 )
 
-expect_equal(
-  pl_drop_na(pl_tmp, mpg) |> nrow(),
-  29
+expect_dim(
+  pl_drop_na(pl_tmp, mpg),
+  c(29, 11)
 )
 
-expect_equal(
-  pl_drop_na(pl_tmp, mpg, hp) |> nrow(),
-  28
+expect_dim(
+  pl_drop_na(pl_tmp, mpg, hp),
+  c(28, 11)
 )
 
 expect_error(
-  pl_drop_na(pl_tmp, foo) |> nrow(),
+  pl_drop_na(pl_tmp, foo),
   ""
 )
