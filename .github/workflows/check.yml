@@ -15,18 +15,11 @@ env:
   GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
 
 jobs:
+  # TODO: find a way to increase the OS/Rversions coverage
+  # r2u only works on ubuntu-latest and r-release
+  # https://github.com/rocker-org/r2u/issues/2
   ci:
-    strategy:
-      matrix:
-        include:
-          # - {os: macOS-latest,   r: 'release'}
-          # - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release', depends_only: TRUE}
-          - {os: ubuntu-latest,   r: 'release'}
-          - {os: ubuntu-latest,   r: 'oldrel'}
-          - {os: ubuntu-latest,   r: '4.1.3'}
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     container:
       image: rocker/r2u:latest
