@@ -146,14 +146,18 @@ expect_dim(
 by_cyl <- polars::pl$LazyFrame(mtcars) |>
   pl_group_by(cyl)
 
-# TODO: uncomment this when https://github.com/pola-rs/r-polars/issues/338 is
-# solved
-# expect_equal_lazy(
-#   by_cyl |>
-#     pl_filter(disp == max(disp)) |>
-#     pl_pull(mpg),
-#   c(21.4, 24.4, 10.4)
-# )
+expect_equal_lazy(
+  by_cyl |>
+    pl_filter(disp == max(disp)) |>
+    pl_pull(mpg),
+  c(21.4, 24.4, 10.4)
+)
 
+expect_dim(
+  as_polars(iris) |>
+    pl_group_by(Species) |>
+    pl_filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4),
+  c(123, 5)
+)
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

@@ -47,21 +47,19 @@ expect_equal(
 
 # groups
 
-# TODO: uncomment this when https://github.com/pola-rs/r-polars/issues/338 is
-# solved
-# expect_equal(
-#   test |>
-#     pl_group_by(am) |>
-#     pl_mutate(
-#       across(
-#         .cols = contains("a"),
-#         ~ mean(.x)
-#       )
-#     ) |>
-#     pl_pull(carb),
-#   c(3, 3, 3, 1.333, 1.333, 1.333),
-#   tolerance = 1e-3
-# )
+expect_equal(
+  test |>
+    pl_group_by(am) |>
+    pl_mutate(
+      across(
+        .cols = contains("a"),
+        ~ mean(.x)
+      )
+    ) |>
+    pl_pull(carb),
+  c(3, 3, 3, 1.333, 1.333, 1.333),
+  tolerance = 1e-3
+)
 
 # argument .names
 
