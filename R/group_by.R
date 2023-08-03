@@ -28,12 +28,8 @@
 pl_group_by <- function(.data, ..., maintain_order = FALSE) {
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
-  if (inherits(.data, "LazyFrame")) {
-    .data2 <- .data
-  } else {
-    .data2 <- .data$clone() # otherwise the data gets attributes, even
-                            # if unassigned
-  }
+  .data2 <- .data$clone() # otherwise the data gets attributes, even
+                          # if unassigned
   attr(.data2, "pl_grps") <- vars
   attr(.data2, "maintain_grp_order") <- maintain_order
   .data2
