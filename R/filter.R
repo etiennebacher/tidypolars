@@ -44,13 +44,16 @@ pl_filter <- function(.data, ...) {
   # cannot be used with grouped data. Therefore I have to manually ungroup
   # the data
   grps <- attributes(.data)$pl_grps
+  mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
   if (is_grouped) {
-    expr <- paste0(expr, "$over(grps)")
+    expr <- paste0("(", expr, ")$over(grps)")
   }
 
   expr <- str2lang(expr)
-  .data$filter(eval(expr))
+  out <- .data$filter(eval(expr))
+  attr(out, "maintain_grp_order") <- mo
+  attr(out, "pl_grps") <- grps
+  out
 }
-
