@@ -45,26 +45,12 @@ pl_filter <- function(.data, ...) {
   # the data
   grps <- attributes(.data)$pl_grps
   is_grouped <- !is.null(grps)
-  mo <- attributes(.data)$private$maintain_order
 
   if (is_grouped) {
-    .data2 <- clone_grouped_data(.data)
-    if (inherits(.data2, "GroupBy")) {
-      attributes(.data2)$class <- "DataFrame"
-    } else {
-      attributes(.data2)$class <- "LazyFrame"
-    }
     expr <- paste0(expr, "$over(grps)")
   }
 
   expr <- str2lang(expr)
-
-  out <- .data$filter(eval(expr))
-
-  if (is_grouped) {
-    out$groupby(grps, maintain_order = mo)
-  } else {
-    out
-  }
+  .data$filter(eval(expr))
 }
 
