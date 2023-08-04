@@ -19,6 +19,7 @@
 pl_count <- function(.data, ..., sort = FALSE, name = "n") {
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
+  vars <- c(attributes(.data)$pl_grps, vars)
   count_(.data, vars, sort = sort, name = name, new_col = FALSE)
 }
 
@@ -29,6 +30,7 @@ pl_count <- function(.data, ..., sort = FALSE, name = "n") {
 pl_add_count <- function(.data, ..., sort = FALSE, name = "n") {
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
+  vars <- c(attributes(.data)$pl_grps, vars)
   count_(.data, vars, sort = sort, name = name, new_col = TRUE)
 }
 
