@@ -81,6 +81,8 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="tidypolars">tidypolars<a class="anchor" aria-label="anchor" href="#tidypolars"></a>
 </h1></div>
+<!-- badges: start -->
+
 <hr>
 <p><span class="emoji" data-emoji="warning">⚠️</span> If you’re looking for the Python package “tidypolars”, you’re on the wrong repo. The right one is here: <a href="https://github.com/markfairbanks/tidypolars" class="external-link">markfairbanks/tidypolars</a> <span class="emoji" data-emoji="warning">⚠️</span></p>
 <hr>
@@ -157,6 +159,9 @@
 <p>With <code>tidypolars</code>, you can provide a Polars <code>DataFrame</code> or <code>LazyFrame</code> and keep the exact same code:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.tidypolars.etiennebacher.com/" class="external-link">tidypolars</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Registered S3 method overwritten by 'tidypolars':</span></span>
+<span><span class="co">#&gt;   method          from  </span></span>
+<span><span class="co">#&gt;   print.DataFrame polars</span></span>
 <span></span>
 <span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -252,9 +257,9 @@
 <span><span class="co">#&gt; # A tibble: 3 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars        101ms 108.29ms     9.11     25.7KB    0    </span></span>
-<span><span class="co">#&gt; 2 tidypolars 109.67ms 149.61ms     6.61    123.2KB    0.661</span></span>
-<span><span class="co">#&gt; 3 dplyr         2.14s    2.23s     0.438   916.7MB    1.88</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 polars      99.44ms 107.24ms     9.00     25.8KB    0    </span></span>
+<span><span class="co">#&gt; 2 tidypolars 123.55ms 138.12ms     6.73    123.4KB    0.673</span></span>
+<span><span class="co">#&gt; 3 dplyr         2.09s    2.26s     0.442   916.7MB    1.68</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -288,7 +293,14 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/etiennebacher/tidypolars/actions/workflows/check.yml" class="external-link"><img src="https://github.com/etiennebacher/tidypolars/actions/workflows/check.yml/badge.svg" alt="check"></a></li>
+<li><a href="https://etiennebacher.r-universe.dev/tidypolars" class="external-link"><img src="https://etiennebacher.r-universe.dev/badges/tidypolars" alt="tidypolars status badge"></a></li>
+<li><a href="https://app.codecov.io/gh/etiennebacher/tidypolars?branch=main" class="external-link"><img src="https://codecov.io/gh/etiennebacher/tidypolars/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>
