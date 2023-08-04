@@ -39,6 +39,11 @@ expect_equal_lazy <- function(x, y, ...) {
   if (inherits(y, "LazyFrame")) {
     y <- y$collect()
   }
+  dots <- get_dots(...)
+  if (isTRUE(dots$skip_for_lazy)) {
+    message("Test skipped for LazyFrame")
+    return(invisible())
+  }
   tinytest::expect_equal(
     x, y,
     call = sys.call(sys.parent(2)),

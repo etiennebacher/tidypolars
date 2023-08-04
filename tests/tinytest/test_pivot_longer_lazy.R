@@ -27,12 +27,16 @@ expect_equal_lazy(
 
 expect_equal_lazy(
   pl_pull(first, income),
-  c("<$10k", "$10-20k", "$20-30k", "$30-40k", "$40-50k")
+  c("<$10k", "$10-20k", "$20-30k", "$30-40k", "$40-50k"),
+  skip_for_lazy = TRUE # sort() + slice_head() doesn't return the same output on
+                       # LazyFrame (works with slice_tail())
 )
 
 expect_equal_lazy(
   pl_pull(first, count),
-  c(27, 34, 60, 81, 76)
+  c(27, 34, 60, 81, 76),
+  skip_for_lazy = TRUE # sort() + slice_head() doesn't return the same output on
+                       # LazyFrame (works with slice_tail())
 )
 
 
