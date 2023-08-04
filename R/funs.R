@@ -1285,3 +1285,19 @@ pl_str_remove_all <- function(x, pattern, ...) {
   check_empty_dots(...)
   x$str$replace_all(pattern, "")
 }
+
+pl_paste0 <- function(..., collapse = NULL) {
+  dots <- get_dots(...)
+
+  for (i in seq_along(dots)) {
+    if (length(dots[[i]]) == 1 && is.character(dots[[i]])) {
+      dots[[i]] <- paste("pl$lit('", dots[[i]], "')", sep = '')
+    } else {
+      dots[[i]] <- safe_deparse(dots[[i]])
+    }
+  }
+  dots <- paste(unlist(dots), collapse = ", ")
+  paste0('pl$concat_str(', dots, ', separator = "")') |>
+    str2lang() |>
+    eval()
+}
