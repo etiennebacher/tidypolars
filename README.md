@@ -1,7 +1,14 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # tidypolars
+
+<!-- badges: start -->
+
+[![check](https://github.com/etiennebacher/tidypolars/actions/workflows/check.yml/badge.svg)](https://github.com/etiennebacher/tidypolars/actions/workflows/check.yml)
+[![tidypolars status
+badge](https://etiennebacher.r-universe.dev/badges/tidypolars)](https://etiennebacher.r-universe.dev/tidypolars)
+[![Codecov test
+coverage](https://codecov.io/gh/etiennebacher/tidypolars/branch/main/graph/badge.svg)](https://app.codecov.io/gh/etiennebacher/tidypolars?branch=main)
+<!-- badges: end -->
 
 ------------------------------------------------------------------------
 
@@ -100,6 +107,9 @@ and keep the exact same code:
 
 ``` r
 library(tidypolars)
+#> Registered S3 method overwritten by 'tidypolars':
+#>   method          from  
+#>   print.DataFrame polars
 
 iris |> 
   as_polars() |> 
@@ -203,7 +213,7 @@ bench::mark(
 #> # A tibble: 3 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars        101ms 108.29ms     9.11     25.7KB    0    
-#> 2 tidypolars 109.67ms 149.61ms     6.61    123.2KB    0.661
-#> 3 dplyr         2.14s    2.23s     0.438   916.7MB    1.88
+#> 1 polars      99.44ms 107.24ms     9.00     25.8KB    0    
+#> 2 tidypolars 123.55ms 138.12ms     6.73    123.4KB    0.673
+#> 3 dplyr         2.09s    2.26s     0.442   916.7MB    1.68
 ```
