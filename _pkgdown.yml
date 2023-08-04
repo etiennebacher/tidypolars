@@ -65,6 +65,7 @@ reference:
       - pl_pivot_wider
       - pl_replace_na
       - pl_separate
+      - pl_unite
   - title: Utility functions
     desc: |
       Users shouldn't need to use them directly.
