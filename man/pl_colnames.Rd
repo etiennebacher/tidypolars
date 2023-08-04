@@ -7,7 +7,7 @@
 pl_colnames(x)
 }
 \arguments{
-\item{x}{A Polars Data/LazyFrame or GroupBy/LazyGroupBy}
+\item{x}{A Polars Data/LazyFrame}
 }
 \value{
 A character vector with the column names

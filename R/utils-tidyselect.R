@@ -1,9 +1,5 @@
 tidyselect_dots <- function(.data, ...) {
-  if (inherits(.data, "LazyGroupBy")) {
-    data <- .data$first()$collect()$to_data_frame()
-  } else if (inherits(.data, "GroupBy")) {
-    data <- .data$first()$to_data_frame()
-  } else if (inherits(.data, "LazyFrame")) {
+  if (inherits(.data, "LazyFrame")) {
     data <- .data$first()$collect()$to_data_frame()
   } else {
     data <- .data$first()$to_data_frame()

@@ -1,6 +1,6 @@
 #' Get column names of a Polars Data/LazyFrame
 #'
-#' @param x A Polars Data/LazyFrame or GroupBy/LazyGroupBy
+#' @param x A Polars Data/LazyFrame
 #'
 #' @return A character vector with the column names
 #' @export
@@ -11,8 +11,7 @@ pl_colnames <- function(x) {
 }
 
 check_polars_data <- function(x) {
-  if (!inherits(x, "DataFrame") && !inherits(x, "LazyFrame")
-      && !inherits(x, "GroupBy") && !inherits(x, "LazyGroupBy")) {
+  if (!inherits(x, "DataFrame") && !inherits(x, "LazyFrame")) {
     rlang::abort("The data must be a Polars DataFrame or LazyFrame.")
   }
 }
