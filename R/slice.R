@@ -12,12 +12,32 @@
 
 pl_slice_tail <- function(.data, n = 5) {
   check_polars_data(.data)
-  .data$slice(offset = -n, length = NULL)
+  grps <- attributes(.data)$pl_grps
+  is_grouped <- !is.null(grps)
+
+  if (is_grouped) {
+    non_grps <- setdiff(pl_colnames(.data), grps)
+    .data$groupby(grps)$agg(
+      pl$all()$tail(n)
+    )$explode(non_grps)
+  } else {
+    .data$tail(n)
+  }
 }
 
 #' @rdname pl_slice
 #' @export
 pl_slice_head <- function(.data, n = 5) {
   check_polars_data(.data)
-  .data$slice(offset = 0, length = n)
+  grps <- attributes(.data)$pl_grps
+  is_grouped <- !is.null(grps)
+
+  if (is_grouped) {
+    non_grps <- setdiff(pl_colnames(.data), grps)
+    .data$groupby(grps)$agg(
+      pl$all()$head(n)
+    )$explode(non_grps)
+  } else {
+    .data$head(n)
+  }
 }

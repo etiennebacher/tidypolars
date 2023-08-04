@@ -4,12 +4,14 @@
 \alias{pl_arrange}
 \title{Order rows using column values}
 \usage{
-pl_arrange(.data, ...)
+pl_arrange(.data, ..., .by_group = FALSE)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
 
 \item{...}{Quoted or unquoted variable names. Select helpers cannot be used.}
+
+\item{.by_group}{If \code{TRUE}, will sort data within groups.}
 }
 \description{
 Order rows using column values

@@ -11,14 +11,14 @@ pl_test <- pl$LazyFrame(
   value = 1:6
 )
 
-expect_equal_lazy(
-  pl_distinct(pl_test) |> nrow(),
-  6
+expect_dim(
+  pl_distinct(pl_test),
+  c(6, 3)
 )
 
-expect_equal_lazy(
-  pl_distinct(pl_test, iso_o) |> nrow(),
-  3
+expect_dim(
+  pl_distinct(pl_test, iso_o),
+  c(3, 3)
 )
 
 expect_equal_lazy(
@@ -33,9 +33,9 @@ expect_equal_lazy(
   c(2, 4, 6)
 )
 
-expect_equal_lazy(
-  pl_distinct(pl_test, iso_o, keep = "none") |> nrow(),
-  0
+expect_dim(
+  pl_distinct(pl_test, iso_o, keep = "none"),
+  c(0, 3)
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

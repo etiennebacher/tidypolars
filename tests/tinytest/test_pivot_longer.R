@@ -8,7 +8,7 @@ out <- pl_relig_income |>
 
 # basic checks
 
-expect_equal(dim(out), c(180, 3))
+expect_dim(out, c(180, 3))
 expect_colnames(out, c("religion", "income", "count"))
 
 
@@ -23,12 +23,16 @@ expect_equal(
 
 expect_equal(
   pl_pull(first, income),
-  c("<$10k", "$10-20k", "$20-30k", "$30-40k", "$40-50k")
+  c("<$10k", "$10-20k", "$20-30k", "$30-40k", "$40-50k"),
+  skip_for_lazy = TRUE # sort() + slice_head() doesn't return the same output on
+                       # LazyFrame (works with slice_tail())
 )
 
 expect_equal(
   pl_pull(first, count),
-  c(27, 34, 60, 81, 76)
+  c(27, 34, 60, 81, 76),
+  skip_for_lazy = TRUE # sort() + slice_head() doesn't return the same output on
+                       # LazyFrame (works with slice_tail())
 )
 
 

@@ -4,6 +4,8 @@ using("tidypolars")
 # TODO: remove this when r-polars 0.8.0 is released
 exit_file("Doesn't work for LazyFrames")
 
+# TODO: don't forget tests for groups
+
 test <- polars::pl$DataFrame(
   country = c("France", "France", "UK", "UK", "Spain"),
   year = c(2020, 2021, 2019, 2020, 2022),

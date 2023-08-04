@@ -22,6 +22,7 @@
 #' pl_bind_rows(list(p1, p2))
 
 pl_bind_rows <- function(...) {
+  # TODO: check with "diagonal" to coerce types and fill missings
   concat_(..., how = "vertical")
 }
 

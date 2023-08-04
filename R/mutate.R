@@ -50,32 +50,23 @@ pl_mutate <- function(.data, ...) {
 
   check_polars_data(.data)
 
-  dots <- get_dots(...)
-  out_exprs <- rearrange_exprs(.data, dots)
-  to_drop <- names(out_exprs[[1]])
+  grps <- attributes(.data)$pl_grps
+  is_grouped <- !is.null(grps)
 
-  out_exprs <- Filter(Negate(is.null), out_exprs[[2]])
-  out_exprs <- unlist(out_exprs)
-  out_exprs <- paste(out_exprs, collapse = ", ")
+  polars_exprs <- build_polars_exprs(.data, ...)
+  exprs <- polars_exprs$exprs
+  to_drop <- polars_exprs$to_drop
 
-  if (inherits(.data, "GroupBy") || inherits(.data, "LazyGroupBy")) {
-    grps <- paste0("'", pl_groups(.data), "'")
-    grps <- paste(grps, collapse = ", ")
-    if (inherits(.data, "GroupBy")) {
-      class(.data) <- "DataFrame"
-    } else if (inherits(.data, "LazyGroupBy")) {
-      class(.data) <- "LazyFrame"
+  if (exprs != "") {
+    if (is_grouped) {
+      exprs <- paste0(exprs, "$over(grps)")
     }
-
-    out_exprs <- paste0(out_exprs, "$over(", grps, ")")
-    out_expr <- paste0(".data$with_columns(", out_exprs, ")$groupby(", grps, ")")
+    out <- paste0(".data$with_columns(", exprs, ")") |>
+      str2lang() |>
+      eval()
   } else {
-    out_expr <- paste0(".data$with_columns(", out_exprs, ")")
+    out <- .data
   }
-
-  out <- out_expr |>
-    str2lang() |>
-    eval()
 
   if (length(to_drop) > 0) {
     out$drop(to_drop)

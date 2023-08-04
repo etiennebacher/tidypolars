@@ -13,13 +13,7 @@
 
 pl_pull <- function(.data, var) {
   check_polars_data(.data)
-  tr <- try(is.character(var), silent = TRUE)
-  if (!isTRUE(tr)) {
-    var <- deparse(substitute(var))
-  }
-  if (inherits(.data, "GroupBy")) attributes(.data)$class <- "DataFrame"
-  if (inherits(.data, "LazyGroupBy")) attributes(.data)$class <- "LazyFrame"
-
+  var <- tidyselect_named_arg(.data, rlang::enquo(var))
   # for testing only
   if (inherits(.data, "LazyFrame") && Sys.getenv("TIDYPOLARS_TEST") == "TRUE") {
     return(.data$collect()$select(pl$col(var))$to_series()$to_r())

@@ -9,10 +9,10 @@ rearrange_exprs <- function(.data, dots, create_new = TRUE) {
   # becomes
   #   'carb = mean(carb),
   #    am = mean(am),
-  #    gear = mean(gear),
-  #    drat = mean(drat)'
+  #    ...
   for (i in seq_along(dots)) {
     expr <- dots[[i]]
+    if (is.null(expr)) next
     deparsed <- safe_deparse(expr)
     is_across_expr <- startsWith(deparsed, "across(")
     if (is_across_expr) {
@@ -39,7 +39,7 @@ rearrange_exprs <- function(.data, dots, create_new = TRUE) {
     }
   })
 
-  list(to_drop, out)
+  list(to_drop = to_drop, out = out)
 
 }
 
@@ -229,4 +229,18 @@ unnest_across_expr <- function(expr, .data) {
   }
 
   unlist(out)
+}
+
+
+
+build_polars_exprs <- function(.data, ...) {
+  dots <- get_dots(...)
+  exprs <- rearrange_exprs(.data, dots)
+  to_drop <- names(exprs$to_drop)
+
+  exprs <- Filter(Negate(is.null), exprs$out)
+  exprs <- unlist(exprs)
+  exprs <- paste(exprs, collapse = ", ")
+
+  list(exprs = exprs, to_drop = to_drop)
 }

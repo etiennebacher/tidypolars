@@ -28,25 +28,18 @@
 pl_group_by <- function(.data, ..., maintain_order = FALSE) {
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
-
-  # we can't access column names on a "GroupBy" object so I save them as an
-  # attribute before
-  names <- pl_colnames(.data)
-  .data <- .data$groupby(vars, maintain_order = maintain_order)
-  attr(.data, "pl_colnames") <- names
-  attr(.data, "pl_grps") <- vars
-  .data
+  # need to clone, otherwise the data gets attributes, even if unassigned
+  .data2 <- .data$clone()
+  attr(.data2, "pl_grps") <- vars
+  attr(.data2, "maintain_grp_order") <- maintain_order
+  .data2
 }
 
 #' @rdname pl_group_by
 #' @export
 
 pl_ungroup <- function(.data) {
-  if (inherits(.data, "GroupBy")) {
-    class(.data) <- "DataFrame"
-  } else if (inherits(.data, "LazyGroupBy")) {
-    class(.data) <- "LazyFrame"
-  }
   attributes(.data)$pl_grps <- NULL
+  attributes(.data)$maintain_grp_order <- NULL
   .data
 }

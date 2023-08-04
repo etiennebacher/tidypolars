@@ -17,20 +17,40 @@
 
 
 pl_summarize <- function(.data, ...) {
-  if (!inherits(.data, "GroupBy") && !inherits(.data, "LazyGroupBy")) {
-    rlang::abort("`pl_summarize()` only works on grouped data.")
-  }
+
   check_polars_data(.data)
 
-  dots <- get_dots(...)
-  out_expr <- build_polars_expr(.data, dots)
+  grps <- attributes(.data)$pl_grps
+  mo <- attributes(.data)$maintain_order
+  is_grouped <- !is.null(grps)
 
-  out <- out_expr$out_expr |>
-    str2lang() |>
-    eval()
+  if (!is_grouped) {
+    rlang::abort("`pl_summarize()` only works on grouped data.")
+  }
 
-  if (length(out_expr$to_drop) > 0) {
-    out$drop(out_expr$to_drop)
+  polars_exprs <- build_polars_exprs(.data, ...)
+  exprs <- polars_exprs$exprs
+  to_drop <- polars_exprs$to_drop
+
+  if (exprs != "" ) {
+    if (!is.null(mo)) {
+      out_expr <- ".data$groupby(grps, maintain_order = mo)$agg("
+    } else {
+      out_expr <- ".data$groupby(grps)$agg("
+    }
+
+    out_expr <- paste0(out_expr, exprs, ")")
+
+    out <- out_expr |>
+      str2lang() |>
+      eval()
+  } else {
+    out <- .data
+  }
+
+
+  if (length(to_drop) > 0) {
+    out$drop(to_drop)
   } else {
     out
   }
@@ -39,32 +59,3 @@ pl_summarize <- function(.data, ...) {
 #' @rdname pl_summarize
 #' @export
 pl_summarise <- pl_summarize
-
-build_polars_expr <- function(.data, dots) {
-  out_exprs <- rearrange_exprs(.data, dots)
-  to_drop <- names(out_exprs[[1]])
-
-  out_exprs <- Filter(Negate(is.null), out_exprs[[2]])
-  out_exprs <- unlist(out_exprs)
-  out_exprs <- paste(out_exprs, collapse = ", ")
-
-  # deal with groups
-  grps <- paste0("'", pl_groups(.data), "'")
-  mo <- attributes(.data)$private$maintain_order
-  grps <- paste(grps, collapse = ", ")
-
-  out_expr <- paste0(".data$agg(", out_exprs, ")")
-  if (length(grps) > 1 || (length(grps) == 1 & grps != "''")) {
-    out_expr <- paste0(
-      out_expr, "$groupby(", grps, ", maintain_order = ", mo, ")"
-    )
-  }
-
-  return(
-    list(
-      out_expr = out_expr,
-      to_drop = to_drop
-    )
-  )
-
-}

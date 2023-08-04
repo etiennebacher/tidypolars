@@ -2,6 +2,7 @@
 #'
 #' @param .data A Polars Data/LazyFrame
 #' @param ... Quoted or unquoted variable names. Select helpers cannot be used.
+#' @param .by_group If `TRUE`, will sort data within groups.
 #'
 #' @export
 #' @examples
@@ -16,13 +17,16 @@
 #' pl_arrange(pl_test, x1, -x2)
 
 
-pl_arrange <- function(.data, ...) {
+pl_arrange <- function(.data, ..., .by_group = FALSE) {
 
   check_polars_data(.data)
 
   dots <- get_dots(...)
   out_length <- length(dots)
   direction <- rep(FALSE, out_length)
+
+  grps <- attributes(.data)$pl_grps
+  is_grouped <- !is.null(grps)
 
   vars <- lapply(seq_along(dots), \(x) {
       out <- as.character(dots[[x]])
@@ -42,5 +46,9 @@ pl_arrange <- function(.data, ...) {
 
   if (length(vars) == 0) return(.data)
 
+  if (is_grouped && isTRUE(.by_group)) {
+    vars <- c(grps, vars)
+    direction <- c(rep(FALSE, length(grps)), direction)
+  }
   .data$sort(vars, descending = direction)
 }
