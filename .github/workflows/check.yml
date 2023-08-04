@@ -37,6 +37,12 @@ jobs:
       - name: Check Package
         run: R CMD check --no-build-vignettes --no-manual $(ls -1tr *.tar.gz | tail -1)
 
-      - uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Test coverage
+        run: |
+          install.packages('covr')
+          covr::codecov(
+            quiet = FALSE,
+            clean = FALSE,
+            token = "${{secrets.CODECOV_TOKEN}}"
+          )
+        shell: Rscript {0}
