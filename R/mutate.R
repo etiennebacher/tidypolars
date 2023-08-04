@@ -57,15 +57,16 @@ pl_mutate <- function(.data, ...) {
   exprs <- polars_exprs$exprs
   to_drop <- polars_exprs$to_drop
 
-  if (is_grouped) {
-    exprs <- paste0(exprs, "$over(grps)")
+  if (exprs != "") {
+    if (is_grouped) {
+      exprs <- paste0(exprs, "$over(grps)")
+    }
+    out <- paste0(".data$with_columns(", exprs, ")") |>
+      str2lang() |>
+      eval()
+  } else {
+    out <- .data
   }
-
-  out_expr <- paste0(".data$with_columns(", exprs, ")")
-
-  out <- out_expr |>
-    str2lang() |>
-    eval()
 
   if (length(to_drop) > 0) {
     out$drop(to_drop)

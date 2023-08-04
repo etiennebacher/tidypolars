@@ -23,3 +23,8 @@ expect_error(
   pl_summarize(pl_iris, x = mean(Sepal.Length)) ,
   pattern = "only works on grouped data"
 )
+
+expect_colnames(
+  pl_summarize(pl_iris_g, Sepal.Length = NULL),
+  names(iris)[2:5]
+)

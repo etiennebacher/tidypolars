@@ -4,7 +4,7 @@
 #' @param ... Not used
 #'
 #' @export
-print.DataFrame <- function(x, ...) {
+print.DataFrame <- function(x, ...) { # nocov start
   grps <- attributes(x)$pl_grps
   is_grouped <- !is.null(grps)
   mo <- attributes(x)$maintain_grp_order
@@ -17,3 +17,4 @@ print.DataFrame <- function(x, ...) {
     invisible(x)
   }
 }
+# nocov end

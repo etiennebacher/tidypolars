@@ -125,6 +125,13 @@ expect_equal(
   tolerance = 1e5
 )
 
+expect_colnames(
+  pl_iris |>
+    pl_group_by(Species) |>
+    pl_mutate(Sepal.Length = NULL),
+  names(iris)[2:5]
+)
+
 
 # warning
 

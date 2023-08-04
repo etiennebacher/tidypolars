@@ -12,6 +12,11 @@ expect_colnames(
   c("mpg", "hp", "vs", "cyl", "disp", "drat", "wt", "qsec", "am", "gear", "carb")
 )
 
+expect_equal_lazy(
+  pl_relocate(test),
+  test
+)
+
 # moved to first positions if no .before or .after
 expect_colnames(
   test |> pl_relocate(hp, vs),

@@ -32,17 +32,22 @@ pl_summarize <- function(.data, ...) {
   exprs <- polars_exprs$exprs
   to_drop <- polars_exprs$to_drop
 
-  if (!is.null(mo)) {
-    out_expr <- ".data$groupby(grps, maintain_order = mo)$agg("
+  if (exprs != "" ) {
+    if (!is.null(mo)) {
+      out_expr <- ".data$groupby(grps, maintain_order = mo)$agg("
+    } else {
+      out_expr <- ".data$groupby(grps)$agg("
+    }
+
+    out_expr <- paste0(out_expr, exprs, ")")
+
+    out <- out_expr |>
+      str2lang() |>
+      eval()
   } else {
-    out_expr <- ".data$groupby(grps)$agg("
+    out <- .data
   }
 
-  out_expr <- paste0(out_expr, exprs, ")")
-
-  out <- out_expr |>
-    str2lang() |>
-    eval()
 
   if (length(to_drop) > 0) {
     out$drop(to_drop)
@@ -54,4 +59,3 @@ pl_summarize <- function(.data, ...) {
 #' @rdname pl_summarize
 #' @export
 pl_summarise <- pl_summarize
-
