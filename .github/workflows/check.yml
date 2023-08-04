@@ -36,3 +36,7 @@ jobs:
         run: R CMD build --no-build-vignettes --no-manual .
       - name: Check Package
         run: R CMD check --no-build-vignettes --no-manual $(ls -1tr *.tar.gz | tail -1)
+
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
