@@ -19,32 +19,37 @@ on the wrong repo. The right one is here:
 
 ------------------------------------------------------------------------
 
+- [Motivation](#motivation)
+- [Installation](#installation)
+- [Example](#example)
+
+## Motivation
+
+`polars` (both the Rust source and the R implementation) are amazing
+packages. I won’t argue here for the interest of using `polars`, there
+are already a lot of resources on [its
+website](https://rpolars.github.io/).
+
+One characteristic of `polars` is that its syntax is 1) quite verbose,
+and 2) very close to the `pandas` syntax in Python. While this makes it
+easy to read, it is **yet another syntax to learn** for R users that are
+accustomed so far to either base R, `data.table` or the `tidyverse`.
+
+The objective of `tidypolars` is to **provide functions that are very
+close to the `tidyverse` ones** but that call the `polars` functions
+under the hood so that we don’t lose any of its capacities.
+
 ## Installation
 
 `tidypolars` is built on `polars`, which is not available on CRAN. This
-implies that `tidypolars` also can’t be on CRAN.
-
-That said, there are still several ways to install `tidypolars`.
-Depending on your OS, the procedure is slightly different.
+implies that `tidypolars` also can’t be on CRAN. That said, there are
+still several ways to install `tidypolars`. Depending on your OS, the
+procedure is slightly different.
 
 ### Windows or macOS
 
 ``` r
 install.packages('tidypolars', repos = c('https://etiennebacher.r-universe.dev'))
-
-#### OR
-
-# install.packages("remotes")
-remotes::install_github(
-  "etiennebacher/tidypolars", 
-  repos = c("https://rpolars.r-universe.dev", getOption("repos"))
-)
-
-#### OR
-
-# install.packages("pak")
-pak::repo_add("https://rpolars.r-universe.dev")
-pak::pkg_install("etiennebacher/tidypolars")
 ```
 
 ### Linux
@@ -62,22 +67,6 @@ remotes::install_github(
 pak::repo_add("https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
 pak::pkg_install("etiennebacher/tidypolars")
 ```
-
-## Motivation
-
-`polars` (both the Rust source and the R implementation) are amazing
-packages. I won’t argue here for the interest of using `polars`, there
-are already a lot of resources on [its
-website](https://rpolars.github.io/).
-
-One characteristic of `polars` is that its syntax is 1) quite verbose,
-and 2) very close to the `pandas` syntax in Python. While this makes it
-easy to read, it is **yet another syntax to learn** for R users that are
-accustomed so far to either base R, `data.table` or the `tidyverse`.
-
-The objective of `tidypolars` is to **provide functions that are very
-close to the `tidyverse` ones** but that call the `polars` functions
-under the hood so that we don’t lose any of its capacities.
 
 ## Example
 
@@ -167,8 +156,14 @@ pl$DataFrame(iris)$
 #> └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘
 ```
 
-Don’t worry about losing performance compared to the pure `polars`
-syntax, `tidypolars` is just as fast:
+Since most of the work is simply rewriting `tidyverse` code into
+`polars` syntax, `tidypolars` is extremely close to `polars`
+performance.
+
+<details>
+<summary>
+Click to see a small benchmark
+</summary>
 
 ``` r
 large_iris <- data.table::rbindlist(rep(list(iris), 50000))
@@ -213,7 +208,9 @@ bench::mark(
 #> # A tibble: 3 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars      99.44ms 107.24ms     9.00     25.8KB    0    
-#> 2 tidypolars 123.55ms 138.12ms     6.73    123.4KB    0.673
-#> 3 dplyr         2.09s    2.26s     0.442   916.7MB    1.68
+#> 1 polars      91.03ms  110.6ms     9.09     25.8KB    0    
+#> 2 tidypolars 119.04ms 141.88ms     6.73    123.4KB    0.673
+#> 3 dplyr         2.01s    2.09s     0.473   916.7MB    1.80
 ```
+
+</details>

@@ -23,6 +23,7 @@
 
 pl_bind_rows <- function(...) {
   # TODO: check with "diagonal" to coerce types and fill missings
+  # wait for https://github.com/pola-rs/r-polars/issues/350
   concat_(..., how = "vertical")
 }
 
