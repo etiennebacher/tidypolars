@@ -86,30 +86,27 @@
 <hr>
 <p><span class="emoji" data-emoji="warning">⚠️</span> If you’re looking for the Python package “tidypolars”, you’re on the wrong repo. The right one is here: <a href="https://github.com/markfairbanks/tidypolars" class="external-link">markfairbanks/tidypolars</a> <span class="emoji" data-emoji="warning">⚠️</span></p>
 <hr>
+<ul>
+<li><a href="#motivation">Motivation</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#example">Example</a></li>
+</ul>
+<div class="section level2">
+<h2 id="motivation">Motivation<a class="anchor" aria-label="anchor" href="#motivation"></a>
+</h2>
+<p><code>polars</code> (both the Rust source and the R implementation) are amazing packages. I won’t argue here for the interest of using <code>polars</code>, there are already a lot of resources on <a href="https://rpolars.github.io/" class="external-link">its website</a>.</p>
+<p>One characteristic of <code>polars</code> is that its syntax is 1) quite verbose, and 2) very close to the <code>pandas</code> syntax in Python. While this makes it easy to read, it is <strong>yet another syntax to learn</strong> for R users that are accustomed so far to either base R, <code>data.table</code> or the <code>tidyverse</code>.</p>
+<p>The objective of <code>tidypolars</code> is to <strong>provide functions that are very close to the <code>tidyverse</code> ones</strong> but that call the <code>polars</code> functions under the hood so that we don’t lose any of its capacities.</p>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p><code>tidypolars</code> is built on <code>polars</code>, which is not available on CRAN. This implies that <code>tidypolars</code> also can’t be on CRAN.</p>
-<p>That said, there are still several ways to install <code>tidypolars</code>. Depending on your OS, the procedure is slightly different.</p>
+<p><code>tidypolars</code> is built on <code>polars</code>, which is not available on CRAN. This implies that <code>tidypolars</code> also can’t be on CRAN. That said, there are still several ways to install <code>tidypolars</code>. Depending on your OS, the procedure is slightly different.</p>
 <div class="section level3">
 <h3 id="windows-or-macos">Windows or macOS<a class="anchor" aria-label="anchor" href="#windows-or-macos"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'tidypolars'</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'https://etiennebacher.r-universe.dev'</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#### OR</span></span>
-<span></span>
-<span><span class="co"># install.packages("remotes")</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span></span>
-<span>  <span class="st">"etiennebacher/tidypolars"</span>, </span>
-<span>  repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://rpolars.r-universe.dev"</span>, <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"repos"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#### OR</span></span>
-<span></span>
-<span><span class="co"># install.packages("pak")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu">repo_add</span><span class="op">(</span><span class="st">"https://rpolars.r-universe.dev"</span><span class="op">)</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu">pkg_install</span><span class="op">(</span><span class="st">"etiennebacher/tidypolars"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'tidypolars'</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'https://etiennebacher.r-universe.dev'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="linux">Linux<a class="anchor" aria-label="anchor" href="#linux"></a>
@@ -127,13 +124,6 @@
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu">repo_add</span><span class="op">(</span><span class="st">"https://rpolars.r-universe.dev/bin/linux/jammy/4.3"</span><span class="op">)</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu">pkg_install</span><span class="op">(</span><span class="st">"etiennebacher/tidypolars"</span><span class="op">)</span></span></code></pre></div>
 </div>
-</div>
-<div class="section level2">
-<h2 id="motivation">Motivation<a class="anchor" aria-label="anchor" href="#motivation"></a>
-</h2>
-<p><code>polars</code> (both the Rust source and the R implementation) are amazing packages. I won’t argue here for the interest of using <code>polars</code>, there are already a lot of resources on <a href="https://rpolars.github.io/" class="external-link">its website</a>.</p>
-<p>One characteristic of <code>polars</code> is that its syntax is 1) quite verbose, and 2) very close to the <code>pandas</code> syntax in Python. While this makes it easy to read, it is <strong>yet another syntax to learn</strong> for R users that are accustomed so far to either base R, <code>data.table</code> or the <code>tidyverse</code>.</p>
-<p>The objective of <code>tidypolars</code> is to <strong>provide functions that are very close to the <code>tidyverse</code> ones</strong> but that call the <code>polars</code> functions under the hood so that we don’t lose any of its capacities.</p>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
@@ -213,8 +203,10 @@
 <span><span class="co">#&gt; │ 5.0          ┆ 3.6         ┆ 1.4          ┆ 0.2         ┆ long       │</span></span>
 <span><span class="co">#&gt; │ 5.4          ┆ 3.9         ┆ 1.7          ┆ 0.4         ┆ long       │</span></span>
 <span><span class="co">#&gt; └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘</span></span></code></pre></div>
-<p>Don’t worry about losing performance compared to the pure <code>polars</code> syntax, <code>tidypolars</code> is just as fast:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<p>Since most of the work is simply rewriting <code>tidyverse</code> code into <code>polars</code> syntax, <code>tidypolars</code> is extremely close to <code>polars</code> performance.</p>
+<details><summary>
+Click to see a small benchmark
+</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">large_iris</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">rbindlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="fl">50000</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">large_iris_pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="va">large_iris</span>, lazy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
@@ -257,9 +249,10 @@
 <span><span class="co">#&gt; # A tibble: 3 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars      99.44ms 107.24ms     9.00     25.8KB    0    </span></span>
-<span><span class="co">#&gt; 2 tidypolars 123.55ms 138.12ms     6.73    123.4KB    0.673</span></span>
-<span><span class="co">#&gt; 3 dplyr         2.09s    2.26s     0.442   916.7MB    1.68</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 polars      91.03ms  110.6ms     9.09     25.8KB    0    </span></span>
+<span><span class="co">#&gt; 2 tidypolars 119.04ms 141.88ms     6.73    123.4KB    0.673</span></span>
+<span><span class="co">#&gt; 3 dplyr         2.01s    2.09s     0.473   916.7MB    1.80</span></span></code></pre></div>
+</details>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
