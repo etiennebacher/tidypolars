@@ -49,7 +49,7 @@ procedure is slightly different.
 ### Windows or macOS
 
 ``` r
-install.packages('tidypolars', repos = c('https://etiennebacher.r-universe.dev'))
+install.packages('tidypolars', repos = c('https://etiennebacher.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
 ### Linux
@@ -96,9 +96,6 @@ and keep the exact same code:
 
 ``` r
 library(tidypolars)
-#> Registered S3 method overwritten by 'tidypolars':
-#>   method          from  
-#>   print.DataFrame polars
 
 iris |> 
   as_polars() |> 
@@ -208,9 +205,9 @@ bench::mark(
 #> # A tibble: 3 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars      91.03ms  110.6ms     9.09     25.8KB    0    
-#> 2 tidypolars 119.04ms 141.88ms     6.73    123.4KB    0.673
-#> 3 dplyr         2.01s    2.09s     0.473   916.7MB    1.80
+#> 1 polars       80.9ms  83.91ms    11.8      25.8KB    0    
+#> 2 tidypolars  99.67ms 110.22ms     8.88    123.4KB    0.888
+#> 3 dplyr         1.79s    1.98s     0.503   916.7MB    1.91
 ```
 
 </details>
