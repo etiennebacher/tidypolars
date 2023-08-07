@@ -117,6 +117,22 @@ unary_op <- function(left) {
   )
 }
 
+basic_fun <- function(left, ...) {
+  new_function(
+    exprs(e1 = ,),
+    expr({
+      contents <- !!list2(...)
+      contents <- paste(names(contents), contents, sep = "=", collapse = ", ")
+      if (length(contents) > 0) {
+        paste0("pl_", !!left, "(", e1, ", ", contents, ")")
+      } else {
+        paste0("pl_", !!left, "(", e1, ")")
+      }
+    }),
+    caller_env()
+  )
+}
+
 binary_op <- function(sep) {
   new_function(
     exprs(e1 = , e2 = ),
@@ -146,7 +162,7 @@ f_env <- child_env(
     paste0(e1, "$is_in(pl$lit(", e2, "))")
   },
 
-  mean = unary_op("mean")
+  mean = basic_fun("mean", ...)
 )
 
 unknown_op <- function(op) {
