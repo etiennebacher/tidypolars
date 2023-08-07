@@ -106,7 +106,7 @@
 <h3 id="windows-or-macos">Windows or macOS<a class="anchor" aria-label="anchor" href="#windows-or-macos"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'tidypolars'</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'https://etiennebacher.r-universe.dev'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'tidypolars'</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'https://etiennebacher.r-universe.dev'</span>, <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="linux">Linux<a class="anchor" aria-label="anchor" href="#linux"></a>
@@ -149,9 +149,6 @@
 <p>With <code>tidypolars</code>, you can provide a Polars <code>DataFrame</code> or <code>LazyFrame</code> and keep the exact same code:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.tidypolars.etiennebacher.com/" class="external-link">tidypolars</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Registered S3 method overwritten by 'tidypolars':</span></span>
-<span><span class="co">#&gt;   method          from  </span></span>
-<span><span class="co">#&gt;   print.DataFrame polars</span></span>
 <span></span>
 <span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -249,9 +246,13 @@ Click to see a small benchmark
 <span><span class="co">#&gt; # A tibble: 3 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars      91.03ms  110.6ms     9.09     25.8KB    0    </span></span>
-<span><span class="co">#&gt; 2 tidypolars 119.04ms 141.88ms     6.73    123.4KB    0.673</span></span>
-<span><span class="co">#&gt; 3 dplyr         2.01s    2.09s     0.473   916.7MB    1.80</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 polars      81.73ms  86.53ms    11.3      25.8KB    0    </span></span>
+<span><span class="co">#&gt; 2 tidypolars  99.81ms 104.51ms     9.15    123.4KB    0.915</span></span>
+<span><span class="co">#&gt; 3 dplyr         1.61s    1.69s     0.595   916.7MB    2.26</span></span>
+<span></span>
+<span><span class="co"># NOTE: do NOT take the "mem_alloc" results into account.</span></span>
+<span><span class="co"># `bench::mark()` doesn't report the accurate memory usage for packages calling</span></span>
+<span><span class="co"># Rust code.</span></span></code></pre></div>
 </details>
 </div>
 </div>
