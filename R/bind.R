@@ -53,13 +53,10 @@ pl_bind_cols <- function(...) {
 }
 
 concat_ <- function(..., how) {
-  dots <- get_dots(...)
-  one_el <- length(dots) == 1L
-
-  dots <- lapply(dots, \(x) eval(x, envir = parent.frame(4L)))
-  dots_is_a_single_list <- one_el && is.list(dots)
-
-  if (dots_is_a_single_list) dots <- unlist(dots, recursive = FALSE)
+  dots <- rlang::list2(...)
+  if (length(dots) == 1 && rlang::is_bare_list(dots[[1]])) {
+    dots <- dots[[1]]
+  }
 
   any_not_polars <- any(vapply(dots, \(y) {
     !inherits(y, "DataFrame") && !inherits(y, "LazyFrame")
