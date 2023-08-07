@@ -54,31 +54,7 @@ pl_mutate <- function(.data, ...) {
   is_grouped <- !is.null(grps)
   to_drop <- list()
 
-  expr <- rlang::enexprs(...)
-
-  out <- lapply(expr, function(x) {
-    res <- rlang::eval_bare(x, polars_env(x, .data))
-
-    char_not_colname <- is.character(x) && !x %in% pl_colnames(.data)
-    other_length_one <- length(x) == 1 && (is.double(x) || is.logical(x) || is.integer(x))
-    if (other_length_one || char_not_colname) {
-      res <- paste0("pl$lit(", x, ")")
-    }
-    if (is.null(res)) {
-      to_drop[[names(out)[x]]] <<- 1
-      return(NULL)
-    }
-
-    paste0(res, "$alias('", names(expr)[x], "')")
-  })
-
-  out <- list(to_drop = to_drop, out = out)
-  to_drop <- names(out$to_drop)
-  exprs <- Filter(Negate(is.null), out$out)
-  out <- unlist(out$out)
-  out <- paste(out, collapse = ", ")
-  polars_exprs <- list(exprs = out, to_drop = to_drop)
-
+  polars_exprs <- build_polars_expr(.data, ...)
   exprs <- polars_exprs$exprs
   to_drop <- polars_exprs$to_drop
 

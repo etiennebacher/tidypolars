@@ -26,6 +26,41 @@
 # unknown function, so we pass it through apply() with a warning about efficiency.
 
 
+# Takes the original expressions as input, returns a list with 1) the non-NULL
+# Polars expressions and 2) the name of the variables to drop.
+build_polars_expr <- function(.data, ...) {
+  exprs <- rlang::enexprs(...)
+
+  to_drop <- list()
+  out <- lapply(seq_along(exprs), function(x) {
+    expr <- exprs[[x]]
+    res <- rlang::eval_bare(expr, polars_env(expr, .data))
+
+    char_not_colname <- is.character(expr) && !expr %in% pl_colnames(.data)
+    other_length_one <- length(x) == 1 && (is.double(expr) || is.logical(expr) || is.integer(expr))
+    if (other_length_one || char_not_colname) {
+      if (is.character(expr)) {
+        res <- paste0("pl$lit('", expr, "')")
+      } else {
+        res <- paste0("pl$lit(", expr, ")")
+      }
+    }
+    if (is.null(res)) {
+      to_drop[[names(exprs)[x]]] <<- 1
+      return(NULL)
+    }
+
+    paste0("(", res, ")$alias('", names(exprs)[x], "')")
+  })
+
+  to_drop <- names(to_drop)
+  exprs <- Filter(Negate(is.null), out)
+  out <- unlist(out)
+  out <- paste(out, collapse = ", ")
+
+  list(exprs = out, to_drop = to_drop)
+}
+
 polars_env <- function(expr, .data) {
   # Unknown functions
   calls <- all_calls(expr)
@@ -37,12 +72,23 @@ polars_env <- function(expr, .data) {
 
   # Default symbols
   names <- all_names(expr)
-  if (length(names) == 1 && names %in% pl_colnames(.data)) {
-    names <- set_names(paste0("pl$col('", names, "')"), names)
-  } else {
-    names <- NULL
+  new_names <- c()
+  for (i in seq_along(names)) {
+    if (names[i] %in% pl_colnames(.data)) {
+      new_names[i] <- paste0("pl$col('", names[i], "')")
+    } else {
+      tr <- try(eval(names[i]), silent = TRUE)
+      if (!inherits(tr, "try-error")) {
+        new_names[i] <- tr
+      } else {
+        names[i] <- NULL
+      }
+    }
   }
-  symbol_env <- as_environment(names, parent = f_env)
+  if (!is.null(new_names)) {
+    new_names <- set_names(new_names, names)
+  }
+  symbol_env <- as_environment(new_names, parent = f_env)
 
   symbol_env
 }
@@ -88,6 +134,17 @@ f_env <- child_env(
   `*` = binary_op(" * "),
   `/` = binary_op(" / "),
   `^` = binary_op("^"),
+  `>` = binary_op(">"),
+  `>=` = binary_op(">="),
+  `<` = binary_op("<"),
+  `<=` = binary_op("<="),
+  `==` = binary_op("=="),
+  `!=` = binary_op("!="),
+  `&` = binary_op("&"),
+  `|` = binary_op("|"),
+  `%in%` = function(e1, e2) {
+    paste0(e1, "$is_in(pl$lit(", e2, "))")
+  },
 
   mean = unary_op("mean")
 )
