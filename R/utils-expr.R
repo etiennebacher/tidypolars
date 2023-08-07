@@ -137,14 +137,6 @@ find_function_call_in_string <- function(x) {
     "text"
   ]
 
-  if ("col" %in% function_calls) {
-    char_before_call <- regmatches(p, gregexpr(".[col]", p))[[1]]
-    char_before_call <- char_before_call[char_before_call != ""]
-    if (all(substr(char_before_call, 1, 1) == "$")) {
-      function_calls <- function_calls[function_calls != "col"]
-    }
-  }
-
   pl_exprs <- r_polars_funs
 
   list(
