@@ -1,7 +1,7 @@
 Package: tidypolars
 Type: Package
 Title: Provide the Functionalities of Polars with the Syntax of the Tidyverse
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: 
     person(given = "Etienne",
            family = "Bacher",
