@@ -39,25 +39,18 @@ pl_fill <- function(.data, ..., direction = c("down", "up", "downup", "updown"))
   grps <- attributes(.data)$pl_grps
   is_grouped <- !is.null(grps)
 
-  expr <- paste0("pl$col('", vars, "')$")
-  expr_fill <- switch(
+  expr <- polars::pl$col(vars)
+  expr <- switch(
     direction,
-    "down" = "fill_null(strategy = 'forward')",
-    "up" = "fill_null(strategy = 'backward')",
-    "downup" = "fill_null(strategy = 'forward')$fill_null(strategy = 'backward')",
-    "updown" = "fill_null(strategy = 'backward')$fill_null(strategy = 'forward')"
+    "down" = expr$fill_null(strategy = 'forward'),
+    "up" = expr$fill_null(strategy = 'backward'),
+    "downup" = expr$fill_null(strategy = 'forward')$fill_null(strategy = 'backward'),
+    "updown" = expr$fill_null(strategy = 'backward')$fill_null(strategy = 'forward')
   )
 
   if (is_grouped) {
-    expr_fill <- paste0(expr_fill, "$over(grps)")
+    expr <- expr$over(grps)
   }
 
-  expr <- paste0(expr, expr_fill)
-  final_expr <- paste(expr, collapse = ",")
-
-  # ungrouped data
-  paste0(".data$with_columns(", final_expr, ")") |>
-    str2lang() |>
-    eval()
-
+  .data$with_columns(expr)
 }

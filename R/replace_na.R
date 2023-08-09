@@ -31,18 +31,8 @@ pl_replace_na <- function(.data, replace) {
   } else if (is.list(replace)) {
     exprs <- list()
     for (i in seq_along(replace)) {
-      if (is.character(replace[[i]])) {
-        replace[[i]] <- paste0("'", replace[[i]], "'")
-      }
-      exprs[[i]] <- paste0("pl$col('", names(replace)[i],
-                           "')$fill_null(", replace[[i]], ")")
+      exprs[[i]] <- polars::pl$col(names(replace)[i])$fill_null(replace[[i]])
     }
-    final_expr <- unlist(exprs)
-    final_expr <- paste(final_expr, collapse = ",")
-
-    paste0(".data$with_columns(", final_expr, ")") |>
-      str2lang() |>
-      eval()
+    .data$with_columns(exprs)
   }
-
 }

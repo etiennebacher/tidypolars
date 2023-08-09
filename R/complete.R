@@ -28,19 +28,24 @@ pl_complete <- function(.data, ...) {
   # TODO: remove this ifelse at some point
   if (utils::packageVersion("polars") > "0.7.0") {
 
-    start <- ".data$select(pl$col(vars)$unique()$sort()$implode())"
-    chain <- vector("list", length = length(vars) - 1)
+    if (inherits(.data, "DataFrame")) {
+      converted <- TRUE
+      .data <- .data$lazy()
+    } else {
+      converted <- FALSE
+    }
+    chain <- .data$select(pl$col(vars)$unique()$sort()$implode())
 
     for (i in 1:length(vars)) {
-      chain[[i]] <- paste0("$explode(vars[", i, "])")
+      chain <- chain$explode(vars[i])
     }
 
-    paste0(
-      start, paste(unlist(chain), collapse = ""),
-      "$join(.data, on = vars, how = 'left')"
-    ) |>
-      str2lang() |>
-      eval()
+    out <- chain$join(.data, on = vars, how = 'left')
+    if (isTRUE(converted)) {
+      out$collect()
+    } else {
+      out
+    }
 
   } else {
 
