@@ -4,12 +4,7 @@ translate_dots <- function(dots, data) {
   lapply(dots, translate_expr, data = data)
 }
 
-translate_expr <- function(
-    quo, data,
-    alias = NULL,
-    partition = NULL,
-    need_window = FALSE
-) {
+translate_expr <- function(quo, data) {
 
   names_data <- pl_colnames(data)
 
@@ -26,7 +21,7 @@ translate_expr <- function(
   # pl$lit() from those who are passed as a function argument.
   call_is_function <- typeof(expr) == "language"
 
-  do_translate <- function(expr, in_window = FALSE) {
+  translate <- function(expr) {
     if (is_quosure(expr)) {
       # FIXME: What to do with the environment here?
       expr <- quo_get_expr(expr)
@@ -44,7 +39,7 @@ translate_expr <- function(
         if (call_is_function) {
           return(expr)
         } else {
-          relexpr_constant(expr)
+          polars_constant(expr)
         }
       },
 
@@ -54,10 +49,10 @@ translate_expr <- function(
           if (!(ref %in% used)) {
             used <<- c(used, ref)
           }
-          relexpr_reference(ref)
+          polars_col(ref)
         } else {
           val <- eval_tidy(expr, env = caller_env())
-          relexpr_constant(val)
+          polars_constant(val)
         }
       },
 
@@ -67,7 +62,7 @@ translate_expr <- function(
         switch(
           name,
           "(" = {
-            return(do_translate(expr[[2]], in_window = in_window))
+            return(translate(expr[[2]]))
           },
           "c" = ,
           ":" = {
@@ -77,8 +72,8 @@ translate_expr <- function(
           "%in%" = {
             out <- tryCatch(
               {
-                lhs <- do_translate(expr[[2]])
-                rhs <- do_translate(expr[[3]])
+                lhs <- translate(expr[[2]])
+                rhs <- translate(expr[[3]])
                 lhs$is_in(rhs)
               },
               error = identity
@@ -88,7 +83,7 @@ translate_expr <- function(
           "is.na" = {
             out <- tryCatch(
               {
-                inside <- do_translate(expr[[2]])
+                inside <- translate(expr[[2]])
                 inside$is_null()
               },
               error = identity
@@ -98,7 +93,7 @@ translate_expr <- function(
           "is.nan" = {
             out <- tryCatch(
               {
-                inside <- do_translate(expr[[2]])
+                inside <- translate(expr[[2]])
                 inside$is_nan()
               },
               error = identity
@@ -120,7 +115,7 @@ translate_expr <- function(
           abort(paste0("Unknown function: ", name))
         }
 
-        args <- lapply(as.list(expr[-1]), do_translate, in_window = in_window || window)
+        args <- lapply(as.list(expr[-1]), translate)
         if (name %in% known_functions) {
           name <- paste0("pl_", name)
         }
@@ -133,14 +128,14 @@ translate_expr <- function(
     )
   }
 
-  do_translate(expr)
+  translate(expr)
 }
 
-relexpr_constant <- function(x) {
+polars_constant <- function(x) {
   polars::pl$lit(x)
 }
 
-relexpr_reference <- function(x) {
+polars_col <- function(x) {
   polars::pl$col(x)
 }
 
