@@ -54,20 +54,36 @@ pl_mutate <- function(.data, ...) {
   is_grouped <- !is.null(grps)
   to_drop <- list()
 
-  polars_exprs <- build_polars_expr(.data, ...)
-  exprs <- polars_exprs$exprs
-  to_drop <- polars_exprs$to_drop
+  exprs <- enexprs(...)
+  polars_exprs <- rel_translate_dots(exprs, .data)
 
-  if (exprs != "") {
+  to_drop <- names(Filter(\(x) length(x) == 0, polars_exprs))
+  polars_exprs <- Filter(\(x) length(x) != 0, polars_exprs)
+
+  if (length(exprs) > 0) {
     if (is_grouped) {
-      exprs <- paste0(exprs, "$over(grps)")
+      polars_exprs <- lapply(polars_exprs, \(x) x$over(grps))
     }
-    out <- paste0(".data$with_columns(", exprs, ")") |>
-      str2lang() |>
-      eval()
-  } else {
-    out <- .data
+
+    pl$set_polars_options(named_exprs = TRUE)
+    out <- .data$with_columns(polars_exprs)
+    pl$set_polars_options(named_exprs = FALSE)
   }
+
+  # polars_exprs <- build_polars_expr(.data, ...)
+  # exprs <- polars_exprs$exprs
+  # to_drop <- polars_exprs$to_drop
+  #
+  # if (exprs != "") {
+  #   if (is_grouped) {
+  #     exprs <- paste0(exprs, "$over(grps)")
+  #   }
+  #   out <- paste0(".data$with_columns(", exprs, ")") |>
+  #     str2lang() |>
+  #     eval()
+  # } else {
+  #   out <- .data
+  # }
 
   if (length(to_drop) > 0) {
     out$drop(to_drop)

@@ -83,6 +83,14 @@ expect_equal(
   "a"
 )
 
+expect_error(
+  pl_mutate(pl_iris, Sepal.Width = 1:2)
+)
+
+expect_error(
+  pl_mutate(pl_iris, Sepal.Width = letters[1:2])
+)
+
 # Several exprs
 
 out <- pl_mutate(

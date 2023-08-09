@@ -223,3 +223,19 @@ unnest_across_expr <- function(expr, .data) {
   unlist(out)
 }
 
+# basic_fun <- function(left, ...) {
+#   new_function(
+#     pairlist2(e1 = , ...),
+#     expr({
+#       contents <- !!list2(...)
+#       contents <- paste(names(contents), contents, sep = "=", collapse = ", ")
+#       if (length(contents) > 0) {
+#         paste0("pl_", !!left, "(", e1, ", ", contents, ")")
+#       } else {
+#         paste0("pl_", !!left, "(", e1, ")")
+#       }
+#     }),
+#     caller_env()
+#   )
+# }
+# basic_fun("mean", na.rm = TRUE)("Sepal.Length")
