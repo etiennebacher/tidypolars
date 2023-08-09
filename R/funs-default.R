@@ -909,5 +909,3 @@ pl_when_then_otherwise <- function(x, ...) {
   check_empty_dots(...)
   x$when_then_otherwise()
 }
-
-
