@@ -1,4 +1,5 @@
 #' @import rlang
+
 rel_translate_dots <- function(dots, data) {
   lapply(dots, rel_translate, data = data)
 }
@@ -21,6 +22,9 @@ rel_translate <- function(
   }
 
   used <- character()
+  # we want to distinguish literals that are passed as-is and should be put in
+  # pl$lit() from those who are passed as a function argument.
+  call_is_function <- typeof(expr) == "language"
 
   do_translate <- function(expr, in_window = FALSE) {
     if (is_quosure(expr)) {
@@ -36,7 +40,13 @@ rel_translate <- function(
       character = ,
       logical = ,
       integer = ,
-      double = relexpr_constant(expr),
+      double = {
+        if (call_is_function) {
+          return(expr)
+        } else {
+          relexpr_constant(expr)
+        }
+      },
 
       symbol = {
         if (as.character(expr) %in% names_data) {
@@ -59,6 +69,11 @@ rel_translate <- function(
           "(" = {
             return(do_translate(expr[[2]], in_window = in_window))
           },
+          "c" = ,
+          ":" = {
+            out <- tryCatch(eval_tidy(expr, env = caller_env()), error = identity)
+            return(out)
+          },
           "%in%" = {
             out <- tryCatch(
               {
@@ -69,49 +84,56 @@ rel_translate <- function(
               error = identity
             )
             return(out)
+          },
+          "is.na" = {
+            out <- tryCatch(
+              {
+                inside <- do_translate(expr[[2]])
+                inside$is_null()
+              },
+              error = identity
+            )
+            return(out)
+          },
+          "is.nan" = {
+            out <- tryCatch(
+              {
+                inside <- do_translate(expr[[2]])
+                inside$is_nan()
+              },
+              error = identity
+            )
+            return(out)
           }
         )
 
-        aliases <- c(
-          sd = "stddev",
-          first = "first_value",
-          last = "last_value",
-          nth = "nth_value",
-          NULL
-        )
-
-        known_window <- c(
+        known_functions <- c(
           # Window functions
           "rank", "rank_dense", "dense_rank", "percent_rank",
           "row_number", "first_value", "last_value", "nth_value",
           "cume_dist", "lead", "lag", "ntile",
 
           # Aggregates
-          "sum", "mean", "stddev", "min", "max",
+          "sum", "mean", "stddev", "min", "max", "median",
+
+          "between",
 
           NULL
         )
 
         known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
-                       "&", "|")
+                       "&", "|", "!")
 
         user_defined <- get_globenv_functions()
 
-        duckplyr_macros <- NULL
-        known <- c(names(duckplyr_macros), names(aliases), known_window, known_ops)
+        known <- c(known_functions, known_ops)
 
         if (!(name %in% known) && !name %in% user_defined) {
           abort(paste0("Unknown function: ", name))
         }
 
-        if (name %in% names(aliases)) {
-          name <- aliases[[name]]
-        }
-
-        window <- need_window && (name %in% known_window)
-
         args <- lapply(as.list(expr[-1]), do_translate, in_window = in_window || window)
-        if (name %in% known_window) {
+        if (name %in% known_functions) {
           name <- paste0("pl_", name)
         }
 
