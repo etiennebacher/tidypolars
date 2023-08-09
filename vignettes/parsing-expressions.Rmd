@@ -122,6 +122,7 @@ out <- tribble(
   "`stats`", "`median`", 
   "`base`", "`min`",
   "`base`", "`nchar`",
+  "`base`", "`paste0`",
   "`base`", "`rank`",
   "`base`", "`round`",
   "`base`", "`sin`", 
