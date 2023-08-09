@@ -39,7 +39,7 @@ pl_filter <- function(.data, ...) {
   is_grouped <- !is.null(grps)
 
   exprs <- enexprs(...)
-  polars_exprs <- rel_translate_dots(exprs, .data)
+  polars_exprs <- translate_dots(exprs, .data)
 
   if (is_grouped) {
     polars_exprs <- lapply(polars_exprs, \(x) x$over(grps))

@@ -55,7 +55,7 @@ pl_mutate <- function(.data, ...) {
   to_drop <- list()
 
   exprs <- enexprs(...)
-  polars_exprs <- rel_translate_dots(exprs, .data)
+  polars_exprs <- translate_dots(exprs, .data)
 
   to_drop <- names(Filter(\(x) length(x) == 0, polars_exprs))
   polars_exprs <- Filter(\(x) length(x) != 0, polars_exprs)

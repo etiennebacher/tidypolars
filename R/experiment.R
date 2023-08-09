@@ -1,10 +1,10 @@
 #' @import rlang
 
-rel_translate_dots <- function(dots, data) {
-  lapply(dots, rel_translate, data = data)
+translate_dots <- function(dots, data) {
+  lapply(dots, translate_expr, data = data)
 }
 
-rel_translate <- function(
+translate_expr <- function(
     quo, data,
     alias = NULL,
     partition = NULL,
@@ -107,19 +107,7 @@ rel_translate <- function(
           }
         )
 
-        known_functions <- c(
-          # Window functions
-          "rank", "rank_dense", "dense_rank", "percent_rank",
-          "row_number", "first_value", "last_value", "nth_value",
-          "cume_dist", "lead", "lag", "ntile",
-
-          # Aggregates
-          "sum", "mean", "stddev", "min", "max", "median",
-
-          "between",
-
-          NULL
-        )
+        known_functions <- r_polars_funs$r_funs
 
         known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
                        "&", "|", "!")
