@@ -22,32 +22,24 @@ pl_summarize <- function(.data, ...) {
 
   grps <- attributes(.data)$pl_grps
   mo <- attributes(.data)$maintain_order
+  if (is.null(mo)) mo <- FALSE
   is_grouped <- !is.null(grps)
 
   if (!is_grouped) {
     rlang::abort("`pl_summarize()` only works on grouped data.")
   }
 
-  polars_exprs <- build_polars_exprs(.data, ...)
-  exprs <- polars_exprs$exprs
-  to_drop <- polars_exprs$to_drop
+  exprs <- enexprs(...)
+  polars_exprs <- rel_translate_dots(exprs, .data)
 
-  if (exprs != "" ) {
-    if (!is.null(mo)) {
-      out_expr <- ".data$groupby(grps, maintain_order = mo)$agg("
-    } else {
-      out_expr <- ".data$groupby(grps)$agg("
-    }
+  to_drop <- names(Filter(\(x) length(x) == 0, polars_exprs))
+  polars_exprs <- Filter(\(x) length(x) != 0, polars_exprs)
 
-    out_expr <- paste0(out_expr, exprs, ")")
-
-    out <- out_expr |>
-      str2lang() |>
-      eval()
-  } else {
-    out <- .data
+  if (length(exprs) > 0) {
+    pl$set_polars_options(named_exprs = TRUE)
+    out <- .data$groupby(grps, maintain_order = mo)$agg(polars_exprs)
+    pl$set_polars_options(named_exprs = FALSE)
   }
-
 
   if (length(to_drop) > 0) {
     out$drop(to_drop)
