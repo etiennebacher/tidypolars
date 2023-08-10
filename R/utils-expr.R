@@ -2,12 +2,21 @@
 
 translate_dots <- function(.data, ...) {
   dots <- enexprs(...)
-  lapply(dots, translate_expr, .data = .data)
+  out <- lapply(dots, translate_expr, .data = .data)
+  # calling across() returns a nested list
+  if (is.recursive(out)) {
+    out <- unlist(out, recursive = FALSE)
+  }
+  out
 }
 
 translate_expr <- function(quo, .data) {
 
   names_data <- pl_colnames(.data)
+
+  if (!is_quosure(quo)) {
+    quo <- enquo(quo)
+  }
 
   if (is_expression(quo)) {
     expr <- quo
@@ -23,11 +32,6 @@ translate_expr <- function(quo, .data) {
   call_is_function <- typeof(expr) == "language"
 
   translate <- function(expr) {
-    if (is_quosure(expr)) {
-      # FIXME: What to do with the environment here?
-      expr <- quo_get_expr(expr)
-    }
-
     switch(
       typeof(expr),
 
@@ -47,9 +51,6 @@ translate_expr <- function(quo, .data) {
       symbol = {
         if (as.character(expr) %in% names_data) {
           ref <- as.character(expr)
-          if (!(ref %in% used)) {
-            used <<- c(used, ref)
-          }
           polars_col(ref)
         } else {
           val <- eval_tidy(expr, env = caller_env())
@@ -102,25 +103,16 @@ translate_expr <- function(quo, .data) {
             return(out)
           },
           "across" = {
-            cols <- get_arg(".cols", 1, expr)
-            cols <- tidyselect_named_arg(.data, enquo(cols))
-            fns <- get_arg(".fns", 2, expr)
-            if (is_call(fns)) {
-              abort("`across` doesn't work with anonymous functions for now.")
-            } else {
-              fns <- as_string(fns)
-            }
-            nms <- get_arg(".names", 3, expr)
-            sep_calls <- build_separate_calls(cols, fns, nms)
-            out <- lapply(sep_calls, translate_expr, .data = .data)
+            out <- unpack_across(.data, expr)
             return(out)
           }
         )
 
-        known_functions <- r_polars_funs$r_funs
-        known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
-                       "&", "|", "!")
-        user_defined <- get_globenv_functions()
+        k_funs <- known_functions()
+        known_functions <- k_funs$known_functions
+        known_ops <- k_funs$known_ops
+        user_defined <- k_funs$user_defined
+
         known <- c(known_functions, known_ops)
 
         if (!(name %in% known) && !name %in% user_defined) {
@@ -175,32 +167,44 @@ check_empty_dots <- function(...) {
   }
 }
 
-# extract arg from across(), either from name or position
-get_arg <- function(name, position, list) {
-  if (name %in% names(list)) {
-    list[[name]]
-  } else {
-    # I provide the position in across() but the call to "across" takes the
-    # first slot of the list
-    if (position + 1 <= length(list)) {
-      list[[position + 1]]
+check_polars_expr <- function(exprs, .data) {
+  out <- lapply(exprs, \(x) {
+    eval_tidy(x, data = .data$to_data_frame())
+  })
+  not_polars_expr <- which(vapply(out, \(x) !inherits(x, "Expr"), logical(1L)))
+  if (length(not_polars_expr) > 0) {
+    fault <- exprs[not_polars_expr]
+    errors <- lapply(seq_along(fault), \(x) {
+      fn_call <- fault[[x]][[2]]
+      kf <- known_functions()
+      if (safe_deparse(fn_call[[1]]) %in% c(kf$known_functions, kf$kwnow_ops)) {
+        return(invisible())
+      }
+      paste0(names(fault)[x], " = ", safe_deparse(fn_call))
+    })
+    errors <- Filter(\(x) length(x) > 0, errors)
+    if (length(errors) > 0) {
+      names(errors) <- rep("*", length(errors))
+      abort(
+        c(
+          paste0("The following call(s) do not return a Polars expression:"),
+          errors
+        ),
+        call = caller_env()
+      )
     }
   }
 }
 
-build_separate_calls <- function(cols, fns, names) {
-  list_calls <- list()
-  for (i in seq_along(cols)) {
-    for (j in seq_along(fns)) {
-      if (!is.null(names) && length(names) == 1) {
-        nm <- gsub("{\\.col}", cols[[i]], names, perl = TRUE)
-        nm <- gsub("{\\.fn}", fns[[j]], nm, perl = TRUE)
-      } else {
-        nm <- paste0(fns[j], "_", cols[i])
-      }
-      arg <- sym(cols[i])
-      list_calls[[nm]] <- call2(fns[j], arg)
-    }
-  }
-  list_calls
+
+known_functions <- function() {
+  known_functions <- r_polars_funs$r_funs
+  known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
+                 "&", "|", "!")
+  user_defined <- get_globenv_functions()
+  list(
+    known_functions = known_functions,
+    known_ops = known_ops,
+    user_defined = user_defined
+  )
 }

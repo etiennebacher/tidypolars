@@ -1,7 +1,8 @@
 source("helpers.R")
 using("tidypolars")
 
-test <- polars:::pl$DataFrame(head(mtcars))
+# devtools::load_all()
+test <- polars::pl$DataFrame(head(mtcars))
 
 # single word function
 
@@ -41,6 +42,32 @@ expect_equal(
     am = mean(am),
     gear = mean(gear),
     carb = mean(carb),
+    cyl = cyl + 1
+  )
+)
+
+# custom function
+
+foo <<- function(x) {
+  tmp <- x$cos()$mean()
+  tmp
+}
+
+expect_equal(
+  pl_mutate(
+    test,
+    across(
+      .cols = contains("a"),
+      foo
+    ),
+    cyl = cyl + 1
+  ),
+  pl_mutate(
+    test,
+    drat = foo(drat),
+    am = foo(am),
+    gear = foo(gear),
+    carb = foo(carb),
     cyl = cyl + 1
   )
 )
