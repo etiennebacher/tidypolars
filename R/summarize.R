@@ -29,8 +29,7 @@ pl_summarize <- function(.data, ...) {
     rlang::abort("`pl_summarize()` only works on grouped data.")
   }
 
-  exprs <- enexprs(...)
-  polars_exprs <- translate_dots(exprs, .data)
+  polars_exprs <- translate_dots(.data = .data, ...)
 
   to_drop <- names(Filter(\(x) length(x) == 0, polars_exprs))
   polars_exprs <- Filter(\(x) length(x) != 0, polars_exprs)

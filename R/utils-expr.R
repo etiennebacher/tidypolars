@@ -1,12 +1,13 @@
 #' @import rlang
 
-translate_dots <- function(dots, data) {
-  lapply(dots, translate_expr, data = data)
+translate_dots <- function(.data, ...) {
+  dots <- enexprs(...)
+  lapply(dots, translate_expr, .data = .data)
 }
 
-translate_expr <- function(quo, data) {
+translate_expr <- function(quo, .data) {
 
-  names_data <- pl_colnames(data)
+  names_data <- pl_colnames(.data)
 
   if (is_expression(quo)) {
     expr <- quo
@@ -147,4 +148,15 @@ get_globenv_functions <- function() {
     }
   }
   unlist(list_fns)
+}
+
+# Used when I convert R functions to polars functions. E.g warn that na.rm = TRUE
+# exists in the R function but will not be used in the polars function.
+check_empty_dots <- function(...) {
+  dots <- get_dots(...)
+  if (length(dots) > 0) {
+    fn <- deparse(match.call(call = sys.call(sys.parent()))[1])
+    fn <- gsub("^pl\\_", "", fn)
+    rlang::warn(paste0("\nWhen the dataset is a Polars DataFrame or LazyFrame, `", fn, "` only needs one argument. Additional arguments will not be used."))
+  }
 }

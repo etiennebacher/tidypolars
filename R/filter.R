@@ -38,8 +38,7 @@ pl_filter <- function(.data, ...) {
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
-  exprs <- enexprs(...)
-  polars_exprs <- translate_dots(exprs, .data)
+  polars_exprs <- translate_dots(.data, ...)
 
   if (is_grouped) {
     polars_exprs <- lapply(polars_exprs, \(x) x$over(grps))

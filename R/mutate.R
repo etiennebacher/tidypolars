@@ -54,8 +54,7 @@ pl_mutate <- function(.data, ...) {
   is_grouped <- !is.null(grps)
   to_drop <- list()
 
-  exprs <- enexprs(...)
-  polars_exprs <- translate_dots(exprs, .data)
+  polars_exprs <- translate_dots(.data = .data, ...)
 
   to_drop <- names(Filter(\(x) length(x) == 0, polars_exprs))
   polars_exprs <- Filter(\(x) length(x) != 0, polars_exprs)
