@@ -35,10 +35,10 @@ pl_summarize <- function(.data, ...) {
   to_drop <- names(Filter(\(x) length(x) == 0, polars_exprs))
   polars_exprs <- Filter(\(x) length(x) != 0, polars_exprs)
 
-  if (length(exprs) > 0) {
-    pl$set_polars_options(named_exprs = TRUE)
+  if (length(polars_exprs) > 0) {
     out <- .data$groupby(grps, maintain_order = mo)$agg(polars_exprs)
-    pl$set_polars_options(named_exprs = FALSE)
+  } else {
+    out <- .data
   }
 
   if (length(to_drop) > 0) {

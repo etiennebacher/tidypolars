@@ -87,6 +87,14 @@ expect_equal_lazy(
   "a"
 )
 
+expect_error_lazy(
+  pl_mutate(pl_iris, Sepal.Width = 1:2)
+)
+
+expect_error_lazy(
+  pl_mutate(pl_iris, Sepal.Width = letters[1:2])
+)
+
 # Several exprs
 
 out <- pl_mutate(

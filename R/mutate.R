@@ -65,25 +65,8 @@ pl_mutate <- function(.data, ...) {
       polars_exprs <- lapply(polars_exprs, \(x) x$over(grps))
     }
 
-    pl$set_polars_options(named_exprs = TRUE)
     out <- .data$with_columns(polars_exprs)
-    pl$set_polars_options(named_exprs = FALSE)
   }
-
-  # polars_exprs <- build_polars_expr(.data, ...)
-  # exprs <- polars_exprs$exprs
-  # to_drop <- polars_exprs$to_drop
-  #
-  # if (exprs != "") {
-  #   if (is_grouped) {
-  #     exprs <- paste0(exprs, "$over(grps)")
-  #   }
-  #   out <- paste0(".data$with_columns(", exprs, ")") |>
-  #     str2lang() |>
-  #     eval()
-  # } else {
-  #   out <- .data
-  # }
 
   if (length(to_drop) > 0) {
     out$drop(to_drop)
