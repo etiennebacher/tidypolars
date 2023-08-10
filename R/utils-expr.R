@@ -100,6 +100,20 @@ translate_expr <- function(quo, .data) {
               error = identity
             )
             return(out)
+          },
+          "across" = {
+            cols <- get_arg(".cols", 1, expr)
+            cols <- tidyselect_named_arg(.data, enquo(cols))
+            fns <- get_arg(".fns", 2, expr)
+            if (is_call(fns)) {
+              abort("`across` doesn't work with anonymous functions for now.")
+            } else {
+              fns <- as_string(fns)
+            }
+            nms <- get_arg(".names", 3, expr)
+            sep_calls <- build_separate_calls(cols, fns, nms)
+            out <- lapply(sep_calls, translate_expr, .data = .data)
+            return(out)
           }
         )
 
@@ -159,4 +173,34 @@ check_empty_dots <- function(...) {
     fn <- gsub("^pl\\_", "", fn)
     rlang::warn(paste0("\nWhen the dataset is a Polars DataFrame or LazyFrame, `", fn, "` only needs one argument. Additional arguments will not be used."))
   }
+}
+
+# extract arg from across(), either from name or position
+get_arg <- function(name, position, list) {
+  if (name %in% names(list)) {
+    list[[name]]
+  } else {
+    # I provide the position in across() but the call to "across" takes the
+    # first slot of the list
+    if (position + 1 <= length(list)) {
+      list[[position + 1]]
+    }
+  }
+}
+
+build_separate_calls <- function(cols, fns, names) {
+  list_calls <- list()
+  for (i in seq_along(cols)) {
+    for (j in seq_along(fns)) {
+      if (!is.null(names) && length(names) == 1) {
+        nm <- gsub("{\\.col}", cols[[i]], names, perl = TRUE)
+        nm <- gsub("{\\.fn}", fns[[j]], nm, perl = TRUE)
+      } else {
+        nm <- paste0(fns[j], "_", cols[i])
+      }
+      arg <- sym(cols[i])
+      list_calls[[nm]] <- call2(fns[j], arg)
+    }
+  }
+  list_calls
 }

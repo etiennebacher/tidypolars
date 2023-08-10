@@ -110,3 +110,7 @@ expect_colnames(
     "mean_drat", "mean_am", "mean_gear", "mean_carb"
   )
 )
+
+# TODO: add a test where I pass a custom function
+
+# TODO: add a test with a list of functions
