@@ -8,9 +8,9 @@ unpack_across <- function(.data, expr) {
   .names <- get_arg(".names", 3, expr)
 
   validate <- function(x) {
-    if (is_formula(x)) {
+    if (is_formula(x)) { # e.g ~ mean(.x) -> mean(.x)
       x[[2]]
-    } else if (is_symbol(x)) {
+    } else if (is_symbol(x)) { # e.g mean -> mean(.x)
       out <- call2(x)
       call_modify(out, quote(.x))
     } else {
