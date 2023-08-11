@@ -84,6 +84,17 @@ expect_colnames(
   c(names(mtcars), "gear_1", "gear_2", "carb_1", "carb_2")
 )
 
+expect_colnames(
+  pl_mutate(
+    test,
+    across(
+      .cols = gear,
+      list(mean = \(x) x$mean(), \(x) x$std())
+    )
+  ),
+  c(names(mtcars), "gear_mean", "gear_2")
+)
+
 expect_error(
   pl_mutate(
     test,
