@@ -175,4 +175,13 @@ expect_equal_lazy(
   rep(mean(iris$Sepal.Length) + mean(iris$Petal.Length), nrow(iris))
 )
 
+# embracing works
+
+some_value <- 1
+
+expect_equal_lazy(
+  pl_mutate(pl_iris, x = {{ some_value }}) |> to_r(),
+  pl_mutate(pl_iris, x = 1) |> to_r()
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
