@@ -65,14 +65,15 @@ and functions.
 
 If you pass a single value, like `x = 1` or `x = "a"`, it is wrapped into 
 `pl$lit()`. This is also the case for external objects with the difference that
-these are evaluated before they are wrap into `pl$lit()`.
+these need to be wrapped in `{{ }}` and are evaluated before being wrapped into
+`pl$lit()`.
 
 Column names, like `x = mpg`, are wrapped into `pl$col()`. 
 
 ```
-x = "a"     -> x = pl$lit("a")
-x = letters -> x = pl$lit(letters)
-x = mpg     -> x = pl$col("mpg")
+x = "a"               ->  x = pl$lit("a")
+x = {{ some_value }}  ->  x = pl$lit(*value*)
+x = mpg               ->  x = pl$col("mpg")
 ```
 
 ## Functions
@@ -87,13 +88,14 @@ are written by the user (you).
 
 In the first case, `tidypolars` checks the function name and whether there's an
 equivalent function in Polars. For example, the R function `sd(x, na.rm = TRUE)`
-is converted to `std(x, na.rm = TRUE)`. Since R and Polars functions don't share
-the same name, this check relies on a custom list containing all equivalencies 
+is converted to `std(x, na.rm = TRUE)`. Since R and Polars functions often don't 
+share the same name, this check relies on a custom list containing all equivalencies 
 between R and Polars functions. You can see the list of supported R functions at
-the bottom of this vignette.
+the bottom of this vignette. Note that **most of essential base R functions are
+supported, but also some functions from `dplyr` or from `stringr` for example**.
 
-Here, replacing R's `sd()` functions with `std()` is not enough because the 
-argument `x` (which usually is a column of the dataset) is not in the right 
+Here, replacing R's `sd()` function with `std()` is not enough because the 
+argument `x` (which usually is a variable in the dataset) is not in the right 
 format to be used by Polars. Therefore, `tidypolars` calls `translate()` a 
 second time on the inside of the function.  
 
@@ -111,7 +113,7 @@ library(polars)
 
 mtcars |> 
   as_polars() |> 
-  pl_mutate(x = sd(mpg, na.rm = TRUE))
+  mutate(x = sd(mpg, na.rm = TRUE))
 ```
 
 
@@ -123,7 +125,6 @@ would be extremely complicated. In this situation, you will have to rewrite your
 custom function using Polars syntax so that it returns a Polars expression. For
 example, we could make a function to standardize a column like this:
 
-
 ```{r}
 pl_standardize <- function(x) {
   (x - x$mean()) / x$std()
@@ -131,8 +132,8 @@ pl_standardize <- function(x) {
 ```
 
 Remember that the column name used as `x` will end up wrapped into `pl$col()`, 
-so if you want to check if your function returns a Polars expression, you have 
-to provide a `pl$col()` call:
+so to check that your function returns a Polars expression, you have to provide
+a `pl$col()` call:
 
 ```{r}
 pl_standardize(pl$col("mpg"))
@@ -144,7 +145,7 @@ any other function:
 ```{r}
 mtcars |> 
   as_polars() |> 
-  pl_mutate(x = pl_standardize(mpg))
+  mutate(x = pl_standardize(mpg))
 ```
 
 
@@ -152,12 +153,12 @@ mtcars |>
 
 [`across()`](https://dplyr.tidyverse.org/reference/across.html) is a very useful
 function that applies a function (or a list of functions) to a selection of 
-columns. It also accepts built-in functions and UDFs.
+columns. It accepts built-in functions, UDFs, and anonymous functions.
 
 ```{r}
 mtcars |> 
   as_polars() |> 
-  pl_mutate(
+  mutate(
     across(
       .cols = contains("a"),
       list(mean = mean, stand = pl_standardize, ~ sd(.x))
@@ -165,14 +166,13 @@ mtcars |>
   )
 ```
 
-However, it will also error if the UDF you pass doesn't return a Polars expression.
-Similarly, if you want to pass an anonymous function, it has to return a Polars 
+Similarly, UDFs and anonymous functions will error if they don't return a Polars
 expression:
 
 ```{r error=TRUE}
 mtcars |> 
   as_polars() |> 
-  pl_mutate(
+  mutate(
     across(
       .cols = contains("a"),
       .fns = list(
