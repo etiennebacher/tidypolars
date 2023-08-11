@@ -173,3 +173,12 @@ pl_str_remove_all <- function(x, pattern, ...) {
   check_empty_dots(...)
   x$str$replace_all(pattern, "")
 }
+
+pl_paste0 <- function(..., collapse = NULL) {
+  # for (i in seq_along(dots)) {
+  #   if (length(dots[[i]]) == 1 && is.character(dots[[i]])) {
+  #     dots[[i]] <- pl$lit(dots[[i]])
+  #   }
+  # }
+  pl$concat_str(...)
+}
