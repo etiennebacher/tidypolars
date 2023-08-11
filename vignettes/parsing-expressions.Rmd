@@ -38,20 +38,34 @@ it is possible to pass R functions directly to a Polars Data/LazyFrame, it is
 **strongly discouraged** to do so because it doesn't take advantage of Polars
 optimizations. 
 
-Indeed, Polars comes with dozens of built-in functions for maths (`median`, `var`, `arccos`, ...), string manipulation (`n_chars`, `starts`, ...), and date-time (`hour`, `quarter`, `ordinal_day`, ...). All of these functions are optimized internally and are ran in parallel under the hood, which will not be the case if we pass R functions.
+Indeed, Polars comes with dozens of built-in functions for maths (`median`, 
+`var`, `arccos`, ...), string manipulation (`n_chars`, `starts`, ...), and date-time 
+(`hour`, `quarter`, `ordinal_day`, ...). All of these functions are optimized
+internally and are ran in parallel under the hood, which will not be the case if
+we pass R functions.
 
-However, using these Polars expressions would imply that we need to learn these new functions and this new syntax. To avoid doing that, `tidypolars` will automatically translate R expressions into Polars ones. Basically, **you can keep writing R expressions in most situations**, and they will automatically be translated to Polars syntax. 
+However, using these Polars expressions would imply that we need to learn these
+new functions and this new syntax. To avoid doing that, `tidypolars` will 
+automatically translate R expressions into Polars ones. Basically, **you can
+keep writing R expressions in most situations**, and they will automatically be
+translated to Polars syntax. 
 
-However, there are some situations where this might not work, so this vignette explains the process and the limitations.
+However, there are some situations where this might not work, so this vignette
+explains the process and the limitations.
 
 # How does `tidypolars` translate R expressions into Polars expressions?
 
-When `tidypolars` receives an expression, it runs a function `translate()` several times until all components are translated to their Polars equivalent. There are four possible components: single values, column names, external objects, and functions.
+When `tidypolars` receives an expression, it runs a function `translate()` 
+several times until all components are translated to their Polars equivalent. 
+There are four possible components: single values, column names, external objects,
+and functions.
 
 
 ## Single values, column names, and external objects
 
-If you pass a single value, like `x = 1` or `x = "a"`, it is wrapped into `pl$lit()`. This is also the case for external objects with the difference that these are evaluated before they are wrap into `pl$lit()`.
+If you pass a single value, like `x = 1` or `x = "a"`, it is wrapped into 
+`pl$lit()`. This is also the case for external objects with the difference that
+these are evaluated before they are wrap into `pl$lit()`.
 
 Column names, like `x = mpg`, are wrapped into `pl$col()`. 
 
@@ -64,16 +78,32 @@ x = mpg     -> x = pl$col("mpg")
 ## Functions
 
 
-Functions are split into two categories: built-in functions (i.e functions provided by base R or by other packages), and user-defined functions (UDF) that are written by the user (you). 
+Functions are split into two categories: built-in functions (i.e functions 
+provided by base R or by other packages), and user-defined functions (UDF) that
+are written by the user (you). 
 
 
 ### Built-in functions
 
-In the first case, `tidypolars` checks the function name and whether there's an equivalent function in Polars. For example, the R function `sd(x, na.rm = TRUE)` is converted to `std(x, na.rm = TRUE)`. Since R and Polars functions don't share the same name, this check relies on a custom list containing all equivalencies between R and Polars functions. You can see the list of supported R functions at the bottom of this vignette.
+In the first case, `tidypolars` checks the function name and whether there's an
+equivalent function in Polars. For example, the R function `sd(x, na.rm = TRUE)`
+is converted to `std(x, na.rm = TRUE)`. Since R and Polars functions don't share
+the same name, this check relies on a custom list containing all equivalencies 
+between R and Polars functions. You can see the list of supported R functions at
+the bottom of this vignette.
 
-Here, replacing R's `sd()` functions with `std()` is not enough because the argument `x` (which usually is a column of the dataset) is not in the right format to be used by Polars. Therefore, `tidypolars` calls `translate()` a second time on the inside of the function.  
+Here, replacing R's `sd()` functions with `std()` is not enough because the 
+argument `x` (which usually is a column of the dataset) is not in the right 
+format to be used by Polars. Therefore, `tidypolars` calls `translate()` a 
+second time on the inside of the function.  
 
-We now have `std(pl$col("x"))`^[Not exactly because `tidypolars` actually calls an internal function `pl_std()` that contains the right Polars syntax, but this is the main idea.]. To end this example, we need to see what happens to additional arguments. You can see that we didn't modify the `na.rm = TRUE` for now. This is because Polars doesn't have this argument in `std()` (it automatically drops the missing values). Internally, `tidypolars` checks whether additional arguments are accepted and throws a message if this is not the case:
+We now have `std(pl$col("x"))`^[Not exactly because `tidypolars` actually calls
+an internal function `pl_std()` that contains the right Polars syntax, but this
+is the main idea.]. To end this example, we need to see what happens to additional
+arguments. You can see that we didn't modify the `na.rm = TRUE` for now. This is 
+because Polars doesn't have this argument in `std()` (it automatically drops the
+missing values). Internally, `tidypolars` checks whether additional arguments 
+are accepted and throws a message if this is not the case:
 
 ```{r}
 library(tidypolars)
@@ -87,7 +117,11 @@ mtcars |>
 
 ### User-defined functions
 
-User-defined functions (UDF) are more challenging. Indeed, it is technically possible to inspect the code inside a UDF, but rewriting it to match Polars syntax would be extremely complicated. In this situation, you will have to rewrite your custom function using Polars syntax so that it returns a Polars expression. For example, we could make a function to standardize a column like this:
+User-defined functions (UDF) are more challenging. Indeed, it is technically 
+possible to inspect the code inside a UDF, but rewriting it to match Polars syntax
+would be extremely complicated. In this situation, you will have to rewrite your
+custom function using Polars syntax so that it returns a Polars expression. For
+example, we could make a function to standardize a column like this:
 
 
 ```{r}
@@ -96,13 +130,16 @@ pl_standardize <- function(x) {
 }
 ```
 
-Remember that the column name used as `x` will end up wrapped into `pl$col()`, so if you want to check if your function returns a Polars expression, you have to provide a `pl$col()` call:
+Remember that the column name used as `x` will end up wrapped into `pl$col()`, 
+so if you want to check if your function returns a Polars expression, you have 
+to provide a `pl$col()` call:
 
 ```{r}
 pl_standardize(pl$col("mpg"))
 ```
 
-This function correctly returns a Polars expression, so we can now use it like any other function:
+This function correctly returns a Polars expression, so we can now use it like
+any other function:
 
 ```{r}
 mtcars |> 
@@ -113,7 +150,9 @@ mtcars |>
 
 ### Special case: `across()`
 
-[`across()`](https://dplyr.tidyverse.org/reference/across.html) is a very useful function that applies a function (or a list of functions) to a selection of columns. It also accepts built-in functions and UDFs.
+[`across()`](https://dplyr.tidyverse.org/reference/across.html) is a very useful
+function that applies a function (or a list of functions) to a selection of 
+columns. It also accepts built-in functions and UDFs.
 
 ```{r}
 mtcars |> 
@@ -126,7 +165,9 @@ mtcars |>
   )
 ```
 
-However, it will also error if the UDF you pass doesn't return a Polars expression. Similarly, if you want to pass an anonymous function, it has to return a Polars expression:
+However, it will also error if the UDF you pass doesn't return a Polars expression.
+Similarly, if you want to pass an anonymous function, it has to return a Polars 
+expression:
 
 ```{r error=TRUE}
 mtcars |> 
