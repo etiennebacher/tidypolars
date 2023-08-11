@@ -4,7 +4,7 @@
 \alias{expect_error_lazy}
 \title{\code{tinytest} helper}
 \usage{
-expect_error_lazy(current, pattern, ...)
+expect_error_lazy(current, pattern = ".*", ...)
 }
 \description{
 \code{tinytest} helper

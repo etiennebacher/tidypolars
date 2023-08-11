@@ -87,6 +87,14 @@ expect_equal_lazy(
   "a"
 )
 
+expect_error_lazy(
+  pl_mutate(pl_iris, Sepal.Width = 1:2)
+)
+
+expect_error_lazy(
+  pl_mutate(pl_iris, Sepal.Width = letters[1:2])
+)
+
 # Several exprs
 
 out <- pl_mutate(
@@ -102,6 +110,14 @@ expect_equal_lazy(
   ),
   c(iris$Sepal.Width*2, iris$Petal.Width*3)
 )
+
+# drop columns
+
+expect_colnames(
+  pl_mutate(pl_iris, Sepal.Length = 1, Species = NULL),
+  names(iris)[1:4]
+)
+
 
 # grouped data (checked with dplyr)
 
@@ -157,6 +173,15 @@ expect_equal_lazy(
   pl_mutate(pl_iris, x = foo(Sepal.Length, Petal.Length)) |>
     pl_pull(x),
   rep(mean(iris$Sepal.Length) + mean(iris$Petal.Length), nrow(iris))
+)
+
+# embracing works
+
+some_value <- 1
+
+expect_equal_lazy(
+  pl_mutate(pl_iris, x = {{ some_value }}) |> to_r(),
+  pl_mutate(pl_iris, x = 1) |> to_r()
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

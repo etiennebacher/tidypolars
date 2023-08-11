@@ -23,6 +23,13 @@ expect_equal_lazy(
   c(5.006, 5.936, 6.588)
 )
 
+expect_equal_lazy(
+  pl_summarize(pl_iris_g,
+               x = 1) |>
+    pl_pull(x),
+  rep(1, 3)
+)
+
 expect_error_lazy(
   pl_summarize(pl_iris, x = mean(Sepal.Length)) ,
   pattern = "only works on grouped data"

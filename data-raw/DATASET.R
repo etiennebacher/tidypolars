@@ -150,10 +150,10 @@ r_polars_funs <- data.frame(
       "paste0", "paste0",
       "ymd_hms", "ymd_hms",
       "ymd_hm", "ymd_hm",
-      "dt_day", "mday"
+      "dt_day", "mday",
+      "dt_ordinal_day", "yday"
     )
   ) |>
   arrange(category, polars_funs, .locale = "en")
 
 usethis::use_data(r_polars_funs, overwrite = TRUE, internal = TRUE)
-

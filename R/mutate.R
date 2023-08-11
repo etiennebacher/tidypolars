@@ -44,6 +44,26 @@
 #'   pl_mutate(
 #'     foo = mean(Sepal.Length)
 #'   )
+#'
+#' # across() is available
+#' pl_iris |>
+#'   pl_mutate(
+#'     across(.cols = contains("Sepal"), .fns = mean, .names = "{.fn}_of_{.col}")
+#'   )
+#
+#' # It can receive several types of functions:
+#' pl_iris |>
+#'   pl_mutate(
+#'     across(
+#'       .cols = contains("Sepal"),
+#'       .fns = list(mean = mean, sd = ~ sd(.x)),
+#'       .names = "{.fn}_of_{.col}"
+#'     )
+#'   )
+#'
+#' # Embracing an external variable works
+#' some_value <- 1
+#' pl_mutate(pl_iris, x = {{ some_value }})
 
 
 pl_mutate <- function(.data, ...) {
@@ -52,20 +72,20 @@ pl_mutate <- function(.data, ...) {
 
   grps <- attributes(.data)$pl_grps
   is_grouped <- !is.null(grps)
+  to_drop <- list()
 
-  polars_exprs <- build_polars_exprs(.data, ...)
-  exprs <- polars_exprs$exprs
-  to_drop <- polars_exprs$to_drop
+  polars_exprs <- translate_dots(.data = .data, ...)
 
-  if (exprs != "") {
+  to_drop <- names(Filter(\(x) length(x) == 0, polars_exprs))
+  polars_exprs <- Filter(\(x) length(x) != 0, polars_exprs)
+  # check_polars_expr(polars_exprs, .data)
+
+  if (length(exprs) > 0) {
     if (is_grouped) {
-      exprs <- paste0(exprs, "$over(grps)")
+      polars_exprs <- lapply(polars_exprs, \(x) x$over(grps))
     }
-    out <- paste0(".data$with_columns(", exprs, ")") |>
-      str2lang() |>
-      eval()
-  } else {
-    out <- .data
+
+    out <- .data$with_columns(polars_exprs)
   }
 
   if (length(to_drop) > 0) {

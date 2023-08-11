@@ -19,6 +19,13 @@ expect_equal(
   c(5.006, 5.936, 6.588)
 )
 
+expect_equal(
+  pl_summarize(pl_iris_g,
+               x = 1) |>
+    pl_pull(x),
+  rep(1, 3)
+)
+
 expect_error(
   pl_summarize(pl_iris, x = mean(Sepal.Length)) ,
   pattern = "only works on grouped data"

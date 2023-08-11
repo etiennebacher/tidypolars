@@ -11,9 +11,9 @@ tidyselect_dots <- function(.data, ...) {
 
 tidyselect_named_arg <- function(.data, cols) {
   if (inherits(.data, "LazyFrame")) {
-    data <- .data$slice(1)$collect()$to_data_frame()
+    data <- .data$slice(offset = 0, length = 1)$collect()$to_data_frame()
   } else {
-    data <- .data$slice(1)$to_data_frame()
+    data <- .data$slice(offset = 0, length = 1)$to_data_frame()
   }
   names(tidyselect::eval_select(cols, data = data))
 }

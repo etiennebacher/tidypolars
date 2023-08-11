@@ -1,7 +1,5 @@
 # All these functions should be internal, the user doesn't need to access them
 
-###### DEFAULT FUNCTIONS
-
 pl_abs <- function(x, ...) {
   check_empty_dots(...)
   x$abs()
@@ -151,35 +149,36 @@ pl_bin <- function(x, ...) {
   x$bin()
 }
 
-pl_case_match <- function(x, ...) {
+pl_case_match <- function(x, ..., .data) {
   dots <- get_dots(...)
+
+  x <- polars::pl$col(deparse(substitute(x)))
 
   if (!".default" %in% names(dots)) {
     dots[[length(dots) + 1]] <- NA
     names(dots)[length(dots)] <- ".default"
   }
 
-  exprs <- lapply(seq_along(dots), \(x) {
-    dep <- safe_deparse(dots[[x]])
-    if (x == length(dots)) {
-      return(paste0("$otherwise(", dep, ")"))
+  out <- NULL
+  exprs <- lapply(seq_along(dots), \(y) {
+    if (y == length(dots)) {
+      out <<- out$otherwise(dots[[y]])
+      return(invisible())
     }
-
-    spl <- strsplit(dep, "~")[[1]] |>
-      trimws()
-
-    paste0("$when(x$is_in(pl$lit(", spl[1], ")))$then(", spl[2], ")")
-  }) |>
-    paste(collapse = "")
-
-  paste0("pl", exprs) |>
-    str2lang() |>
-    eval()
+    lhs <- translate_expr(.data, dots[[y]][[2]])
+    rhs <- translate_expr(.data, dots[[y]][[3]])
+    if (is.null(out)) {
+      out <<- polars::pl$when(x$is_in(lhs))$then(rhs)
+    } else {
+      out <<- out$when(x$is_in(lhs))$then(rhs)
+    }
+  })
+  out
 }
 
 
 
-pl_case_when <- function(...) {
+pl_case_when <- function(..., .data) {
   dots <- get_dots(...)
 
   if (!".default" %in% names(dots)) {
@@ -187,22 +186,21 @@ pl_case_when <- function(...) {
     names(dots)[length(dots)] <- ".default"
   }
 
-  exprs <- lapply(seq_along(dots), \(x) {
-    dep <- safe_deparse(dots[[x]])
-
-    if (x == length(dots)) {
-      return(paste0("$otherwise(", dep, ")"))
+  out <- NULL
+  exprs <- lapply(seq_along(dots), \(y) {
+    if (y == length(dots)) {
+      out <<- out$otherwise(dots[[y]])
+      return(invisible())
     }
-    spl <- strsplit(dep, "~")[[1]] |>
-      trimws()
-    spl[1] <- parse_boolean_exprs(spl[1])
-    paste0("$when(", spl[1], ")$then(", spl[2], ")")
-  }) |>
-    paste(collapse = "")
-
-  paste0("pl", exprs) |>
-    str2lang() |>
-    eval()
+    lhs <- translate_expr(.data, dots[[y]][[2]])
+    rhs <- translate_expr(.data, dots[[y]][[3]])
+    if (is.null(out)) {
+      out <<- polars::pl$when(lhs)$then(rhs)
+    } else {
+      out <<- out$when(lhs)$then(rhs)
+    }
+  })
+  out
 }
 
 pl_cast <- function(x, ...) {
@@ -910,394 +908,4 @@ pl_value_counts <- function(x, ...) {
 pl_when_then_otherwise <- function(x, ...) {
   check_empty_dots(...)
   x$when_then_otherwise()
-}
-
-
-
-###### DATE-TIME FUNCTIONS
-
-pl_default_round <- function(x, ...) {
-  check_empty_dots(...)
-  x$default$round()
-}
-
-pl_dt_round <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$round()
-}
-
-pl_dt_cast_time_unit <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$cast_time_unit()
-}
-
-pl_dt_combine <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$combine()
-}
-
-pl_dt_convert_time_zone <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$convert_time_zone()
-}
-
-pl_dt_day <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$day()
-}
-
-pl_dt_days <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$days()
-}
-
-pl_dt_epoch <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$epoch()
-}
-
-pl_dt_hour <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$hour()
-}
-
-pl_dt_hours <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$hours()
-}
-
-pl_dt_iso_year <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$iso_year()
-}
-
-pl_dt_microsecond <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$microsecond()
-}
-
-pl_dt_microseconds <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$microseconds()
-}
-
-pl_dt_millisecond <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$millisecond()
-}
-
-pl_dt_milliseconds <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$milliseconds()
-}
-
-pl_dt_minute <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$minute()
-}
-
-pl_dt_minutes <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$minutes()
-}
-
-pl_dt_month <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$month()
-}
-
-pl_dt_nanosecond <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$nanosecond()
-}
-
-pl_dt_nanoseconds <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$nanoseconds()
-}
-
-pl_dt_offset_by <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$offset_by()
-}
-
-pl_dt_ordinal_day <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$ordinal_day()
-}
-
-pl_dt_quarter <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$quarter()
-}
-
-pl_dt_replace_time_zone <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$replace_time_zone()
-}
-
-pl_default_round <- function(x, ...) {
-  check_empty_dots(...)
-  x$default$round()
-}
-
-pl_dt_round <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$round()
-}
-
-pl_dt_second <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$second()
-}
-
-pl_dt_seconds <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$seconds()
-}
-
-pl_dt_strftime <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$strftime()
-}
-
-pl_dt_timestamp <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$timestamp()
-}
-
-pl_dt_truncate <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$truncate()
-}
-
-pl_dt_tz_localize <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$tz_localize()
-}
-
-pl_dt_week <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$week()
-}
-
-# TODO: check the day of weekstart (lubridate starts the
-# week on sunday, polars on monday)
-pl_dt_weekday <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$weekday()
-}
-
-pl_dt_with_time_unit <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$with_time_unit()
-}
-
-pl_dt_year <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$year()
-}
-
-pl_ymd_hms <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$strptime(pl$Datetime("ms"), "%Y-%m-%d %H:%M:%S", strict = FALSE)
-}
-
-pl_ymd_hm <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$strptime(pl$Datetime("ms"), "%Y-%m-%d %H:%M", strict = FALSE)
-}
-
-
-###### STRING FUNCTIONS
-
-pl_str_concat <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$concat()
-}
-
-pl_str_contains <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$contains()
-}
-
-pl_str_count_match <- function(x, pattern = "", ...) {
-  check_empty_dots(...)
-  x$str$count_match(pattern)
-}
-
-pl_str_decode <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$decode()
-}
-
-pl_str_encode <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$encode()
-}
-
-pl_str_ends <- function(x, pattern, negate = FALSE) {
-  if (isTRUE(negate)) {
-    x$str$ends_with(pl$lit(pattern))$is_not()
-  } else {
-    x$str$ends_with(pl$lit(pattern))
-  }
-}
-
-pl_str_extract <- function(x, pattern, group = 0) {
-  x$str$extract(pattern, group)
-}
-
-pl_str_extract_all <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$extract_all()
-}
-
-pl_str_json_extract <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$json_extract()
-}
-
-pl_str_json_path_match <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$json_path_match()
-}
-
-pl_str_lengths <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$lengths()
-}
-
-pl_str_ljust <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$ljust()
-}
-
-pl_str_lstrip <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$lstrip()
-}
-
-pl_str_length <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$n_chars()
-}
-
-pl_str_n_chars <- pl_str_length
-
-pl_str_parse_int <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$parse_int()
-}
-
-pl_str_replace <- function(x, pattern, replacement, ...) {
-  check_empty_dots(...)
-  x$str$replace(pattern, replacement)
-}
-
-pl_str_replace_all <- function(x, pattern, replacement, ...) {
-  check_empty_dots(...)
-  x$str$replace_all(pattern, replacement)
-}
-
-pl_str_rjust <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$rjust()
-}
-
-pl_str_rstrip <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$rstrip()
-}
-
-pl_str_slice <- function(x, start, end = NULL, ...) {
-  check_empty_dots(...)
-  # polars is 0-indexed
-  if (start > 0) start <- start - 1
-  x$str$slice(start, end)
-}
-
-pl_str_split <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$split()
-}
-
-pl_str_split_exact <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$split_exact()
-}
-
-pl_str_splitn <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$splitn()
-}
-
-pl_str_starts <- function(x, pattern, negate = FALSE) {
-  if (isTRUE(negate)) {
-    x$str$starts_with(pl$lit(pattern))$is_not()
-  } else {
-    x$str$starts_with(pl$lit(pattern))
-  }
-}
-
-pl_str_str_explode <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$str_explode()
-}
-
-pl_str_strip <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$strip()
-}
-
-pl_str_strptime <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$strptime()
-}
-
-pl_str_to_lower <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$to_lowercase()
-}
-
-pl_tolower <- pl_str_to_lower
-
-pl_str_to_upper <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$to_uppercase()
-}
-
-pl_toupper <- pl_str_to_upper
-
-pl_str_zfill <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$zfill()
-}
-
-# not in polars
-pl_str_remove <- function(x, pattern, ...) {
-  check_empty_dots(...)
-  x$str$replace(pattern, "")
-}
-
-# not in polars
-pl_str_remove_all <- function(x, pattern, ...) {
-  check_empty_dots(...)
-  x$str$replace_all(pattern, "")
-}
-
-pl_paste0 <- function(..., collapse = NULL) {
-  dots <- get_dots(...)
-
-  for (i in seq_along(dots)) {
-    if (length(dots[[i]]) == 1 && is.character(dots[[i]])) {
-      dots[[i]] <- paste("pl$lit('", dots[[i]], "')", sep = '')
-    } else {
-      dots[[i]] <- safe_deparse(dots[[i]])
-    }
-  }
-  dots <- paste(unlist(dots), collapse = ", ")
-  paste0('pl$concat_str(', dots, ', separator = "")') |>
-    str2lang() |>
-    eval()
 }

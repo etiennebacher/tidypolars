@@ -1,238 +1,266 @@
-# Rearrange classic R expressions in Polars syntax
+#' @import rlang
 
-rearrange_exprs <- function(.data, dots, create_new = TRUE) {
-
-  to_drop <- list()
-
-  # if there's an across expression, I "explode" it e.g
-  #   'across(contains("a"), mean)'
-  # becomes
-  #   'carb = mean(carb),
-  #    am = mean(am),
-  #    ...
-  for (i in seq_along(dots)) {
-    expr <- dots[[i]]
-    if (is.null(expr)) next
-    deparsed <- safe_deparse(expr)
-    is_across_expr <- startsWith(deparsed, "across(")
-    if (is_across_expr) {
-      dots[[i]] <- unnest_across_expr(expr, .data)
-    }
-  }
-
-  if (any(vapply(dots, is.list, FUN.VALUE = logical(1L)))) {
-    dots <- unlist(dots, recursive = FALSE)
-  }
-
-  out <- lapply(seq_along(dots), function(x) {
-    if (is.null(dots[[x]])) {
-      to_drop[[names(dots)[x]]] <<- 1
-      return(NULL)
-    }
-    deparsed <- safe_deparse(dots[[x]])
-    deparsed <- replace_vars_in_expr(.data, deparsed)
-    new_expr <- replace_funs(deparsed, create_new = create_new)
-    if (isTRUE(create_new)) {
-      paste0(new_expr, "$alias('", names(dots)[x], "')")
-    } else {
-      new_expr
-    }
+translate_dots <- function(.data, ...) {
+  dots <- enexprs(...)
+  out <- lapply(dots, \(x) {
+    translate_expr(.data = .data, x)
   })
-
-  list(to_drop = to_drop, out = out)
-
+  # across() returns a nested list
+  unlist(out, recursive = FALSE, use.names = TRUE)
 }
 
+translate_expr <- function(.data, quo) {
 
-# Either replace R funs by their Polars equivalent or put the R funs into
-# map() or apply()
+  names_data <- pl_colnames(.data)
 
-replace_funs <- function(x, create_new = TRUE) {
-
-  new_x <- x
-  funs <- find_function_call_in_string(x)
-
-  for (f in unique(funs$in_polars)) {
-    replacement <- r_polars_funs[r_polars_funs$r_funs == f, "polars_funs"]
-
-    # a bit hacky but usually when two functions have the same name we want
-    # to prefer the one from Polars "default" namespace
-    if (length(replacement) > 1) {
-      replacement <- replacement[1]
-    }
-    new_x <- gsub(paste0(f, "\\("), paste0("pl_", replacement, "\\("), new_x)
+  if (!is_quosure(quo)) {
+    quo <- enquo(quo)
   }
 
-  contains_in <- grepl("%in%", new_x, perl = TRUE)
-  is_preceded_by_casewhen <- grepl("(?=.*case\\_when\\()(.*%in%)", new_x, perl = TRUE)
-
-  if (contains_in && !is_preceded_by_casewhen) {
-    new_x <- parse_boolean_exprs(new_x)
+  if (is_expression(quo)) {
+    expr <- quo
+    env <- baseenv()
   } else {
-    can_return <<- TRUE
+    expr <- quo_get_expr(quo)
+    env <- quo_get_env(quo)
   }
 
-  if (length(funs$in_polars) == 0 &&
-      length(funs$not_in_polars) == 0 &&
-      length(new_x) == 1) {
-    new_x <- paste0("pl$lit(", new_x, ")")
+  used <- character()
+  # we want to distinguish literals that are passed as-is and should be put in
+  # pl$lit() (e.g "x = TRUE") from those who are passed as a function argument
+  # e.g ("x = mean(y, TRUE)").
+  # TODO: drop the exception about paste0(). I had to put it here because
+  # pl$concat_str() parses classic characters as column names so I had to make
+  # an exception and convert paste0() arguments as polars literals
+  call_is_function <- typeof(expr) == "language" && expr[[1]] != "paste0"
+
+  # split across() call early
+  if (length(expr) > 0 && safe_deparse(expr[[1]]) == "across") {
+    expr <- unpack_across(.data, expr)
   }
 
-  is_polars_expr <- inherits(
-    try(eval(str2lang(new_x)), silent = TRUE),
-    "Expr"
-  )
+  translate <- function(expr) {
 
-  if (is_polars_expr || can_return) {
-    if (isTRUE(create_new)) {
-      paste0("(", new_x, ")")
-    } else {
-      new_x
+    # prepare function and arg if the user provided an anonymous function in
+    # across()
+    if (length(expr) == 1 && is.character(expr) &&
+        startsWith(expr, ".__tidypolars__across_fn")) {
+      col_name <- gsub(".__tidypolars__across_fn.*---", "", expr)
+      expr <- gsub("---.*", "", expr)
+      foo <- sym(expr)
+      expr <- enquo(foo)
     }
+
+    switch(
+      typeof(expr),
+
+      "NULL" = return(list(NULL)),
+
+      character = ,
+      logical = ,
+      integer = ,
+      double = {
+        # if call is a function, then the single value is a param, not a literal
+        if (call_is_function) {
+          return(expr)
+        } else {
+          polars_constant(expr)
+        }
+      },
+
+      symbol = {
+        if (as.character(expr) %in% names_data) {
+          ref <- as.character(expr)
+          polars_col(ref)
+        } else {
+          val <- eval_tidy(expr, env = caller_env(3))
+          polars_constant(val)
+        }
+      },
+
+      language = {
+        name <- as.character(expr[[1]])
+
+        switch(
+          name,
+          "(" = {
+            return(translate(expr[[2]]))
+          },
+          # these two case_ functions are handled separately from other funs
+          # because we don't want to evaluate the conditions inside too soon
+          "case_match" =  {
+            args <- call_args(expr)
+            args$.data <- .data
+            return(do.call(pl_case_match, args))
+          },
+          "case_when" = {
+            args <- call_args(expr)
+            args$.data <- .data
+            return(do.call(pl_case_when, args))
+          },
+          "c" = ,
+          ":" = {
+            out <- tryCatch(eval_tidy(expr, env = caller_env()), error = identity)
+            return(out)
+          },
+          "%in%" = {
+            out <- tryCatch(
+              {
+                lhs <- translate(expr[[2]])
+                rhs <- translate(expr[[3]])
+                lhs$is_in(rhs)
+              },
+              error = identity
+            )
+            return(out)
+          },
+          "is.na" = {
+            out <- tryCatch(
+              {
+                inside <- translate(expr[[2]])
+                inside$is_null()
+              },
+              error = identity
+            )
+            return(out)
+          },
+          "is.nan" = {
+            out <- tryCatch(
+              {
+                inside <- translate(expr[[2]])
+                inside$is_nan()
+              },
+              error = identity
+            )
+            return(out)
+          }
+        )
+
+        k_funs <- known_functions()
+        known_functions <- k_funs$known_functions
+        known_ops <- k_funs$known_ops
+        user_defined <- k_funs$user_defined
+
+        if (!(name %in% c(known_functions, known_ops, user_defined))) {
+          # last possibility in function is unknown: it's an anonymous function
+          # defined in an across() call
+          obj_name <- quo_name(expr)
+          if (startsWith(obj_name, ".__tidypolars__across_fn")) {
+            fn <- eval_bare(global_env()[[obj_name]])
+            col_name <- sym(col_name)
+            args <- translate(col_name)
+            suppressWarnings({
+              tr <- try(do.call(fn, list(args)), silent = TRUE)
+            })
+            if (inherits(tr, "Expr")) {
+              return(tr)
+            } else {
+              abort(
+                c("Could not evaluate an anonymous function in `across()`.",
+                  "i" = "Are you sure the anonymous function returns a Polars expression?"),
+                call = caller_env(7)
+              )
+            }
+          } else {
+            abort(paste("Unknown function:", name))
+          }
+        }
+
+        args <- lapply(as.list(expr[-1]), translate)
+        if (name %in% known_functions) {
+          name <- r_polars_funs$polars_funs[r_polars_funs$r_funs == name][1]
+          name <- paste0("pl_", name)
+        }
+
+        fun <- do.call(name, args)
+        fun
+      },
+
+      abort(paste("Internal: Unknown type", typeof(expr)))
+    )
+  }
+
+  # happens because across() calls get split earlier
+  if ((is.vector(expr) && length(expr) > 1) || is.list(expr)) {
+    lapply(expr, translate)
   } else {
-    rlang::abort("Can't evaluate expression")
+    translate(expr)
   }
 }
 
+polars_constant <- function(x) {
+  polars::pl$lit(x)
+}
 
+polars_col <- function(x) {
+  polars::pl$col(x)
+}
 
-# In a deparsed expression, find the variable names and add pl$col() around
-# them
-
-replace_vars_in_expr <- function(.data, deparsed) {
-  p <- parse(
-    text = deparsed,
-    keep.source = TRUE
-  )
-  p_d <- utils::getParseData(p)
-  vars_used <- p_d[p_d$token %in% c("SYMBOL"), "text"]
-  vars_used <- unique(vars_used[vars_used %in% pl_colnames(.data)])
-
-  p_d_2 <- p_d
-  for (i in vars_used) {
-    p_d_2[p_d_2$text == i, "text"] <- paste0("pl$col('", i, "')")
+# Look for user-defined functions in the global environment
+get_globenv_functions <- function() {
+  x <- ls(global_env())
+  list_fns <- list()
+  for (i in x) {
+    foo <- get(i, envir = global_env())
+    if (is.function(foo)) {
+      list_fns[[i]] <- i
+    }
   }
-
-  # just prettier when I need to see the expression to debug
-  # p_d_2[p_d_2$text == ",", "text"] <- ", "
-
-  paste(p_d_2$text, collapse = "")
+  unlist(list_fns)
 }
-
-
-# In a deparsed expression, find the function calls and show which has an
-# equivalent in polars and which hasn't
-
-find_function_call_in_string <- function(x) {
-
-  p <- parse(
-    text = x,
-    keep.source = TRUE
-  )
-  p_d <- utils::getParseData(p)
-
-  function_calls <- p_d[
-    p_d$token %in% c("SYMBOL_FUNCTION_CALL", "'+'", "'-'") |
-      p_d$text == "%in%",
-    "text"
-  ]
-
-  pl_exprs <- r_polars_funs
-
-  list(
-    in_polars = function_calls[function_calls %in% pl_exprs$r_funs],
-    not_in_polars = function_calls[!function_calls %in% pl_exprs$r_funs]
-  )
-
-}
-
 
 # Used when I convert R functions to polars functions. E.g warn that na.rm = TRUE
 # exists in the R function but will not be used in the polars function.
-
 check_empty_dots <- function(...) {
   dots <- get_dots(...)
   if (length(dots) > 0) {
     fn <- deparse(match.call(call = sys.call(sys.parent()))[1])
     fn <- gsub("^pl\\_", "", fn)
-    rlang::warn(paste0("\nWhen the dataset is a Polars DataFrame or LazyFrame, `", fn, "` only needs one argument. Additional arguments will not be used."))
+    rlang::warn(
+      paste0("\nWhen the dataset is a Polars DataFrame or LazyFrame, `", fn,
+             "`\nonly needs one argument. Additional arguments will not be used."))
   }
 }
 
-# Convert an across() call to a list of calls
-
-unnest_across_expr <- function(expr, .data) {
-
-  if (".cols" %in% names(expr)) {
-    .cols <- expr[[".cols"]]
-  } else {
-    .cols <- expr[[2]]
-  }
-
-  if (".fns" %in% names(expr)) {
-    .fns <- expr[[".fns"]]
-  } else {
-    .fns <- expr[[3]]
-  }
-
-  if (".names" %in% names(expr)) {
-    .names <- expr[[".names"]]
-  } else if (length(expr) >= 4) {
-    .names <- expr[[4]]
-  } else {
-    .names <- NULL
-  }
-
-  .cols <- tidyselect_named_arg(.data, .cols)
-
-  out <- vector("list", length = length(.cols))
-  names(out) <- .cols
-
-  if (length(.fns) == 1) { # just a function name, e.g .fns = mean
-    for (i in .cols) {
-      out[[i]] <- paste0(.fns, "(", i, ")") |>
-        str2lang()
-    }
-  } else if (length(.fns) == 2) { # anonymous function, e.g .fns = ~mean(.x)
-    dep <- safe_deparse(.fns[[2]])
-    for (i in .cols) {
-      out[[i]] <- gsub("\\(\\.x,", paste0("\\(", i, ","), dep)
-      out[[i]] <- gsub("\\(\\.x\\)", paste0("\\(", i, "\\)"), out[[i]])
-      out[[i]] <- gsub(",\\.x\\),", paste0(",", i, "\\)"), out[[i]])
-      out[[i]] <- str2lang(out[[i]])
-    }
-  } else { # TODO: function that I can't convert to polars, e.g .fns = function(x) mean(x)
-    rlang::abort("Anonymous functions are not supported in `across()` for now.")
-  }
-
-  # modify names of new variables if necessary
-  if (!is.null(.names)) {
-    if (grepl("{\\.fn}", .names, perl = TRUE) && length(.fns) > 2) {
-      rlang::abort("Can't use `{.fn}` in argument `.names` of `across()` with anonymous functions.")
-    }
-    if (length(.fns) == 2) {
-      .fns <- .fns[[2]][1]
-    }
-    for (i in seq_along(out)) {
-      new_name <- gsub("{\\.col}", .cols[[i]], .names, perl = TRUE)
-      new_name <- gsub("{\\.fn}", .fns, new_name, perl = TRUE)
-      names(out)[[i]] <- new_name
+# TODO: do something with this?
+check_polars_expr <- function(exprs, .data) {
+  out <- lapply(exprs, \(x) {
+    eval_tidy(x, data = .data$to_data_frame())
+  })
+  not_polars_expr <- which(vapply(out, \(x) !inherits(x, "Expr"), logical(1L)))
+  if (length(not_polars_expr) > 0) {
+    fault <- exprs[not_polars_expr]
+    errors <- lapply(seq_along(fault), \(x) {
+      fn_call <- fault[[x]][[2]]
+      kf <- known_functions()
+      if (safe_deparse(fn_call[[1]]) %in% c(kf$known_functions, kf$kwnow_ops)) {
+        return(invisible())
+      }
+      paste0(names(fault)[x], " = ", safe_deparse(fn_call))
+    })
+    errors <- Filter(\(x) length(x) > 0, errors)
+    if (length(errors) > 0) {
+      names(errors) <- rep("*", length(errors))
+      abort(
+        c(
+          paste0("The following call(s) do not return a Polars expression:"),
+          errors
+        ),
+        call = caller_env()
+      )
     }
   }
-
-  unlist(out)
 }
 
-
-
-build_polars_exprs <- function(.data, ...) {
-  dots <- get_dots(...)
-  exprs <- rearrange_exprs(.data, dots)
-  to_drop <- names(exprs$to_drop)
-
-  exprs <- Filter(Negate(is.null), exprs$out)
-  exprs <- unlist(exprs)
-  exprs <- paste(exprs, collapse = ", ")
-
-  list(exprs = exprs, to_drop = to_drop)
+# Return a list of all functions / operations we know
+known_functions <- function() {
+  known_functions <- r_polars_funs$r_funs
+  known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
+                 "&", "|", "!")
+  user_defined <- get_globenv_functions()
+  list(
+    known_functions = known_functions,
+    known_ops = known_ops,
+    user_defined = user_defined
+  )
 }

@@ -33,23 +33,22 @@
 pl_filter <- function(.data, ...) {
 
   check_polars_data(.data)
-  dots <- get_dots(...)
-
-  expr <- rearrange_exprs(.data, dots, create_new = FALSE)[[2]] |>
-    unlist()
-
-  expr <- parse_boolean_exprs(expr)
 
   grps <- attributes(.data)$pl_grps
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
+  polars_exprs <- translate_dots(.data, ...)
+
   if (is_grouped) {
-    expr <- paste0("(", expr, ")$over(grps)")
+    polars_exprs <- lapply(polars_exprs, \(x) x$over(grps))
   }
 
-  expr <- str2lang(expr)
-  out <- .data$filter(eval(expr))
+  # this is only applied between expressions that were separated by a comma
+  # in the filter() call. So it won't replace the "|" call.
+  polars_exprs <- Reduce(`&`, polars_exprs)
+
+  out <- .data$filter(polars_exprs)
   attr(out, "maintain_grp_order") <- mo
   attr(out, "pl_grps") <- grps
   out
