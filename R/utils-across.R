@@ -7,7 +7,7 @@ unpack_across <- function(.data, expr) {
   .fns <- get_arg(".fns", 2, expr)
   .names <- get_arg(".names", 3, expr)
 
-  validate <- function(x) {
+  harmonize <- function(x) {
     if (is_formula(x)) { # e.g ~ mean(.x) -> mean(.x)
       x[[2]]
     } else if (is_symbol(x)) { # e.g mean -> mean(.x)
@@ -25,9 +25,9 @@ unpack_across <- function(.data, expr) {
   }
 
   if (is.list(.fns)) {
-    .new_fns <- Map(function(x) validate(x), .fns)
+    .new_fns <- Map(function(x) harmonize(x), .fns)
   } else {
-    .new_fns <- list(validate(.fns))
+    .new_fns <- list(harmonize(.fns))
     if (is_symbol(.fns)) {
       names(.new_fns) <- safe_deparse(.fns)
     }
@@ -81,14 +81,14 @@ build_separate_calls <- function(.cols, .fns, .names, .data) {
 }
 
 # extract arg from across(), either from name or position
-get_arg <- function(name, position, list) {
-  out <- if (name %in% names(list)) {
-    list[[name]]
+get_arg <- function(name, position, expr) {
+  out <- if (name %in% names(expr)) {
+    expr[[name]]
   } else {
     # I provide the position in across() but the call to "across" takes the
     # first slot of the list
-    if (position + 1 <= length(list)) {
-      list[[position + 1]]
+    if (position + 1 <= length(expr)) {
+      expr[[position + 1]]
     }
   }
   # drop the list() call if the user provided a list of functions

@@ -41,6 +41,8 @@ translate_expr <- function(.data, quo) {
 
   translate <- function(expr) {
 
+    # prepare function and arg if the user provided an anonymous function in
+    # across()
     if (length(expr) == 1 && is.character(expr) &&
         startsWith(expr, ".__tidypolars__across_fn")) {
       col_name <- gsub(".__tidypolars__across_fn.*---", "", expr)
@@ -58,6 +60,7 @@ translate_expr <- function(.data, quo) {
       logical = ,
       integer = ,
       double = {
+        # if call is a function, then the single value is a param, not a literal
         if (call_is_function) {
           return(expr)
         } else {
@@ -70,7 +73,7 @@ translate_expr <- function(.data, quo) {
           ref <- as.character(expr)
           polars_col(ref)
         } else {
-          val <- eval_tidy(expr, env = caller_env())
+          val <- eval_tidy(expr, env = caller_env(3))
           polars_constant(val)
         }
       },
@@ -83,6 +86,8 @@ translate_expr <- function(.data, quo) {
           "(" = {
             return(translate(expr[[2]]))
           },
+          # these two case_ functions are handled separately from other funs
+          # because we don't want to evaluate the conditions inside too soon
           "case_match" =  {
             args <- call_args(expr)
             args$.data <- .data
@@ -136,12 +141,12 @@ translate_expr <- function(.data, quo) {
         known_ops <- k_funs$known_ops
         user_defined <- k_funs$user_defined
 
-        known <- c(known_functions, known_ops)
-
-        if (!(name %in% c(known, user_defined))) {
-          potential_name <- quo_name(expr)
-          if (startsWith(potential_name, ".__tidypolars__across_fn")) {
-            fn <- eval_bare(global_env()[[potential_name]])
+        if (!(name %in% c(known_functions, known_ops, user_defined))) {
+          # last possibility in function is unknown: it's an anonymous function
+          # defined in an across() call
+          obj_name <- quo_name(expr)
+          if (startsWith(obj_name, ".__tidypolars__across_fn")) {
+            fn <- eval_bare(global_env()[[obj_name]])
             col_name <- sym(col_name)
             args <- translate(col_name)
             suppressWarnings({
@@ -157,7 +162,7 @@ translate_expr <- function(.data, quo) {
               )
             }
           } else {
-            abort(paste0("Unknown function: ", name))
+            abort(paste("Unknown function:", name))
           }
         }
 
@@ -171,7 +176,7 @@ translate_expr <- function(.data, quo) {
         fun
       },
 
-      abort(paste0("Internal: Unknown type ", typeof(expr)))
+      abort(paste("Internal: Unknown type", typeof(expr)))
     )
   }
 
@@ -212,10 +217,12 @@ check_empty_dots <- function(...) {
     fn <- deparse(match.call(call = sys.call(sys.parent()))[1])
     fn <- gsub("^pl\\_", "", fn)
     rlang::warn(
-      paste0("\nWhen the dataset is a Polars DataFrame or LazyFrame, `", fn, "`\n only needs one argument. Additional arguments will not be used."))
+      paste0("\nWhen the dataset is a Polars DataFrame or LazyFrame, `", fn,
+             "`\nonly needs one argument. Additional arguments will not be used."))
   }
 }
 
+# TODO: do something with this?
 check_polars_expr <- function(exprs, .data) {
   out <- lapply(exprs, \(x) {
     eval_tidy(x, data = .data$to_data_frame())
@@ -245,7 +252,7 @@ check_polars_expr <- function(exprs, .data) {
   }
 }
 
-
+# Return a list of all functions / operations we know
 known_functions <- function() {
   known_functions <- r_polars_funs$r_funs
   known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
