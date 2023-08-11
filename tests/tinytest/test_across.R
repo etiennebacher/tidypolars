@@ -1,7 +1,6 @@
 source("helpers.R")
 using("tidypolars")
 
-# devtools::load_all()
 test <- polars::pl$DataFrame(head(mtcars))
 
 # single word function
@@ -130,14 +129,73 @@ expect_colnames(
       ~mean(.x),
       .names = "{.fn}_{.col}"
     ),
-    cyl = cyl + 1
+    cyl = NULL
   ),
   c(
-    "mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am", "gear", "carb",
-    "mean_drat", "mean_am", "mean_gear", "mean_carb"
+    "mpg", "disp", "hp", "drat", "wt", "qsec", "vs", "am", "gear", "carb",
+    "1_drat", "1_am", "1_gear", "1_carb"
   )
 )
 
-# TODO: add a test where I pass a custom function
+# List of functions ---------------
 
-# TODO: add a test with a list of functions
+expect_equal(
+  pl_mutate(
+    test,
+    across(
+      .cols = mpg,
+      list(mean, median)
+    )
+  ),
+  pl_mutate(test, mpg_mean = mean(mpg), mpg_median = median(mpg))
+)
+
+expect_equal(
+  pl_mutate(
+    test,
+    across(
+      .cols = mpg,
+      list(my_mean = mean, my_median = median)
+    )
+  ),
+  pl_mutate(test, my_mpg_mean = mean(mpg), my_mpg_median = median(mpg))
+)
+
+expect_equal(
+  pl_mutate(
+    test,
+    across(
+      .cols = mpg,
+      list(mean = mean, median = median),
+      .nms = "{.col}_foo_{.fn}"
+    )
+  ),
+  pl_mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
+)
+
+expect_equal(
+  pl_mutate(
+    test,
+    across(
+      .cols = mpg,
+      list(mean = ~mean(.x), median = median),
+      .nms = "{.col}_foo_{.fn}"
+    )
+  ),
+  pl_mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
+)
+
+# just one check for summarize()
+
+test_grp <- pl_group_by(test, cyl)
+
+expect_equal(
+  pl_summarize(
+    test_grp,
+    across(
+      .cols = mpg,
+      list(my_mean = mean, my_median = median)
+    )
+  ),
+  pl_summarize(test_grp, my_mpg_mean = mean(mpg), my_mpg_median = median(mpg))
+)

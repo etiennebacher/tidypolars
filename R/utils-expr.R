@@ -2,15 +2,14 @@
 
 translate_dots <- function(.data, ...) {
   dots <- enexprs(...)
-  out <- lapply(dots, translate_expr, .data = .data)
-  # calling across() returns a nested list
-  if (is.recursive(out)) {
-    out <- unlist(out, recursive = FALSE)
-  }
-  out
+  out <- lapply(dots, \(x) {
+    translate_expr(.data = .data, x)
+  })
+  # across() returns a nested list
+  unlist(out, recursive = FALSE, use.names = TRUE)
 }
 
-translate_expr <- function(quo, .data) {
+translate_expr <- function(.data, quo) {
 
   names_data <- pl_colnames(.data)
 
@@ -28,14 +27,20 @@ translate_expr <- function(quo, .data) {
 
   used <- character()
   # we want to distinguish literals that are passed as-is and should be put in
-  # pl$lit() from those who are passed as a function argument.
+  # pl$lit() (e.g "x = TRUE") from those who are passed as a function argument
+  # e.g ("x = mean(y, TRUE)").
   call_is_function <- typeof(expr) == "language"
+
+  # split across() call early
+  if (length(expr) > 0 && safe_deparse(expr[[1]]) == "across") {
+    expr <- unpack_across(.data, expr)
+  }
 
   translate <- function(expr) {
     switch(
       typeof(expr),
 
-      "NULL" = return(NULL),
+      "NULL" = return(list(NULL)),
 
       character = ,
       logical = ,
@@ -101,10 +106,6 @@ translate_expr <- function(quo, .data) {
               error = identity
             )
             return(out)
-          },
-          "across" = {
-            out <- unpack_across(.data, expr)
-            return(out)
           }
         )
 
@@ -132,7 +133,12 @@ translate_expr <- function(quo, .data) {
     )
   }
 
-  translate(expr)
+  # happens because across() calls get split earlier
+  if (is.list(expr)) {
+    lapply(expr, translate)
+  } else {
+    translate(expr)
+  }
 }
 
 polars_constant <- function(x) {

@@ -107,6 +107,14 @@ expect_equal(
   c(iris$Sepal.Width*2, iris$Petal.Width*3)
 )
 
+# drop columns
+
+expect_colnames(
+  pl_mutate(pl_iris, Sepal.Length = 1, Species = NULL),
+  names(iris)[1:4]
+)
+
+
 # grouped data (checked with dplyr)
 
 out <- pl_iris |>
