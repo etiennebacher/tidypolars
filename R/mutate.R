@@ -44,6 +44,26 @@
 #'   pl_mutate(
 #'     foo = mean(Sepal.Length)
 #'   )
+#'
+#' # across() is available
+#' pl_iris |>
+#'   pl_mutate(
+#'     across(.cols = contains("Sepal"), .fns = mean, .names = "{.fn}_of_{.col}")
+#'   )
+#
+#' # It can receive several types of functions:
+#' pl_iris |>
+#'   pl_mutate(
+#'     across(
+#'       .cols = contains("Sepal"),
+#'       .fns = list(mean = mean, sd = ~ sd(.x)),
+#'       .names = "{.fn}_of_{.col}"
+#'     )
+#'   )
+#'
+#' # Embracing an external variable works
+#' some_value <- 1
+#' pl_mutate(pl_iris, x = {{ some_value }})
 
 
 pl_mutate <- function(.data, ...) {
