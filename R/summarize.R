@@ -21,7 +21,7 @@ pl_summarize <- function(.data, ...) {
   check_polars_data(.data)
 
   grps <- attributes(.data)$pl_grps
-  mo <- attributes(.data)$maintain_order
+  mo <- attributes(.data)$maintain_grp_order
   if (is.null(mo)) mo <- FALSE
   is_grouped <- !is.null(grps)
 

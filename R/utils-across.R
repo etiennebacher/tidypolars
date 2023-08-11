@@ -54,7 +54,11 @@ build_separate_calls <- function(.cols, .fns, .names, .data) {
       } else {
         nm <- .cols[i]
         if (length(.fns) > 1) {
-          nm <- paste0(nm, "_", names(.fns)[j])
+          if (!is.null(names(.fns))) {
+            nm <- paste0(nm, "_", names(.fns)[j])
+          } else {
+            nm <- paste0(nm, "_", j)
+          }
         }
       }
 

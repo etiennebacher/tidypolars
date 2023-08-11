@@ -194,7 +194,7 @@ expect_equal(
       list(mean, median)
     )
   ) |> to_r(),
-  pl_mutate(test, mpg_mean = mean(mpg), mpg_median = median(mpg)) |> to_r()
+  pl_mutate(test, mpg_1 = mean(mpg), mpg_2 = median(mpg)) |> to_r()
 )
 
 expect_equal(
@@ -205,7 +205,7 @@ expect_equal(
       list(my_mean = mean, my_median = median)
     )
   ) |> to_r(),
-  pl_mutate(test, my_mpg_mean = mean(mpg), my_mpg_median = median(mpg)) |> to_r()
+  pl_mutate(test, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg)) |> to_r()
 )
 
 expect_equal(
@@ -234,7 +234,7 @@ expect_equal(
 
 # just one check for summarize()
 
-test_grp <- pl_group_by(test, cyl)
+test_grp <- pl_group_by(test, cyl, maintain_order = TRUE)
 
 expect_equal(
   pl_summarize(
@@ -244,6 +244,6 @@ expect_equal(
       list(my_mean = mean, my_median = median)
     )
   ) |> to_r(),
-  pl_summarize(test_grp, my_mpg_mean = mean(mpg), my_mpg_median = median(mpg)) |>
+  pl_summarize(test_grp, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg)) |>
     to_r()
 )

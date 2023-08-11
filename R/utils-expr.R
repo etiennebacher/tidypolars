@@ -41,7 +41,7 @@ translate_expr <- function(.data, quo) {
 
   translate <- function(expr) {
 
-    if (length(expr) == 1 && all(is.character(expr)) &&
+    if (length(expr) == 1 && is.character(expr) &&
         startsWith(expr, ".__tidypolars__across_fn")) {
       col_name <- gsub(".__tidypolars__across_fn.*---", "", expr)
       expr <- gsub("---.*", "", expr)
@@ -176,7 +176,7 @@ translate_expr <- function(.data, quo) {
   }
 
   # happens because across() calls get split earlier
-  if (is.vector(expr) || is.list(expr)) {
+  if ((is.vector(expr) && length(expr) > 1) || is.list(expr)) {
     lapply(expr, translate)
   } else {
     translate(expr)
