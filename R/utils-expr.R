@@ -40,6 +40,15 @@ translate_expr <- function(.data, quo) {
   }
 
   translate <- function(expr) {
+
+    if (length(expr) == 1 && all(is.character(expr)) &&
+        startsWith(expr, ".__tidypolars__across_fn")) {
+      col_name <- gsub(".__tidypolars__across_fn.*---", "", expr)
+      expr <- gsub("---.*", "", expr)
+      foo <- sym(expr)
+      expr <- enquo(foo)
+    }
+
     switch(
       typeof(expr),
 
@@ -129,8 +138,27 @@ translate_expr <- function(.data, quo) {
 
         known <- c(known_functions, known_ops)
 
-        if (!(name %in% known) && !name %in% user_defined) {
-          abort(paste0("Unknown function: ", name))
+        if (!(name %in% c(known, user_defined))) {
+          potential_name <- quo_name(expr)
+          if (startsWith(potential_name, ".__tidypolars__across_fn")) {
+            fn <- eval_bare(global_env()[[potential_name]])
+            col_name <- sym(col_name)
+            args <- translate(col_name)
+            suppressWarnings({
+              tr <- try(do.call(fn, list(args)), silent = TRUE)
+            })
+            if (inherits(tr, "Expr")) {
+              return(tr)
+            } else {
+              abort(
+                c("Could not evaluate an anonymous function in `across()`.",
+                  "i" = "Are you sure the anonymous function returns a Polars expression?"),
+                call = caller_env(7)
+              )
+            }
+          } else {
+            abort(paste0("Unknown function: ", name))
+          }
         }
 
         args <- lapply(as.list(expr[-1]), translate)
@@ -148,7 +176,7 @@ translate_expr <- function(.data, quo) {
   }
 
   # happens because across() calls get split earlier
-  if (is.list(expr)) {
+  if (is.vector(expr) || is.list(expr)) {
     lapply(expr, translate)
   } else {
     translate(expr)

@@ -13,6 +13,14 @@ unpack_across <- function(.data, expr) {
     } else if (is_symbol(x)) {
       out <- call2(x)
       call_modify(out, quote(.x))
+    } else {
+      # if the user gives an anonymous function, we assign it in the global env
+      # with a specific prefix to find it in translate()
+      # Note that the function is in the global env but can only be obtained
+      # with the correct name (i.e ls(global_env()) doesn't show it).
+      nm <- paste0(".__tidypolars__across_fn_", paste(sample(letters, 10), collapse = ""))
+      env_bind(.env = global_env(), !!nm := x)
+      nm
     }
   }
 
@@ -32,8 +40,10 @@ unpack_across <- function(.data, expr) {
 build_separate_calls <- function(.cols, .fns, .names, .data) {
   list_calls <- list()
   has_names <- !is.null(.names) && length(.names) == 1
+
   for (i in seq_along(.cols)) {
     for (j in seq_along(.fns)) {
+
       if (has_names) {
         nm <- gsub("{\\.col}", .cols[i], .names, perl = TRUE)
         if (is.null(names(.fns)[j])) {
@@ -47,6 +57,18 @@ build_separate_calls <- function(.cols, .fns, .names, .data) {
           nm <- paste0(nm, "_", names(.fns)[j])
         }
       }
+
+      # if anonymous function, we return the name starting with ".__tidypolars__"
+      # so that we can get the function back in translate()
+      if (is.character(.fns[[j]])) {
+        # TODO: dirty hack
+        if (endsWith(nm, "_")) {
+          nm <- paste0(nm, j)
+        }
+        list_calls[[nm]] <- paste0(.fns[[j]], "---", .cols[i])
+        next
+      }
+
       arg <- sym(.cols[i])
       list_calls[[nm]] <- expr_substitute(.fns[[j]], quote(.x), arg)
     }

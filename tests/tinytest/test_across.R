@@ -8,12 +8,9 @@ test <- polars::pl$DataFrame(head(mtcars))
 expect_equal(
   pl_mutate(
     test,
-    across(
-      .cols = contains("a"),
-      mean
-    ),
+    across(.cols = contains("a"), mean),
     cyl = cyl + 1
-  ),
+  ) |> to_r(),
   pl_mutate(
     test,
     drat = mean(drat),
@@ -21,7 +18,7 @@ expect_equal(
     gear = mean(gear),
     carb = mean(carb),
     cyl = cyl + 1
-  )
+  ) |> to_r()
 )
 
 # purrr-style function
@@ -29,12 +26,9 @@ expect_equal(
 expect_equal(
   pl_mutate(
     test,
-    across(
-      .cols = contains("a"),
-      ~ mean(.x)
-    ),
+    across(.cols = contains("a"), ~ mean(.x)),
     cyl = cyl + 1
-  ),
+  ) |> to_r(),
   pl_mutate(
     test,
     drat = mean(drat),
@@ -42,7 +36,60 @@ expect_equal(
     gear = mean(gear),
     carb = mean(carb),
     cyl = cyl + 1
-  )
+  ) |> to_r()
+)
+
+# anonymous functions has to return a Polars expression
+
+expect_equal(
+  pl_mutate(
+    test,
+    across(.cols = contains("ar"), \(x) x$mean())
+  ) |> to_r(),
+  pl_mutate(
+    test,
+    gear = mean(gear),
+    carb = mean(carb)
+  ) |> to_r()
+)
+
+expect_equal(
+  pl_mutate(
+    test,
+    across(
+      .cols = contains("ar"),
+      list(
+        mean = \(x) x$mean(),
+        std = \(x) x$std()
+      )
+    )
+  ) |> to_r(),
+  pl_mutate(
+    test,
+    gear_mean = mean(gear),
+    gear_std = sd(gear),
+    carb_mean = mean(carb),
+    carb_std = sd(carb),
+  ) |> to_r()
+)
+
+expect_colnames(
+  pl_mutate(
+    test,
+    across(
+      .cols = contains("ar"),
+      list(\(x) x$mean(), \(x) x$std())
+    )
+  ),
+  c(names(mtcars), "gear_1", "gear_2", "carb_1", "carb_2")
+)
+
+expect_error(
+  pl_mutate(
+    test,
+    across(.cols = contains("a"), \(x) mean(x)),
+  ) |> to_r(),
+  "Are you sure the anonymous function"
 )
 
 # custom function
@@ -60,7 +107,7 @@ expect_equal(
       foo
     ),
     cyl = cyl + 1
-  ),
+  ) |> to_r(),
   pl_mutate(
     test,
     drat = foo(drat),
@@ -68,7 +115,7 @@ expect_equal(
     gear = foo(gear),
     carb = foo(carb),
     cyl = cyl + 1
-  )
+  ) |> to_r()
 )
 
 # groups
@@ -146,8 +193,8 @@ expect_equal(
       .cols = mpg,
       list(mean, median)
     )
-  ),
-  pl_mutate(test, mpg_mean = mean(mpg), mpg_median = median(mpg))
+  ) |> to_r(),
+  pl_mutate(test, mpg_mean = mean(mpg), mpg_median = median(mpg)) |> to_r()
 )
 
 expect_equal(
@@ -157,8 +204,8 @@ expect_equal(
       .cols = mpg,
       list(my_mean = mean, my_median = median)
     )
-  ),
-  pl_mutate(test, my_mpg_mean = mean(mpg), my_mpg_median = median(mpg))
+  ) |> to_r(),
+  pl_mutate(test, my_mpg_mean = mean(mpg), my_mpg_median = median(mpg)) |> to_r()
 )
 
 expect_equal(
@@ -169,8 +216,8 @@ expect_equal(
       list(mean = mean, median = median),
       .nms = "{.col}_foo_{.fn}"
     )
-  ),
-  pl_mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
+  ) |> to_r(),
+  pl_mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg)) |> to_r()
 )
 
 expect_equal(
@@ -181,8 +228,8 @@ expect_equal(
       list(mean = ~mean(.x), median = median),
       .nms = "{.col}_foo_{.fn}"
     )
-  ),
-  pl_mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
+  ) |> to_r(),
+  pl_mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg)) |> to_r()
 )
 
 # just one check for summarize()
@@ -196,6 +243,7 @@ expect_equal(
       .cols = mpg,
       list(my_mean = mean, my_median = median)
     )
-  ),
-  pl_summarize(test_grp, my_mpg_mean = mean(mpg), my_mpg_median = median(mpg))
+  ) |> to_r(),
+  pl_summarize(test_grp, my_mpg_mean = mean(mpg), my_mpg_median = median(mpg)) |>
+    to_r()
 )
