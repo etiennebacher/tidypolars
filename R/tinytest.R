@@ -55,7 +55,7 @@ expect_equal_lazy <- function(x, y, ...) {
 #'
 #' @export
 #' @keywords internal
-expect_error_lazy <- function(current, pattern, ...) {
+expect_error_lazy <- function(current, pattern = ".*", ...) {
   tinytest::expect_error(current$collect(), pattern, ...)
 }
 

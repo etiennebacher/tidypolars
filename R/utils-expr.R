@@ -29,7 +29,10 @@ translate_expr <- function(.data, quo) {
   # we want to distinguish literals that are passed as-is and should be put in
   # pl$lit() (e.g "x = TRUE") from those who are passed as a function argument
   # e.g ("x = mean(y, TRUE)").
-  call_is_function <- typeof(expr) == "language"
+  # TODO: drop the exception about paste0(). I had to put it here because
+  # pl$concat_str() parses classic characters as column names so I had to make
+  # an exception and convert paste0() arguments as polars literals
+  call_is_function <- typeof(expr) == "language" && expr[[1]] != "paste0"
 
   # split across() call early
   if (length(expr) > 0 && safe_deparse(expr[[1]]) == "across") {
@@ -132,6 +135,7 @@ translate_expr <- function(.data, quo) {
 
         args <- lapply(as.list(expr[-1]), translate)
         if (name %in% known_functions) {
+          name <- r_polars_funs$polars_funs[r_polars_funs$r_funs == name][1]
           name <- paste0("pl_", name)
         }
 

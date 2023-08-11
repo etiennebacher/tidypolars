@@ -139,7 +139,7 @@ pl_forward_fill <- function(x, ...) {
   x$forward_fill()
 }
 
-pl_between <- function(x, left, right, include_bounds = TRUE, ...) {
+pl_is_between <- function(x, left, right, include_bounds = TRUE, ...) {
   check_empty_dots(...)
   x$is_between(start = left, end = right, include_bounds = include_bounds)
 }
