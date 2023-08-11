@@ -29,11 +29,14 @@ delete columns (by setting their value to NULL)."><!-- mathjax --><script src="h
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/faq.html">FAQ</a>
-    <a class="dropdown-item" href="../articles/parsing-expressions.html">Parsing expressions</a>
+    <a class="dropdown-item" href="../articles/r-and-polars-expressions.html">R and Polars expressions</a>
   </div>
 </li>
 <li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -177,6 +180,75 @@ Polars syntax.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ virginica ┆ 6.588 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.9          ┆ 3.0         ┆ 5.1          ┆ 1.8         ┆ virginica ┆ 6.588 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └──────────────┴─────────────┴──────────────┴─────────────┴───────────┴───────┘</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># across() is available</span></span></span>
+<span class="r-in"><span><span class="va">pl_iris</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">pl_mutate</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span>.cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"Sepal"</span><span class="op">)</span>, .fns <span class="op">=</span> <span class="va">mean</span>, .names <span class="op">=</span> <span class="st">"{.fn}_of_{.col}"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (150, 7)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌────────────┬─────────────┬───────────────┬─────────────┬───────────┬──────────────┬──────────────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ Sepal.Leng ┆ Sepal.Width ┆ Petal.Length  ┆ Petal.Width ┆ Species   ┆ mean_of_Sepa ┆ mean_of_Sepa │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ th         ┆ ---         ┆ ---           ┆ ---         ┆ ---       ┆ l.Length     ┆ l.Width      │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---        ┆ f64         ┆ f64           ┆ f64         ┆ cat       ┆ ---          ┆ ---          │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64        ┆             ┆               ┆             ┆           ┆ f64          ┆ f64          │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞════════════╪═════════════╪═══════════════╪═════════════╪═══════════╪══════════════╪══════════════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.1        ┆ 3.5         ┆ 1.4           ┆ 0.2         ┆ setosa    ┆ 5.843333     ┆ 3.057333     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.9        ┆ 3.0         ┆ 1.4           ┆ 0.2         ┆ setosa    ┆ 5.843333     ┆ 3.057333     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.7        ┆ 3.2         ┆ 1.3           ┆ 0.2         ┆ setosa    ┆ 5.843333     ┆ 3.057333     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.6        ┆ 3.1         ┆ 1.5           ┆ 0.2         ┆ setosa    ┆ 5.843333     ┆ 3.057333     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ …          ┆ …           ┆ …             ┆ …           ┆ …         ┆ …            ┆ …            │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.3        ┆ 2.5         ┆ 5.0           ┆ 1.9         ┆ virginica ┆ 5.843333     ┆ 3.057333     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.5        ┆ 3.0         ┆ 5.2           ┆ 2.0         ┆ virginica ┆ 5.843333     ┆ 3.057333     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.2        ┆ 3.4         ┆ 5.4           ┆ 2.3         ┆ virginica ┆ 5.843333     ┆ 3.057333     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.9        ┆ 3.0         ┆ 5.1           ┆ 1.8         ┆ virginica ┆ 5.843333     ┆ 3.057333     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └────────────┴─────────────┴───────────────┴─────────────┴───────────┴──────────────┴──────────────┘</span>
+<span class="r-in"><span><span class="co"># It can receive several types of functions:</span></span></span>
+<span class="r-in"><span><span class="va">pl_iris</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">pl_mutate</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      .cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"Sepal"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      .fns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="va">mean</span>, sd <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      .names <span class="op">=</span> <span class="st">"{.fn}_of_{.col}"</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (150, 9)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌────────────┬───────────┬────────────┬───────────┬───┬────────────┬────────────┬────────────┬────────────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ Sepal.Leng ┆ Sepal.Wid ┆ Petal.Leng ┆ Petal.Wid ┆ … ┆ mean_of_Se ┆ sd_of_Sepa ┆ mean_of_Se ┆ sd_of_Sepa │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ th         ┆ th        ┆ th         ┆ th        ┆   ┆ pal.Length ┆ l.Length   ┆ pal.Width  ┆ l.Width    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---        ┆ ---       ┆ ---        ┆ ---       ┆   ┆ ---        ┆ ---        ┆ ---        ┆ ---        │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64        ┆ f64       ┆ f64        ┆ f64       ┆   ┆ f64        ┆ f64        ┆ f64        ┆ f64        │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞════════════╪═══════════╪════════════╪═══════════╪═══╪════════════╪════════════╪════════════╪════════════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.1        ┆ 3.5       ┆ 1.4        ┆ 0.2       ┆ … ┆ 5.843333   ┆ 0.828066   ┆ 3.057333   ┆ 0.435866   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.9        ┆ 3.0       ┆ 1.4        ┆ 0.2       ┆ … ┆ 5.843333   ┆ 0.828066   ┆ 3.057333   ┆ 0.435866   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.7        ┆ 3.2       ┆ 1.3        ┆ 0.2       ┆ … ┆ 5.843333   ┆ 0.828066   ┆ 3.057333   ┆ 0.435866   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.6        ┆ 3.1       ┆ 1.5        ┆ 0.2       ┆ … ┆ 5.843333   ┆ 0.828066   ┆ 3.057333   ┆ 0.435866   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ …          ┆ …         ┆ …          ┆ …         ┆ … ┆ …          ┆ …          ┆ …          ┆ …          │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.3        ┆ 2.5       ┆ 5.0        ┆ 1.9       ┆ … ┆ 5.843333   ┆ 0.828066   ┆ 3.057333   ┆ 0.435866   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.5        ┆ 3.0       ┆ 5.2        ┆ 2.0       ┆ … ┆ 5.843333   ┆ 0.828066   ┆ 3.057333   ┆ 0.435866   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.2        ┆ 3.4       ┆ 5.4        ┆ 2.3       ┆ … ┆ 5.843333   ┆ 0.828066   ┆ 3.057333   ┆ 0.435866   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.9        ┆ 3.0       ┆ 5.1        ┆ 1.8       ┆ … ┆ 5.843333   ┆ 0.828066   ┆ 3.057333   ┆ 0.435866   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └────────────┴───────────┴────────────┴───────────┴───┴────────────┴────────────┴────────────┴────────────┘</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Embracing an external variable works</span></span></span>
+<span class="r-in"><span><span class="va">some_value</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span><span class="fu">pl_mutate</span><span class="op">(</span><span class="va">pl_iris</span>, x <span class="op">=</span> <span class="op">{</span><span class="op">{</span> <span class="va">some_value</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (150, 6)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────────────┬─────────────┬──────────────┬─────────────┬───────────┬─────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ Species   ┆ x   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---       ┆ --- │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ cat       ┆ f64 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞══════════════╪═════════════╪══════════════╪═════════════╪═══════════╪═════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.1          ┆ 3.5         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ setosa    ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ setosa    ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ …            ┆ …           ┆ …            ┆ …           ┆ …         ┆ …   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.3          ┆ 2.5         ┆ 5.0          ┆ 1.9         ┆ virginica ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ virginica ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ virginica ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.9          ┆ 3.0         ┆ 5.1          ┆ 1.8         ┆ virginica ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └──────────────┴─────────────┴──────────────┴─────────────┴───────────┴─────┘</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

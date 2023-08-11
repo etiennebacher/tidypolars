@@ -29,11 +29,14 @@ where operations are performed "by group". pl_ungroup() removes grouping.'><!-- 
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/faq.html">FAQ</a>
-    <a class="dropdown-item" href="../articles/parsing-expressions.html">Parsing expressions</a>
+    <a class="dropdown-item" href="../articles/r-and-polars-expressions.html">R and Polars expressions</a>
   </div>
 </li>
 <li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -123,8 +126,8 @@ large datasets and prevents the use of streaming.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64        ┆ f64        │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪════════════╪════════════╡</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 105.136364 ┆ 82.636364  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 353.1      ┆ 209.214286 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 183.314286 ┆ 122.285714 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 353.1      ┆ 209.214286 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴────────────┴────────────┘</span>
 <span class="r-in"><span><span class="va">by_cyl</span> <span class="op">|&gt;</span> <span class="fu"><a href="pl_filter.html">pl_filter</a></span><span class="op">(</span><span class="va">disp</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 11)</span>

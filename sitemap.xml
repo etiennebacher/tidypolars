@@ -16,7 +16,7 @@
     <loc>/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/parsing-expressions.html</loc>
+    <loc>/articles/r-and-polars-expressions.html</loc>
   </url>
   <url>
     <loc>/articles/tidypolars.html</loc>
@@ -26,6 +26,9 @@
   </url>
   <url>
     <loc>/index.html</loc>
+  </url>
+  <url>
+    <loc>/news/index.html</loc>
   </url>
   <url>
     <loc>/reference/as_polars.html</loc>
