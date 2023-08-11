@@ -149,35 +149,36 @@ pl_bin <- function(x, ...) {
   x$bin()
 }
 
-pl_case_match <- function(x, ...) {
+pl_case_match <- function(x, ..., .data) {
   dots <- get_dots(...)
+
+  x <- polars::pl$col(deparse(substitute(x)))
 
   if (!".default" %in% names(dots)) {
     dots[[length(dots) + 1]] <- NA
     names(dots)[length(dots)] <- ".default"
   }
 
-  exprs <- lapply(seq_along(dots), \(x) {
-    dep <- safe_deparse(dots[[x]])
-    if (x == length(dots)) {
-      return(paste0("$otherwise(", dep, ")"))
+  out <- NULL
+  exprs <- lapply(seq_along(dots), \(y) {
+    if (y == length(dots)) {
+      out <<- out$otherwise(dots[[y]])
+      return(invisible())
     }
-
-    spl <- strsplit(dep, "~")[[1]] |>
-      trimws()
-
-    paste0("$when(x$is_in(pl$lit(", spl[1], ")))$then(", spl[2], ")")
-  }) |>
-    paste(collapse = "")
-
-  paste0("pl", exprs) |>
-    str2lang() |>
-    eval()
+    lhs <- translate_expr(.data, dots[[y]][[2]])
+    rhs <- translate_expr(.data, dots[[y]][[3]])
+    if (is.null(out)) {
+      out <<- polars::pl$when(x$is_in(lhs))$then(rhs)
+    } else {
+      out <<- out$when(x$is_in(lhs))$then(rhs)
+    }
+  })
+  out
 }
 
 
 
-pl_case_when <- function(...) {
+pl_case_when <- function(..., .data) {
   dots <- get_dots(...)
 
   if (!".default" %in% names(dots)) {
@@ -185,22 +186,21 @@ pl_case_when <- function(...) {
     names(dots)[length(dots)] <- ".default"
   }
 
-  exprs <- lapply(seq_along(dots), \(x) {
-    dep <- safe_deparse(dots[[x]])
-
-    if (x == length(dots)) {
-      return(paste0("$otherwise(", dep, ")"))
+  out <- NULL
+  exprs <- lapply(seq_along(dots), \(y) {
+    if (y == length(dots)) {
+      out <<- out$otherwise(dots[[y]])
+      return(invisible())
     }
-    spl <- strsplit(dep, "~")[[1]] |>
-      trimws()
-    spl[1] <- parse_boolean_exprs(spl[1])
-    paste0("$when(", spl[1], ")$then(", spl[2], ")")
-  }) |>
-    paste(collapse = "")
-
-  paste0("pl", exprs) |>
-    str2lang() |>
-    eval()
+    lhs <- translate_expr(.data, dots[[y]][[2]])
+    rhs <- translate_expr(.data, dots[[y]][[3]])
+    if (is.null(out)) {
+      out <<- polars::pl$when(lhs)$then(rhs)
+    } else {
+      out <<- out$when(lhs)$then(rhs)
+    }
+  })
+  out
 }
 
 pl_cast <- function(x, ...) {
