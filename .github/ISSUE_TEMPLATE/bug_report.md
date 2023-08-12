@@ -7,9 +7,10 @@ assignees: ''
 
 ---
 
-<!-- Please fill this template -->
+<!-- 
 
-**Ensure that you have the latest versions**
+Please fill the template at the bottom and ensure that you have the latest versions
+ ========================================================
 
 `polars` and `tidypolars` are frequently updated. Please reinstall both and check whether the bug still exists:
 ```r
@@ -24,12 +25,15 @@ remotes::install_github(
   repos = c("https://rpolars.r-universe.dev/bin/linux/jammy/4.3", getOption("repos"))
 )
 ```
+ -->
+
+
 
 **Describe the bug**
-A clear and concise description of what the bug is.
+Write here a clear and concise description of what the bug is.
 
 **To Reproduce**
-Please use the R package [`reprex`](https://reprex.tidyverse.org/) to create a minimal and reproducible example.
+Please use the R package [`reprex`](https://reprex.tidyverse.org/) to create a minimal and reproducible example. Paste the output here.
 
 **Expected behavior**
-A clear and concise description of what you expected to happen.
+Write here a clear and concise description of what you expected to happen.
