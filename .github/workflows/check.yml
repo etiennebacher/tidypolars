@@ -30,11 +30,13 @@ jobs:
           chmod 0755 run.sh
           ./run.sh bootstrap
 
-      - if: ${{ matrix.os }} == 'ubuntu-latest'
-        run: R -q -e 'install.packages("polars", repos = "https://rpolars.r-universe.dev/bin/linux/jammy/4.3")'
+      - if: matrix.os == 'ubuntu-latest'
+        run: install.packages("polars", repos = "https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
+        shell: Rscript {0}
 
-      - if: ${{ matrix.os }} != 'ubuntu-latest'
-        run: R -q -e 'install.packages("polars", repos = "https://rpolars.r-universe.dev")'
+      - if: matrix.os != 'ubuntu-latest'
+        run: install.packages("polars", repos = "https://rpolars.r-universe.dev")
+        shell: Rscript {0}
 
       - name: Dependencies
         run: ./run.sh install_all
