@@ -1,48 +1,53 @@
-# Run CI for R, based on:
-# https://dirk.eddelbuettel.com/blog/2023/07/23/#041_simpler_ci_via_r2u
+# Run CI for R using https://eddelbuettel.github.io/r-ci/
 
-name: ci
+name: R-CMD-check
 
 on:
   push:
+    branches: [main, master]
   pull_request:
+    branches: [main, master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
 
 env:
+  USE_BSPM: "true"
   _R_CHECK_FORCE_SUGGESTS_: "false"
-  _R_CHECK_TESTS_NLINES_: 0
-  R_NOT_CRAN: true
-  R_GH: true
-  GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
 
 jobs:
-  # TODO: find a way to increase the OS/Rversions coverage
-  # r2u only works on ubuntu-latest and r-release
-  # https://github.com/rocker-org/r2u/issues/2
   ci:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - {os: macOS-latest,   r: 'release'}
+          - {os: windows-latest, r: 'release'}
+          - {os: ubuntu-latest,  r: 'release'}
 
-    container:
-      image: rocker/r2u:latest
+    runs-on: ${{ matrix.os }}
+
     steps:
       - uses: actions/checkout@v3
-      - name: SessionInfo
-        run: R -q -e 'sessionInfo()'
-      #- name: System Dependencies
-      #  # can be used to install e.g. cmake or other build dependencies
-      #  run: apt update -qq && apt install --yes --no-install-recommends cmake git
-      - name: Package Dependencies
-        run: R -q -e 'remotes::install_deps(".", repos = c("https://rpolars.r-universe.dev/bin/linux/jammy/4.3", getOption("repos")), dependencies=TRUE)'
-      - name: Build Package
-        run: R CMD build --no-build-vignettes --no-manual .
-      - name: Check Package
-        run: R CMD check --no-build-vignettes --no-manual $(ls -1tr *.tar.gz | tail -1)
 
-      - name: Test coverage
+      - name: Bootstrap
         run: |
-          install.packages('covr')
-          covr::codecov(
-            quiet = FALSE,
-            clean = FALSE,
-            token = "${{secrets.CODECOV_TOKEN}}"
-          )
+          curl -OLs https://eddelbuettel.github.io/r-ci/run.sh
+          chmod 0755 run.sh
+          ./run.sh bootstrap
+
+      - name: Install r-polars on Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: install.packages("polars", repos = "https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
         shell: Rscript {0}
+
+      - name: Install r-polars on Windows or macOS
+        if: matrix.os != 'ubuntu-latest'
+        run: install.packages("polars", repos = "https://rpolars.r-universe.dev")
+        shell: Rscript {0}
+
+      - name: Dependencies
+        run: ./run.sh install_all
+
+      - name: Test
+        run: ./run.sh run_tests
