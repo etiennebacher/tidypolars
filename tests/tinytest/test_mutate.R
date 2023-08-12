@@ -179,3 +179,8 @@ expect_equal(
   pl_mutate(pl_iris, x = {{ some_value }}) |> to_r(),
   pl_mutate(pl_iris, x = 1) |> to_r()
 )
+
+expect_equal(
+  pl_mutate(pl_iris, x = some_value + Sepal.Length) |> to_r(),
+  pl_mutate(pl_iris, x = 1 + Sepal.Length) |> to_r()
+)

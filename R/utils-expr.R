@@ -35,7 +35,7 @@ translate_expr <- function(.data, quo) {
   call_is_function <- typeof(expr) == "language" && expr[[1]] != "paste0"
 
   # split across() call early
-  if (length(expr) > 0 && safe_deparse(expr[[1]]) == "across") {
+  if (length(expr) > 1 && safe_deparse(expr[[1]]) == "across") {
     expr <- unpack_across(.data, expr)
   }
 

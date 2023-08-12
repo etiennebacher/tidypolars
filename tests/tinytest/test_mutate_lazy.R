@@ -184,4 +184,9 @@ expect_equal_lazy(
   pl_mutate(pl_iris, x = 1) |> to_r()
 )
 
+expect_equal_lazy(
+  pl_mutate(pl_iris, x = some_value + Sepal.Length) |> to_r(),
+  pl_mutate(pl_iris, x = 1 + Sepal.Length) |> to_r()
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
