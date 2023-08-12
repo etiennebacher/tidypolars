@@ -1,0 +1,42 @@
+# Run CI for R using https://eddelbuettel.github.io/r-ci/
+
+name: covr
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+env:
+  _R_CHECK_FORCE_SUGGESTS_: "false"
+  _R_CHECK_TESTS_NLINES_: 0
+  R_NOT_CRAN: true
+  R_GH: true
+  GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    container:
+      image: rocker/r2u:latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: SessionInfo
+        run: R -q -e 'sessionInfo()'
+      - name: Package Dependencies
+        run: R -q -e 'remotes::install_deps(".", repos = c("https://rpolars.r-universe.dev/bin/linux/jammy/4.3", getOption("repos")), dependencies=TRUE)'
+      - name: Test coverage
+        run: |
+          install.packages('covr')
+          covr::codecov(
+            quiet = FALSE,
+            clean = FALSE,
+            token = "${{secrets.CODECOV_TOKEN}}"
+          )
+        shell: Rscript {0}
