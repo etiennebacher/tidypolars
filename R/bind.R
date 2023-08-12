@@ -63,7 +63,10 @@ concat_ <- function(..., how) {
   }, FUN.VALUE = logical(1L)))
 
   if (any_not_polars) {
-    rlang::abort("All elements in `...` must be either DataFrames or LazyFrames).")
+    rlang::abort(
+      "All elements in `...` must be either DataFrames or LazyFrames).",
+      call = caller_env()
+    )
   }
 
   all_df_or_lf <- all(vapply(dots, \(y) {
@@ -71,7 +74,10 @@ concat_ <- function(..., how) {
   }, FUN.VALUE = logical(1L)))
 
   if (!all_df_or_lf) {
-    rlang::abort("All elements in `...` must be of the same class (either DataFrame or LazyFrame).")
+    rlang::abort(
+      "All elements in `...` must be of the same class (either DataFrame or LazyFrame).",
+      call = caller_env()
+    )
   }
 
   pl$concat(dots, how = how)

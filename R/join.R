@@ -154,7 +154,10 @@ join_ <- function(x, y, by = NULL, how, suffix) {
   check_same_class(x, y)
 
   if (!is.null(suffix) && length(suffix) != 2) {
-    rlang::abort("`suffix` must be of length 2.")
+    rlang::abort(
+      "`suffix` must be of length 2.",
+      call = caller_env()
+    )
   }
 
   if (is.null(by) && how != "cross") {

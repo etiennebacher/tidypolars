@@ -12,7 +12,10 @@ pl_colnames <- function(x) {
 
 check_polars_data <- function(x) {
   if (!inherits(x, "DataFrame") && !inherits(x, "LazyFrame")) {
-    rlang::abort("The data must be a Polars DataFrame or LazyFrame.")
+    rlang::abort(
+      "The data must be a Polars DataFrame or LazyFrame.",
+      call = caller_env()
+    )
   }
 }
 
@@ -22,7 +25,8 @@ check_same_class <- function(x, y) {
       paste0(
         "Both objects must be of the same class. Currently, `x` is a ",
         class(x), " and `y` is a ", class(y), "."
-      )
+      ),
+      call = caller_env(2)
     )
   }
 }

@@ -23,10 +23,7 @@
 # nocov start
 describe_plan <- function(.data) {
   if (!inherits(.data, "LazyFrame")) {
-    rlang::abort(
-      paste("`describe_plan()` only works on a LazyFrame.",
-            "The current data is of class ", class(.data))
-    )
+    rlang::abort("`describe_plan()` only works on a LazyFrame.")
   }
   .data$describe_plan()
 }
@@ -36,10 +33,7 @@ describe_plan <- function(.data) {
 
 describe_optimized_plan <- function(.data) {
   if (!inherits(.data, "LazyFrame")) {
-    rlang::abort(
-      paste("`describe_optimized_plan()` only works on a LazyFrame.",
-            "The current data is of class ", class(.data))
-    )
+    rlang::abort("`describe_optimized_plan()` only works on a LazyFrame.")
   }
   .data$describe_optimized_plan()
 }

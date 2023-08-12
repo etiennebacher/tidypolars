@@ -36,6 +36,6 @@ test2 <- pl$DataFrame(mtcars2)
 
 expect_error(
   make_unique_id(test2, am, gear),
-  "Column `hash` already exists"
+  'Column "hash" already exists'
 )
 

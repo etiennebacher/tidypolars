@@ -162,7 +162,7 @@ translate_expr <- function(.data, quo) {
               )
             }
           } else {
-            abort(paste("Unknown function:", name))
+            abort(paste("Unknown function:", name), call = caller_env(5))
           }
         }
 
@@ -176,7 +176,10 @@ translate_expr <- function(.data, quo) {
         fun
       },
 
-      abort(paste("Internal: Unknown type", typeof(expr)))
+      abort(
+        paste("Internal: Unknown type", typeof(expr)),
+        call = caller_env(4)
+      )
     )
   }
 
