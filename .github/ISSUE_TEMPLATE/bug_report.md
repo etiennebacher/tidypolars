@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+<!-- Please fill this template -->
+
 **Ensure that you have the latest versions**
 
 `polars` and `tidypolars` are frequently updated. Please reinstall both and check whether the bug still exists:
