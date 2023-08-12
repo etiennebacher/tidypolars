@@ -49,7 +49,10 @@ procedure is slightly different.
 ### Windows or macOS
 
 ``` r
-install.packages('tidypolars', repos = c('https://etiennebacher.r-universe.dev', 'https://cloud.r-project.org'))
+install.packages(
+  'tidypolars', 
+  repos = c('https://etiennebacher.r-universe.dev', 'https://rpolars.r-universe.dev', getOption("repos"))
+)
 ```
 
 ### Linux
@@ -205,9 +208,9 @@ bench::mark(
 #> # A tibble: 3 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars      81.73ms  86.53ms    11.3      25.8KB    0    
-#> 2 tidypolars  99.81ms 104.51ms     9.15    123.4KB    0.915
-#> 3 dplyr         1.61s    1.69s     0.595   916.7MB    2.26
+#> 1 polars     204.33ms 222.31ms     4.39     27.2KB    0    
+#> 2 tidypolars 257.95ms 291.92ms     3.14     98.4KB    0.314
+#> 3 dplyr         1.36s    1.71s     0.601   916.7MB    2.28
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling

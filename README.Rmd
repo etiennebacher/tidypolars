@@ -58,7 +58,10 @@ different.
 ### Windows or macOS
 
 ```{r eval=FALSE}
-install.packages('tidypolars', repos = c('https://etiennebacher.r-universe.dev', 'https://cloud.r-project.org'))
+install.packages(
+  'tidypolars', 
+  repos = c('https://etiennebacher.r-universe.dev', 'https://rpolars.r-universe.dev', getOption("repos"))
+)
 ```
 
 ### Linux
