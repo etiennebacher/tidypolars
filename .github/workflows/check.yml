@@ -4,7 +4,13 @@ name: ci
 
 on:
   push:
+    branches: [main, master]
   pull_request:
+    branches: [main, master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
 
 env:
   USE_BSPM: "true"
@@ -30,11 +36,13 @@ jobs:
           chmod 0755 run.sh
           ./run.sh bootstrap
 
-      - if: matrix.os == 'ubuntu-latest'
+      - name: Install r-polars on Ubuntu
+        if: matrix.os == 'ubuntu-latest'
         run: install.packages("polars", repos = "https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
         shell: Rscript {0}
 
-      - if: matrix.os != 'ubuntu-latest'
+      - name: Install r-polars on Windows or macOS
+        if: matrix.os != 'ubuntu-latest'
         run: install.packages("polars", repos = "https://rpolars.r-universe.dev")
         shell: Rscript {0}
 
