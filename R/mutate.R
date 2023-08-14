@@ -76,21 +76,22 @@ pl_mutate <- function(.data, ...) {
 
   polars_exprs <- translate_dots(.data = .data, ...)
 
-  to_drop <- names(Filter(\(x) length(x) == 0, polars_exprs))
-  polars_exprs <- Filter(\(x) length(x) != 0, polars_exprs)
-  # check_polars_expr(polars_exprs, .data)
+  for (i in seq_along(polars_exprs)) {
+    sub <- polars_exprs[[i]]
+    to_drop <- names(Filter(\(x) length(x) == 0, sub))
+    sub <- Filter(\(x) length(x) != 0, sub)
 
-  if (length(exprs) > 0) {
-    if (is_grouped) {
-      polars_exprs <- lapply(polars_exprs, \(x) x$over(grps))
+    if (length(exprs) > 0) {
+      if (is_grouped) {
+        sub <- lapply(sub, \(x) x$over(grps))
+      }
+      .data <- .data$with_columns(sub)
     }
 
-    out <- .data$with_columns(polars_exprs)
+    if (length(to_drop) > 0) {
+      .data <- .data$drop(to_drop)
+    }
   }
 
-  if (length(to_drop) > 0) {
-    out$drop(to_drop)
-  } else {
-    out
-  }
+  .data
 }

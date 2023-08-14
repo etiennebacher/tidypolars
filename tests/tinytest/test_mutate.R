@@ -184,3 +184,25 @@ expect_equal(
   pl_mutate(pl_iris, x = some_value + Sepal.Length) |> to_r(),
   pl_mutate(pl_iris, x = 1 + Sepal.Length) |> to_r()
 )
+
+
+# reorder of expressions works
+
+expect_equal(
+  pl_iris |>
+    pl_mutate(
+      x = Sepal.Length * 3,
+      Petal.Length = Petal.Length / x,
+      x = NULL,
+      mean_pl = mean(Petal.Length),
+      foo = Sepal.Width + Petal.Width
+    ) |> to_r(),
+  pl_iris$with_columns(
+    x = pl$col("Sepal.Length") * 3,
+    foo = pl$col("Sepal.Width") + pl$col("Petal.Width")
+  )$with_columns(
+    Petal.Length = pl$col("Petal.Length") / pl$col("x")
+  )$with_columns(
+    mean_pl = pl$col("Petal.Length")$mean()
+  )$drop("x")$to_data_frame()
+)

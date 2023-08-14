@@ -14,10 +14,30 @@ translate_dots <- function(.data, ...) {
     )
     tmp$out
   })
-  print(new_vars)
-  print(out)
+
+  for (i in seq_along(dots)) {
+    if (is.null(names(out)[i]) && !is.list(out[[i]])) {
+      names(out)[i] <- names(dots)[i]
+    }
+  }
+
+  browser()
+
+  new_vars <- Filter(\(x) length(x) > 0, new_vars)
+
+  pool_exprs <- lapply(1:length(new_vars), \(x) character(0))
+  pool_exprs <- setNames(pool_exprs, paste0("pool_exprs_", 1:length(new_vars)))
+
+
+  for (i in seq_along(new_vars)) {
+    pool_exprs[[i]] <- out[new_vars[[i]]]
+    out <- out[-match(new_vars[[i]], names(out))]
+  }
+
+
   # across() returns a nested list
-  unlist(out, recursive = FALSE, use.names = TRUE)
+  # unlist(out, recursive = FALSE, use.names = TRUE)
+  pool_exprs
 }
 
 translate_expr <- function(.data, quo, new_var, new_vars) {
@@ -68,7 +88,23 @@ translate_expr <- function(.data, quo, new_var, new_vars) {
     switch(
       typeof(expr),
 
-      "NULL" = return(list(NULL)),
+      "NULL" = {
+        latest_pool <- Filter(\(x) length(x) > 0, new_vars)
+        latest_pool <- length(latest_pool)
+
+        while (latest_pool > 0) {
+          if (new_var %in% new_vars[[latest_pool]]) {
+            # latest_pool is the pool where the variable we want to use was
+            # defined, so we need to store the current expression in the latest
+            # pool + 1
+            which_pool_var <<- latest_pool + 1
+            break
+          } else {
+            latest_pool <- latest_pool - 1
+          }
+        }
+        return(NULL)
+      },
 
       character = ,
       logical = ,
@@ -78,6 +114,20 @@ translate_expr <- function(.data, quo, new_var, new_vars) {
         if (call_is_function) {
           return(expr)
         } else {
+          latest_pool <- Filter(\(x) length(x) > 0, new_vars)
+          latest_pool <- length(latest_pool)
+
+          while (latest_pool > 0) {
+            if (new_var %in% new_vars[[latest_pool]]) {
+              # latest_pool is the pool where the variable we want to use was
+              # defined, so we need to store the current expression in the latest
+              # pool + 1
+              which_pool_var <<- latest_pool + 1
+              break
+            } else {
+              latest_pool <<- latest_pool - 1
+            }
+          }
           polars_constant(expr)
         }
       },
