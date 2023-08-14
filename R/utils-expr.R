@@ -15,13 +15,15 @@ translate_dots <- function(.data, ...) {
     tmp$out
   })
 
+  # https://stackoverflow.com/questions/76900694/
+  names(out) <- ""
   for (i in seq_along(dots)) {
-    if (is.null(names(out)[i]) && !is.list(out[[i]])) {
+    if (is.na(names(out)[i]) && !is.list(out[[i]])) {
       names(out)[i] <- names(dots)[i]
     }
   }
-
   browser()
+
 
   new_vars <- Filter(\(x) length(x) > 0, new_vars)
 
