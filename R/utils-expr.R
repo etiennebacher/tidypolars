@@ -108,6 +108,9 @@ translate_expr <- function(.data, quo) {
               {
                 lhs <- translate(expr[[2]])
                 rhs <- translate(expr[[3]])
+                if (is.list(rhs)) {
+                  rhs <- unlist(rhs)
+                }
                 lhs$is_in(rhs)
               },
               error = identity
