@@ -2,7 +2,7 @@ source("helpers.R")
 using("tidypolars")
 
 library(dplyr, warn.conflicts = FALSE)
-library(lubridate)
+library(lubridate, warn.conflicts = FALSE)
 
 test_df <- data.frame(
   YMD = as.Date(c("2012-03-26", "2020-01-01", "2023-12-14")),

@@ -173,7 +173,7 @@ expect_equal(
 
 # embracing works
 
-some_value <- 1
+some_value <<- 1
 
 expect_equal(
   pl_mutate(pl_iris, x = {{ some_value }}) |> to_r(),

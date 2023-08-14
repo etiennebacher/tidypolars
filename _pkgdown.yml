@@ -22,9 +22,10 @@ reference:
       - describe_optimized_plan
       - make_unique_id
       - pl_colnames
+      - to_r
   - title: From `dplyr`
     desc: |
-      Functions adapted from `dplyr` functions
+      Functions adapted from `dplyr`
     contents:
       - pl_add_count
       - pl_anti_join
@@ -56,7 +57,7 @@ reference:
       - pl_ungroup
   - title: From `tidyr`
     desc: |
-      Functions adapted from `tidyr` functions
+      Functions adapted from `tidyr`
     contents:
       - pl_complete
       - pl_drop_na

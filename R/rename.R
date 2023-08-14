@@ -37,7 +37,7 @@ pl_rename <- function(.data, ...) {
 #' @rdname pl_rename
 #' @export
 
-pl_rename_with <- function(.data, .fn, .cols = everything(), ...) {
+pl_rename_with <- function(.data, .fn, .cols = tidyselect::everything(), ...) {
   check_polars_data(.data)
   to_replace <- tidyselect_named_arg(.data, rlang::enquo(.cols))
   new <- do.call(.fn, list(to_replace, ...))

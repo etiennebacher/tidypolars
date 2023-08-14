@@ -1,4 +1,17 @@
+#' Convert a Polars DataFrame to an R data.frame
+#'
+#' This is a simple wrapper of `$to_data_frame()` present in `polars`. This is
+#' only make this function work in a pipe workflow.
+#'
+#' @param .data A Polars DataFrame only (LazyFrames are not modified). Any other
+#' object is returned as-is.
+#'
 #' @export
+#' @examples
+#' iris |>
+#'   as_polars() |>
+#'   pl_filter(Sepal.Length > 6) |>
+#'   to_r()
 
 to_r <- function(.data) {
 
