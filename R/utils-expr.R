@@ -16,15 +16,16 @@ translate_dots <- function(.data, ...) {
   })
 
   # https://stackoverflow.com/questions/76900694/
-  names(out) <- ""
-  for (i in seq_along(dots)) {
-    if (is.na(names(out)[i]) && !is.list(out[[i]])) {
-      names(out)[i] <- names(dots)[i]
-    }
-  }
-  browser()
+  # names(out) <- ""
+  # for (i in seq_along(dots)) {
+  #   if (is.na(names(out)[i]) && !is.list(out[[i]])) {
+  #     names(out)[i] <- names(dots)[i]
+  #   }
+  # }
 
+  # browser()
 
+  names(out) <- names(dots)
   new_vars <- Filter(\(x) length(x) > 0, new_vars)
 
   pool_exprs <- lapply(1:length(new_vars), \(x) character(0))
@@ -91,20 +92,7 @@ translate_expr <- function(.data, quo, new_var, new_vars) {
       typeof(expr),
 
       "NULL" = {
-        latest_pool <- Filter(\(x) length(x) > 0, new_vars)
-        latest_pool <- length(latest_pool)
-
-        while (latest_pool > 0) {
-          if (new_var %in% new_vars[[latest_pool]]) {
-            # latest_pool is the pool where the variable we want to use was
-            # defined, so we need to store the current expression in the latest
-            # pool + 1
-            which_pool_var <<- latest_pool + 1
-            break
-          } else {
-            latest_pool <- latest_pool - 1
-          }
-        }
+        which_pool_var <<- find_pool(new_var, new_vars)
         return(NULL)
       },
 
@@ -116,20 +104,7 @@ translate_expr <- function(.data, quo, new_var, new_vars) {
         if (call_is_function) {
           return(expr)
         } else {
-          latest_pool <- Filter(\(x) length(x) > 0, new_vars)
-          latest_pool <- length(latest_pool)
-
-          while (latest_pool > 0) {
-            if (new_var %in% new_vars[[latest_pool]]) {
-              # latest_pool is the pool where the variable we want to use was
-              # defined, so we need to store the current expression in the latest
-              # pool + 1
-              which_pool_var <<- latest_pool + 1
-              break
-            } else {
-              latest_pool <<- latest_pool - 1
-            }
-          }
+          which_pool_var <<- find_pool(new_var, new_vars)
           polars_constant(expr)
         }
       },
@@ -137,26 +112,8 @@ translate_expr <- function(.data, quo, new_var, new_vars) {
       symbol = {
         expr_char <- as.character(expr)
         if (expr_char %in% unlist(new_vars)) {
-          latest_pool <- Filter(\(x) length(x) > 0, new_vars)
-          latest_pool <- length(latest_pool)
-
-          while (latest_pool > 0) {
-            if (expr_char %in% new_vars[[latest_pool]]) {
-              # latest_pool is the pool where the variable we want to use was
-              # defined, so we need to store the current expression in the latest
-              # pool + 1
-              which_pool_var <<- latest_pool + 1
-              break
-            } else {
-              latest_pool <<- latest_pool - 1
-            }
-          }
+          which_pool_var <<- find_pool(expr_char, new_vars)
           polars_col(expr_char)
-          # abort(
-          #   paste0("Variable '", expr_char, "' was defined earlier.",
-          #          " You need to put it in another `pl_mutate()` call."),
-          #   call = caller_env(7)
-          # )
         } else if (expr_char %in% names_data) {
           ref <- expr_char
           polars_col(ref)
@@ -365,4 +322,24 @@ get_known_functions <- function() {
     known_ops = known_ops,
     user_defined = user_defined
   )
+}
+
+
+find_pool <- function(new_var, new_vars) {
+  latest_pool <- Filter(\(x) length(x) > 0, new_vars)
+  latest_pool <- length(latest_pool)
+
+  while (latest_pool > 0) {
+    if (new_var %in% new_vars[[latest_pool]]) {
+      # latest_pool is the pool where the variable we want to use was
+      # defined, so we need to store the current expression in the latest
+      # pool + 1
+      return(latest_pool + 1)
+    } else {
+      latest_pool <- latest_pool - 1
+      if (latest_pool == 0) {
+        return(1)
+      }
+    }
+  }
 }
