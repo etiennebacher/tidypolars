@@ -2,14 +2,17 @@
 
 translate_dots <- function(.data, ...) {
   dots <- enexprs(...)
-  out <- lapply(dots, \(x) {
-    translate_expr(.data = .data, x)
+  new_vars <- character(0)
+  out <- lapply(seq_along(dots), \(x) {
+    tmp <- translate_expr(.data = .data, dots[[x]], names(dots)[x], new_vars)
+    new_vars <<- tmp$new_vars
+    tmp$out
   })
   # across() returns a nested list
   unlist(out, recursive = FALSE, use.names = TRUE)
 }
 
-translate_expr <- function(.data, quo) {
+translate_expr <- function(.data, quo, new_var, new_vars) {
 
   names_data <- pl_colnames(.data)
 
@@ -72,6 +75,12 @@ translate_expr <- function(.data, quo) {
         if (as.character(expr) %in% names_data) {
           ref <- as.character(expr)
           polars_col(ref)
+        } else if (as.character(expr) %in% new_vars) {
+          abort(
+            paste0("Variable '", as.character(expr), "' was defined earlier.",
+                   " You need to put it in another `pl_mutate()` call."),
+            call = caller_env(7)
+          )
         } else {
           val <- eval_tidy(expr, env = caller_env(3))
           polars_constant(val)
@@ -98,7 +107,11 @@ translate_expr <- function(.data, quo) {
             args$.data <- .data
             return(do.call(pl_case_when, args))
           },
-          "c" = ,
+          "c" = {
+            subexprs <- as.list(expr)
+            subexprs <- subexprs[2:length(subexprs)]
+            return(lapply(subexprs, translate))
+          },
           ":" = {
             out <- tryCatch(eval_tidy(expr, env = caller_env()), error = identity)
             return(out)
@@ -136,13 +149,13 @@ translate_expr <- function(.data, quo) {
           }
         )
 
-        k_funs <- known_functions()
+        k_funs <- get_known_functions()
         known_functions <- k_funs$known_functions
         known_ops <- k_funs$known_ops
         user_defined <- k_funs$user_defined
 
         if (!(name %in% c(known_functions, known_ops, user_defined))) {
-          # last possibility in function is unknown: it's an anonymous function
+          # last possibility if function is unknown: it's an anonymous function
           # defined in an across() call
           obj_name <- quo_name(expr)
           if (startsWith(obj_name, ".__tidypolars__across_fn")) {
@@ -185,11 +198,15 @@ translate_expr <- function(.data, quo) {
 
   # happens because across() calls get split earlier
   if ((is.vector(expr) && length(expr) > 1) || is.list(expr)) {
-    lapply(expr, translate)
+    out <- lapply(expr, translate)
   } else {
-    translate(expr)
+    out <- translate(expr)
   }
+
+  return(list(out = out, new_vars = new_var))
 }
+
+
 
 polars_constant <- function(x) {
   polars::pl$lit(x)
@@ -256,7 +273,7 @@ check_polars_expr <- function(exprs, .data) {
 }
 
 # Return a list of all functions / operations we know
-known_functions <- function() {
+get_known_functions <- function() {
   known_functions <- r_polars_funs$r_funs
   known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
                  "&", "|", "!")
