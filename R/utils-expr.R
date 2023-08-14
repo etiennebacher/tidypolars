@@ -2,12 +2,20 @@
 
 translate_dots <- function(.data, ...) {
   dots <- enexprs(...)
-  new_vars <- character(0)
+
+  new_vars <- lapply(1:length(dots), \(x) character(0))
+  new_vars <- setNames(new_vars, paste0("pool_vars_", 1:length(dots)))
+
   out <- lapply(seq_along(dots), \(x) {
     tmp <- translate_expr(.data = .data, dots[[x]], names(dots)[x], new_vars)
-    new_vars <<- tmp$new_vars
+    new_vars[[paste0("pool_vars_", tmp$which_pool_var)]] <<- c(
+      new_vars[[paste0("pool_vars_", tmp$which_pool_var)]],
+      tmp$new_vars
+    )
     tmp$out
   })
+  print(new_vars)
+  print(out)
   # across() returns a nested list
   unlist(out, recursive = FALSE, use.names = TRUE)
 }
@@ -42,6 +50,9 @@ translate_expr <- function(.data, quo, new_var, new_vars) {
     expr <- unpack_across(.data, expr)
   }
 
+
+  which_pool_var <- 1
+
   translate <- function(expr) {
 
     # prepare function and arg if the user provided an anonymous function in
@@ -72,15 +83,31 @@ translate_expr <- function(.data, quo, new_var, new_vars) {
       },
 
       symbol = {
-        if (as.character(expr) %in% names_data) {
-          ref <- as.character(expr)
+        expr_char <- as.character(expr)
+        if (expr_char %in% unlist(new_vars)) {
+          latest_pool <- Filter(\(x) length(x) > 0, new_vars)
+          latest_pool <- length(latest_pool)
+
+          while (latest_pool > 0) {
+            if (expr_char %in% new_vars[[latest_pool]]) {
+              # latest_pool is the pool where the variable we want to use was
+              # defined, so we need to store the current expression in the latest
+              # pool + 1
+              which_pool_var <<- latest_pool + 1
+              break
+            } else {
+              latest_pool <<- latest_pool - 1
+            }
+          }
+          polars_col(expr_char)
+          # abort(
+          #   paste0("Variable '", expr_char, "' was defined earlier.",
+          #          " You need to put it in another `pl_mutate()` call."),
+          #   call = caller_env(7)
+          # )
+        } else if (expr_char %in% names_data) {
+          ref <- expr_char
           polars_col(ref)
-        } else if (as.character(expr) %in% new_vars) {
-          abort(
-            paste0("Variable '", as.character(expr), "' was defined earlier.",
-                   " You need to put it in another `pl_mutate()` call."),
-            call = caller_env(7)
-          )
         } else {
           val <- eval_tidy(expr, env = caller_env(3))
           polars_constant(val)
@@ -206,7 +233,7 @@ translate_expr <- function(.data, quo, new_var, new_vars) {
     out <- translate(expr)
   }
 
-  return(list(out = out, new_vars = new_var))
+  return(list(out = out, new_vars = new_var, which_pool_var = which_pool_var))
 }
 
 
