@@ -152,7 +152,7 @@ translate_expr <- function(.data, quo, new_vars) {
           }
         )
 
-        k_funs <- known_functions()
+        k_funs <- get_known_functions()
         known_functions <- k_funs$known_functions
         known_ops <- k_funs$known_ops
         user_defined <- k_funs$user_defined
@@ -251,7 +251,7 @@ check_polars_expr <- function(exprs, .data) {
     fault <- exprs[not_polars_expr]
     errors <- lapply(seq_along(fault), \(x) {
       fn_call <- fault[[x]][[2]]
-      kf <- known_functions()
+      kf <- get_known_functions()
       if (safe_deparse(fn_call[[1]]) %in% c(kf$known_functions, kf$kwnow_ops)) {
         return(invisible())
       }
@@ -272,7 +272,7 @@ check_polars_expr <- function(exprs, .data) {
 }
 
 # Return a list of all functions / operations we know
-known_functions <- function() {
+get_known_functions <- function() {
   known_functions <- r_polars_funs$r_funs
   known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
                  "&", "|", "!")

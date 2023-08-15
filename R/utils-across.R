@@ -65,10 +65,6 @@ build_separate_calls <- function(.cols, .fns, .names, .data) {
       # if anonymous function, we return the name starting with ".__tidypolars__"
       # so that we can get the function back in translate()
       if (is.character(.fns[[j]])) {
-        # TODO: dirty hack
-        if (endsWith(nm, "_")) {
-          nm <- paste0(nm, j)
-        }
         list_calls[[nm]] <- paste0(.fns[[j]], "---", .cols[i])
         next
       }
