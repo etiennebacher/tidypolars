@@ -285,6 +285,17 @@ known_functions <- function() {
 }
 
 
+# this function takes a list of expressions and outputs a nested list. Each
+# sublist should be run in one `with_columns()` call.
+#
+# Polars cannot run two expressions that modify the same column in a single
+# with_columns() call, hence the need to split expressions.
+#
+# For each expression, we store the LHS variable (which is either created or
+# modified) in `lhs_vars`. We then get the list of variables that this
+# expression uses. If any of the variables it uses is in the pool of created
+# (or modified variable) then we store this expression in a new sublist.
+
 reorder_exprs <- function(exprs) {
   lhs_vars <- lapply(1:length(exprs), \(x) character(0))
   lhs_vars <- setNames(lhs_vars, paste0("pool_vars_", 1:length(exprs)))
@@ -294,10 +305,34 @@ reorder_exprs <- function(exprs) {
       lhs_vars[[1]] <- names(exprs)[i]
       next
     }
-    if (is.null(exprs[[i]])) {
-      # exprs[[i]] <- list(NULL)
-      # next
-    }
+
+    # We can have several pools of variables that correspond to several groups
+    # of expressions.
+    # We work backwards. Example: suppose we have three expressions:
+    # - x = Sepal.Length + 2
+    # - Petal.Width = x * 3
+    # - ratio = Petal.Width / Petal.Length
+    #
+    # The LHS variable in the first expression necessarily goes in the first
+    # pool of variables. When we reach the second expression, we see that it
+    # uses "x", which is in the first pool of variables, so we can't store
+    # "Petal.Width" here too, so it goes in the second pool of variables.
+    #
+    # When we reach the third expression, we have two pools:
+    # - pool 1 contains "x"
+    # - pool 2 contains "Petal.Width"
+    #
+    # Since "ratio" uses "Petal.Width", it cannot go there, so it is put in a
+    # third pool. In the end, we have three pools of variables and therefore
+    # three calls to `with_columns()`.
+    #
+    # However, suppose the last expression was: ratio = x + Sepal.Width
+    #
+    # This expression doesn't use any var in the second pool, so we check whether
+    # it uses any var in the first pool. It does (it uses "x"), so we store it
+    # in the second pool. Therefore, we will end up with two calls to
+    # `with_columns()`.
+
     latest_pool <- Filter(\(x) length(x) > 0, lhs_vars) |>
       length()
 
