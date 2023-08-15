@@ -2,6 +2,7 @@ source("helpers.R")
 using("tidypolars")
 
 pl_iris <- pl$DataFrame(iris)
+translate_dots <- tidypolars:::translate_dots
 
 expect_equal(
   translate_dots(
@@ -22,7 +23,7 @@ expect_equal(
       x = NULL
     ),
     pool_exprs_3 = list(
-      mean_pl = pl_mean(pl$col("Petal.Length"))
+      mean_pl = pl$col("Petal.Length")$mean()
     )
   )
 )

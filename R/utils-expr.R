@@ -298,7 +298,7 @@ known_functions <- function() {
 
 reorder_exprs <- function(exprs) {
   lhs_vars <- lapply(1:length(exprs), \(x) character(0))
-  lhs_vars <- setNames(lhs_vars, paste0("pool_vars_", 1:length(exprs)))
+  names(lhs_vars) <- paste0("pool_vars_", 1:length(exprs))
 
   for (i in seq_along(exprs)) {
     if (i == 1) {
@@ -360,7 +360,7 @@ reorder_exprs <- function(exprs) {
   }
   lhs_vars <- Filter(\(x) length(x) > 0, lhs_vars)
   pool_exprs <- lapply(1:length(lhs_vars), \(x) character(0))
-  pool_exprs <- setNames(pool_exprs, paste0("pool_exprs_", 1:length(lhs_vars)))
+  names(pool_exprs) <- paste0("pool_exprs_", 1:length(lhs_vars))
 
   for (i in seq_along(lhs_vars)) {
     pool_exprs[[i]] <- exprs[lhs_vars[[i]]]
