@@ -2,14 +2,27 @@
 
 translate_dots <- function(.data, ...) {
   dots <- enexprs(...)
-  out <- lapply(dots, \(x) {
-    translate_expr(.data = .data, x)
+  new_vars <- c()
+  out <- lapply(seq_along(dots), \(x) {
+    tmp <- translate_expr(.data = .data, dots[[x]], new_vars)
+    new_vars <<- c(new_vars, names(dots)[x])
+    tmp
   })
+
+  # no need to reorder expressions if they come from filter()
+  if (length(unique(names(dots))) == 1 && unique(names(dots)) == "") {
+    return(out)
+  }
+
+  names(out) <- names(dots)
+
   # across() returns a nested list
-  unlist(out, recursive = FALSE, use.names = TRUE)
+  out <- unlist(out, recursive = FALSE, use.names = TRUE)
+  out <- reorder_exprs(out)
+  out
 }
 
-translate_expr <- function(.data, quo) {
+translate_expr <- function(.data, quo, new_vars) {
 
   names_data <- pl_colnames(.data)
 
@@ -69,9 +82,9 @@ translate_expr <- function(.data, quo) {
       },
 
       symbol = {
-        if (as.character(expr) %in% names_data) {
-          ref <- as.character(expr)
-          polars_col(ref)
+        expr_char <- as.character(expr)
+        if (expr_char %in% names_data || expr_char %in% unlist(new_vars)) {
+          polars_col(expr_char)
         } else {
           val <- eval_tidy(expr, env = caller_env(3))
           polars_constant(val)
@@ -269,4 +282,55 @@ known_functions <- function() {
     known_ops = known_ops,
     user_defined = user_defined
   )
+}
+
+
+reorder_exprs <- function(exprs) {
+  lhs_vars <- lapply(1:length(exprs), \(x) character(0))
+  lhs_vars <- setNames(lhs_vars, paste0("pool_vars_", 1:length(exprs)))
+
+  for (i in seq_along(exprs)) {
+    if (i == 1) {
+      lhs_vars[[1]] <- names(exprs)[i]
+      next
+    }
+    if (is.null(exprs[[i]])) {
+      # exprs[[i]] <- list(NULL)
+      # next
+    }
+    latest_pool <- Filter(\(x) length(x) > 0, lhs_vars) |>
+      length()
+
+    if (is.null(exprs[[i]])) {
+      vars_used <- character(0)
+    } else {
+      vars_used <- exprs[[i]]$meta$root_names()
+    }
+    new_var <- names(exprs)[i]
+
+    while (latest_pool > 0) {
+      if (any(c(vars_used, new_var) %in% lhs_vars[[latest_pool]])) {
+        # latest_pool is the pool where the variable we want to use was
+        # defined, so we need to store the current expression in the latest
+        # pool + 1
+        lhs_vars[[latest_pool + 1]] <- c(lhs_vars[[latest_pool + 1]], new_var)
+        break
+      } else {
+        latest_pool <- latest_pool - 1
+        if (latest_pool == 0) {
+          lhs_vars[[1]] <- c(lhs_vars[[1]], new_var)
+        }
+      }
+    }
+  }
+  lhs_vars <- Filter(\(x) length(x) > 0, lhs_vars)
+  pool_exprs <- lapply(1:length(lhs_vars), \(x) character(0))
+  pool_exprs <- setNames(pool_exprs, paste0("pool_exprs_", 1:length(lhs_vars)))
+
+  for (i in seq_along(lhs_vars)) {
+    pool_exprs[[i]] <- exprs[lhs_vars[[i]]]
+    exprs <- exprs[-match(lhs_vars[[i]], names(exprs))]
+  }
+
+  pool_exprs
 }
