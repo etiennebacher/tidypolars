@@ -31,7 +31,7 @@ expect_equal_lazy(
 )
 
 expect_error_lazy(
-  pl_summarize(pl_iris, x = mean(Sepal.Length)) ,
+  pl_summarize(pl_iris, x = mean(Sepal.Length)),
   pattern = "only works on grouped data"
 )
 

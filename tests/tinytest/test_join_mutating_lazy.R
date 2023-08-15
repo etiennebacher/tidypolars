@@ -30,16 +30,16 @@ expect_equal_lazy(
 expect_equal_lazy(
   pl_right_join(test, test2),
   pl$LazyFrame(
-    x = 1:2, y = 1:2,
-    z = 1:2, z2 = c(4, 5)
+    x = c(1, 2, 4), y = c(1, 2, 4),
+    z2 = c(4, 5, 7), z = c(1, 2, NA)
   )
 )
 
 expect_equal_lazy(
   pl_full_join(test, test2),
   pl$LazyFrame(
-    x = c(1, 2, 3, 4), y = c(1, 2, 3, 4),
-    z = c(1, 2, 3, NA), z2 = c(4, 5, NA, 7)
+    x = c(1, 2, 4, 3), y = c(1, 2, 4, 3),
+    z = c(1, 2, NA, 3), z2 = c(4, 5, 7, NA)
   )
 )
 

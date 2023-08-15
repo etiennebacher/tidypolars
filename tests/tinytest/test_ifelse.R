@@ -43,7 +43,7 @@ expect_equal(
 
 expect_error(
   test |>
-    pl_mutate(y = if_else(x1 == 1, "foo", "bar")) ,
+    pl_mutate(y = if_else(x1 == 1, "foo", "bar")),
   "cannot compare"
 )
 
