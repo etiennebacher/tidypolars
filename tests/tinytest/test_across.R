@@ -18,7 +18,7 @@ expect_equal(
     gear = mean(gear),
     carb = mean(carb),
     cyl = cyl + 1
-  ) 
+  )
 )
 
 # purrr-style function
@@ -36,7 +36,7 @@ expect_equal(
     gear = mean(gear),
     carb = mean(carb),
     cyl = cyl + 1
-  ) 
+  )
 )
 
 # anonymous functions has to return a Polars expression
@@ -50,7 +50,7 @@ expect_equal(
     test,
     gear = mean(gear),
     carb = mean(carb)
-  ) 
+  )
 )
 
 expect_equal(
@@ -70,7 +70,7 @@ expect_equal(
     gear_std = sd(gear),
     carb_mean = mean(carb),
     carb_std = sd(carb),
-  ) 
+  )
 )
 
 expect_colnames(
@@ -126,7 +126,7 @@ expect_equal(
     gear = foo(gear),
     carb = foo(carb),
     cyl = cyl + 1
-  ) 
+  )
 )
 
 # groups
@@ -205,7 +205,7 @@ expect_equal(
       list(mean, median)
     )
   ),
-  pl_mutate(test, mpg_1 = mean(mpg), mpg_2 = median(mpg)) 
+  pl_mutate(test, mpg_1 = mean(mpg), mpg_2 = median(mpg))
 )
 
 expect_equal(
@@ -216,7 +216,7 @@ expect_equal(
       list(my_mean = mean, my_median = median)
     )
   ),
-  pl_mutate(test, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg)) 
+  pl_mutate(test, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg))
 )
 
 expect_equal(
@@ -228,7 +228,7 @@ expect_equal(
       .nms = "{.col}_foo_{.fn}"
     )
   ),
-  pl_mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg)) 
+  pl_mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
 )
 
 expect_equal(
@@ -240,7 +240,7 @@ expect_equal(
       .nms = "{.col}_foo_{.fn}"
     )
   ),
-  pl_mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg)) 
+  pl_mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
 )
 
 # just one check for summarize()
@@ -257,4 +257,22 @@ expect_equal(
   ),
   pl_summarize(test_grp, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg)) |>
     to_r()
+)
+
+
+# sequence of expressions modifying the same vars works
+
+test2 <- pl_mutate(
+  test, across(contains("a"), mean),
+  am = 1, gear = NULL
+)
+
+expect_equal(
+  pl_pull(test2, am) |> unique(),
+  1
+)
+
+expect_colnames(
+  test2,
+  setdiff(colnames(mtcars), "gear")
 )
