@@ -47,7 +47,7 @@ expect_equal_lazy(
 
 expect_error_lazy(
   test |>
-    pl_mutate(y = if_else(x1 == 1, "foo", "bar")) ,
+    pl_mutate(y = if_else(x1 == 1, "foo", "bar")),
   "cannot compare"
 )
 

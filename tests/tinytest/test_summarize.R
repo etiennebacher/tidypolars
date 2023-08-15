@@ -27,7 +27,7 @@ expect_equal(
 )
 
 expect_error(
-  pl_summarize(pl_iris, x = mean(Sepal.Length)) ,
+  pl_summarize(pl_iris, x = mean(Sepal.Length)),
   pattern = "only works on grouped data"
 )
 

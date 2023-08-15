@@ -32,12 +32,30 @@ expect_dim <- function(x, y) {
 #'
 #' @export
 #' @keywords internal
+expect_equal <- function(x, y, ...) {
+  if (inherits(x, "DataFrame")) {
+    x <- x$to_data_frame()
+  }
+  if (inherits(y, "DataFrame")) {
+    y <- y$to_data_frame()
+  }
+  tinytest::expect_equal(
+    x, y,
+    call = sys.call(sys.parent(2)),
+    ...
+  )
+}
+
+#' `tinytest` helper
+#'
+#' @export
+#' @keywords internal
 expect_equal_lazy <- function(x, y, ...) {
   if (inherits(x, "LazyFrame")) {
-    x <- x$collect()
+    x <- x$collect()$to_data_frame()
   }
   if (inherits(y, "LazyFrame")) {
-    y <- y$collect()
+    y <- y$collect()$to_data_frame()
   }
   dots <- get_dots(...)
   if (isTRUE(dots$skip_for_lazy)) {

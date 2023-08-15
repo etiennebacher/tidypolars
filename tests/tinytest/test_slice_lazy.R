@@ -8,13 +8,13 @@ using("tidypolars")
 pl_iris <- polars::pl$LazyFrame(iris)
 
 expect_equal_lazy(
-  pl_slice_head(pl_iris) |> to_r(),
+  pl_slice_head(pl_iris),
   head(iris, n = 5),
   check.attributes = FALSE
 )
 
 expect_equal_lazy(
-  pl_slice_tail(pl_iris) |> to_r(),
+  pl_slice_tail(pl_iris),
   tail(iris, n = 5),
   check.attributes = FALSE
 )

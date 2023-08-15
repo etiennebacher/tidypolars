@@ -31,20 +31,21 @@ pl_summarize <- function(.data, ...) {
 
   polars_exprs <- translate_dots(.data = .data, ...)
 
-  to_drop <- names(Filter(\(x) length(x) == 0, polars_exprs))
-  polars_exprs <- Filter(\(x) length(x) != 0, polars_exprs)
+  for (i in seq_along(polars_exprs)) {
+    sub <- polars_exprs[[i]]
+    to_drop <- names(Filter(\(x) length(x) == 0, sub))
+    sub <- Filter(\(x) length(x) != 0, sub)
 
-  if (length(polars_exprs) > 0) {
-    out <- .data$groupby(grps, maintain_order = mo)$agg(polars_exprs)
-  } else {
-    out <- .data
+    if (length(sub) > 0) {
+      .data <- .data$groupby(grps, maintain_order = mo)$agg(sub)
+    }
+
+    if (length(to_drop) > 0) {
+      .data <- .data$drop(to_drop)
+    }
   }
 
-  if (length(to_drop) > 0) {
-    out$drop(to_drop)
-  } else {
-    out
-  }
+  .data
 }
 
 #' @rdname pl_summarize
