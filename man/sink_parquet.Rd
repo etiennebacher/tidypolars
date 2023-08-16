@@ -30,14 +30,14 @@ sink_parquet(
 \itemize{
 \item "uncompressed"
 \item "zstd" (default): good compression performance
-\item “lz4": fast compression/decompression
+\item "lz4": fast compression / decompression
 \item "snappy": more backwards compatibility guarantees when you deal with older
 parquet readers.
 \item "gzip", "lzo", "brotli"
 }}
 
 \item{compression_level}{The level of compression to use (default is 3). Only
-used if \code{compression} is one of "gzip", "brotli", or "zstd"⁠. Higher
+used if \code{compression} is one of "gzip", "brotli", or "zstd". Higher
 compression means smaller files on disk.
 \itemize{
 \item "gzip" : min-level = 0, max-level = 10
@@ -70,7 +70,7 @@ level (default is \code{TRUE}).}
 and replacing expensive operations with faster alternatives (default is
 \code{TRUE}).}
 
-\item{slice_pushdown}{Only load the required slice from the scan Don't
+\item{slice_pushdown}{Only load the required slice from the scan. Don't
 materialize sliced outputs level. Don't materialize sliced outputs (default
 is \code{TRUE}).}
 

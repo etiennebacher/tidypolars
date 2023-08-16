@@ -10,13 +10,13 @@
 #'
 #' * "uncompressed"
 #' * "zstd" (default): good compression performance
-#' * “lz4": fast compression/decompression
+#' * "lz4": fast compression / decompression
 #' * "snappy": more backwards compatibility guarantees when you deal with older
 #'   parquet readers.
 #' * "gzip", "lzo", "brotli"
 #'
 #' @param compression_level The level of compression to use (default is 3). Only
-#' used if `compression` is one of "gzip", "brotli", or "zstd"⁠. Higher
+#' used if `compression` is one of "gzip", "brotli", or "zstd". Higher
 #' compression means smaller files on disk.
 #'
 #' * "gzip" : min-level = 0, max-level = 10
@@ -45,7 +45,7 @@
 #' @param simplify_expression Various optimizations, such as constant folding
 #' and replacing expensive operations with faster alternatives (default is
 #' `TRUE`).
-#' @param slice_pushdown Only load the required slice from the scan Don't
+#' @param slice_pushdown Only load the required slice from the scan. Don't
 #' materialize sliced outputs level. Don't materialize sliced outputs (default
 #' is `TRUE`).
 #' @param no_optimization Sets the following optimizations to `FALSE`:
