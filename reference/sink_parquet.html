@@ -98,7 +98,7 @@ crashes because of too small memory.</p>
 <dt>compression</dt>
 <dd><p>The compression method. One of :</p><ul><li><p>"uncompressed"</p></li>
 <li><p>"zstd" (default): good compression performance</p></li>
-<li><p>“lz4": fast compression/decompression</p></li>
+<li><p>"lz4": fast compression / decompression</p></li>
 <li><p>"snappy": more backwards compatibility guarantees when you deal with older
 parquet readers.</p></li>
 <li><p>"gzip", "lzo", "brotli"</p></li>
@@ -107,7 +107,7 @@ parquet readers.</p></li>
 
 <dt>compression_level</dt>
 <dd><p>The level of compression to use (default is 3). Only
-used if <code>compression</code> is one of "gzip", "brotli", or "zstd"⁠. Higher
+used if <code>compression</code> is one of "gzip", "brotli", or "zstd". Higher
 compression means smaller files on disk.</p><ul><li><p>"gzip" : min-level = 0, max-level = 10</p></li>
 <li><p>"brotli" : min-level = 0, max-level = 11</p></li>
 <li><p>"zstd" : min-level = 1, max-level = 22.</p></li>
@@ -156,7 +156,7 @@ and replacing expensive operations with faster alternatives (default is
 
 
 <dt>slice_pushdown</dt>
-<dd><p>Only load the required slice from the scan Don't
+<dd><p>Only load the required slice from the scan. Don't
 materialize sliced outputs level. Don't materialize sliced outputs (default
 is <code>TRUE</code>).</p></dd>
 
