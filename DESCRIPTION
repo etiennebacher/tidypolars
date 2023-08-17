@@ -34,4 +34,6 @@ Suggests:
     rmarkdown,
     tidyr,
     tinytest
+Remotes:
+    markvanderloo/tinytest/pkg
 VignetteBuilder: knitr

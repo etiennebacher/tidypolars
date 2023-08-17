@@ -42,11 +42,11 @@ expect_error_lazy(
 )
 expect_error_lazy(
   test |> pl_relocate(mpg, .before = foo),
-  ""
+  "don't exist"
 )
 expect_error_lazy(
   test |> pl_relocate(mpg, .after = foo),
-  ""
+  "don't exist"
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
