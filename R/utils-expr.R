@@ -111,7 +111,10 @@ translate_expr <- function(.data, quo, new_vars) {
             args$.data <- .data
             return(do.call(pl_case_when, args))
           },
-          "c" = ,
+          "c" = {
+            expr[[1]] <- NULL
+            return(lapply(expr, translate))
+          },
           ":" = {
             out <- tryCatch(eval_tidy(expr, env = caller_env()), error = identity)
             return(out)

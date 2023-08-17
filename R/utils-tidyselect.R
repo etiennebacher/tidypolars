@@ -5,7 +5,12 @@ tidyselect_dots <- function(.data, ...) {
     data <- .data$first()$to_data_frame()
   }
   check_where_arg(...)
-  names(tidyselect::eval_select(rlang::expr(c(...)), data))
+  out <- names(tidyselect::eval_select(rlang::expr(c(...)), data))
+  if (length(out) == 0) {
+    NULL
+  } else {
+    out
+  }
 }
 
 

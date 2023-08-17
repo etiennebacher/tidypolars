@@ -72,6 +72,8 @@ pl_mutate <- function(.data, ...) {
 
   grps <- attributes(.data)$pl_grps
   is_grouped <- !is.null(grps)
+  is_rowwise <- attributes(.data)$grp_type == "rowwise"
+  is_rowwise <- length(is_rowwise) == 1 && isTRUE(is_rowwise)
   to_drop <- list()
 
   polars_exprs <- translate_dots(.data = .data, ...)
