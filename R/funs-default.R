@@ -7,7 +7,6 @@ pl_abs <- function(x, ...) {
 
 pl_mean <- function(x, ...) {
   check_empty_dots(...)
-  browser()
   is_rowwise <- rlang::caller_env(6)[["is_rowwise"]]
   if (is.list(x) && is_rowwise) {
     out <- pl$concat_list(x)$arr

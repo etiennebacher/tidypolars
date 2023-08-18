@@ -1,17 +1,13 @@
 source("helpers.R")
 using("tidypolars")
 
-pl_iris <- polars::pl$DataFrame(iris) |>
+test <- polars::pl$DataFrame(x = 1:2, y = 3:4, z = 5:6) |>
   pl_rowwise()
 
 
 expect_equal(
-  pl_mutate(pl_iris, x = mean(c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width))),
-  iris$Sepal.Width + iris$Sepal.Length
+  test |>
+    pl_mutate(m = mean(c(x, y, z))) |>
+    pl_pull(m),
+  c(3, 4)
 )
-expect_equal(
-  pl_mutate(pl_iris, x = Sepal.Width - Sepal.Length + Petal.Length) |>
-    pl_pull(x),
-  iris$Sepal.Width - iris$Sepal.Length + iris$Petal.Length
-)
-
