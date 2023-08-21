@@ -28,5 +28,5 @@ expect_dim(
 
 expect_error(
   pl_drop_na(pl_tmp, foo),
-  ""
+  "don't exist"
 )

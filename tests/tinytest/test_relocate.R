@@ -38,9 +38,9 @@ expect_error(
 )
 expect_error(
   test |> pl_relocate(mpg, .before = foo),
-  ""
+  "don't exist"
 )
 expect_error(
   test |> pl_relocate(mpg, .after = foo),
-  ""
+  "don't exist"
 )

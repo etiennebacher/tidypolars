@@ -32,7 +32,7 @@ expect_dim(
 
 expect_error_lazy(
   pl_drop_na(pl_tmp, foo),
-  ""
+  "don't exist"
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

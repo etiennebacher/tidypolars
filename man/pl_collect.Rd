@@ -4,10 +4,50 @@
 \alias{pl_collect}
 \title{Collect a LazyFrame}
 \usage{
-pl_collect(.data)
+pl_collect(
+  .data,
+  type_coercion = TRUE,
+  predicate_pushdown = TRUE,
+  projection_pushdown = TRUE,
+  simplify_expression = TRUE,
+  slice_pushdown = TRUE,
+  common_subplan_elimination = TRUE,
+  no_optimization = FALSE,
+  streaming = FALSE,
+  collect_in_background = FALSE
+)
 }
 \arguments{
 \item{.data}{A Polars LazyFrame}
+
+\item{type_coercion}{Coerce types such that operations succeed and run on
+minimal required memory (default is \code{TRUE}).}
+
+\item{predicate_pushdown}{Applies filters as early as possible at scan level
+(default is \code{TRUE}).}
+
+\item{projection_pushdown}{Select only the columns that are needed at the scan
+level (default is \code{TRUE}).}
+
+\item{simplify_expression}{Various optimizations, such as constant folding
+and replacing expensive operations with faster alternatives (default is
+\code{TRUE}).}
+
+\item{slice_pushdown}{Only load the required slice from the scan. Don't
+materialize sliced outputs level. Don't materialize sliced outputs (default
+is \code{TRUE}).}
+
+\item{common_subplan_elimination}{Cache subtrees/file scans that are used by
+multiple subtrees in the query plan (default is \code{TRUE}).}
+
+\item{no_optimization}{Sets the following optimizations to \code{FALSE}:
+\code{predicate_pushdown}, \code{projection_pushdown},  \code{slice_pushdown},
+\code{simplify_expression}. Default is \code{FALSE}.}
+
+\item{collect_in_background}{Detach this query from the R session. Computation
+will start in background. Get a handle which later can be converted into the
+resulting DataFrame. Useful in interactive mode to not lock R session (default
+is \code{FALSE}).}
 }
 \description{
 Polars LazyFrames are not loaded in memory. Running \code{collect()} checks the

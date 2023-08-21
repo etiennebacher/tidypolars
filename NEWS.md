@@ -7,6 +7,8 @@
   
 * Support `sink_parquet()` (#38).
 
+* Add all optimization parameters in `collect()`.
+
 **Bug fixes**
 
 * Fix `pl_mutate()` and `pl_summarize()` when expressions use some variables 

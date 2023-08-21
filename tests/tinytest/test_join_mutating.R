@@ -67,7 +67,7 @@ expect_colnames(
 
 expect_error(
   pl_left_join(test, test2, by = c("x", "y"), suffix = c(".hi")),
-  ""
+  "must be of length 2"
 )
 
 
@@ -86,7 +86,7 @@ test2 <- polars::pl$LazyFrame(
 
 expect_error(
   pl_left_join(test, test2),
-  ""
+  "must be of the same class"
 )
 
 options(rlib_message_verbosity = "default")
