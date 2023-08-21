@@ -67,13 +67,69 @@ is loaded in the R session.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pl_collect</span><span class="op">(</span><span class="va">.data</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pl_collect</span><span class="op">(</span></span>
+<span>  <span class="va">.data</span>,</span>
+<span>  type_coercion <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  predicate_pushdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  projection_pushdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  simplify_expression <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  slice_pushdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  common_subplan_elimination <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  no_optimization <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  streaming <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  collect_in_background <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>.data</dt>
 <dd><p>A Polars LazyFrame</p></dd>
+
+
+<dt>type_coercion</dt>
+<dd><p>Coerce types such that operations succeed and run on
+minimal required memory (default is <code>TRUE</code>).</p></dd>
+
+
+<dt>predicate_pushdown</dt>
+<dd><p>Applies filters as early as possible at scan level
+(default is <code>TRUE</code>).</p></dd>
+
+
+<dt>projection_pushdown</dt>
+<dd><p>Select only the columns that are needed at the scan
+level (default is <code>TRUE</code>).</p></dd>
+
+
+<dt>simplify_expression</dt>
+<dd><p>Various optimizations, such as constant folding
+and replacing expensive operations with faster alternatives (default is
+<code>TRUE</code>).</p></dd>
+
+
+<dt>slice_pushdown</dt>
+<dd><p>Only load the required slice from the scan. Don't
+materialize sliced outputs level. Don't materialize sliced outputs (default
+is <code>TRUE</code>).</p></dd>
+
+
+<dt>common_subplan_elimination</dt>
+<dd><p>Cache subtrees/file scans that are used by
+multiple subtrees in the query plan (default is <code>TRUE</code>).</p></dd>
+
+
+<dt>no_optimization</dt>
+<dd><p>Sets the following optimizations to <code>FALSE</code>:
+<code>predicate_pushdown</code>, <code>projection_pushdown</code>,  <code>slice_pushdown</code>,
+<code>simplify_expression</code>. Default is <code>FALSE</code>.</p></dd>
+
+
+<dt>collect_in_background</dt>
+<dd><p>Detach this query from the R session. Computation
+will start in background. Get a handle which later can be converted into the
+resulting DataFrame. Useful in interactive mode to not lock R session (default
+is <code>FALSE</code>).</p></dd>
 
 </dl></div>
 
