@@ -7,13 +7,8 @@ pl_abs <- function(x, ...) {
 
 pl_mean <- function(x, ...) {
   check_empty_dots(...)
-  is_rowwise <- rlang::caller_env(6)[["is_rowwise"]]
-  if (is.list(x) && is_rowwise) {
-    out <- pl$concat_list(x)$arr
-  } else {
-    out <- x
-  }
-  out$mean()
+  x <- check_rowwise(x)
+  x$mean()
 }
 
 pl_median <- function(x, ...) {
@@ -23,21 +18,25 @@ pl_median <- function(x, ...) {
 
 pl_min <- function(x, ...) {
   check_empty_dots(...)
+  x <- check_rowwise(x)
   x$min()
 }
 
 pl_max <- function(x, ...) {
   check_empty_dots(...)
+  x <- check_rowwise(x)
   x$max()
 }
 
 pl_sum <- function(x, ...) {
   check_empty_dots(...)
+  x <- check_rowwise(x)
   x$sum()
 }
 
 pl_std <- function(x, ddof = 1, ...) {
   check_empty_dots(...)
+  x <- check_rowwise(x)
   x$std(ddof = ddof)
 }
 
@@ -58,6 +57,7 @@ pl_alias <- function(x, ...) {
 
 pl_all <- function(x, ...) {
   check_empty_dots(...)
+  x <- check_rowwise(x)
   x$all()
 }
 
@@ -68,6 +68,7 @@ pl_and <- function(x, ...) {
 
 pl_any <- function(x, ...) {
   check_empty_dots(...)
+  x <- check_rowwise(x)
   x$any()
 }
 
@@ -112,11 +113,13 @@ pl_arctanh <- function(x) {
 
 pl_arg_max <- function(x, ...) {
   check_empty_dots(...)
+  x <- check_rowwise(x)
   x$arg_max()
 }
 
 pl_arg_min <- function(x, ...) {
   check_empty_dots(...)
+  x <- check_rowwise(x)
   x$arg_min()
 }
 

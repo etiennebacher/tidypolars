@@ -372,3 +372,14 @@ reorder_exprs <- function(exprs) {
 
   pool_exprs
 }
+
+
+check_rowwise <- function(x) {
+  is_rowwise <- rlang::caller_env(7)[["is_rowwise"]]
+  if (is.list(x) && is_rowwise) {
+    out <- pl$concat_list(x)$arr
+  } else {
+    out <- x
+  }
+  out
+}
