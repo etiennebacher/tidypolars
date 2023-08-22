@@ -80,11 +80,13 @@ pl_str_parse_int <- function(x, ...) {
 
 pl_str_replace <- function(x, pattern, replacement, ...) {
   check_empty_dots(...)
+  replacement <- unlist(replacement)
   x$str$replace(pattern, replacement)
 }
 
 pl_str_replace_all <- function(x, pattern, replacement, ...) {
   check_empty_dots(...)
+  replacement <- unlist(replacement)
   x$str$replace_all(pattern, replacement)
 }
 
