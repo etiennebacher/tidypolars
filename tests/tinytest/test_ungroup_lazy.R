@@ -12,4 +12,9 @@ expect_equal_lazy(
   test
 )
 
+expect_equal_lazy(
+  test |> pl_rowwise(am, cyl) |> pl_ungroup(),
+  test
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

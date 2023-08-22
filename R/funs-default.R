@@ -174,7 +174,7 @@ pl_case_match <- function(x, ..., .data) {
       out <<- out$otherwise(dots[[y]])
       return(invisible())
     }
-    lhs <- translate_expr(.data, dots[[y]][[2]])
+    lhs <- unlist(translate_expr(.data, dots[[y]][[2]]))
     rhs <- translate_expr(.data, dots[[y]][[3]])
     if (is.null(out)) {
       out <<- polars::pl$when(x$is_in(lhs))$then(rhs)

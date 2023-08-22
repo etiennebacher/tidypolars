@@ -5,19 +5,46 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-pl_iris <- polars::pl$LazyFrame(iris) |>
+test <- polars::pl$LazyFrame(x = c(2, 2), y = c(2, 3), z = c(5, NA)) |>
   pl_rowwise()
 
-
 expect_equal_lazy(
-  pl_mutate(pl_iris, x = mean(c(Petal.Length, Petal.Width, Sepal.Length, Sepal.Width))),
-  iris$Sepal.Width + iris$Sepal.Length
-)
-expect_equal_lazy(
-  pl_mutate(pl_iris, x = Sepal.Width - Sepal.Length + Petal.Length) |>
-    pl_pull(x),
-  iris$Sepal.Width - iris$Sepal.Length + iris$Petal.Length
+  test |>
+    pl_mutate(m = mean(c(x, y, z))) |>
+    pl_pull(m),
+  c(3, 2.5)
 )
 
+expect_equal_lazy(
+  test |>
+    pl_mutate(m = min(c(x, y, z))) |>
+    pl_pull(m),
+  c(2, 2)
+)
+
+expect_equal_lazy(
+  test |>
+    pl_mutate(m = max(c(x, y, z))) |>
+    pl_pull(m),
+  c(5, 3)
+)
+
+test2 <- polars::pl$LazyFrame(x = c(TRUE, TRUE), y = c(TRUE, FALSE), z = c(TRUE, NA)) |>
+  pl_rowwise()
+
+# TODO: uncomment this once r-polars has caught up py-polars
+# expect_equal_lazy(
+#   test |>
+#     pl_mutate(m = all(c(x, y, z))) |>
+#     pl_pull(m),
+#   c(TRUE, FALSE)
+# )
+#
+# expect_equal_lazy(
+#   test |>
+#     pl_mutate(m = any(c(x, y, z))) |>
+#     pl_pull(m),
+#   c(TRUE, TRUE)
+# )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
