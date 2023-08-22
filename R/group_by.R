@@ -41,5 +41,6 @@ pl_group_by <- function(.data, ..., maintain_order = FALSE) {
 pl_ungroup <- function(.data) {
   attributes(.data)$pl_grps <- NULL
   attributes(.data)$maintain_grp_order <- NULL
+  attributes(.data2)$grp_type <- NULL
   .data
 }
