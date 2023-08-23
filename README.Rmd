@@ -60,24 +60,17 @@ different.
 ```{r eval=FALSE}
 install.packages(
   'tidypolars', 
-  repos = c('https://etiennebacher.r-universe.dev', 'https://rpolars.r-universe.dev', getOption("repos"))
+  repos = c('https://etiennebacher.r-universe.dev', getOption("repos"))
 )
 ```
 
 ### Linux
 
 ```{r eval=FALSE}
-# install.packages("remotes")
-remotes::install_github(
-  "etiennebacher/tidypolars", 
-  repos = c("https://rpolars.r-universe.dev/bin/linux/jammy/4.3", getOption("repos"))
+install.packages(
+  'tidypolars', 
+  repos = c('https://etiennebacher.r-universe.dev/bin/linux/jammy/4.3', getOption("repos"))
 )
-
-#### OR
-
-# install.packages("pak")
-pak::repo_add("https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
-pak::pkg_install("etiennebacher/tidypolars")
 ```
 
 

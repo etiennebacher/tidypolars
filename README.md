@@ -51,24 +51,17 @@ procedure is slightly different.
 ``` r
 install.packages(
   'tidypolars', 
-  repos = c('https://etiennebacher.r-universe.dev', 'https://rpolars.r-universe.dev', getOption("repos"))
+  repos = c('https://etiennebacher.r-universe.dev', getOption("repos"))
 )
 ```
 
 ### Linux
 
 ``` r
-# install.packages("remotes")
-remotes::install_github(
-  "etiennebacher/tidypolars", 
-  repos = c("https://rpolars.r-universe.dev/bin/linux/jammy/4.3", getOption("repos"))
+install.packages(
+  'tidypolars', 
+  repos = c('https://etiennebacher.r-universe.dev/bin/linux/jammy/4.3', getOption("repos"))
 )
-
-#### OR
-
-# install.packages("pak")
-pak::repo_add("https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
-pak::pkg_install("etiennebacher/tidypolars")
 ```
 
 ## Example
@@ -99,6 +92,9 @@ and keep the exact same code:
 
 ``` r
 library(tidypolars)
+#> Registered S3 method overwritten by 'tidypolars':
+#>   method          from  
+#>   print.DataFrame polars
 
 iris |> 
   as_polars() |> 
@@ -208,9 +204,9 @@ bench::mark(
 #> # A tibble: 3 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     204.33ms 222.31ms     4.39     27.2KB    0    
-#> 2 tidypolars 257.95ms 291.92ms     3.14     98.4KB    0.314
-#> 3 dplyr         1.36s    1.71s     0.601   916.7MB    2.28
+#> 1 polars     161.16ms 260.25ms     4.00     27.2KB    0    
+#> 2 tidypolars 227.14ms 406.94ms     2.58     72.9KB    0.258
+#> 3 dplyr         1.09s    1.34s     0.746   916.7MB    2.83
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
