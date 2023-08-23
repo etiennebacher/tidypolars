@@ -44,6 +44,9 @@ multiple subtrees in the query plan (default is \code{TRUE}).}
 \code{predicate_pushdown}, \code{projection_pushdown},  \code{slice_pushdown},
 \code{simplify_expression}. Default is \code{FALSE}.}
 
+\item{streaming}{Run parts of the query in a streaming fashion (this is in
+an alpha state). Default is \code{FALSE}.}
+
 \item{collect_in_background}{Detach this query from the R session. Computation
 will start in background. Get a handle which later can be converted into the
 resulting DataFrame. Useful in interactive mode to not lock R session (default
