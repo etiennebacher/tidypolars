@@ -17,7 +17,7 @@ env:
   _R_CHECK_TESTS_NLINES_: 0
   R_NOT_CRAN: true
   R_GH: true
-  GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+  GITHUB_PAT: ${{ secrets.COVR_GH_PAT }}
 
 jobs:
   ci:
