@@ -2,8 +2,8 @@
 
 **New features**
 
-* Support `as.numeric()`, `as.character()` and `as.logical()` in expressions
-  in `pl_filter()`, `pl_mutate()` and `pl_summarize()`.
+* Support `as.numeric()`, `as.character()`, `as.logical()`, and `paste()` in
+  expressions in `pl_filter()`, `pl_mutate()` and `pl_summarize()`.
   
 * Support `sink_parquet()` (#38).
 

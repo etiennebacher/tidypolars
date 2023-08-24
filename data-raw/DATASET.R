@@ -148,6 +148,7 @@ r_polars_funs <- data.frame(
       "str_remove", "str_remove",
       "str_remove_all", "str_remove_all",
       "paste0", "paste0",
+      "paste", "paste",
       "ymd_hms", "ymd_hms",
       "ymd_hm", "ymd_hm",
       "dt_day", "mday",

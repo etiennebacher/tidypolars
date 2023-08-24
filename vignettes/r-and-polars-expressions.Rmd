@@ -219,6 +219,7 @@ out <- tribble(
   "`base`", "`min`",
   "`base`", "`nchar`",
   "`base`", "`paste0`",
+  "`base`", "`paste`",
   "`base`", "`rank`",
   "`base`", "`round`",
   "`base`", "`sin`", 

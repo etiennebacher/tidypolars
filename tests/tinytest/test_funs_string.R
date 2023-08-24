@@ -31,6 +31,20 @@ for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper", "nchar")) {
 }
 
 expect_equal(
+  pl_mutate(test, foo = paste(x1, "he")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = paste(x1, "he")) |>
+    pull(foo)
+)
+
+expect_equal(
+  pl_mutate(test, foo = paste(x1, "he", sep = "--")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = paste(x1, "he", sep = "--")) |>
+    pull(foo)
+)
+
+expect_equal(
   pl_mutate(test, foo = paste0(x1, "he")) |>
     pl_pull(foo),
   mutate(test_df, foo = paste0(x1, "he")) |>

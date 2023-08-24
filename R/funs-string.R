@@ -175,10 +175,14 @@ pl_str_remove_all <- function(x, pattern, ...) {
 }
 
 pl_paste0 <- function(..., collapse = NULL) {
-  # for (i in seq_along(dots)) {
-  #   if (length(dots[[i]]) == 1 && is.character(dots[[i]])) {
-  #     dots[[i]] <- pl$lit(dots[[i]])
-  #   }
-  # }
   pl$concat_str(...)
+}
+
+pl_paste <- function(..., sep = " ", collapse = NULL) {
+  # TODO: hacky, I do this because specifying e.g sep = "--" gets wrapped into
+  # Utf8() and doesn't work inside concat_str
+  if (!is.character(sep)) {
+    sep <- sep$to_r()
+  }
+  pl$concat_str(..., separator = sep)
 }
