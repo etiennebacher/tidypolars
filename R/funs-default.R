@@ -124,29 +124,9 @@ pl_arg_unique <- function(x, ...) {
   x$arg_unique()
 }
 
-pl_arr <- function(x, ...) {
-  check_empty_dots(...)
-  x$arr()
-}
-
-pl_backward_fill <- function(x, ...) {
-  check_empty_dots(...)
-  x$backward_fill()
-}
-
-pl_forward_fill <- function(x, ...) {
-  check_empty_dots(...)
-  x$forward_fill()
-}
-
 pl_is_between <- function(x, left, right, include_bounds = TRUE, ...) {
   check_empty_dots(...)
   x$is_between(start = left, end = right, include_bounds = include_bounds)
-}
-
-pl_bin <- function(x, ...) {
-  check_empty_dots(...)
-  x$bin()
 }
 
 pl_case_match <- function(x, ..., .data) {
@@ -208,19 +188,9 @@ pl_cast <- function(x, ...) {
   x$cast()
 }
 
-pl_cat <- function(x, ...) {
-  check_empty_dots(...)
-  x$cat()
-}
-
 pl_ceil <- function(x, ...) {
   check_empty_dots(...)
   x$ceil()
-}
-
-pl_class <- function(x, ...) {
-  check_empty_dots(...)
-  x$class()
 }
 
 pl_clip <- function(x, ...) {
@@ -233,22 +203,12 @@ pl_coalesce <- function(..., default = NULL) {
   pl$coalesce(..., default)
 }
 
-pl_extend_constant <- function(x, ...) {
-  check_empty_dots(...)
-  x$extend_constant()
-}
-
 pl_cos <- function(x) {
   x$cos()
 }
 
 pl_cosh <- function(x) {
   x$cosh()
-}
-
-pl_counts <- function(x, ...) {
-  check_empty_dots(...)
-  x$counts()
 }
 
 pl_cumcount <- function(x, ...) {
@@ -276,29 +236,9 @@ pl_cumulative_eval <- function(x, ...) {
   x$cumulative_eval()
 }
 
-pl_df <- function(x, ...) {
-  check_empty_dots(...)
-  x$df()
-}
-
 pl_diff <- function(x, ...) {
   check_empty_dots(...)
   x$diff()
-}
-
-pl_div <- function(x, ...) {
-  check_empty_dots(...)
-  x$div()
-}
-
-pl_dot <- function(x, ...) {
-  check_empty_dots(...)
-  x$dot()
-}
-
-pl_dt <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt()
 }
 
 pl_duplicated <- function(x, ...) {
@@ -311,24 +251,9 @@ pl_entropy <- function(x, ...) {
   x$entropy()
 }
 
-pl_eq <- function(x, ...) {
-  check_empty_dots(...)
-  x$eq()
-}
-
-pl_gt_eq <- function(x, ...) {
-  check_empty_dots(...)
-  x$gt_eq()
-}
-
 pl_eval <- function(x, ...) {
   check_empty_dots(...)
   x$eval()
-}
-
-pl_exclude <- function(x, ...) {
-  check_empty_dots(...)
-  x$exclude()
 }
 
 pl_exp <- function(x, ...) {
@@ -354,11 +279,6 @@ pl_first <- function(x, ...) {
 pl_agg_groups <- function(x, ...) {
   check_empty_dots(...)
   x$agg_groups()
-}
-
-pl_gt <- function(x, ...) {
-  check_empty_dots(...)
-  x$gt()
 }
 
 pl_hash <- function(x, ...) {
