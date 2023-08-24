@@ -15,6 +15,7 @@ concurrency:
 env:
   USE_BSPM: "true"
   _R_CHECK_FORCE_SUGGESTS_: "false"
+  R_GH: true
   GITHUB_PAT: ${{ secrets.COVR_GH_PAT }}
 
 jobs:
