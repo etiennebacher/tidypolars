@@ -61,11 +61,6 @@ pl_str_ljust <- function(x, ...) {
   x$str$ljust()
 }
 
-pl_str_lstrip <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$lstrip()
-}
-
 pl_str_length <- function(x, ...) {
   check_empty_dots(...)
   x$str$n_chars()
@@ -91,11 +86,6 @@ pl_str_replace_all <- function(x, pattern, replacement, ...) {
 pl_str_rjust <- function(x, ...) {
   check_empty_dots(...)
   x$str$rjust()
-}
-
-pl_str_rstrip <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$rstrip()
 }
 
 pl_str_slice <- function(x, start, end = NULL, ...) {
@@ -126,16 +116,6 @@ pl_str_starts <- function(x, pattern, negate = FALSE) {
   } else {
     x$str$starts_with(pl$lit(pattern))
   }
-}
-
-pl_str_str_explode <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$str_explode()
-}
-
-pl_str_strip <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$strip()
 }
 
 pl_str_strptime <- function(x, ...) {
@@ -185,4 +165,32 @@ pl_paste <- function(..., sep = " ", collapse = NULL) {
     sep <- sep$to_r()
   }
   pl$concat_str(..., separator = sep)
+}
+
+pl_str_trim <- function(x, side = "both") {
+  switch(
+    side,
+    "both" = x$str$strip(),
+    "left" = x$str$lstrip(),
+    "right" = x$str$rstrip()
+  )
+}
+
+pl_str_pad <- function(x, width, side = "left", pad = " ", use_width = TRUE) {
+  if (isFALSE(use_width)) {
+    abort(
+      '`str_pad()` doesn\'t work in a Polars DataFrame when `use_width = FALSE`',
+      call = caller_env(6)
+    )
+  }
+  switch(
+    side,
+    "both" = abort(
+      '`str_pad()` doesn\'t work in a Polars DataFrame when `side = "both"`',
+      call = caller_env(6)
+    ),
+    # polars and dplyr have the opposite understanding for "side"
+    "left" = x$str$rjust(width = width, fillchar = pad),
+    "right" = x$str$ljust(width = width, fillchar = pad)
+  )
 }

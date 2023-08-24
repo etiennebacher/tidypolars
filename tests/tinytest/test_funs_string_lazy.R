@@ -13,7 +13,8 @@ test_df <- data.frame(
   x2 = c("apples x4", "bag of flour"),
   x3 = c("\u6c49\u5b57", "\U0001f60a"),
   x4 = c("\u00fc", "u\u0308"),
-  x5 = c("a.", "...")
+  x5 = c("a.", "..."),
+  x6 = c("  foo  ", "hi there  ")
 )
 
 test <- pl$LazyFrame(test_df)
@@ -257,5 +258,58 @@ expect_equal_lazy(
 #   mutate(test_df, foo = str_count(x5, fixed("."))) |>
 #     pull(foo)
 # )
+
+expect_equal_lazy(
+  pl_mutate(test, foo = str_trim(x6)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_trim(x6)) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  pl_mutate(test, foo = str_trim(x6, side = "left")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_trim(x6, side = "left")) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  pl_mutate(test, foo = str_trim(x6, side = "right")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_trim(x6, side = "right")) |>
+    pull(foo)
+)
+
+
+expect_equal_lazy(
+  pl_mutate(test, foo = str_pad(x6, width = 10)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_pad(x6, width = 10)) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  pl_mutate(test, foo = str_pad(x6, width = 10, pad = "*")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_pad(x6, width = 10, pad = "*")) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  pl_mutate(test, foo = str_pad(x6, width = 10, side = "right")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_pad(x6, width = 10, side = "right")) |>
+    pull(foo)
+)
+
+expect_error_lazy(
+  pl_mutate(test, foo = str_pad(x6, width = 10, side = "both")),
+  "doesn't work in a Polars DataFrame"
+)
+
+expect_error_lazy(
+  pl_mutate(test, foo = str_pad(x6, width = 10, use_width = FALSE)),
+  "doesn't work in a Polars DataFrame"
+)
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

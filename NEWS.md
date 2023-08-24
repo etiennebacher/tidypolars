@@ -7,6 +7,9 @@
   
 * Support `sink_parquet()` (#38).
 
+* Support `str_pad()` and `str_trim()` (some of their arguments are not supported
+  yet).
+
 * Add all optimization parameters in `collect()`.
 
 **Bug fixes**
