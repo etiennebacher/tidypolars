@@ -266,19 +266,9 @@ pl_explode <- function(x, ...) {
   x$explode()
 }
 
-pl_extend <- function(x, ...) {
-  check_empty_dots(...)
-  x$extend()
-}
-
 pl_first <- function(x, ...) {
   check_empty_dots(...)
   x$first()
-}
-
-pl_agg_groups <- function(x, ...) {
-  check_empty_dots(...)
-  x$agg_groups()
 }
 
 pl_hash <- function(x, ...) {
@@ -297,19 +287,9 @@ pl_ifelse <- function(cond, yes, no) {
 
 pl_if_else <- pl_ifelse
 
-pl_in <- function(x, ...) {
-  check_empty_dots(...)
-  # x$in()
-}
-
 pl_infinite <- function(x, ...) {
   check_empty_dots(...)
   x$infinite()
-}
-
-pl_inspect <- function(x, ...) {
-  check_empty_dots(...)
-  x$inspect()
 }
 
 pl_interpolate <- function(x, ...) {
@@ -402,19 +382,9 @@ pl_log10 <- function(x, ...) {
   x$log10()
 }
 
-pl_lt <- function(x, ...) {
-  check_empty_dots(...)
-  x$lt()
-}
-
 pl_map <- function(x, ...) {
   check_empty_dots(...)
   x$map()
-}
-
-pl_meta <- function(x, ...) {
-  check_empty_dots(...)
-  x$meta()
 }
 
 pl_mode <- function(x, ...) {
@@ -427,16 +397,6 @@ pl_mul <- function(x, ...) {
   x$mul()
 }
 
-pl_keep_name <- function(x, ...) {
-  check_empty_dots(...)
-  x$keep_name()
-}
-
-pl_name <- function(x, ...) {
-  check_empty_dots(...)
-  x$name()
-}
-
 pl_fill_nan <- function(x, ...) {
   check_empty_dots(...)
   x$fill_nan()
@@ -445,16 +405,6 @@ pl_fill_nan <- function(x, ...) {
 pl_drop_nans <- function(x, ...) {
   check_empty_dots(...)
   x$drop_nans()
-}
-
-pl_neq <- function(x, ...) {
-  check_empty_dots(...)
-  x$neq()
-}
-
-pl_not <- function(x, ...) {
-  check_empty_dots(...)
-  x$not()
 }
 
 pl_fill_null <- function(x, ...) {
@@ -467,29 +417,9 @@ pl_drop_nulls <- function(x, ...) {
   x$drop_nulls()
 }
 
-pl_or <- function(x, ...) {
-  check_empty_dots(...)
-  x$or()
-}
-
-pl_over <- function(x, ...) {
-  check_empty_dots(...)
-  x$over()
-}
-
-pl_to_physical <- function(x, ...) {
-  check_empty_dots(...)
-  x$to_physical()
-}
-
 pl_pow <- function(x, ...) {
   check_empty_dots(...)
   x$pow()
-}
-
-pl_print <- function(x, ...) {
-  check_empty_dots(...)
-  x$print()
 }
 
 pl_product <- function(x, ...) {
@@ -519,11 +449,6 @@ pl_reinterpret <- function(x, ...) {
 pl_rep <- function(x, ...) {
   check_empty_dots(...)
   x$rep()
-}
-
-pl_reshape <- function(x, ...) {
-  check_empty_dots(...)
-  x$reshape()
 }
 
 pl_round <- function(x, digits = 0, ...) {
@@ -587,16 +512,6 @@ pl_sqrt <- function(x, ...) {
   x$sqrt()
 }
 
-pl_str <- function(x, ...) {
-  check_empty_dots(...)
-  x$str()
-}
-
-pl_struct <- function(x, ...) {
-  check_empty_dots(...)
-  x$struct()
-}
-
 pl_sub <- function(x, ...) {
   check_empty_dots(...)
   x$sub()
@@ -610,11 +525,6 @@ pl_sum <- function(x, ...) {
 pl_tail <- function(x, ...) {
   check_empty_dots(...)
   x$tail()
-}
-
-pl_take <- function(x, ...) {
-  check_empty_dots(...)
-  x$take()
 }
 
 pl_tan <- function(x) {
@@ -658,21 +568,6 @@ pl_ewm_var <- function(x, ddof = 1, ...) {
 pl_xor <- function(x, ...) {
   check_empty_dots(...)
   x$xor()
-}
-
-pl_lit_to_df <- function(x, ...) {
-  check_empty_dots(...)
-  x$lit_to_df()
-}
-
-pl_lit_to_s <- function(x, ...) {
-  check_empty_dots(...)
-  x$lit_to_s()
-}
-
-pl_lt_eq <- function(x, ...) {
-  check_empty_dots(...)
-  x$lt_eq()
 }
 
 pl_map_alias <- function(x, ...) {
@@ -790,21 +685,6 @@ pl_take_every <- function(x, ...) {
   x$take_every()
 }
 
-pl_to_physical <- function(x, ...) {
-  check_empty_dots(...)
-  x$to_physical()
-}
-
-pl_to_r <- function(x, ...) {
-  check_empty_dots(...)
-  x$to_r()
-}
-
-pl_to_struct <- function(x, ...) {
-  check_empty_dots(...)
-  x$to_struct()
-}
-
 pl_top_k <- function(x, ...) {
   check_empty_dots(...)
   x$top_k()
@@ -823,9 +703,4 @@ pl_upper_lower_bound <- function(x, ...) {
 pl_value_counts <- function(x, ...) {
   check_empty_dots(...)
   x$value_counts()
-}
-
-pl_when_then_otherwise <- function(x, ...) {
-  check_empty_dots(...)
-  x$when_then_otherwise()
 }
