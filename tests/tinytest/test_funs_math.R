@@ -57,3 +57,7 @@ for (i in c(
   expect_equal(pol, res, info = i)
 
 }
+
+foo <- test |> pl_mutate(x = sample(x2)) |> pl_pull(x)
+
+expect_true(all(foo %in% c(1, 2, 3, 5)))

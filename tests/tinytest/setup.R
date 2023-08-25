@@ -4,7 +4,8 @@ eager <- lf[grep("lazy", lf, invert = TRUE)]
 # TODO: the only exceptions should be: benchmark, bind, collect, pivot_wider,
 # sink_parquet
 exceptions <- c("test_benchmark.R", "test_bind.R", "test_collect.R",
-                "test_pivot_wider.R", "test_separate.R", "test_sink_parquet.R")
+                "test_pivot_wider.R", "test_separate.R", "test_sink_parquet.R",
+                "test_utils.R")
 
 eager <- setdiff(eager, exceptions)
 

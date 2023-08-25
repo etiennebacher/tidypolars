@@ -40,11 +40,6 @@ pl_floor <- function(x, ...) {
   x$floor()
 }
 
-pl_add <- function(x, ...) {
-  check_empty_dots(...)
-  x$add()
-}
-
 pl_all <- function(x, ...) {
   check_empty_dots(...)
   x$all()
@@ -223,19 +218,9 @@ pl_entropy <- function(x, ...) {
   x$entropy()
 }
 
-pl_eval <- function(x, ...) {
-  check_empty_dots(...)
-  x$eval()
-}
-
 pl_exp <- function(x, ...) {
   check_empty_dots(...)
   x$exp()
-}
-
-pl_explode <- function(x, ...) {
-  check_empty_dots(...)
-  x$explode()
 }
 
 pl_first <- function(x, ...) {
@@ -329,16 +314,6 @@ pl_last <- function(x, ...) {
   x$last()
 }
 
-pl_limit <- function(x, ...) {
-  check_empty_dots(...)
-  x$limit()
-}
-
-pl_list <- function(x, ...) {
-  check_empty_dots(...)
-  x$list()
-}
-
 pl_log <- function(x, ...) {
   check_empty_dots(...)
   x$log()
@@ -383,19 +358,18 @@ pl_rank <- function(x, ...) {
   x$rank()
 }
 
-pl_rep <- function(x, ...) {
-  check_empty_dots(...)
-  x$rep()
-}
-
 pl_round <- function(x, digits = 0, ...) {
   check_empty_dots(...)
   x$round(decimals = digits)
 }
 
-pl_sample <- function(x, ...) {
+pl_sample <- function(x, size = NULL, replace = FALSE, prob, ...) {
   check_empty_dots(...)
-  x$sample()
+  if (!missing(prob)) {
+    inform("Argument `prob` is not supported by Polars `x$sample()`. It will be ignored.")
+  }
+  # TODO: how should I handle seed, given that R sample() doesn't have this arg
+  x$sample(n = size, with_replacement = replace, shuffle = TRUE)
 }
 
 pl_shift <- function(x, n = 1, k = NULL, ...) {

@@ -62,4 +62,8 @@ for (i in c(
 
 }
 
+foo <- test |> pl_mutate(x = sample(x2)) |> pl_pull(x)
+
+expect_true(all(foo %in% c(1, 2, 3, 5)))
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
