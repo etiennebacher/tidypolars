@@ -45,34 +45,14 @@ pl_add <- function(x, ...) {
   x$add()
 }
 
-pl_alias <- function(x, ...) {
-  check_empty_dots(...)
-  x$alias()
-}
-
 pl_all <- function(x, ...) {
   check_empty_dots(...)
   x$all()
 }
 
-pl_and <- function(x, ...) {
-  check_empty_dots(...)
-  x$and()
-}
-
 pl_any <- function(x, ...) {
   check_empty_dots(...)
   x$any()
-}
-
-pl_append <- function(x, ...) {
-  check_empty_dots(...)
-  x$append()
-}
-
-pl_apply <- function(x, ...) {
-  check_empty_dots(...)
-  x$apply()
 }
 
 pl_approx_unique <- function(x, ...) {
@@ -181,11 +161,6 @@ pl_case_when <- function(..., .data) {
   out
 }
 
-pl_cast <- function(x, ...) {
-  check_empty_dots(...)
-  x$cast()
-}
-
 pl_ceil <- function(x, ...) {
   check_empty_dots(...)
   x$ceil()
@@ -271,11 +246,6 @@ pl_first <- function(x, ...) {
 pl_hash <- function(x, ...) {
   check_empty_dots(...)
   x$hash()
-}
-
-pl_head <- function(x, ...) {
-  check_empty_dots(...)
-  x$head()
 }
 
 pl_ifelse <- function(cond, yes, no) {
@@ -379,19 +349,9 @@ pl_log10 <- function(x, ...) {
   x$log10()
 }
 
-pl_map <- function(x, ...) {
-  check_empty_dots(...)
-  x$map()
-}
-
 pl_mode <- function(x, ...) {
   check_empty_dots(...)
   x$mode()
-}
-
-pl_mul <- function(x, ...) {
-  check_empty_dots(...)
-  x$mul()
 }
 
 pl_fill_nan <- function(x, ...) {
@@ -414,16 +374,6 @@ pl_drop_nulls <- function(x, ...) {
   x$drop_nulls()
 }
 
-pl_pow <- function(x, ...) {
-  check_empty_dots(...)
-  x$pow()
-}
-
-pl_product <- function(x, ...) {
-  check_empty_dots(...)
-  x$product()
-}
-
 pl_quantile <- function(x, ...) {
   check_empty_dots(...)
   x$quantile()
@@ -431,16 +381,6 @@ pl_quantile <- function(x, ...) {
 pl_rank <- function(x, ...) {
   check_empty_dots(...)
   x$rank()
-}
-
-pl_rechunk <- function(x, ...) {
-  check_empty_dots(...)
-  x$rechunk()
-}
-
-pl_reinterpret <- function(x, ...) {
-  check_empty_dots(...)
-  x$reinterpret()
 }
 
 pl_rep <- function(x, ...) {
@@ -451,11 +391,6 @@ pl_rep <- function(x, ...) {
 pl_round <- function(x, digits = 0, ...) {
   check_empty_dots(...)
   x$round(decimals = digits)
-}
-
-pl_rpow <- function(x, ...) {
-  check_empty_dots(...)
-  x$rpow()
 }
 
 pl_sample <- function(x, ...) {
@@ -509,19 +444,9 @@ pl_sqrt <- function(x, ...) {
   x$sqrt()
 }
 
-pl_sub <- function(x, ...) {
-  check_empty_dots(...)
-  x$sub()
-}
-
 pl_sum <- function(x, ...) {
   check_empty_dots(...)
   x$sum()
-}
-
-pl_tail <- function(x, ...) {
-  check_empty_dots(...)
-  x$tail()
 }
 
 pl_tan <- function(x) {
@@ -567,11 +492,6 @@ pl_xor <- function(x, ...) {
   x$xor()
 }
 
-pl_map_alias <- function(x, ...) {
-  check_empty_dots(...)
-  x$map_alias()
-}
-
 pl_n_unique <- function(x, ...) {
   check_empty_dots(...)
   x$n_unique()
@@ -595,16 +515,6 @@ pl_null_count <- function(x, ...) {
 pl_pct_change <- function(x, ...) {
   check_empty_dots(...)
   x$pct_change()
-}
-
-pl_rep_extend <- function(x, ...) {
-  check_empty_dots(...)
-  x$rep_extend()
-}
-
-pl_repeat_by <- function(x, ...) {
-  check_empty_dots(...)
-  x$repeat_by()
 }
 
 pl_rolling_max <- function(x, ...) {
@@ -652,34 +562,9 @@ pl_rolling_var <- function(x, ...) {
   x$rolling_var()
 }
 
-pl_search_sorted <- function(x, ...) {
-  check_empty_dots(...)
-  x$search_sorted()
-}
-
-pl_set_sorted <- function(x, ...) {
-  check_empty_dots(...)
-  x$set_sorted()
-}
-
 pl_shift_and_fill <- function(x, ...) {
   check_empty_dots(...)
   x$shift_and_fill()
-}
-
-pl_shrink_dtype <- function(x, ...) {
-  check_empty_dots(...)
-  x$shrink_dtype()
-}
-
-pl_sort_by <- function(x, ...) {
-  check_empty_dots(...)
-  x$sort_by()
-}
-
-pl_take_every <- function(x, ...) {
-  check_empty_dots(...)
-  x$take_every()
 }
 
 pl_top_k <- function(x, ...) {
