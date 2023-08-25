@@ -5,7 +5,7 @@
 #' @return A character vector with the column names
 #' @export
 pl_colnames <- function(x) {
-  if (inherits(x, "DataFrame") | inherits(x, "LazyFrame")) {
+  if (inherits(x, "DataFrame") || inherits(x, "LazyFrame")) {
     x$columns
   }
 }

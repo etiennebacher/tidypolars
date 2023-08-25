@@ -32,13 +32,10 @@ translate_expr <- function(.data, quo, new_vars) {
 
   if (is_expression(quo)) {
     expr <- quo
-    env <- baseenv()
   } else {
     expr <- quo_get_expr(quo)
-    env <- quo_get_env(quo)
   }
 
-  used <- character()
   # we want to distinguish literals that are passed as-is and should be put in
   # pl$lit() (e.g "x = TRUE") from those who are passed as a function argument
   # e.g ("x = mean(y, TRUE)").
@@ -299,8 +296,8 @@ get_known_functions <- function() {
 # (or modified variable) then we store this expression in a new sublist.
 
 reorder_exprs <- function(exprs) {
-  lhs_vars <- lapply(1:length(exprs), \(x) character(0))
-  names(lhs_vars) <- paste0("pool_vars_", 1:length(exprs))
+  lhs_vars <- lapply(seq_along(exprs), \(x) character(0))
+  names(lhs_vars) <- paste0("pool_vars_", seq_along(exprs))
 
   for (i in seq_along(exprs)) {
     if (i == 1) {
@@ -361,8 +358,8 @@ reorder_exprs <- function(exprs) {
     }
   }
   lhs_vars <- Filter(\(x) length(x) > 0, lhs_vars)
-  pool_exprs <- lapply(1:length(lhs_vars), \(x) character(0))
-  names(pool_exprs) <- paste0("pool_exprs_", 1:length(lhs_vars))
+  pool_exprs <- lapply(seq_along(lhs_vars), \(x) character(0))
+  names(pool_exprs) <- paste0("pool_exprs_", seq_along(lhs_vars))
 
   for (i in seq_along(lhs_vars)) {
     pool_exprs[[i]] <- exprs[lhs_vars[[i]]]

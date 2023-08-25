@@ -197,7 +197,6 @@ pl_clip <- function(x, ...) {
 }
 
 pl_coalesce <- function(..., default = NULL) {
-  dots <- get_dots(...)
   pl$coalesce(..., default)
 }
 
