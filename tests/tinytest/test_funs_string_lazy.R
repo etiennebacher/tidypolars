@@ -14,7 +14,9 @@ test_df <- data.frame(
   x3 = c("\u6c49\u5b57", "\U0001f60a"),
   x4 = c("\u00fc", "u\u0308"),
   x5 = c("a.", "..."),
-  x6 = c("  foo  ", "hi there  ")
+  x6 = c("  foo  ", "hi there  "),
+  x7 = c("Jane saw a cat", "Jane sat down"),
+  x8 = c("Jane-saw-a-cat", "Jane-sat-down")
 )
 
 test <- pl$LazyFrame(test_df)
@@ -311,5 +313,33 @@ expect_error_lazy(
   pl_mutate(test, foo = str_pad(x6, width = 10, use_width = FALSE)),
   "doesn't work in a Polars DataFrame"
 )
+
+
+expect_equal_lazy(
+  pl_mutate(test, foo = word(x7)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = word(x7)) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  pl_mutate(test, foo = word(x7, 2, 3)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = word(x7, 2, 3)) |>
+    pull(foo)
+)
+
+expect_error_lazy(
+  pl_mutate(test, foo = word(x7, 2, 4)),
+  "out of bounds"
+)
+
+expect_equal_lazy(
+  pl_mutate(test, foo = word(x8, 2, 3, sep = "-")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = word(x8, 2, 3, sep = "-")) |>
+    pull(foo)
+)
+
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

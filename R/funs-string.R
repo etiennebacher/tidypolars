@@ -1,9 +1,4 @@
 
-pl_str_concat <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$concat()
-}
-
 pl_str_contains <- function(x, ...) {
   check_empty_dots(...)
   x$str$contains()
@@ -12,16 +7,6 @@ pl_str_contains <- function(x, ...) {
 pl_str_count_match <- function(x, pattern = "", ...) {
   check_empty_dots(...)
   x$str$count_match(pattern)
-}
-
-pl_str_decode <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$decode()
-}
-
-pl_str_encode <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$encode()
 }
 
 pl_str_ends <- function(x, pattern, negate = FALSE) {
@@ -39,26 +24,6 @@ pl_str_extract <- function(x, pattern, group = 0) {
 pl_str_extract_all <- function(x, ...) {
   check_empty_dots(...)
   x$str$extract_all()
-}
-
-pl_str_json_extract <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$json_extract()
-}
-
-pl_str_json_path_match <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$json_path_match()
-}
-
-pl_str_lengths <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$lengths()
-}
-
-pl_str_ljust <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$ljust()
 }
 
 pl_str_length <- function(x, ...) {
@@ -81,11 +46,6 @@ pl_str_replace <- function(x, pattern, replacement, ...) {
 pl_str_replace_all <- function(x, pattern, replacement, ...) {
   check_empty_dots(...)
   x$str$replace_all(pattern, replacement)
-}
-
-pl_str_rjust <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$rjust()
 }
 
 pl_str_slice <- function(x, start, end = NULL, ...) {
@@ -193,4 +153,10 @@ pl_str_pad <- function(x, width, side = "left", pad = " ", use_width = TRUE) {
     "left" = x$str$rjust(width = width, fillchar = pad),
     "right" = x$str$ljust(width = width, fillchar = pad)
   )
+}
+
+# not in polars
+
+pl_word <- function(string, start = 1L, end = start, sep = " ") {
+  string$str$split(sep)$arr$take((start:end) - 1L)$arr$join(sep)
 }

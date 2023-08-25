@@ -157,7 +157,8 @@ r_polars_funs <- data.frame(
       "dt_ordinal_day", "yday",
       "as.numeric", "as.numeric",
       "as.logical", "as.logical",
-      "as.character", "as.character"
+      "as.character", "as.character",
+      "word", "word"
     )
   ) |>
   arrange(category, polars_funs, .locale = "en")
