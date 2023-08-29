@@ -11,7 +11,8 @@ pl_collect(
   projection_pushdown = TRUE,
   simplify_expression = TRUE,
   slice_pushdown = TRUE,
-  common_subplan_elimination = TRUE,
+  comm_subplan_elim = TRUE,
+  comm_subexpr_elim = TRUE,
   no_optimization = FALSE,
   streaming = FALSE,
   collect_in_background = FALSE
@@ -37,8 +38,10 @@ and replacing expensive operations with faster alternatives (default is
 materialize sliced outputs level. Don't materialize sliced outputs (default
 is \code{TRUE}).}
 
-\item{common_subplan_elimination}{Cache subtrees/file scans that are used by
-multiple subtrees in the query plan (default is \code{TRUE}).}
+\item{comm_subplan_elim}{Cache branching subplans that occur on self-joins or
+unions (default is \code{TRUE}).}
+
+\item{comm_subexpr_elim}{Cache common subexpressions (default is \code{TRUE}).}
 
 \item{no_optimization}{Sets the following optimizations to \code{FALSE}:
 \code{predicate_pushdown}, \code{projection_pushdown},  \code{slice_pushdown},
