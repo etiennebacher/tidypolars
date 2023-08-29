@@ -116,7 +116,8 @@ pl_case_match <- function(x, ..., .data) {
   out <- NULL
   for (y in seq_along(dots)) {
     if (y == length(dots)) {
-      out <- out$otherwise(dots[[y]])
+      otw <- translate_expr(.data, dots[[y]])
+      out <- out$otherwise(otw)
       next
     }
     lhs <- translate_expr(.data, dots[[y]][[2]])
@@ -127,6 +128,7 @@ pl_case_match <- function(x, ..., .data) {
       out <- out$when(x$is_in(lhs))$then(rhs)
     }
   }
+
   out
 }
 
@@ -142,11 +144,13 @@ pl_case_when <- function(..., .data) {
   out <- NULL
   for (y in seq_along(dots)) {
     if (y == length(dots)) {
-      out <- out$otherwise(dots[[y]])
+      otw <- translate_expr(.data, dots[[y]])
+      out <- out$otherwise(otw)
       next
     }
     lhs <- translate_expr(.data, dots[[y]][[2]])
     rhs <- translate_expr(.data, dots[[y]][[3]])
+
     if (is.null(out)) {
       out <- polars::pl$when(lhs)$then(rhs)
     } else {
@@ -233,11 +237,12 @@ pl_hash <- function(x, ...) {
   x$hash()
 }
 
-pl_ifelse <- function(cond, yes, no) {
+pl_ifelse <- function(cond, yes, no, .data) {
+  cond <- translate_expr(.data, enexpr(cond))
+  yes <- translate_expr(.data, enexpr(yes))
+  no <- translate_expr(.data, enexpr(no))
   pl$when(cond)$then(yes)$otherwise(no)
 }
-
-pl_if_else <- pl_ifelse
 
 pl_infinite <- function(x, ...) {
   check_empty_dots(...)

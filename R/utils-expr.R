@@ -129,6 +129,12 @@ translate_expr <- function(.data, quo, new_vars) {
             )
             return(out)
           },
+          "ifelse" = ,
+          "if_else" =  {
+            args <- call_args(expr)
+            args$.data <- .data
+            return(do.call(pl_ifelse, args))
+          },
           "is.na" = {
             out <- tryCatch(
               {
