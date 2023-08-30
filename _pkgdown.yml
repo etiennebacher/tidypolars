@@ -22,6 +22,7 @@ reference:
       - describe_optimized_plan
       - make_unique_id
       - pl_colnames
+      - pl_fetch
       - sink_parquet
       - to_r
   - title: From `dplyr`

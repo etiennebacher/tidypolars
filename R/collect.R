@@ -31,9 +31,16 @@
 #' is `FALSE`).
 #'
 #' @export
+#' @seealso [pl_fetch()] for applying a lazy query on a subset of the data.
 #' @examples
 #' dat_lazy <- polars::pl$DataFrame(iris)$lazy()
 #' pl_collect(dat_lazy)
+#'
+#' # you can build a query and add pl_collect() as the last piece
+#' dat_lazy |>
+#'   pl_select(starts_with("Sepal")) |>
+#'   pl_filter(between(Sepal.Length, 5, 6)) |>
+#'   pl_collect()
 
 pl_collect <- function(
     .data,
