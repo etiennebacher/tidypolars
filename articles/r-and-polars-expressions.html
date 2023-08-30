@@ -186,8 +186,8 @@ and throws a message if this is not the case:</p>
 <span>  <span class="fu"><a href="../reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">mpg</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: </span></span>
-<span><span class="co">#&gt; When the dataset is a Polars DataFrame or LazyFrame, `std()`</span></span>
-<span><span class="co">#&gt; only needs one argument. Additional arguments will not be used.</span></span>
+<span><span class="co">#&gt; Not all arguments of std() are used by Polars.</span></span>
+<span><span class="co">#&gt; The following argument(s) will not be used: `na.rm`.</span></span>
 <span><span class="co">#&gt; shape: (32, 12)</span></span>
 <span><span class="co">#&gt; ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬──────────┐</span></span>
 <span><span class="co">#&gt; │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ x        │</span></span>
