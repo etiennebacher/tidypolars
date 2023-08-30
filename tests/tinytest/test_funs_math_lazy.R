@@ -66,4 +66,9 @@ foo <- test |> pl_mutate(x = sample(x2)) |> pl_pull(x)
 
 expect_true(all(foo %in% c(1, 2, 3, 5)))
 
+expect_warning(
+  test |> pl_mutate(x = sample(x2, prob = 0.5)),
+  "will not be used: `prob`"
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

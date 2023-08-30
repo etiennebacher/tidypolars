@@ -368,11 +368,8 @@ pl_round <- function(x, digits = 0, ...) {
   x$round(decimals = digits)
 }
 
-pl_sample <- function(x, size = NULL, replace = FALSE, prob, ...) {
+pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
   check_empty_dots(...)
-  if (!missing(prob)) {
-    inform("Argument `prob` is not supported by Polars `x$sample()`. It will be ignored.")
-  }
   # TODO: how should I handle seed, given that R sample() doesn't have this arg
   x$sample(n = size, with_replacement = replace, shuffle = TRUE)
 }
