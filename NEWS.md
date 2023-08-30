@@ -7,6 +7,8 @@
   
 * Support `sink_parquet()` (#38).
 
+* Support `fetch()` (#42).
+
 * Support for additional `stringr` functions: `str_pad()` `str_trim()`, `word()`
   (some arguments or corner cases are not supported yet).
 
