@@ -157,7 +157,7 @@ expect_colnames(
 
 expect_warning(
   pl_mutate(pl_iris, foo = mean(Sepal.Length, na.rm = TRUE)),
-  pattern = "Additional arguments will not be used"
+  pattern = "will not be used: `na.rm`"
 )
 
 
@@ -181,12 +181,12 @@ some_value <<- 1
 
 expect_equal_lazy(
   pl_mutate(pl_iris, x = {{ some_value }}),
-  pl_mutate(pl_iris, x = 1) 
+  pl_mutate(pl_iris, x = 1)
 )
 
 expect_equal_lazy(
   pl_mutate(pl_iris, x = some_value + Sepal.Length),
-  pl_mutate(pl_iris, x = 1 + Sepal.Length) 
+  pl_mutate(pl_iris, x = 1 + Sepal.Length)
 )
 
 # reorder of expressions works

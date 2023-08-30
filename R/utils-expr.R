@@ -241,8 +241,13 @@ check_empty_dots <- function(...) {
     fn <- deparse(match.call(call = sys.call(sys.parent()))[1])
     fn <- gsub("^pl\\_", "", fn)
     rlang::warn(
-      paste0("\nWhen the dataset is a Polars DataFrame or LazyFrame, `", fn,
-             "`\nonly needs one argument. Additional arguments will not be used."))
+      paste0(
+        "\nNot all arguments of ", fn, " are used by Polars.\n",
+        "The following argument(s) will not be used: ",
+        toString(paste0("`", names(dots), "`")),
+        "."
+      )
+    )
   }
 }
 
