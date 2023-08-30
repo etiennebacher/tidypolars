@@ -11,7 +11,7 @@
 #'
 #' @details
 #' The parameter `n_rows` indicates how many rows from the LazyFrame should be
-#' used at the beginning of the query. It doesn't guarantee that `n_rows` will
+#' used at the beginning of the query, but it doesn't guarantee that `n_rows` will
 #' be returned. For example, if the query contains a filter or join operations
 #' with other datasets, then the final number of rows can be lower than `n_rows`.
 #' On the other hand, appending some rows during the query can lead to an output
