@@ -13,11 +13,12 @@
 pl_slice_tail <- function(.data, n = 5) {
   check_polars_data(.data)
   grps <- attributes(.data)$pl_grps
+  mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
   if (is_grouped) {
     non_grps <- setdiff(pl_colnames(.data), grps)
-    .data$groupby(grps)$agg(
+    .data$groupby(grps, maintain_order = mo)$agg(
       pl$all()$tail(n)
     )$explode(non_grps)
   } else {
@@ -30,11 +31,12 @@ pl_slice_tail <- function(.data, n = 5) {
 pl_slice_head <- function(.data, n = 5) {
   check_polars_data(.data)
   grps <- attributes(.data)$pl_grps
+  mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
   if (is_grouped) {
     non_grps <- setdiff(pl_colnames(.data), grps)
-    .data$groupby(grps)$agg(
+    .data$groupby(grps, maintain_order = mo)$agg(
       pl$all()$head(n)
     )$explode(non_grps)
   } else {

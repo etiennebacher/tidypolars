@@ -16,7 +16,7 @@ expect_equal(
 )
 
 pl_iris_g <- pl_iris |>
-  pl_group_by(Species)
+  pl_group_by(Species, maintain_order = TRUE)
 
 hd <- pl_slice_head(pl_iris_g, n = 2)
 
