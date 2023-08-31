@@ -175,6 +175,17 @@ expect_equal_lazy(
   rep(mean(iris$Sepal.Length) + mean(iris$Petal.Length), nrow(iris))
 )
 
+# custom function that doesn't return Polars expression
+
+foo2 <<- function(x, y) {
+  dplyr::near(x, y)
+}
+
+expect_error_lazy(
+  pl_mutate(pl_iris, x = foo2(Sepal.Length, Petal.Length)),
+  "Couldn't evaluate function `foo2`"
+)
+
 # embracing works
 
 some_value <<- 1

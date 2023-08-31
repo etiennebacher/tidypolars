@@ -193,8 +193,20 @@ translate_expr <- function(.data, quo, new_vars) {
           name <- paste0("pl_", name)
         }
 
-        fun <- do.call(name, args)
-        fun
+        tryCatch(
+          do.call(name, args),
+          error = function(e) {
+            if (!inherits(e, "tidypolars_error")) {
+              abort(
+                paste0("Couldn't evaluate function `", name, "` in Polars. Are you ",
+                       "sure it returns a Polars expression?"),
+
+              )
+            } else {
+              abort(e$message, call = caller_env(9))
+            }
+          }
+        )
       },
 
       abort(
@@ -267,7 +279,7 @@ check_polars_expr <- function(exprs, .data) {
       }
       paste0(names(fault)[x], " = ", safe_deparse(fn_call))
     })
-    errors <- Filter(\(x) length(x) > 0, errors)
+    errors <- compact(errors)
     if (length(errors) > 0) {
       names(errors) <- rep("*", length(errors))
       abort(
@@ -343,8 +355,7 @@ reorder_exprs <- function(exprs) {
     # in the second pool. Therefore, we will end up with two calls to
     # `with_columns()`.
 
-    latest_pool <- Filter(\(x) length(x) > 0, lhs_vars) |>
-      length()
+    latest_pool <- length(compact(lhs_vars))
 
     if (is.null(exprs[[i]])) {
       vars_used <- character(0)
@@ -368,7 +379,7 @@ reorder_exprs <- function(exprs) {
       }
     }
   }
-  lhs_vars <- Filter(\(x) length(x) > 0, lhs_vars)
+  lhs_vars <- compact(lhs_vars)
   pool_exprs <- lapply(seq_along(lhs_vars), \(x) character(0))
   names(pool_exprs) <- paste0("pool_exprs_", seq_along(lhs_vars))
 

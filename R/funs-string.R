@@ -140,14 +140,14 @@ pl_str_pad <- function(x, width, side = "left", pad = " ", use_width = TRUE) {
   if (isFALSE(use_width)) {
     abort(
       '`str_pad()` doesn\'t work in a Polars DataFrame when `use_width = FALSE`',
-      call = caller_env(6)
+      class = "tidypolars_error"
     )
   }
   switch(
     side,
     "both" = abort(
       '`str_pad()` doesn\'t work in a Polars DataFrame when `side = "both"`',
-      call = caller_env(6)
+      class = "tidypolars_error"
     ),
     # polars and dplyr have the opposite understanding for "side"
     "left" = x$str$rjust(width = width, fillchar = pad),
