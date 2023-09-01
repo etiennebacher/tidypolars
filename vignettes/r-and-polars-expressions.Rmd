@@ -209,6 +209,7 @@ out <- tribble(
   "`base`", "`cumsum`", 
   "`base`", "`exp`", 
   "`base`", "`floor`",
+  "`base`", "`grepl`",
   "`base`", "`ifelse`",
   "`stats` / `dplyr`", "`lag`",
   "`base`", "`log`", 

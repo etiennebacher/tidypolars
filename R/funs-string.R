@@ -1,117 +1,127 @@
 
-pl_str_contains <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$contains()
-}
-
-pl_str_count_match <- function(x, pattern = "", ...) {
-  check_empty_dots(...)
-  x$str$count_match(pattern)
-}
-
-pl_str_ends <- function(x, pattern, negate = FALSE) {
+pl_str_detect <- function(string, pattern, negate = FALSE) {
+  out <- string$str$contains(pattern)
   if (isTRUE(negate)) {
-    x$str$ends_with(pl$lit(pattern))$is_not()
+    out$is_not()
   } else {
-    x$str$ends_with(pl$lit(pattern))
+    out
   }
 }
 
-pl_str_extract <- function(x, pattern, group = 0) {
-  x$str$extract(pattern, group)
+pl_grepl <- function(pattern, x, ...) {
+  check_empty_dots(...)
+  pl_str_detect(string = x, pattern = pattern)
 }
 
-pl_str_extract_all <- function(x, ...) {
+pl_str_count_match <- function(string, pattern = "", ...) {
   check_empty_dots(...)
-  x$str$extract_all()
+  string$str$count_match(pattern)
 }
 
-pl_str_length <- function(x, ...) {
+pl_str_ends <- function(string, pattern, negate = FALSE) {
+  out <- string$str$ends_with(pattern)
+  if (isTRUE(negate)) {
+    out$is_not()
+  } else {
+    out
+  }
+}
+
+pl_str_extract <- function(string, pattern, group = 0) {
+  string$str$extract(pattern, group)
+}
+
+pl_str_extract_all <- function(string, ...) {
   check_empty_dots(...)
-  x$str$n_chars()
+  string$str$extract_all()
+}
+
+pl_str_length <- function(string, ...) {
+  check_empty_dots(...)
+  string$str$n_chars()
 }
 
 pl_str_n_chars <- pl_str_length
 
-pl_str_parse_int <- function(x, ...) {
+pl_str_parse_int <- function(string, ...) {
   check_empty_dots(...)
-  x$str$parse_int()
+  string$str$parse_int()
 }
 
-pl_str_replace <- function(x, pattern, replacement, ...) {
+pl_str_replace <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
-  x$str$replace(pattern, replacement)
+  string$str$replace(pattern, replacement)
 }
 
-pl_str_replace_all <- function(x, pattern, replacement, ...) {
+pl_str_replace_all <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
-  x$str$replace_all(pattern, replacement)
+  string$str$replace_all(pattern, replacement)
 }
 
-pl_str_slice <- function(x, start, end = NULL, ...) {
+pl_str_slice <- function(string, start, end = NULL, ...) {
   check_empty_dots(...)
   # polars is 0-indexed
   if (start > 0) start <- start - 1
-  x$str$slice(start, end)
+  string$str$slice(start, end)
 }
 
-pl_str_split <- function(x, ...) {
+pl_str_split <- function(string, ...) {
   check_empty_dots(...)
-  x$str$split()
+  string$str$split()
 }
 
-pl_str_split_exact <- function(x, ...) {
+pl_str_split_exact <- function(string, ...) {
   check_empty_dots(...)
-  x$str$split_exact()
+  string$str$split_exact()
 }
 
-pl_str_splitn <- function(x, ...) {
+pl_str_splitn <- function(string, ...) {
   check_empty_dots(...)
-  x$str$splitn()
+  string$str$splitn()
 }
 
-pl_str_starts <- function(x, pattern, negate = FALSE) {
+pl_str_starts <- function(string, pattern, negate = FALSE) {
   if (isTRUE(negate)) {
-    x$str$starts_with(pl$lit(pattern))$is_not()
+    string$str$starts_with(pl$lit(pattern))$is_not()
   } else {
-    x$str$starts_with(pl$lit(pattern))
+    string$str$starts_with(pl$lit(pattern))
   }
 }
 
-pl_str_strptime <- function(x, ...) {
+pl_str_strptime <- function(string, ...) {
   check_empty_dots(...)
-  x$str$strptime()
+  string$str$strptime()
 }
 
-pl_str_to_lower <- function(x, ...) {
+pl_str_to_lower <- function(string, ...) {
   check_empty_dots(...)
-  x$str$to_lowercase()
+  string$str$to_lowercase()
 }
 
 pl_tolower <- pl_str_to_lower
 
-pl_str_to_upper <- function(x, ...) {
+pl_str_to_upper <- function(string, ...) {
   check_empty_dots(...)
-  x$str$to_uppercase()
+  string$str$to_uppercase()
 }
 
 pl_toupper <- pl_str_to_upper
 
-pl_str_zfill <- function(x, ...) {
+pl_str_zfill <- function(string, ...) {
   check_empty_dots(...)
-  x$str$zfill()
+  string$str$zfill()
 }
 
 # not in polars
-pl_str_remove <- function(x, pattern, ...) {
+pl_str_remove <- function(string, pattern, ...) {
   check_empty_dots(...)
-  x$str$replace(pattern, "")
+  string$str$replace(pattern, "")
 }
 
 # not in polars
-pl_str_remove_all <- function(x, pattern, ...) {
+pl_str_remove_all <- function(string, pattern, ...) {
   check_empty_dots(...)
-  x$str$replace_all(pattern, "")
+  string$str$replace_all(pattern, "")
 }
 
 pl_paste0 <- function(..., collapse = NULL) {
@@ -127,16 +137,21 @@ pl_paste <- function(..., sep = " ", collapse = NULL) {
   pl$concat_str(..., separator = sep)
 }
 
-pl_str_trim <- function(x, side = "both") {
+pl_str_trim <- function(string, side = "both") {
   switch(
     side,
-    "both" = x$str$strip(),
-    "left" = x$str$lstrip(),
-    "right" = x$str$rstrip()
+    "both" = string$str$strip(),
+    "left" = string$str$lstrip(),
+    "right" = string$str$rstrip()
   )
 }
 
-pl_str_pad <- function(x, width, side = "left", pad = " ", use_width = TRUE) {
+pl_trimws <- function(string, which = "both", ...) {
+  check_empty_dots(...)
+  pl_str_trim(string, side = which)
+}
+
+pl_str_pad <- function(string, width, side = "left", pad = " ", use_width = TRUE) {
   if (isFALSE(use_width)) {
     abort(
       '`str_pad()` doesn\'t work in a Polars DataFrame when `use_width = FALSE`',
@@ -150,8 +165,8 @@ pl_str_pad <- function(x, width, side = "left", pad = " ", use_width = TRUE) {
       class = "tidypolars_error"
     ),
     # polars and dplyr have the opposite understanding for "side"
-    "left" = x$str$rjust(width = width, fillchar = pad),
-    "right" = x$str$ljust(width = width, fillchar = pad)
+    "left" = string$str$rjust(width = width, fillchar = pad),
+    "right" = string$str$ljust(width = width, fillchar = pad)
   )
 }
 

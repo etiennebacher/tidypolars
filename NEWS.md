@@ -2,15 +2,16 @@
 
 **New features**
 
-* Support `as.numeric()`, `as.character()`, `as.logical()`, and `paste()` in
-  expressions in `pl_filter()`, `pl_mutate()` and `pl_summarize()`.
+* Support `as.numeric()`, `as.character()`, `as.logical()`, `grepl()`, and
+  `paste()` in expressions in `pl_filter()`, `pl_mutate()` and `pl_summarize()`.
   
 * Support `sink_parquet()` (#38).
 
 * Support `fetch()` (#42).
 
-* Support for additional `stringr` functions: `str_pad()`, `str_squish()`, 
-  `str_trim()`, `word()` (some arguments or corner cases are not supported yet).
+* Support for additional `stringr` functions: `str_detect()`, `str_pad()`,
+  `str_squish()`, `str_trim()`, `word()` (some arguments or corner cases are not
+  supported yet).
 
 * Add all optimization parameters in `collect()`.
 

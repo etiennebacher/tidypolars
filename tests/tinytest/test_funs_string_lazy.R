@@ -38,6 +38,10 @@ for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper", "nchar")) {
 
 }
 
+
+
+# paste / paste0 --------------------------------------------------------------
+
 expect_equal_lazy(
   pl_mutate(test, foo = paste(x1, "he")) |>
     pl_pull(foo),
@@ -65,6 +69,10 @@ expect_equal_lazy(
   mutate(test_df, foo = paste0(x1, "he", x3)) |>
     pull(foo)
 )
+
+
+
+# start /end -----------------------------------------------------------------
 
 expect_equal_lazy(
   pl_mutate(test, foo = str_starts(x1, "he")) |>
@@ -94,6 +102,10 @@ expect_equal_lazy(
     pull(foo)
 )
 
+
+
+# extract -----------------------------------------------------------------
+
 expect_equal_lazy(
   pl_mutate(test, foo = str_extract(x2, "\\d")) |>
     pl_pull(foo),
@@ -115,6 +127,10 @@ expect_equal_lazy(
     pull(foo)
 )
 
+
+
+# length -----------------------------------------------------------------
+
 expect_equal_lazy(
   pl_mutate(test, foo = str_length(x2)) |>
     pl_pull(foo),
@@ -135,6 +151,10 @@ expect_equal_lazy(
   mutate(test_df, foo = str_length(x4)) |>
     pull(foo)
 )
+
+
+
+# replace / replace_all ----------------------------------------------------------
 
 expect_equal_lazy(
   pl_mutate(test, foo = str_replace(x1, "[aeiou]", "-")) |>
@@ -189,6 +209,9 @@ expect_equal_lazy(
 # )
 
 
+
+# remove / remove_all ----------------------------------------------------------
+
 expect_equal_lazy(
   pl_mutate(test, foo = str_remove(x1, "[aeiou]")) |>
     pl_pull(foo),
@@ -210,6 +233,8 @@ expect_equal_lazy(
     pull(foo)
 )
 
+
+# sub ---------------------------------------------------------------------
 
 expect_equal_lazy(
   pl_mutate(test, foo = str_sub(x1, 1, 5)) |>
@@ -240,6 +265,11 @@ expect_equal_lazy(
 #     pull(foo)
 # )
 
+
+
+
+# count ---------------------------------------------------------------------
+
 expect_equal_lazy(
   pl_mutate(test, foo = str_count(x1, "[aeiou]")) |>
     pl_pull(foo),
@@ -262,6 +292,9 @@ expect_equal_lazy(
 #     pull(foo)
 # )
 
+
+# trim ---------------------------------------------------------------------
+
 expect_equal_lazy(
   pl_mutate(test, foo = str_trim(x6)) |>
     pl_pull(foo),
@@ -283,6 +316,35 @@ expect_equal_lazy(
     pull(foo)
 )
 
+expect_equal_lazy(
+  pl_mutate(test, foo = trimws(x6)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = trimws(x6)) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  pl_mutate(test, foo = trimws(x6, which = "left")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = trimws(x6, which = "left")) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  pl_mutate(test, foo = trimws(x6, which = "right")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = trimws(x6, which = "right")) |>
+    pull(foo)
+)
+
+expect_warning(
+  pl_mutate(test, foo = trimws(x6, which = "right", whitespace = " ")),
+  "will not be used"
+)
+
+
+
+# pad ---------------------------------------------------------------------
 
 expect_equal_lazy(
   pl_mutate(test, foo = str_pad(x6, width = 10)) |>
@@ -316,6 +378,8 @@ expect_error_lazy(
 )
 
 
+# word ---------------------------------------------------------------------
+
 expect_equal_lazy(
   pl_mutate(test, foo = word(x7)) |>
     pl_pull(foo),
@@ -343,6 +407,7 @@ expect_equal_lazy(
 )
 
 
+# squish ---------------------------------------------------------------------
 
 expect_equal_lazy(
   pl_mutate(test, foo = str_squish(x9)) |>
@@ -356,6 +421,43 @@ expect_equal_lazy(
     pl_pull(foo),
   mutate(test_df, foo = str_squish(x7)) |>
     pull(foo)
+)
+
+
+
+# detect / grepl ---------------------------------------------------------
+
+expect_equal_lazy(
+  pl_mutate(test, foo = str_detect(x1, "e")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_detect(x1, "e")) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  pl_mutate(test, foo = str_detect(x1, "^he")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_detect(x1, "^he")) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  pl_mutate(test, foo = str_detect(x1, "e", negate = TRUE)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_detect(x1, "e", negate = TRUE)) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  pl_mutate(test, foo = grepl("^he", x1)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = grepl("^he", x1)) |>
+    pull(foo)
+)
+
+expect_warning(
+  pl_mutate(test, foo = grepl("e", x1, ignore.case = TRUE)),
+  "will not be used"
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
