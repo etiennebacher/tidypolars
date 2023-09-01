@@ -104,7 +104,7 @@ expect_equal_lazy(
 
 
 
-# extract -----------------------------------------------------------------
+# extract / extract _all -------------------------------------------------------
 
 expect_equal_lazy(
   pl_mutate(test, foo = str_extract(x2, "\\d")) |>
@@ -127,6 +127,17 @@ expect_equal_lazy(
     pull(foo)
 )
 
+expect_equal_lazy(
+  pl_mutate(test, foo = str_extract_all(x2, "[a-z]+")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_extract_all(x2, "[a-z]+")) |>
+    pull(foo)
+)
+
+expect_warning(
+  pl_mutate(test, foo = str_extract_all(x2, "[a-z]+", simplify = TRUE)),
+  "will not be used"
+)
 
 
 # length -----------------------------------------------------------------

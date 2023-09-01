@@ -4,12 +4,15 @@
 \alias{as_polars}
 \title{Convert an R dataframe to a Polars Data/LazyFrame}
 \usage{
-as_polars(.data, lazy = FALSE)
+as_polars(.data, lazy = FALSE, with_string_cache = TRUE)
 }
 \arguments{
 \item{.data}{An R dataframe.}
 
 \item{lazy}{Convert the data to lazy format.}
+
+\item{with_string_cache}{Enable the string cache. This allows more operations,
+such as comparing factors to strings but may cost some performance.}
 }
 \description{
 This operation is time- and memory-consuming. It should only be used for small
@@ -18,4 +21,6 @@ datasets. Use \code{polars} original functions to read files instead.
 \examples{
 mtcars |>
   as_polars()
+mtcars |>
+  as_polars(lazy = TRUE)
 }
