@@ -64,7 +64,7 @@ datasets. Use <code>polars</code> original functions to read files instead.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">as_polars</span><span class="op">(</span><span class="va">.data</span>, lazy <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">as_polars</span><span class="op">(</span><span class="va">.data</span>, lazy <span class="op">=</span> <span class="cn">FALSE</span>, with_string_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -75,6 +75,11 @@ datasets. Use <code>polars</code> original functions to read files instead.</p>
 
 <dt>lazy</dt>
 <dd><p>Convert the data to lazy format.</p></dd>
+
+
+<dt>with_string_cache</dt>
+<dd><p>Enable the string cache. This allows more operations,
+such as comparing factors to strings but may cost some performance.</p></dd>
 
 </dl></div>
 
@@ -98,6 +103,10 @@ datasets. Use <code>polars</code> original functions to read files instead.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 8.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 1.0 ┆ 4.0  ┆ 2.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └──────┴─────┴───────┴───────┴───┴─────┴─────┴──────┴──────┘</span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">as_polars</span><span class="op">(</span>lazy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "polars LazyFrame naive plan: (run ldf$describe_optimized_plan() to see the optimized plan)"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DF ["mpg", "cyl", "disp", "hp"]; PROJECT */11 COLUMNS; SELECTION: "None"</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
