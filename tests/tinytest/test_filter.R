@@ -167,14 +167,14 @@ foo <- pl$DataFrame(
 
 expect_dim(
   foo |>
-    group_by(grp) |>
-    filter(all(x)),
+    pl_group_by(grp) |>
+    pl_filter(all(x)),
   c(2, 2)
 )
 
 expect_dim(
   foo |>
-    group_by(grp) |>
-    filter(any(x)),
+    pl_group_by(grp) |>
+    pl_filter(any(x)),
   c(4, 2)
 )
