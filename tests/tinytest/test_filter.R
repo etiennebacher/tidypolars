@@ -159,3 +159,22 @@ expect_dim(
     pl_filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4),
   c(123, 5)
 )
+
+foo <- pl$DataFrame(
+  grp = c("a", "a", "b", "b"),
+  x = c(TRUE, TRUE, TRUE, FALSE)
+)
+
+expect_dim(
+  foo |>
+    group_by(grp) |>
+    filter(all(x)),
+  c(2, 2)
+)
+
+expect_dim(
+  foo |>
+    group_by(grp) |>
+    filter(any(x)),
+  c(4, 2)
+)

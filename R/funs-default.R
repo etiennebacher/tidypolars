@@ -279,21 +279,6 @@ pl_is_nan <- function(x, ...) {
   x$is_nan()
 }
 
-pl_is_not <- function(x, ...) {
-  check_empty_dots(...)
-  x$is_not()
-}
-
-pl_is_not_nan <- function(x, ...) {
-  check_empty_dots(...)
-  x$is_not_nan()
-}
-
-pl_is_not_null <- function(x, ...) {
-  check_empty_dots(...)
-  x$is_not_null()
-}
-
 pl_is_null <- function(x, ...) {
   check_empty_dots(...)
   x$is_null()

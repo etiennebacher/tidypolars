@@ -43,6 +43,24 @@ expect_equal_lazy(
   iris$Sepal.Width > iris$Sepal.Length & iris$Petal.Width > iris$Petal.Length
 )
 
+expect_false(
+  pl_mutate(pl_iris, x = all(Sepal.Length/2 > Sepal.Width)) |>
+    pl_pull(x) |>
+    unique()
+)
+
+expect_true(
+  pl_mutate(pl_iris, x = all(Sepal.Width > 0)) |>
+    pl_pull(x) |>
+    unique()
+)
+
+expect_false(
+  pl_mutate(pl_iris, x = any(Sepal.Width > Sepal.Length)) |>
+    pl_pull(x) |>
+    unique()
+)
+
 # %in% operator
 
 test <- pl$LazyFrame(

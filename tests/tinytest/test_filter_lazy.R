@@ -164,4 +164,23 @@ expect_dim(
   c(123, 5)
 )
 
+foo <- pl$LazyFrame(
+  grp = c("a", "a", "b", "b"),
+  x = c(TRUE, TRUE, TRUE, FALSE)
+)
+
+expect_dim(
+  foo |>
+    group_by(grp) |>
+    filter(all(x)),
+  c(2, 2)
+)
+
+expect_dim(
+  foo |>
+    group_by(grp) |>
+    filter(any(x)),
+  c(4, 2)
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
