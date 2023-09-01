@@ -100,7 +100,7 @@ expect_equal(
 
 
 
-# extract -----------------------------------------------------------------
+# extract / extract _all -------------------------------------------------------
 
 expect_equal(
   pl_mutate(test, foo = str_extract(x2, "\\d")) |>
@@ -123,6 +123,17 @@ expect_equal(
     pull(foo)
 )
 
+expect_equal(
+  pl_mutate(test, foo = str_extract_all(x2, "[a-z]+")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_extract_all(x2, "[a-z]+")) |>
+    pull(foo)
+)
+
+expect_warning(
+  pl_mutate(test, foo = str_extract_all(x2, "[a-z]+", simplify = TRUE)),
+  "will not be used"
+)
 
 
 # length -----------------------------------------------------------------

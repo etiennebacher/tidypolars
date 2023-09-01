@@ -138,6 +138,8 @@ r_polars_funs <- data.frame(
       "case_when", "case_when",
       "case_match", "case_match",
       "coalesce", "coalesce",
+      "str_extract", "str_extract",
+      "str_extract_all", "str_extract_all",
       "str_to_upper", "toupper",
       "str_to_upper", "str_to_upper",
       "str_to_lower", "tolower",

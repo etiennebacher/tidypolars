@@ -243,6 +243,7 @@ out <- tribble(
   "`stringr`", "`str_count`",
   "`stringr`", "`str_ends`",
   "`stringr`", "`str_extract`",
+  "`stringr`", "`str_extract_all`",
   "`stringr`", "`str_length`",
   "`stringr`", "`str_pad`",
   "`stringr`", "`str_remove`",

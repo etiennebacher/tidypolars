@@ -27,13 +27,17 @@ pl_str_ends <- function(string, pattern, negate = FALSE) {
   }
 }
 
+# group = 0 means the whole match
 pl_str_extract <- function(string, pattern, group = 0) {
-  string$str$extract(pattern, group)
+  string$str$extract(pattern, group_index = group)
 }
 
-pl_str_extract_all <- function(string, ...) {
+# TODO: argument "simplify" should be allowed. It requirest the method "unnest"
+# for "struct". When it is implement in r-polars, use this:
+# $arr$to_struct()$struct$unnest()
+pl_str_extract_all <- function(string, pattern, ...) {
   check_empty_dots(...)
-  string$str$extract_all()
+  string$str$extract_all(pattern)
 }
 
 pl_str_length <- function(string, ...) {
@@ -42,11 +46,6 @@ pl_str_length <- function(string, ...) {
 }
 
 pl_str_n_chars <- pl_str_length
-
-pl_str_parse_int <- function(string, ...) {
-  check_empty_dots(...)
-  string$str$parse_int()
-}
 
 pl_str_replace <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
@@ -65,20 +64,21 @@ pl_str_slice <- function(string, start, end = NULL, ...) {
   string$str$slice(start, end)
 }
 
-pl_str_split <- function(string, ...) {
-  check_empty_dots(...)
-  string$str$split()
-}
-
-pl_str_split_exact <- function(string, ...) {
-  check_empty_dots(...)
-  string$str$split_exact()
-}
-
-pl_str_splitn <- function(string, ...) {
-  check_empty_dots(...)
-  string$str$splitn()
-}
+# TODO: check how to associate this with stringr::str_split() + tidyr nesting
+# pl_str_split <- function(string, ...) {
+#   check_empty_dots(...)
+#   string$str$split()
+# }
+#
+# pl_str_split_exact <- function(string, ...) {
+#   check_empty_dots(...)
+#   string$str$split_exact()
+# }
+#
+# pl_str_splitn <- function(string, ...) {
+#   check_empty_dots(...)
+#   string$str$splitn()
+# }
 
 pl_str_starts <- function(string, pattern, negate = FALSE) {
   if (isTRUE(negate)) {
@@ -106,11 +106,6 @@ pl_str_to_upper <- function(string, ...) {
 }
 
 pl_toupper <- pl_str_to_upper
-
-pl_str_zfill <- function(string, ...) {
-  check_empty_dots(...)
-  string$str$zfill()
-}
 
 # not in polars
 pl_str_remove <- function(string, pattern, ...) {
