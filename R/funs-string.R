@@ -160,3 +160,7 @@ pl_str_pad <- function(x, width, side = "left", pad = " ", use_width = TRUE) {
 pl_word <- function(string, start = 1L, end = start, sep = " ") {
   string$str$split(sep)$arr$take((start:end) - 1L)$arr$join(sep)
 }
+
+pl_str_squish <- function(string) {
+  string$str$replace_all("\\s+", " ")$str$strip()
+}

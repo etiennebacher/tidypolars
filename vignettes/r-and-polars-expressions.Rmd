@@ -248,6 +248,7 @@ out <- tribble(
   "`stringr`", "`str_remove_all`",
   "`stringr`", "`str_replace`",
   "`stringr`", "`str_replace_all`",
+  "`stringr`", "`str_squish`",
   "`stringr`", "`str_starts`",
   "`stringr`", "`str_sub`",
   "`stringr`", "`str_trim`",

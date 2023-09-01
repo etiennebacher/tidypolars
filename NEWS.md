@@ -9,8 +9,8 @@
 
 * Support `fetch()` (#42).
 
-* Support for additional `stringr` functions: `str_pad()` `str_trim()`, `word()`
-  (some arguments or corner cases are not supported yet).
+* Support for additional `stringr` functions: `str_pad()`, `str_squish()`, 
+  `str_trim()`, `word()` (some arguments or corner cases are not supported yet).
 
 * Add all optimization parameters in `collect()`.
 

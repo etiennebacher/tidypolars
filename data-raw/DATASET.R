@@ -148,6 +148,7 @@ r_polars_funs <- data.frame(
       "str_length", "str_length",
       "str_remove", "str_remove",
       "str_remove_all", "str_remove_all",
+      "str_squish", "str_squish",
       "str_trim", "str_trim",
       "paste0", "paste0",
       "paste", "paste",

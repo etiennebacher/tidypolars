@@ -16,7 +16,8 @@ test_df <- data.frame(
   x5 = c("a.", "..."),
   x6 = c("  foo  ", "hi there  "),
   x7 = c("Jane saw a cat", "Jane sat down"),
-  x8 = c("Jane-saw-a-cat", "Jane-sat-down")
+  x8 = c("Jane-saw-a-cat", "Jane-sat-down"),
+  x9 = c(" Some text    with ws   ", "and more     white   space  ")
 )
 
 test <- pl$LazyFrame(test_df)
@@ -341,5 +342,20 @@ expect_equal_lazy(
     pull(foo)
 )
 
+
+
+expect_equal_lazy(
+  pl_mutate(test, foo = str_squish(x9)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_squish(x9)) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  pl_mutate(test, foo = str_squish(x7)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_squish(x7)) |>
+    pull(foo)
+)
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
