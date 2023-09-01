@@ -104,7 +104,7 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p><code>tidypolars</code> is built on <code>polars</code>, which is not available on CRAN. This implies that <code>tidypolars</code> also can’t be on CRAN. That said, there are still several ways to install <code>tidypolars</code>. Depending on your OS, the procedure is slightly different.</p>
+<p><code>tidypolars</code> is built on <code>polars</code>, which is not available on CRAN. This means that <code>tidypolars</code> also can’t be on CRAN. However, you can install it from R-universe.</p>
 <div class="section level3">
 <h3 id="windows-or-macos">Windows or macOS<a class="anchor" aria-label="anchor" href="#windows-or-macos"></a>
 </h3>
@@ -183,8 +183,8 @@
 <span>  <span class="fu">with_columns</span><span class="op">(</span></span>
 <span>    <span class="va">pl</span><span class="op">$</span><span class="fu">when</span><span class="op">(</span></span>
 <span>      <span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"Petal.Length"</span><span class="op">)</span> <span class="op">/</span> <span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span><span class="op">)</span></span>
-<span>    <span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="st">"long"</span><span class="op">)</span><span class="op">$</span></span>
-<span>      <span class="fu">otherwise</span><span class="op">(</span><span class="st">"large"</span><span class="op">)</span><span class="op">$</span></span>
+<span>    <span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">lit</span><span class="op">(</span><span class="st">"long"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span></span>
+<span>      <span class="fu">otherwise</span><span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">lit</span><span class="op">(</span><span class="st">"large"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span></span>
 <span>      <span class="fu">alias</span><span class="op">(</span><span class="st">"petal_type"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">$</span></span>
 <span>  <span class="fu">filter</span><span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"Sepal.Length"</span><span class="op">)</span><span class="op">$</span><span class="fu">is_between</span><span class="op">(</span><span class="fl">4.5</span>, <span class="fl">5.5</span><span class="op">)</span><span class="op">)</span><span class="op">$</span></span>
@@ -216,8 +216,8 @@ Click to see a small benchmark
 <span>      <span class="fu">with_columns</span><span class="op">(</span></span>
 <span>        <span class="va">pl</span><span class="op">$</span><span class="fu">when</span><span class="op">(</span></span>
 <span>          <span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"Petal.Length"</span><span class="op">)</span> <span class="op">/</span> <span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"Petal.Width"</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span><span class="op">)</span></span>
-<span>        <span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="st">"long"</span><span class="op">)</span><span class="op">$</span></span>
-<span>          <span class="fu">otherwise</span><span class="op">(</span><span class="st">"large"</span><span class="op">)</span><span class="op">$</span></span>
+<span>        <span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">lit</span><span class="op">(</span><span class="st">"long"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span></span>
+<span>          <span class="fu">otherwise</span><span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">lit</span><span class="op">(</span><span class="st">"large"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span></span>
 <span>          <span class="fu">alias</span><span class="op">(</span><span class="st">"petal_type"</span><span class="op">)</span></span>
 <span>      <span class="op">)</span><span class="op">$</span></span>
 <span>      <span class="fu">filter</span><span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"Sepal.Length"</span><span class="op">)</span><span class="op">$</span><span class="fu">is_between</span><span class="op">(</span><span class="fl">4.5</span>, <span class="fl">5.5</span><span class="op">)</span><span class="op">)</span><span class="op">$</span></span>
@@ -248,9 +248,9 @@ Click to see a small benchmark
 <span><span class="co">#&gt; # A tibble: 3 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars     161.16ms 260.25ms     4.00     27.2KB    0    </span></span>
-<span><span class="co">#&gt; 2 tidypolars 227.14ms 406.94ms     2.58     72.9KB    0.258</span></span>
-<span><span class="co">#&gt; 3 dplyr         1.09s    1.34s     0.746   916.7MB    2.83</span></span>
+<span><span class="co">#&gt; 1 polars      112.9ms 131.47ms     7.69     25.6KB    0    </span></span>
+<span><span class="co">#&gt; 2 tidypolars  130.7ms 154.82ms     6.17     69.4KB    0.617</span></span>
+<span><span class="co">#&gt; 3 dplyr          2.1s    2.31s     0.436   916.7MB    1.66</span></span>
 <span></span>
 <span><span class="co"># NOTE: do NOT take the "mem_alloc" results into account.</span></span>
 <span><span class="co"># `bench::mark()` doesn't report the accurate memory usage for packages calling</span></span>
