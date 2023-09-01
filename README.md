@@ -42,9 +42,8 @@ under the hood so that we don’t lose any of its capacities.
 ## Installation
 
 `tidypolars` is built on `polars`, which is not available on CRAN. This
-implies that `tidypolars` also can’t be on CRAN. That said, there are
-still several ways to install `tidypolars`. Depending on your OS, the
-procedure is slightly different.
+means that `tidypolars` also can’t be on CRAN. However, you can install
+it from R-universe.
 
 ### Windows or macOS
 
@@ -131,8 +130,8 @@ pl$DataFrame(iris)$
   with_columns(
     pl$when(
       (pl$col("Petal.Length") / pl$col("Petal.Width") > 3)
-    )$then("long")$
-      otherwise("large")$
+    )$then(pl$lit("long"))$
+      otherwise(pl$lit("large"))$
       alias("petal_type")
   )$
   filter(pl$col("Sepal.Length")$is_between(4.5, 5.5))$
@@ -172,8 +171,8 @@ bench::mark(
       with_columns(
         pl$when(
           (pl$col("Petal.Length") / pl$col("Petal.Width") > 3)
-        )$then("long")$
-          otherwise("large")$
+        )$then(pl$lit("long"))$
+          otherwise(pl$lit("large"))$
           alias("petal_type")
       )$
       filter(pl$col("Sepal.Length")$is_between(4.5, 5.5))$
@@ -204,9 +203,9 @@ bench::mark(
 #> # A tibble: 3 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     161.16ms 260.25ms     4.00     27.2KB    0    
-#> 2 tidypolars 227.14ms 406.94ms     2.58     72.9KB    0.258
-#> 3 dplyr         1.09s    1.34s     0.746   916.7MB    2.83
+#> 1 polars      112.9ms 131.47ms     7.69     25.6KB    0    
+#> 2 tidypolars  130.7ms 154.82ms     6.17     69.4KB    0.617
+#> 3 dplyr          2.1s    2.31s     0.436   916.7MB    1.66
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
