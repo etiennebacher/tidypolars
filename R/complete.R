@@ -21,46 +21,25 @@
 pl_complete <- function(.data, ...) {
 
   check_polars_data(.data)
-
   vars <- tidyselect_dots(.data, ...)
   if (length(vars) < 2) return(.data)
 
-  # TODO: remove this ifelse at some point
-  if (utils::packageVersion("polars") > "0.7.0") {
+  grps <- attributes(.data)$pl_grps
+  mo <- attributes(.data)$maintain_grp_order
+  is_grouped <- !is.null(grps)
 
-    if (inherits(.data, "DataFrame")) {
-      converted <- TRUE
-      .data <- .data$lazy()
-    } else {
-      converted <- FALSE
-    }
-    chain <- .data$select(pl$col(vars)$unique()$sort()$implode())
-
-    for (i in 1:length(vars)) {
-      chain <- chain$explode(vars[i])
-    }
-
-    out <- chain$join(.data, on = vars, how = 'left')
-    if (isTRUE(converted)) {
-      out$collect()
-    } else {
-      out
-    }
-
-  } else {
-
-    start <- ".data$select(vars[1])$unique()"
-    chain <- vector("list", length = length(vars) - 1)
-
-    for (i in 2:length(vars)) {
-      chain[[i]] <- paste0("$join(.data$select(vars[", i, "])$unique(), how = 'cross')")
-    }
-
-    paste0(
-      start, paste(unlist(chain), collapse = ""),
-      "$sort(vars)$join(.data, on = vars, how = 'left')"
-    ) |>
-      str2lang() |>
-      eval()
+  chain <- .data$select(pl$col(vars)$unique()$sort()$implode())
+  for (i in 1:length(vars)) {
+    chain <- chain$explode(vars[i])
   }
+  out <- chain$join(.data, on = vars, how = 'left')
+
+  if (isTRUE(is_grouped)) {
+    out |>
+      pl_relocate(tidyselect::all_of(grps), .before = 1) |>
+      pl_group_by(tidyselect::all_of(grps))
+  } else {
+    out
+  }
+
 }
