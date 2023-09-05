@@ -263,36 +263,6 @@ check_empty_dots <- function(...) {
   }
 }
 
-# TODO: do something with this?
-check_polars_expr <- function(exprs, .data) {
-  out <- lapply(exprs, \(x) {
-    eval_tidy(x, data = .data$to_data_frame())
-  })
-  not_polars_expr <- which(vapply(out, \(x) !inherits(x, "Expr"), logical(1L)))
-  if (length(not_polars_expr) > 0) {
-    fault <- exprs[not_polars_expr]
-    errors <- lapply(seq_along(fault), \(x) {
-      fn_call <- fault[[x]][[2]]
-      kf <- get_known_functions()
-      if (safe_deparse(fn_call[[1]]) %in% c(kf$known_functions, kf$kwnow_ops)) {
-        return(invisible())
-      }
-      paste0(names(fault)[x], " = ", safe_deparse(fn_call))
-    })
-    errors <- compact(errors)
-    if (length(errors) > 0) {
-      names(errors) <- rep("*", length(errors))
-      abort(
-        c(
-          paste0("The following call(s) do not return a Polars expression:"),
-          errors
-        ),
-        call = caller_env()
-      )
-    }
-  }
-}
-
 # Return a list of all functions / operations we know
 get_known_functions <- function() {
   known_functions <- r_polars_funs$r_funs
