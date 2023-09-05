@@ -31,7 +31,7 @@
 #' is `FALSE`).
 #'
 #' @export
-#' @seealso [pl_fetch()] for applying a lazy query on a subset of the data.
+#' @seealso [fetch()] for applying a lazy query on a subset of the data.
 #' @examples
 #' dat_lazy <- polars::pl$DataFrame(iris)$lazy()
 #' pl_collect(dat_lazy)

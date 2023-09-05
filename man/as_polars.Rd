@@ -4,7 +4,7 @@
 \alias{as_polars}
 \title{Convert an R dataframe to a Polars Data/LazyFrame}
 \usage{
-as_polars(.data, lazy = FALSE, with_string_cache = TRUE)
+as_polars(.data, lazy = FALSE, with_string_cache = FALSE)
 }
 \arguments{
 \item{.data}{An R dataframe.}

@@ -20,9 +20,8 @@ reference:
       - as_polars
       - describe_plan
       - describe_optimized_plan
+      - fetch
       - make_unique_id
-      - pl_colnames
-      - pl_fetch
       - sink_parquet
       - to_r
   - title: From `dplyr`

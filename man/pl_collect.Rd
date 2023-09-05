@@ -71,5 +71,5 @@ dat_lazy |>
   pl_collect()
 }
 \seealso{
-\code{\link[=pl_fetch]{pl_fetch()}} for applying a lazy query on a subset of the data.
+\code{\link[=fetch]{fetch()}} for applying a lazy query on a subset of the data.
 }

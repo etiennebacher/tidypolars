@@ -23,15 +23,15 @@
 #' dat_lazy <- polars::pl$DataFrame(iris)$lazy()
 #'
 #' # this will return 30 rows
-#' pl_fetch(dat_lazy, 30)
+#' fetch(dat_lazy, 30)
 #'
 #' # this will return less than 30 rows because there are less than 30 matches
 #' # for this filter in the whole dataset
 #' dat_lazy |>
 #'   pl_filter(Sepal.Length > 7.0) |>
-#'   pl_fetch(30)
+#'   fetch(30)
 
-pl_fetch <- function(
+fetch <- function(
     .data,
     n_rows = 500,
     type_coercion = TRUE,

@@ -63,3 +63,4 @@ expect_equal(
 #     c = c(5, NA, NA)
 #   )
 # )
+
