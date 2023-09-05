@@ -3,6 +3,7 @@
 #' @param x A Polars Data/LazyFrame
 #'
 #' @return A character vector with the column names
+#' @noRd
 
 pl_colnames <- function(x) {
   if (inherits(x, "DataFrame") || inherits(x, "LazyFrame")) {
