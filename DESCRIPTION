@@ -23,8 +23,7 @@ Depends: R (>= 4.1.0)
 Imports: 
     polars,
     rlang,
-    tidyselect,
-    utils
+    tidyselect
 Suggests: 
     bench,
     data.table,
