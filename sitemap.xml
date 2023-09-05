@@ -52,6 +52,9 @@
     <loc>/reference/expect_error_lazy.html</loc>
   </url>
   <url>
+    <loc>/reference/fetch.html</loc>
+  </url>
+  <url>
     <loc>/reference/filtering-joins.html</loc>
   </url>
   <url>
@@ -79,9 +82,6 @@
     <loc>/reference/pl_collect.html</loc>
   </url>
   <url>
-    <loc>/reference/pl_colnames.html</loc>
-  </url>
-  <url>
     <loc>/reference/pl_complete.html</loc>
   </url>
   <url>
@@ -95,9 +95,6 @@
   </url>
   <url>
     <loc>/reference/pl_drop_na.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pl_fetch.html</loc>
   </url>
   <url>
     <loc>/reference/pl_fill.html</loc>
