@@ -74,7 +74,7 @@ pl_mutate <- function(.data, ...) {
   is_grouped <- !is.null(grps)
   to_drop <- list()
 
-  polars_exprs <- translate_dots(.data = .data, ...)
+  polars_exprs <- translate_dots(.data = .data, ..., env = rlang::caller_env())
 
   for (i in seq_along(polars_exprs)) {
     sub <- polars_exprs[[i]]
