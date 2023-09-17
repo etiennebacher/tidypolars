@@ -29,7 +29,7 @@ pl_summarize <- function(.data, ...) {
     rlang::abort("`pl_summarize()` only works on grouped data.")
   }
 
-  polars_exprs <- translate_dots(.data = .data, ...)
+  polars_exprs <- translate_dots(.data = .data, ..., env = rlang::caller_env())
 
   for (i in seq_along(polars_exprs)) {
     sub <- polars_exprs[[i]]
