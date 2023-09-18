@@ -18,7 +18,8 @@ test_df <- data.frame(
 
 test <- pl$DataFrame(test_df)
 
-for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper", "nchar")) {
+for (i in c("toupper", "tolower", "str_to_title", "str_to_lower", "str_to_upper",
+            "nchar")) {
 
   pol <- paste0("pl_mutate(test, foo = ", i, "(x1))") |>
     str2lang() |>
@@ -192,14 +193,6 @@ expect_equal(
     pull(foo)
 )
 
-# TODO:
-# expect_equal(
-#   pl_mutate(test, foo = str_replace(x1, c("a", "e"), "-")) |>
-#     pl_pull(foo),
-#   mutate(test_df, foo = str_replace(x1, c("a", "e"), "-")) |>
-#     pull(foo)
-# )
-
 expect_equal(
   pl_mutate(test, foo = str_replace_all(x1, "[aeiou]", "-")) |>
     pl_pull(foo),
@@ -293,7 +286,7 @@ expect_equal(
 
 # TODO:
 # expect_equal(
-#   pl_mutate(test, foo = str_count(x5, ".")) |>
+#   pl_mutate(test, foo = str_count(x5, fixed("."))) |>
 #     pl_pull(foo),
 #   mutate(test_df, foo = str_count(x5, fixed("."))) |>
 #     pull(foo)

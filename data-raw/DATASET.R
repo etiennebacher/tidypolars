@@ -144,6 +144,8 @@ r_polars_funs <- data.frame(
       "str_to_upper", "str_to_upper",
       "str_to_lower", "tolower",
       "str_to_lower", "str_to_lower",
+      "str_to_title", "toTitleCase",
+      "str_to_title", "str_to_title",
       "str_detect", "str_detect",
       "str_ends", "str_ends",
       "str_pad", "str_pad",

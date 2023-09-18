@@ -154,6 +154,11 @@ translate_expr <- function(.data, quo, new_vars) {
               error = identity
             )
             return(out)
+          },
+          "fixed" = {
+            out <- expr[[2]]
+            attr(out, "stringr_attr") <- "fixed"
+            return(out)
           }
         )
 

@@ -196,14 +196,6 @@ expect_equal_lazy(
     pull(foo)
 )
 
-# TODO:
-# expect_equal_lazy(
-#   pl_mutate(test, foo = str_replace(x1, c("a", "e"), "-")) |>
-#     pl_pull(foo),
-#   mutate(test_df, foo = str_replace(x1, c("a", "e"), "-")) |>
-#     pull(foo)
-# )
-
 expect_equal_lazy(
   pl_mutate(test, foo = str_replace_all(x1, "[aeiou]", "-")) |>
     pl_pull(foo),

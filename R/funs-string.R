@@ -15,6 +15,10 @@ pl_grepl <- function(pattern, x, ...) {
 
 pl_str_count_match <- function(string, pattern = "", ...) {
   check_empty_dots(...)
+  # TODO: use literal = is_fixed when str_count_match has an arg "literal" in
+  # py-polars
+  # https://github.com/pola-rs/polars/issues/10930
+  is_fixed <- isTRUE(attr(pattern,"stringr_attr") == "fixed")
   string$str$count_match(pattern)
 }
 
@@ -97,15 +101,21 @@ pl_str_to_lower <- function(string, ...) {
   check_empty_dots(...)
   string$str$to_lowercase()
 }
-
 pl_tolower <- pl_str_to_lower
+
 
 pl_str_to_upper <- function(string, ...) {
   check_empty_dots(...)
   string$str$to_uppercase()
 }
-
 pl_toupper <- pl_str_to_upper
+
+
+pl_str_to_title <- function(string, ...) {
+  check_empty_dots(...)
+  string$str$to_titlecase()
+}
+pl_toTitleCase <- pl_str_to_title
 
 # not in polars
 pl_str_remove <- function(string, pattern, ...) {
