@@ -209,6 +209,7 @@ out <- tribble(
   "`base`", "`cumsum`", 
   "`base`", "`exp`", 
   "`base`", "`floor`",
+  "`base`", "`grepl`",
   "`base`", "`ifelse`",
   "`stats` / `dplyr`", "`lag`",
   "`base`", "`log`", 
@@ -219,6 +220,7 @@ out <- tribble(
   "`base`", "`min`",
   "`base`", "`nchar`",
   "`base`", "`paste0`",
+  "`base`", "`paste`",
   "`base`", "`rank`",
   "`base`", "`round`",
   "`base`", "`sin`", 
@@ -241,15 +243,20 @@ out <- tribble(
   "`stringr`", "`str_count`",
   "`stringr`", "`str_ends`",
   "`stringr`", "`str_extract`",
+  "`stringr`", "`str_extract_all`",
   "`stringr`", "`str_length`",
+  "`stringr`", "`str_pad`",
   "`stringr`", "`str_remove`",
   "`stringr`", "`str_remove_all`",
   "`stringr`", "`str_replace`",
   "`stringr`", "`str_replace_all`",
+  "`stringr`", "`str_squish`",
   "`stringr`", "`str_starts`",
   "`stringr`", "`str_sub`",
+  "`stringr`", "`str_trim`",
   "`stringr`", "`str_to_lower`",
   "`stringr`", "`str_to_upper`",
+  "`stringr`", "`word`"
 ) |> 
   arrange(Package)
 

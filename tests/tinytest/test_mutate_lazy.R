@@ -43,6 +43,24 @@ expect_equal_lazy(
   iris$Sepal.Width > iris$Sepal.Length & iris$Petal.Width > iris$Petal.Length
 )
 
+expect_false(
+  pl_mutate(pl_iris, x = all(Sepal.Length/2 > Sepal.Width)) |>
+    pl_pull(x) |>
+    unique()
+)
+
+expect_true(
+  pl_mutate(pl_iris, x = all(Sepal.Width > 0)) |>
+    pl_pull(x) |>
+    unique()
+)
+
+expect_false(
+  pl_mutate(pl_iris, x = any(Sepal.Width > Sepal.Length)) |>
+    pl_pull(x) |>
+    unique()
+)
+
 # %in% operator
 
 test <- pl$LazyFrame(
@@ -157,7 +175,7 @@ expect_colnames(
 
 expect_warning(
   pl_mutate(pl_iris, foo = mean(Sepal.Length, na.rm = TRUE)),
-  pattern = "Additional arguments will not be used"
+  pattern = "will not be used: `na.rm`"
 )
 
 
@@ -175,18 +193,29 @@ expect_equal_lazy(
   rep(mean(iris$Sepal.Length) + mean(iris$Petal.Length), nrow(iris))
 )
 
+# custom function that doesn't return Polars expression
+
+foo2 <<- function(x, y) {
+  dplyr::near(x, y)
+}
+
+expect_error_lazy(
+  pl_mutate(pl_iris, x = foo2(Sepal.Length, Petal.Length)),
+  "Couldn't evaluate function `foo2`"
+)
+
 # embracing works
 
 some_value <<- 1
 
 expect_equal_lazy(
   pl_mutate(pl_iris, x = {{ some_value }}),
-  pl_mutate(pl_iris, x = 1) 
+  pl_mutate(pl_iris, x = 1)
 )
 
 expect_equal_lazy(
   pl_mutate(pl_iris, x = some_value + Sepal.Length),
-  pl_mutate(pl_iris, x = 1 + Sepal.Length) 
+  pl_mutate(pl_iris, x = 1 + Sepal.Length)
 )
 
 # reorder of expressions works

@@ -39,15 +39,13 @@ expect_equal_lazy(
   c(3, 4, 12, 8, 3, 2)
 )
 
-expect_equal_lazy(
-  pl_add_count(test, cyl) |>
-    pl_colnames(),
+expect_colnames(
+  pl_add_count(test, cyl),
   c(names(mtcars), "n")
 )
 
-expect_equal_lazy(
-  pl_add_count(test, cyl, am, sort = TRUE, name = "count") |>
-    pl_colnames(),
+expect_colnames(
+  pl_add_count(test, cyl, am, sort = TRUE, name = "count"),
   c(names(mtcars), "count")
 )
 

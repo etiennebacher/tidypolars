@@ -17,8 +17,9 @@
 #' @param slice_pushdown Only load the required slice from the scan. Don't
 #' materialize sliced outputs level. Don't materialize sliced outputs (default
 #' is `TRUE`).
-#' @param common_subplan_elimination Cache subtrees/file scans that are used by
-#' multiple subtrees in the query plan (default is `TRUE`).
+#' @param comm_subplan_elim Cache branching subplans that occur on self-joins or
+#' unions (default is `TRUE`).
+#' @param comm_subexpr_elim Cache common subexpressions (default is `TRUE`).
 #' @param no_optimization Sets the following optimizations to `FALSE`:
 #' `predicate_pushdown`, `projection_pushdown`,  `slice_pushdown`,
 #' `simplify_expression`. Default is `FALSE`.
@@ -30,9 +31,16 @@
 #' is `FALSE`).
 #'
 #' @export
+#' @seealso [fetch()] for applying a lazy query on a subset of the data.
 #' @examples
 #' dat_lazy <- polars::pl$DataFrame(iris)$lazy()
 #' pl_collect(dat_lazy)
+#'
+#' # you can build a query and add pl_collect() as the last piece
+#' dat_lazy |>
+#'   pl_select(starts_with("Sepal")) |>
+#'   pl_filter(between(Sepal.Length, 5, 6)) |>
+#'   pl_collect()
 
 pl_collect <- function(
     .data,
@@ -41,7 +49,8 @@ pl_collect <- function(
     projection_pushdown = TRUE,
     simplify_expression = TRUE,
     slice_pushdown = TRUE,
-    common_subplan_elimination = TRUE,
+    comm_subplan_elim = TRUE,
+    comm_subexpr_elim = TRUE,
     no_optimization = FALSE,
     streaming = FALSE,
     collect_in_background = FALSE
@@ -55,7 +64,8 @@ pl_collect <- function(
     projection_pushdown = projection_pushdown,
     simplify_expression = simplify_expression,
     slice_pushdown = slice_pushdown,
-    common_subplan_elimination = common_subplan_elimination,
+    comm_subplan_elim = comm_subplan_elim,
+    comm_subexpr_elim = comm_subexpr_elim,
     no_optimization = no_optimization,
     streaming = streaming,
     collect_in_background = collect_in_background

@@ -1,10 +1,10 @@
 #' @import rlang
 
-translate_dots <- function(.data, ...) {
+translate_dots <- function(.data, ..., env) {
   dots <- enexprs(...)
   new_vars <- c()
   out <- lapply(seq_along(dots), \(x) {
-    tmp <- translate_expr(.data = .data, dots[[x]], new_vars)
+    tmp <- translate_expr(.data = .data, dots[[x]], new_vars, env = env)
     new_vars <<- c(new_vars, names(dots)[x])
     tmp
   })
@@ -22,7 +22,7 @@ translate_dots <- function(.data, ...) {
   out
 }
 
-translate_expr <- function(.data, quo, new_vars) {
+translate_expr <- function(.data, quo, new_vars, env) {
 
   names_data <- pl_colnames(.data)
 
@@ -32,27 +32,26 @@ translate_expr <- function(.data, quo, new_vars) {
 
   if (is_expression(quo)) {
     expr <- quo
-    env <- baseenv()
   } else {
     expr <- quo_get_expr(quo)
-    env <- quo_get_env(quo)
   }
 
-  used <- character()
   # we want to distinguish literals that are passed as-is and should be put in
   # pl$lit() (e.g "x = TRUE") from those who are passed as a function argument
   # e.g ("x = mean(y, TRUE)").
   # TODO: drop the exception about paste0(). I had to put it here because
   # pl$concat_str() parses classic characters as column names so I had to make
   # an exception and convert paste0() arguments as polars literals
-  call_is_function <- typeof(expr) == "language" && expr[[1]] != "paste0"
+  call_is_function <-
+    typeof(expr) == "language" &&
+    !safe_deparse(expr[[1]]) %in% c("paste0", "paste")
 
   # split across() call early
   if (length(expr) > 1 && safe_deparse(expr[[1]]) == "across") {
     expr <- unpack_across(.data, expr)
   }
 
-  translate <- function(expr) {
+  translate <- function(expr, env) {
 
     # prepare function and arg if the user provided an anonymous function in
     # across()
@@ -86,7 +85,7 @@ translate_expr <- function(.data, quo, new_vars) {
         if (expr_char %in% names_data || expr_char %in% unlist(new_vars)) {
           polars_col(expr_char)
         } else {
-          val <- eval_tidy(expr, env = caller_env(3))
+          val <- eval_tidy(expr, env = env)
           polars_constant(val)
         }
       },
@@ -122,8 +121,8 @@ translate_expr <- function(.data, quo, new_vars) {
           "%in%" = {
             out <- tryCatch(
               {
-                lhs <- translate(expr[[2]])
-                rhs <- translate(expr[[3]])
+                lhs <- translate(expr[[2]], env = env)
+                rhs <- translate(expr[[3]], env = env)
                 if (is.list(rhs)) {
                   rhs <- unlist(rhs)
                 }
@@ -133,10 +132,16 @@ translate_expr <- function(.data, quo, new_vars) {
             )
             return(out)
           },
+          "ifelse" = ,
+          "if_else" =  {
+            args <- call_args(expr)
+            args$.data <- .data
+            return(do.call(pl_ifelse, args))
+          },
           "is.na" = {
             out <- tryCatch(
               {
-                inside <- translate(expr[[2]])
+                inside <- translate(expr[[2]], env = env)
                 inside$is_null()
               },
               error = identity
@@ -146,7 +151,7 @@ translate_expr <- function(.data, quo, new_vars) {
           "is.nan" = {
             out <- tryCatch(
               {
-                inside <- translate(expr[[2]])
+                inside <- translate(expr[[2]], env = env)
                 inside$is_nan()
               },
               error = identity
@@ -167,7 +172,7 @@ translate_expr <- function(.data, quo, new_vars) {
           if (startsWith(obj_name, ".__tidypolars__across_fn")) {
             fn <- eval_bare(global_env()[[obj_name]])
             col_name <- sym(col_name)
-            args <- translate(col_name)
+            args <- translate(col_name, env = env)
             suppressWarnings({
               tr <- try(do.call(fn, list(args)), silent = TRUE)
             })
@@ -177,36 +182,48 @@ translate_expr <- function(.data, quo, new_vars) {
               abort(
                 c("Could not evaluate an anonymous function in `across()`.",
                   "i" = "Are you sure the anonymous function returns a Polars expression?"),
-                call = caller_env(7)
+                call = env
               )
             }
           } else {
-            abort(paste("Unknown function:", name), call = caller_env(5))
+            abort(paste("Unknown function:", name), call = env)
           }
         }
 
-        args <- lapply(as.list(expr[-1]), translate)
+        args <- lapply(as.list(expr[-1]), translate, env = env)
         if (name %in% known_functions) {
           name <- r_polars_funs$polars_funs[r_polars_funs$r_funs == name][1]
           name <- paste0("pl_", name)
         }
 
-        fun <- do.call(name, args)
-        fun
+        tryCatch(
+          do.call(name, args),
+          error = function(e) {
+            if (!inherits(e, "tidypolars_error")) {
+              abort(
+                paste0("Couldn't evaluate function `", name, "` in Polars. Are you ",
+                       "sure it returns a Polars expression?"),
+
+              )
+            } else {
+              abort(e$message, call = env)
+            }
+          }
+        )
       },
 
       abort(
         paste("Internal: Unknown type", typeof(expr)),
-        call = caller_env(4)
+        call = env
       )
     )
   }
 
   # happens because across() calls get split earlier
   if ((is.vector(expr) && length(expr) > 1) || is.list(expr)) {
-    lapply(expr, translate)
+    lapply(expr, translate, env = env)
   } else {
-    translate(expr)
+    translate(expr, env = env)
   }
 }
 
@@ -239,38 +256,13 @@ check_empty_dots <- function(...) {
     fn <- deparse(match.call(call = sys.call(sys.parent()))[1])
     fn <- gsub("^pl\\_", "", fn)
     rlang::warn(
-      paste0("\nWhen the dataset is a Polars DataFrame or LazyFrame, `", fn,
-             "`\nonly needs one argument. Additional arguments will not be used."))
-  }
-}
-
-# TODO: do something with this?
-check_polars_expr <- function(exprs, .data) {
-  out <- lapply(exprs, \(x) {
-    eval_tidy(x, data = .data$to_data_frame())
-  })
-  not_polars_expr <- which(vapply(out, \(x) !inherits(x, "Expr"), logical(1L)))
-  if (length(not_polars_expr) > 0) {
-    fault <- exprs[not_polars_expr]
-    errors <- lapply(seq_along(fault), \(x) {
-      fn_call <- fault[[x]][[2]]
-      kf <- get_known_functions()
-      if (safe_deparse(fn_call[[1]]) %in% c(kf$known_functions, kf$kwnow_ops)) {
-        return(invisible())
-      }
-      paste0(names(fault)[x], " = ", safe_deparse(fn_call))
-    })
-    errors <- Filter(\(x) length(x) > 0, errors)
-    if (length(errors) > 0) {
-      names(errors) <- rep("*", length(errors))
-      abort(
-        c(
-          paste0("The following call(s) do not return a Polars expression:"),
-          errors
-        ),
-        call = caller_env()
+      paste0(
+        "\nNot all arguments of ", fn, " are used by Polars.\n",
+        "The following argument(s) will not be used: ",
+        toString(paste0("`", names(dots), "`")),
+        "."
       )
-    }
+    )
   }
 }
 
@@ -300,8 +292,8 @@ get_known_functions <- function() {
 # (or modified variable) then we store this expression in a new sublist.
 
 reorder_exprs <- function(exprs) {
-  lhs_vars <- lapply(1:length(exprs), \(x) character(0))
-  names(lhs_vars) <- paste0("pool_vars_", 1:length(exprs))
+  lhs_vars <- lapply(seq_along(exprs), \(x) character(0))
+  names(lhs_vars) <- paste0("pool_vars_", seq_along(exprs))
 
   for (i in seq_along(exprs)) {
     if (i == 1) {
@@ -336,8 +328,7 @@ reorder_exprs <- function(exprs) {
     # in the second pool. Therefore, we will end up with two calls to
     # `with_columns()`.
 
-    latest_pool <- Filter(\(x) length(x) > 0, lhs_vars) |>
-      length()
+    latest_pool <- length(compact(lhs_vars))
 
     if (is.null(exprs[[i]])) {
       vars_used <- character(0)
@@ -361,9 +352,9 @@ reorder_exprs <- function(exprs) {
       }
     }
   }
-  lhs_vars <- Filter(\(x) length(x) > 0, lhs_vars)
-  pool_exprs <- lapply(1:length(lhs_vars), \(x) character(0))
-  names(pool_exprs) <- paste0("pool_exprs_", 1:length(lhs_vars))
+  lhs_vars <- compact(lhs_vars)
+  pool_exprs <- lapply(seq_along(lhs_vars), \(x) character(0))
+  names(pool_exprs) <- paste0("pool_exprs_", seq_along(lhs_vars))
 
   for (i in seq_along(lhs_vars)) {
     pool_exprs[[i]] <- exprs[lhs_vars[[i]]]

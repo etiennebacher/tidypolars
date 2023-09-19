@@ -60,7 +60,7 @@ count_ <- function(.data, vars, sort, name, new_col = FALSE) {
 
   if (isTRUE(sort)) {
     out <- out$sort(name, descending = TRUE)
-  } else {
+  } else if (length(vars) > 0) {
     out <- out$sort(vars)
   }
 

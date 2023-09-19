@@ -17,7 +17,7 @@ env:
   _R_CHECK_TESTS_NLINES_: 0
   R_NOT_CRAN: true
   R_GH: true
-  GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+  GITHUB_PAT: ${{ secrets.COVR_GH_PAT }}
 
 jobs:
   ci:
@@ -30,7 +30,7 @@ jobs:
       - name: SessionInfo
         run: R -q -e 'sessionInfo()'
       - name: Package Dependencies
-        run: R -q -e 'remotes::install_deps(".", repos = c("https://rpolars.r-universe.dev/bin/linux/jammy/4.3", getOption("repos")), dependencies=TRUE)'
+        run: R -q -e 'remotes::install_deps(".", repos = c("https://rpolars.r-universe.dev/bin/linux/jammy/4.3", getOption("repos")), dependencies=TRUE, method = "libcurl")'
       - name: Test coverage
         run: |
           install.packages('covr')

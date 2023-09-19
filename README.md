@@ -42,33 +42,25 @@ under the hood so that we don’t lose any of its capacities.
 ## Installation
 
 `tidypolars` is built on `polars`, which is not available on CRAN. This
-implies that `tidypolars` also can’t be on CRAN. That said, there are
-still several ways to install `tidypolars`. Depending on your OS, the
-procedure is slightly different.
+means that `tidypolars` also can’t be on CRAN. However, you can install
+it from R-universe.
 
 ### Windows or macOS
 
 ``` r
 install.packages(
   'tidypolars', 
-  repos = c('https://etiennebacher.r-universe.dev', 'https://rpolars.r-universe.dev', getOption("repos"))
+  repos = c('https://etiennebacher.r-universe.dev', getOption("repos"))
 )
 ```
 
 ### Linux
 
 ``` r
-# install.packages("remotes")
-remotes::install_github(
-  "etiennebacher/tidypolars", 
-  repos = c("https://rpolars.r-universe.dev/bin/linux/jammy/4.3", getOption("repos"))
+install.packages(
+  'tidypolars', 
+  repos = c('https://etiennebacher.r-universe.dev/bin/linux/jammy/4.3', getOption("repos"))
 )
-
-#### OR
-
-# install.packages("pak")
-pak::repo_add("https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
-pak::pkg_install("etiennebacher/tidypolars")
 ```
 
 ## Example
@@ -99,6 +91,9 @@ and keep the exact same code:
 
 ``` r
 library(tidypolars)
+#> Registered S3 method overwritten by 'tidypolars':
+#>   method          from  
+#>   print.DataFrame polars
 
 iris |> 
   as_polars() |> 
@@ -135,8 +130,8 @@ pl$DataFrame(iris)$
   with_columns(
     pl$when(
       (pl$col("Petal.Length") / pl$col("Petal.Width") > 3)
-    )$then("long")$
-      otherwise("large")$
+    )$then(pl$lit("long"))$
+      otherwise(pl$lit("large"))$
       alias("petal_type")
   )$
   filter(pl$col("Sepal.Length")$is_between(4.5, 5.5))$
@@ -176,8 +171,8 @@ bench::mark(
       with_columns(
         pl$when(
           (pl$col("Petal.Length") / pl$col("Petal.Width") > 3)
-        )$then("long")$
-          otherwise("large")$
+        )$then(pl$lit("long"))$
+          otherwise(pl$lit("large"))$
           alias("petal_type")
       )$
       filter(pl$col("Sepal.Length")$is_between(4.5, 5.5))$
@@ -208,9 +203,9 @@ bench::mark(
 #> # A tibble: 3 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     204.33ms 222.31ms     4.39     27.2KB    0    
-#> 2 tidypolars 257.95ms 291.92ms     3.14     98.4KB    0.314
-#> 3 dplyr         1.36s    1.71s     0.601   916.7MB    2.28
+#> 1 polars      112.9ms 131.47ms     7.69     25.6KB    0    
+#> 2 tidypolars  130.7ms 154.82ms     6.17     69.4KB    0.617
+#> 3 dplyr          2.1s    2.31s     0.436   916.7MB    1.66
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling

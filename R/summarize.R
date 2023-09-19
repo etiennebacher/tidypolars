@@ -29,12 +29,12 @@ pl_summarize <- function(.data, ...) {
     rlang::abort("`pl_summarize()` only works on grouped data.")
   }
 
-  polars_exprs <- translate_dots(.data = .data, ...)
+  polars_exprs <- translate_dots(.data = .data, ..., env = rlang::caller_env())
 
   for (i in seq_along(polars_exprs)) {
     sub <- polars_exprs[[i]]
-    to_drop <- names(Filter(\(x) length(x) == 0, sub))
-    sub <- Filter(\(x) length(x) != 0, sub)
+    to_drop <- names(empty_elems(sub))
+    sub <- compact(sub)
 
     if (length(sub) > 0) {
       .data <- .data$groupby(grps, maintain_order = mo)$agg(sub)

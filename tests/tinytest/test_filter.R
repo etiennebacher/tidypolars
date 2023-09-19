@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-pl_iris <- pl$DataFrame(iris)
+pl_iris <- as_polars(iris)
 
 expect_dim(
   pl_filter(pl_iris, Species == "setosa"),
@@ -106,18 +106,22 @@ expect_dim(
   c(21, 11)
 )
 
-iris3 <- iris
-iris3$Species <- as.character(iris3$Species)
-pl_iris3 <- pl$DataFrame(iris3)
+# See in as_polars()
+# expect_dim(
+#   pl_filter(pl_iris, Species %in% c("setosa", "virginica")),
+#   c(100, 5)
+# )
+#
+# expect_dim(
+#   pl_filter(pl_iris, Species %in% c("setosa", "foo")),
+#   c(50, 5)
+# )
 
-expect_dim(
-  pl_filter(pl_iris3, Species %in% c("setosa", "virginica")),
-  c(100, 5)
-)
+pl_iris3 <- as_polars(iris, with_string_cache = FALSE)
 
-expect_dim(
-  pl_filter(pl_iris3, Species %in% c("setosa", "foo")),
-  c(50, 5)
+expect_error(
+  pl_filter(pl_iris, Species %in% c("setosa", "foo")),
+  "consider setting a global"
 )
 
 # between()
@@ -154,4 +158,23 @@ expect_dim(
     pl_group_by(Species) |>
     pl_filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4),
   c(123, 5)
+)
+
+foo <- pl$DataFrame(
+  grp = c("a", "a", "b", "b"),
+  x = c(TRUE, TRUE, TRUE, FALSE)
+)
+
+expect_dim(
+  foo |>
+    pl_group_by(grp) |>
+    pl_filter(all(x)),
+  c(2, 2)
+)
+
+expect_dim(
+  foo |>
+    pl_group_by(grp) |>
+    pl_filter(any(x)),
+  c(4, 2)
 )

@@ -50,34 +50,26 @@ that we don't lose any of its capacities.
 
 ## Installation
 
-`tidypolars` is built on `polars`, which is not available on CRAN. This implies 
-that `tidypolars` also can't be on CRAN. That said, there are still several ways
-to install `tidypolars`. Depending on your OS, the procedure is slightly 
-different.
+`tidypolars` is built on `polars`, which is not available on CRAN. This means 
+that `tidypolars` also can't be on CRAN. However, you can install it from 
+R-universe.
 
 ### Windows or macOS
 
 ```{r eval=FALSE}
 install.packages(
   'tidypolars', 
-  repos = c('https://etiennebacher.r-universe.dev', 'https://rpolars.r-universe.dev', getOption("repos"))
+  repos = c('https://etiennebacher.r-universe.dev', getOption("repos"))
 )
 ```
 
 ### Linux
 
 ```{r eval=FALSE}
-# install.packages("remotes")
-remotes::install_github(
-  "etiennebacher/tidypolars", 
-  repos = c("https://rpolars.r-universe.dev/bin/linux/jammy/4.3", getOption("repos"))
+install.packages(
+  'tidypolars', 
+  repos = c('https://etiennebacher.r-universe.dev/bin/linux/jammy/4.3', getOption("repos"))
 )
-
-#### OR
-
-# install.packages("pak")
-pak::repo_add("https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
-pak::pkg_install("etiennebacher/tidypolars")
 ```
 
 
@@ -125,8 +117,8 @@ pl$DataFrame(iris)$
   with_columns(
     pl$when(
       (pl$col("Petal.Length") / pl$col("Petal.Width") > 3)
-    )$then("long")$
-      otherwise("large")$
+    )$then(pl$lit("long"))$
+      otherwise(pl$lit("large"))$
       alias("petal_type")
   )$
   filter(pl$col("Sepal.Length")$is_between(4.5, 5.5))$
@@ -150,8 +142,8 @@ bench::mark(
       with_columns(
         pl$when(
           (pl$col("Petal.Length") / pl$col("Petal.Width") > 3)
-        )$then("long")$
-          otherwise("large")$
+        )$then(pl$lit("long"))$
+          otherwise(pl$lit("large"))$
           alias("petal_type")
       )$
       filter(pl$col("Sepal.Length")$is_between(4.5, 5.5))$

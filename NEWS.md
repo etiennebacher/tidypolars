@@ -1,11 +1,23 @@
-# tidypolars (development version)
+# tidypolars (development)
+
+* Rename `pl_fetch()` to `fetch()`.
+
+* `pl_colnames()` is no longer exported.
+
+# tidypolars 0.1.0
 
 **New features**
 
-* Support `as.numeric()`, `as.character()` and `as.logical()` in expressions
-  in `pl_filter()`, `pl_mutate()` and `pl_summarize()`.
+* Support `as.numeric()`, `as.character()`, `as.logical()`, `grepl()`, and
+  `paste()` in expressions in `pl_filter()`, `pl_mutate()` and `pl_summarize()`.
   
 * Support `sink_parquet()` (#38).
+
+* Support `fetch()` (#42).
+
+* Support for additional `stringr` functions: `str_detect()`, `str_extract_all()`,
+  `str_pad()`, `str_squish()`, `str_trim()`, `word()` (some arguments or corner 
+  cases are not supported yet).
 
 * Add all optimization parameters in `collect()`.
 

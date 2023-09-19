@@ -10,3 +10,13 @@ safe_deparse <- function (x, ...) {
          collapse = " ")
 }
 
+# sort of equivalent of purrr::compact()
+# takes a list, returns a list
+compact <- function(x) {
+  Filter(\(y) length(y) != 0, x)
+}
+
+# takes a list, returns a list with only length-0 elements
+empty_elems <- function(x) {
+  Filter(\(y) length(y) == 0, x)
+}

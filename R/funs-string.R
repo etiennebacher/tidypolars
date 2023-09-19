@@ -1,186 +1,178 @@
 
-pl_str_concat <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$concat()
-}
-
-pl_str_contains <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$contains()
-}
-
-pl_str_count_match <- function(x, pattern = "", ...) {
-  check_empty_dots(...)
-  x$str$count_match(pattern)
-}
-
-pl_str_decode <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$decode()
-}
-
-pl_str_encode <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$encode()
-}
-
-pl_str_ends <- function(x, pattern, negate = FALSE) {
+pl_str_detect <- function(string, pattern, negate = FALSE) {
+  out <- string$str$contains(pattern)
   if (isTRUE(negate)) {
-    x$str$ends_with(pl$lit(pattern))$is_not()
+    out$is_not()
   } else {
-    x$str$ends_with(pl$lit(pattern))
+    out
   }
 }
 
-pl_str_extract <- function(x, pattern, group = 0) {
-  x$str$extract(pattern, group)
+pl_grepl <- function(pattern, x, ...) {
+  check_empty_dots(...)
+  pl_str_detect(string = x, pattern = pattern)
 }
 
-pl_str_extract_all <- function(x, ...) {
+pl_str_count_match <- function(string, pattern = "", ...) {
   check_empty_dots(...)
-  x$str$extract_all()
+  string$str$count_match(pattern)
 }
 
-pl_str_json_extract <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$json_extract()
+pl_str_ends <- function(string, pattern, negate = FALSE) {
+  out <- string$str$ends_with(pattern)
+  if (isTRUE(negate)) {
+    out$is_not()
+  } else {
+    out
+  }
 }
 
-pl_str_json_path_match <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$json_path_match()
+# group = 0 means the whole match
+pl_str_extract <- function(string, pattern, group = 0) {
+  string$str$extract(pattern, group_index = group)
 }
 
-pl_str_lengths <- function(x, ...) {
+# TODO: argument "simplify" should be allowed. It requirest the method "unnest"
+# for "struct". When it is implement in r-polars, use this:
+# $arr$to_struct()$struct$unnest()
+pl_str_extract_all <- function(string, pattern, ...) {
   check_empty_dots(...)
-  x$str$lengths()
+  string$str$extract_all(pattern)
 }
 
-pl_str_ljust <- function(x, ...) {
+pl_str_length <- function(string, ...) {
   check_empty_dots(...)
-  x$str$ljust()
-}
-
-pl_str_lstrip <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$lstrip()
-}
-
-pl_str_length <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$n_chars()
+  string$str$n_chars()
 }
 
 pl_str_n_chars <- pl_str_length
 
-pl_str_parse_int <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$parse_int()
-}
-
-pl_str_replace <- function(x, pattern, replacement, ...) {
+pl_str_replace <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
   replacement <- unlist(replacement)
-  x$str$replace(pattern, replacement)
+  string$str$replace(pattern, replacement)
 }
 
-pl_str_replace_all <- function(x, pattern, replacement, ...) {
+pl_str_replace_all <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
   replacement <- unlist(replacement)
-  x$str$replace_all(pattern, replacement)
+  string$str$replace_all(pattern, replacement)
 }
 
-pl_str_rjust <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$rjust()
-}
-
-pl_str_rstrip <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$rstrip()
-}
-
-pl_str_slice <- function(x, start, end = NULL, ...) {
+pl_str_slice <- function(string, start, end = NULL, ...) {
   check_empty_dots(...)
   # polars is 0-indexed
   if (start > 0) start <- start - 1
-  x$str$slice(start, end)
+  string$str$slice(start, end)
 }
 
-pl_str_split <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$split()
-}
+# TODO: check how to associate this with stringr::str_split() + tidyr nesting
+# pl_str_split <- function(string, ...) {
+#   check_empty_dots(...)
+#   string$str$split()
+# }
+#
+# pl_str_split_exact <- function(string, ...) {
+#   check_empty_dots(...)
+#   string$str$split_exact()
+# }
+#
+# pl_str_splitn <- function(string, ...) {
+#   check_empty_dots(...)
+#   string$str$splitn()
+# }
 
-pl_str_split_exact <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$split_exact()
-}
-
-pl_str_splitn <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$splitn()
-}
-
-pl_str_starts <- function(x, pattern, negate = FALSE) {
+pl_str_starts <- function(string, pattern, negate = FALSE) {
   if (isTRUE(negate)) {
-    x$str$starts_with(pl$lit(pattern))$is_not()
+    string$str$starts_with(pl$lit(pattern))$is_not()
   } else {
-    x$str$starts_with(pl$lit(pattern))
+    string$str$starts_with(pl$lit(pattern))
   }
 }
 
-pl_str_str_explode <- function(x, ...) {
+pl_str_strptime <- function(string, ...) {
   check_empty_dots(...)
-  x$str$str_explode()
+  string$str$strptime()
 }
 
-pl_str_strip <- function(x, ...) {
+pl_str_to_lower <- function(string, ...) {
   check_empty_dots(...)
-  x$str$strip()
-}
-
-pl_str_strptime <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$strptime()
-}
-
-pl_str_to_lower <- function(x, ...) {
-  check_empty_dots(...)
-  x$str$to_lowercase()
+  string$str$to_lowercase()
 }
 
 pl_tolower <- pl_str_to_lower
 
-pl_str_to_upper <- function(x, ...) {
+pl_str_to_upper <- function(string, ...) {
   check_empty_dots(...)
-  x$str$to_uppercase()
+  string$str$to_uppercase()
 }
 
 pl_toupper <- pl_str_to_upper
 
-pl_str_zfill <- function(x, ...) {
+# not in polars
+pl_str_remove <- function(string, pattern, ...) {
   check_empty_dots(...)
-  x$str$zfill()
+  string$str$replace(pattern, "")
 }
 
 # not in polars
-pl_str_remove <- function(x, pattern, ...) {
+pl_str_remove_all <- function(string, pattern, ...) {
   check_empty_dots(...)
-  x$str$replace(pattern, "")
-}
-
-# not in polars
-pl_str_remove_all <- function(x, pattern, ...) {
-  check_empty_dots(...)
-  x$str$replace_all(pattern, "")
+  string$str$replace_all(pattern, "")
 }
 
 pl_paste0 <- function(..., collapse = NULL) {
-  # for (i in seq_along(dots)) {
-  #   if (length(dots[[i]]) == 1 && is.character(dots[[i]])) {
-  #     dots[[i]] <- pl$lit(dots[[i]])
-  #   }
-  # }
   pl$concat_str(...)
+}
+
+pl_paste <- function(..., sep = " ", collapse = NULL) {
+  # TODO: hacky, I do this because specifying e.g sep = "--" gets wrapped into
+  # Utf8() and doesn't work inside concat_str
+  if (!is.character(sep)) {
+    sep <- sep$to_r()
+  }
+  pl$concat_str(..., separator = sep)
+}
+
+pl_str_trim <- function(string, side = "both") {
+  switch(
+    side,
+    "both" = string$str$strip(),
+    "left" = string$str$lstrip(),
+    "right" = string$str$rstrip()
+  )
+}
+
+pl_trimws <- function(string, which = "both", ...) {
+  check_empty_dots(...)
+  pl_str_trim(string, side = which)
+}
+
+pl_str_pad <- function(string, width, side = "left", pad = " ", use_width = TRUE) {
+  if (isFALSE(use_width)) {
+    abort(
+      '`str_pad()` doesn\'t work in a Polars DataFrame when `use_width = FALSE`',
+      class = "tidypolars_error"
+    )
+  }
+  switch(
+    side,
+    "both" = abort(
+      '`str_pad()` doesn\'t work in a Polars DataFrame when `side = "both"`',
+      class = "tidypolars_error"
+    ),
+    # polars and dplyr have the opposite understanding for "side"
+    "left" = string$str$rjust(width = width, fillchar = pad),
+    "right" = string$str$ljust(width = width, fillchar = pad)
+  )
+}
+
+# not in polars
+
+pl_word <- function(string, start = 1L, end = start, sep = " ") {
+  string$str$split(sep)$arr$take((start:end) - 1L)$arr$join(sep)
+}
+
+pl_str_squish <- function(string) {
+  string$str$replace_all("\\s+", " ")$str$strip()
 }
