@@ -30,3 +30,9 @@ expect_error(
   describe(test, percentiles = -1),
   'between 0 and 1'
 )
+
+expect_error(
+  describe(test$lazy(), percentiles = 0.3),
+  'only be used on a DataFrame'
+)
+
