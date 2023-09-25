@@ -1,8 +1,12 @@
 # tidypolars (development)
 
+**New features**
+
 * Rename `pl_fetch()` to `fetch()`.
 
 * `pl_colnames()` is no longer exported.
+
+* Support `describe()`.
 
 # tidypolars 0.1.0
 

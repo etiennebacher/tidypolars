@@ -1,10 +1,10 @@
 #' @import rlang
 
-translate_dots <- function(.data, ...) {
+translate_dots <- function(.data, ..., env) {
   dots <- enexprs(...)
   new_vars <- c()
   out <- lapply(seq_along(dots), \(x) {
-    tmp <- translate_expr(.data = .data, dots[[x]], new_vars)
+    tmp <- translate_expr(.data = .data, dots[[x]], new_vars, env = env)
     new_vars <<- c(new_vars, names(dots)[x])
     tmp
   })
@@ -22,7 +22,7 @@ translate_dots <- function(.data, ...) {
   out
 }
 
-translate_expr <- function(.data, quo, new_vars) {
+translate_expr <- function(.data, quo, new_vars, env) {
 
   names_data <- pl_colnames(.data)
 
@@ -51,7 +51,7 @@ translate_expr <- function(.data, quo, new_vars) {
     expr <- unpack_across(.data, expr)
   }
 
-  translate <- function(expr) {
+  translate <- function(expr, env) {
 
     # prepare function and arg if the user provided an anonymous function in
     # across()
@@ -85,7 +85,7 @@ translate_expr <- function(.data, quo, new_vars) {
         if (expr_char %in% names_data || expr_char %in% unlist(new_vars)) {
           polars_col(expr_char)
         } else {
-          val <- eval_tidy(expr, env = caller_env(3))
+          val <- eval_tidy(expr, env = env)
           polars_constant(val)
         }
       },
@@ -118,8 +118,8 @@ translate_expr <- function(.data, quo, new_vars) {
           "%in%" = {
             out <- tryCatch(
               {
-                lhs <- translate(expr[[2]])
-                rhs <- translate(expr[[3]])
+                lhs <- translate(expr[[2]], env = env)
+                rhs <- translate(expr[[3]], env = env)
                 if (is.list(rhs)) {
                   rhs <- unlist(rhs)
                 }
@@ -138,7 +138,7 @@ translate_expr <- function(.data, quo, new_vars) {
           "is.na" = {
             out <- tryCatch(
               {
-                inside <- translate(expr[[2]])
+                inside <- translate(expr[[2]], env = env)
                 inside$is_null()
               },
               error = identity
@@ -148,7 +148,7 @@ translate_expr <- function(.data, quo, new_vars) {
           "is.nan" = {
             out <- tryCatch(
               {
-                inside <- translate(expr[[2]])
+                inside <- translate(expr[[2]], env = env)
                 inside$is_nan()
               },
               error = identity
@@ -174,7 +174,7 @@ translate_expr <- function(.data, quo, new_vars) {
           if (startsWith(obj_name, ".__tidypolars__across_fn")) {
             fn <- eval_bare(global_env()[[obj_name]])
             col_name <- sym(col_name)
-            args <- translate(col_name)
+            args <- translate(col_name, env = env)
             suppressWarnings({
               tr <- try(do.call(fn, list(args)), silent = TRUE)
             })
@@ -184,15 +184,15 @@ translate_expr <- function(.data, quo, new_vars) {
               abort(
                 c("Could not evaluate an anonymous function in `across()`.",
                   "i" = "Are you sure the anonymous function returns a Polars expression?"),
-                call = caller_env(7)
+                call = env
               )
             }
           } else {
-            abort(paste("Unknown function:", name), call = caller_env(5))
+            abort(paste("Unknown function:", name), call = env)
           }
         }
 
-        args <- lapply(as.list(expr[-1]), translate)
+        args <- lapply(as.list(expr[-1]), translate, env = env)
         if (name %in% known_functions) {
           name <- r_polars_funs$polars_funs[r_polars_funs$r_funs == name][1]
           name <- paste0("pl_", name)
@@ -208,7 +208,7 @@ translate_expr <- function(.data, quo, new_vars) {
 
               )
             } else {
-              abort(e$message, call = caller_env(9))
+              abort(e$message, call = env)
             }
           }
         )
@@ -216,16 +216,16 @@ translate_expr <- function(.data, quo, new_vars) {
 
       abort(
         paste("Internal: Unknown type", typeof(expr)),
-        call = caller_env(4)
+        call = env
       )
     )
   }
 
   # happens because across() calls get split earlier
   if ((is.vector(expr) && length(expr) > 1) || is.list(expr)) {
-    lapply(expr, translate)
+    lapply(expr, translate, env = env)
   } else {
-    translate(expr)
+    translate(expr, env = env)
   }
 }
 
