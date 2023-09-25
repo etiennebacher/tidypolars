@@ -36,6 +36,40 @@ for (i in c("toupper", "tolower", "str_to_title", "str_to_lower", "str_to_upper"
 }
 
 
+if (isTRUE(polars::pl$polars_info()$features$full_features)) {
+
+  expect_equal(
+    pl_mutate(test, foo = str_to_title(x1)) |>
+      pl_pull(foo),
+    mutate(test_df, foo = str_to_title(x1)) |>
+      pull(foo)
+  )
+
+  # TODO: fix cases where the package name is prefixed to the function call
+  # expect_equal(
+  #   pl_mutate(test, foo = tools::toTitleCase(x1, "he", sep = "--")) |>
+  #     pl_pull(foo),
+  #   mutate(test_df, foo = tools::toTitleCase(x1, "he", sep = "--")) |>
+  #     pull(foo)
+  # )
+
+} else {
+
+  expect_error(
+    pl_mutate(test, foo = str_to_title(x1)),
+    "Try to install polars from Github releases"
+  )
+
+  # TODO: same as above
+  # expect_error(
+  #   pl_mutate(test, foo = tools::toTitleCase(x1)),
+  #   "Try to install polars from Github releases"
+  # )
+
+}
+
+
+
 
 # paste / paste0 --------------------------------------------------------------
 

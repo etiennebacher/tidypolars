@@ -112,6 +112,13 @@ pl_toupper <- pl_str_to_upper
 
 
 pl_str_to_title <- function(string, ...) {
+  if (isFALSE(polars::pl$polars_info()$features$full_features)) {
+    rlang::abort(
+      c("You can only use `str_to_title()` or `toTitleCase()` when polars was compiled with the\n  RPOLARS_FULL_FEATURES envvar enabled.",
+        "Your version of polars was not. Try to install polars from Github releases (see \n  https://rpolars.github.io/#github-releases)."),
+      class = "tidypolars_error"
+    )
+  }
   check_empty_dots(...)
   string$str$to_titlecase()
 }
