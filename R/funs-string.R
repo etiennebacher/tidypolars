@@ -18,7 +18,7 @@ pl_str_count_match <- function(string, pattern = "", ...) {
   # TODO: use literal = is_fixed when str_count_match has an arg "literal" in
   # py-polars
   # https://github.com/pola-rs/polars/issues/10930
-  is_fixed <- isTRUE(attr(pattern,"stringr_attr") == "fixed")
+  is_fixed <- isTRUE(attr(pattern, "stringr_attr") == "fixed")
   string$str$count_match(pattern)
 }
 
