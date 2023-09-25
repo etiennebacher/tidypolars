@@ -22,7 +22,8 @@ test_df <- data.frame(
 
 test <- pl$LazyFrame(test_df)
 
-for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper", "nchar")) {
+for (i in c("toupper", "tolower", "str_to_title", "str_to_lower", "str_to_upper",
+            "nchar")) {
 
   pol <- paste0("pl_mutate(test, foo = ", i, "(x1))") |>
     str2lang() |>
@@ -289,7 +290,7 @@ expect_equal_lazy(
 
 # TODO:
 # expect_equal_lazy(
-#   pl_mutate(test, foo = str_count(x5, ".")) |>
+#   pl_mutate(test, foo = str_count(x5, fixed("."))) |>
 #     pl_pull(foo),
 #   mutate(test_df, foo = str_count(x5, fixed("."))) |>
 #     pull(foo)
