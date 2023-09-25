@@ -8,9 +8,15 @@
 
 * Support `describe()`.
 
-* Support `stringr::str_to_title()`. This needs polars to be compiled with full
-  features enabled, which is the case with Github releases but not R-universe
-  installations for now. See https://rpolars.github.io/#github-releases (#46).
+* Support `str_to_title()` (from `stringr`) and `toTitleCase()` (from `tools`). 
+  This needs polars to be compiled with full features enabled, which is the case
+  with Github releases but not R-universe installations for now. See
+  https://rpolars.github.io/#github-releases (#46).
+  
+**Misc**
+
+* Clearer error message when an expression contains `<pkg>::`. This is not 
+  supported for now but could potentially be implemented later.
 
 
 # tidypolars 0.1.0

@@ -92,6 +92,15 @@ translate_expr <- function(.data, quo, new_vars, env) {
 
       language = {
         name <- as.character(expr[[1]])
+        if (length(name) == 3 && name[[1]] == "::") {
+          abort(
+            c(
+              "tidypolars doesn't work when expressions contain `<pkg>::`.",
+              "Use `library(<pkg>)` in your script instead."
+            ),
+            call = env
+          )
+        }
 
         switch(
           name,

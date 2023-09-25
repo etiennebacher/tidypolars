@@ -6,6 +6,7 @@ source("helpers.R")
 using("tidypolars")
 
 library(dplyr, warn.conflicts = FALSE)
+library(tools)
 library(stringr)
 
 test_df <- data.frame(
@@ -48,13 +49,12 @@ if (isTRUE(polars::pl$polars_info()$features$full_features)) {
       pull(foo)
   )
 
-  # TODO: fix cases where the package name is prefixed to the function call
-  # expect_equal_lazy(
-  #   pl_mutate(test, foo = tools::toTitleCase(x1, "he", sep = "--")) |>
-  #     pl_pull(foo),
-  #   mutate(test_df, foo = tools::toTitleCase(x1, "he", sep = "--")) |>
-  #     pull(foo)
-  # )
+  expect_equal_lazy(
+    pl_mutate(test, foo = toTitleCase(x1)) |>
+      pl_pull(foo),
+    mutate(test_df, foo = toTitleCase(x1)) |>
+      pull(foo)
+  )
 
 } else {
 
@@ -63,11 +63,10 @@ if (isTRUE(polars::pl$polars_info()$features$full_features)) {
     "Try to install polars from Github releases"
   )
 
-  # TODO: same as above
-  # expect_error_lazy(
-  #   pl_mutate(test, foo = tools::toTitleCase(x1)),
-  #   "Try to install polars from Github releases"
-  # )
+  expect_error_lazy(
+    pl_mutate(test, foo = toTitleCase(x1)),
+    "Try to install polars from Github releases"
+  )
 
 }
 
