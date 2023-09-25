@@ -231,6 +231,7 @@ out <- tribble(
   "`base`", "`tan`", 
   "`base`", "`tanh`",
   "`base`", "`tolower`",
+  "`tools`", "`toTitleCase`",
   "`base`", "`toupper`",
   "`stats`", "`var`",
   "`dplyr`", "`between`",
@@ -255,6 +256,7 @@ out <- tribble(
   "`stringr`", "`str_sub`",
   "`stringr`", "`str_trim`",
   "`stringr`", "`str_to_lower`",
+  "`stringr`", "`str_to_title`",
   "`stringr`", "`str_to_upper`",
   "`stringr`", "`word`"
 ) |> 

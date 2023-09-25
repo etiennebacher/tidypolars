@@ -39,6 +39,40 @@ for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper", "nchar")) {
 }
 
 
+if (isTRUE(polars::pl$polars_info()$features$full_features)) {
+
+  expect_equal_lazy(
+    pl_mutate(test, foo = str_to_title(x1)) |>
+      pl_pull(foo),
+    mutate(test_df, foo = str_to_title(x1)) |>
+      pull(foo)
+  )
+
+  # TODO: fix cases where the package name is prefixed to the function call
+  # expect_equal_lazy(
+  #   pl_mutate(test, foo = tools::toTitleCase(x1, "he", sep = "--")) |>
+  #     pl_pull(foo),
+  #   mutate(test_df, foo = tools::toTitleCase(x1, "he", sep = "--")) |>
+  #     pull(foo)
+  # )
+
+} else {
+
+  expect_error_lazy(
+    pl_mutate(test, foo = str_to_title(x1)),
+    "Try to install polars from Github releases"
+  )
+
+  # TODO: same as above
+  # expect_error_lazy(
+  #   pl_mutate(test, foo = tools::toTitleCase(x1)),
+  #   "Try to install polars from Github releases"
+  # )
+
+}
+
+
+
 
 # paste / paste0 --------------------------------------------------------------
 
@@ -196,14 +230,6 @@ expect_equal_lazy(
     pull(foo)
 )
 
-# TODO:
-# expect_equal_lazy(
-#   pl_mutate(test, foo = str_replace(x1, c("a", "e"), "-")) |>
-#     pl_pull(foo),
-#   mutate(test_df, foo = str_replace(x1, c("a", "e"), "-")) |>
-#     pull(foo)
-# )
-
 expect_equal_lazy(
   pl_mutate(test, foo = str_replace_all(x1, "[aeiou]", "-")) |>
     pl_pull(foo),
@@ -297,7 +323,7 @@ expect_equal_lazy(
 
 # TODO:
 # expect_equal_lazy(
-#   pl_mutate(test, foo = str_count(x5, ".")) |>
+#   pl_mutate(test, foo = str_count(x5, fixed("."))) |>
 #     pl_pull(foo),
 #   mutate(test_df, foo = str_count(x5, fixed("."))) |>
 #     pull(foo)

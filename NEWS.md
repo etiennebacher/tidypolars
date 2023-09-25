@@ -8,6 +8,11 @@
 
 * Support `describe()`.
 
+* Support `stringr::str_to_title()`. This needs polars to be compiled with full
+  features enabled, which is the case with Github releases but not R-universe
+  installations for now. See https://rpolars.github.io/#github-releases (#46).
+
+
 # tidypolars 0.1.0
 
 **New features**
