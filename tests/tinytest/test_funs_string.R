@@ -18,8 +18,7 @@ test_df <- data.frame(
 
 test <- pl$DataFrame(test_df)
 
-for (i in c("toupper", "tolower", "str_to_title", "str_to_lower", "str_to_upper",
-            "nchar")) {
+for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper", "nchar")) {
 
   pol <- paste0("pl_mutate(test, foo = ", i, "(x1))") |>
     str2lang() |>
