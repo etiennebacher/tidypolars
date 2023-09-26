@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-exit_if(packageVersion("polars") <= "0.8.1")
+exit_if_not(packageVersion("polars") > "0.8.1")
 
 test <- pl$DataFrame(
   x = c(NA, "x.y", "x.z", "y.z")
