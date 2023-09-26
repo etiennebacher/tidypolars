@@ -38,7 +38,7 @@ pl_str_extract <- function(string, pattern, group = 0) {
 
 # TODO: argument "simplify" should be allowed. It requirest the method "unnest"
 # for "struct". When it is implement in r-polars, use this:
-# $arr$to_struct()$struct$unnest()
+# $list$to_struct()$struct$unnest()
 pl_str_extract_all <- function(string, pattern, ...) {
   check_empty_dots(...)
   string$str$extract_all(pattern)
@@ -185,7 +185,7 @@ pl_str_pad <- function(string, width, side = "left", pad = " ", use_width = TRUE
 # not in polars
 
 pl_word <- function(string, start = 1L, end = start, sep = " ") {
-  string$str$split(sep)$arr$take((start:end) - 1L)$arr$join(sep)
+  string$str$split(sep)$list$take((start:end) - 1L)$list$join(sep)
 }
 
 pl_str_squish <- function(string) {
