@@ -2,7 +2,7 @@
 #'
 #' @inheritParams pl_select
 #' @param percentiles One or more percentiles to include in the summary
-#' statistics. All values must be between 0 and 1 (`NULL` are ignored)⁠.
+#' statistics. All values must be between 0 and 1 (`NULL` are ignored).
 #'
 #' @export
 #' @examples

@@ -10,7 +10,7 @@ describe(.data, percentiles = c(0.25, 0.75))
 \item{.data}{A Polars Data/LazyFrame}
 
 \item{percentiles}{One or more percentiles to include in the summary
-statistics. All values must be between 0 and 1 (\code{NULL} are ignored)⁠.}
+statistics. All values must be between 0 and 1 (\code{NULL} are ignored).}
 }
 \description{
 Summary statistics for a Polars DataFrame
