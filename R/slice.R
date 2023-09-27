@@ -58,6 +58,10 @@ pl_slice_head <- function(.data, n = 5) {
 pl_slice_sample <- function(.data, n = NULL, prop = NULL, replace = FALSE) {
   check_polars_data(.data)
 
+  if (packageVersion("polars") <= "0.8.1") {
+    abort("`pl_slice_sample()` requires polars > 0.8.1. Try to install a more recent version of polars.")
+  }
+
   if (inherits(.data, "LazyFrame")) {
     abort("`pl_slice_sample()` only works on Polars DataFrames.")
   }

@@ -49,6 +49,8 @@ expect_equal(
 
 # slice_sample ---------------------------------------------------
 
+exit_if_not(packageVersion("polars") > "0.8.1")
+
 if (inherits(pl_iris, "DataFrame")) {
   expect_equal(
     pl_slice_sample(pl_iris, n = 5) |> nrow(),
