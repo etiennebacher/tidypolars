@@ -4,7 +4,7 @@
 \alias{pl_slice_tail}
 \alias{pl_slice_head}
 \alias{pl_slice_sample}
-\title{Subset the first or last rows of a Data/LazyFrame}
+\title{Subset rows of a Data/LazyFrame}
 \usage{
 pl_slice_tail(.data, n = 5)
 
@@ -24,7 +24,7 @@ Cannot be used with \code{prop}.}
 (\code{FALSE}).}
 }
 \description{
-Subset the first or last rows of a Data/LazyFrame
+Subset rows of a Data/LazyFrame
 }
 \examples{
 pl_test <- polars::pl$DataFrame(iris)
