@@ -4,6 +4,8 @@
 #' @param ... Not used
 #'
 #' @export
+#' @noRd
+
 print.DataFrame <- function(x, ...) { # nocov start
   grps <- attributes(x)$pl_grps
   is_grouped <- !is.null(grps)

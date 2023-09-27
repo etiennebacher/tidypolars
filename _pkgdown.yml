@@ -27,7 +27,7 @@ reference:
       - to_r
   - title: From `dplyr`
     desc: |
-      Functions adapted from `dplyr`
+      Functions coming from `dplyr`
     contents:
       - pl_add_count
       - pl_anti_join
@@ -54,12 +54,13 @@ reference:
       - pl_separate
       - pl_slice_head
       - pl_slice_tail
+      - pl_slice_sample
       - pl_summarize
       - pl_summarise
       - pl_ungroup
   - title: From `tidyr`
     desc: |
-      Functions adapted from `tidyr`
+      Functions coming from `tidyr`
     contents:
       - pl_complete
       - pl_drop_na
@@ -69,11 +70,6 @@ reference:
       - pl_replace_na
       - pl_separate
       - pl_unite
-  - title: Utility functions
-    desc: |
-      Users shouldn't need to use them directly.
-    contents:
-      - print.DataFrame
   - title: Datasets
     desc: |
       Datasets reexported from various tidyverse packages
