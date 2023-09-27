@@ -51,4 +51,61 @@ expect_equal_lazy(
   c(5.1, 5.7)
 )
 
+# slice_sample ---------------------------------------------------
+
+if (inherits(pl_iris, "DataFrame")) {
+  expect_equal_lazy(
+    pl_slice_sample(pl_iris, n = 5) |> nrow(),
+    5
+  )
+
+  expect_equal_lazy(
+    pl_slice_sample(pl_iris, prop = 0.1) |> nrow(),
+    15
+  )
+
+  expect_error_lazy(
+    pl_slice_sample(pl_iris, n = 2, prop = 0.1),
+    "not both"
+  )
+
+  expect_equal_lazy(
+    pl_slice_sample(pl_iris, n = 200, replace = TRUE) |> nrow(),
+    200
+  )
+
+  expect_error_lazy(
+    pl_slice_sample(pl_iris, n = 200),
+    "Cannot take more rows than"
+  )
+
+  expect_equal_lazy(
+    pl_slice_sample(pl_iris, prop = 2, replace = TRUE) |> nrow(),
+    300
+  )
+
+  expect_error_lazy(
+    pl_slice_sample(pl_iris, prop = 1.2),
+    "Cannot take more rows than"
+  )
+
+  expect_equal_lazy(
+    pl_iris |>
+      pl_group_by(Species) |>
+      pl_slice_sample(n = 5) |>
+      nrow(),
+    15
+  )
+
+  expect_equal_lazy(
+    pl_iris |>
+      pl_group_by(Species) |>
+      pl_slice_sample(prop = 0.1) |>
+      nrow(),
+    15
+  )
+}
+
+
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

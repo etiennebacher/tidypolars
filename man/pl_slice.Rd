@@ -3,16 +3,25 @@
 \name{pl_slice_tail}
 \alias{pl_slice_tail}
 \alias{pl_slice_head}
+\alias{pl_slice_sample}
 \title{Subset the first or last rows of a Data/LazyFrame}
 \usage{
 pl_slice_tail(.data, n = 5)
 
 pl_slice_head(.data, n = 5)
+
+pl_slice_sample(.data, n = NULL, prop = NULL, replace = FALSE)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
 
-\item{n}{The number of rows to select from the start or the end of the data.}
+\item{n}{The number of rows to select from the start or the end of the data.
+Cannot be used with \code{prop}.}
+
+\item{prop}{Proportion of rows to select. Cannot be used with \code{n}.}
+
+\item{replace}{Perform the sampling with replacement (\code{TRUE}) or without
+(\code{FALSE}).}
 }
 \description{
 Subset the first or last rows of a Data/LazyFrame
@@ -21,4 +30,6 @@ Subset the first or last rows of a Data/LazyFrame
 pl_test <- polars::pl$DataFrame(iris)
 pl_slice_head(pl_test, 3)
 pl_slice_tail(pl_test, 3)
+pl_slice_sample(pl_test, n = 5)
+pl_slice_sample(pl_test, prop = 0.1)
 }
