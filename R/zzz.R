@@ -75,6 +75,8 @@
     registerS3method("slice_tail", "DataFrame", pl_slice_tail, envir = asNamespace("dplyr"))
     registerS3method("slice_tail", "LazyFrame", pl_slice_tail, envir = asNamespace("dplyr"))
 
+    registerS3method("slice_sample", "DataFrame", pl_slice_sample, envir = asNamespace("dplyr"))
+
     registerS3method("summarize", "DataFrame", pl_summarize, envir = asNamespace("dplyr"))
     registerS3method("summarize", "LazyFrame", pl_summarize, envir = asNamespace("dplyr"))
     registerS3method("summarise", "DataFrame", pl_summarise, envir = asNamespace("dplyr"))
