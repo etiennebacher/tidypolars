@@ -13,6 +13,8 @@
   with Github releases but not R-universe installations for now. See
   https://rpolars.github.io/#github-releases (#46).
   
+* Support `slice_sample()`.
+  
 **Misc**
 
 * Clearer error message when an expression contains `<pkg>::`. This is not 
