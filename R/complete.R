@@ -6,19 +6,29 @@
 #'
 #' @param .data A Polars Data/LazyFrame
 #' @inheritParams pl_select
+#' @param fill A named list that for each variable supplies a single value to
+#' use instead of `NA` for missing combinations.
 #'
 #' @export
 #' @examples
-#' test <- polars::pl$DataFrame(
-#'   country = c("France", "France", "UK", "UK", "Spain"),
-#'   year = c(2020, 2021, 2019, 2020, 2022),
-#'   value = c(1, 2, 3, 4, 5)
+#' df <- polars::pl$DataFrame(
+#'   group = c(1:2, 1, 2),
+#'   item_id = c(1:2, 2, 3),
+#'   item_name = c("a", "a", "b", "b"),
+#'   value1 = c(1, NA, 3, 4),
+#'   value2 = 4:7
 #' )
-#' test
+#' df
 #'
-#' pl_complete(test, country, year)
+#' df |> pl_complete(group, item_id, item_name)
+#'
+#' df |>
+#'   pl_complete(
+#'     group, item_id, item_name,
+#'     fill = list(value1 = 0, value2 = 99)
+#'   )
 
-pl_complete <- function(.data, ...) {
+pl_complete <- function(.data, ..., fill = list()) {
 
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
@@ -28,11 +38,23 @@ pl_complete <- function(.data, ...) {
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
+  # TODO: implement by group
+  # df |>
+  #  pl_group_by(group) |>
+  #  pl_complete(item_id, item_name)
+  # foo <- df$groupby(grps)$agg(pl$col(vars)$unique()$sort()$implode())
+  # need to explode twice in this case
+
   chain <- .data$select(pl$col(vars)$unique()$sort()$implode())
   for (i in 1:length(vars)) {
     chain <- chain$explode(vars[i])
   }
   out <- chain$join(.data, on = vars, how = 'left')
+
+  # TODO: implement argument `explicit`
+  if (length(fill) > 0) {
+    out <- pl_replace_na(out, fill)
+  }
 
   if (isTRUE(is_grouped)) {
     out |>

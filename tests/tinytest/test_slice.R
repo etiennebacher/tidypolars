@@ -49,7 +49,7 @@ expect_equal(
 
 # slice_sample ---------------------------------------------------
 
-exit_if_not(packageVersion("polars") > "0.8.1")
+exit_if_not(utils::packageVersion("polars") > "0.8.1")
 
 if (inherits(pl_iris, "DataFrame")) {
   expect_equal(

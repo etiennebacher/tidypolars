@@ -26,6 +26,13 @@ expect_equal(
 )
 
 expect_equal(
+  pl_complete(test, country, year, fill = list(value = 99)) |>
+    pl_slice_head(4) |>
+    pl_pull(value),
+  c(99, 1, 2, 99)
+)
+
+expect_equal(
   pl_complete(test, country),
   test
 )

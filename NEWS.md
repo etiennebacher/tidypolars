@@ -4,8 +4,6 @@
 
 * Rename `pl_fetch()` to `fetch()`.
 
-* `pl_colnames()` is no longer exported.
-
 * Support `describe()`.
 
 * Support `str_to_title()` (from `stringr`) and `toTitleCase()` (from `tools`). 
@@ -14,11 +12,15 @@
   https://rpolars.github.io/#github-releases (#46).
   
 * Support `slice_sample()`.
+
+* New argument `fill` in `pl_complete()`.
   
 **Misc**
 
 * Clearer error message when an expression contains `<pkg>::`. This is not 
   supported for now but could potentially be implemented later.
+
+* `pl_colnames()` is no longer exported.
 
 
 # tidypolars 0.1.0
