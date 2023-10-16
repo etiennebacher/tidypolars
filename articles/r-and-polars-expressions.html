@@ -224,7 +224,7 @@ returns a Polars expression, you have to provide a <code>pl$col()</code>
 call:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pl_standardize</span><span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"mpg"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; polars Expr: [([(col("mpg")) - (col("mpg").mean())]) // (col("mpg").var())]</span></span></code></pre></div>
+<span><span class="co">#&gt; polars Expr: [([(col("mpg")) - (col("mpg").mean())]) // (col("mpg").std())]</span></span></code></pre></div>
 <p>This function correctly returns a Polars expression, so we can now
 use it like any other function:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
