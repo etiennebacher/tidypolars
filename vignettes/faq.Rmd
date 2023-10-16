@@ -57,7 +57,7 @@ pl_test <- pl$DataFrame(
 
 bench::mark(
   polars = pl_test$
-    groupby("grp")$
+    group_by("grp")$
     agg(
       pl$col('val1')$mean()$alias('x'), 
       pl$col('val2')$sum()$alias('y')

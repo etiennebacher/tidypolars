@@ -21,7 +21,7 @@ pl_slice_tail <- function(.data, n = 5) {
 
   if (is_grouped) {
     non_grps <- setdiff(pl_colnames(.data), grps)
-    .data$groupby(grps, maintain_order = mo)$agg(
+    .data$group_by(grps, maintain_order = mo)$agg(
       pl$all()$tail(n)
     )$explode(non_grps)
   } else {
@@ -40,7 +40,7 @@ pl_slice_head <- function(.data, n = 5) {
 
   if (is_grouped) {
     non_grps <- setdiff(pl_colnames(.data), grps)
-    .data$groupby(grps, maintain_order = mo)$agg(
+    .data$group_by(grps, maintain_order = mo)$agg(
       pl$all()$head(n)
     )$explode(non_grps)
   } else {
@@ -85,7 +85,7 @@ pl_slice_sample <- function(.data, n = NULL, prop = NULL, replace = FALSE) {
 
   if (is_grouped) {
     non_grps <- setdiff(pl_colnames(.data), grps)
-    .data$groupby(grps, maintain_order = mo)$agg(
+    .data$group_by(grps, maintain_order = mo)$agg(
       pl$all()$sample(n = n, frac = prop, with_replacement = replace)
     )$explode(non_grps)
   } else {

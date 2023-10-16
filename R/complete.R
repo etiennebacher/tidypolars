@@ -42,7 +42,7 @@ pl_complete <- function(.data, ..., fill = list()) {
   # df |>
   #  pl_group_by(group) |>
   #  pl_complete(item_id, item_name)
-  # foo <- df$groupby(grps)$agg(pl$col(vars)$unique()$sort()$implode())
+  # foo <- df$group_by(grps)$agg(pl$col(vars)$unique()$sort()$implode())
   # need to explode twice in this case
 
   chain <- .data$select(pl$col(vars)$unique()$sort()$implode())

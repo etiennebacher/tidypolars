@@ -12,7 +12,7 @@ print.DataFrame <- function(x, ...) { # nocov start
   mo <- attributes(x)$maintain_grp_order
 
   if (is_grouped) {
-    n_groups <- x$groupby(grps)$agg(pl$lit(1))$height
+    n_groups <- x$group_by(grps)$agg(pl$lit(1))$height
   }
 
   x$print()

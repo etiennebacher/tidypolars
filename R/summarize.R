@@ -37,7 +37,7 @@ pl_summarize <- function(.data, ...) {
     sub <- compact(sub)
 
     if (length(sub) > 0) {
-      .data <- .data$groupby(grps, maintain_order = mo)$agg(sub)
+      .data <- .data$group_by(grps, maintain_order = mo)$agg(sub)
     }
 
     if (length(to_drop) > 0) {
