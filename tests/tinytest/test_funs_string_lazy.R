@@ -320,13 +320,12 @@ expect_equal_lazy(
     pull(foo)
 )
 
-# TODO:
-# expect_equal_lazy(
-#   pl_mutate(test, foo = str_count(x5, fixed("."))) |>
-#     pl_pull(foo),
-#   mutate(test_df, foo = str_count(x5, fixed("."))) |>
-#     pull(foo)
-# )
+expect_equal_lazy(
+  pl_mutate(test, foo = str_count(x5, fixed("."))) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_count(x5, fixed("."))) |>
+    pull(foo)
+)
 
 
 # trim ---------------------------------------------------------------------

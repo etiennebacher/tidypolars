@@ -14,6 +14,8 @@
 * Support `slice_sample()`.
 
 * New argument `fill` in `pl_complete()`.
+
+* Support `stringr::fixed()` to use literal strings.
   
 **Misc**
 

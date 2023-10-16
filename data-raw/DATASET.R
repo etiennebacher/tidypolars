@@ -106,7 +106,7 @@ r_polars_funs <- data.frame(
       "ceil" ~ "ceiling",
       "shift" ~ "lag",
       "is_between" ~ "between",
-      "count_match" ~ "str_count",
+      "count_matches" ~ "str_count",
       "replace" ~ "str_replace",
       "replace_all" ~ "str_replace_all",
       "n_chars" ~ "nchar",

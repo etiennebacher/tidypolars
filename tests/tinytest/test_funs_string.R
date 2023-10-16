@@ -316,13 +316,12 @@ expect_equal(
     pull(foo)
 )
 
-# TODO:
-# expect_equal(
-#   pl_mutate(test, foo = str_count(x5, fixed("."))) |>
-#     pl_pull(foo),
-#   mutate(test_df, foo = str_count(x5, fixed("."))) |>
-#     pull(foo)
-# )
+expect_equal(
+  pl_mutate(test, foo = str_count(x5, fixed("."))) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_count(x5, fixed("."))) |>
+    pull(foo)
+)
 
 
 # trim ---------------------------------------------------------------------

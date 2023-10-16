@@ -13,13 +13,13 @@ pl_grepl <- function(pattern, x, ...) {
   pl_str_detect(string = x, pattern = pattern)
 }
 
-pl_str_count_match <- function(string, pattern = "", ...) {
+pl_str_count_matches <- function(string, pattern = "", ...) {
   check_empty_dots(...)
-  # TODO: use literal = is_fixed when str_count_match has an arg "literal" in
+  # TODO: use literal = is_fixed when str_count_matches has an arg "literal" in
   # py-polars
   # https://github.com/pola-rs/polars/issues/10930
   is_fixed <- isTRUE(attr(pattern, "stringr_attr") == "fixed")
-  string$str$count_match(pattern)
+  string$str$count_matches(pattern, literal = is_fixed)
 }
 
 pl_str_ends <- function(string, pattern, negate = FALSE) {
@@ -152,9 +152,9 @@ pl_paste <- function(..., sep = " ", collapse = NULL) {
 pl_str_trim <- function(string, side = "both") {
   switch(
     side,
-    "both" = string$str$strip(),
-    "left" = string$str$lstrip(),
-    "right" = string$str$rstrip()
+    "both" = string$str$strip_chars(),
+    "left" = string$str$strip_chars_start(),
+    "right" = string$str$strip_chars_end()
   )
 }
 
@@ -189,5 +189,5 @@ pl_word <- function(string, start = 1L, end = start, sep = " ") {
 }
 
 pl_str_squish <- function(string) {
-  string$str$replace_all("\\s+", " ")$str$strip()
+  string$str$replace_all("\\s+", " ")$str$strip_chars()
 }
