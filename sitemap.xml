@@ -148,6 +148,9 @@
     <loc>/reference/relig_income.html</loc>
   </url>
   <url>
+    <loc>/reference/sink_csv.html</loc>
+  </url>
+  <url>
     <loc>/reference/sink_parquet.html</loc>
   </url>
   <url>
