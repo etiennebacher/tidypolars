@@ -23,6 +23,7 @@ reference:
       - describe_optimized_plan
       - fetch
       - make_unique_id
+      - sink_csv
       - sink_parquet
       - to_r
   - title: From `dplyr`
