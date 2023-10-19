@@ -4,18 +4,20 @@
 
 * Rename `pl_fetch()` to `fetch()`.
 
-* Support `describe()`.
+* New functions supported: `describe()`, `sink_csv()`, `slice_sample()`.
 
 * Support `str_to_title()` (from `stringr`) and `toTitleCase()` (from `tools`). 
   This needs polars to be compiled with full features enabled, which is the case
   with Github releases but not R-universe installations for now. See
   https://rpolars.github.io/#github-releases (#46).
   
-* Support `slice_sample()`.
-
 * New argument `fill` in `pl_complete()`.
 
 * Support `stringr::fixed()` to use literal strings.
+
+**Bug fixes**
+
+* `sink_parquet()` didn't use the user inputs (apart from the `path`).
   
 **Misc**
 

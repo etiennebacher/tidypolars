@@ -102,19 +102,19 @@ sink_parquet <- function(
   }
 
   .data$sink_parquet(
-    path,
-    compression = "zstd",
-    compression_level = 3,
-    statistics = FALSE,
-    row_group_size = NULL,
-    data_pagesize_limit = NULL,
-    maintain_order = TRUE,
-    type_coercion = TRUE,
-    predicate_pushdown = TRUE,
-    projection_pushdown = TRUE,
-    simplify_expression = TRUE,
-    slice_pushdown = TRUE,
-    no_optimization = FALSE
+    path = path,
+    compression = compression,
+    compression_level = compression_level,
+    statistics = statistics,
+    row_group_size = row_group_size,
+    data_pagesize_limit = data_pagesize_limit,
+    maintain_order = maintain_order,
+    type_coercion = type_coercion,
+    predicate_pushdown = predicate_pushdown,
+    projection_pushdown = projection_pushdown,
+    simplify_expression = simplify_expression,
+    slice_pushdown = slice_pushdown,
+    no_optimization = no_optimization
   )
 
 }
