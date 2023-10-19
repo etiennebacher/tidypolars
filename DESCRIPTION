@@ -1,6 +1,6 @@
 Package: tidypolars
 Type: Package
-Title: Provide the Functionalities of Polars with the Syntax of the Tidyverse
+Title: Get the Power of Polars with the Syntax of the Tidyverse
 Version: 0.1.0.9000
 Authors@R: 
     person(given = "Etienne",
