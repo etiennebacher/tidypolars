@@ -99,7 +99,7 @@ crashes because of too small memory.
 }
 \examples{
 \dontrun{
-# This is an example workflow where sink_parquet() is not very useful because
+# This is an example workflow where sink_csv() is not very useful because
 # the data would fit in memory. It simply is an example of using it at the
 # end of a piped workflow.
 
@@ -118,7 +118,7 @@ polars::pl$scan_csv(file_csv) |>
   pl_mutate(
     hp_gear_ratio = hp / gear
   ) |>
-  sink_parquet(path = file_csv2)
+  sink_csv(path = file_csv2)
 
 }
 }
