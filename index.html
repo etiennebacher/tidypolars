@@ -97,9 +97,9 @@
 <div class="section level2">
 <h2 id="motivation">Motivation<a class="anchor" aria-label="anchor" href="#motivation"></a>
 </h2>
-<p><code>polars</code> (both the Rust source and the R implementation) are amazing packages. I won’t argue here for the interest of using <code>polars</code>, there are already a lot of resources on <a href="https://rpolars.github.io/" class="external-link">its website</a>.</p>
-<p>One characteristic of <code>polars</code> is that its syntax is 1) quite verbose, and 2) very close to the <code>pandas</code> syntax in Python. While this makes it easy to read, it is <strong>yet another syntax to learn</strong> for R users that are accustomed so far to either base R, <code>data.table</code> or the <code>tidyverse</code>.</p>
-<p>The objective of <code>tidypolars</code> is to <strong>provide functions that are very close to the <code>tidyverse</code> ones</strong> but that call the <code>polars</code> functions under the hood so that we don’t lose any of its capacities.</p>
+<p><code>polars</code> is a DataFrame library written in Rust and with bindings in several languages, <a href="https://rpolars.github.io/" class="external-link">including R</a>. I won’t argue here for the interest of using <code>polars</code>, there are already a lot of resources on <a href="https://www.pola.rs/" class="external-link">its website</a>.</p>
+<p>The R package <code>polars</code> was made to mimic very closely the original Python syntax, which is quite verbose. While this makes it easy to read, it is <strong>yet another syntax to learn</strong> for R users that are accustomed so far to either base R, <code>data.table</code> or the <code>tidyverse</code>.</p>
+<p>The objective of <code>tidypolars</code> is to <strong>provide the power and speed of <code>polars</code> while keeping the <code>tidyverse</code> syntax</strong>.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -202,7 +202,7 @@
 <span><span class="co">#&gt; │ 5.0          ┆ 3.6         ┆ 1.4          ┆ 0.2         ┆ long       │</span></span>
 <span><span class="co">#&gt; │ 5.4          ┆ 3.9         ┆ 1.7          ┆ 0.4         ┆ long       │</span></span>
 <span><span class="co">#&gt; └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘</span></span></code></pre></div>
-<p>Since most of the work is simply rewriting <code>tidyverse</code> code into <code>polars</code> syntax, <code>tidypolars</code> is extremely close to <code>polars</code> performance.</p>
+<p>Since most of the work is rewriting <code>tidyverse</code> code into <code>polars</code> syntax, <code>tidypolars</code> and <code>polars</code> have very similar performance.</p>
 <details><summary>
 Click to see a small benchmark
 </summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -248,9 +248,9 @@ Click to see a small benchmark
 <span><span class="co">#&gt; # A tibble: 3 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars      110.9ms 132.12ms     7.48     25.7KB    0    </span></span>
-<span><span class="co">#&gt; 2 tidypolars  127.1ms 138.37ms     6.58     69.8KB    0.658</span></span>
-<span><span class="co">#&gt; 3 dplyr          2.1s    2.27s     0.439   916.7MB    1.67</span></span>
+<span><span class="co">#&gt; 1 polars     109.74ms 126.38ms     7.76     26.6KB     0   </span></span>
+<span><span class="co">#&gt; 2 tidypolars 128.07ms 140.82ms     7.13     74.6KB     0   </span></span>
+<span><span class="co">#&gt; 3 dplyr         2.23s    2.31s     0.423   916.6MB     2.03</span></span>
 <span></span>
 <span><span class="co"># NOTE: do NOT take the "mem_alloc" results into account.</span></span>
 <span><span class="co"># `bench::mark()` doesn't report the accurate memory usage for packages calling</span></span>
