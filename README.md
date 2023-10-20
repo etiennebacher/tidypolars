@@ -25,19 +25,18 @@ on the wrong repo. The right one is here:
 
 ## Motivation
 
-`polars` (both the Rust source and the R implementation) are amazing
-packages. I won’t argue here for the interest of using `polars`, there
-are already a lot of resources on [its
-website](https://rpolars.github.io/).
+`polars` is a DataFrame library written in Rust and with bindings in
+several languages, [including R](https://rpolars.github.io/). I won’t
+argue here for the interest of using `polars`, there are already a lot
+of resources on [its website](https://www.pola.rs/).
 
-One characteristic of `polars` is that its syntax is 1) quite verbose,
-and 2) very close to the `pandas` syntax in Python. While this makes it
-easy to read, it is **yet another syntax to learn** for R users that are
-accustomed so far to either base R, `data.table` or the `tidyverse`.
+The R package `polars` was made to mimic very closely the original
+Python syntax, which is quite verbose. While this makes it easy to read,
+it is **yet another syntax to learn** for R users that are accustomed so
+far to either base R, `data.table` or the `tidyverse`.
 
-The objective of `tidypolars` is to **provide functions that are very
-close to the `tidyverse` ones** but that call the `polars` functions
-under the hood so that we don’t lose any of its capacities.
+The objective of `tidypolars` is to **provide the power and speed of
+`polars` while keeping the `tidyverse` syntax**.
 
 ## Installation
 
@@ -151,9 +150,8 @@ pl$DataFrame(iris)$
 #> └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘
 ```
 
-Since most of the work is simply rewriting `tidyverse` code into
-`polars` syntax, `tidypolars` is extremely close to `polars`
-performance.
+Since most of the work is rewriting `tidyverse` code into `polars`
+syntax, `tidypolars` and `polars` have very similar performance.
 
 <details>
 <summary>
@@ -203,9 +201,9 @@ bench::mark(
 #> # A tibble: 3 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars      110.9ms 132.12ms     7.48     25.7KB    0    
-#> 2 tidypolars  127.1ms 138.37ms     6.58     69.8KB    0.658
-#> 3 dplyr          2.1s    2.27s     0.439   916.7MB    1.67
+#> 1 polars     109.74ms 126.38ms     7.76     26.6KB     0   
+#> 2 tidypolars 128.07ms 140.82ms     7.13     74.6KB     0   
+#> 3 dplyr         2.23s    2.31s     0.423   916.6MB     2.03
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling

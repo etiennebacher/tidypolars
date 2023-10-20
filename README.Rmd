@@ -34,18 +34,18 @@ you're on the wrong repo. The right one is here: [markfairbanks/tidypolars](http
 
 ## Motivation
 
-`polars` (both the Rust source and the R implementation) are amazing packages.
-I won't argue here for the interest of using `polars`, there are already a lot 
-of resources on [its website](https://rpolars.github.io/).
+`polars` is a DataFrame library written in Rust and with bindings in several
+languages, [including R](https://rpolars.github.io/). I won't argue here for the
+interest of using `polars`, there are already a lot of resources on [its
+website](https://www.pola.rs/).
 
-One characteristic of `polars` is that its syntax is 1) quite verbose, and 
-2) very close to the `pandas` syntax in Python. While this makes it easy
-to read, it is **yet another syntax to learn** for R users that are accustomed 
-so far to either base R, `data.table` or the `tidyverse`.
+The R package `polars` was made to mimic very closely the original Python syntax,
+which is quite verbose. While this makes it easy to read, it is **yet another 
+syntax to learn** for R users that are accustomed so far to either base R, 
+`data.table` or the `tidyverse`.
 
-The objective of `tidypolars` is to **provide functions that are very close to
-the `tidyverse` ones** but that call the `polars` functions under the hood so 
-that we don't lose any of its capacities. 
+The objective of `tidypolars` is to **provide the power and speed of `polars` 
+while keeping the `tidyverse` syntax**. 
 
 
 ## Installation
@@ -125,8 +125,8 @@ pl$DataFrame(iris)$
   head(6)
 ```
 
-Since most of the work is simply rewriting `tidyverse` code into `polars` 
-syntax, `tidypolars` is extremely close to `polars` performance.
+Since most of the work is rewriting `tidyverse` code into `polars` syntax, 
+`tidypolars` and `polars` have very similar performance.
 
 <details>
 <summary>Click to see a small benchmark</summary>
