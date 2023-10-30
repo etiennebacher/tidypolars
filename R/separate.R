@@ -20,12 +20,6 @@
 pl_separate <- function(.data, col, into, sep = "[^[:alnum:]]+", remove = TRUE) {
 
   check_polars_data(.data)
-
-  # TODO: remove this when 0.9.0 is released
-  if (inherits(.data, "LazyFrame") && utils::packageVersion("polars") <= "0.8.1") {
-    abort("`pl_separate()` only works on LazyFrames with polars > 0.8.1. Try to install a more recent version of polars.")
-  }
-
   col <- deparse(substitute(col))
 
   into_len <- length(into) - 1

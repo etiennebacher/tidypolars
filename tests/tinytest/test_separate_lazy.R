@@ -5,8 +5,6 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-exit_if_not(utils::packageVersion("polars") > "0.8.1")
-
 test <- pl$LazyFrame(
   x = c(NA, "x.y", "x.z", "y.z")
 )
