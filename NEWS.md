@@ -1,5 +1,7 @@
 # tidypolars (development)
 
+`tidypolars` requires `polars` >= 0.9.0.
+
 **New features**
 
 * Rename `pl_fetch()` to `fetch()`.
