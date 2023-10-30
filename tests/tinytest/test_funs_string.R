@@ -35,36 +35,19 @@ for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper", "nchar")) {
 
 }
 
+expect_equal(
+  pl_mutate(test, foo = str_to_title(x1)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_to_title(x1)) |>
+    pull(foo)
+)
 
-if (isTRUE(polars::pl$polars_info()$features$full_features)) {
-
-  expect_equal(
-    pl_mutate(test, foo = str_to_title(x1)) |>
-      pl_pull(foo),
-    mutate(test_df, foo = str_to_title(x1)) |>
-      pull(foo)
-  )
-
-  expect_equal(
-    pl_mutate(test, foo = toTitleCase(x1)) |>
-      pl_pull(foo),
-    mutate(test_df, foo = toTitleCase(x1)) |>
-      pull(foo)
-  )
-
-} else {
-
-  expect_error(
-    pl_mutate(test, foo = str_to_title(x1)),
-    "Try to install polars from Github releases"
-  )
-
-  expect_error(
-    pl_mutate(test, foo = toTitleCase(x1)),
-    "Try to install polars from Github releases"
-  )
-
-}
+expect_equal(
+  pl_mutate(test, foo = toTitleCase(x6)) |>
+    pl_pull(foo),
+  mutate(test_df, foo = toTitleCase(x6)) |>
+    pull(foo)
+)
 
 
 

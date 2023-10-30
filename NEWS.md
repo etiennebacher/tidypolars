@@ -6,10 +6,7 @@
 
 * New functions supported: `describe()`, `sink_csv()`, `slice_sample()`.
 
-* Support `str_to_title()` (from `stringr`) and `toTitleCase()` (from `tools`). 
-  This needs polars to be compiled with full features enabled, which is the case
-  with Github releases but not R-universe installations for now. See
-  https://rpolars.github.io/#github-releases (#46).
+* Support `str_to_title()` (from `stringr`) and `toTitleCase()` (from `tools`).
   
 * New argument `fill` in `pl_complete()`.
 
