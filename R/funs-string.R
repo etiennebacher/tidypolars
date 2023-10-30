@@ -15,9 +15,6 @@ pl_grepl <- function(pattern, x, ...) {
 
 pl_str_count_matches <- function(string, pattern = "", ...) {
   check_empty_dots(...)
-  # TODO: use literal = is_fixed when str_count_matches has an arg "literal" in
-  # py-polars
-  # https://github.com/pola-rs/polars/issues/10930
   is_fixed <- isTRUE(attr(pattern, "stringr_attr") == "fixed")
   string$str$count_matches(pattern, literal = is_fixed)
 }
@@ -53,11 +50,13 @@ pl_str_n_chars <- pl_str_length
 
 pl_str_replace <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
+  replacement <- parse_replacement(replacement)
   string$str$replace(pattern, replacement)
 }
 
 pl_str_replace_all <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
+  replacement <- parse_replacement(replacement)
   string$str$replace_all(pattern, replacement)
 }
 

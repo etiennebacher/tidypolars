@@ -20,3 +20,9 @@ compact <- function(x) {
 empty_elems <- function(x) {
   Filter(\(y) length(y) == 0, x)
 }
+
+# take a string, replace \\1 by $1, \\2 by $2, etc.
+# this is to match Polars syntax for regexes
+parse_replacement <- function(x) {
+  gsub("\\\\(\\d+)", "$\\1", x)
+}

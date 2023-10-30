@@ -14,7 +14,8 @@ test_df <- data.frame(
   x6 = c("  foo  ", "hi there  "),
   x7 = c("Jane saw a cat", "Jane sat down"),
   x8 = c("Jane-saw-a-cat", "Jane-sat-down"),
-  x9 = c(" Some text    with ws   ", "and more     white   space  ")
+  x9 = c(" Some text    with ws   ", "and more     white   space  "),
+  x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons")
 )
 
 test <- pl$DataFrame(test_df)
@@ -193,13 +194,19 @@ expect_equal(
     pull(foo)
 )
 
-# TODO:
-# expect_equal(
-#   pl_mutate(test, foo = str_replace(x1, "[aeiou]", "\\1\\1")) |>
-#     pl_pull(foo),
-#   mutate(test_df, foo = str_replace(x1, "([aeiou])", "\\1\\1")) |>
-#     pull(foo)
-# )
+expect_equal(
+  pl_mutate(test, foo = str_replace(x1, "([aeiou])", "\\1\\1")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_replace(x1, "([aeiou])", "\\1\\1")) |>
+    pull(foo)
+)
+
+expect_equal(
+  pl_mutate(test, foo = str_replace(x10, "(\\d{1,2})(_)(\\d{1,2})", "\\1-\\3")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_replace(x10, "(\\d{1,2})(_)(\\d{1,2})", "\\1-\\3")) |>
+    pull(foo)
+)
 
 expect_equal(
   pl_mutate(test, foo = str_replace(x1, "[aeiou]", c("1", "2"))) |>
@@ -212,6 +219,13 @@ expect_equal(
   pl_mutate(test, foo = str_replace_all(x1, "[aeiou]", "-")) |>
     pl_pull(foo),
   mutate(test_df, foo = str_replace_all(x1, "[aeiou]", "-")) |>
+    pull(foo)
+)
+
+expect_equal(
+  pl_mutate(test, foo = str_replace_all(x1, "([aeiou])", "\\1")) |>
+    pl_pull(foo),
+  mutate(test_df, foo = str_replace_all(x1, "([aeiou])", "\\1")) |>
     pull(foo)
 )
 

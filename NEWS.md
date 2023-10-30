@@ -8,11 +8,14 @@
 
 * New functions supported: `describe()`, `sink_csv()`, `slice_sample()`.
 
-* Support `str_to_title()` (from `stringr`) and `toTitleCase()` (from `tools`).
-  
 * New argument `fill` in `pl_complete()`.
+  
+* Support `stringr::str_to_title()` and `tools::toTitleCase()`.
 
 * Support `stringr::fixed()` to use literal strings.
+
+* Support replacements with captured groups like `\\1` in `stringr::str_replace()`
+  and `stringr::str_replace_all()`.
 
 **Bug fixes**
 
