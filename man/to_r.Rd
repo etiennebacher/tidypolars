@@ -4,15 +4,23 @@
 \alias{to_r}
 \title{Convert a Polars DataFrame to an R data.frame}
 \usage{
-to_r(.data)
+to_r(.data, shrink_i64 = TRUE)
 }
 \arguments{
 \item{.data}{A Polars DataFrame only (LazyFrames are not modified). Any other
 object is returned as-is.}
+
+\item{shrink_i64}{Try to shrink i64 to i32 or lower. See Details.}
 }
 \description{
 This is a simple wrapper of \verb{$to_data_frame()} present in \code{polars}. This is
-only make this function work in a pipe workflow.
+only to make this function work in a pipe workflow.
+}
+\details{
+Int64 is a format accepted in Polars but not natively in R (the package \code{bit64}
+helps with that). Therefore, int64 values will give infinitely small values
+when converted to R. If \code{shrink_i64} is \code{TRUE}, int64 columns will be shrunk
+to a lower int before being converted to R.
 }
 \examples{
 iris |>

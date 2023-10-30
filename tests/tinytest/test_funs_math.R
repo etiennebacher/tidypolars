@@ -21,17 +21,14 @@ for (i in c(
   "asinh", "atan", "atanh",
   "ceiling", "cos", "cosh",
   "cummin",
-  # TODO: cumprod fails because of i64 output
-  # https://github.com/pola-rs/r-polars/issues/116
-  # "cumprod",
+  "cumprod",
   "cumsum", "exp", "first",
   "floor", "lag",
   "last", "log", "log10",
   "max", "mean", "median", "min",
   "rank",
   "round",
-  # TODO: sign fails for same reason as cumprod
-  # "sign",
+  "sign",
   "sin", "sinh", "sort",  "sqrt", "sd", "tan", "tanh", "var"
 )) {
 
