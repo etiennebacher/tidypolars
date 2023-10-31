@@ -4,7 +4,7 @@ using("tidypolars")
 exit_if(is_ci(), is_cran())
 exit_file("Only for releases")
 
-tmp <- rep(list(mtcars), 2*1e5)
+tmp <- rep(list(mtcars), 4*1e5)
 
 # EAGER
 
@@ -17,8 +17,8 @@ x <- bench::mark(
     with_columns(
       pl$when(
         (pl$col("cyl") >= 6)
-      )$then("large")$
-        otherwise("small")$
+      )$then(pl$lit("large"))$
+        otherwise(pl$lit("small"))$
         alias("cyl_type")
     )$
     filter(pl$col("disp") / pl$col("gear") > 40),
@@ -28,7 +28,7 @@ x <- bench::mark(
       cyl_type = ifelse(cyl >= 6, "large", "small")
     ) |>
     pl_filter(disp / gear > 40),
-  iterations = 5
+  iterations = 10
 )
 
 times <- as.numeric(x$median)
