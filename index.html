@@ -37,7 +37,7 @@
     
     <a class="navbar-brand me-2" href="index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -205,8 +205,12 @@
 <p>Since most of the work is rewriting <code>tidyverse</code> code into <code>polars</code> syntax, <code>tidypolars</code> and <code>polars</code> have very similar performance.</p>
 <details><summary>
 Click to see a small benchmark
-</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">large_iris</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">rbindlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="fl">50000</span><span class="op">)</span><span class="op">)</span></span>
+</summary><p>For more serious benchmarks about <code>polars</code>, take a look at <a href="https://duckdblabs.github.io/db-benchmark/" class="external-link">DuckDB benchmarks</a>.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sebkrantz.github.io/collapse/" class="external-link">collapse</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; collapse 2.0.2, see ?`collapse-package` or ?`collapse-documentation`</span></span>
+<span></span>
+<span><span class="va">large_iris</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">rbindlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="fl">50000</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">large_iris_pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="va">large_iris</span>, lazy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
@@ -240,17 +244,26 @@ Click to see a small benchmark
 <span>      <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/between.html" class="external-link">between</a></span><span class="op">(</span><span class="va">Sepal.Length</span>, <span class="fl">4.5</span>, <span class="fl">5.5</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span>,</span>
+<span>  collapse <span class="op">=</span> <span class="op">{</span></span>
+<span>    <span class="va">large_iris</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu">fselect</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sepal.Length"</span>, <span class="st">"Sepal.Width"</span>, <span class="st">"Petal.Length"</span>, <span class="st">"Petal.Width"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu">fmutate</span><span class="op">(</span></span>
+<span>        petal_type <span class="op">=</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fifelse.html" class="external-link">fifelse</a></span><span class="op">(</span><span class="op">(</span><span class="va">Petal.Length</span> <span class="op">/</span> <span class="va">Petal.Width</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span>, <span class="st">"long"</span>, <span class="st">"large"</span><span class="op">)</span></span>
+<span>      <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu">fsubset</span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">&gt;=</span> <span class="fl">4.5</span> <span class="op">&amp;</span> <span class="va">Sepal.Length</span> <span class="op">&lt;=</span> <span class="fl">5.5</span><span class="op">)</span></span>
+<span>  <span class="op">}</span>,</span>
 <span>  check <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  iterations <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Some expressions had a GC in every iteration; so filtering is</span></span>
 <span><span class="co">#&gt; disabled.</span></span>
-<span><span class="co">#&gt; # A tibble: 3 × 6</span></span>
+<span><span class="co">#&gt; # A tibble: 4 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars     109.74ms 126.38ms     7.76     26.6KB     0   </span></span>
-<span><span class="co">#&gt; 2 tidypolars 128.07ms 140.82ms     7.13     74.6KB     0   </span></span>
-<span><span class="co">#&gt; 3 dplyr         2.23s    2.31s     0.423   916.6MB     2.03</span></span>
+<span><span class="co">#&gt; 1 polars     141.97ms  168.5ms     5.91     26.6KB     0   </span></span>
+<span><span class="co">#&gt; 2 tidypolars 162.03ms 207.92ms     4.90     74.6KB     0   </span></span>
+<span><span class="co">#&gt; 3 dplyr         3.29s    3.43s     0.288   916.6MB     1.30</span></span>
+<span><span class="co">#&gt; 4 collapse    278.9ms 390.28ms     2.53    373.1MB     2.27</span></span>
 <span></span>
 <span><span class="co"># NOTE: do NOT take the "mem_alloc" results into account.</span></span>
 <span><span class="co"># `bench::mark()` doesn't report the accurate memory usage for packages calling</span></span>

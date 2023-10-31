@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,6 +54,26 @@
       <small>Source: <a href="https://github.com/etiennebacher/tidypolars/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.0" id="tidypolars-020">tidypolars 0.2.0<a class="anchor" aria-label="anchor" href="#tidypolars-020"></a></h2>
+<p><code>tidypolars</code> requires <code>polars</code> &gt;= 0.9.0.</p>
+<p><strong>New features</strong></p>
+<ul><li><p>Rename <code>pl_fetch()</code> to <code><a href="../reference/fetch.html">fetch()</a></code>.</p></li>
+<li><p>New functions supported: <code><a href="../reference/describe.html">describe()</a></code>, <code><a href="../reference/sink_csv.html">sink_csv()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample()</a></code>.</p></li>
+<li><p>New argument <code>fill</code> in <code><a href="../reference/pl_complete.html">pl_complete()</a></code>.</p></li>
+<li><p>Support <code><a href="https://stringr.tidyverse.org/reference/case.html" class="external-link">stringr::str_to_title()</a></code> and <code><a href="https://rdrr.io/r/tools/toTitleCase.html" class="external-link">tools::toTitleCase()</a></code>.</p></li>
+<li><p>Support <code><a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">stringr::fixed()</a></code> to use literal strings.</p></li>
+<li><p>Support replacements with captured groups like <code>\\1</code> in <code><a href="https://stringr.tidyverse.org/reference/str_replace.html" class="external-link">stringr::str_replace()</a></code> and <code><a href="https://stringr.tidyverse.org/reference/str_replace.html" class="external-link">stringr::str_replace_all()</a></code>.</p></li>
+</ul><p><strong>Bug fixes</strong></p>
+<ul><li>
+<code><a href="../reference/sink_parquet.html">sink_parquet()</a></code> didn’t use the user inputs (apart from the <code>path</code>).</li>
+</ul><p><strong>Misc</strong></p>
+<ul><li><p>Clearer error message when an expression contains <code>&lt;pkg&gt;::</code>. This is not supported for now but could potentially be implemented later.</p></li>
+<li><p><code>pl_colnames()</code> is no longer exported.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="tidypolars-010">tidypolars 0.1.0<a class="anchor" aria-label="anchor" href="#tidypolars-010"></a></h2>
 <p><strong>New features</strong></p>
