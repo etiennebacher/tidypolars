@@ -158,7 +158,13 @@ syntax, `tidypolars` and `polars` have very similar performance.
 Click to see a small benchmark
 </summary>
 
+For more serious benchmarks about `polars`, take a look at [DuckDB
+benchmarks](https://duckdblabs.github.io/db-benchmark/).
+
 ``` r
+library(collapse, warn.conflicts = FALSE)
+#> collapse 2.0.2, see ?`collapse-package` or ?`collapse-documentation`
+
 large_iris <- data.table::rbindlist(rep(list(iris), 50000))
 large_iris_pl <- as_polars(large_iris, lazy = TRUE)
 
@@ -193,17 +199,26 @@ bench::mark(
       ) |>
       filter(between(Sepal.Length, 4.5, 5.5))
   },
+  collapse = {
+    large_iris |>
+      fselect(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")) |>
+      fmutate(
+        petal_type = data.table::fifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+      ) |>
+      fsubset(Sepal.Length >= 4.5 & Sepal.Length <= 5.5)
+  },
   check = FALSE,
   iterations = 10
 )
 #> Warning: Some expressions had a GC in every iteration; so filtering is
 #> disabled.
-#> # A tibble: 3 × 6
+#> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     146.04ms 176.25ms     5.77     26.6KB     0   
-#> 2 tidypolars 190.53ms 206.79ms     4.79     74.6KB     0   
-#> 3 dplyr         2.77s    3.01s     0.325   916.6MB     1.30
+#> 1 polars     141.97ms  168.5ms     5.91     26.6KB     0   
+#> 2 tidypolars 162.03ms 207.92ms     4.90     74.6KB     0   
+#> 3 dplyr         3.29s    3.43s     0.288   916.6MB     1.30
+#> 4 collapse    278.9ms 390.28ms     2.53    373.1MB     2.27
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling

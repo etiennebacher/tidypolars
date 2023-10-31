@@ -131,7 +131,12 @@ Since most of the work is rewriting `tidyverse` code into `polars` syntax,
 <details>
 <summary>Click to see a small benchmark</summary>
 
+For more serious benchmarks about `polars`, take a look at [DuckDB
+benchmarks](https://duckdblabs.github.io/db-benchmark/).
+
 ```{r}
+library(collapse, warn.conflicts = FALSE)
+
 large_iris <- data.table::rbindlist(rep(list(iris), 50000))
 large_iris_pl <- as_polars(large_iris, lazy = TRUE)
 
@@ -165,6 +170,14 @@ bench::mark(
         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
       ) |>
       filter(between(Sepal.Length, 4.5, 5.5))
+  },
+  collapse = {
+    large_iris |>
+      fselect(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")) |>
+      fmutate(
+        petal_type = data.table::fifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+      ) |>
+      fsubset(Sepal.Length >= 4.5 & Sepal.Length <= 5.5)
   },
   check = FALSE,
   iterations = 10
