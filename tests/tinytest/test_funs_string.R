@@ -229,7 +229,7 @@ expect_equal(
     pull(foo)
 )
 
-# TODO:
+# TODO: https://github.com/pola-rs/polars/issues/12110
 # expect_equal(
 #   pl_mutate(test, foo = str_replace_all(x1, "[aeiou]", toupper)) |>
 #     pl_pull(foo),
