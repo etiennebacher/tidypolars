@@ -21,17 +21,17 @@ URL: https://www.tidypolars.etiennebacher.com/, https://etiennebacher.r-universe
 BugReports: https://github.com/etiennebacher/tidypolars/issues
 Depends: R (>= 4.1.0)
 Imports: 
+    dplyr,
     polars (>= 0.9.0),
     rlang,
+    tidyr,
     tidyselect
 Suggests: 
     bench,
     data.table,
-    dplyr,
     knitr,
     lubridate,
     rmarkdown,
-    tidyr,
     tinytest
 Remotes:
     markvanderloo/tinytest/pkg
