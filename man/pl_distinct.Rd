@@ -2,9 +2,12 @@
 % Please edit documentation in R/distinct.R
 \name{pl_distinct}
 \alias{pl_distinct}
-\title{Remove duplicated rows in a Data/LazyFrame}
+\alias{duplicated_rows}
+\title{Remove or keep only duplicated rows in a Data/LazyFrame}
 \usage{
 pl_distinct(.data, ..., keep = "first", maintain_order = TRUE)
+
+duplicated_rows(.data, ...)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
@@ -28,11 +31,14 @@ remove all duplicates.
 }
 \examples{
 pl_test <- polars::pl$DataFrame(
-  iso_o = rep(c("AA", "AB", "AC"), each = 2),
+  iso_o = c(rep(c("AA", "AB"), each = 2), "AC", "DC"),
   iso_d = rep(c("BA", "BB", "BC"), each = 2),
-  value = 1:6
+  value = c(2, 2, 3, 4, 5, 6)
 )
 
 pl_distinct(pl_test)
 pl_distinct(pl_test, iso_o)
+
+duplicated_rows(pl_test)
+duplicated_rows(pl_test, iso_o, iso_d)
 }
