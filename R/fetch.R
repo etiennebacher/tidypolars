@@ -28,7 +28,7 @@
 #' # this will return less than 30 rows because there are less than 30 matches
 #' # for this filter in the whole dataset
 #' dat_lazy |>
-#'   pl_filter(Sepal.Length > 7.0) |>
+#'   filter(Sepal.Length > 7.0) |>
 #'   fetch(30)
 
 fetch <- function(

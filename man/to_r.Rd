@@ -25,6 +25,6 @@ to a lower int before being converted to R.
 \examples{
 iris |>
   as_polars() |>
-  pl_filter(Sepal.Length > 6) |>
+  filter(Sepal.Length > 6) |>
   to_r()
 }

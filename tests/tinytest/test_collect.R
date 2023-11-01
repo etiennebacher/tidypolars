@@ -11,10 +11,10 @@ expect_equal(
 
 expect_equal(
   pl_iris_lazy |>
-    pl_filter(Species == "setosa") |>
+    filter(Species == "setosa") |>
     pl_collect(),
   pl_iris |>
-    pl_filter(Species == "setosa")
+    filter(Species == "setosa")
 )
 
 expect_error(

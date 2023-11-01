@@ -34,6 +34,6 @@ by_cyl |> pl_summarise(
   disp = mean(disp),
   hp = mean(hp)
 )
-by_cyl |> pl_filter(disp == max(disp))
+by_cyl |> filter(disp == max(disp))
 
 }

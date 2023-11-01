@@ -22,7 +22,7 @@
 #'   disp = mean(disp),
 #'   hp = mean(hp)
 #' )
-#' by_cyl |> pl_filter(disp == max(disp))
+#' by_cyl |> filter(disp == max(disp))
 #'
 
 pl_group_by <- function(.data, ..., maintain_order = FALSE) {

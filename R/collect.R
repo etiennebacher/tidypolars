@@ -39,7 +39,7 @@
 #' # you can build a query and add pl_collect() as the last piece
 #' dat_lazy |>
 #'   pl_select(starts_with("Sepal")) |>
-#'   pl_filter(between(Sepal.Length, 5, 6)) |>
+#'   filter(between(Sepal.Length, 5, 6)) |>
 #'   pl_collect()
 
 pl_collect <- function(

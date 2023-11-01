@@ -24,7 +24,7 @@ queries are read from bottom to top.
 query <- mtcars |>
   as_polars(lazy = TRUE) |>
   pl_arrange(drat) |>
-  pl_filter(cyl == 3) |>
+  filter(cyl == 3) |>
   pl_select(mpg)
 
 describe_plan(query)

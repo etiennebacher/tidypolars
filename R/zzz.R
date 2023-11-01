@@ -30,8 +30,8 @@
     registerS3method("distinct", "DataFrame", pl_distinct, envir = asNamespace("dplyr"))
     registerS3method("distinct", "LazyFrame", pl_distinct, envir = asNamespace("dplyr"))
 
-    registerS3method("filter", "DataFrame", pl_filter, envir = asNamespace("dplyr"))
-    registerS3method("filter", "LazyFrame", pl_filter, envir = asNamespace("dplyr"))
+    registerS3method("filter", "DataFrame", filter, envir = asNamespace("dplyr"))
+    registerS3method("filter", "LazyFrame", filter, envir = asNamespace("dplyr"))
 
     registerS3method("full_join", "DataFrame", pl_full_join, envir = asNamespace("dplyr"))
     registerS3method("full_join", "LazyFrame", pl_full_join, envir = asNamespace("dplyr"))
