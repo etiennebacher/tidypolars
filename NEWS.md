@@ -2,7 +2,7 @@
 
 **New features**
 
-* New function `duplicated_rows()` that is the opposite of `distinct()`.
+* New function `duplicated_rows()` that is the opposite of `distinct()` (#50).
 
 
 # tidypolars 0.2.0
