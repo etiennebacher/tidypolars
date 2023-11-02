@@ -54,7 +54,7 @@ complete.DataFrame <- function(.data, ..., fill = list()) {
 
   # TODO: implement argument `explicit`
   if (length(fill) > 0) {
-    out <- pl_replace_na(out, fill)
+    out <- replace_na(out, fill)
   }
 
   if (isTRUE(is_grouped)) {

@@ -6,20 +6,21 @@
 #'   used to replace `NA` in it. **The column type will be automatically
 #'   converted to the type of the replacement value.**
 #'
+#' @rdname replace_na
 #' @export
 #' @examples
 #' pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 #'
 #' # replace all NA with 0
-#' pl_replace_na(pl_test, 0)
+#' replace_na(pl_test, 0)
 #'
 #' # custom replacement per column
-#' pl_replace_na(pl_test, list(x = 0, y = 999))
+#' replace_na(pl_test, list(x = 0, y = 999))
 #'
 #' # be careful to use the same type for the replacement and for the column!
-#' pl_replace_na(pl_test, list(x = "a", y = "unknown"))
+#' replace_na(pl_test, list(x = "a", y = "unknown"))
 
-pl_replace_na <- function(.data, replace) {
+replace_na.DataFrame <- function(.data, replace) {
 
   check_polars_data(.data)
   is_scalar <- length(replace) == 1 && !is.list(replace)
@@ -36,3 +37,6 @@ pl_replace_na <- function(.data, replace) {
     .data$with_columns(exprs)
   }
 }
+
+#' @export
+replace_na.LazyFrame <- replace_na.DataFrame

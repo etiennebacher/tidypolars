@@ -68,7 +68,7 @@ reference:
       - fill
       - pivot_longer
       - pivot_wider
-      - pl_replace_na
+      - replace_na
       - pl_separate
       - pl_unite
   - title: Datasets
