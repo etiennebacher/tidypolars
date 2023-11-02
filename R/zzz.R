@@ -25,9 +25,6 @@
     registerS3method("left_join", "DataFrame", pl_left_join, envir = asNamespace("dplyr"))
     registerS3method("left_join", "LazyFrame", pl_left_join, envir = asNamespace("dplyr"))
 
-    registerS3method("relocate", "DataFrame", pl_relocate, envir = asNamespace("dplyr"))
-    registerS3method("relocate", "LazyFrame", pl_relocate, envir = asNamespace("dplyr"))
-
     registerS3method("rename", "DataFrame", pl_rename, envir = asNamespace("dplyr"))
     registerS3method("rename", "LazyFrame", pl_rename, envir = asNamespace("dplyr"))
 

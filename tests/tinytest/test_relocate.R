@@ -4,43 +4,43 @@ using("tidypolars")
 test <- polars::pl$DataFrame(mtcars)
 
 expect_colnames(
-  test |> pl_relocate(hp, vs, .before = cyl),
+  test |> relocate(hp, vs, .before = cyl),
   c("mpg", "hp", "vs", "cyl", "disp", "drat", "wt", "qsec", "am", "gear", "carb")
 )
 
 expect_equal(
-  pl_relocate(test),
+  relocate(test),
   test
 )
 
 # moved to first positions if no .before or .after
 expect_colnames(
-  test |> pl_relocate(hp, vs),
+  test |> relocate(hp, vs),
   c("hp", "vs", "mpg", "cyl", "disp", "drat", "wt", "qsec", "am", "gear", "carb")
 )
 
 # .before and .after can be quoted or unquoted
 expect_colnames(
-  test |> pl_relocate(hp, vs, .after = "gear"),
+  test |> relocate(hp, vs, .after = "gear"),
   c("mpg", "cyl", "disp", "drat", "wt", "qsec", "am", "gear", "hp", "vs", "carb")
 )
 
 # select helpers are also available
 expect_colnames(
-  test |> pl_relocate(matches("[aeiouy]")),
+  test |> relocate(matches("[aeiouy]")),
   c("cyl", "disp", "drat", "qsec", "am", "gear", "carb", "mpg", "hp", "wt", "vs")
 )
 
 # errors
 expect_error(
-  test |> pl_relocate(mpg, .before = cyl, .after = drat),
+  test |> relocate(mpg, .before = cyl, .after = drat),
   "not both"
 )
 expect_error(
-  test |> pl_relocate(mpg, .before = foo),
+  test |> relocate(mpg, .before = foo),
   "don't exist"
 )
 expect_error(
-  test |> pl_relocate(mpg, .after = foo),
+  test |> relocate(mpg, .after = foo),
   "don't exist"
 )

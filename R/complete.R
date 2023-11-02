@@ -58,7 +58,7 @@ pl_complete <- function(.data, ..., fill = list()) {
 
   if (isTRUE(is_grouped)) {
     out |>
-      pl_relocate(tidyselect::all_of(grps), .before = 1) |>
+      relocate(tidyselect::all_of(grps), .before = 1) |>
       group_by(tidyselect::all_of(grps))
   } else {
     out

@@ -1,6 +1,6 @@
 #' Change column order
 #'
-#' Use `pl_relocate()` to change column positions, using the same syntax as
+#' Use `relocate()` to change column positions, using the same syntax as
 #' `pl_select()` to make it easy to move blocks of columns at once.
 #'
 #' @inheritParams pl_select
@@ -8,27 +8,28 @@
 #' indicates the destination of columns selected by `...`. Supplying neither
 #' will move columns to the left-hand side; specifying both is an error.
 #'
+#' @rdname relocate
 #' @export
 #' @examples
 #' dat <- as_polars(mtcars)
 #'
 #' dat |>
-#'   pl_relocate(hp, vs, .before = cyl)
+#'   relocate(hp, vs, .before = cyl)
 #'
 #' # if .before and .after are not specified, selected columns are moved to the
 #' # first positions
 #' dat |>
-#'   pl_relocate(hp, vs)
+#'   relocate(hp, vs)
 #'
 #' # .before and .after can be quoted or unquoted
 #' dat |>
-#'   pl_relocate(hp, vs, .after = "gear")
+#'   relocate(hp, vs, .after = "gear")
 #'
 #' # select helpers are also available
 #' dat |>
-#'   pl_relocate(contains("[aeiou]"))
+#'   relocate(contains("[aeiou]"))
 
-pl_relocate <- function(.data, ..., .before = NULL, .after = NULL) {
+relocate.DataFrame <- function(.data, ..., .before = NULL, .after = NULL) {
   check_polars_data(.data)
 
   if (!missing(.before) && !missing(.after)) {
@@ -78,3 +79,5 @@ pl_relocate <- function(.data, ..., .before = NULL, .after = NULL) {
   .data$select(new_order)
 }
 
+#' @export
+relocate.LazyFrame <- relocate.DataFrame

@@ -46,7 +46,7 @@ reference:
       - pl_left_join
       - mutate
       - pull
-      - pl_relocate
+      - relocate
       - pl_rename
       - pl_rename_with
       - pl_right_join
