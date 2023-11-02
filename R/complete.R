@@ -40,7 +40,7 @@ pl_complete <- function(.data, ..., fill = list()) {
 
   # TODO: implement by group
   # df |>
-  #  pl_group_by(group) |>
+  #  group_by(group) |>
   #  pl_complete(item_id, item_name)
   # foo <- df$group_by(grps)$agg(pl$col(vars)$unique()$sort()$implode())
   # need to explode twice in this case
@@ -59,7 +59,7 @@ pl_complete <- function(.data, ..., fill = list()) {
   if (isTRUE(is_grouped)) {
     out |>
       pl_relocate(tidyselect::all_of(grps), .before = 1) |>
-      pl_group_by(tidyselect::all_of(grps))
+      group_by(tidyselect::all_of(grps))
   } else {
     out
   }

@@ -137,7 +137,7 @@ expect_equal_lazy(
 
 expect_equal_lazy(
   test |>
-    pl_group_by(am) |>
+    group_by(am) |>
     pl_mutate(
       across(
         .cols = contains("a"),
@@ -249,7 +249,7 @@ expect_equal_lazy(
 
 # just one check for summarize()
 
-test_grp <- pl_group_by(test, cyl, maintain_order = TRUE)
+test_grp <- group_by(test, cyl, maintain_order = TRUE)
 
 expect_equal_lazy(
   pl_summarize(

@@ -38,10 +38,10 @@ reference:
       - pl_collect
       - pl_count
       - pl_cross_join
-      - pl_distinct
+      - distinct
       - pl_filter
       - pl_full_join
-      - pl_group_by
+      - group_by
       - pl_inner_join
       - pl_left_join
       - pl_mutate
@@ -58,7 +58,7 @@ reference:
       - pl_slice_sample
       - pl_summarize
       - pl_summarise
-      - pl_ungroup
+      - ungroup
   - title: From `tidyr`
     desc: |
       Functions coming from `tidyr`

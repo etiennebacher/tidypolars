@@ -18,7 +18,7 @@
 #' # if the data is grouped, you need to specify `.by_group = TRUE` to sort by
 #' # the groups first
 #' pl_test |>
-#'   pl_group_by(x1) |>
+#'   group_by(x1) |>
 #'   pl_arrange(-x2, .by_group = TRUE)
 
 

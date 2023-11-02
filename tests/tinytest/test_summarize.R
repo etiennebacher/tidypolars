@@ -3,7 +3,7 @@ using("tidypolars")
 
 pl_iris <- polars::pl$DataFrame(iris)
 pl_iris_g <- pl_iris |>
-  pl_group_by(Species, maintain_order = TRUE)
+  group_by(Species, maintain_order = TRUE)
 
 expect_equal(
   pl_summarize(pl_iris_g, x = mean(Sepal.Length)) |>

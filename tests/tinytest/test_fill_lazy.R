@@ -41,7 +41,7 @@ pl_grouped <- polars::pl$LazyFrame(
   x = c(NA, 1, NA, NA, 2, NA),
   y = c(3, NA, 4, NA, 3, 1)
 ) |>
-  pl_group_by(grp)
+  group_by(grp)
 
 expect_equal_lazy(
   pl_fill(pl_grouped, everything(), direction = "down") |>

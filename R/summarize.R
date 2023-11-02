@@ -12,7 +12,7 @@
 #' @examples
 #' mtcars |>
 #'   as_polars() |>
-#'   pl_group_by(cyl) |>
+#'   group_by(cyl) |>
 #'   pl_summarize(gear = mean(gear), gear2 = sd(gear))
 
 

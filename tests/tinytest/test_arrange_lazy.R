@@ -52,7 +52,7 @@ expect_equal_lazy(
 
 # groups: need .by_group = TRUE
 
-test_grp <- pl_group_by(test, x1)
+test_grp <- group_by(test, x1)
 
 expect_equal_lazy(
   pl_arrange(test_grp, x2),

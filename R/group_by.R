@@ -1,20 +1,21 @@
 #' Group by one or more variables
 #'
-#' Most data operations are done on groups defined by variables. `pl_group_by()`
+#' Most data operations are done on groups defined by variables. `group_by()`
 #' takes an existing Polars Data/LazyFrame and converts it into a grouped one
-#' where operations are performed "by group". `pl_ungroup()` removes grouping.
+#' where operations are performed "by group". `ungroup()` removes grouping.
 #'
 #' @param .data A Polars Data/LazyFrame
-#' @param ... Variables to group by (used in `pl_group_by()` only).
+#' @param ... Variables to group by (used in `group_by()` only).
 #' @param maintain_order Maintain row order. For performance reasons, this is
 #' `FALSE` by default). Setting it to `TRUE` can slow down the process with
 #' large datasets and prevents the use of streaming.
 #'
+#' @rdname group_by
 #' @export
 #' @examples
 #' by_cyl <- mtcars |>
 #'   as_polars() |>
-#'   pl_group_by(cyl)
+#'   group_by(cyl)
 #'
 #' by_cyl
 #'
@@ -25,7 +26,7 @@
 #' by_cyl |> filter(disp == max(disp))
 #'
 
-pl_group_by <- function(.data, ..., maintain_order = FALSE) {
+group_by.DataFrame <- function(.data, ..., maintain_order = FALSE) {
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
   # need to clone, otherwise the data gets attributes, even if unassigned
@@ -35,11 +36,17 @@ pl_group_by <- function(.data, ..., maintain_order = FALSE) {
   .data2
 }
 
-#' @rdname pl_group_by
+#' @rdname group_by
 #' @export
 
-pl_ungroup <- function(.data) {
+ungroup.DataFrame <- function(.data) {
   attributes(.data)$pl_grps <- NULL
   attributes(.data)$maintain_grp_order <- NULL
   .data
 }
+
+#' @export
+group_by.LazyFrame <- group_by.DataFrame
+
+#' @export
+ungroup.LazyFrame <- ungroup.DataFrame

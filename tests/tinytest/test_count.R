@@ -23,7 +23,7 @@ expect_equal(
   c(12, 8, 4, 3, 3, 2)
 )
 
-test_grp <- pl_group_by(test, am)
+test_grp <- group_by(test, am)
 
 expect_equal(
   pl_count(test_grp) |> pl_pull(n),

@@ -48,7 +48,7 @@ expect_equal(
 
 # groups: need .by_group = TRUE
 
-test_grp <- pl_group_by(test, x1)
+test_grp <- group_by(test, x1)
 
 expect_equal(
   pl_arrange(test_grp, x2),

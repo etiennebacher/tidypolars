@@ -140,7 +140,7 @@ expect_colnames(
 # grouped data (checked with dplyr)
 
 out <- pl_iris |>
-  pl_group_by(Species) |>
+  group_by(Species) |>
   pl_mutate(
     foo = mean(Sepal.Length)
   )
@@ -151,11 +151,11 @@ expect_equal_lazy(
 )
 
 out <- polars::pl$LazyFrame(mtcars) |>
-  pl_group_by(cyl, am) |>
+  group_by(cyl, am) |>
   pl_mutate(
     disp2 = disp / mean(disp)
   ) |>
-  pl_ungroup()
+  ungroup()
 
 expect_equal_lazy(
   out |> pl_slice_head(5) |> pl_pull(disp2),
@@ -165,7 +165,7 @@ expect_equal_lazy(
 
 expect_colnames(
   pl_iris |>
-    pl_group_by(Species) |>
+    group_by(Species) |>
     pl_mutate(Sepal.Length = NULL),
   names(iris)[2:5]
 )

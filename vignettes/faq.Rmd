@@ -63,7 +63,7 @@ bench::mark(
       pl$col('val2')$sum()$alias('y')
     ),
   tidypolars = pl_test |> 
-    pl_group_by(grp) |> 
+    group_by(grp) |> 
     pl_summarize(
       x = mean(val1),
       y = sum(val2)

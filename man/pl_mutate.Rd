@@ -48,7 +48,7 @@ pl_mutate(pl_iris, Sepal.Width = Sepal.Width*2)
 
 # grouped computation
 pl_iris |>
-  pl_group_by(Species) |>
+  group_by(Species) |>
   pl_mutate(
     foo = mean(Sepal.Length)
   )

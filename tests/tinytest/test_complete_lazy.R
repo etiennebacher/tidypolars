@@ -53,7 +53,7 @@ expect_equal_lazy(
 #   b = factor(c("a", "a", "b"), levels = levels),
 #   c = c(4, 5, 6)
 # )
-# gdf <- pl_group_by(df, g)
+# gdf <- group_by(df, g)
 # out <- pl_complete(gdf, a, b)
 #
 #

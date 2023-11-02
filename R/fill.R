@@ -26,7 +26,7 @@
 #'   x = c(1, NA, NA, NA, 2, NA),
 #'   y = c(3, NA, 4, NA, 3, 1)
 #' ) |>
-#'   pl_group_by(grp)
+#'   group_by(grp)
 #'
 #' pl_fill(pl_grouped, x, y, direction = "down")
 

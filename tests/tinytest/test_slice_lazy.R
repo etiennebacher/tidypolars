@@ -20,7 +20,7 @@ expect_equal_lazy(
 )
 
 pl_iris_g <- pl_iris |>
-  pl_group_by(Species, maintain_order = TRUE)
+  group_by(Species, maintain_order = TRUE)
 
 hd <- pl_slice_head(pl_iris_g, n = 2)
 
@@ -91,7 +91,7 @@ if (inherits(pl_iris, "DataFrame")) {
 
   expect_equal_lazy(
     pl_iris |>
-      pl_group_by(Species) |>
+      group_by(Species) |>
       pl_slice_sample(n = 5) |>
       nrow(),
     15
@@ -99,7 +99,7 @@ if (inherits(pl_iris, "DataFrame")) {
 
   expect_equal_lazy(
     pl_iris |>
-      pl_group_by(Species) |>
+      group_by(Species) |>
       pl_slice_sample(prop = 0.1) |>
       nrow(),
     15
