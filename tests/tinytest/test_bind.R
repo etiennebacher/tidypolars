@@ -13,7 +13,7 @@ l <- list(
 )
 
 expect_equal(
-  bind_rows(l) |>
+  bind_rows_polars(l) |>
     nrow(),
   40
 )
@@ -30,13 +30,13 @@ l2 <- list(
 )
 
 expect_equal(
-  bind_cols(l2) |>
+  bind_cols_polars(l2) |>
     ncol(),
   4
 )
 
 expect_equal(
-  bind_cols(l2) |>
+  bind_cols_polars(l2) |>
     nrow(),
   20
 )
@@ -51,8 +51,8 @@ p2 <- pl$DataFrame(
 )
 
 expect_equal(
-  bind_rows(p1, p2),
-  bind_rows(list(p1, p2))
+  bind_rows_polars(p1, p2),
+  bind_rows_polars(list(p1, p2))
 )
 
 p3 <- pl$DataFrame(
@@ -65,8 +65,8 @@ p4 <- pl$DataFrame(
 )
 
 expect_equal(
-  bind_cols(p3, p4),
-  bind_cols(list(p3, p4))
+  bind_cols_polars(p3, p4),
+  bind_cols_polars(list(p3, p4))
 )
 
 # for now, error if not the same cols (for bind_rows) or duplicated col names
@@ -84,7 +84,7 @@ l3 <- list(
 )
 
 expect_error(
-  bind_rows(l3),
+  bind_rows_polars(l3),
   "column names don't match"
 )
 
@@ -100,7 +100,7 @@ l4 <- list(
 )
 
 expect_error(
-  bind_cols(l4),
+  bind_cols_polars(l4),
   "already exists"
 )
 
@@ -116,6 +116,6 @@ l5 <- list(
 )
 
 expect_error(
-  bind_cols(l5),
+  bind_cols_polars(l5),
   "must be either"
 )
