@@ -3,6 +3,7 @@
 #' @param .data A Polars Data/LazyFrame
 #' @param n The number of rows to select from the start or the end of the data.
 #' Cannot be used with `prop`.
+#' @param ... Not used.
 #'
 #' @rdname slice
 #' @export
@@ -13,7 +14,7 @@
 #' slice_sample(pl_test, n = 5)
 #' slice_sample(pl_test, prop = 0.1)
 
-slice_tail.DataFrame <- function(.data, n) {
+slice_tail.DataFrame <- function(.data, ..., n) {
   check_polars_data(.data)
   grps <- attributes(.data)$pl_grps
   mo <- attributes(.data)$maintain_grp_order
@@ -35,7 +36,7 @@ slice_tail.LazyFrame <- slice_tail.DataFrame
 #' @rdname slice
 #' @export
 
-slice_head.DataFrame <- function(.data, n) {
+slice_head.DataFrame <- function(.data, ..., n) {
   check_polars_data(.data)
   grps <- attributes(.data)$pl_grps
   mo <- attributes(.data)$maintain_grp_order
@@ -62,7 +63,7 @@ slice_head.LazyFrame <- slice_head.DataFrame
 #' @rdname slice
 #' @export
 
-slice_sample.DataFrame <- function(.data, n = NULL, prop = NULL, replace = FALSE) {
+slice_sample.DataFrame <- function(.data, ..., n = NULL, prop = NULL, replace = FALSE) {
   check_polars_data(.data)
 
   if (inherits(.data, "LazyFrame")) {

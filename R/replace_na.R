@@ -1,11 +1,11 @@
 #' Replace NAs with specified values
 #'
-#' @param .data A Polars Data/LazyFrame
+#' @param data A Polars Data/LazyFrame
 #' @param replace Either a scalar that will be used to replace `NA` in all
 #'   columns, or a named list with the column name and the value that will be
 #'   used to replace `NA` in it. **The column type will be automatically
 #'   converted to the type of the replacement value.**
-#'
+#' @inheritParams slice_tail.DataFrame
 #' @rdname replace_na
 #' @export
 #' @examples
@@ -20,13 +20,13 @@
 #' # be careful to use the same type for the replacement and for the column!
 #' replace_na(pl_test, list(x = "a", y = "unknown"))
 
-replace_na.DataFrame <- function(.data, replace) {
+replace_na.DataFrame <- function(data, replace, ...) {
 
-  check_polars_data(.data)
+  check_polars_data(data)
   is_scalar <- length(replace) == 1 && !is.list(replace)
 
   if (is_scalar) {
-    .data$with_columns(
+    data$with_columns(
       pl$all()$fill_null(replace)
     )
   } else if (is.list(replace)) {
@@ -34,7 +34,7 @@ replace_na.DataFrame <- function(.data, replace) {
     for (i in seq_along(replace)) {
       exprs[[i]] <- polars::pl$col(names(replace)[i])$fill_null(replace[[i]])
     }
-    .data$with_columns(exprs)
+    data$with_columns(exprs)
   }
 }
 

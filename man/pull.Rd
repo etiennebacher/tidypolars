@@ -4,12 +4,14 @@
 \alias{pull.DataFrame}
 \title{Extract a variable of a Data/LazyFrame}
 \usage{
-\method{pull}{DataFrame}(.data, var)
+\method{pull}{DataFrame}(.data, var, ...)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
 
 \item{var}{A quoted or unquoted variable name}
+
+\item{...}{Not used.}
 }
 \description{
 This returns an R vector and not a Polars Series.

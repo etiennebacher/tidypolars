@@ -1,6 +1,6 @@
 #' Unite multiple columns into one by pasting strings together
 #'
-#' @param .data A Polars Data/LazyFrame
+#' @param data A Polars Data/LazyFrame
 #' @param col The name of the new column, as a string or symbol.
 #' @inheritParams select.DataFrame
 #' @param sep Separator to use between values.
@@ -32,10 +32,10 @@
 #' unite(test2, col = "full_name", everything(), sep = " ")
 #' unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
 
-unite.DataFrame <- function(.data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE) {
+unite.DataFrame <- function(data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE) {
 
-  check_polars_data(.data)
-  vars <- tidyselect_dots(.data, ...)
+  check_polars_data(data)
+  vars <- tidyselect_dots(data, ...)
   # can be a character or symbol
   col <- rlang::as_string(rlang::ensym(col))
 
@@ -47,7 +47,7 @@ unite.DataFrame <- function(.data, col, ..., sep = "_", remove = TRUE, na.rm = F
 
   vars_concat <- pl$col(vars)$fill_null(fill)
 
-  out <- .data$with_columns(pl$concat_str(vars_concat, separator = sep)$alias(col))
+  out <- data$with_columns(pl$concat_str(vars_concat, separator = sep)$alias(col))
 
   if (isTRUE(remove)) {
     out$drop(vars)

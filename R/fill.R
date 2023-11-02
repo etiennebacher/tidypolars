@@ -7,7 +7,7 @@
 #' With grouped Data/LazyFrames, fill() will be applied within each group,
 #' meaning that it won't fill across group boundaries.
 #'
-#' @param .data A Polars Data/LazyFrame
+#' @param data A Polars Data/LazyFrame
 #' @inheritParams select.DataFrame
 #' @param .direction Direction in which to fill missing values. Either "down"
 #'    (the default), "up", "downup" (i.e. first down and then up) or "updown"
@@ -31,13 +31,13 @@
 #'
 #' fill(pl_grouped, x, y, .direction = "down")
 
-fill.DataFrame <- function(.data, ..., .direction = c("down", "up", "downup", "updown")) {
+fill.DataFrame <- function(data, ..., .direction = c("down", "up", "downup", "updown")) {
 
-  check_polars_data(.data)
-  vars <- tidyselect_dots(.data, ...)
+  check_polars_data(data)
+  vars <- tidyselect_dots(data, ...)
   .direction <- match.arg(.direction)
 
-  grps <- attributes(.data)$pl_grps
+  grps <- attributes(data)$pl_grps
   is_grouped <- !is.null(grps)
 
   expr <- polars::pl$col(vars)
@@ -53,7 +53,7 @@ fill.DataFrame <- function(.data, ..., .direction = c("down", "up", "downup", "u
     expr <- expr$over(grps)
   }
 
-  .data$with_columns(expr)
+  data$with_columns(expr)
 }
 
 #' @export

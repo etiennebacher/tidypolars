@@ -5,6 +5,7 @@
 #' variables will be considered.
 #'
 #' @inheritParams select.DataFrame
+#' @inheritParams slice_tail.DataFrame
 #'
 #' @rdname drop_na
 #' @export
@@ -17,10 +18,10 @@
 #' drop_na(pl_tmp)
 #' drop_na(pl_tmp, hp, mpg)
 
-drop_na.DataFrame <- function(.data, ...) {
-  check_polars_data(.data)
-  vars <- tidyselect_dots(.data, ...)
-  .data$drop_nulls(vars)
+drop_na.DataFrame <- function(data, ...) {
+  check_polars_data(data)
+  vars <- tidyselect_dots(data, ...)
+  data$drop_nulls(vars)
 }
 
 #' @export

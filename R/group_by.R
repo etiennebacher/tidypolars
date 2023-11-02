@@ -36,13 +36,14 @@ group_by.DataFrame <- function(.data, ..., maintain_order = FALSE) {
   .data2
 }
 
+#' @param x A Polars Data/LazyFrame
 #' @rdname group_by
 #' @export
 
-ungroup.DataFrame <- function(.data) {
-  attributes(.data)$pl_grps <- NULL
-  attributes(.data)$maintain_grp_order <- NULL
-  .data
+ungroup.DataFrame <- function(x) {
+  attributes(x)$pl_grps <- NULL
+  attributes(x)$maintain_grp_order <- NULL
+  x
 }
 
 #' @export

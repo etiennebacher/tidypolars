@@ -4,15 +4,17 @@
 \alias{replace_na.DataFrame}
 \title{Replace NAs with specified values}
 \usage{
-\method{replace_na}{DataFrame}(.data, replace)
+\method{replace_na}{DataFrame}(data, replace, ...)
 }
 \arguments{
-\item{.data}{A Polars Data/LazyFrame}
+\item{data}{A Polars Data/LazyFrame}
 
 \item{replace}{Either a scalar that will be used to replace \code{NA} in all
 columns, or a named list with the column name and the value that will be
 used to replace \code{NA} in it. \strong{The column type will be automatically
 converted to the type of the replacement value.}}
+
+\item{...}{Not used.}
 }
 \description{
 Replace NAs with specified values

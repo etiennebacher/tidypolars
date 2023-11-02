@@ -7,7 +7,7 @@
 \usage{
 \method{group_by}{DataFrame}(.data, ..., maintain_order = FALSE)
 
-\method{ungroup}{DataFrame}(.data)
+\method{ungroup}{DataFrame}(x)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
@@ -17,6 +17,8 @@
 \item{maintain_order}{Maintain row order. For performance reasons, this is
 \code{FALSE} by default). Setting it to \code{TRUE} can slow down the process with
 large datasets and prevents the use of streaming.}
+
+\item{x}{A Polars Data/LazyFrame}
 }
 \description{
 Most data operations are done on groups defined by variables. \code{group_by()}

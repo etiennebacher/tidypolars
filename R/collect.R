@@ -54,7 +54,8 @@ collect.LazyFrame <- function(
     comm_subexpr_elim = TRUE,
     no_optimization = FALSE,
     streaming = FALSE,
-    collect_in_background = FALSE
+    collect_in_background = FALSE,
+    ...
   ) {
   .data$collect(
     type_coercion = type_coercion,

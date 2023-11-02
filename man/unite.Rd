@@ -4,10 +4,10 @@
 \alias{unite.DataFrame}
 \title{Unite multiple columns into one by pasting strings together}
 \usage{
-\method{unite}{DataFrame}(.data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE)
+\method{unite}{DataFrame}(data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE)
 }
 \arguments{
-\item{.data}{A Polars Data/LazyFrame}
+\item{data}{A Polars Data/LazyFrame}
 
 \item{col}{The name of the new column, as a string or symbol.}
 
