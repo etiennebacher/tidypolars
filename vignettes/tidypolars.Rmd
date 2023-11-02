@@ -114,7 +114,7 @@ who_pl |>
   pl_drop_na(newrel_f3544) |> 
   pl_select(iso3, year, matches("^newrel(.*)_f")) |> 
   arrange(iso3, year) |> 
-  pl_rename_with(.fn = toupper) |> 
+  rename_with(.fn = toupper) |> 
   head()
 ```
 
