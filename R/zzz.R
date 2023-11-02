@@ -31,11 +31,6 @@
     registerS3method("semi_join", "DataFrame", pl_semi_join, envir = asNamespace("dplyr"))
     registerS3method("semi_join", "LazyFrame", pl_semi_join, envir = asNamespace("dplyr"))
 
-    registerS3method("summarize", "DataFrame", pl_summarize, envir = asNamespace("dplyr"))
-    registerS3method("summarize", "LazyFrame", pl_summarize, envir = asNamespace("dplyr"))
-    registerS3method("summarise", "DataFrame", pl_summarise, envir = asNamespace("dplyr"))
-    registerS3method("summarise", "LazyFrame", pl_summarise, envir = asNamespace("dplyr"))
-
   }
   if(requireNamespace("tidyr", quietly = TRUE)) {
 

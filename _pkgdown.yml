@@ -56,8 +56,8 @@ reference:
       - slice_head
       - slice_tail
       - slice_sample
-      - pl_summarize
-      - pl_summarise
+      - summarize
+      - summarise
       - ungroup
   - title: From `tidyr`
     desc: |

@@ -41,7 +41,7 @@
 **New features**
 
 * Support `as.numeric()`, `as.character()`, `as.logical()`, `grepl()`, and
-  `paste()` in expressions in `pl_filter()`, `mutate()` and `pl_summarize()`.
+  `paste()` in expressions in `pl_filter()`, `mutate()` and `summarize()`.
   
 * Support `sink_parquet()` (#38).
 
@@ -55,7 +55,7 @@
 
 **Bug fixes**
 
-* Fix `mutate()` and `pl_summarize()` when expressions use some variables 
+* Fix `mutate()` and `summarize()` when expressions use some variables 
   previously created or modified (#10, #37).
   
 * Fix bug in `pl_filter()` when passing a vector in the RHS of `%in%`.

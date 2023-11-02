@@ -252,14 +252,14 @@ expect_equal_lazy(
 test_grp <- group_by(test, cyl, maintain_order = TRUE)
 
 expect_equal_lazy(
-  pl_summarize(
+  summarize(
     test_grp,
     across(
       .cols = mpg,
       list(my_mean = mean, my_median = median)
     )
   ),
-  pl_summarize(test_grp, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg)) |>
+  summarize(test_grp, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg)) |>
     to_r()
 )
 

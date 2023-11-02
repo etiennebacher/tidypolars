@@ -19,7 +19,7 @@
 #'
 #' by_cyl
 #'
-#' by_cyl |> pl_summarise(
+#' by_cyl |> summarise(
 #'   disp = mean(disp),
 #'   hp = mean(hp)
 #' )
