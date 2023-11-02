@@ -89,7 +89,7 @@ inner_join.LazyFrame <- inner_join.DataFrame
 #' * `anti_join()` return all rows from `x` without a match in `y`.
 #'
 #' @param x,y Two Polars Data/LazyFrames
-#' @inheritParams left_join
+#' @inheritParams left_join.DataFrame
 #'
 #' @rdname filtering-joins
 #'
@@ -139,7 +139,7 @@ anti_join.LazyFrame <- anti_join.DataFrame
 #' Cross joins match each row in `x` to every row in `y`, resulting in a dataset
 #' with `nrow(x) * nrow(y)` rows.
 #'
-#' @inheritParams left_join
+#' @inheritParams left_join.DataFrame
 #'
 #' @export
 #' @examples

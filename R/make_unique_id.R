@@ -1,6 +1,6 @@
 #' Create a column with unique id per row values
 #'
-#' @inheritParams select
+#' @inheritParams select.DataFrame
 #' @param new_col Name of the new column
 #'
 #' @export

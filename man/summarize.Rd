@@ -11,6 +11,14 @@
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
+
+\item{...}{Name-value pairs. The name gives the name of the column in
+the output. The value can be:
+\itemize{
+\item A vector the same length as the current group (or the whole data
+frame if ungrouped).
+\item NULL, to remove the column.
+}}
 }
 \description{
 \code{summarize()} returns one row for each combination of grouping variables

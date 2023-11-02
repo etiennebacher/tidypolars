@@ -11,6 +11,11 @@
 }
 \arguments{
 \item{x, y}{Two Polars Data/LazyFrames}
+
+\item{by}{Variables to join by. If \code{NULL}, the default, \verb{*_join()} will
+perform a natural join, using all variables in common across \code{x} and \code{y}. A
+message lists the variables so that you can check they're correct; suppress
+the message by supplying \code{by} explicitly.}
 }
 \description{
 Filtering joins filter rows from \code{x} based on the presence or absence of

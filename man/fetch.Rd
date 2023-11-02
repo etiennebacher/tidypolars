@@ -19,7 +19,38 @@ fetch(
 )
 }
 \arguments{
+\item{.data}{A Polars LazyFrame}
+
 \item{n_rows}{Number of rows to fetch.}
+
+\item{type_coercion}{Coerce types such that operations succeed and run on
+minimal required memory (default is \code{TRUE}).}
+
+\item{predicate_pushdown}{Applies filters as early as possible at scan level
+(default is \code{TRUE}).}
+
+\item{projection_pushdown}{Select only the columns that are needed at the scan
+level (default is \code{TRUE}).}
+
+\item{simplify_expression}{Various optimizations, such as constant folding
+and replacing expensive operations with faster alternatives (default is
+\code{TRUE}).}
+
+\item{slice_pushdown}{Only load the required slice from the scan. Don't
+materialize sliced outputs level. Don't materialize sliced outputs (default
+is \code{TRUE}).}
+
+\item{comm_subplan_elim}{Cache branching subplans that occur on self-joins or
+unions (default is \code{TRUE}).}
+
+\item{comm_subexpr_elim}{Cache common subexpressions (default is \code{TRUE}).}
+
+\item{no_optimization}{Sets the following optimizations to \code{FALSE}:
+\code{predicate_pushdown}, \code{projection_pushdown},  \code{slice_pushdown},
+\code{simplify_expression}. Default is \code{FALSE}.}
+
+\item{streaming}{Run parts of the query in a streaming fashion (this is in
+an alpha state). Default is \code{FALSE}.}
 }
 \description{
 Fetch is a way to collect only the first \code{n} rows of a LazyFrame. It is

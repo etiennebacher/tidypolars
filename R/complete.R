@@ -5,7 +5,7 @@
 #' work with grouped data yet.
 #'
 #' @param .data A Polars Data/LazyFrame
-#' @inheritParams select
+#' @inheritParams select.DataFrame
 #' @param fill A named list that for each variable supplies a single value to
 #' use instead of `NA` for missing combinations.
 #'

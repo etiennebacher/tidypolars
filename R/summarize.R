@@ -6,7 +6,7 @@
 #' and one column for each of the summary statistics that you have specified.
 #'
 #' @param .data A Polars Data/LazyFrame
-#' @inheritParams mutate
+#' @inheritParams mutate.DataFrame
 #'
 #' @rdname summarize
 #' @export

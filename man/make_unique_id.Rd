@@ -7,6 +7,11 @@
 make_unique_id(.data, ..., new_col = "hash")
 }
 \arguments{
+\item{.data}{A Polars Data/LazyFrame}
+
+\item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
+column numbers, select helpers, etc.}
+
 \item{new_col}{Name of the new column}
 }
 \description{

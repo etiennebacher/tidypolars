@@ -6,6 +6,13 @@
 \usage{
 \method{cross_join}{DataFrame}(x, y, suffix = c(".x", ".y"))
 }
+\arguments{
+\item{x, y}{Two Polars Data/LazyFrames}
+
+\item{suffix}{If there are non-joined duplicate variables in \code{x} and \code{y},
+these suffixes will be added to the output to disambiguate them. Should be a
+character vector of length 2.}
+}
 \description{
 Cross joins match each row in \code{x} to every row in \code{y}, resulting in a dataset
 with \code{nrow(x) * nrow(y)} rows.

@@ -7,6 +7,11 @@
 \method{relocate}{DataFrame}(.data, ..., .before = NULL, .after = NULL)
 }
 \arguments{
+\item{.data}{A Polars Data/LazyFrame}
+
+\item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
+column numbers, select helpers, etc.}
+
 \item{.before, .after}{Column name (either quoted or unquoted) that
 indicates the destination of columns selected by \code{...}. Supplying neither
 will move columns to the left-hand side; specifying both is an error.}

@@ -9,6 +9,9 @@
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
 
+\item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
+column numbers, select helpers, etc.}
+
 \item{fill}{A named list that for each variable supplies a single value to
 use instead of \code{NA} for missing combinations.}
 }

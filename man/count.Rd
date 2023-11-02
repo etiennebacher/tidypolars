@@ -12,6 +12,9 @@
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
 
+\item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
+column numbers, select helpers, etc.}
+
 \item{sort}{If \code{TRUE}, will show the largest groups at the top.}
 
 \item{name}{Name of the new column.}

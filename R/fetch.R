@@ -7,7 +7,7 @@
 #' 'Details' for more information.
 #'
 #' @param n_rows Number of rows to fetch.
-#' @inheritParams collect
+#' @inheritParams collect.LazyFrame
 #'
 #' @details
 #' The parameter `n_rows` indicates how many rows from the LazyFrame should be

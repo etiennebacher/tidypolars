@@ -4,7 +4,7 @@
 #' possible to specify a subset of variables so that only missing values in these
 #' variables will be considered.
 #'
-#' @inheritParams select
+#' @inheritParams select.DataFrame
 #'
 #' @rdname drop_na
 #' @export
