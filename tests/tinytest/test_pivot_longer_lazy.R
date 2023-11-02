@@ -18,7 +18,7 @@ expect_colnames(out, c("religion", "income", "count"))
 
 # check values
 
-first <- pl_slice_head(out)
+first <- slice_head(out)
 
 expect_equal_lazy(
   pull(first, religion),
@@ -40,7 +40,7 @@ expect_equal_lazy(
 )
 
 
-last <- pl_slice_tail(out)
+last <- slice_tail(out)
 
 expect_equal_lazy(
   pull(last, religion),

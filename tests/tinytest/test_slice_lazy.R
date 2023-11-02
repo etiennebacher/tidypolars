@@ -8,13 +8,13 @@ using("tidypolars")
 pl_iris <- polars::pl$LazyFrame(iris)
 
 expect_equal_lazy(
-  pl_slice_head(pl_iris),
+  slice_head(pl_iris),
   head(iris, n = 5),
   check.attributes = FALSE
 )
 
 expect_equal_lazy(
-  pl_slice_tail(pl_iris),
+  slice_tail(pl_iris),
   tail(iris, n = 5),
   check.attributes = FALSE
 )
@@ -22,7 +22,7 @@ expect_equal_lazy(
 pl_iris_g <- pl_iris |>
   group_by(Species, maintain_order = TRUE)
 
-hd <- pl_slice_head(pl_iris_g, n = 2)
+hd <- slice_head(pl_iris_g, n = 2)
 
 expect_equal_lazy(
   pull(hd, Species),
@@ -37,7 +37,7 @@ expect_equal_lazy(
 )
 
 
-tl <- pl_slice_tail(pl_iris_g, n = 2)
+tl <- slice_tail(pl_iris_g, n = 2)
 
 expect_equal_lazy(
   pull(tl, Species),
@@ -55,44 +55,44 @@ expect_equal_lazy(
 
 if (inherits(pl_iris, "DataFrame")) {
   expect_equal_lazy(
-    pl_slice_sample(pl_iris, n = 5) |> nrow(),
+    slice_sample(pl_iris, n = 5) |> nrow(),
     5
   )
 
   expect_equal_lazy(
-    pl_slice_sample(pl_iris, prop = 0.1) |> nrow(),
+    slice_sample(pl_iris, prop = 0.1) |> nrow(),
     15
   )
 
   expect_error_lazy(
-    pl_slice_sample(pl_iris, n = 2, prop = 0.1),
+    slice_sample(pl_iris, n = 2, prop = 0.1),
     "not both"
   )
 
   expect_equal_lazy(
-    pl_slice_sample(pl_iris, n = 200, replace = TRUE) |> nrow(),
+    slice_sample(pl_iris, n = 200, replace = TRUE) |> nrow(),
     200
   )
 
   expect_error_lazy(
-    pl_slice_sample(pl_iris, n = 200),
+    slice_sample(pl_iris, n = 200),
     "Cannot take more rows than"
   )
 
   expect_equal_lazy(
-    pl_slice_sample(pl_iris, prop = 2, replace = TRUE) |> nrow(),
+    slice_sample(pl_iris, prop = 2, replace = TRUE) |> nrow(),
     300
   )
 
   expect_error_lazy(
-    pl_slice_sample(pl_iris, prop = 1.2),
+    slice_sample(pl_iris, prop = 1.2),
     "Cannot take more rows than"
   )
 
   expect_equal_lazy(
     pl_iris |>
       group_by(Species) |>
-      pl_slice_sample(n = 5) |>
+      slice_sample(n = 5) |>
       nrow(),
     15
   )
@@ -100,7 +100,7 @@ if (inherits(pl_iris, "DataFrame")) {
   expect_equal_lazy(
     pl_iris |>
       group_by(Species) |>
-      pl_slice_sample(prop = 0.1) |>
+      slice_sample(prop = 0.1) |>
       nrow(),
     15
   )

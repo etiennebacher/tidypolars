@@ -14,7 +14,7 @@ expect_colnames(out, c("religion", "income", "count"))
 
 # check values
 
-first <- pl_slice_head(out)
+first <- slice_head(out)
 
 expect_equal(
   pull(first, religion),
@@ -36,7 +36,7 @@ expect_equal(
 )
 
 
-last <- pl_slice_tail(out)
+last <- slice_tail(out)
 
 expect_equal(
   pull(last, religion),

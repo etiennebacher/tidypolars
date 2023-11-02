@@ -15,7 +15,7 @@ expect_colnames(out, c("fish", "Release", "I80_1", "Lisbon", "Rstr", "Base_TD",
 
 # check values
 
-first <- pl_slice_head(out)
+first <- slice_head(out)
 
 expect_equal(
   pull(first, I80_1),
@@ -30,7 +30,7 @@ expect_equal(
 
 filled <- pl_fish_encounters |>
   pl_pivot_wider(names_from = station, values_from = seen, values_fill = 0) |>
-  pl_slice_head()
+  slice_head()
 
 expect_equal(
   pull(filled, I80_1),

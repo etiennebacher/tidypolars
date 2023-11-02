@@ -31,14 +31,6 @@
     registerS3method("semi_join", "DataFrame", pl_semi_join, envir = asNamespace("dplyr"))
     registerS3method("semi_join", "LazyFrame", pl_semi_join, envir = asNamespace("dplyr"))
 
-    registerS3method("slice_head", "DataFrame", pl_slice_head, envir = asNamespace("dplyr"))
-    registerS3method("slice_head", "LazyFrame", pl_slice_head, envir = asNamespace("dplyr"))
-
-    registerS3method("slice_tail", "DataFrame", pl_slice_tail, envir = asNamespace("dplyr"))
-    registerS3method("slice_tail", "LazyFrame", pl_slice_tail, envir = asNamespace("dplyr"))
-
-    registerS3method("slice_sample", "DataFrame", pl_slice_sample, envir = asNamespace("dplyr"))
-
     registerS3method("summarize", "DataFrame", pl_summarize, envir = asNamespace("dplyr"))
     registerS3method("summarize", "LazyFrame", pl_summarize, envir = asNamespace("dplyr"))
     registerS3method("summarise", "DataFrame", pl_summarise, envir = asNamespace("dplyr"))

@@ -53,9 +53,9 @@ reference:
       - select
       - pl_semi_join
       - pl_separate
-      - pl_slice_head
-      - pl_slice_tail
-      - pl_slice_sample
+      - slice_head
+      - slice_tail
+      - slice_sample
       - pl_summarize
       - pl_summarise
       - ungroup

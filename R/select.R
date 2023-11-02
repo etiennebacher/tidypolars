@@ -4,6 +4,7 @@
 #' @param ... Any expression accepted by `dplyr::select()`: variable names,
 #'  column numbers, select helpers, etc.
 #'
+#' @rdname select
 #' @export
 #' @examples
 #'

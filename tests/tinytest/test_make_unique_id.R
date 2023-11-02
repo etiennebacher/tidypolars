@@ -5,7 +5,7 @@ test <- pl$DataFrame(mtcars)
 
 expect_equal(
   make_unique_id(test, am, gear) |>
-    pl_slice_head(3) |>
+    slice_head(3) |>
     pull(hash) |>
     unique() |>
     length(),
