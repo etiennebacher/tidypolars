@@ -33,7 +33,7 @@
 #'
 #' @export
 #' @seealso [fetch()] for applying a lazy query on a subset of the data.
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' dat_lazy <- polars::pl$DataFrame(iris)$lazy()
 #' collect(dat_lazy)
 #'

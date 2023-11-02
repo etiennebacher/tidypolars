@@ -87,6 +87,7 @@ to a \code{.parquet} file without collecting it in the R session, thus preventin
 crashes because of too small memory.
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontrun{
 # This is an example workflow where sink_parquet() is not very useful because
 # the data would fit in memory. It simply is an example of using it at the
@@ -110,4 +111,5 @@ polars::pl$scan_csv(file_csv) |>
   sink_parquet(path = file_parquet)
 
 }
+\dontshow{\}) # examplesIf}
 }

@@ -25,6 +25,7 @@ prior to uniting each value.}
 Unite multiple columns into one by pasting strings together
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 test <- polars::pl$DataFrame(
   year = 2009:2011,
   month = 10:12,
@@ -45,4 +46,5 @@ test2 <- polars::pl$DataFrame(
 # By default, NA values are kept in the character output
 unite(test2, col = "full_name", everything(), sep = " ")
 unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
+\dontshow{\}) # examplesIf}
 }

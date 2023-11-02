@@ -9,7 +9,7 @@
 #' prior to uniting each value.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' test <- polars::pl$DataFrame(
 #'   year = 2009:2011,
 #'   month = 10:12,

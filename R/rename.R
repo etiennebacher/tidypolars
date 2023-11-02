@@ -11,7 +11,7 @@
 #'   `dplyr::select()`.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_test <- polars::pl$DataFrame(mtcars)
 #'
 #' rename(pl_test, miles_per_gallon = "mpg", horsepower = "hp")

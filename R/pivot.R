@@ -10,7 +10,7 @@
 #' @inheritParams slice_tail.DataFrame
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_relig_income <- polars::pl$DataFrame(relig_income)
 #' pl_relig_income
 #'
@@ -51,7 +51,7 @@ pivot_longer.LazyFrame <- pivot_longer.DataFrame
 #' @inheritParams slice_tail.DataFrame
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_fish_encounters <- polars::pl$DataFrame(fish_encounters)
 #'
 #' pl_fish_encounters |>

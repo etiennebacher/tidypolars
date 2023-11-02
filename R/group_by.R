@@ -12,7 +12,7 @@
 #' large datasets and prevents the use of streaming.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' by_cyl <- mtcars |>
 #'   as_polars() |>
 #'   group_by(cyl)

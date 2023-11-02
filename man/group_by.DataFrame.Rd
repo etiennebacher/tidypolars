@@ -27,6 +27,7 @@ takes an existing Polars Data/LazyFrame and converts it into a grouped one
 where operations are performed "by group". \code{ungroup()} removes grouping.
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 by_cyl <- mtcars |>
   as_polars() |>
   group_by(cyl)
@@ -38,5 +39,5 @@ by_cyl |> summarise(
   hp = mean(hp)
 )
 by_cyl |> filter(disp == max(disp))
-
+\dontshow{\}) # examplesIf}
 }

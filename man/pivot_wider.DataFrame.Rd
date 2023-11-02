@@ -29,6 +29,7 @@ all these columns will be converted to character.}
 Pivot Data/LazyFrame from long to wide
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pl_fish_encounters <- polars::pl$DataFrame(fish_encounters)
 
 pl_fish_encounters |>
@@ -40,4 +41,5 @@ pl_fish_encounters |>
 # be careful about the type of the replacement value!
 pl_fish_encounters |>
   pivot_wider(names_from = station, values_from = seen, values_fill = "a")
+\dontshow{\}) # examplesIf}
 }

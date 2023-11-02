@@ -68,6 +68,7 @@ Mutating joins add columns from \code{y} to \code{x}, matching observations base
 the keys.
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 test <- polars::pl$DataFrame(
   x = c(1, 2, 3),
   y = c(1, 2, 3),
@@ -98,4 +99,5 @@ test2 <- polars::pl$DataFrame(
 )
 
 left_join(test, test2, by = c("x", "y"), suffix = c("_left", "_right"))
+\dontshow{\}) # examplesIf}
 }

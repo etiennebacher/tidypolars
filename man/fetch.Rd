@@ -68,6 +68,7 @@ On the other hand, appending some rows during the query can lead to an output
 that has more rows than \code{n_rows}.
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 dat_lazy <- polars::pl$DataFrame(iris)$lazy()
 
 # this will return 30 rows
@@ -78,6 +79,7 @@ fetch(dat_lazy, 30)
 dat_lazy |>
   filter(Sepal.Length > 7.0) |>
   fetch(30)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=collect]{collect()}} for applying a lazy query on the full data.

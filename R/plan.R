@@ -9,7 +9,7 @@
 #'
 #' @param .data A Polars LazyFrame
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' query <- mtcars |>
 #'   as_polars(lazy = TRUE) |>
 #'   arrange(drat) |>

@@ -6,7 +6,7 @@
 #' @param name Name of the new column.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' test <- polars::pl$DataFrame(mtcars)
 #' count(test, cyl)
 #'

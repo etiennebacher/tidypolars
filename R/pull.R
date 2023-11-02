@@ -7,7 +7,7 @@
 #' @inheritParams slice_tail.DataFrame
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_test <- polars::pl$DataFrame(iris)
 #' pull(pl_test, Sepal.Length)
 #' pull(pl_test, "Sepal.Length")

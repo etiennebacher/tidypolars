@@ -5,7 +5,7 @@
 #'  column numbers, select helpers, etc.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #'
 #' pl_iris <- polars::pl$DataFrame(iris)
 #'

@@ -15,7 +15,7 @@
 #' @param copy,keep Not used.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' test <- polars::pl$DataFrame(
 #'   x = c(1, 2, 3),
 #'   y = c(1, 2, 3),
@@ -100,7 +100,7 @@ inner_join.LazyFrame <- inner_join.DataFrame
 #' @inheritParams left_join.DataFrame
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' test <- polars::pl$DataFrame(
 #'   x = c(1, 2, 3),
 #'   y = c(1, 2, 3),
@@ -148,7 +148,7 @@ anti_join.LazyFrame <- anti_join.DataFrame
 #' @inheritParams left_join.DataFrame
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' test <- polars::pl$DataFrame(
 #'   origin = c("ALG", "FRA", "GER"),
 #'   year = c(2020, 2020, 2021)

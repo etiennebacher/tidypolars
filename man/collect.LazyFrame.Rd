@@ -64,6 +64,7 @@ execution plan, optimizes it in the background and performs it. The result
 is loaded in the R session.
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 dat_lazy <- polars::pl$DataFrame(iris)$lazy()
 collect(dat_lazy)
 
@@ -72,6 +73,7 @@ dat_lazy |>
   select(starts_with("Sepal")) |>
   filter(between(Sepal.Length, 5, 6)) |>
   collect()
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=fetch]{fetch()}} for applying a lazy query on a subset of the data.

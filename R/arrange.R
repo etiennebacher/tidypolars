@@ -5,7 +5,7 @@
 #' @param .by_group If `TRUE`, will sort data within groups.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_test <- polars::pl$DataFrame(
 #'   x1 = c("a", "a", "b", "a", "c"),
 #'   x2 = c(2, 1, 5, 3, 1),

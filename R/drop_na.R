@@ -8,7 +8,7 @@
 #' @inheritParams slice_tail.DataFrame
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' tmp <- mtcars
 #' tmp[1:3, "mpg"] <- NA
 #' tmp[4, "hp"] <- NA

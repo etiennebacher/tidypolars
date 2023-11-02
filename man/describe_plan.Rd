@@ -21,6 +21,7 @@ plan ran by Polars is shown by \code{describe_optimized_plan()}. Note that the
 queries are read from bottom to top.
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 query <- mtcars |>
   as_polars(lazy = TRUE) |>
   arrange(drat) |>
@@ -30,4 +31,5 @@ query <- mtcars |>
 describe_plan(query)
 
 describe_optimized_plan(query)
+\dontshow{\}) # examplesIf}
 }

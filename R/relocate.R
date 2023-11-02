@@ -9,7 +9,7 @@
 #' will move columns to the left-hand side; specifying both is an error.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' dat <- as_polars(mtcars)
 #'
 #' dat |>

@@ -12,7 +12,7 @@
 #' @inheritParams slice_tail.DataFrame
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' test <- polars::pl$DataFrame(
 #'   x = c(NA, "x.y", "x.z", "y.z")
 #' )

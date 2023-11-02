@@ -12,7 +12,7 @@
 #' evaluate to `TRUE` are kept.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_iris <- polars::pl$DataFrame(iris)
 #'
 #' filter(pl_iris, Sepal.Length < 5, Species == "setosa")

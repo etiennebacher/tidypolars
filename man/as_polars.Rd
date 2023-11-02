@@ -19,8 +19,10 @@ This operation is time- and memory-consuming. It should only be used for small
 datasets. Use \code{polars} original functions to read files instead.
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 mtcars |>
   as_polars()
 mtcars |>
   as_polars(lazy = TRUE)
+\dontshow{\}) # examplesIf}
 }

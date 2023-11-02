@@ -6,7 +6,7 @@
 #'  identical names.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' p1 <- polars::pl$DataFrame(
 #'   x = sample(letters, 20),
 #'   y = sample(1:100, 20)
@@ -35,7 +35,7 @@ bind_rows_polars <- function(...) {
 #'  mustn't be duplicated column names.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' p1 <- polars::pl$DataFrame(
 #'   x = sample(letters, 20),
 #'   y = sample(1:100, 20)

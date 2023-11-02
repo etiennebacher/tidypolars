@@ -5,7 +5,7 @@
 #' statistics. All values must be between 0 and 1 (`NULL` are ignored).
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' mtcars |>
 #'   as_polars() |>
 #'   describe(percentiles = c(0.2, 0.4, 0.6, 0.8))

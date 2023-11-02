@@ -9,7 +9,7 @@
 #' @inheritParams mutate.DataFrame
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' mtcars |>
 #'   as_polars() |>
 #'   group_by(cyl) |>

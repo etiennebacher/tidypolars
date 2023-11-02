@@ -14,7 +14,7 @@
 #'  streaming.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_test <- polars::pl$DataFrame(
 #'   iso_o = c(rep(c("AA", "AB"), each = 2), "AC", "DC"),
 #'   iso_d = rep(c("BA", "BB", "BC"), each = 2),

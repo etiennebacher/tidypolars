@@ -14,7 +14,7 @@
 #' to a lower int before being converted to R.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' iris |>
 #'   as_polars() |>
 #'   filter(Sepal.Length > 6) |>

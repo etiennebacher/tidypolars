@@ -20,6 +20,7 @@ Cross joins match each row in \code{x} to every row in \code{y}, resulting in a 
 with \code{nrow(x) * nrow(y)} rows.
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 test <- polars::pl$DataFrame(
   origin = c("ALG", "FRA", "GER"),
   year = c(2020, 2020, 2021)
@@ -35,4 +36,5 @@ test
 test2
 
 cross_join(test, test2)
+\dontshow{\}) # examplesIf}
 }

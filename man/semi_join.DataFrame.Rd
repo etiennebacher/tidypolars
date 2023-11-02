@@ -28,6 +28,7 @@ matches in \code{y}:
 }
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 test <- polars::pl$DataFrame(
   x = c(1, 2, 3),
   y = c(1, 2, 3),
@@ -44,4 +45,5 @@ test2
 semi_join(test, test2, by = c("x", "y"))
 # only keep the rows of `test` that don't have matching keys in `test2`
 anti_join(test, test2, by = c("x", "y"))
+\dontshow{\}) # examplesIf}
 }

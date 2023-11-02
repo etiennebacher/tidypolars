@@ -21,6 +21,7 @@ Use \code{relocate()} to change column positions, using the same syntax as
 \code{select()} to make it easy to move blocks of columns at once.
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 dat <- as_polars(mtcars)
 
 dat |>
@@ -38,4 +39,5 @@ dat |>
 # select helpers are also available
 dat |>
   relocate(contains("[aeiou]"))
+\dontshow{\}) # examplesIf}
 }

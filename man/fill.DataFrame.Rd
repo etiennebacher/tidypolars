@@ -26,6 +26,7 @@ With grouped Data/LazyFrames, fill() will be applied within each group,
 meaning that it won't fill across group boundaries.
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 
 fill(pl_test, everything(), .direction = "down")
@@ -40,4 +41,5 @@ pl_grouped <- polars::pl$DataFrame(
   group_by(grp)
 
 fill(pl_grouped, x, y, .direction = "down")
+\dontshow{\}) # examplesIf}
 }

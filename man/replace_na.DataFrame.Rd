@@ -20,6 +20,7 @@ converted to the type of the replacement value.}}
 Replace NAs with specified values
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 
 # replace all NA with 0
@@ -30,4 +31,5 @@ replace_na(pl_test, list(x = 0, y = 999))
 
 # be careful to use the same type for the replacement and for the column!
 replace_na(pl_test, list(x = "a", y = "unknown"))
+\dontshow{\}) # examplesIf}
 }

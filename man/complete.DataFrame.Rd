@@ -21,6 +21,7 @@ for completing missing combinations of data. Note that this function doesn't
 work with grouped data yet.
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 df <- polars::pl$DataFrame(
   group = c(1:2, 1, 2),
   item_id = c(1:2, 2, 3),
@@ -37,4 +38,5 @@ df |>
     group, item_id, item_name,
     fill = list(value1 = 0, value2 = 99)
   )
+\dontshow{\}) # examplesIf}
 }

@@ -16,6 +16,7 @@ column numbers, select helpers, etc.}
 Select columns from a Data/LazyFrame
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 
 pl_iris <- polars::pl$DataFrame(iris)
 
@@ -24,4 +25,5 @@ select(pl_iris, Sepal.Length, Sepal.Width)
 select(pl_iris, 1:3)
 select(pl_iris, starts_with("Sepal"))
 select(pl_iris, -ends_with("Length"))
+\dontshow{\}) # examplesIf}
 }

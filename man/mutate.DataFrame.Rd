@@ -35,6 +35,7 @@ Note that this is slower than using functions that can be translated to
 Polars syntax.
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pl_iris <- polars::pl$DataFrame(iris)
 
 # classic operation
@@ -71,4 +72,5 @@ pl_iris |>
 # Embracing an external variable works
 some_value <- 1
 mutate(pl_iris, x = {{ some_value }})
+\dontshow{\}) # examplesIf}
 }

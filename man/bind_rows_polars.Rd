@@ -16,6 +16,7 @@ identical names.}
 Stack multiple Data/LazyFrames on top of each other
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 p1 <- polars::pl$DataFrame(
   x = sample(letters, 20),
   y = sample(1:100, 20)
@@ -29,4 +30,5 @@ bind_rows_polars(p1, p2)
 
 # this is equivalent
 bind_rows_polars(list(p1, p2))
+\dontshow{\}) # examplesIf}
 }

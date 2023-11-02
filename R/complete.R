@@ -10,7 +10,7 @@
 #' use instead of `NA` for missing combinations.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' df <- polars::pl$DataFrame(
 #'   group = c(1:2, 1, 2),
 #'   item_id = c(1:2, 2, 3),

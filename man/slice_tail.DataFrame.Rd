@@ -29,9 +29,11 @@ Cannot be used with \code{prop}.}
 Subset rows of a Data/LazyFrame
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pl_test <- polars::pl$DataFrame(iris)
 slice_head(pl_test, n = 3)
 slice_tail(pl_test, n = 3)
 slice_sample(pl_test, n = 5)
 slice_sample(pl_test, prop = 0.1)
+\dontshow{\}) # examplesIf}
 }

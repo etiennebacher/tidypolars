@@ -17,7 +17,9 @@
 This returns an R vector and not a Polars Series.
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pl_test <- polars::pl$DataFrame(iris)
 pull(pl_test, Sepal.Length)
 pull(pl_test, "Sepal.Length")
+\dontshow{\}) # examplesIf}
 }

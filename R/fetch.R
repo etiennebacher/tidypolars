@@ -20,7 +20,7 @@
 #'
 #' @export
 #' @seealso [collect()] for applying a lazy query on the full data.
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' dat_lazy <- polars::pl$DataFrame(iris)$lazy()
 #'
 #' # this will return 30 rows

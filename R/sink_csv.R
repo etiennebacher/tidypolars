@@ -33,7 +33,7 @@
 #' @return Writes a `.csv` file with the content of the LazyFrame.
 #' @export
 #'
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' \dontrun{
 #' # This is an example workflow where sink_csv() is not very useful because
 #' # the data would fit in memory. It simply is an example of using it at the

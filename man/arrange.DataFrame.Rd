@@ -17,6 +17,7 @@
 Order rows using column values
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pl_test <- polars::pl$DataFrame(
   x1 = c("a", "a", "b", "a", "c"),
   x2 = c(2, 1, 5, 3, 1),
@@ -31,4 +32,5 @@ arrange(pl_test, x1, -x2)
 pl_test |>
   group_by(x1) |>
   arrange(-x2, .by_group = TRUE)
+\dontshow{\}) # examplesIf}
 }

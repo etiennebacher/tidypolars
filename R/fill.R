@@ -14,7 +14,7 @@
 #'    (first up and then down).
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 #'
 #' fill(pl_test, everything(), .direction = "down")

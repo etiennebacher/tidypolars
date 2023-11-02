@@ -6,7 +6,7 @@
 #' @param ... Not used.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_test <- polars::pl$DataFrame(iris)
 #' slice_head(pl_test, n = 3)
 #' slice_tail(pl_test, n = 3)

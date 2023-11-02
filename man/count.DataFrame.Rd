@@ -20,6 +20,7 @@ column numbers, select helpers, etc.}
 Count the observations in each group
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 test <- polars::pl$DataFrame(mtcars)
 count(test, cyl)
 
@@ -28,4 +29,5 @@ count(test, cyl, am)
 count(test, cyl, am, sort = TRUE, name = "count")
 
 add_count(test, cyl, am, sort = TRUE, name = "count")
+\dontshow{\}) # examplesIf}
 }
