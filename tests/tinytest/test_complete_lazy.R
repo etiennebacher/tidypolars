@@ -12,32 +12,32 @@ test <- polars::pl$LazyFrame(
 )
 
 expect_dim(
-  pl_complete(test, country, year),
+  complete(test, country, year),
   c(12, 3)
 )
 
 expect_equal_lazy(
-  pl_complete(test, country, year) |>
+  complete(test, country, year) |>
     pull(country),
   rep(c("France", "Spain", "UK"), each = 4)
 )
 
 expect_equal_lazy(
-  pl_complete(test, country, year) |>
+  complete(test, country, year) |>
     slice_head(4) |>
     pull(value),
   c(NA, 1, 2, NA)
 )
 
 expect_equal_lazy(
-  pl_complete(test, country, year, fill = list(value = 99)) |>
+  complete(test, country, year, fill = list(value = 99)) |>
     slice_head(4) |>
     pull(value),
   c(99, 1, 2, 99)
 )
 
 expect_equal_lazy(
-  pl_complete(test, country),
+  complete(test, country),
   test
 )
 
@@ -54,7 +54,7 @@ expect_equal_lazy(
 #   c = c(4, 5, 6)
 # )
 # gdf <- group_by(df, g)
-# out <- pl_complete(gdf, a, b)
+# out <- complete(gdf, a, b)
 #
 #
 # expect_identical(

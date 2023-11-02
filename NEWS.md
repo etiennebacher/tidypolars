@@ -15,7 +15,7 @@
 
 * New functions supported: `describe()`, `sink_csv()`, `slice_sample()`.
 
-* New argument `fill` in `pl_complete()`.
+* New argument `fill` in `complete()`.
   
 * Support `stringr::str_to_title()` and `tools::toTitleCase()`.
 

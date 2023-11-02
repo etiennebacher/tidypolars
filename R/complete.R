@@ -9,6 +9,7 @@
 #' @param fill A named list that for each variable supplies a single value to
 #' use instead of `NA` for missing combinations.
 #'
+#' @rdname complete
 #' @export
 #' @examples
 #' df <- polars::pl$DataFrame(
@@ -20,15 +21,15 @@
 #' )
 #' df
 #'
-#' df |> pl_complete(group, item_id, item_name)
+#' df |> complete(group, item_id, item_name)
 #'
 #' df |>
-#'   pl_complete(
+#'   complete(
 #'     group, item_id, item_name,
 #'     fill = list(value1 = 0, value2 = 99)
 #'   )
 
-pl_complete <- function(.data, ..., fill = list()) {
+complete.DataFrame <- function(.data, ..., fill = list()) {
 
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
@@ -41,7 +42,7 @@ pl_complete <- function(.data, ..., fill = list()) {
   # TODO: implement by group
   # df |>
   #  group_by(group) |>
-  #  pl_complete(item_id, item_name)
+  #  complete(item_id, item_name)
   # foo <- df$group_by(grps)$agg(pl$col(vars)$unique()$sort()$implode())
   # need to explode twice in this case
 
@@ -65,3 +66,6 @@ pl_complete <- function(.data, ..., fill = list()) {
   }
 
 }
+
+#' @export
+complete.LazyFrame <- complete.DataFrame
