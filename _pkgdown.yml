@@ -31,27 +31,27 @@ reference:
       Functions coming from `dplyr`
     contents:
       - add_count
-      - pl_anti_join
+      - anti_join
       - arrange
       - bind_cols
       - bind_rows
       - collect
       - count
-      - pl_cross_join
+      - cross_join
       - distinct
       - pl_filter
-      - pl_full_join
+      - full_join
       - group_by
-      - pl_inner_join
-      - pl_left_join
+      - inner_join
+      - left_join
       - mutate
       - pull
       - relocate
       - rename
       - rename_with
-      - pl_right_join
+      - right_join
       - select
-      - pl_semi_join
+      - semi_join
       - separate
       - slice_head
       - slice_tail

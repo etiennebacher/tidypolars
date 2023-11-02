@@ -12,12 +12,12 @@ test2 <- polars::pl$DataFrame(
 )
 
 expect_dim(
-  pl_cross_join(test, test2),
+  cross_join(test, test2),
   c(9, 4)
 )
 
 expect_equal(
-  pl_cross_join(test, test2) |>
+  cross_join(test, test2) |>
     pull(origin),
   rep(c("ALG", "FRA", "GER"), each = 3)
 )
