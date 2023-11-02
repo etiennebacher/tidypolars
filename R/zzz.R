@@ -7,12 +7,6 @@
     registerS3method("anti_join", "DataFrame", pl_anti_join, envir = asNamespace("dplyr"))
     registerS3method("anti_join", "LazyFrame", pl_anti_join, envir = asNamespace("dplyr"))
 
-    registerS3method("bind_cols", "DataFrame", pl_bind_cols, envir = asNamespace("dplyr"))
-    registerS3method("bind_cols", "LazyFrame", pl_bind_cols, envir = asNamespace("dplyr"))
-
-    registerS3method("bind_rows", "DataFrame", pl_bind_rows, envir = asNamespace("dplyr"))
-    registerS3method("bind_rows", "LazyFrame", pl_bind_rows, envir = asNamespace("dplyr"))
-
     registerS3method("cross_join", "DataFrame", pl_cross_join, envir = asNamespace("dplyr"))
     registerS3method("cross_join", "LazyFrame", pl_cross_join, envir = asNamespace("dplyr"))
 

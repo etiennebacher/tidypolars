@@ -33,8 +33,8 @@ reference:
       - add_count
       - pl_anti_join
       - arrange
-      - pl_bind_cols
-      - pl_bind_rows
+      - bind_cols
+      - bind_rows
       - collect
       - count
       - pl_cross_join

@@ -5,6 +5,7 @@
 #'  by name. All Data/LazyFrames must have the same number of columns with
 #'  identical names.
 #'
+#' @rdname bind_rows
 #' @export
 #' @examples
 #' p1 <- polars::pl$DataFrame(
@@ -16,16 +17,19 @@
 #'   y = sample(1:100, 20)
 #' )
 #'
-#' pl_bind_rows(p1, p2)
+#' bind_rows(p1, p2)
 #'
 #' # this is equivalent
-#' pl_bind_rows(list(p1, p2))
+#' bind_rows(list(p1, p2))
 
-pl_bind_rows <- function(...) {
+bind_rows.DataFrame <- function(...) {
   # TODO: check with "diagonal" to coerce types and fill missings
   # wait for https://github.com/pola-rs/r-polars/issues/350
   concat_(..., how = "vertical")
 }
+
+#' @export
+bind_rows.LazyFrame <- bind_rows.DataFrame
 
 #' Append multiple Data/LazyFrames next to each other
 #'
@@ -34,6 +38,7 @@ pl_bind_rows <- function(...) {
 #'  by name. All Data/LazyFrames must have the same number of rows and there
 #'  mustn't be duplicated column names.
 #'
+#' @rdname bind_cols
 #' @export
 #' @examples
 #' p1 <- polars::pl$DataFrame(
@@ -45,12 +50,15 @@ pl_bind_rows <- function(...) {
 #'   w = sample(1:100, 20)
 #' )
 #'
-#' pl_bind_cols(p1, p2)
-#' pl_bind_cols(list(p1, p2))
+#' bind_cols(p1, p2)
+#' bind_cols(list(p1, p2))
 
-pl_bind_cols <- function(...) {
+bind_cols.DataFrame <- function(...) {
   concat_(..., how = "horizontal")
 }
+
+#' @export
+bind_cols.LazyFrame <- bind_cols.DataFrame
 
 concat_ <- function(..., how) {
   dots <- rlang::list2(...)
