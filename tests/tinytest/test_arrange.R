@@ -26,7 +26,7 @@ expect_equal(
 
 expect_equal(
   arrange(test, x1, -x2) |>
-    pl_select(starts_with("x")) |>
+    select(starts_with("x")) |>
     to_r(),
   data.frame(
     x1 = c("a", "a", "a", "b", "c"),

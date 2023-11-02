@@ -2,7 +2,7 @@
 #'
 #' @param .data A Polars Data/LazyFrame
 #' @param col The name of the new column, as a string or symbol.
-#' @inheritParams pl_select
+#' @inheritParams select
 #' @param sep Separator to use between values.
 #' @param remove If `TRUE`, remove input columns from the output Data/LazyFrame.
 #' @param na.rm If `TRUE`, missing values will be replaced with an empty string

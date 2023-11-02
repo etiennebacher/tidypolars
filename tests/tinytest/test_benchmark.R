@@ -23,7 +23,7 @@ x <- bench::mark(
     )$
     filter(pl$col("disp") / pl$col("gear") > 40),
   tidypolars = dat |>
-    pl_select(c("mpg", "cyl", "disp", "vs", "am", "gear")) |>
+    select(c("mpg", "cyl", "disp", "vs", "am", "gear")) |>
     mutate(
       cyl_type = ifelse(cyl >= 6, "large", "small")
     ) |>
@@ -57,7 +57,7 @@ x <- bench::mark(
     filter(pl$col("disp") / pl$col("gear") > 40)$
     collect(),
   tidypolars = dat |>
-    pl_select(c("mpg", "cyl", "disp", "vs", "am", "gear")) |>
+    select(c("mpg", "cyl", "disp", "vs", "am", "gear")) |>
     mutate(
       cyl_type = ifelse(cyl >= 6, "large", "small")
     ) |>

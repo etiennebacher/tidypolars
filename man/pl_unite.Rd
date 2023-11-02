@@ -11,9 +11,6 @@ pl_unite(.data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE)
 
 \item{col}{The name of the new column, as a string or symbol.}
 
-\item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
-column numbers, select helpers, etc.}
-
 \item{sep}{Separator to use between values.}
 
 \item{remove}{If \code{TRUE}, remove input columns from the output Data/LazyFrame.}

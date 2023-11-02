@@ -1,9 +1,9 @@
 #' Change column order
 #'
 #' Use `relocate()` to change column positions, using the same syntax as
-#' `pl_select()` to make it easy to move blocks of columns at once.
+#' `select()` to make it easy to move blocks of columns at once.
 #'
-#' @inheritParams pl_select
+#' @inheritParams select
 #' @param .before,.after Column name (either quoted or unquoted) that
 #' indicates the destination of columns selected by `...`. Supplying neither
 #' will move columns to the left-hand side; specifying both is an error.

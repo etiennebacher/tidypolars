@@ -6,12 +6,6 @@
 \usage{
 pl_drop_na(.data, ...)
 }
-\arguments{
-\item{.data}{A Polars Data/LazyFrame}
-
-\item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
-column numbers, select helpers, etc.}
-}
 \description{
 By default, this will drop rows that contain any missing values. It is
 possible to specify a subset of variables so that only missing values in these

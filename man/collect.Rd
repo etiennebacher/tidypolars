@@ -66,7 +66,7 @@ collect(dat_lazy)
 
 # you can build a query and add collect() as the last piece
 dat_lazy |>
-  pl_select(starts_with("Sepal")) |>
+  select(starts_with("Sepal")) |>
   filter(between(Sepal.Length, 5, 6)) |>
   collect()
 }

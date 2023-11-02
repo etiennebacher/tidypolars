@@ -1,6 +1,6 @@
 #' Summary statistics for a Polars DataFrame
 #'
-#' @inheritParams pl_select
+#' @inheritParams select
 #' @param percentiles One or more percentiles to include in the summary
 #' statistics. All values must be between 0 and 1 (`NULL` are ignored).
 #'

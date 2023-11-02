@@ -25,7 +25,7 @@ query <- mtcars |>
   as_polars(lazy = TRUE) |>
   arrange(drat) |>
   filter(cyl == 3) |>
-  pl_select(mpg)
+  select(mpg)
 
 describe_plan(query)
 

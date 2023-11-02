@@ -50,7 +50,7 @@ reference:
       - rename
       - rename_with
       - pl_right_join
-      - pl_select
+      - select
       - pl_semi_join
       - pl_separate
       - pl_slice_head

@@ -1,7 +1,7 @@
 #' Count the observations in each group
 #'
 #' @param .data A Polars Data/LazyFrame
-#' @inheritParams pl_select
+#' @inheritParams select
 #' @param sort If `TRUE`, will show the largest groups at the top.
 #' @param name Name of the new column.
 #'

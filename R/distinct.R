@@ -5,7 +5,7 @@
 #' also possible to keep either the first occurrence, the last occurence or
 #' remove all duplicates.
 #'
-#' @inheritParams pl_select
+#' @inheritParams select
 #' @param keep Either "first" (keep the first occurrence of the duplicated row),
 #'  "last" (last occurrence) or "none" (remove all ofccurences of duplicated
 #'  rows).

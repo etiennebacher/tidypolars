@@ -10,11 +10,6 @@
 duplicated_rows(.data, ...)
 }
 \arguments{
-\item{.data}{A Polars Data/LazyFrame}
-
-\item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
-column numbers, select helpers, etc.}
-
 \item{keep}{Either "first" (keep the first occurrence of the duplicated row),
 "last" (last occurrence) or "none" (remove all ofccurences of duplicated
 rows).}

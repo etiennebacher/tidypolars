@@ -1,6 +1,6 @@
 #' Create a column with unique id per row values
 #'
-#' @inheritParams pl_select
+#' @inheritParams select
 #' @param new_col Name of the new column
 #'
 #' @export
