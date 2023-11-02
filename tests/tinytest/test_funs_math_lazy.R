@@ -5,8 +5,6 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-library(dplyr, warn.conflicts = FALSE)
-
 test_df <- data.frame(
   x1 = c("a", "a", "b", "a", "c"),
   x2 = c(2, 1, 5, 3, 1),

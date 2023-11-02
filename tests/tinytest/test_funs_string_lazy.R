@@ -5,7 +5,6 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-library(dplyr, warn.conflicts = FALSE)
 library(tools)
 library(stringr)
 
