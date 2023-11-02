@@ -8,6 +8,7 @@
 #' @param na.rm If `TRUE`, missing values will be replaced with an empty string
 #' prior to uniting each value.
 #'
+#' @rdname unite
 #' @export
 #' @examples
 #' test <- polars::pl$DataFrame(
@@ -18,8 +19,8 @@
 #' )
 #'
 #' # By default, united columns are dropped
-#' pl_unite(test, col = "full_date", year, month, day, sep = "-")
-#' pl_unite(test, col = "full_date", year, month, day, sep = "-", remove = FALSE)
+#' unite(test, col = "full_date", year, month, day, sep = "-")
+#' unite(test, col = "full_date", year, month, day, sep = "-", remove = FALSE)
 #'
 #' test2 <- polars::pl$DataFrame(
 #'   name = c("John", "Jack", "Thomas"),
@@ -28,10 +29,10 @@
 #' )
 #'
 #' # By default, NA values are kept in the character output
-#' pl_unite(test2, col = "full_name", everything(), sep = " ")
-#' pl_unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
+#' unite(test2, col = "full_name", everything(), sep = " ")
+#' unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
 
-pl_unite <- function(.data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE) {
+unite.DataFrame <- function(.data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE) {
 
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
@@ -54,3 +55,6 @@ pl_unite <- function(.data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE) {
     out
   }
 }
+
+#' @export
+unite.LazyFrame <- unite.DataFrame

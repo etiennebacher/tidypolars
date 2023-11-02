@@ -12,7 +12,7 @@ test <- polars::pl$LazyFrame(
   name_day = c("Monday", "Thursday", "Wednesday")
 )
 
-out1 <- pl_unite(test, col = "full_date", year, month, day, sep = "-")
+out1 <- unite(test, col = "full_date", year, month, day, sep = "-")
 
 expect_equal_lazy(
    pull(out1, full_date),
@@ -21,7 +21,7 @@ expect_equal_lazy(
 
 expect_dim(out1, c(3, 2))
 
-out2 <- pl_unite(test, col = "full_date", year, month, day, sep = "-", remove = FALSE)
+out2 <- unite(test, col = "full_date", year, month, day, sep = "-", remove = FALSE)
 
 expect_dim(out2, c(3, 5))
 
@@ -31,7 +31,7 @@ test2 <- polars::pl$LazyFrame(
   surname = c("Smith", "Thompson", "Jones")
 )
 
-out3 <- pl_unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
+out3 <- unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
 
 expect_equal_lazy(
   pull(out3, full_name),

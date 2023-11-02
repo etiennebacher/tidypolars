@@ -26,10 +26,5 @@
     registerS3method("semi_join", "LazyFrame", pl_semi_join, envir = asNamespace("dplyr"))
 
   }
-  if(requireNamespace("tidyr", quietly = TRUE)) {
-
-    registerS3method("unite", "DataFrame", pl_unite, envir = asNamespace("tidyr"))
-    registerS3method("unite", "LazyFrame", pl_unite, envir = asNamespace("tidyr"))
-  }
 }
 # nocov end

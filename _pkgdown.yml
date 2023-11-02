@@ -70,7 +70,7 @@ reference:
       - pivot_wider
       - replace_na
       - separate
-      - pl_unite
+      - unite
   - title: Datasets
     desc: |
       Datasets reexported from various tidyverse packages
