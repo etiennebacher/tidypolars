@@ -66,8 +66,8 @@ reference:
       - complete
       - drop_na
       - fill
-      - pl_pivot_longer
-      - pl_pivot_wider
+      - pivot_longer
+      - pivot_wider
       - pl_replace_na
       - pl_separate
       - pl_unite

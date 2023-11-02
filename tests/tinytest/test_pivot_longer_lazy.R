@@ -8,7 +8,7 @@ using("tidypolars")
 pl_relig_income <- polars::pl$LazyFrame(relig_income)
 
 out <- pl_relig_income |>
-  pl_pivot_longer(!religion, names_to = "income", values_to = "count")
+  pivot_longer(!religion, names_to = "income", values_to = "count")
 
 # basic checks
 

@@ -4,7 +4,7 @@ using("tidypolars")
 pl_fish_encounters <- polars::pl$DataFrame(fish_encounters)
 
 out <- pl_fish_encounters |>
-  pl_pivot_wider(names_from = station, values_from = seen)
+  pivot_wider(names_from = station, values_from = seen)
 
 # basic checks
 
@@ -29,7 +29,7 @@ expect_equal(
 # fill values
 
 filled <- pl_fish_encounters |>
-  pl_pivot_wider(names_from = station, values_from = seen, values_fill = 0) |>
+  pivot_wider(names_from = station, values_from = seen, values_fill = 0) |>
   slice_head()
 
 expect_equal(

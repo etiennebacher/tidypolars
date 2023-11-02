@@ -8,15 +8,16 @@
 #' @param values_to A string specifying the name of the column to create from the
 #'  data stored in cell values.
 #'
+#' @rdname pivot_longer
 #' @export
 #' @examples
 #' pl_relig_income <- polars::pl$DataFrame(relig_income)
 #' pl_relig_income
 #'
 #' pl_relig_income |>
-#'   pl_pivot_longer(!religion, names_to = "income", values_to = "count")
+#'   pivot_longer(!religion, names_to = "income", values_to = "count")
 
-pl_pivot_longer <- function(.data, cols, names_to = "name", values_to = "value") {
+pivot_longer.DataFrame <- function(.data, cols, names_to = "name", values_to = "value") {
 
   check_polars_data(.data)
 
@@ -29,6 +30,9 @@ pl_pivot_longer <- function(.data, cols, names_to = "name", values_to = "value")
   )$sort(id_vars)
 
 }
+
+#' @export
+pivot_longer.LazyFrame <- pivot_longer.DataFrame
 
 #' Pivot Data/LazyFrame from long to wide
 #'
@@ -44,21 +48,22 @@ pl_pivot_longer <- function(.data, cols, names_to = "name", values_to = "value")
 #'   For example, if you provide a character value to fill numeric columns, then
 #'   all these columns will be converted to character.
 #'
+#' @rdname pivot_wider
 #' @export
 #' @examples
 #' pl_fish_encounters <- polars::pl$DataFrame(fish_encounters)
 #'
 #' pl_fish_encounters |>
-#'   pl_pivot_wider(names_from = station, values_from = seen)
+#'   pivot_wider(names_from = station, values_from = seen)
 #'
 #' pl_fish_encounters |>
-#'   pl_pivot_wider(names_from = station, values_from = seen, values_fill = 0)
+#'   pivot_wider(names_from = station, values_from = seen, values_fill = 0)
 #'
 #' # be careful about the type of the replacement value!
 #' pl_fish_encounters |>
-#'   pl_pivot_wider(names_from = station, values_from = seen, values_fill = "a")
+#'   pivot_wider(names_from = station, values_from = seen, values_fill = "a")
 
-pl_pivot_wider <- function(.data, id_cols, names_from, values_from,
+pivot_wider.DataFrame <- function(.data, id_cols, names_from, values_from,
                            values_fill = NULL) {
 
   check_polars_data(.data)
@@ -87,3 +92,5 @@ pl_pivot_wider <- function(.data, id_cols, names_from, values_from,
   }
 }
 
+#' @export
+pivot_wider.LazyFrame <- pivot_wider.DataFrame

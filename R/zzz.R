@@ -28,11 +28,8 @@
   }
   if(requireNamespace("tidyr", quietly = TRUE)) {
 
-    registerS3method("pivot_longer", "DataFrame", pl_pivot_longer, envir = asNamespace("tidyr"))
-    registerS3method("pivot_longer", "LazyFrame", pl_pivot_longer, envir = asNamespace("tidyr"))
-
-    registerS3method("pivot_wider", "DataFrame", pl_pivot_wider, envir = asNamespace("tidyr"))
-    registerS3method("pivot_wider", "LazyFrame", pl_pivot_wider, envir = asNamespace("tidyr"))
+    registerS3method("pivot_wider", "DataFrame", pivot_wider, envir = asNamespace("tidyr"))
+    registerS3method("pivot_wider", "LazyFrame", pivot_wider, envir = asNamespace("tidyr"))
 
     registerS3method("replace_na", "DataFrame", pl_replace_na, envir = asNamespace("tidyr"))
     registerS3method("replace_na", "LazyFrame", pl_replace_na, envir = asNamespace("tidyr"))
