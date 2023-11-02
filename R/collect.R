@@ -56,9 +56,6 @@ collect.LazyFrame <- function(
     streaming = FALSE,
     collect_in_background = FALSE
   ) {
-  if (!inherits(.data, "LazyFrame")) {
-    rlang::abort("`collect()` can only be used on a LazyFrame.")
-  }
   .data$collect(
     type_coercion = type_coercion,
     predicate_pushdown = predicate_pushdown,

@@ -19,5 +19,5 @@ expect_equal(
 
 expect_error(
   collect(pl_iris),
-  "can only be used on a LazyFrame"
+  "no applicable method"
 )

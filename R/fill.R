@@ -9,7 +9,7 @@
 #'
 #' @param .data A Polars Data/LazyFrame
 #' @inheritParams select.DataFrame
-#' @param direction Direction in which to fill missing values. Either "down"
+#' @param .direction Direction in which to fill missing values. Either "down"
 #'    (the default), "up", "downup" (i.e. first down and then up) or "updown"
 #'    (first up and then down).
 #'
@@ -18,8 +18,8 @@
 #' @examples
 #' pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 #'
-#' fill(pl_test, everything(), direction = "down")
-#' fill(pl_test, everything(), direction = "up")
+#' fill(pl_test, everything(), .direction = "down")
+#' fill(pl_test, everything(), .direction = "up")
 #'
 #' # with grouped data, it doesn't use values from other groups
 #' pl_grouped <- polars::pl$DataFrame(
@@ -29,20 +29,20 @@
 #' ) |>
 #'   group_by(grp)
 #'
-#' fill(pl_grouped, x, y, direction = "down")
+#' fill(pl_grouped, x, y, .direction = "down")
 
-fill.DataFrame <- function(.data, ..., direction = c("down", "up", "downup", "updown")) {
+fill.DataFrame <- function(.data, ..., .direction = c("down", "up", "downup", "updown")) {
 
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
-  direction <- match.arg(direction)
+  .direction <- match.arg(.direction)
 
   grps <- attributes(.data)$pl_grps
   is_grouped <- !is.null(grps)
 
   expr <- polars::pl$col(vars)
   expr <- switch(
-    direction,
+    .direction,
     "down" = expr$fill_null(strategy = 'forward'),
     "up" = expr$fill_null(strategy = 'backward'),
     "downup" = expr$fill_null(strategy = 'forward')$fill_null(strategy = 'backward'),

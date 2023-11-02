@@ -6,9 +6,9 @@
 \alias{slice_sample.DataFrame}
 \title{Subset rows of a Data/LazyFrame}
 \usage{
-\method{slice_tail}{DataFrame}(.data, n = 5)
+\method{slice_tail}{DataFrame}(.data, n)
 
-\method{slice_head}{DataFrame}(.data, n = 5)
+\method{slice_head}{DataFrame}(.data, n)
 
 \method{slice_sample}{DataFrame}(.data, n = NULL, prop = NULL, replace = FALSE)
 }
@@ -28,8 +28,8 @@ Subset rows of a Data/LazyFrame
 }
 \examples{
 pl_test <- polars::pl$DataFrame(iris)
-slice_head(pl_test, 3)
-slice_tail(pl_test, 3)
+slice_head(pl_test, n = 3)
+slice_tail(pl_test, n = 3)
 slice_sample(pl_test, n = 5)
 slice_sample(pl_test, prop = 0.1)
 }

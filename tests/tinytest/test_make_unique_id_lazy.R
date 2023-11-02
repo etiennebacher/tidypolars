@@ -9,7 +9,7 @@ test <- pl$LazyFrame(mtcars)
 
 expect_equal_lazy(
   make_unique_id(test, am, gear) |>
-    slice_head(3) |>
+    slice_head(n = 3) |>
     pull(hash) |>
     unique() |>
     length(),

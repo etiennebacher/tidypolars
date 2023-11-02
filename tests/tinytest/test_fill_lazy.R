@@ -12,24 +12,24 @@ pl_test <- polars::pl$LazyFrame(
 )
 
 expect_equal_lazy(
-  fill(pl_test, everything(), direction = "down") |>
+  fill(pl_test, everything(), .direction = "down") |>
     pull(x),
   c(NA, 1, 1, 1, 2, 2)
 )
 
 expect_equal_lazy(
-  fill(pl_test, everything(), direction = "down"),
+  fill(pl_test, everything(), .direction = "down"),
   fill(pl_test, x, y)
 )
 
 expect_equal_lazy(
-  fill(pl_test, everything(), direction = "updown") |>
+  fill(pl_test, everything(), .direction = "updown") |>
     pull(x),
   c(1, 1, 2, 2, 2, 2)
 )
 
 expect_equal_lazy(
-  fill(pl_test, everything(), direction = "downup") |>
+  fill(pl_test, everything(), .direction = "downup") |>
     pull(x),
   c(1, 1, 1, 1, 2, 2)
 )
@@ -44,19 +44,19 @@ pl_grouped <- polars::pl$LazyFrame(
   group_by(grp)
 
 expect_equal_lazy(
-  fill(pl_grouped, everything(), direction = "down") |>
+  fill(pl_grouped, everything(), .direction = "down") |>
     pull(x),
   c(NA, 1, 1, NA, 2, 2)
 )
 
 expect_equal_lazy(
-  fill(pl_grouped, everything(), direction = "downup") |>
+  fill(pl_grouped, everything(), .direction = "downup") |>
     pull(y),
   c(3, 3, 4, 3, 3, 1)
 )
 
 expect_equal_lazy(
-  fill(pl_grouped, everything(), direction = "updown") |>
+  fill(pl_grouped, everything(), .direction = "updown") |>
     pull(y),
   c(3, 4, 4, 3, 3, 1)
 )

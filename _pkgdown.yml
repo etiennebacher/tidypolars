@@ -39,7 +39,7 @@ reference:
       - count
       - cross_join
       - distinct
-      - pl_filter
+      - filter
       - full_join
       - group_by
       - inner_join

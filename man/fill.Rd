@@ -4,7 +4,7 @@
 \alias{fill.DataFrame}
 \title{Fill in missing values with previous or next value}
 \usage{
-\method{fill}{DataFrame}(.data, ..., direction = c("down", "up", "downup", "updown"))
+\method{fill}{DataFrame}(.data, ..., .direction = c("down", "up", "downup", "updown"))
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
@@ -12,7 +12,7 @@
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}
 
-\item{direction}{Direction in which to fill missing values. Either "down"
+\item{.direction}{Direction in which to fill missing values. Either "down"
 (the default), "up", "downup" (i.e. first down and then up) or "updown"
 (first up and then down).}
 }
@@ -28,8 +28,8 @@ meaning that it won't fill across group boundaries.
 \examples{
 pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 
-fill(pl_test, everything(), direction = "down")
-fill(pl_test, everything(), direction = "up")
+fill(pl_test, everything(), .direction = "down")
+fill(pl_test, everything(), .direction = "up")
 
 # with grouped data, it doesn't use values from other groups
 pl_grouped <- polars::pl$DataFrame(
@@ -39,5 +39,5 @@ pl_grouped <- polars::pl$DataFrame(
 ) |>
   group_by(grp)
 
-fill(pl_grouped, x, y, direction = "down")
+fill(pl_grouped, x, y, .direction = "down")
 }

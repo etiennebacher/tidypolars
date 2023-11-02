@@ -4,13 +4,13 @@ using("tidypolars")
 pl_iris <- polars::pl$DataFrame(iris)
 
 expect_equal(
-  slice_head(pl_iris),
+  slice_head(pl_iris, n = 5),
   head(iris, n = 5),
   check.attributes = FALSE
 )
 
 expect_equal(
-  slice_tail(pl_iris),
+  slice_tail(pl_iris, n = 5),
   tail(iris, n = 5),
   check.attributes = FALSE
 )

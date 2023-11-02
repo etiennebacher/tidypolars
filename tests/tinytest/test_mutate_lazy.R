@@ -158,7 +158,7 @@ out <- polars::pl$LazyFrame(mtcars) |>
   ungroup()
 
 expect_equal_lazy(
-  out |> slice_head(5) |> pull(disp2),
+  out |> slice_head(n = 5) |> pull(disp2),
   c(1.032258, 1.032258, 1.153692, 1.261305, 1.006664),
   tolerance = 1e5
 )

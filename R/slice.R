@@ -8,12 +8,12 @@
 #' @export
 #' @examples
 #' pl_test <- polars::pl$DataFrame(iris)
-#' slice_head(pl_test, 3)
-#' slice_tail(pl_test, 3)
+#' slice_head(pl_test, n = 3)
+#' slice_tail(pl_test, n = 3)
 #' slice_sample(pl_test, n = 5)
 #' slice_sample(pl_test, prop = 0.1)
 
-slice_tail.DataFrame <- function(.data, n = 5) {
+slice_tail.DataFrame <- function(.data, n) {
   check_polars_data(.data)
   grps <- attributes(.data)$pl_grps
   mo <- attributes(.data)$maintain_grp_order
@@ -35,7 +35,7 @@ slice_tail.LazyFrame <- slice_tail.DataFrame
 #' @rdname slice
 #' @export
 
-slice_head.DataFrame <- function(.data, n = 5) {
+slice_head.DataFrame <- function(.data, n) {
   check_polars_data(.data)
   grps <- attributes(.data)$pl_grps
   mo <- attributes(.data)$maintain_grp_order

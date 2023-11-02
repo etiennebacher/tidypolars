@@ -24,14 +24,14 @@ expect_equal_lazy(
 
 expect_equal_lazy(
   complete(test, country, year) |>
-    slice_head(4) |>
+    slice_head(n = 4) |>
     pull(value),
   c(NA, 1, 2, NA)
 )
 
 expect_equal_lazy(
   complete(test, country, year, fill = list(value = 99)) |>
-    slice_head(4) |>
+    slice_head(n = 4) |>
     pull(value),
   c(99, 1, 2, 99)
 )
