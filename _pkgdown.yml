@@ -32,7 +32,7 @@ reference:
     contents:
       - pl_add_count
       - pl_anti_join
-      - pl_arrange
+      - arrange
       - pl_bind_cols
       - pl_bind_rows
       - pl_collect

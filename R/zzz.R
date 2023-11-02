@@ -10,8 +10,8 @@
     registerS3method("anti_join", "DataFrame", pl_anti_join, envir = asNamespace("dplyr"))
     registerS3method("anti_join", "LazyFrame", pl_anti_join, envir = asNamespace("dplyr"))
 
-    registerS3method("arrange", "DataFrame", pl_arrange, envir = asNamespace("dplyr"))
-    registerS3method("arrange", "LazyFrame", pl_arrange, envir = asNamespace("dplyr"))
+    registerS3method("arrange", "DataFrame", arrange, envir = asNamespace("dplyr"))
+    registerS3method("arrange", "LazyFrame", arrange, envir = asNamespace("dplyr"))
 
     registerS3method("bind_cols", "DataFrame", pl_bind_cols, envir = asNamespace("dplyr"))
     registerS3method("bind_cols", "LazyFrame", pl_bind_cols, envir = asNamespace("dplyr"))
@@ -72,9 +72,6 @@
     registerS3method("summarize", "LazyFrame", pl_summarize, envir = asNamespace("dplyr"))
     registerS3method("summarise", "DataFrame", pl_summarise, envir = asNamespace("dplyr"))
     registerS3method("summarise", "LazyFrame", pl_summarise, envir = asNamespace("dplyr"))
-
-    registerS3method("ungroup", "DataFrame", ungroup, envir = asNamespace("dplyr"))
-    registerS3method("ungroup", "LazyFrame", ungroup, envir = asNamespace("dplyr"))
 
   }
   if(requireNamespace("tidyr", quietly = TRUE)) {

@@ -113,7 +113,7 @@ who_pl |>
   pl_filter(year > 1990) |> 
   pl_drop_na(newrel_f3544) |> 
   pl_select(iso3, year, matches("^newrel(.*)_f")) |> 
-  pl_arrange(iso3, year) |> 
+  arrange(iso3, year) |> 
   pl_rename_with(.fn = toupper) |> 
   head()
 ```

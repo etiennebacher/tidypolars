@@ -8,24 +8,24 @@ test <- pl$DataFrame(
 )
 
 expect_equal(
-  pl_arrange(test, x1) |>
+  arrange(test, x1) |>
     pl_pull(x1),
   c("a", "a", "a", "b", "c")
 )
 
 expect_equal(
-  pl_arrange(test, -x1) |>
+  arrange(test, -x1) |>
     pl_pull(x1),
   c("c", "b", "a", "a", "a")
 )
 
 expect_equal(
-  pl_arrange(test, -x1),
-  pl_arrange(test, !x1)
+  arrange(test, -x1),
+  arrange(test, !x1)
 )
 
 expect_equal(
-  pl_arrange(test, x1, -x2) |>
+  arrange(test, x1, -x2) |>
     pl_select(starts_with("x")) |>
     to_r(),
   data.frame(
@@ -37,12 +37,12 @@ expect_equal(
 # vars don't exist
 
 expect_equal(
-  pl_arrange(test, foo, x1),
-  pl_arrange(test, x1)
+  arrange(test, foo, x1),
+  arrange(test, x1)
 )
 
 expect_equal(
-  pl_arrange(test, foo),
+  arrange(test, foo),
   test
 )
 
@@ -51,12 +51,12 @@ expect_equal(
 test_grp <- group_by(test, x1)
 
 expect_equal(
-  pl_arrange(test_grp, x2),
-  pl_arrange(test, x2)
+  arrange(test_grp, x2),
+  arrange(test, x2)
 )
 
 expect_equal(
-  pl_arrange(test_grp, x2, .by_group = TRUE) |>
+  arrange(test_grp, x2, .by_group = TRUE) |>
     pl_pull(x2),
   c(1, 2, 3, 5, 1)
 )

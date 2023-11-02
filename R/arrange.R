@@ -4,6 +4,7 @@
 #' @param ... Quoted or unquoted variable names. Select helpers cannot be used.
 #' @param .by_group If `TRUE`, will sort data within groups.
 #'
+#' @rdname arrange
 #' @export
 #' @examples
 #' pl_test <- polars::pl$DataFrame(
@@ -12,17 +13,17 @@
 #'   value = sample(1:5)
 #' )
 #'
-#' pl_arrange(pl_test, x1)
-#' pl_arrange(pl_test, x1, -x2)
+#' arrange(pl_test, x1)
+#' arrange(pl_test, x1, -x2)
 #'
 #' # if the data is grouped, you need to specify `.by_group = TRUE` to sort by
 #' # the groups first
 #' pl_test |>
 #'   group_by(x1) |>
-#'   pl_arrange(-x2, .by_group = TRUE)
+#'   arrange(-x2, .by_group = TRUE)
 
 
-pl_arrange <- function(.data, ..., .by_group = FALSE) {
+arrange.DataFrame <- function(.data, ..., .by_group = FALSE) {
 
   check_polars_data(.data)
 
@@ -57,3 +58,6 @@ pl_arrange <- function(.data, ..., .by_group = FALSE) {
   }
   .data$sort(vars, descending = direction)
 }
+
+#' @export
+arrange.LazyFrame <- arrange.DataFrame

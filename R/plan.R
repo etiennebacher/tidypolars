@@ -12,7 +12,7 @@
 #' @examples
 #' query <- mtcars |>
 #'   as_polars(lazy = TRUE) |>
-#'   pl_arrange(drat) |>
+#'   arrange(drat) |>
 #'   filter(cyl == 3) |>
 #'   pl_select(mpg)
 #'
