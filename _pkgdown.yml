@@ -52,7 +52,7 @@ reference:
       - pl_right_join
       - select
       - pl_semi_join
-      - pl_separate
+      - separate
       - slice_head
       - slice_tail
       - slice_sample
@@ -69,7 +69,7 @@ reference:
       - pivot_longer
       - pivot_wider
       - replace_na
-      - pl_separate
+      - separate
       - pl_unite
   - title: Datasets
     desc: |

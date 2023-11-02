@@ -10,14 +10,15 @@
 #' @param sep String that is used to split the column.
 #' @param remove If `TRUE`, remove input column from output data frame.
 #'
+#' @rdname separate
 #' @export
 #' @examples
 #' test <- polars::pl$DataFrame(
 #'   x = c(NA, "x.y", "x.z", "y.z")
 #' )
-#' pl_separate(test, x, into = c("foo", "foo2"), sep = ".")
+#' separate(test, x, into = c("foo", "foo2"), sep = ".")
 
-pl_separate <- function(.data, col, into, sep = "[^[:alnum:]]+", remove = TRUE) {
+separate.DataFrame <- function(.data, col, into, sep = "[^[:alnum:]]+", remove = TRUE) {
 
   check_polars_data(.data)
   col <- deparse(substitute(col))
@@ -41,3 +42,6 @@ pl_separate <- function(.data, col, into, sep = "[^[:alnum:]]+", remove = TRUE) 
 
   .data
 }
+
+#' @export
+separate.LazyFrame <- separate.DataFrame
