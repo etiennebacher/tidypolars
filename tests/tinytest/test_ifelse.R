@@ -9,7 +9,7 @@ test <- pl$DataFrame(
 
 expect_equal(
   test |>
-    pl_mutate(y = ifelse(x1 == 'a', "foo", "bar")) |>
+    mutate(y = ifelse(x1 == 'a', "foo", "bar")) |>
     pl_pull(y),
   c("foo", "foo", "bar", "foo", "bar")
 )
@@ -21,13 +21,13 @@ expect_equal(
 # be clear about data types
 expect_error(
   test |>
-    pl_mutate(y = ifelse(x1 == 1, "foo", "bar")),
+    mutate(y = ifelse(x1 == 1, "foo", "bar")),
   "cannot compare"
 )
 
 expect_equal(
   test |>
-    pl_mutate(y = ifelse(x1 == 'a', x3, x1)) |>
+    mutate(y = ifelse(x1 == 'a', x3, x1)) |>
     pl_pull(y),
   c("hello", "hello", "b", "hello", "c")
 )
@@ -36,20 +36,20 @@ expect_equal(
 
 expect_equal(
   test |>
-    pl_mutate(y = if_else(x1 == 'a', "foo", "bar")) |>
+    mutate(y = if_else(x1 == 'a', "foo", "bar")) |>
     pl_pull(y),
   c("foo", "foo", "bar", "foo", "bar")
 )
 
 expect_error(
   test |>
-    pl_mutate(y = if_else(x1 == 1, "foo", "bar")),
+    mutate(y = if_else(x1 == 1, "foo", "bar")),
   "cannot compare"
 )
 
 expect_equal(
   test |>
-    pl_mutate(y = if_else(x1 == 'a', x3, x1)) |>
+    mutate(y = if_else(x1 == 'a', x3, x1)) |>
     pl_pull(y),
   c("hello", "hello", "b", "hello", "c")
 )

@@ -10,12 +10,12 @@ test <- polars::pl$LazyFrame(head(mtcars))
 # single word function
 
 expect_equal_lazy(
-  pl_mutate(
+  mutate(
     test,
     across(.cols = contains("a"), mean),
     cyl = cyl + 1
   ),
-  pl_mutate(
+  mutate(
     test,
     drat = mean(drat),
     am = mean(am),
@@ -28,12 +28,12 @@ expect_equal_lazy(
 # purrr-style function
 
 expect_equal_lazy(
-  pl_mutate(
+  mutate(
     test,
     across(.cols = contains("a"), ~ mean(.x)),
     cyl = cyl + 1
   ),
-  pl_mutate(
+  mutate(
     test,
     drat = mean(drat),
     am = mean(am),
@@ -46,11 +46,11 @@ expect_equal_lazy(
 # anonymous functions has to return a Polars expression
 
 expect_equal_lazy(
-  pl_mutate(
+  mutate(
     test,
     across(.cols = contains("ar"), \(x) x$mean())
   ),
-  pl_mutate(
+  mutate(
     test,
     gear = mean(gear),
     carb = mean(carb)
@@ -58,7 +58,7 @@ expect_equal_lazy(
 )
 
 expect_equal_lazy(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = contains("ar"),
@@ -68,7 +68,7 @@ expect_equal_lazy(
       )
     )
   ),
-  pl_mutate(
+  mutate(
     test,
     gear_mean = mean(gear),
     gear_std = sd(gear),
@@ -78,7 +78,7 @@ expect_equal_lazy(
 )
 
 expect_colnames(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = contains("ar"),
@@ -89,7 +89,7 @@ expect_colnames(
 )
 
 expect_colnames(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = gear,
@@ -100,7 +100,7 @@ expect_colnames(
 )
 
 expect_error_lazy(
-  pl_mutate(
+  mutate(
     test,
     across(.cols = contains("a"), \(x) mean(x)),
   ),
@@ -115,7 +115,7 @@ foo <<- function(x) {
 }
 
 expect_equal_lazy(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = contains("a"),
@@ -123,7 +123,7 @@ expect_equal_lazy(
     ),
     cyl = cyl + 1
   ),
-  pl_mutate(
+  mutate(
     test,
     drat = foo(drat),
     am = foo(am),
@@ -138,7 +138,7 @@ expect_equal_lazy(
 expect_equal_lazy(
   test |>
     group_by(am) |>
-    pl_mutate(
+    mutate(
       across(
         .cols = contains("a"),
         ~ mean(.x)
@@ -152,7 +152,7 @@ expect_equal_lazy(
 # argument .names
 
 expect_colnames(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = contains("a"),
@@ -168,7 +168,7 @@ expect_colnames(
 )
 
 expect_colnames(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = contains("a"),
@@ -184,7 +184,7 @@ expect_colnames(
 )
 
 expect_colnames(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = contains("a"),
@@ -202,29 +202,29 @@ expect_colnames(
 # List of functions ---------------
 
 expect_equal_lazy(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = mpg,
       list(mean, median)
     )
   ),
-  pl_mutate(test, mpg_1 = mean(mpg), mpg_2 = median(mpg))
+  mutate(test, mpg_1 = mean(mpg), mpg_2 = median(mpg))
 )
 
 expect_equal_lazy(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = mpg,
       list(my_mean = mean, my_median = median)
     )
   ),
-  pl_mutate(test, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg))
+  mutate(test, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg))
 )
 
 expect_equal_lazy(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = mpg,
@@ -232,11 +232,11 @@ expect_equal_lazy(
       .nms = "{.col}_foo_{.fn}"
     )
   ),
-  pl_mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
+  mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
 )
 
 expect_equal_lazy(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = mpg,
@@ -244,7 +244,7 @@ expect_equal_lazy(
       .nms = "{.col}_foo_{.fn}"
     )
   ),
-  pl_mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
+  mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
 )
 
 # just one check for summarize()
@@ -266,7 +266,7 @@ expect_equal_lazy(
 
 # sequence of expressions modifying the same vars works
 
-test2 <- pl_mutate(
+test2 <- mutate(
   test, across(contains("a"), mean),
   am = 1, gear = NULL
 )

@@ -73,7 +73,7 @@
 #' # and write it to a parquet file without ever collecting it in the R session:
 #' polars::pl$scan_csv(file_csv) |>
 #'   filter(cyl %in% c(4, 6), mpg > 22) |>
-#'   pl_mutate(
+#'   mutate(
 #'     hp_gear_ratio = hp / gear
 #'   ) |>
 #'   sink_parquet(path = file_parquet)

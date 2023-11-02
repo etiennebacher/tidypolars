@@ -44,7 +44,7 @@ reference:
       - group_by
       - pl_inner_join
       - pl_left_join
-      - pl_mutate
+      - mutate
       - pl_pull
       - pl_relocate
       - pl_rename

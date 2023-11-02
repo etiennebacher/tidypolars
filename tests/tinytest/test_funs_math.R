@@ -41,7 +41,7 @@ for (i in c(
     variable <- "value"
   }
 
-  pol <- paste0("pl_mutate(test, foo =", i, "(", variable, "))") |>
+  pol <- paste0("mutate(test, foo =", i, "(", variable, "))") |>
     str2lang() |>
     eval() |>
     pl_pull(foo)
@@ -55,11 +55,11 @@ for (i in c(
 
 }
 
-foo <- test |> pl_mutate(x = sample(x2)) |> pl_pull(x)
+foo <- test |> mutate(x = sample(x2)) |> pl_pull(x)
 
 expect_true(all(foo %in% c(1, 2, 3, 5)))
 
 expect_warning(
-  test |> pl_mutate(x = sample(x2, prob = 0.5)),
+  test |> mutate(x = sample(x2, prob = 0.5)),
   "will not be used: `prob`"
 )

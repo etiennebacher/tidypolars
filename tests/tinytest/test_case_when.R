@@ -9,7 +9,7 @@ test <- pl$DataFrame(
 
 expect_equal(
   test |>
-    pl_mutate(
+    mutate(
       y = case_when(
         x1 == 'a' ~ "foo",
         x2 == 3 ~ "bar",
@@ -22,7 +22,7 @@ expect_equal(
 
 expect_equal(
   test |>
-    pl_mutate(
+    mutate(
       y = case_when(
         x1 %in% 'a' ~ "foo",
         x2 == 3 ~ "bar",
@@ -35,7 +35,7 @@ expect_equal(
 
 expect_equal(
   test |>
-    pl_mutate(
+    mutate(
       y = case_when(
         x1 %in% 'a' & x2 == 2 ~ "foo",
         x2 == 3 ~ "bar",
@@ -50,7 +50,7 @@ expect_equal(
 
 expect_equal(
   test |>
-    pl_mutate(
+    mutate(
       y = case_when(
         x1 == 'a' ~ "foo",
         x2 == 3 ~ "bar"

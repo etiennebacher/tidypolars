@@ -6,22 +6,22 @@ pl_iris <- polars::pl$DataFrame(iris)
 # Basic ops: +, -, *, /
 
 expect_equal(
-  pl_mutate(pl_iris, x = Sepal.Width + Sepal.Length) |>
+  mutate(pl_iris, x = Sepal.Width + Sepal.Length) |>
     pl_pull(x),
   iris$Sepal.Width + iris$Sepal.Length
 )
 expect_equal(
-  pl_mutate(pl_iris, x = Sepal.Width - Sepal.Length + Petal.Length) |>
+  mutate(pl_iris, x = Sepal.Width - Sepal.Length + Petal.Length) |>
     pl_pull(x),
   iris$Sepal.Width - iris$Sepal.Length + iris$Petal.Length
 )
 expect_equal(
-  pl_mutate(pl_iris, x = Sepal.Width*Sepal.Length) |>
+  mutate(pl_iris, x = Sepal.Width*Sepal.Length) |>
     pl_pull(x),
   iris$Sepal.Width*iris$Sepal.Length
 )
 expect_equal(
-  pl_mutate(pl_iris, x = Sepal.Width/Sepal.Length) |>
+  mutate(pl_iris, x = Sepal.Width/Sepal.Length) |>
     pl_pull(x),
   iris$Sepal.Width/iris$Sepal.Length
 )
@@ -29,30 +29,30 @@ expect_equal(
 # Logical ops
 
 expect_equal(
-  pl_mutate(pl_iris, x = Sepal.Width > Sepal.Length) |>
+  mutate(pl_iris, x = Sepal.Width > Sepal.Length) |>
     pl_pull(x),
   iris$Sepal.Width > iris$Sepal.Length
 )
 expect_equal(
-  pl_mutate(pl_iris, x = Sepal.Width > Sepal.Length & Petal.Width > Petal.Length) |>
+  mutate(pl_iris, x = Sepal.Width > Sepal.Length & Petal.Width > Petal.Length) |>
     pl_pull(x),
   iris$Sepal.Width > iris$Sepal.Length & iris$Petal.Width > iris$Petal.Length
 )
 
 expect_false(
-  pl_mutate(pl_iris, x = all(Sepal.Length/2 > Sepal.Width)) |>
+  mutate(pl_iris, x = all(Sepal.Length/2 > Sepal.Width)) |>
     pl_pull(x) |>
     unique()
 )
 
 expect_true(
-  pl_mutate(pl_iris, x = all(Sepal.Width > 0)) |>
+  mutate(pl_iris, x = all(Sepal.Width > 0)) |>
     pl_pull(x) |>
     unique()
 )
 
 expect_false(
-  pl_mutate(pl_iris, x = any(Sepal.Width > Sepal.Length)) |>
+  mutate(pl_iris, x = any(Sepal.Width > Sepal.Length)) |>
     pl_pull(x) |>
     unique()
 )
@@ -66,13 +66,13 @@ test <- pl$DataFrame(
 )
 
 expect_equal(
-  pl_mutate(test, x = x1 %in% letters) |>
+  mutate(test, x = x1 %in% letters) |>
     pl_pull(x),
   c(TRUE, TRUE, FALSE, TRUE, TRUE)
 )
 
 expect_equal(
-  pl_mutate(test, x = x1 %in% letters & x2 < 3) |>
+  mutate(test, x = x1 %in% letters & x2 < 3) |>
     pl_pull(x),
   c(TRUE, TRUE, FALSE, FALSE, TRUE)
 )
@@ -80,7 +80,7 @@ expect_equal(
 # Overwrite existing vars
 
 expect_equal(
-  pl_mutate(pl_iris, Sepal.Width = Sepal.Width*2) |>
+  mutate(pl_iris, Sepal.Width = Sepal.Width*2) |>
     pl_pull(Sepal.Width),
   iris$Sepal.Width*2
 )
@@ -88,30 +88,30 @@ expect_equal(
 # Scalar
 
 expect_equal(
-  pl_mutate(pl_iris, Sepal.Width = 2) |>
+  mutate(pl_iris, Sepal.Width = 2) |>
     pl_pull(Sepal.Width) |>
     unique(),
   2
 )
 
 expect_equal(
-  pl_mutate(pl_iris, Sepal.Width = "a") |>
+  mutate(pl_iris, Sepal.Width = "a") |>
     pl_pull(Sepal.Width) |>
     unique(),
   "a"
 )
 
 expect_error(
-  pl_mutate(pl_iris, Sepal.Width = 1:2)
+  mutate(pl_iris, Sepal.Width = 1:2)
 )
 
 expect_error(
-  pl_mutate(pl_iris, Sepal.Width = letters[1:2])
+  mutate(pl_iris, Sepal.Width = letters[1:2])
 )
 
 # Several exprs
 
-out <- pl_mutate(
+out <- mutate(
   pl_iris,
   Sepal.Width = Sepal.Width*2,
   Petal.Width = Petal.Width*3
@@ -128,7 +128,7 @@ expect_equal(
 # drop columns
 
 expect_colnames(
-  pl_mutate(pl_iris, Sepal.Length = 1, Species = NULL),
+  mutate(pl_iris, Sepal.Length = 1, Species = NULL),
   names(iris)[1:4]
 )
 
@@ -137,7 +137,7 @@ expect_colnames(
 
 out <- pl_iris |>
   group_by(Species) |>
-  pl_mutate(
+  mutate(
     foo = mean(Sepal.Length)
   )
 
@@ -148,7 +148,7 @@ expect_equal(
 
 out <- polars::pl$DataFrame(mtcars) |>
   group_by(cyl, am) |>
-  pl_mutate(
+  mutate(
     disp2 = disp / mean(disp)
   ) |>
   ungroup()
@@ -162,7 +162,7 @@ expect_equal(
 expect_colnames(
   pl_iris |>
     group_by(Species) |>
-    pl_mutate(Sepal.Length = NULL),
+    mutate(Sepal.Length = NULL),
   names(iris)[2:5]
 )
 
@@ -170,7 +170,7 @@ expect_colnames(
 # warning
 
 expect_warning(
-  pl_mutate(pl_iris, foo = mean(Sepal.Length, na.rm = TRUE)),
+  mutate(pl_iris, foo = mean(Sepal.Length, na.rm = TRUE)),
   pattern = "will not be used: `na.rm`"
 )
 
@@ -184,7 +184,7 @@ foo <<- function(x, y) {
 }
 
 expect_equal(
-  pl_mutate(pl_iris, x = foo(Sepal.Length, Petal.Length)) |>
+  mutate(pl_iris, x = foo(Sepal.Length, Petal.Length)) |>
     pl_pull(x),
   rep(mean(iris$Sepal.Length) + mean(iris$Petal.Length), nrow(iris))
 )
@@ -196,7 +196,7 @@ foo2 <<- function(x, y) {
 }
 
 expect_error(
-  pl_mutate(pl_iris, x = foo2(Sepal.Length, Petal.Length)),
+  mutate(pl_iris, x = foo2(Sepal.Length, Petal.Length)),
   "Couldn't evaluate function `foo2`"
 )
 
@@ -205,20 +205,20 @@ expect_error(
 some_value <<- 1
 
 expect_equal(
-  pl_mutate(pl_iris, x = {{ some_value }}),
-  pl_mutate(pl_iris, x = 1)
+  mutate(pl_iris, x = {{ some_value }}),
+  mutate(pl_iris, x = 1)
 )
 
 expect_equal(
-  pl_mutate(pl_iris, x = some_value + Sepal.Length),
-  pl_mutate(pl_iris, x = 1 + Sepal.Length)
+  mutate(pl_iris, x = some_value + Sepal.Length),
+  mutate(pl_iris, x = 1 + Sepal.Length)
 )
 
 # reorder of expressions works
 
 expect_equal(
   pl_iris |>
-    pl_mutate(
+    mutate(
       x = Sepal.Length * 3,
       Petal.Length = Petal.Length / x,
       x = NULL,
@@ -237,7 +237,7 @@ expect_equal(
 
 expect_equal(
   pl_iris |>
-    pl_mutate(
+    mutate(
       x = 1,
       x = NULL,
       mean_pl = mean(Petal.Length),

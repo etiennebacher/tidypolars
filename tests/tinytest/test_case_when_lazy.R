@@ -13,7 +13,7 @@ test <- pl$LazyFrame(
 
 expect_equal_lazy(
   test |>
-    pl_mutate(
+    mutate(
       y = case_when(
         x1 == 'a' ~ "foo",
         x2 == 3 ~ "bar",
@@ -26,7 +26,7 @@ expect_equal_lazy(
 
 expect_equal_lazy(
   test |>
-    pl_mutate(
+    mutate(
       y = case_when(
         x1 %in% 'a' ~ "foo",
         x2 == 3 ~ "bar",
@@ -39,7 +39,7 @@ expect_equal_lazy(
 
 expect_equal_lazy(
   test |>
-    pl_mutate(
+    mutate(
       y = case_when(
         x1 %in% 'a' & x2 == 2 ~ "foo",
         x2 == 3 ~ "bar",
@@ -54,7 +54,7 @@ expect_equal_lazy(
 
 expect_equal_lazy(
   test |>
-    pl_mutate(
+    mutate(
       y = case_when(
         x1 == 'a' ~ "foo",
         x2 == 3 ~ "bar"

@@ -25,35 +25,36 @@
 #' Note that this is slower than using functions that can be translated to
 #' Polars syntax.
 #'
+#' @rdname mutate
 #' @export
 #' @examples
 #' pl_iris <- polars::pl$DataFrame(iris)
 #'
 #' # classic operation
-#' pl_mutate(pl_iris, x = Sepal.Width + Sepal.Length)
+#' mutate(pl_iris, x = Sepal.Width + Sepal.Length)
 #'
 #' # logical operation
-#' pl_mutate(pl_iris, x = Sepal.Width > Sepal.Length & Petal.Width > Petal.Length)
+#' mutate(pl_iris, x = Sepal.Width > Sepal.Length & Petal.Width > Petal.Length)
 #'
 #' # overwrite existing variable
-#' pl_mutate(pl_iris, Sepal.Width = Sepal.Width*2)
+#' mutate(pl_iris, Sepal.Width = Sepal.Width*2)
 #'
 #' # grouped computation
 #' pl_iris |>
 #'   group_by(Species) |>
-#'   pl_mutate(
+#'   mutate(
 #'     foo = mean(Sepal.Length)
 #'   )
 #'
 #' # across() is available
 #' pl_iris |>
-#'   pl_mutate(
+#'   mutate(
 #'     across(.cols = contains("Sepal"), .fns = mean, .names = "{.fn}_of_{.col}")
 #'   )
 #
 #' # It can receive several types of functions:
 #' pl_iris |>
-#'   pl_mutate(
+#'   mutate(
 #'     across(
 #'       .cols = contains("Sepal"),
 #'       .fns = list(mean = mean, sd = ~ sd(.x)),
@@ -63,10 +64,9 @@
 #'
 #' # Embracing an external variable works
 #' some_value <- 1
-#' pl_mutate(pl_iris, x = {{ some_value }})
+#' mutate(pl_iris, x = {{ some_value }})
 
-
-pl_mutate <- function(.data, ...) {
+mutate.DataFrame <- function(.data, ...) {
 
   check_polars_data(.data)
 
@@ -95,3 +95,6 @@ pl_mutate <- function(.data, ...) {
 
   .data
 }
+
+#' @export
+mutate.LazyFrame <- mutate.DataFrame
