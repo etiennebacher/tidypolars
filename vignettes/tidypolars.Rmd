@@ -111,7 +111,7 @@ where you only load `tidypolars` and run:
 ```{r}
 who_pl |> 
   pl_filter(year > 1990) |> 
-  pl_drop_na(newrel_f3544) |> 
+  drop_na(newrel_f3544) |> 
   select(iso3, year, matches("^newrel(.*)_f")) |> 
   arrange(iso3, year) |> 
   rename_with(.fn = toupper) |> 

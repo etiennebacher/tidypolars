@@ -28,9 +28,6 @@
   }
   if(requireNamespace("tidyr", quietly = TRUE)) {
 
-    registerS3method("drop_na", "DataFrame", pl_drop_na, envir = asNamespace("tidyr"))
-    registerS3method("drop_na", "LazyFrame", pl_drop_na, envir = asNamespace("tidyr"))
-
     registerS3method("fill", "DataFrame", pl_fill, envir = asNamespace("tidyr"))
     registerS3method("fill", "LazyFrame", pl_fill, envir = asNamespace("tidyr"))
 

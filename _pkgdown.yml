@@ -64,7 +64,7 @@ reference:
       Functions coming from `tidyr`
     contents:
       - complete
-      - pl_drop_na
+      - drop_na
       - pl_fill
       - pl_pivot_longer
       - pl_pivot_wider

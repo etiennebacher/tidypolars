@@ -6,6 +6,7 @@
 #'
 #' @inheritParams select
 #'
+#' @rdname drop_na
 #' @export
 #' @examples
 #' tmp <- mtcars
@@ -13,11 +14,14 @@
 #' tmp[4, "hp"] <- NA
 #' pl_tmp <- polars::pl$DataFrame(tmp)
 #'
-#' pl_drop_na(pl_tmp)
-#' pl_drop_na(pl_tmp, hp, mpg)
+#' drop_na(pl_tmp)
+#' drop_na(pl_tmp, hp, mpg)
 
-pl_drop_na <- function(.data, ...) {
+drop_na.DataFrame <- function(.data, ...) {
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
   .data$drop_nulls(vars)
 }
+
+#' @export
+drop_na.LazyFrame <- drop_na.DataFrame
