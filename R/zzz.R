@@ -4,9 +4,6 @@
 
   if(requireNamespace("dplyr", quietly = TRUE)) {
 
-    registerS3method("add_count", "DataFrame", pl_add_count, envir = asNamespace("dplyr"))
-    registerS3method("add_count", "LazyFrame", pl_add_count, envir = asNamespace("dplyr"))
-
     registerS3method("anti_join", "DataFrame", pl_anti_join, envir = asNamespace("dplyr"))
     registerS3method("anti_join", "LazyFrame", pl_anti_join, envir = asNamespace("dplyr"))
 
@@ -15,9 +12,6 @@
 
     registerS3method("bind_rows", "DataFrame", pl_bind_rows, envir = asNamespace("dplyr"))
     registerS3method("bind_rows", "LazyFrame", pl_bind_rows, envir = asNamespace("dplyr"))
-
-    registerS3method("count", "DataFrame", pl_count, envir = asNamespace("dplyr"))
-    registerS3method("count", "LazyFrame", pl_count, envir = asNamespace("dplyr"))
 
     registerS3method("cross_join", "DataFrame", pl_cross_join, envir = asNamespace("dplyr"))
     registerS3method("cross_join", "LazyFrame", pl_cross_join, envir = asNamespace("dplyr"))

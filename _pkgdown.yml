@@ -30,13 +30,13 @@ reference:
     desc: |
       Functions coming from `dplyr`
     contents:
-      - pl_add_count
+      - add_count
       - pl_anti_join
       - arrange
       - pl_bind_cols
       - pl_bind_rows
       - collect
-      - pl_count
+      - count
       - pl_cross_join
       - distinct
       - pl_filter
