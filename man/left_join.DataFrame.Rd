@@ -7,13 +7,45 @@
 \alias{inner_join.DataFrame}
 \title{Mutating joins}
 \usage{
-\method{left_join}{DataFrame}(x, y, by = NULL, suffix = c(".x", ".y"))
+\method{left_join}{DataFrame}(
+  x,
+  y,
+  by = NULL,
+  copy = NULL,
+  suffix = c(".x", ".y"),
+  ...,
+  keep = NULL
+)
 
-\method{right_join}{DataFrame}(x, y, by = NULL, suffix = c(".x", ".y"))
+\method{right_join}{DataFrame}(
+  x,
+  y,
+  by = NULL,
+  copy = NULL,
+  suffix = c(".x", ".y"),
+  ...,
+  keep = NULL
+)
 
-\method{full_join}{DataFrame}(x, y, by = NULL, suffix = c(".x", ".y"))
+\method{full_join}{DataFrame}(
+  x,
+  y,
+  by = NULL,
+  copy = NULL,
+  suffix = c(".x", ".y"),
+  ...,
+  keep = NULL
+)
 
-\method{inner_join}{DataFrame}(x, y, by = NULL, suffix = c(".x", ".y"))
+\method{inner_join}{DataFrame}(
+  x,
+  y,
+  by = NULL,
+  copy = NULL,
+  suffix = c(".x", ".y"),
+  ...,
+  keep = NULL
+)
 }
 \arguments{
 \item{x, y}{Two Polars Data/LazyFrames}
@@ -23,9 +55,13 @@ perform a natural join, using all variables in common across \code{x} and \code{
 message lists the variables so that you can check they're correct; suppress
 the message by supplying \code{by} explicitly.}
 
+\item{copy, keep}{Not used.}
+
 \item{suffix}{If there are non-joined duplicate variables in \code{x} and \code{y},
 these suffixes will be added to the output to disambiguate them. Should be a
 character vector of length 2.}
+
+\item{...}{Not used.}
 }
 \description{
 Mutating joins add columns from \code{y} to \code{x}, matching observations based on

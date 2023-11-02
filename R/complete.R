@@ -9,7 +9,6 @@
 #' @param fill A named list that for each variable supplies a single value to
 #' use instead of `NA` for missing combinations.
 #'
-#' @rdname complete
 #' @export
 #' @examples
 #' df <- polars::pl$DataFrame(

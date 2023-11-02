@@ -5,7 +5,7 @@
 \title{Collect a LazyFrame}
 \usage{
 \method{collect}{LazyFrame}(
-  .data,
+  x,
   type_coercion = TRUE,
   predicate_pushdown = TRUE,
   projection_pushdown = TRUE,
@@ -20,7 +20,7 @@
 )
 }
 \arguments{
-\item{.data}{A Polars LazyFrame}
+\item{x}{A Polars LazyFrame}
 
 \item{type_coercion}{Coerce types such that operations succeed and run on
 minimal required memory (default is \code{TRUE}).}
@@ -55,6 +55,8 @@ an alpha state). Default is \code{FALSE}.}
 will start in background. Get a handle which later can be converted into the
 resulting DataFrame. Useful in interactive mode to not lock R session (default
 is \code{FALSE}).}
+
+\item{...}{Not used.}
 }
 \description{
 Polars LazyFrames are not loaded in memory. Running \code{collect()} checks the

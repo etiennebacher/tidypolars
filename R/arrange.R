@@ -4,7 +4,6 @@
 #' @param ... Quoted or unquoted variable names. Select helpers cannot be used.
 #' @param .by_group If `TRUE`, will sort data within groups.
 #'
-#' @rdname arrange
 #' @export
 #' @examples
 #' pl_test <- polars::pl$DataFrame(

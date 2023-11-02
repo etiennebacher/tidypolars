@@ -7,12 +7,13 @@
 \usage{
 \method{group_by}{DataFrame}(.data, ..., maintain_order = FALSE)
 
-\method{ungroup}{DataFrame}(x)
+\method{ungroup}{DataFrame}(x, ...)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
 
-\item{...}{Variables to group by (used in \code{group_by()} only).}
+\item{...}{Variables to group by (used in \code{group_by()} only). Not used in
+\code{ungroup()}.}
 
 \item{maintain_order}{Maintain row order. For performance reasons, this is
 \code{FALSE} by default). Setting it to \code{TRUE} can slow down the process with

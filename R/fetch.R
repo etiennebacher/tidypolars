@@ -6,6 +6,7 @@
 #' doesn't mean that the output will actually contain `n` rows, see the section
 #' 'Details' for more information.
 #'
+#' @param .data A Polars LazyFrame
 #' @param n_rows Number of rows to fetch.
 #' @inheritParams collect.LazyFrame
 #'

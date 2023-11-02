@@ -8,7 +8,6 @@
 #' indicates the destination of columns selected by `...`. Supplying neither
 #' will move columns to the left-hand side; specifying both is an error.
 #'
-#' @rdname relocate
 #' @export
 #' @examples
 #' dat <- as_polars(mtcars)

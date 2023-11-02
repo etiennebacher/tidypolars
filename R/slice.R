@@ -5,7 +5,6 @@
 #' Cannot be used with `prop`.
 #' @param ... Not used.
 #'
-#' @rdname slice
 #' @export
 #' @examples
 #' pl_test <- polars::pl$DataFrame(iris)
@@ -33,7 +32,7 @@ slice_tail.DataFrame <- function(.data, ..., n) {
 #' @export
 slice_tail.LazyFrame <- slice_tail.DataFrame
 
-#' @rdname slice
+#' @rdname slice_tail.DataFrame
 #' @export
 
 slice_head.DataFrame <- function(.data, ..., n) {
@@ -60,7 +59,7 @@ slice_head.LazyFrame <- slice_head.DataFrame
 #' @param replace Perform the sampling with replacement (`TRUE`) or without
 #' (`FALSE`).
 #'
-#' @rdname slice
+#' @rdname slice_tail.DataFrame
 #' @export
 
 slice_sample.DataFrame <- function(.data, ..., n = NULL, prop = NULL, replace = FALSE) {

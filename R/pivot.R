@@ -1,14 +1,14 @@
 #' Pivot Data/LazyFrame from wide to long
 #'
-#' @param .data A Polars Data/LazyFrame
+#' @param data A Polars Data/LazyFrame
 #' @param cols Columns to pivot into longer format. Can be anything accepted by
 #'  `dplyr::select()`.
 #' @param names_to The (quoted) name of the column that will contain the column
 #'  names specified by `cols`.
 #' @param values_to A string specifying the name of the column to create from the
 #'  data stored in cell values.
+#' @inheritParams slice_tail.DataFrame
 #'
-#' @rdname pivot_longer
 #' @export
 #' @examples
 #' pl_relig_income <- polars::pl$DataFrame(relig_income)
@@ -17,14 +17,15 @@
 #' pl_relig_income |>
 #'   pivot_longer(!religion, names_to = "income", values_to = "count")
 
-pivot_longer.DataFrame <- function(.data, cols, names_to = "name", values_to = "value") {
+pivot_longer.DataFrame <- function(data, cols, ..., names_to = "name",
+                                   values_to = "value") {
 
-  check_polars_data(.data)
+  check_polars_data(data)
 
-  data_names <- pl_colnames(.data)
-  value_vars <- tidyselect_named_arg(.data, rlang::enquo(cols))
+  data_names <- pl_colnames(data)
+  value_vars <- tidyselect_named_arg(data, rlang::enquo(cols))
   id_vars <- data_names[!data_names %in% value_vars]
-  .data$melt(
+  data$melt(
     id_vars = id_vars, value_vars = value_vars,
     variable_name = names_to, value_name = values_to
   )$sort(id_vars)
@@ -36,7 +37,7 @@ pivot_longer.LazyFrame <- pivot_longer.DataFrame
 
 #' Pivot Data/LazyFrame from long to wide
 #'
-#' @param .data A Polars Data/LazyFrame
+#' @param data A Polars Data/LazyFrame
 #' @param id_cols Defaults to all columns in data except for the columns specified
 #'   through `names_from` and `values_from`.
 #' @param names_from The (quoted or unquoted) column name whose values will be
@@ -47,8 +48,8 @@ pivot_longer.LazyFrame <- pivot_longer.DataFrame
 #'   new columns. Note that the type of this value will be applied to new columns.
 #'   For example, if you provide a character value to fill numeric columns, then
 #'   all these columns will be converted to character.
+#' @inheritParams slice_tail.DataFrame
 #'
-#' @rdname pivot_wider
 #' @export
 #' @examples
 #' pl_fish_encounters <- polars::pl$DataFrame(fish_encounters)
@@ -63,32 +64,32 @@ pivot_longer.LazyFrame <- pivot_longer.DataFrame
 #' pl_fish_encounters |>
 #'   pivot_wider(names_from = station, values_from = seen, values_fill = "a")
 
-pivot_wider.DataFrame <- function(.data, id_cols, names_from, values_from,
+pivot_wider.DataFrame <- function(data, ..., id_cols, names_from, values_from,
                            values_fill = NULL) {
 
-  check_polars_data(.data)
+  check_polars_data(data)
 
-  data_names <- pl_colnames(.data)
-  value_vars <- tidyselect_named_arg(.data, rlang::enquo(values_from))
-  names_vars <- tidyselect_named_arg(.data, rlang::enquo(names_from))
+  data_names <- pl_colnames(data)
+  value_vars <- tidyselect_named_arg(data, rlang::enquo(values_from))
+  names_vars <- tidyselect_named_arg(data, rlang::enquo(names_from))
   id_vars <- data_names[!data_names %in% c(value_vars, names_vars)]
 
-  to_fill <- pull(.data, names_vars) |>
+  to_fill <- pull(data, names_vars) |>
     unique() |>
     as.character()
 
-  .data <- .data$pivot(
+  data <- data$pivot(
     values = value_vars,
     columns = names_vars,
     index = id_vars
   )
 
   if (!is.null(values_fill)) {
-    .data$with_columns(
+    data$with_columns(
       pl$col(to_fill)$fill_null(values_fill)
     )
   } else {
-    .data
+    data
   }
 }
 

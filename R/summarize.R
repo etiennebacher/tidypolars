@@ -8,7 +8,6 @@
 #' @param .data A Polars Data/LazyFrame
 #' @inheritParams mutate.DataFrame
 #'
-#' @rdname summarize
 #' @export
 #' @examples
 #' mtcars |>
@@ -49,7 +48,6 @@ summarize.DataFrame <- function(.data, ...) {
   .data
 }
 
-#' @rdname summarize
 #' @export
 summarise.DataFrame <- summarize.DataFrame
 

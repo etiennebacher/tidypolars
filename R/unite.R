@@ -8,7 +8,6 @@
 #' @param na.rm If `TRUE`, missing values will be replaced with an empty string
 #' prior to uniting each value.
 #'
-#' @rdname unite
 #' @export
 #' @examples
 #' test <- polars::pl$DataFrame(

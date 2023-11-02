@@ -6,7 +6,7 @@
 #'   used to replace `NA` in it. **The column type will be automatically
 #'   converted to the type of the replacement value.**
 #' @inheritParams slice_tail.DataFrame
-#' @rdname replace_na
+#'
 #' @export
 #' @examples
 #' pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))

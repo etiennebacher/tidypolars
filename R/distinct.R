@@ -14,7 +14,6 @@
 #'  streaming.
 #'
 #' @export
-#' @rdname distinct
 #' @examples
 #' pl_test <- polars::pl$DataFrame(
 #'   iso_o = c(rep(c("AA", "AB"), each = 2), "AC", "DC"),
@@ -38,8 +37,7 @@ distinct.DataFrame <- function(.data, ..., keep = "first", maintain_order = TRUE
 #' @export
 distinct.LazyFrame <- distinct.DataFrame
 
-
-#' @rdname distinct
+#' @rdname distinct.DataFrame
 #' @export
 
 duplicated_rows <- function(.data, ...) {

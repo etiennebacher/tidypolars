@@ -4,7 +4,7 @@
 #' execution plan, optimizes it in the background and performs it. The result
 #' is loaded in the R session.
 #'
-#' @param .data A Polars LazyFrame
+#' @param x A Polars LazyFrame
 #' @param type_coercion Coerce types such that operations succeed and run on
 #' minimal required memory (default is `TRUE`).
 #' @param predicate_pushdown Applies filters as early as possible at scan level
@@ -29,8 +29,8 @@
 #' will start in background. Get a handle which later can be converted into the
 #' resulting DataFrame. Useful in interactive mode to not lock R session (default
 #' is `FALSE`).
+#' @inheritParams slice_tail.DataFrame
 #'
-#' @rdname collect
 #' @export
 #' @seealso [fetch()] for applying a lazy query on a subset of the data.
 #' @examples
@@ -44,7 +44,7 @@
 #'   collect()
 
 collect.LazyFrame <- function(
-    .data,
+    x,
     type_coercion = TRUE,
     predicate_pushdown = TRUE,
     projection_pushdown = TRUE,
@@ -57,7 +57,7 @@ collect.LazyFrame <- function(
     collect_in_background = FALSE,
     ...
   ) {
-  .data$collect(
+  x$collect(
     type_coercion = type_coercion,
     predicate_pushdown = predicate_pushdown,
     projection_pushdown = projection_pushdown,

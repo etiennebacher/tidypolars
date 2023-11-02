@@ -2,15 +2,12 @@
 % Please edit documentation in R/count.R
 \name{count.DataFrame}
 \alias{count.DataFrame}
-\alias{add_count.DataFrame}
 \title{Count the observations in each group}
 \usage{
-\method{count}{DataFrame}(.data, ..., sort = FALSE, name = "n")
-
-\method{add_count}{DataFrame}(.data, ..., sort = FALSE, name = "n")
+\method{count}{DataFrame}(x, ..., sort = FALSE, name = "n")
 }
 \arguments{
-\item{.data}{A Polars Data/LazyFrame}
+\item{x}{A Polars Data/LazyFrame}
 
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}

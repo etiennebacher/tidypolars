@@ -11,7 +11,6 @@
 #' will be combined with the & operator. Only rows for which all conditions
 #' evaluate to `TRUE` are kept.
 #'
-#' @rdname filter
 #' @export
 #' @examples
 #' pl_iris <- polars::pl$DataFrame(iris)
@@ -55,5 +54,4 @@ filter.DataFrame <- function(.data, ...) {
 }
 
 #' @export
-#' @rdname filter
 filter.LazyFrame <- filter.DataFrame

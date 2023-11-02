@@ -13,7 +13,6 @@
 #'    (the default), "up", "downup" (i.e. first down and then up) or "updown"
 #'    (first up and then down).
 #'
-#' @rdname fill
 #' @export
 #' @examples
 #' pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))

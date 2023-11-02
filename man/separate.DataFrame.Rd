@@ -4,10 +4,10 @@
 \alias{separate.DataFrame}
 \title{Separate a character column into multiple columns based on a substring}
 \usage{
-\method{separate}{DataFrame}(.data, col, into, sep = "[^[:alnum:]]+", remove = TRUE)
+\method{separate}{DataFrame}(data, col, into, sep = "[^[:alnum:]]+", remove = TRUE, ...)
 }
 \arguments{
-\item{.data}{A Polars Data/LazyFrame}
+\item{data}{A Polars Data/LazyFrame}
 
 \item{col}{Column to split}
 
@@ -17,6 +17,8 @@ Use \code{NA} to omit the variable in the output.}
 \item{sep}{String that is used to split the column.}
 
 \item{remove}{If \code{TRUE}, remove input column from output data frame.}
+
+\item{...}{Not used.}
 }
 \description{
 Currently, splitting a column on a regular expression or position is not

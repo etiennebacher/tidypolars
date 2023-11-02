@@ -25,7 +25,6 @@
 #' Note that this is slower than using functions that can be translated to
 #' Polars syntax.
 #'
-#' @rdname mutate
 #' @export
 #' @examples
 #' pl_iris <- polars::pl$DataFrame(iris)

@@ -7,7 +7,6 @@
 #' @inheritParams select.DataFrame
 #' @inheritParams slice_tail.DataFrame
 #'
-#' @rdname drop_na
 #' @export
 #' @examples
 #' tmp <- mtcars

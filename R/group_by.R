@@ -5,12 +5,12 @@
 #' where operations are performed "by group". `ungroup()` removes grouping.
 #'
 #' @param .data A Polars Data/LazyFrame
-#' @param ... Variables to group by (used in `group_by()` only).
+#' @param ... Variables to group by (used in `group_by()` only). Not used in
+#' `ungroup()`.
 #' @param maintain_order Maintain row order. For performance reasons, this is
 #' `FALSE` by default). Setting it to `TRUE` can slow down the process with
 #' large datasets and prevents the use of streaming.
 #'
-#' @rdname group_by
 #' @export
 #' @examples
 #' by_cyl <- mtcars |>
@@ -37,10 +37,10 @@ group_by.DataFrame <- function(.data, ..., maintain_order = FALSE) {
 }
 
 #' @param x A Polars Data/LazyFrame
-#' @rdname group_by
+#' @rdname group_by.DataFrame
 #' @export
 
-ungroup.DataFrame <- function(x) {
+ungroup.DataFrame <- function(x, ...) {
   attributes(x)$pl_grps <- NULL
   attributes(x)$maintain_grp_order <- NULL
   x

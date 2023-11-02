@@ -5,9 +5,9 @@
 \alias{anti_join.DataFrame}
 \title{Filtering joins}
 \usage{
-\method{semi_join}{DataFrame}(x, y, by = NULL)
+\method{semi_join}{DataFrame}(x, y, by = NULL, ...)
 
-\method{anti_join}{DataFrame}(x, y, by = NULL)
+\method{anti_join}{DataFrame}(x, y, by = NULL, ...)
 }
 \arguments{
 \item{x, y}{Two Polars Data/LazyFrames}
@@ -16,6 +16,8 @@
 perform a natural join, using all variables in common across \code{x} and \code{y}. A
 message lists the variables so that you can check they're correct; suppress
 the message by supplying \code{by} explicitly.}
+
+\item{...}{Not used.}
 }
 \description{
 Filtering joins filter rows from \code{x} based on the presence or absence of

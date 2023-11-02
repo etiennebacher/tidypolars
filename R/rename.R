@@ -10,7 +10,6 @@
 #' @param .cols Columns on which to apply `fn`. Can be anything accepted by
 #'   `dplyr::select()`.
 #'
-#' @rdname rename
 #' @export
 #' @examples
 #' pl_test <- polars::pl$DataFrame(mtcars)
@@ -37,7 +36,7 @@ rename.DataFrame <- function(.data, ...) {
 #' @export
 rename.LazyFrame <- rename.DataFrame
 
-#' @rdname rename
+#' @rdname rename.DataFrame
 #' @export
 
 rename_with.DataFrame <- function(.data, .fn, .cols = tidyselect::everything(), ...) {

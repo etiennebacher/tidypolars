@@ -5,7 +5,6 @@
 #'  by name. All Data/LazyFrames must have the same number of columns with
 #'  identical names.
 #'
-#' @rdname bind_rows
 #' @export
 #' @examples
 #' p1 <- polars::pl$DataFrame(
@@ -35,7 +34,6 @@ bind_rows_polars <- function(...) {
 #'  by name. All Data/LazyFrames must have the same number of rows and there
 #'  mustn't be duplicated column names.
 #'
-#' @rdname bind_cols
 #' @export
 #' @examples
 #' p1 <- polars::pl$DataFrame(

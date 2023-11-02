@@ -6,7 +6,6 @@
 #' @param var A quoted or unquoted variable name
 #' @inheritParams slice_tail.DataFrame
 #'
-#' @rdname pull
 #' @export
 #' @examples
 #' pl_test <- polars::pl$DataFrame(iris)

@@ -4,10 +4,12 @@
 \alias{pivot_wider.DataFrame}
 \title{Pivot Data/LazyFrame from long to wide}
 \usage{
-\method{pivot_wider}{DataFrame}(.data, id_cols, names_from, values_from, values_fill = NULL)
+\method{pivot_wider}{DataFrame}(data, ..., id_cols, names_from, values_from, values_fill = NULL)
 }
 \arguments{
-\item{.data}{A Polars Data/LazyFrame}
+\item{data}{A Polars Data/LazyFrame}
+
+\item{...}{Not used.}
 
 \item{id_cols}{Defaults to all columns in data except for the columns specified
 through \code{names_from} and \code{values_from}.}

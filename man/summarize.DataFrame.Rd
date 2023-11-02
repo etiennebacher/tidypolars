@@ -2,12 +2,9 @@
 % Please edit documentation in R/summarize.R
 \name{summarize.DataFrame}
 \alias{summarize.DataFrame}
-\alias{summarise.DataFrame}
 \title{Summarize each group down to one row}
 \usage{
 \method{summarize}{DataFrame}(.data, ...)
-
-\method{summarise}{DataFrame}(.data, ...)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}

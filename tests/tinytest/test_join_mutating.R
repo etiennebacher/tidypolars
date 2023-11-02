@@ -47,6 +47,16 @@ expect_equal(
   )
 )
 
+expect_warning(
+  left_join(test, test2, keep = TRUE),
+  "Unused arguments: keep"
+)
+
+expect_warning(
+  left_join(test, test2, copy = TRUE),
+  "Unused arguments: copy"
+)
+
 # suffix
 
 test2 <- polars::pl$DataFrame(
