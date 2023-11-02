@@ -1,5 +1,13 @@
 # tidypolars (development version)
 
+**Breaking changes**
+
+* All functions starting with `pl_` have been removed to the benefit of the S3
+  methods. For example, `pl_distinct()` doesn't exist anymore so the only way to
+  use it is to load `dplyr` and to use `distinct()` on a Polars DataFrame or
+  LazyFrame. This is to avoid confusion about compatibility with `dplyr` and 
+  `tidyr`. See #49 for a more detailed explanation.
+
 **New features**
 
 * New function `duplicated_rows()` that is the opposite of `distinct()` (#50).
