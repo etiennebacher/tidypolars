@@ -144,7 +144,7 @@ expect_equal_lazy(
         ~ mean(.x)
       )
     ) |>
-    pl_pull(carb),
+    pull(carb),
   c(3, 3, 3, 1.333, 1.333, 1.333),
   tolerance = 1e-3
 )
@@ -272,7 +272,7 @@ test2 <- mutate(
 )
 
 expect_equal_lazy(
-  pl_pull(test2, am) |> unique(),
+  pull(test2, am) |> unique(),
   1
 )
 

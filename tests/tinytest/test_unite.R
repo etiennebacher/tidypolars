@@ -11,7 +11,7 @@ test <- polars::pl$DataFrame(
 out1 <- pl_unite(test, col = "full_date", year, month, day, sep = "-")
 
 expect_equal(
-   pl_pull(out1, full_date),
+   pull(out1, full_date),
    c("2009-10-11", "2010-11-22", "2011-12-28")
 )
 
@@ -30,6 +30,6 @@ test2 <- polars::pl$DataFrame(
 out3 <- pl_unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
 
 expect_equal(
-  pl_pull(out3, full_name),
+  pull(out3, full_name),
   c("John T. Smith", "Jack  Thompson", "Thomas F. Jones")
 )

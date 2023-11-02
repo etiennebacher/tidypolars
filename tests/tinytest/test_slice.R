@@ -21,14 +21,14 @@ pl_iris_g <- pl_iris |>
 hd <- pl_slice_head(pl_iris_g, n = 2)
 
 expect_equal(
-  pl_pull(hd, Species),
+  pull(hd, Species),
   factor(rep(c("setosa", "versicolor", "virginica"), each = 2))
 )
 
 expect_dim(hd, c(6, 5))
 
 expect_equal(
-  pl_pull(hd, Sepal.Length)[3:4],
+  pull(hd, Sepal.Length)[3:4],
   c(7, 6.4)
 )
 
@@ -36,14 +36,14 @@ expect_equal(
 tl <- pl_slice_tail(pl_iris_g, n = 2)
 
 expect_equal(
-  pl_pull(tl, Species),
+  pull(tl, Species),
   factor(rep(c("setosa", "versicolor", "virginica"), each = 2))
 )
 
 expect_dim(tl, c(6, 5))
 
 expect_equal(
-  pl_pull(tl, Sepal.Length)[3:4],
+  pull(tl, Sepal.Length)[3:4],
   c(5.1, 5.7)
 )
 

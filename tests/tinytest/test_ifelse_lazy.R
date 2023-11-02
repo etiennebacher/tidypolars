@@ -14,7 +14,7 @@ test <- pl$LazyFrame(
 expect_equal_lazy(
   test |>
     mutate(y = ifelse(x1 == 'a', "foo", "bar")) |>
-    pl_pull(y),
+    pull(y),
   c("foo", "foo", "bar", "foo", "bar")
 )
 
@@ -32,7 +32,7 @@ expect_error_lazy(
 expect_equal_lazy(
   test |>
     mutate(y = ifelse(x1 == 'a', x3, x1)) |>
-    pl_pull(y),
+    pull(y),
   c("hello", "hello", "b", "hello", "c")
 )
 
@@ -41,7 +41,7 @@ expect_equal_lazy(
 expect_equal_lazy(
   test |>
     mutate(y = if_else(x1 == 'a', "foo", "bar")) |>
-    pl_pull(y),
+    pull(y),
   c("foo", "foo", "bar", "foo", "bar")
 )
 
@@ -54,7 +54,7 @@ expect_error_lazy(
 expect_equal_lazy(
   test |>
     mutate(y = if_else(x1 == 'a', x3, x1)) |>
-    pl_pull(y),
+    pull(y),
   c("hello", "hello", "b", "hello", "c")
 )
 

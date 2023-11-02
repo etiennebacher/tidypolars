@@ -153,7 +153,7 @@ by_cyl <- polars::pl$LazyFrame(mtcars) |>
 expect_equal_lazy(
   by_cyl |>
     filter(disp == max(disp)) |>
-    pl_pull(mpg),
+    pull(mpg),
   c(21.4, 24.4, 10.4)
 )
 

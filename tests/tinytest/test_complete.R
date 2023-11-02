@@ -14,21 +14,21 @@ expect_dim(
 
 expect_equal(
   pl_complete(test, country, year) |>
-    pl_pull(country),
+    pull(country),
   rep(c("France", "Spain", "UK"), each = 4)
 )
 
 expect_equal(
   pl_complete(test, country, year) |>
     pl_slice_head(4) |>
-    pl_pull(value),
+    pull(value),
   c(NA, 1, 2, NA)
 )
 
 expect_equal(
   pl_complete(test, country, year, fill = list(value = 99)) |>
     pl_slice_head(4) |>
-    pl_pull(value),
+    pull(value),
   c(99, 1, 2, 99)
 )
 

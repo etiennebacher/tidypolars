@@ -18,11 +18,11 @@ expect_colnames(out, c("fish", "Release", "I80_1", "Lisbon", "Rstr", "Base_TD",
 first <- pl_slice_head(out)
 
 expect_equal(
-  pl_pull(first, I80_1),
+  pull(first, I80_1),
   rep(1, 5)
 )
 expect_equal(
-  pl_pull(first, BCE2),
+  pull(first, BCE2),
   c(1, 1, 1, NA, NA)
 )
 
@@ -33,10 +33,10 @@ filled <- pl_fish_encounters |>
   pl_slice_head()
 
 expect_equal(
-  pl_pull(filled, I80_1),
+  pull(filled, I80_1),
   rep(1, 5)
 )
 expect_equal(
-  pl_pull(filled, BCE2),
+  pull(filled, BCE2),
   c(1, 1, 1, 0, 0)
 )

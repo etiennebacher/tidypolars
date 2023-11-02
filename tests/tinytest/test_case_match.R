@@ -17,7 +17,7 @@ expect_equal(
         .default = "hi there"
       )
     ) |>
-    pl_pull(y),
+    pull(y),
   c("foo", "foo", "bar", "foo", "hi there")
 )
 
@@ -30,7 +30,7 @@ expect_equal(
         'b' ~ "bar"
       )
     ) |>
-    pl_pull(y),
+    pull(y),
   c("foo", "foo", "bar", "foo", "foo")
 )
 
@@ -43,6 +43,6 @@ expect_equal(
         .default = "bar"
       )
     ) |>
-    pl_pull(y),
+    pull(y),
   c("foo", "foo", "bar", "foo", "foo")
 )

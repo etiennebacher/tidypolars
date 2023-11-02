@@ -8,12 +8,12 @@ test <- polars::pl$DataFrame(
 )
 
 expect_equal(
-  test |> mutate(d = coalesce(a, b, c)) |> pl_pull(d),
+  test |> mutate(d = coalesce(a, b, c)) |> pull(d),
   c(1, 2, 3, NA)
 )
 
 expect_equal(
-  test |> mutate(d = coalesce(a, b, c, default = 10)) |> pl_pull(d),
+  test |> mutate(d = coalesce(a, b, c, default = 10)) |> pull(d),
   c(1, 2, 3, 10)
 )
 
@@ -26,6 +26,6 @@ test <- polars::pl$DataFrame(
 )
 
 expect_equal(
-  test |> mutate(d = coalesce(a, b, c)) |> pl_pull(d),
+  test |> mutate(d = coalesce(a, b, c)) |> pull(d),
   c("1.0", "2", "3.0", NA)
 )

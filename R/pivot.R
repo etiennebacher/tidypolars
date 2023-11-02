@@ -68,7 +68,7 @@ pl_pivot_wider <- function(.data, id_cols, names_from, values_from,
   names_vars <- tidyselect_named_arg(.data, rlang::enquo(names_from))
   id_vars <- data_names[!data_names %in% c(value_vars, names_vars)]
 
-  to_fill <- pl_pull(.data, names_vars) |>
+  to_fill <- pull(.data, names_vars) |>
     unique() |>
     as.character()
 

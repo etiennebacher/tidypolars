@@ -27,7 +27,7 @@ for (i in c("year", "month", "day", "quarter", "week", "mday", "yday"
   pol <- paste0("mutate(test, foo = ", i, "(YMD))") |>
     str2lang() |>
     eval() |>
-    pl_pull(foo)
+    pull(foo)
 
   res <- paste0("mutate(test_df, foo = ", i, "(YMD))") |>
     str2lang() |>
@@ -41,7 +41,7 @@ for (i in c("hour", "minute", "second")) {
   pol <- paste0("mutate(test, foo = ", i, "(YMD_HMS))") |>
     str2lang() |>
     eval() |>
-    pl_pull(foo)
+    pull(foo)
 
   res <- paste0("mutate(test_df, foo = ", i, "(YMD_HMS))") |>
     str2lang() |>

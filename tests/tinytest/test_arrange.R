@@ -9,13 +9,13 @@ test <- pl$DataFrame(
 
 expect_equal(
   arrange(test, x1) |>
-    pl_pull(x1),
+    pull(x1),
   c("a", "a", "a", "b", "c")
 )
 
 expect_equal(
   arrange(test, -x1) |>
-    pl_pull(x1),
+    pull(x1),
   c("c", "b", "a", "a", "a")
 )
 
@@ -57,6 +57,6 @@ expect_equal(
 
 expect_equal(
   arrange(test_grp, x2, .by_group = TRUE) |>
-    pl_pull(x2),
+    pull(x2),
   c(1, 2, 3, 5, 1)
 )

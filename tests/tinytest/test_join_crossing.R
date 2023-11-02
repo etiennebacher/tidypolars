@@ -18,6 +18,6 @@ expect_dim(
 
 expect_equal(
   pl_cross_join(test, test2) |>
-    pl_pull(origin),
+    pull(origin),
   rep(c("ALG", "FRA", "GER"), each = 3)
 )

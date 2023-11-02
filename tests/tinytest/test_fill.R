@@ -9,7 +9,7 @@ pl_test <- polars::pl$DataFrame(
 
 expect_equal(
   pl_fill(pl_test, everything(), direction = "down") |>
-    pl_pull(x),
+    pull(x),
   c(NA, 1, 1, 1, 2, 2)
 )
 
@@ -20,13 +20,13 @@ expect_equal(
 
 expect_equal(
   pl_fill(pl_test, everything(), direction = "updown") |>
-    pl_pull(x),
+    pull(x),
   c(1, 1, 2, 2, 2, 2)
 )
 
 expect_equal(
   pl_fill(pl_test, everything(), direction = "downup") |>
-    pl_pull(x),
+    pull(x),
   c(1, 1, 1, 1, 2, 2)
 )
 
@@ -41,18 +41,18 @@ pl_grouped <- polars::pl$DataFrame(
 
 expect_equal(
   pl_fill(pl_grouped, everything(), direction = "down") |>
-    pl_pull(x),
+    pull(x),
   c(NA, 1, 1, NA, 2, 2)
 )
 
 expect_equal(
   pl_fill(pl_grouped, everything(), direction = "downup") |>
-    pl_pull(y),
+    pull(y),
   c(3, 3, 4, 3, 3, 1)
 )
 
 expect_equal(
   pl_fill(pl_grouped, everything(), direction = "updown") |>
-    pl_pull(y),
+    pull(y),
   c(3, 4, 4, 3, 3, 1)
 )

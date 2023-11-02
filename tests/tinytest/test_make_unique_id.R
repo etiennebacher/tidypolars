@@ -6,7 +6,7 @@ test <- pl$DataFrame(mtcars)
 expect_equal(
   make_unique_id(test, am, gear) |>
     pl_slice_head(3) |>
-    pl_pull(hash) |>
+    pull(hash) |>
     unique() |>
     length(),
   1
@@ -24,7 +24,7 @@ expect_colnames(
 
 expect_equal(
   make_unique_id(test) |>
-    pl_pull(hash) |>
+    pull(hash) |>
     unique() |>
     length(),
   32

@@ -149,7 +149,7 @@ by_cyl <- polars::pl$DataFrame(mtcars) |>
 expect_equal(
   by_cyl |>
     filter(disp == max(disp)) |>
-    pl_pull(mpg),
+    pull(mpg),
   c(21.4, 24.4, 10.4)
 )
 

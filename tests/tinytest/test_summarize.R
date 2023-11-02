@@ -7,7 +7,7 @@ pl_iris_g <- pl_iris |>
 
 expect_equal(
   pl_summarize(pl_iris_g, x = mean(Sepal.Length)) |>
-    pl_pull(x),
+    pull(x),
   c(5.006, 5.936, 6.588)
 )
 
@@ -15,14 +15,14 @@ expect_equal(
   pl_summarize(pl_iris_g,
                x = sum(Sepal.Length),
                y = mean(Sepal.Length)) |>
-    pl_pull(y),
+    pull(y),
   c(5.006, 5.936, 6.588)
 )
 
 expect_equal(
   pl_summarize(pl_iris_g,
                x = 1) |>
-    pl_pull(x),
+    pull(x),
   rep(1, 3)
 )
 

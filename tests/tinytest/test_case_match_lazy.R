@@ -21,7 +21,7 @@ expect_equal_lazy(
         .default = "hi there"
       )
     ) |>
-    pl_pull(y),
+    pull(y),
   c("foo", "foo", "bar", "foo", "hi there")
 )
 
@@ -34,7 +34,7 @@ expect_equal_lazy(
         'b' ~ "bar"
       )
     ) |>
-    pl_pull(y),
+    pull(y),
   c("foo", "foo", "bar", "foo", "foo")
 )
 
@@ -47,7 +47,7 @@ expect_equal_lazy(
         .default = "bar"
       )
     ) |>
-    pl_pull(y),
+    pull(y),
   c("foo", "foo", "bar", "foo", "foo")
 )
 

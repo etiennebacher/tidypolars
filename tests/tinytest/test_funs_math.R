@@ -44,7 +44,7 @@ for (i in c(
   pol <- paste0("mutate(test, foo =", i, "(", variable, "))") |>
     str2lang() |>
     eval() |>
-    pl_pull(foo)
+    pull(foo)
 
   res <- paste0("mutate(test_df, foo =", i, "(", variable, "))") |>
     str2lang() |>
@@ -55,7 +55,7 @@ for (i in c(
 
 }
 
-foo <- test |> mutate(x = sample(x2)) |> pl_pull(x)
+foo <- test |> mutate(x = sample(x2)) |> pull(x)
 
 expect_true(all(foo %in% c(1, 2, 3, 5)))
 
