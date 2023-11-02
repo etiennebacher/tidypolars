@@ -35,7 +35,7 @@ reference:
       - arrange
       - pl_bind_cols
       - pl_bind_rows
-      - pl_collect
+      - collect
       - pl_count
       - pl_cross_join
       - distinct

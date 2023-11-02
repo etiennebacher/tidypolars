@@ -62,7 +62,7 @@ x <- bench::mark(
       cyl_type = ifelse(cyl >= 6, "large", "small")
     ) |>
     filter(disp / gear > 40) |>
-    pl_collect(),
+    collect(),
   iterations = 5
 )
 

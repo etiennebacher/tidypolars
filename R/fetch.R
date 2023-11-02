@@ -2,12 +2,12 @@
 #'
 #' Fetch is a way to collect only the first `n` rows of a LazyFrame. It is
 #' mainly used to test that a query runs as expected on a subset of the data
-#' before using `pl_collect()` on the full query. Note that fetching `n` rows
+#' before using `collect()` on the full query. Note that fetching `n` rows
 #' doesn't mean that the output will actually contain `n` rows, see the section
 #' 'Details' for more information.
 #'
 #' @param n_rows Number of rows to fetch.
-#' @inheritParams pl_collect
+#' @inheritParams collect
 #'
 #' @details
 #' The parameter `n_rows` indicates how many rows from the LazyFrame should be
@@ -18,7 +18,7 @@
 #' that has more rows than `n_rows`.
 #'
 #' @export
-#' @seealso [pl_collect()] for applying a lazy query on the full data.
+#' @seealso [collect()] for applying a lazy query on the full data.
 #' @examples
 #' dat_lazy <- polars::pl$DataFrame(iris)$lazy()
 #'

@@ -30,19 +30,20 @@
 #' resulting DataFrame. Useful in interactive mode to not lock R session (default
 #' is `FALSE`).
 #'
+#' @rdname collect
 #' @export
 #' @seealso [fetch()] for applying a lazy query on a subset of the data.
 #' @examples
 #' dat_lazy <- polars::pl$DataFrame(iris)$lazy()
-#' pl_collect(dat_lazy)
+#' collect(dat_lazy)
 #'
-#' # you can build a query and add pl_collect() as the last piece
+#' # you can build a query and add collect() as the last piece
 #' dat_lazy |>
 #'   pl_select(starts_with("Sepal")) |>
 #'   filter(between(Sepal.Length, 5, 6)) |>
-#'   pl_collect()
+#'   collect()
 
-pl_collect <- function(
+collect.LazyFrame <- function(
     .data,
     type_coercion = TRUE,
     predicate_pushdown = TRUE,
