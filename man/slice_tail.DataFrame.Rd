@@ -2,13 +2,19 @@
 % Please edit documentation in R/slice.R
 \name{slice_tail.DataFrame}
 \alias{slice_tail.DataFrame}
+\alias{slice_tail.LazyFrame}
 \alias{slice_head.DataFrame}
+\alias{slice_head.LazyFrame}
 \alias{slice_sample.DataFrame}
 \title{Subset rows of a Data/LazyFrame}
 \usage{
 \method{slice_tail}{DataFrame}(.data, ..., n)
 
+\method{slice_tail}{LazyFrame}(.data, ..., n)
+
 \method{slice_head}{DataFrame}(.data, ..., n)
+
+\method{slice_head}{LazyFrame}(.data, ..., n)
 
 \method{slice_sample}{DataFrame}(.data, ..., n = NULL, prop = NULL, replace = FALSE)
 }

@@ -2,9 +2,12 @@
 % Please edit documentation in R/pull.R
 \name{pull.DataFrame}
 \alias{pull.DataFrame}
+\alias{pull.LazyFrame}
 \title{Extract a variable of a Data/LazyFrame}
 \usage{
 \method{pull}{DataFrame}(.data, var, ...)
+
+\method{pull}{LazyFrame}(.data, var, ...)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}

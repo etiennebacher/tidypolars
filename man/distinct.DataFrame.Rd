@@ -2,10 +2,13 @@
 % Please edit documentation in R/distinct.R
 \name{distinct.DataFrame}
 \alias{distinct.DataFrame}
+\alias{distinct.LazyFrame}
 \alias{duplicated_rows}
 \title{Remove or keep only duplicated rows in a Data/LazyFrame}
 \usage{
 \method{distinct}{DataFrame}(.data, ..., keep = "first", maintain_order = TRUE)
+
+\method{distinct}{LazyFrame}(.data, ..., keep = "first", maintain_order = TRUE)
 
 duplicated_rows(.data, ...)
 }

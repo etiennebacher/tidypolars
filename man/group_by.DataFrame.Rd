@@ -3,11 +3,17 @@
 \name{group_by.DataFrame}
 \alias{group_by.DataFrame}
 \alias{ungroup.DataFrame}
+\alias{group_by.LazyFrame}
+\alias{ungroup.LazyFrame}
 \title{Group by one or more variables}
 \usage{
 \method{group_by}{DataFrame}(.data, ..., maintain_order = FALSE)
 
 \method{ungroup}{DataFrame}(x, ...)
+
+\method{group_by}{LazyFrame}(.data, ..., maintain_order = FALSE)
+
+\method{ungroup}{LazyFrame}(x, ...)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}

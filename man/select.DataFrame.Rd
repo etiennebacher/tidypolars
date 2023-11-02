@@ -2,9 +2,12 @@
 % Please edit documentation in R/select.R
 \name{select.DataFrame}
 \alias{select.DataFrame}
+\alias{select.LazyFrame}
 \title{Select columns from a Data/LazyFrame}
 \usage{
 \method{select}{DataFrame}(.data, ...)
+
+\method{select}{LazyFrame}(.data, ...)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}

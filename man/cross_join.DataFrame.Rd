@@ -2,9 +2,12 @@
 % Please edit documentation in R/join.R
 \name{cross_join.DataFrame}
 \alias{cross_join.DataFrame}
+\alias{cross_join.LazyFrame}
 \title{Cross join}
 \usage{
 \method{cross_join}{DataFrame}(x, y, suffix = c(".x", ".y"), ...)
+
+\method{cross_join}{LazyFrame}(x, y, suffix = c(".x", ".y"), ...)
 }
 \arguments{
 \item{x, y}{Two Polars Data/LazyFrames}

@@ -33,6 +33,7 @@ rename.DataFrame <- function(.data, ...) {
   .data$rename(...)
 }
 
+#' @rdname rename.DataFrame
 #' @export
 rename.LazyFrame <- rename.DataFrame
 
@@ -48,5 +49,6 @@ rename_with.DataFrame <- function(.data, .fn, .cols = tidyselect::everything(), 
   .data$rename(mapping)
 }
 
+#' @rdname rename.DataFrame
 #' @export
 rename_with.LazyFrame <- rename_with.DataFrame

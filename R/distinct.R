@@ -34,6 +34,7 @@ distinct.DataFrame <- function(.data, ..., keep = "first", maintain_order = TRUE
   .data$unique(subset = vars, keep = keep, maintain_order = maintain_order)
 }
 
+#' @rdname distinct.DataFrame
 #' @export
 distinct.LazyFrame <- distinct.DataFrame
 

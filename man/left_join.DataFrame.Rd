@@ -5,6 +5,10 @@
 \alias{right_join.DataFrame}
 \alias{full_join.DataFrame}
 \alias{inner_join.DataFrame}
+\alias{left_join.LazyFrame}
+\alias{right_join.LazyFrame}
+\alias{full_join.LazyFrame}
+\alias{inner_join.LazyFrame}
 \title{Mutating joins}
 \usage{
 \method{left_join}{DataFrame}(
@@ -38,6 +42,46 @@
 )
 
 \method{inner_join}{DataFrame}(
+  x,
+  y,
+  by = NULL,
+  copy = NULL,
+  suffix = c(".x", ".y"),
+  ...,
+  keep = NULL
+)
+
+\method{left_join}{LazyFrame}(
+  x,
+  y,
+  by = NULL,
+  copy = NULL,
+  suffix = c(".x", ".y"),
+  ...,
+  keep = NULL
+)
+
+\method{right_join}{LazyFrame}(
+  x,
+  y,
+  by = NULL,
+  copy = NULL,
+  suffix = c(".x", ".y"),
+  ...,
+  keep = NULL
+)
+
+\method{full_join}{LazyFrame}(
+  x,
+  y,
+  by = NULL,
+  copy = NULL,
+  suffix = c(".x", ".y"),
+  ...,
+  keep = NULL
+)
+
+\method{inner_join}{LazyFrame}(
   x,
   y,
   by = NULL,

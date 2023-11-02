@@ -48,11 +48,14 @@ summarize.DataFrame <- function(.data, ...) {
   .data
 }
 
+#' @rdname summarize.DataFrame
 #' @export
 summarise.DataFrame <- summarize.DataFrame
 
+#' @rdname summarize.DataFrame
 #' @export
 summarize.LazyFrame <- summarize.DataFrame
 
+#' @rdname summarize.DataFrame
 #' @export
 summarise.LazyFrame <- summarize.DataFrame

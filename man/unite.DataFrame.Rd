@@ -2,9 +2,12 @@
 % Please edit documentation in R/unite.R
 \name{unite.DataFrame}
 \alias{unite.DataFrame}
+\alias{unite.LazyFrame}
 \title{Unite multiple columns into one by pasting strings together}
 \usage{
 \method{unite}{DataFrame}(data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE)
+
+\method{unite}{LazyFrame}(data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE)
 }
 \arguments{
 \item{data}{A Polars Data/LazyFrame}

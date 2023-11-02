@@ -2,9 +2,12 @@
 % Please edit documentation in R/filter.R
 \name{filter.DataFrame}
 \alias{filter.DataFrame}
+\alias{filter.LazyFrame}
 \title{Keep rows that match a condition}
 \usage{
 \method{filter}{DataFrame}(.data, ...)
+
+\method{filter}{LazyFrame}(.data, ...)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}

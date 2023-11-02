@@ -2,9 +2,12 @@
 % Please edit documentation in R/drop_na.R
 \name{drop_na.DataFrame}
 \alias{drop_na.DataFrame}
+\alias{drop_na.LazyFrame}
 \title{Drop missing values}
 \usage{
 \method{drop_na}{DataFrame}(data, ...)
+
+\method{drop_na}{LazyFrame}(data, ...)
 }
 \arguments{
 \item{data}{A Polars Data/LazyFrame}

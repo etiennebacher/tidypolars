@@ -29,6 +29,7 @@ slice_tail.DataFrame <- function(.data, ..., n) {
   }
 }
 
+#' @rdname slice_tail.DataFrame
 #' @export
 slice_tail.LazyFrame <- slice_tail.DataFrame
 
@@ -51,6 +52,7 @@ slice_head.DataFrame <- function(.data, ..., n) {
   }
 }
 
+#' @rdname slice_tail.DataFrame
 #' @export
 slice_head.LazyFrame <- slice_head.DataFrame
 
@@ -64,10 +66,6 @@ slice_head.LazyFrame <- slice_head.DataFrame
 
 slice_sample.DataFrame <- function(.data, ..., n = NULL, prop = NULL, replace = FALSE) {
   check_polars_data(.data)
-
-  if (inherits(.data, "LazyFrame")) {
-    abort("`slice_sample()` only works on Polars DataFrames.")
-  }
 
   grps <- attributes(.data)$pl_grps
   mo <- attributes(.data)$maintain_grp_order

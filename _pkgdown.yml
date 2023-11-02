@@ -30,47 +30,46 @@ reference:
     desc: |
       Functions coming from `dplyr`
     contents:
-      - add_count
-      - anti_join
-      - arrange
-      - bind_cols
-      - bind_rows
-      - collect
-      - count
-      - cross_join
-      - distinct
-      - filter
-      - full_join
-      - group_by
-      - inner_join
-      - left_join
-      - mutate
-      - pull
-      - relocate
-      - rename
-      - rename_with
-      - right_join
-      - select
-      - semi_join
-      - separate
-      - slice_head
-      - slice_tail
-      - slice_sample
-      - summarize
-      - summarise
-      - ungroup
+      - add_count.DataFrame
+      - anti_join.DataFrame
+      - arrange.DataFrame
+      - bind_cols_polars
+      - bind_rows_polars
+      - collect.LazyFrame
+      - count.DataFrame
+      - cross_join.DataFrame
+      - distinct.DataFrame
+      - filter.DataFrame
+      - full_join.DataFrame
+      - group_by.DataFrame
+      - inner_join.DataFrame
+      - left_join.DataFrame
+      - mutate.DataFrame
+      - pull.DataFrame
+      - relocate.DataFrame
+      - rename.DataFrame
+      - rename_with.DataFrame
+      - right_join.DataFrame
+      - select.DataFrame
+      - semi_join.DataFrame
+      - separate.DataFrame
+      - slice_head.DataFrame
+      - slice_tail.DataFrame
+      - slice_sample.DataFrame
+      - summarize.DataFrame
+      - ungroup.DataFrame
   - title: From `tidyr`
     desc: |
       Functions coming from `tidyr`
     contents:
-      - complete
-      - drop_na
-      - fill
-      - pivot_longer
-      - pivot_wider
-      - replace_na
-      - separate
-      - unite
+      - complete.DataFrame
+      - drop_na.DataFrame
+      - fill.DataFrame
+      - pivot_longer.DataFrame
+      - pivot_wider.DataFrame
+      - replace_na.DataFrame
+      - separate.DataFrame
+      - unite.DataFrame
   - title: Datasets
     desc: |
       Datasets reexported from various tidyverse packages

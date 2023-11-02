@@ -2,9 +2,12 @@
 % Please edit documentation in R/pivot.R
 \name{pivot_longer.DataFrame}
 \alias{pivot_longer.DataFrame}
+\alias{pivot_longer.LazyFrame}
 \title{Pivot Data/LazyFrame from wide to long}
 \usage{
 \method{pivot_longer}{DataFrame}(data, cols, ..., names_to = "name", values_to = "value")
+
+\method{pivot_longer}{LazyFrame}(data, cols, ..., names_to = "name", values_to = "value")
 }
 \arguments{
 \item{data}{A Polars Data/LazyFrame}

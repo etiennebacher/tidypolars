@@ -21,5 +21,6 @@ select.DataFrame <- function(.data, ...) {
   .data$select(vars)
 }
 
+#' @rdname select.DataFrame
 #' @export
 select.LazyFrame <- select.DataFrame

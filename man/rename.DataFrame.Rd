@@ -2,12 +2,18 @@
 % Please edit documentation in R/rename.R
 \name{rename.DataFrame}
 \alias{rename.DataFrame}
+\alias{rename.LazyFrame}
 \alias{rename_with.DataFrame}
+\alias{rename_with.LazyFrame}
 \title{Rename columns}
 \usage{
 \method{rename}{DataFrame}(.data, ...)
 
+\method{rename}{LazyFrame}(.data, ...)
+
 \method{rename_with}{DataFrame}(.data, .fn, .cols = tidyselect::everything(), ...)
+
+\method{rename_with}{LazyFrame}(.data, .fn, .cols = tidyselect::everything(), ...)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}

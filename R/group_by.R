@@ -46,8 +46,10 @@ ungroup.DataFrame <- function(x, ...) {
   x
 }
 
+#' @rdname group_by.DataFrame
 #' @export
 group_by.LazyFrame <- group_by.DataFrame
 
+#' @rdname group_by.DataFrame
 #' @export
 ungroup.LazyFrame <- ungroup.DataFrame

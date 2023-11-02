@@ -23,10 +23,11 @@ count.DataFrame <- function(x, ..., sort = FALSE, name = "n") {
   count_(x, vars, sort = sort, name = name, new_col = FALSE)
 }
 
+#' @rdname count.DataFrame
 #' @export
 count.LazyFrame <- count.DataFrame
 
-
+#' @rdname count.DataFrame
 #' @export
 
 add_count.DataFrame <- function(x, ..., sort = FALSE, name = "n") {
@@ -36,6 +37,7 @@ add_count.DataFrame <- function(x, ..., sort = FALSE, name = "n") {
   count_(x, vars, sort = sort, name = name, new_col = TRUE)
 }
 
+#' @rdname count.DataFrame
 #' @export
 add_count.LazyFrame <- add_count.DataFrame
 

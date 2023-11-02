@@ -21,7 +21,6 @@
 #'   group_by(x1) |>
 #'   arrange(-x2, .by_group = TRUE)
 
-
 arrange.DataFrame <- function(.data, ..., .by_group = FALSE) {
 
   check_polars_data(.data)

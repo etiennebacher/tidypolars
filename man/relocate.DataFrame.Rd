@@ -2,9 +2,12 @@
 % Please edit documentation in R/relocate.R
 \name{relocate.DataFrame}
 \alias{relocate.DataFrame}
+\alias{relocate.LazyFrame}
 \title{Change column order}
 \usage{
 \method{relocate}{DataFrame}(.data, ..., .before = NULL, .after = NULL)
+
+\method{relocate}{LazyFrame}(.data, ..., .before = NULL, .after = NULL)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}

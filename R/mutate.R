@@ -95,5 +95,6 @@ mutate.DataFrame <- function(.data, ...) {
   .data
 }
 
+#' @rdname mutate.DataFrame
 #' @export
 mutate.LazyFrame <- mutate.DataFrame

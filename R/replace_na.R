@@ -38,5 +38,6 @@ replace_na.DataFrame <- function(data, replace, ...) {
   }
 }
 
+#' @rdname replace_na.DataFrame
 #' @export
 replace_na.LazyFrame <- replace_na.DataFrame

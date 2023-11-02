@@ -55,5 +55,6 @@ unite.DataFrame <- function(data, col, ..., sep = "_", remove = TRUE, na.rm = FA
   }
 }
 
+#' @rdname unite.DataFrame
 #' @export
 unite.LazyFrame <- unite.DataFrame

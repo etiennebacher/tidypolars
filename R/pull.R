@@ -23,5 +23,6 @@ pull.DataFrame <- function(.data, var, ...) {
   to_r(.data$select(pl$col(var)))[[1]]
 }
 
+#' @rdname pull.DataFrame
 #' @export
 pull.LazyFrame <- pull.DataFrame

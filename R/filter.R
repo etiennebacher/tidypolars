@@ -53,5 +53,6 @@ filter.DataFrame <- function(.data, ...) {
   out
 }
 
+#' @rdname filter.DataFrame
 #' @export
 filter.LazyFrame <- filter.DataFrame

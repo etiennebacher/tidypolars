@@ -2,9 +2,18 @@
 % Please edit documentation in R/count.R
 \name{count.DataFrame}
 \alias{count.DataFrame}
+\alias{count.LazyFrame}
+\alias{add_count.DataFrame}
+\alias{add_count.LazyFrame}
 \title{Count the observations in each group}
 \usage{
 \method{count}{DataFrame}(x, ..., sort = FALSE, name = "n")
+
+\method{count}{LazyFrame}(x, ..., sort = FALSE, name = "n")
+
+\method{add_count}{DataFrame}(x, ..., sort = FALSE, name = "n")
+
+\method{add_count}{LazyFrame}(x, ..., sort = FALSE, name = "n")
 }
 \arguments{
 \item{x}{A Polars Data/LazyFrame}

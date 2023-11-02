@@ -23,5 +23,6 @@ drop_na.DataFrame <- function(data, ...) {
   data$drop_nulls(vars)
 }
 
+#' @rdname drop_na.DataFrame
 #' @export
 drop_na.LazyFrame <- drop_na.DataFrame

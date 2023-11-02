@@ -2,9 +2,12 @@
 % Please edit documentation in R/complete.R
 \name{complete.DataFrame}
 \alias{complete.DataFrame}
+\alias{complete.LazyFrame}
 \title{Complete a data frame with missing combinations of data}
 \usage{
 \method{complete}{DataFrame}(data, ..., fill = list())
+
+\method{complete}{LazyFrame}(data, ..., fill = list())
 }
 \arguments{
 \item{data}{A Polars Data/LazyFrame}

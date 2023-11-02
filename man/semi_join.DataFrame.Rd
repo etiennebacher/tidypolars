@@ -3,11 +3,17 @@
 \name{semi_join.DataFrame}
 \alias{semi_join.DataFrame}
 \alias{anti_join.DataFrame}
+\alias{semi_join.LazyFrame}
+\alias{anti_join.LazyFrame}
 \title{Filtering joins}
 \usage{
 \method{semi_join}{DataFrame}(x, y, by = NULL, ...)
 
 \method{anti_join}{DataFrame}(x, y, by = NULL, ...)
+
+\method{semi_join}{LazyFrame}(x, y, by = NULL, ...)
+
+\method{anti_join}{LazyFrame}(x, y, by = NULL, ...)
 }
 \arguments{
 \item{x, y}{Two Polars Data/LazyFrames}

@@ -2,9 +2,12 @@
 % Please edit documentation in R/replace_na.R
 \name{replace_na.DataFrame}
 \alias{replace_na.DataFrame}
+\alias{replace_na.LazyFrame}
 \title{Replace NAs with specified values}
 \usage{
 \method{replace_na}{DataFrame}(data, replace, ...)
+
+\method{replace_na}{LazyFrame}(data, replace, ...)
 }
 \arguments{
 \item{data}{A Polars Data/LazyFrame}

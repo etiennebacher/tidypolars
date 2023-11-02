@@ -2,9 +2,12 @@
 % Please edit documentation in R/mutate.R
 \name{mutate.DataFrame}
 \alias{mutate.DataFrame}
+\alias{mutate.LazyFrame}
 \title{Create, modify, and delete columns}
 \usage{
 \method{mutate}{DataFrame}(.data, ...)
+
+\method{mutate}{LazyFrame}(.data, ...)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}

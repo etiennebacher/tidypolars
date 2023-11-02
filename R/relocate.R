@@ -78,5 +78,6 @@ relocate.DataFrame <- function(.data, ..., .before = NULL, .after = NULL) {
   .data$select(new_order)
 }
 
+#' @rdname relocate.DataFrame
 #' @export
 relocate.LazyFrame <- relocate.DataFrame

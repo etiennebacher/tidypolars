@@ -44,5 +44,6 @@ separate.DataFrame <- function(data, col, into, sep = "[^[:alnum:]]+",
   data
 }
 
+#' @rdname separate.DataFrame
 #' @export
 separate.LazyFrame <- separate.DataFrame

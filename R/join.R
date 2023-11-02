@@ -77,15 +77,19 @@ inner_join.DataFrame <- function(x, y, by = NULL, copy = NULL,
   join_(x = x, y = y, by = by, how = "inner", suffix = suffix)
 }
 
+#' @rdname left_join.DataFrame
 #' @export
 left_join.LazyFrame <- left_join.DataFrame
 
+#' @rdname left_join.DataFrame
 #' @export
 right_join.LazyFrame <- right_join.DataFrame
 
+#' @rdname left_join.DataFrame
 #' @export
 full_join.LazyFrame <- full_join.DataFrame
 
+#' @rdname left_join.DataFrame
 #' @export
 inner_join.LazyFrame <- inner_join.DataFrame
 
@@ -134,9 +138,11 @@ anti_join.DataFrame <- function(x, y, by = NULL, ...) {
   join_(x = x, y = y, by = by, how = "anti", suffix = NULL)
 }
 
+#' @rdname semi_join.DataFrame
 #' @export
 semi_join.LazyFrame <- semi_join.DataFrame
 
+#' @rdname semi_join.DataFrame
 #' @export
 anti_join.LazyFrame <- anti_join.DataFrame
 
@@ -169,6 +175,7 @@ cross_join.DataFrame <- function(x, y, suffix = c(".x", ".y"), ...) {
   join_(x = x, y = y, by = NULL, how = "cross", suffix = suffix)
 }
 
+#' @rdname cross_join.DataFrame
 #' @export
 cross_join.LazyFrame <- cross_join.DataFrame
 

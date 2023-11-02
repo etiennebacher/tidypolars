@@ -32,6 +32,7 @@ pivot_longer.DataFrame <- function(data, cols, ..., names_to = "name",
 
 }
 
+#' @rdname pivot_longer.DataFrame
 #' @export
 pivot_longer.LazyFrame <- pivot_longer.DataFrame
 
@@ -93,5 +94,6 @@ pivot_wider.DataFrame <- function(data, ..., id_cols, names_from, values_from,
   }
 }
 
+#' @rdname pivot_wider.DataFrame
 #' @export
 pivot_wider.LazyFrame <- pivot_wider.DataFrame

@@ -66,5 +66,6 @@ complete.DataFrame <- function(data, ..., fill = list()) {
 
 }
 
+#' @rdname complete.DataFrame
 #' @export
 complete.LazyFrame <- complete.DataFrame

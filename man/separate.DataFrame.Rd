@@ -2,9 +2,12 @@
 % Please edit documentation in R/separate.R
 \name{separate.DataFrame}
 \alias{separate.DataFrame}
+\alias{separate.LazyFrame}
 \title{Separate a character column into multiple columns based on a substring}
 \usage{
 \method{separate}{DataFrame}(data, col, into, sep = "[^[:alnum:]]+", remove = TRUE, ...)
+
+\method{separate}{LazyFrame}(data, col, into, sep = "[^[:alnum:]]+", remove = TRUE, ...)
 }
 \arguments{
 \item{data}{A Polars Data/LazyFrame}
