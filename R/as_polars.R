@@ -9,7 +9,7 @@
 #' such as comparing factors to strings but may cost some performance.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' mtcars |>
 #'   as_polars()
 #' mtcars |>

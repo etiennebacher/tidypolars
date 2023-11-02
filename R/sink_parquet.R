@@ -55,7 +55,7 @@
 #' @return Writes a `.parquet` file with the content of the LazyFrame.
 #' @export
 #'
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' \dontrun{
 #' # This is an example workflow where sink_parquet() is not very useful because
 #' # the data would fit in memory. It simply is an example of using it at the
@@ -72,8 +72,8 @@
 #' # In a new R session, we could read this file as a LazyFrame, do some operations,
 #' # and write it to a parquet file without ever collecting it in the R session:
 #' polars::pl$scan_csv(file_csv) |>
-#'   pl_filter(cyl %in% c(4, 6), mpg > 22) |>
-#'   pl_mutate(
+#'   filter(cyl %in% c(4, 6), mpg > 22) |>
+#'   mutate(
 #'     hp_gear_ratio = hp / gear
 #'   ) |>
 #'   sink_parquet(path = file_parquet)

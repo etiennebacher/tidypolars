@@ -5,19 +5,19 @@ pl_iris <- pl$DataFrame(iris)
 pl_iris_lazy <- pl$LazyFrame(iris)
 
 expect_equal(
-  pl_collect(pl_iris_lazy),
+  collect(pl_iris_lazy),
   pl_iris
 )
 
 expect_equal(
   pl_iris_lazy |>
-    pl_filter(Species == "setosa") |>
-    pl_collect(),
+    filter(Species == "setosa") |>
+    collect(),
   pl_iris |>
-    pl_filter(Species == "setosa")
+    filter(Species == "setosa")
 )
 
 expect_error(
-  pl_collect(pl_iris),
-  "can only be used on a LazyFrame"
+  collect(pl_iris),
+  "no applicable method"
 )

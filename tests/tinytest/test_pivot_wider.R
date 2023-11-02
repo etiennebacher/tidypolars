@@ -4,7 +4,7 @@ using("tidypolars")
 pl_fish_encounters <- polars::pl$DataFrame(fish_encounters)
 
 out <- pl_fish_encounters |>
-  pl_pivot_wider(names_from = station, values_from = seen)
+  pivot_wider(names_from = station, values_from = seen)
 
 # basic checks
 
@@ -15,28 +15,28 @@ expect_colnames(out, c("fish", "Release", "I80_1", "Lisbon", "Rstr", "Base_TD",
 
 # check values
 
-first <- pl_slice_head(out)
+first <- slice_head(out, n = 5)
 
 expect_equal(
-  pl_pull(first, I80_1),
+  pull(first, I80_1),
   rep(1, 5)
 )
 expect_equal(
-  pl_pull(first, BCE2),
+  pull(first, BCE2),
   c(1, 1, 1, NA, NA)
 )
 
 # fill values
 
 filled <- pl_fish_encounters |>
-  pl_pivot_wider(names_from = station, values_from = seen, values_fill = 0) |>
-  pl_slice_head()
+  pivot_wider(names_from = station, values_from = seen, values_fill = 0) |>
+  slice_head(n = 5)
 
 expect_equal(
-  pl_pull(filled, I80_1),
+  pull(filled, I80_1),
   rep(1, 5)
 )
 expect_equal(
-  pl_pull(filled, BCE2),
+  pull(filled, BCE2),
   c(1, 1, 1, 0, 0)
 )

@@ -11,11 +11,11 @@
 #' @param suffix If there are non-joined duplicate variables in `x` and `y`,
 #' these suffixes will be added to the output to disambiguate them. Should be a
 #' character vector of length 2.
-#'
-#' @rdname mutating-joins
+#' @inheritParams slice_tail.DataFrame
+#' @param copy,keep Not used.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' test <- polars::pl$DataFrame(
 #'   x = c(1, 2, 3),
 #'   y = c(1, 2, 3),
@@ -32,11 +32,11 @@
 #'
 #' test2
 #'
-#' pl_left_join(test, test2)
+#' left_join(test, test2)
 #'
-#' pl_inner_join(test, test2)
+#' inner_join(test, test2)
 #'
-#' pl_full_join(test, test2)
+#' full_join(test, test2)
 #'
 #' # Show how the arg 'suffix' works:
 #' test2 <- polars::pl$DataFrame(
@@ -45,45 +45,66 @@
 #'   z = c(4, 5, 7)
 #' )
 #'
-#' pl_left_join(test, test2, by = c("x", "y"), suffix = c("_left", "_right"))
+#' left_join(test, test2, by = c("x", "y"), suffix = c("_left", "_right"))
 
-pl_left_join <- function(x, y, by = NULL, suffix = c(".x", ".y")) {
+left_join.DataFrame <- function(x, y, by = NULL, copy = NULL,
+                                suffix = c(".x", ".y"), ..., keep = NULL) {
+  unused_args(copy, keep)
   join_(x = x, y = y, by = by, how = "left", suffix = suffix)
 }
 
-#' @rdname mutating-joins
+#' @rdname left_join.DataFrame
 #' @export
-pl_right_join <- function(x, y, by = NULL, suffix = c(".x", ".y")) {
+right_join.DataFrame <- function(x, y, by = NULL, copy = NULL,
+                                 suffix = c(".x", ".y"), ..., keep = NULL) {
+  unused_args(copy, keep)
   join_(x = x, y = y, by = by, how = "right", suffix = suffix)
 }
 
-#' @rdname mutating-joins
+#' @rdname left_join.DataFrame
 #' @export
-pl_full_join <- function(x, y, by = NULL, suffix = c(".x", ".y")) {
+full_join.DataFrame <- function(x, y, by = NULL, copy = NULL,
+                                suffix = c(".x", ".y"), ..., keep = NULL) {
+  unused_args(copy, keep)
   join_(x = x, y = y, by = by, how = "outer", suffix = suffix)
 }
 
-#' @rdname mutating-joins
+#' @rdname left_join.DataFrame
 #' @export
-pl_inner_join <- function(x, y, by = NULL, suffix = c(".x", ".y")) {
+inner_join.DataFrame <- function(x, y, by = NULL, copy = NULL,
+                                 suffix = c(".x", ".y"), ..., keep = NULL) {
+  unused_args(copy, keep)
   join_(x = x, y = y, by = by, how = "inner", suffix = suffix)
 }
 
+#' @rdname left_join.DataFrame
+#' @export
+left_join.LazyFrame <- left_join.DataFrame
+
+#' @rdname left_join.DataFrame
+#' @export
+right_join.LazyFrame <- right_join.DataFrame
+
+#' @rdname left_join.DataFrame
+#' @export
+full_join.LazyFrame <- full_join.DataFrame
+
+#' @rdname left_join.DataFrame
+#' @export
+inner_join.LazyFrame <- inner_join.DataFrame
 
 #' Filtering joins
 #'
 #' Filtering joins filter rows from `x` based on the presence or absence of
 #' matches in `y`:
-#' * `pl_semi_join()` return all rows from `x` with a match in `y`.
-#' * `pl_anti_join()` return all rows from `x` without a match in `y`.
+#' * `semi_join()` return all rows from `x` with a match in `y`.
+#' * `anti_join()` return all rows from `x` without a match in `y`.
 #'
 #' @param x,y Two Polars Data/LazyFrames
-#' @inheritParams pl_left_join
-#'
-#' @rdname filtering-joins
+#' @inheritParams left_join.DataFrame
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' test <- polars::pl$DataFrame(
 #'   x = c(1, 2, 3),
 #'   y = c(1, 2, 3),
@@ -101,31 +122,39 @@ pl_inner_join <- function(x, y, by = NULL, suffix = c(".x", ".y")) {
 #' test2
 #
 #' # only keep the rows of `test` that have matching keys in `test2`
-#' pl_semi_join(test, test2, by = c("x", "y"))
+#' semi_join(test, test2, by = c("x", "y"))
 #
 #' # only keep the rows of `test` that don't have matching keys in `test2`
-#' pl_anti_join(test, test2, by = c("x", "y"))
+#' anti_join(test, test2, by = c("x", "y"))
 
-pl_semi_join <- function(x, y, by = NULL) {
+semi_join.DataFrame <- function(x, y, by = NULL, ...) {
   join_(x = x, y = y, by = by, how = "semi", suffix = NULL)
 }
 
-#' @rdname filtering-joins
+#' @rdname semi_join.DataFrame
 #' @export
 
-pl_anti_join <- function(x, y, by = NULL) {
+anti_join.DataFrame <- function(x, y, by = NULL, ...) {
   join_(x = x, y = y, by = by, how = "anti", suffix = NULL)
 }
+
+#' @rdname semi_join.DataFrame
+#' @export
+semi_join.LazyFrame <- semi_join.DataFrame
+
+#' @rdname semi_join.DataFrame
+#' @export
+anti_join.LazyFrame <- anti_join.DataFrame
 
 #' Cross join
 #'
 #' Cross joins match each row in `x` to every row in `y`, resulting in a dataset
 #' with `nrow(x) * nrow(y)` rows.
 #'
-#' @inheritParams pl_left_join
+#' @inheritParams left_join.DataFrame
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' test <- polars::pl$DataFrame(
 #'   origin = c("ALG", "FRA", "GER"),
 #'   year = c(2020, 2020, 2021)
@@ -140,11 +169,15 @@ pl_anti_join <- function(x, y, by = NULL) {
 #'
 #' test2
 #'
-#' pl_cross_join(test, test2)
+#' cross_join(test, test2)
 
-pl_cross_join <- function(x, y, suffix = c(".x", ".y")) {
+cross_join.DataFrame <- function(x, y, suffix = c(".x", ".y"), ...) {
   join_(x = x, y = y, by = NULL, how = "cross", suffix = suffix)
 }
+
+#' @rdname cross_join.DataFrame
+#' @export
+cross_join.LazyFrame <- cross_join.DataFrame
 
 
 join_ <- function(x, y, by = NULL, how, suffix) {

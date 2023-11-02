@@ -1,22 +1,22 @@
 #' Summarize each group down to one row
 #'
-#' `pl_summarize()` returns one row for each combination of grouping variables
-#' (one difference with `dplyr::summarize()` is that `pl_summarize()` only
+#' `summarize()` returns one row for each combination of grouping variables
+#' (one difference with `dplyr::summarize()` is that `summarize()` only
 #' accepts grouped data). It will contain one column for each grouping variable
 #' and one column for each of the summary statistics that you have specified.
 #'
 #' @param .data A Polars Data/LazyFrame
-#' @inheritParams pl_mutate
+#' @inheritParams mutate.DataFrame
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' mtcars |>
 #'   as_polars() |>
-#'   pl_group_by(cyl) |>
-#'   pl_summarize(gear = mean(gear), gear2 = sd(gear))
+#'   group_by(cyl) |>
+#'   summarize(gear = mean(gear), gear2 = sd(gear))
 
 
-pl_summarize <- function(.data, ...) {
+summarize.DataFrame <- function(.data, ...) {
 
   check_polars_data(.data)
 
@@ -26,7 +26,7 @@ pl_summarize <- function(.data, ...) {
   is_grouped <- !is.null(grps)
 
   if (!is_grouped) {
-    rlang::abort("`pl_summarize()` only works on grouped data.")
+    rlang::abort("`summarize()` only works on grouped data.")
   }
 
   polars_exprs <- translate_dots(.data = .data, ..., env = rlang::caller_env())
@@ -48,6 +48,14 @@ pl_summarize <- function(.data, ...) {
   .data
 }
 
-#' @rdname pl_summarize
+#' @rdname summarize.DataFrame
 #' @export
-pl_summarise <- pl_summarize
+summarise.DataFrame <- summarize.DataFrame
+
+#' @rdname summarize.DataFrame
+#' @export
+summarize.LazyFrame <- summarize.DataFrame
+
+#' @rdname summarize.DataFrame
+#' @export
+summarise.LazyFrame <- summarize.DataFrame

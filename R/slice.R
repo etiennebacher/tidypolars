@@ -3,17 +3,17 @@
 #' @param .data A Polars Data/LazyFrame
 #' @param n The number of rows to select from the start or the end of the data.
 #' Cannot be used with `prop`.
+#' @param ... Not used.
 #'
-#' @rdname pl_slice
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_test <- polars::pl$DataFrame(iris)
-#' pl_slice_head(pl_test, 3)
-#' pl_slice_tail(pl_test, 3)
-#' pl_slice_sample(pl_test, n = 5)
-#' pl_slice_sample(pl_test, prop = 0.1)
+#' slice_head(pl_test, n = 3)
+#' slice_tail(pl_test, n = 3)
+#' slice_sample(pl_test, n = 5)
+#' slice_sample(pl_test, prop = 0.1)
 
-pl_slice_tail <- function(.data, n = 5) {
+slice_tail.DataFrame <- function(.data, ..., n) {
   check_polars_data(.data)
   grps <- attributes(.data)$pl_grps
   mo <- attributes(.data)$maintain_grp_order
@@ -29,10 +29,14 @@ pl_slice_tail <- function(.data, n = 5) {
   }
 }
 
-#' @rdname pl_slice
+#' @rdname slice_tail.DataFrame
+#' @export
+slice_tail.LazyFrame <- slice_tail.DataFrame
+
+#' @rdname slice_tail.DataFrame
 #' @export
 
-pl_slice_head <- function(.data, n = 5) {
+slice_head.DataFrame <- function(.data, ..., n) {
   check_polars_data(.data)
   grps <- attributes(.data)$pl_grps
   mo <- attributes(.data)$maintain_grp_order
@@ -48,19 +52,20 @@ pl_slice_head <- function(.data, n = 5) {
   }
 }
 
+#' @rdname slice_tail.DataFrame
+#' @export
+slice_head.LazyFrame <- slice_head.DataFrame
+
+
 #' @param prop Proportion of rows to select. Cannot be used with `n`.
 #' @param replace Perform the sampling with replacement (`TRUE`) or without
 #' (`FALSE`).
 #'
-#' @rdname pl_slice
+#' @rdname slice_tail.DataFrame
 #' @export
 
-pl_slice_sample <- function(.data, n = NULL, prop = NULL, replace = FALSE) {
+slice_sample.DataFrame <- function(.data, ..., n = NULL, prop = NULL, replace = FALSE) {
   check_polars_data(.data)
-
-  if (inherits(.data, "LazyFrame")) {
-    abort("`pl_slice_sample()` only works on Polars DataFrames.")
-  }
 
   grps <- attributes(.data)$pl_grps
   mo <- attributes(.data)$maintain_grp_order

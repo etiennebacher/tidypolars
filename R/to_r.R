@@ -14,10 +14,10 @@
 #' to a lower int before being converted to R.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' iris |>
 #'   as_polars() |>
-#'   pl_filter(Sepal.Length > 6) |>
+#'   filter(Sepal.Length > 6) |>
 #'   to_r()
 
 to_r <- function(.data, shrink_i64 = TRUE) {

@@ -8,7 +8,7 @@ using("tidypolars")
 test <- pl$LazyFrame(mtcars)
 
 expect_equal_lazy(
-  test |> pl_group_by(am, cyl) |> pl_ungroup(),
+  test |> group_by(am, cyl) |> ungroup(),
   test
 )
 

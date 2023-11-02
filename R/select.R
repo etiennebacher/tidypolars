@@ -5,18 +5,22 @@
 #'  column numbers, select helpers, etc.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #'
 #' pl_iris <- polars::pl$DataFrame(iris)
 #'
-#' pl_select(pl_iris, c("Sepal.Length", "Sepal.Width"))
-#' pl_select(pl_iris, Sepal.Length, Sepal.Width)
-#' pl_select(pl_iris, 1:3)
-#' pl_select(pl_iris, starts_with("Sepal"))
-#' pl_select(pl_iris, -ends_with("Length"))
+#' select(pl_iris, c("Sepal.Length", "Sepal.Width"))
+#' select(pl_iris, Sepal.Length, Sepal.Width)
+#' select(pl_iris, 1:3)
+#' select(pl_iris, starts_with("Sepal"))
+#' select(pl_iris, -ends_with("Length"))
 
-pl_select <- function(.data, ...) {
+select.DataFrame <- function(.data, ...) {
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
   .data$select(vars)
 }
+
+#' @rdname select.DataFrame
+#' @export
+select.LazyFrame <- select.DataFrame

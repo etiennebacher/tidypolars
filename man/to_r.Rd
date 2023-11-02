@@ -23,8 +23,10 @@ when converted to R. If \code{shrink_i64} is \code{TRUE}, int64 columns will be 
 to a lower int before being converted to R.
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 iris |>
   as_polars() |>
-  pl_filter(Sepal.Length > 6) |>
+  filter(Sepal.Length > 6) |>
   to_r()
+\dontshow{\}) # examplesIf}
 }

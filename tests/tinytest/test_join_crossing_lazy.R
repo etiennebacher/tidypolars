@@ -16,13 +16,13 @@ test2 <- polars::pl$LazyFrame(
 )
 
 expect_dim(
-  pl_cross_join(test, test2),
+  cross_join(test, test2),
   c(9, 4)
 )
 
 expect_equal_lazy(
-  pl_cross_join(test, test2) |>
-    pl_pull(origin),
+  cross_join(test, test2) |>
+    pull(origin),
   rep(c("ALG", "FRA", "GER"), each = 3)
 )
 

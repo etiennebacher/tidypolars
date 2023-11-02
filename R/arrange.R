@@ -5,24 +5,23 @@
 #' @param .by_group If `TRUE`, will sort data within groups.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_test <- polars::pl$DataFrame(
 #'   x1 = c("a", "a", "b", "a", "c"),
 #'   x2 = c(2, 1, 5, 3, 1),
 #'   value = sample(1:5)
 #' )
 #'
-#' pl_arrange(pl_test, x1)
-#' pl_arrange(pl_test, x1, -x2)
+#' arrange(pl_test, x1)
+#' arrange(pl_test, x1, -x2)
 #'
 #' # if the data is grouped, you need to specify `.by_group = TRUE` to sort by
 #' # the groups first
 #' pl_test |>
-#'   pl_group_by(x1) |>
-#'   pl_arrange(-x2, .by_group = TRUE)
+#'   group_by(x1) |>
+#'   arrange(-x2, .by_group = TRUE)
 
-
-pl_arrange <- function(.data, ..., .by_group = FALSE) {
+arrange.DataFrame <- function(.data, ..., .by_group = FALSE) {
 
   check_polars_data(.data)
 
@@ -57,3 +56,6 @@ pl_arrange <- function(.data, ..., .by_group = FALSE) {
   }
   .data$sort(vars, descending = direction)
 }
+
+#' @export
+arrange.LazyFrame <- arrange.DataFrame

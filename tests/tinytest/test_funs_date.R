@@ -1,7 +1,6 @@
 source("helpers.R")
 using("tidypolars")
 
-library(dplyr, warn.conflicts = FALSE)
 library(lubridate, warn.conflicts = FALSE)
 
 test_df <- data.frame(
@@ -20,10 +19,10 @@ test <- pl$DataFrame(test_df)
 for (i in c("year", "month", "day", "quarter", "week", "mday", "yday"
             # TODO: "wday" (see pl_dt_weekday())
             )) {
-  pol <- paste0("pl_mutate(test, foo = ", i, "(YMD))") |>
+  pol <- paste0("mutate(test, foo = ", i, "(YMD))") |>
     str2lang() |>
     eval() |>
-    pl_pull(foo)
+    pull(foo)
 
   res <- paste0("mutate(test_df, foo = ", i, "(YMD))") |>
     str2lang() |>
@@ -34,10 +33,10 @@ for (i in c("year", "month", "day", "quarter", "week", "mday", "yday"
 }
 
 for (i in c("hour", "minute", "second")) {
-  pol <- paste0("pl_mutate(test, foo = ", i, "(YMD_HMS))") |>
+  pol <- paste0("mutate(test, foo = ", i, "(YMD_HMS))") |>
     str2lang() |>
     eval() |>
-    pl_pull(foo)
+    pull(foo)
 
   res <- paste0("mutate(test_df, foo = ", i, "(YMD_HMS))") |>
     str2lang() |>
@@ -49,7 +48,7 @@ for (i in c("hour", "minute", "second")) {
 
 # TODO: fix timezone attributes
 # for (i in c("ymd_hms", "ymd_hm")) {
-#   pol <- paste0("pl_mutate(test, to_", i, "  = ", i, "(to_", i, "))") |>
+#   pol <- paste0("mutate(test, to_", i, "  = ", i, "(to_", i, "))") |>
 #     str2lang() |>
 #     eval() |>
 #     to_r()

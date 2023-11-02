@@ -12,26 +12,25 @@
 #' evaluate to `TRUE` are kept.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_iris <- polars::pl$DataFrame(iris)
 #'
-#' pl_filter(pl_iris, Sepal.Length < 5 & Species == "setosa")
+#' filter(pl_iris, Sepal.Length < 5, Species == "setosa")
 #'
-#' pl_filter(pl_iris, Sepal.Length < Sepal.Width + Petal.Length)
+#' filter(pl_iris, Sepal.Length < Sepal.Width + Petal.Length)
 #'
-#' pl_filter(pl_iris, Species == "setosa" | is.na(Species))
+#' filter(pl_iris, Species == "setosa" | is.na(Species))
 #'
-#' pl_filter(pl_iris, between(Sepal.Length, 5, 6, include_bounds = FALSE))
+#' filter(pl_iris, between(Sepal.Length, 5, 6, include_bounds = FALSE))
 #'
 #' iris2 <- iris
 #' iris2$Species <- as.character(iris2$Species)
 #' iris2 |>
 #'   as_polars() |>
-#'   pl_filter(Species %in% c("setosa", "virginica"))
+#'   filter(Species %in% c("setosa", "virginica"))
 #'
 
-pl_filter <- function(.data, ...) {
-
+filter.DataFrame <- function(.data, ...) {
   check_polars_data(.data)
 
   grps <- attributes(.data)$pl_grps
@@ -53,3 +52,7 @@ pl_filter <- function(.data, ...) {
   attr(out, "pl_grps") <- grps
   out
 }
+
+#' @rdname filter.DataFrame
+#' @export
+filter.LazyFrame <- filter.DataFrame

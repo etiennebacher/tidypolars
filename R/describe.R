@@ -1,11 +1,11 @@
 #' Summary statistics for a Polars DataFrame
 #'
-#' @inheritParams pl_select
+#' @inheritParams select.DataFrame
 #' @param percentiles One or more percentiles to include in the summary
 #' statistics. All values must be between 0 and 1 (`NULL` are ignored).
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' mtcars |>
 #'   as_polars() |>
 #'   describe(percentiles = c(0.2, 0.4, 0.6, 0.8))

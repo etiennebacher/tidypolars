@@ -4,14 +4,15 @@
 #'
 #' @param .data A Polars Data/LazyFrame
 #' @param var A quoted or unquoted variable name
+#' @inheritParams slice_tail.DataFrame
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_test <- polars::pl$DataFrame(iris)
-#' pl_pull(pl_test, Sepal.Length)
-#' pl_pull(pl_test, "Sepal.Length")
+#' pull(pl_test, Sepal.Length)
+#' pull(pl_test, "Sepal.Length")
 
-pl_pull <- function(.data, var) {
+pull.DataFrame <- function(.data, var, ...) {
   check_polars_data(.data)
   var <- tidyselect_named_arg(.data, rlang::enquo(var))
   # for testing only
@@ -22,3 +23,6 @@ pl_pull <- function(.data, var) {
   to_r(.data$select(pl$col(var)))[[1]]
 }
 
+#' @rdname pull.DataFrame
+#' @export
+pull.LazyFrame <- pull.DataFrame

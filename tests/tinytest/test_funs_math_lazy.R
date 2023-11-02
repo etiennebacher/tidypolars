@@ -5,8 +5,6 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-library(dplyr, warn.conflicts = FALSE)
-
 test_df <- data.frame(
   x1 = c("a", "a", "b", "a", "c"),
   x2 = c(2, 1, 5, 3, 1),
@@ -45,10 +43,10 @@ for (i in c(
     variable <- "value"
   }
 
-  pol <- paste0("pl_mutate(test, foo =", i, "(", variable, "))") |>
+  pol <- paste0("mutate(test, foo =", i, "(", variable, "))") |>
     str2lang() |>
     eval() |>
-    pl_pull(foo)
+    pull(foo)
 
   res <- paste0("mutate(test_df, foo =", i, "(", variable, "))") |>
     str2lang() |>
@@ -59,12 +57,12 @@ for (i in c(
 
 }
 
-foo <- test |> pl_mutate(x = sample(x2)) |> pl_pull(x)
+foo <- test |> mutate(x = sample(x2)) |> pull(x)
 
 expect_true(all(foo %in% c(1, 2, 3, 5)))
 
 expect_warning(
-  test |> pl_mutate(x = sample(x2, prob = 0.5)),
+  test |> mutate(x = sample(x2, prob = 0.5)),
   "will not be used: `prob`"
 )
 

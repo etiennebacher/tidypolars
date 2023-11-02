@@ -57,6 +57,6 @@ expect_equal(
 )
 
 expect_error(
-  pl_mutate(pl_iris, Sepal.Length = dplyr::lag(Sepal.Length)),
+  mutate(pl_iris, Sepal.Length = dplyr::lag(Sepal.Length)),
   "doesn't work when expressions contain"
 )
