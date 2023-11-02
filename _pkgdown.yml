@@ -65,7 +65,7 @@ reference:
     contents:
       - complete
       - drop_na
-      - pl_fill
+      - fill
       - pl_pivot_longer
       - pl_pivot_wider
       - pl_replace_na

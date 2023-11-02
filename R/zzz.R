@@ -28,9 +28,6 @@
   }
   if(requireNamespace("tidyr", quietly = TRUE)) {
 
-    registerS3method("fill", "DataFrame", pl_fill, envir = asNamespace("tidyr"))
-    registerS3method("fill", "LazyFrame", pl_fill, envir = asNamespace("tidyr"))
-
     registerS3method("pivot_longer", "DataFrame", pl_pivot_longer, envir = asNamespace("tidyr"))
     registerS3method("pivot_longer", "LazyFrame", pl_pivot_longer, envir = asNamespace("tidyr"))
 

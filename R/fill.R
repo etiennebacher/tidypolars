@@ -4,7 +4,7 @@
 #' This is useful in the common output format where values are not repeated, and
 #' are only recorded when they change.
 #'
-#' With grouped Data/LazyFrames, pl_fill() will be applied within each group,
+#' With grouped Data/LazyFrames, fill() will be applied within each group,
 #' meaning that it won't fill across group boundaries.
 #'
 #' @param .data A Polars Data/LazyFrame
@@ -13,12 +13,13 @@
 #'    (the default), "up", "downup" (i.e. first down and then up) or "updown"
 #'    (first up and then down).
 #'
+#' @rdname fill
 #' @export
 #' @examples
 #' pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 #'
-#' pl_fill(pl_test, everything(), direction = "down")
-#' pl_fill(pl_test, everything(), direction = "up")
+#' fill(pl_test, everything(), direction = "down")
+#' fill(pl_test, everything(), direction = "up")
 #'
 #' # with grouped data, it doesn't use values from other groups
 #' pl_grouped <- polars::pl$DataFrame(
@@ -28,9 +29,9 @@
 #' ) |>
 #'   group_by(grp)
 #'
-#' pl_fill(pl_grouped, x, y, direction = "down")
+#' fill(pl_grouped, x, y, direction = "down")
 
-pl_fill <- function(.data, ..., direction = c("down", "up", "downup", "updown")) {
+fill.DataFrame <- function(.data, ..., direction = c("down", "up", "downup", "updown")) {
 
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
@@ -54,3 +55,6 @@ pl_fill <- function(.data, ..., direction = c("down", "up", "downup", "updown"))
 
   .data$with_columns(expr)
 }
+
+#' @export
+fill.LazyFrame <- fill.DataFrame
