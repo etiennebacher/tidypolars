@@ -1,5 +1,7 @@
 # tidypolars (development version)
 
+`tidypolars` requires `polars` >= 0.10.0.
+
 **Breaking changes**
 
 * All functions starting with `pl_` have been removed to the benefit of the S3

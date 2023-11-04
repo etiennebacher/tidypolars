@@ -43,10 +43,10 @@ pl_str_extract_all <- function(string, pattern, ...) {
 
 pl_str_length <- function(string, ...) {
   check_empty_dots(...)
-  string$str$n_chars()
+  string$str$len_chars()
 }
 
-pl_str_n_chars <- pl_str_length
+pl_str_len_chars <- pl_str_length
 
 pl_str_replace <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
@@ -169,8 +169,8 @@ pl_str_pad <- function(string, width, side = "left", pad = " ", use_width = TRUE
       class = "tidypolars_error"
     ),
     # polars and dplyr have the opposite understanding for "side"
-    "left" = string$str$rjust(width = width, fillchar = pad),
-    "right" = string$str$ljust(width = width, fillchar = pad)
+    "left" = string$str$pad_start(width = width, fillchar = pad),
+    "right" = string$str$pad_end(width = width, fillchar = pad)
   )
 }
 

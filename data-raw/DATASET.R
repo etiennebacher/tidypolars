@@ -109,7 +109,7 @@ r_polars_funs <- data.frame(
       "count_matches" ~ "str_count",
       "replace" ~ "str_replace",
       "replace_all" ~ "str_replace_all",
-      "n_chars" ~ "nchar",
+      "len_chars" ~ "nchar",
       "weekday" ~ "wday",
       "ordinal_day" ~ "yday",
       "is_nan" ~ "is.nan",
