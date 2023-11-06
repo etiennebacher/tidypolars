@@ -92,15 +92,15 @@ mustn't be duplicated column names.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ --- ┆ --- │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ str ┆ i32 ┆ str ┆ i32 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═════╪═════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ g   ┆ 25  ┆ o   ┆ 7   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ s   ┆ 75  ┆ x   ┆ 15  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ t   ┆ 49  ┆ i   ┆ 75  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ q   ┆ 63  ┆ z   ┆ 94  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 80  ┆ y   ┆ 51  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ g   ┆ 99  ┆ q   ┆ 69  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 15  ┆ d   ┆ 59  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ n   ┆ 67  ┆ o   ┆ 86  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …   ┆ …   ┆ …   ┆ …   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ r   ┆ 73  ┆ a   ┆ 30  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ e   ┆ 42  ┆ t   ┆ 58  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ k   ┆ 53  ┆ q   ┆ 92  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ d   ┆ 32  ┆ m   ┆ 71  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ y   ┆ 10  ┆ n   ┆ 21  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ p   ┆ 35  ┆ v   ┆ 36  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f   ┆ 4   ┆ i   ┆ 81  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ 36  ┆ r   ┆ 9   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴─────┴─────┘</span>
 <span class="r-in"><span><span class="fu">bind_cols_polars</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (20, 4)</span>
@@ -109,15 +109,15 @@ mustn't be duplicated column names.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ --- ┆ --- │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ str ┆ i32 ┆ str ┆ i32 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═════╪═════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ g   ┆ 25  ┆ o   ┆ 7   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ s   ┆ 75  ┆ x   ┆ 15  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ t   ┆ 49  ┆ i   ┆ 75  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ q   ┆ 63  ┆ z   ┆ 94  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 80  ┆ y   ┆ 51  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ g   ┆ 99  ┆ q   ┆ 69  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 15  ┆ d   ┆ 59  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ n   ┆ 67  ┆ o   ┆ 86  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …   ┆ …   ┆ …   ┆ …   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ r   ┆ 73  ┆ a   ┆ 30  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ e   ┆ 42  ┆ t   ┆ 58  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ k   ┆ 53  ┆ q   ┆ 92  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ d   ┆ 32  ┆ m   ┆ 71  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ y   ┆ 10  ┆ n   ┆ 21  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ p   ┆ 35  ┆ v   ┆ 36  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f   ┆ 4   ┆ i   ┆ 81  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ 36  ┆ r   ┆ 9   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴─────┴─────┘</span>
 </code></pre></div>
     </div>
