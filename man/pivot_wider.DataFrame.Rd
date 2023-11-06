@@ -33,7 +33,7 @@ Pivot Data/LazyFrame from long to wide
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pl_fish_encounters <- polars::pl$DataFrame(fish_encounters)
+pl_fish_encounters <- polars::pl$DataFrame(tidyr::fish_encounters)
 
 pl_fish_encounters |>
   pivot_wider(names_from = station, values_from = seen)

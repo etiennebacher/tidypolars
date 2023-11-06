@@ -28,7 +28,7 @@ Pivot Data/LazyFrame from wide to long
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pl_relig_income <- polars::pl$DataFrame(relig_income)
+pl_relig_income <- polars::pl$DataFrame(tidyr::relig_income)
 pl_relig_income
 
 pl_relig_income |>

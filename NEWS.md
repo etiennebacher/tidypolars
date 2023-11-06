@@ -12,6 +12,11 @@
 
 * New function `duplicated_rows()` that is the opposite of `distinct()` (#50).
 
+**Misc**
+
+* `relig_income` and `fish_encounters` are not reexported anymore since `tidyr` 
+  is now imported.
+  
 
 # tidypolars 0.2.0
 

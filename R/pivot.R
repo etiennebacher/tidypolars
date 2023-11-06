@@ -11,7 +11,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_relig_income <- polars::pl$DataFrame(relig_income)
+#' pl_relig_income <- polars::pl$DataFrame(tidyr::relig_income)
 #' pl_relig_income
 #'
 #' pl_relig_income |>
@@ -53,7 +53,7 @@ pivot_longer.LazyFrame <- pivot_longer.DataFrame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_fish_encounters <- polars::pl$DataFrame(fish_encounters)
+#' pl_fish_encounters <- polars::pl$DataFrame(tidyr::fish_encounters)
 #'
 #' pl_fish_encounters |>
 #'   pivot_wider(names_from = station, values_from = seen)
