@@ -65,10 +65,10 @@ possible.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for DataFrame</span></span>
-<span><span class="fu">separate</span><span class="op">(</span><span class="va">data</span>, <span class="va">col</span>, <span class="va">into</span>, sep <span class="op">=</span> <span class="st">"[^[:alnum:]]+"</span>, remove <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">separate</span><span class="op">(</span><span class="va">data</span>, <span class="va">col</span>, <span class="va">into</span>, sep <span class="op">=</span> <span class="st">" "</span>, remove <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for LazyFrame</span></span>
-<span><span class="fu">separate</span><span class="op">(</span><span class="va">data</span>, <span class="va">col</span>, <span class="va">into</span>, sep <span class="op">=</span> <span class="st">"[^[:alnum:]]+"</span>, remove <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">separate</span><span class="op">(</span><span class="va">data</span>, <span class="va">col</span>, <span class="va">into</span>, sep <span class="op">=</span> <span class="st">" "</span>, remove <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -87,7 +87,8 @@ Use <code>NA</code> to omit the variable in the output.</p></dd>
 
 
 <dt>sep</dt>
-<dd><p>String that is used to split the column.</p></dd>
+<dd><p>String that is used to split the column. Regular expressions are
+not supported yet.</p></dd>
 
 
 <dt>remove</dt>
