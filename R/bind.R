@@ -4,6 +4,8 @@
 #'  either be a Data/LazyFrame, or a list of Data/LazyFrames. Columns are matched
 #'  by name. All Data/LazyFrames must have the same number of columns with
 #'  identical names.
+#' @param .id The name of an optional identifier column. Provide a string to
+#' create an output column that identifies each input.
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -20,11 +22,14 @@
 #'
 #' # this is equivalent
 #' bind_rows_polars(list(p1, p2))
+#'
+#' # create an id colum
+#' bind_rows_polars(p1, p2, .id = "id")
 
-bind_rows_polars <- function(...) {
+bind_rows_polars <- function(..., .id = NULL) {
   # TODO: check with "diagonal" to coerce types and fill missings
   # wait for https://github.com/pola-rs/r-polars/issues/350
-  concat_(..., how = "vertical")
+  concat_(..., how = "vertical", .id = .id)
 }
 
 #' Append multiple Data/LazyFrames next to each other
@@ -54,7 +59,7 @@ bind_cols_polars <- function(...) {
   concat_(..., how = "horizontal")
 }
 
-concat_ <- function(..., how) {
+concat_ <- function(..., how, .id = NULL) {
   dots <- rlang::list2(...)
   if (length(dots) == 1 && rlang::is_bare_list(dots[[1]])) {
     dots <- dots[[1]]
@@ -80,6 +85,16 @@ concat_ <- function(..., how) {
       "All elements in `...` must be of the same class (either DataFrame or LazyFrame).",
       call = caller_env()
     )
+  }
+
+  if (!is.null(.id)) {
+    dots <- lapply(seq_along(dots), \(x) {
+      dots[[x]]$
+        with_columns(
+          pl$lit(x)$alias(.id)
+        )$
+        select(pl$col(.id), pl$col("*")$exclude(.id))
+    })
   }
 
   pl$concat(dots, how = how)

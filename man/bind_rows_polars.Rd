@@ -4,13 +4,16 @@
 \alias{bind_rows_polars}
 \title{Stack multiple Data/LazyFrames on top of each other}
 \usage{
-bind_rows_polars(...)
+bind_rows_polars(..., .id = NULL)
 }
 \arguments{
 \item{...}{Polars DataFrames or LazyFrames to combine. Each argument can
 either be a Data/LazyFrame, or a list of Data/LazyFrames. Columns are matched
 by name. All Data/LazyFrames must have the same number of columns with
 identical names.}
+
+\item{.id}{The name of an optional identifier column. Provide a string to
+create an output column that identifies each input.}
 }
 \description{
 Stack multiple Data/LazyFrames on top of each other
@@ -30,5 +33,8 @@ bind_rows_polars(p1, p2)
 
 # this is equivalent
 bind_rows_polars(list(p1, p2))
+
+# create an id colum
+bind_rows_polars(p1, p2, .id = "id")
 \dontshow{\}) # examplesIf}
 }

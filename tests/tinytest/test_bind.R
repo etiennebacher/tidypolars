@@ -18,6 +18,12 @@ expect_equal(
   40
 )
 
+expect_equal(
+  bind_rows_polars(l, .id = "foo") |>
+    pull(foo),
+  rep(1:2, each = 20)
+)
+
 l2 <- list(
   polars::pl$DataFrame(
     x = sample(letters, 20),

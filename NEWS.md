@@ -12,6 +12,8 @@
 
 * New function `duplicated_rows()` that is the opposite of `distinct()` (#50).
 
+* New argument `.id` in `bind_rows_polars()`.
+
 **Misc**
 
 * `relig_income` and `fish_encounters` are not reexported anymore since `tidyr` 
