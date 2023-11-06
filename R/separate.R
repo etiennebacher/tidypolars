@@ -7,7 +7,8 @@
 #' @param col Column to split
 #' @param into Character vector containing the names of new variables to create.
 #' Use `NA` to omit the variable in the output.
-#' @param sep String that is used to split the column.
+#' @param sep String that is used to split the column. Regular expressions are
+#' not supported yet.
 #' @param remove If `TRUE`, remove input column from output data frame.
 #' @inheritParams slice_tail.DataFrame
 #'
@@ -18,7 +19,7 @@
 #' )
 #' separate(test, x, into = c("foo", "foo2"), sep = ".")
 
-separate.DataFrame <- function(data, col, into, sep = "[^[:alnum:]]+",
+separate.DataFrame <- function(data, col, into, sep = " ",
                                remove = TRUE, ...) {
 
   check_polars_data(data)

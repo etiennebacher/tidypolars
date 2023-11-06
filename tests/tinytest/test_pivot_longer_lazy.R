@@ -5,7 +5,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-pl_relig_income <- polars::pl$LazyFrame(relig_income)
+pl_relig_income <- polars::pl$LazyFrame(tidyr::relig_income)
 
 out <- pl_relig_income |>
   pivot_longer(!religion, names_to = "income", values_to = "count")
