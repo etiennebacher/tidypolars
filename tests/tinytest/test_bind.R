@@ -12,10 +12,9 @@ l <- list(
   )
 )
 
-expect_equal(
-  bind_rows_polars(l) |>
-    nrow(),
-  40
+expect_dim(
+  bind_rows_polars(l),
+  c(40, 2)
 )
 
 expect_equal(
@@ -24,6 +23,8 @@ expect_equal(
   rep(1:2, each = 20)
 )
 
+# TODO: enable bind_cols() for LazyFrames, need with_context()
+# https://github.com/pola-rs/polars/issues/2856#issuecomment-1209621687
 l2 <- list(
   polars::pl$DataFrame(
     x = sample(letters, 20),
@@ -35,16 +36,9 @@ l2 <- list(
   )
 )
 
-expect_equal(
-  bind_cols_polars(l2) |>
-    ncol(),
-  4
-)
-
-expect_equal(
-  bind_cols_polars(l2) |>
-    nrow(),
-  20
+expect_dim(
+  bind_cols_polars(l2),
+  c(20, 4)
 )
 
 p1 <- pl$DataFrame(
