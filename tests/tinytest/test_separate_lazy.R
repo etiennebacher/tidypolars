@@ -30,15 +30,13 @@ test2 <- pl$LazyFrame(
 # https://github.com/pola-rs/polars/issues/4819
 expect_equal_lazy(
   separate(test2, x, into = c("foo", "foo2")) |>
-    pull(foo) |>
-    to_r(),
+    pull(foo),
   c(NA, "x", "x", "y")
 )
 
 expect_equal_lazy(
   separate(test2, x, into = c("foo", "foo2")) |>
-    pull(foo2) |>
-    to_r(),
+    pull(foo2),
   c(NA, "y", "z", "z")
 )
 
