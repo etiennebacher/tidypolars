@@ -108,52 +108,38 @@ so that we can easily compare <code>dplyr</code> and
 <span><span class="co">#&gt; Registered S3 method overwritten by 'tidypolars':</span></span>
 <span><span class="co">#&gt;   method          from  </span></span>
 <span><span class="co">#&gt;   print.DataFrame polars</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">link</span> <span class="op">&lt;-</span> <span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/tidyr/who.csv"</span></span>
-<span></span>
-<span><span class="va">who_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">link</span><span class="op">)</span></span>
-<span><span class="va">who_pl</span> <span class="op">&lt;-</span> <span class="va">pl</span><span class="op">$</span><span class="fu">read_csv</span><span class="op">(</span><span class="va">link</span>, null_values <span class="op">=</span> <span class="st">"NA"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; tmp file placed in </span></span>
-<span><span class="co">#&gt;  /var/folders/3s/vfzpb5r51gs6y328rmlgzm7c0000gn/T//RtmpRY4d29/https...vincentarelbundock.github.io.Rdatasets.csv.tidyr.who.csv</span></span></code></pre></div>
-<p>The objective of <code>tidypolars</code> is to provide functions
-whose syntax is close to the <code>tidyverse</code> while keeping the
-number of dependencies quite low. Therefore, it can be used in two ways
-depending on whether you already the <code>tidyverse</code> or not.</p>
-<div class="section level2">
-<h2 id="you-already-use-the-tidyverse">You already use the <code>tidyverse</code><a class="anchor" aria-label="anchor" href="#you-already-use-the-tidyverse"></a>
-</h2>
-<p>If you already load <code>dplyr</code> or other
-<code>tidyverse</code> packages in your code, you can use the same code
-on a Polars <code>DataFrame</code> and it should work (if it doesn’t,
-feel free to <a href="https://github.com/etiennebacher/tidypolars/issues" class="external-link">open an
-issue</a>).</p>
+<span><span class="va">who_df</span> <span class="op">&lt;-</span> <span class="fu">tidyr</span><span class="fu">::</span><span class="va"><a href="https://tidyr.tidyverse.org/reference/who.html" class="external-link">who</a></span></span>
+<span><span class="va">who_pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="fu">tidyr</span><span class="fu">::</span><span class="va"><a href="https://tidyr.tidyverse.org/reference/who.html" class="external-link">who</a></span><span class="op">)</span></span></code></pre></div>
+<p><code>tidypolars</code> provides methods for <code>dplyr</code> and
+<code>tidyr</code> S3 generics. In simpler words, it means that you can
+use the same functions on a Polars <code>DataFrame</code> or
+<code>LazyFrame</code> as in a classic <code>tidyverse</code> workflow
+and it should just work (if it doesn’t, feel free to <a href="https://github.com/etiennebacher/tidypolars/issues" class="external-link">open an
+issue</a>). Note that you still need to load <code>dplyr</code> and
+<code>tidyr</code> in your code.</p>
 <p>Here’s an example of some <code>dplyr</code> and <code>tidyr</code>
 code on the classic R <code>data.frame</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">who_df</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">who_df</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/drop_na.html" class="external-link">drop_na</a></span><span class="op">(</span><span class="va">newrel_f3544</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">iso3</span>, <span class="va">year</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">matches</a></span><span class="op">(</span><span class="st">"^newrel(.*)_f"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">iso3</span>, <span class="va">year</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename_with</a></span><span class="op">(</span>.fn <span class="op">=</span> <span class="va">toupper</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   ISO3 YEAR NEWREL_F014 NEWREL_F1524 NEWREL_F2534 NEWREL_F3544 NEWREL_F4554</span></span>
-<span><span class="co">#&gt; 1  AGO 2013         626         2644         2480         1671          991</span></span>
-<span><span class="co">#&gt; 2  AIA 2013           0            0            0            0            0</span></span>
-<span><span class="co">#&gt; 3  ALB 2013           5           28           34           13           18</span></span>
-<span><span class="co">#&gt; 4  AND 2013           0            0            0            1            0</span></span>
-<span><span class="co">#&gt; 5  ARE 2013           5            4            9            3            3</span></span>
-<span><span class="co">#&gt; 6  ARG 2013         431          927          808          537          395</span></span>
-<span><span class="co">#&gt;   NEWREL_F5564 NEWREL_F65</span></span>
-<span><span class="co">#&gt; 1          481        314</span></span>
-<span><span class="co">#&gt; 2            0          0</span></span>
-<span><span class="co">#&gt; 3           14         34</span></span>
-<span><span class="co">#&gt; 4            0          0</span></span>
-<span><span class="co">#&gt; 5            1          6</span></span>
-<span><span class="co">#&gt; 6          307        374</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 9</span></span></span>
+<span><span class="co">#&gt;   ISO3   YEAR NEWREL_F014 NEWREL_F1524 NEWREL_F2534 NEWREL_F3544 NEWREL_F4554</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> AGO    <span style="text-decoration: underline;">2</span>013         626         <span style="text-decoration: underline;">2</span>644         <span style="text-decoration: underline;">2</span>480         <span style="text-decoration: underline;">1</span>671          991</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> AIA    <span style="text-decoration: underline;">2</span>013           0            0            0            0            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ALB    <span style="text-decoration: underline;">2</span>013           5           28           34           13           18</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> AND    <span style="text-decoration: underline;">2</span>013           0            0            0            1            0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ARE    <span style="text-decoration: underline;">2</span>013           5            4            9            3            3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> ARG    <span style="text-decoration: underline;">2</span>013         431          927          808          537          395</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: NEWREL_F5564 &lt;dbl&gt;, NEWREL_F65 &lt;dbl&gt;</span></span></span></code></pre></div>
 <p>We can simply use our Polars dataset instead:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">who_pl</span> <span class="op">|&gt;</span> </span>
@@ -164,23 +150,23 @@ code on the classic R <code>data.frame</code>:</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename_with</a></span><span class="op">(</span>.fn <span class="op">=</span> <span class="va">toupper</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; shape: (6, 9)</span></span>
-<span><span class="co">#&gt; ┌──────┬──────┬─────────────┬─────────────┬───┬─────────────┬────────────┬────────────┬────────────┐</span></span>
-<span><span class="co">#&gt; │ ISO3 ┆ YEAR ┆ NEWREL_F014 ┆ NEWREL_F152 ┆ … ┆ NEWREL_F354 ┆ NEWREL_F45 ┆ NEWREL_F55 ┆ NEWREL_F65 │</span></span>
-<span><span class="co">#&gt; │ ---  ┆ ---  ┆ ---         ┆ 4           ┆   ┆ 4           ┆ 54         ┆ 64         ┆ ---        │</span></span>
-<span><span class="co">#&gt; │ str  ┆ i64  ┆ i64         ┆ ---         ┆   ┆ ---         ┆ ---        ┆ ---        ┆ i64        │</span></span>
-<span><span class="co">#&gt; │      ┆      ┆             ┆ i64         ┆   ┆ i64         ┆ i64        ┆ i64        ┆            │</span></span>
-<span><span class="co">#&gt; ╞══════╪══════╪═════════════╪═════════════╪═══╪═════════════╪════════════╪════════════╪════════════╡</span></span>
-<span><span class="co">#&gt; │ AGO  ┆ 2013 ┆ 626         ┆ 2644        ┆ … ┆ 1671        ┆ 991        ┆ 481        ┆ 314        │</span></span>
-<span><span class="co">#&gt; │ AIA  ┆ 2013 ┆ 0           ┆ 0           ┆ … ┆ 0           ┆ 0          ┆ 0          ┆ 0          │</span></span>
-<span><span class="co">#&gt; │ ALB  ┆ 2013 ┆ 5           ┆ 28          ┆ … ┆ 13          ┆ 18         ┆ 14         ┆ 34         │</span></span>
-<span><span class="co">#&gt; │ AND  ┆ 2013 ┆ 0           ┆ 0           ┆ … ┆ 1           ┆ 0          ┆ 0          ┆ 0          │</span></span>
-<span><span class="co">#&gt; │ ARE  ┆ 2013 ┆ 5           ┆ 4           ┆ … ┆ 3           ┆ 3          ┆ 1          ┆ 6          │</span></span>
-<span><span class="co">#&gt; │ ARG  ┆ 2013 ┆ 431         ┆ 927         ┆ … ┆ 537         ┆ 395        ┆ 307        ┆ 374        │</span></span>
-<span><span class="co">#&gt; └──────┴──────┴─────────────┴─────────────┴───┴─────────────┴────────────┴────────────┴────────────┘</span></span></code></pre></div>
+<span><span class="co">#&gt; ┌──────┬────────┬─────────────┬────────────┬───┬────────────┬────────────┬────────────┬────────────┐</span></span>
+<span><span class="co">#&gt; │ ISO3 ┆ YEAR   ┆ NEWREL_F014 ┆ NEWREL_F15 ┆ … ┆ NEWREL_F35 ┆ NEWREL_F45 ┆ NEWREL_F55 ┆ NEWREL_F65 │</span></span>
+<span><span class="co">#&gt; │ ---  ┆ ---    ┆ ---         ┆ 24         ┆   ┆ 44         ┆ 54         ┆ 64         ┆ ---        │</span></span>
+<span><span class="co">#&gt; │ str  ┆ f64    ┆ f64         ┆ ---        ┆   ┆ ---        ┆ ---        ┆ ---        ┆ f64        │</span></span>
+<span><span class="co">#&gt; │      ┆        ┆             ┆ f64        ┆   ┆ f64        ┆ f64        ┆ f64        ┆            │</span></span>
+<span><span class="co">#&gt; ╞══════╪════════╪═════════════╪════════════╪═══╪════════════╪════════════╪════════════╪════════════╡</span></span>
+<span><span class="co">#&gt; │ AGO  ┆ 2013.0 ┆ 626.0       ┆ 2644.0     ┆ … ┆ 1671.0     ┆ 991.0      ┆ 481.0      ┆ 314.0      │</span></span>
+<span><span class="co">#&gt; │ AIA  ┆ 2013.0 ┆ 0.0         ┆ 0.0        ┆ … ┆ 0.0        ┆ 0.0        ┆ 0.0        ┆ 0.0        │</span></span>
+<span><span class="co">#&gt; │ ALB  ┆ 2013.0 ┆ 5.0         ┆ 28.0       ┆ … ┆ 13.0       ┆ 18.0       ┆ 14.0       ┆ 34.0       │</span></span>
+<span><span class="co">#&gt; │ AND  ┆ 2013.0 ┆ 0.0         ┆ 0.0        ┆ … ┆ 1.0        ┆ 0.0        ┆ 0.0        ┆ 0.0        │</span></span>
+<span><span class="co">#&gt; │ ARE  ┆ 2013.0 ┆ 5.0         ┆ 4.0        ┆ … ┆ 3.0        ┆ 3.0        ┆ 1.0        ┆ 6.0        │</span></span>
+<span><span class="co">#&gt; │ ARG  ┆ 2013.0 ┆ 431.0       ┆ 927.0      ┆ … ┆ 537.0      ┆ 395.0      ┆ 307.0      ┆ 374.0      │</span></span>
+<span><span class="co">#&gt; └──────┴────────┴─────────────┴────────────┴───┴────────────┴────────────┴────────────┴────────────┘</span></span></code></pre></div>
 <p>If you use Polars lazy API, you need to call <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code>
 at the end of the chained expression to evaluate the query:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">who_pl_lazy</span> <span class="op">&lt;-</span> <span class="va">pl</span><span class="op">$</span><span class="fu">scan_csv</span><span class="op">(</span><span class="va">link</span>, null_values <span class="op">=</span> <span class="st">"NA"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">who_pl_lazy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="fu">tidyr</span><span class="fu">::</span><span class="va"><a href="https://tidyr.tidyverse.org/reference/who.html" class="external-link">who</a></span>, lazy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">who_pl_lazy</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -191,76 +177,26 @@ at the end of the chained expression to evaluate the query:</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; shape: (6, 9)</span></span>
-<span><span class="co">#&gt; ┌──────┬──────┬─────────────┬─────────────┬───┬─────────────┬────────────┬────────────┬────────────┐</span></span>
-<span><span class="co">#&gt; │ ISO3 ┆ YEAR ┆ NEWREL_F014 ┆ NEWREL_F152 ┆ … ┆ NEWREL_F354 ┆ NEWREL_F45 ┆ NEWREL_F55 ┆ NEWREL_F65 │</span></span>
-<span><span class="co">#&gt; │ ---  ┆ ---  ┆ ---         ┆ 4           ┆   ┆ 4           ┆ 54         ┆ 64         ┆ ---        │</span></span>
-<span><span class="co">#&gt; │ str  ┆ i64  ┆ i64         ┆ ---         ┆   ┆ ---         ┆ ---        ┆ ---        ┆ i64        │</span></span>
-<span><span class="co">#&gt; │      ┆      ┆             ┆ i64         ┆   ┆ i64         ┆ i64        ┆ i64        ┆            │</span></span>
-<span><span class="co">#&gt; ╞══════╪══════╪═════════════╪═════════════╪═══╪═════════════╪════════════╪════════════╪════════════╡</span></span>
-<span><span class="co">#&gt; │ AGO  ┆ 2013 ┆ 626         ┆ 2644        ┆ … ┆ 1671        ┆ 991        ┆ 481        ┆ 314        │</span></span>
-<span><span class="co">#&gt; │ AIA  ┆ 2013 ┆ 0           ┆ 0           ┆ … ┆ 0           ┆ 0          ┆ 0          ┆ 0          │</span></span>
-<span><span class="co">#&gt; │ ALB  ┆ 2013 ┆ 5           ┆ 28          ┆ … ┆ 13          ┆ 18         ┆ 14         ┆ 34         │</span></span>
-<span><span class="co">#&gt; │ AND  ┆ 2013 ┆ 0           ┆ 0           ┆ … ┆ 1           ┆ 0          ┆ 0          ┆ 0          │</span></span>
-<span><span class="co">#&gt; │ ARE  ┆ 2013 ┆ 5           ┆ 4           ┆ … ┆ 3           ┆ 3          ┆ 1          ┆ 6          │</span></span>
-<span><span class="co">#&gt; │ ARG  ┆ 2013 ┆ 431         ┆ 927         ┆ … ┆ 537         ┆ 395        ┆ 307        ┆ 374        │</span></span>
-<span><span class="co">#&gt; └──────┴──────┴─────────────┴─────────────┴───┴─────────────┴────────────┴────────────┴────────────┘</span></span></code></pre></div>
-<p><strong>NOTE:</strong> if you want to use the same functions as the
-<code>tidyverse</code> ones, you <strong>must</strong> load
-<code>dplyr</code> or the related packages (loading
-<code>tidypolars</code> alone is not enough).</p>
-</div>
-<div class="section level2">
-<h2 id="you-dont-want-to-use-the-tidyverse">You don’t want to use the <code>tidyverse</code><a class="anchor" aria-label="anchor" href="#you-dont-want-to-use-the-tidyverse"></a>
-</h2>
-<p>As we saw above, it is extremely easy to use a <code>tidyverse</code>
-pipeline on some Polars data. However, maybe you would like to have
-access to this syntax without importing <code>dplyr</code> or other
-packages (this could be the case if you want to use
-<code>tidypolars</code> inside a package for example).</p>
-<p>To do so, you can prefix the function calls with <code>pl_</code>, so
-that you would use <code><a href="../reference/pl_filter.html">pl_filter()</a></code> instead of
-<code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code> for instance. These functions have exactly the
-same functionalities. Taking the example from above, you could have a
-script where you only load <code>tidypolars</code> and run:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">who_pl</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/pl_filter.html">pl_filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/pl_drop_na.html">pl_drop_na</a></span><span class="op">(</span><span class="va">newrel_f3544</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/pl_select.html">pl_select</a></span><span class="op">(</span><span class="va">iso3</span>, <span class="va">year</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">matches</a></span><span class="op">(</span><span class="st">"^newrel(.*)_f"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/pl_arrange.html">pl_arrange</a></span><span class="op">(</span><span class="va">iso3</span>, <span class="va">year</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/pl_rename.html">pl_rename_with</a></span><span class="op">(</span>.fn <span class="op">=</span> <span class="va">toupper</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; shape: (6, 9)</span></span>
-<span><span class="co">#&gt; ┌──────┬──────┬─────────────┬─────────────┬───┬─────────────┬────────────┬────────────┬────────────┐</span></span>
-<span><span class="co">#&gt; │ ISO3 ┆ YEAR ┆ NEWREL_F014 ┆ NEWREL_F152 ┆ … ┆ NEWREL_F354 ┆ NEWREL_F45 ┆ NEWREL_F55 ┆ NEWREL_F65 │</span></span>
-<span><span class="co">#&gt; │ ---  ┆ ---  ┆ ---         ┆ 4           ┆   ┆ 4           ┆ 54         ┆ 64         ┆ ---        │</span></span>
-<span><span class="co">#&gt; │ str  ┆ i64  ┆ i64         ┆ ---         ┆   ┆ ---         ┆ ---        ┆ ---        ┆ i64        │</span></span>
-<span><span class="co">#&gt; │      ┆      ┆             ┆ i64         ┆   ┆ i64         ┆ i64        ┆ i64        ┆            │</span></span>
-<span><span class="co">#&gt; ╞══════╪══════╪═════════════╪═════════════╪═══╪═════════════╪════════════╪════════════╪════════════╡</span></span>
-<span><span class="co">#&gt; │ AGO  ┆ 2013 ┆ 626         ┆ 2644        ┆ … ┆ 1671        ┆ 991        ┆ 481        ┆ 314        │</span></span>
-<span><span class="co">#&gt; │ AIA  ┆ 2013 ┆ 0           ┆ 0           ┆ … ┆ 0           ┆ 0          ┆ 0          ┆ 0          │</span></span>
-<span><span class="co">#&gt; │ ALB  ┆ 2013 ┆ 5           ┆ 28          ┆ … ┆ 13          ┆ 18         ┆ 14         ┆ 34         │</span></span>
-<span><span class="co">#&gt; │ AND  ┆ 2013 ┆ 0           ┆ 0           ┆ … ┆ 1           ┆ 0          ┆ 0          ┆ 0          │</span></span>
-<span><span class="co">#&gt; │ ARE  ┆ 2013 ┆ 5           ┆ 4           ┆ … ┆ 3           ┆ 3          ┆ 1          ┆ 6          │</span></span>
-<span><span class="co">#&gt; │ ARG  ┆ 2013 ┆ 431         ┆ 927         ┆ … ┆ 537         ┆ 395        ┆ 307        ┆ 374        │</span></span>
-<span><span class="co">#&gt; └──────┴──────┴─────────────┴─────────────┴───┴─────────────┴────────────┴────────────┴────────────┘</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="about-dependencies">About dependencies<a class="anchor" aria-label="anchor" href="#about-dependencies"></a>
-</h2>
-<p>If you care about dependencies (if you’d like to use
-<code>tidypolars</code> in a package for instance),
-<code>tidypolars</code> uses <code>polars</code> (no R package
-dependencies) and <code>tidyselect</code>, which is a low-level, widely
-tested package that has very rarely breaking changes:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">tools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/tools/package_dependencies.html" class="external-link">package_dependencies</a></span><span class="op">(</span><span class="st">"tidyselect"</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $tidyselect</span></span>
-<span><span class="co">#&gt; [1] "cli"       "glue"      "lifecycle" "rlang"     "vctrs"     "withr"     "utils"     "methods"  </span></span>
-<span><span class="co">#&gt; [9] "graphics"  "grDevices" "stats" </span></span></code></pre></div>
-</div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
-    </nav></aside>
+<span><span class="co">#&gt; ┌──────┬────────┬─────────────┬────────────┬───┬────────────┬────────────┬────────────┬────────────┐</span></span>
+<span><span class="co">#&gt; │ ISO3 ┆ YEAR   ┆ NEWREL_F014 ┆ NEWREL_F15 ┆ … ┆ NEWREL_F35 ┆ NEWREL_F45 ┆ NEWREL_F55 ┆ NEWREL_F65 │</span></span>
+<span><span class="co">#&gt; │ ---  ┆ ---    ┆ ---         ┆ 24         ┆   ┆ 44         ┆ 54         ┆ 64         ┆ ---        │</span></span>
+<span><span class="co">#&gt; │ str  ┆ f64    ┆ f64         ┆ ---        ┆   ┆ ---        ┆ ---        ┆ ---        ┆ f64        │</span></span>
+<span><span class="co">#&gt; │      ┆        ┆             ┆ f64        ┆   ┆ f64        ┆ f64        ┆ f64        ┆            │</span></span>
+<span><span class="co">#&gt; ╞══════╪════════╪═════════════╪════════════╪═══╪════════════╪════════════╪════════════╪════════════╡</span></span>
+<span><span class="co">#&gt; │ AGO  ┆ 2013.0 ┆ 626.0       ┆ 2644.0     ┆ … ┆ 1671.0     ┆ 991.0      ┆ 481.0      ┆ 314.0      │</span></span>
+<span><span class="co">#&gt; │ AIA  ┆ 2013.0 ┆ 0.0         ┆ 0.0        ┆ … ┆ 0.0        ┆ 0.0        ┆ 0.0        ┆ 0.0        │</span></span>
+<span><span class="co">#&gt; │ ALB  ┆ 2013.0 ┆ 5.0         ┆ 28.0       ┆ … ┆ 13.0       ┆ 18.0       ┆ 14.0       ┆ 34.0       │</span></span>
+<span><span class="co">#&gt; │ AND  ┆ 2013.0 ┆ 0.0         ┆ 0.0        ┆ … ┆ 1.0        ┆ 0.0        ┆ 0.0        ┆ 0.0        │</span></span>
+<span><span class="co">#&gt; │ ARE  ┆ 2013.0 ┆ 5.0         ┆ 4.0        ┆ … ┆ 3.0        ┆ 3.0        ┆ 1.0        ┆ 6.0        │</span></span>
+<span><span class="co">#&gt; │ ARG  ┆ 2013.0 ┆ 431.0       ┆ 927.0      ┆ … ┆ 537.0      ┆ 395.0      ┆ 307.0      ┆ 374.0      │</span></span>
+<span><span class="co">#&gt; └──────┴────────┴─────────────┴────────────┴───┴────────────┴────────────┴────────────┴────────────┘</span></span></code></pre></div>
+<p><code>tidypolars</code> also supports many functions from
+<code>base</code>, <code>lubridate</code> or <code>stringr</code>. When
+these are used inside <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code> or
+<code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code>, <code>tidypolars</code> will automatically
+convert them to use the Polars engine under the hood. Take a look at the
+vignette “R and Polars expressions” for more information.</p>
+  </main>
 </div>
 
 

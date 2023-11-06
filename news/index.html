@@ -56,8 +56,13 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
-<p><strong>New features</strong></p>
-<ul><li>New function <code><a href="../reference/pl_distinct.html">duplicated_rows()</a></code> that is the opposite of <code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/50" class="external-link">#50</a>).</li>
+<p><strong>Breaking changes</strong></p>
+<ul><li>All functions starting with <code>pl_</code> have been removed to the benefit of the S3 methods. For example, <code>pl_distinct()</code> doesn’t exist anymore so the only way to use it is to load <code>dplyr</code> and to use <code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct()</a></code> on a Polars DataFrame or LazyFrame. This is to avoid confusion about compatibility with <code>dplyr</code> and <code>tidyr</code>. See <a href="https://github.com/etiennebacher/tidypolars/issues/49" class="external-link">#49</a> for a more detailed explanation.</li>
+</ul><p><strong>New features</strong></p>
+<ul><li>New function <code><a href="../reference/distinct.DataFrame.html">duplicated_rows()</a></code> that is the opposite of <code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/50" class="external-link">#50</a>).</li>
+</ul><p><strong>Misc</strong></p>
+<ul><li>
+<code>relig_income</code> and <code>fish_encounters</code> are not reexported anymore since <code>tidyr</code> is now imported.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="tidypolars-020">tidypolars 0.2.0<a class="anchor" aria-label="anchor" href="#tidypolars-020"></a></h2>
@@ -65,7 +70,7 @@
 <p><strong>New features</strong></p>
 <ul><li><p>Rename <code>pl_fetch()</code> to <code><a href="../reference/fetch.html">fetch()</a></code>.</p></li>
 <li><p>New functions supported: <code><a href="../reference/describe.html">describe()</a></code>, <code><a href="../reference/sink_csv.html">sink_csv()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample()</a></code>.</p></li>
-<li><p>New argument <code>fill</code> in <code><a href="../reference/pl_complete.html">pl_complete()</a></code>.</p></li>
+<li><p>New argument <code>fill</code> in <code>pl_complete()</code>.</p></li>
 <li><p>Support <code><a href="https://stringr.tidyverse.org/reference/case.html" class="external-link">stringr::str_to_title()</a></code> and <code><a href="https://rdrr.io/r/tools/toTitleCase.html" class="external-link">tools::toTitleCase()</a></code>.</p></li>
 <li><p>Support <code><a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">stringr::fixed()</a></code> to use literal strings.</p></li>
 <li><p>Support replacements with captured groups like <code>\\1</code> in <code><a href="https://stringr.tidyverse.org/reference/str_replace.html" class="external-link">stringr::str_replace()</a></code> and <code><a href="https://stringr.tidyverse.org/reference/str_replace.html" class="external-link">stringr::str_replace_all()</a></code>.</p></li>
@@ -79,14 +84,14 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="tidypolars-010">tidypolars 0.1.0<a class="anchor" aria-label="anchor" href="#tidypolars-010"></a></h2>
 <p><strong>New features</strong></p>
-<ul><li><p>Support <code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric()</a></code>, <code><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character()</a></code>, <code><a href="https://rdrr.io/r/base/logical.html" class="external-link">as.logical()</a></code>, <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl()</a></code>, and <code><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste()</a></code> in expressions in <code><a href="../reference/pl_filter.html">pl_filter()</a></code>, <code><a href="../reference/pl_mutate.html">pl_mutate()</a></code> and <code><a href="../reference/pl_summarize.html">pl_summarize()</a></code>.</p></li>
+<ul><li><p>Support <code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric()</a></code>, <code><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character()</a></code>, <code><a href="https://rdrr.io/r/base/logical.html" class="external-link">as.logical()</a></code>, <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl()</a></code>, and <code><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste()</a></code> in expressions in <code>pl_filter()</code>, <code>pl_mutate()</code> and <code>pl_summarize()</code>.</p></li>
 <li><p>Support <code><a href="../reference/sink_parquet.html">sink_parquet()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/38" class="external-link">#38</a>).</p></li>
 <li><p>Support <code><a href="../reference/fetch.html">fetch()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/42" class="external-link">#42</a>).</p></li>
 <li><p>Support for additional <code>stringr</code> functions: <code>str_detect()</code>, <code>str_extract_all()</code>, <code>str_pad()</code>, <code>str_squish()</code>, <code>str_trim()</code>, <code>word()</code> (some arguments or corner cases are not supported yet).</p></li>
 <li><p>Add all optimization parameters in <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code>.</p></li>
 </ul><p><strong>Bug fixes</strong></p>
-<ul><li><p>Fix <code><a href="../reference/pl_mutate.html">pl_mutate()</a></code> and <code><a href="../reference/pl_summarize.html">pl_summarize()</a></code> when expressions use some variables previously created or modified (<a href="https://github.com/etiennebacher/tidypolars/issues/10" class="external-link">#10</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/37" class="external-link">#37</a>).</p></li>
-<li><p>Fix bug in <code><a href="../reference/pl_filter.html">pl_filter()</a></code> when passing a vector in the RHS of <code>%in%</code>.</p></li>
+<ul><li><p>Fix <code>pl_mutate()</code> and <code>pl_summarize()</code> when expressions use some variables previously created or modified (<a href="https://github.com/etiennebacher/tidypolars/issues/10" class="external-link">#10</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/37" class="external-link">#37</a>).</p></li>
+<li><p>Fix bug in <code>pl_filter()</code> when passing a vector in the RHS of <code>%in%</code>.</p></li>
 </ul><p><strong>Misc</strong></p>
 <ul><li><p>Improve the backend to translate R expressions into Polars expressions. This also led to a complete rewriting of the vignette “R and Polars expressions” (<a href="https://github.com/etiennebacher/tidypolars/issues/27" class="external-link">#27</a>).</p></li>
 <li><p>Error messages should now report the correct function call.</p></li>

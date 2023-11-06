@@ -31,13 +31,40 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
+    <loc>/reference/arrange.DataFrame.html</loc>
+  </url>
+  <url>
     <loc>/reference/as_polars.html</loc>
+  </url>
+  <url>
+    <loc>/reference/bind_cols_polars.html</loc>
+  </url>
+  <url>
+    <loc>/reference/bind_rows_polars.html</loc>
+  </url>
+  <url>
+    <loc>/reference/collect.LazyFrame.html</loc>
+  </url>
+  <url>
+    <loc>/reference/complete.DataFrame.html</loc>
+  </url>
+  <url>
+    <loc>/reference/count.DataFrame.html</loc>
+  </url>
+  <url>
+    <loc>/reference/cross_join.DataFrame.html</loc>
   </url>
   <url>
     <loc>/reference/describe.html</loc>
   </url>
   <url>
     <loc>/reference/describe_plan.html</loc>
+  </url>
+  <url>
+    <loc>/reference/distinct.DataFrame.html</loc>
+  </url>
+  <url>
+    <loc>/reference/drop_na.DataFrame.html</loc>
   </url>
   <url>
     <loc>/reference/expect_colnames.html</loc>
@@ -58,94 +85,52 @@
     <loc>/reference/fetch.html</loc>
   </url>
   <url>
-    <loc>/reference/filtering-joins.html</loc>
+    <loc>/reference/fill.DataFrame.html</loc>
   </url>
   <url>
-    <loc>/reference/fish_encounters.html</loc>
+    <loc>/reference/filter.DataFrame.html</loc>
+  </url>
+  <url>
+    <loc>/reference/group_by.DataFrame.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
   </url>
   <url>
+    <loc>/reference/left_join.DataFrame.html</loc>
+  </url>
+  <url>
     <loc>/reference/make_unique_id.html</loc>
   </url>
   <url>
-    <loc>/reference/mutating-joins.html</loc>
+    <loc>/reference/mutate.DataFrame.html</loc>
   </url>
   <url>
-    <loc>/reference/pl_arrange.html</loc>
+    <loc>/reference/pivot_longer.DataFrame.html</loc>
   </url>
   <url>
-    <loc>/reference/pl_bind_cols.html</loc>
+    <loc>/reference/pivot_wider.DataFrame.html</loc>
   </url>
   <url>
-    <loc>/reference/pl_bind_rows.html</loc>
+    <loc>/reference/pull.DataFrame.html</loc>
   </url>
   <url>
-    <loc>/reference/pl_collect.html</loc>
+    <loc>/reference/relocate.DataFrame.html</loc>
   </url>
   <url>
-    <loc>/reference/pl_complete.html</loc>
+    <loc>/reference/rename.DataFrame.html</loc>
   </url>
   <url>
-    <loc>/reference/pl_count.html</loc>
+    <loc>/reference/replace_na.DataFrame.html</loc>
   </url>
   <url>
-    <loc>/reference/pl_cross_join.html</loc>
+    <loc>/reference/select.DataFrame.html</loc>
   </url>
   <url>
-    <loc>/reference/pl_distinct.html</loc>
+    <loc>/reference/semi_join.DataFrame.html</loc>
   </url>
   <url>
-    <loc>/reference/pl_drop_na.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pl_fill.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pl_filter.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pl_group_by.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pl_mutate.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pl_pivot_longer.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pl_pivot_wider.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pl_pull.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pl_relocate.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pl_rename.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pl_replace_na.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pl_select.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pl_separate.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pl_slice.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pl_summarize.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pl_unite.html</loc>
-  </url>
-  <url>
-    <loc>/reference/relig_income.html</loc>
+    <loc>/reference/separate.DataFrame.html</loc>
   </url>
   <url>
     <loc>/reference/sink_csv.html</loc>
@@ -154,6 +139,15 @@
     <loc>/reference/sink_parquet.html</loc>
   </url>
   <url>
+    <loc>/reference/slice_tail.DataFrame.html</loc>
+  </url>
+  <url>
+    <loc>/reference/summarize.DataFrame.html</loc>
+  </url>
+  <url>
     <loc>/reference/to_r.html</loc>
+  </url>
+  <url>
+    <loc>/reference/unite.DataFrame.html</loc>
   </url>
 </urlset>
