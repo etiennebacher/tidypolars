@@ -21,6 +21,10 @@
 * `bind_rows_polars()` can now bind Data/LazyFrames that don't have the same 
   schema. Columns will be upcast to common types if necessary. Unknown columns 
   will be filled with `NA`.
+  
+**Bug fixes**
+
+* `complete()` now works correctly on grouped data.
 
 **Misc**
 
