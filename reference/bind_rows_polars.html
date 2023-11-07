@@ -69,8 +69,7 @@
     <dl><dt>...</dt>
 <dd><p>Polars DataFrames or LazyFrames to combine. Each argument can
 either be a Data/LazyFrame, or a list of Data/LazyFrames. Columns are matched
-by name. All Data/LazyFrames must have the same number of columns with
-identical names.</p></dd>
+by name, and any missing columns will be filled with <code>NA</code>.</p></dd>
 
 
 <dt>.id</dt>
@@ -81,70 +80,41 @@ create an output column that identifies each input.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="fl">20</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pola-rs/r-polars" class="external-link">polars</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  y <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="fl">20</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  y <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">4</span>,</span></span>
+<span class="r-in"><span>  z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"c"</span>, <span class="st">"d"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span><span class="op">$</span><span class="fu">with_columns</span><span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"y"</span><span class="op">)</span><span class="op">$</span><span class="fu">cast</span><span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="va">Int16</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">bind_rows_polars</span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (40, 2)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┐</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ y   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ str ┆ i32 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ v   ┆ 26  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 79  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ y   ┆ 76  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ i   ┆ 91  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ …   ┆ …   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ c   ┆ 89  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ q   ┆ 23  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ o   ┆ 62  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ t   ┆ 33  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┘</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument `to_supertypes` is not used when how=='diagonal'</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Execution halted with the following contexts</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>    0: In R: in $collect():</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>    0: During function call [pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)]</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>    1: Encountered the following error in Rust-Polars:</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>       	lengths don't match: unable to vstack, dtypes for column "y" don't match: `i32` and `i16`</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># this is equivalent</span></span></span>
 <span class="r-in"><span><span class="fu">bind_rows_polars</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (40, 2)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┐</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ y   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ str ┆ i32 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ v   ┆ 26  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 79  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ y   ┆ 76  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ i   ┆ 91  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ …   ┆ …   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ c   ┆ 89  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ q   ┆ 23  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ o   ┆ 62  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ t   ┆ 33  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┘</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument `to_supertypes` is not used when how=='diagonal'</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Execution halted with the following contexts</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>    0: In R: in $collect():</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>    0: During function call [pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)]</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>    1: Encountered the following error in Rust-Polars:</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>       	lengths don't match: unable to vstack, dtypes for column "y" don't match: `i32` and `i16`</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># create an id colum</span></span></span>
 <span class="r-in"><span><span class="fu">bind_rows_polars</span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, .id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (40, 3)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┬─────┐</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ id  ┆ x   ┆ y   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ --- │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ i32 ┆ str ┆ i32 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1   ┆ v   ┆ 26  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1   ┆ b   ┆ 79  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1   ┆ y   ┆ 76  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1   ┆ i   ┆ 91  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ …   ┆ …   ┆ …   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2   ┆ c   ┆ 89  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2   ┆ q   ┆ 23  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2   ┆ o   ┆ 62  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2   ┆ t   ┆ 33  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴─────┘</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument `to_supertypes` is not used when how=='diagonal'</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Execution halted with the following contexts</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>    0: In R: in $collect():</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>    0: During function call [pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)]</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>    1: Encountered the following error in Rust-Polars:</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>       	lengths don't match: unable to vstack, dtypes for column "y" don't match: `i32` and `i16`</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
