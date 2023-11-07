@@ -63,6 +63,9 @@
 <ul><li><p>New function <code><a href="../reference/distinct.DataFrame.html">duplicated_rows()</a></code> that is the opposite of <code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/50" class="external-link">#50</a>).</p></li>
 <li><p>New argument <code>.id</code> in <code><a href="../reference/bind_rows_polars.html">bind_rows_polars()</a></code>.</p></li>
 <li><p><code><a href="../reference/bind_rows_polars.html">bind_rows_polars()</a></code> can now bind Data/LazyFrames that don’t have the same schema. Columns will be upcast to common types if necessary. Unknown columns will be filled with <code>NA</code>.</p></li>
+</ul><p><strong>Bug fixes</strong></p>
+<ul><li>
+<code><a href="https://tidyr.tidyverse.org/reference/complete.html" class="external-link">complete()</a></code> now works correctly on grouped data.</li>
 </ul><p><strong>Misc</strong></p>
 <ul><li>
 <code>relig_income</code> and <code>fish_encounters</code> are not reexported anymore since <code>tidyr</code> is now imported.</li>
