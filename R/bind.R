@@ -2,21 +2,21 @@
 #'
 #' @param ... Polars DataFrames or LazyFrames to combine. Each argument can
 #'  either be a Data/LazyFrame, or a list of Data/LazyFrames. Columns are matched
-#'  by name. All Data/LazyFrames must have the same number of columns with
-#'  identical names.
+#'  by name, and any missing columns will be filled with `NA`.
 #' @param .id The name of an optional identifier column. Provide a string to
 #' create an output column that identifies each input.
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' p1 <- polars::pl$DataFrame(
-#'   x = sample(letters, 20),
-#'   y = sample(1:100, 20)
+#' library(polars)
+#' p1 <- pl$DataFrame(
+#'   x = c("a", "b"),
+#'   y = 1:2
 #' )
-#' p2 <- polars::pl$DataFrame(
-#'   x = sample(letters, 20),
-#'   y = sample(1:100, 20)
-#' )
+#' p2 <- pl$DataFrame(
+#'   y = 3:4,
+#'   z = c("c", "d")
+#' )$with_columns(pl$col("y")$cast(pl$Int16))
 #'
 #' bind_rows_polars(p1, p2)
 #'
@@ -29,7 +29,7 @@
 bind_rows_polars <- function(..., .id = NULL) {
   # TODO: check with "diagonal" to coerce types and fill missings
   # wait for https://github.com/pola-rs/r-polars/issues/350
-  concat_(..., how = "vertical", .id = .id)
+  concat_(..., how = "diagonal", .id = .id)
 }
 
 #' Append multiple Data/LazyFrames next to each other
@@ -97,5 +97,9 @@ concat_ <- function(..., how, .id = NULL) {
     })
   }
 
-  pl$concat(dots, how = how)
+  if (how == "diagonal") {
+    pl$concat(dots, how = how, to_supertypes = TRUE)
+  } else {
+    pl$concat(dots, how = how)
+  }
 }

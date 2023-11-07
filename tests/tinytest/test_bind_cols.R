@@ -34,6 +34,9 @@ expect_equal(
   bind_cols_polars(list(p1, p2))
 )
 
+
+# for now, error if duplicated col names
+
 l2 <- list(
   polars::pl$DataFrame(
     x = sample(letters, 20),
@@ -44,6 +47,7 @@ l2 <- list(
     z = sample(1:100, 20)
   )
 )
+
 
 expect_error(
   bind_cols_polars(l2),

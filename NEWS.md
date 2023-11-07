@@ -7,12 +7,20 @@
   use it is to load `dplyr` and to use `distinct()` on a Polars DataFrame or
   LazyFrame. This is to avoid confusion about compatibility with `dplyr` and 
   `tidyr`. See #49 for a more detailed explanation.
+  
+* `pl_bind_rows()` and `pl_bind_cols()` are renamed `bind_rows_polars()` and
+  `bind_cols_polars()` respectively. This is because `bind_rows()` and `bind_cols()`
+  are not S3 methods (this might change in future versions of `dplyr`).
 
 **New features**
 
 * New function `duplicated_rows()` that is the opposite of `distinct()` (#50).
 
 * New argument `.id` in `bind_rows_polars()`.
+
+* `bind_rows_polars()` can now bind Data/LazyFrames that don't have the same 
+  schema. Columns will be upcast to common types if necessary. Unknown columns 
+  will be filled with `NA`.
 
 **Misc**
 

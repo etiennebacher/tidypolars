@@ -23,7 +23,6 @@ expect_equal(
   rep(1:2, each = 20)
 )
 
-
 p1 <- pl$DataFrame(
   x = sample(letters, 20),
   y = sample(1:100, 20)
@@ -38,23 +37,23 @@ expect_equal(
   bind_rows_polars(list(p1, p2))
 )
 
-
-# for now, error if not the same cols (for bind_rows) or duplicated col names
-# (for bind_cols)
-
 l2 <- list(
   polars::pl$DataFrame(
-    x = sample(letters, 20),
-    y = sample(1:100, 20)
+    x = c("a", "b"),
+    y = 1:2
   ),
   polars::pl$DataFrame(
-    y = sample(letters, 20),
-    z = sample(1:100, 20)
-  )
+    y = 3:4,
+    z = c("c", "d")
+  )$with_columns(pl$col("y")$cast(pl$Int16))
 )
 
-expect_error(
+expect_equal(
   bind_rows_polars(l2),
-  "column names don't match"
+  data.frame(
+    x = c("a", "b", NA, NA),
+    y = 1:4,
+    z = c(NA, NA, "c", "d")
+  )
 )
 
