@@ -18,29 +18,20 @@
 # nocov start
 as_polars <- function(.data, lazy = FALSE, with_string_cache = FALSE) {
 
-  # TODO: in r-polars, add string cache in pl$get_polars_options() so that I
-  # can know if it's already globally enabled
-
-  # can't disable it here because I can't still use filter() after that
-  # NOT GOOD: enabling it for one Data/lazyFrame will quietly enable it globally
-  # if (isTRUE(with_string_cache)) {
-  #   polars::pl$enable_string_cache(TRUE)
-  #   # on.exit(polars::pl$enable_string_cache(FALSE))
-  # }
-
   if (isTRUE(with_string_cache)) {
-    inform(
-      paste(
-        "This argument does nothing for now.",
-        "Please use `polars::pl$enable_string_cache(TRUE)` instead."
-      )
-    )
-  }
-
-  if (isTRUE(lazy)) {
-    pl$LazyFrame(.data)
+    pl$with_string_cache({
+      if (isTRUE(lazy)) {
+        pl$LazyFrame(.data)
+      } else {
+        pl$DataFrame(.data)
+      }
+    })
   } else {
-    pl$DataFrame(.data)
+    if (isTRUE(lazy)) {
+      pl$LazyFrame(.data)
+    } else {
+      pl$DataFrame(.data)
+    }
   }
 }
 # nocov end
