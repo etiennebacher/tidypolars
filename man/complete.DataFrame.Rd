@@ -20,8 +20,7 @@ use instead of \code{NA} for missing combinations.}
 }
 \description{
 Turns implicit missing values into explicit missing values. This is useful
-for completing missing combinations of data. Note that this function doesn't
-work with grouped data yet.
+for completing missing combinations of data.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -41,5 +40,9 @@ df |>
     group, item_id, item_name,
     fill = list(value1 = 0, value2 = 99)
   )
+
+df |>
+  group_by(group, maintain_order = TRUE) |>
+  complete(item_id, item_name)
 \dontshow{\}) # examplesIf}
 }

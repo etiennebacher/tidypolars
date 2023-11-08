@@ -27,19 +27,17 @@ test2 <- pl$LazyFrame(
 )
 
 # TODO: test more extensively regex
+# https://github.com/pola-rs/polars/issues/4819
+expect_equal_lazy(
+  separate(test2, x, into = c("foo", "foo2")) |>
+    pull(foo),
+  c(NA, "x", "x", "y")
+)
 
-# expect_equal_lazy(
-#   separate(test2, x, into = c("foo", "foo2")) |>
-#     pull(foo) |>
-#     to_r(),
-#   c(NA, "x", "x", "y")
-# )
-#
-# expect_equal_lazy(
-#   separate(test2, x, into = c("foo", "foo2")) |>
-#     pull(foo2) |>
-#     to_r(),
-#   c(NA, "y", "z", "z")
-# )
+expect_equal_lazy(
+  separate(test2, x, into = c("foo", "foo2")) |>
+    pull(foo2),
+  c(NA, "y", "z", "z")
+)
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-pl_fish_encounters <- polars::pl$DataFrame(fish_encounters)
+pl_fish_encounters <- polars::pl$DataFrame(tidyr::fish_encounters)
 
 out <- pl_fish_encounters |>
   pivot_wider(names_from = station, values_from = seen)

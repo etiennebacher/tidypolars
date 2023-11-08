@@ -5,9 +5,9 @@
 \alias{separate.LazyFrame}
 \title{Separate a character column into multiple columns based on a substring}
 \usage{
-\method{separate}{DataFrame}(data, col, into, sep = "[^[:alnum:]]+", remove = TRUE, ...)
+\method{separate}{DataFrame}(data, col, into, sep = " ", remove = TRUE, ...)
 
-\method{separate}{LazyFrame}(data, col, into, sep = "[^[:alnum:]]+", remove = TRUE, ...)
+\method{separate}{LazyFrame}(data, col, into, sep = " ", remove = TRUE, ...)
 }
 \arguments{
 \item{data}{A Polars Data/LazyFrame}
@@ -17,7 +17,8 @@
 \item{into}{Character vector containing the names of new variables to create.
 Use \code{NA} to omit the variable in the output.}
 
-\item{sep}{String that is used to split the column.}
+\item{sep}{String that is used to split the column. Regular expressions are
+not supported yet.}
 
 \item{remove}{If \code{TRUE}, remove input column from output data frame.}
 

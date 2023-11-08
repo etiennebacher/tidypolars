@@ -1,8 +1,7 @@
 #' Complete a data frame with missing combinations of data
 #'
 #' Turns implicit missing values into explicit missing values. This is useful
-#' for completing missing combinations of data. Note that this function doesn't
-#' work with grouped data yet.
+#' for completing missing combinations of data.
 #'
 #' @param data A Polars Data/LazyFrame
 #' @inheritParams select.DataFrame
@@ -27,6 +26,10 @@
 #'     group, item_id, item_name,
 #'     fill = list(value1 = 0, value2 = 99)
 #'   )
+#'
+#' df |>
+#'   group_by(group, maintain_order = TRUE) |>
+#'   complete(item_id, item_name)
 
 complete.DataFrame <- function(data, ..., fill = list()) {
 
@@ -38,18 +41,21 @@ complete.DataFrame <- function(data, ..., fill = list()) {
   mo <- attributes(data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
-  # TODO: implement by group
-  # df |>
-  #  group_by(group) |>
-  #  complete(item_id, item_name)
-  # foo <- df$group_by(grps)$agg(pl$col(vars)$unique()$sort()$implode())
-  # need to explode twice in this case
+  if (isTRUE(is_grouped)) {
+    chain <- data$group_by(grps, maintain_order = mo)$agg(pl$col(vars)$unique()$sort())
+  } else {
+    chain <- data$select(pl$col(vars)$unique()$sort()$implode())
+  }
 
-  chain <- data$select(pl$col(vars)$unique()$sort()$implode())
   for (i in 1:length(vars)) {
     chain <- chain$explode(vars[i])
   }
-  out <- chain$join(data, on = vars, how = 'left')
+
+  if (isTRUE(is_grouped)) {
+    out <- chain$join(data, on = c(grps, vars), how = 'left')
+  } else {
+    out <- chain$join(data, on = vars, how = 'left')
+  }
 
   # TODO: implement argument `explicit`
   if (length(fill) > 0) {
@@ -59,7 +65,7 @@ complete.DataFrame <- function(data, ..., fill = list()) {
   if (isTRUE(is_grouped)) {
     out |>
       relocate(tidyselect::all_of(grps), .before = 1) |>
-      group_by(tidyselect::all_of(grps))
+      group_by(tidyselect::all_of(grps), maintain_order = mo)
   } else {
     out
   }
