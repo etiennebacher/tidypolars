@@ -27,8 +27,6 @@
 #' bind_rows_polars(p1, p2, .id = "id")
 
 bind_rows_polars <- function(..., .id = NULL) {
-  # TODO: check with "diagonal" to coerce types and fill missings
-  # wait for https://github.com/pola-rs/r-polars/issues/350
   concat_(..., how = "diagonal", .id = .id)
 }
 
