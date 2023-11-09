@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,23 +54,6 @@
       <small>Source: <a href="https://github.com/etiennebacher/tidypolars/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
-    <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
-<p><code>tidypolars</code> requires <code>polars</code> &gt;= 0.10.0.</p>
-<p><strong>Breaking changes</strong></p>
-<ul><li><p>All functions starting with <code>pl_</code> have been removed to the benefit of the S3 methods. For example, <code>pl_distinct()</code> doesn’t exist anymore so the only way to use it is to load <code>dplyr</code> and to use <code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct()</a></code> on a Polars DataFrame or LazyFrame. This is to avoid confusion about compatibility with <code>dplyr</code> and <code>tidyr</code>. See <a href="https://github.com/etiennebacher/tidypolars/issues/49" class="external-link">#49</a> for a more detailed explanation.</p></li>
-<li><p><code>pl_bind_rows()</code> and <code>pl_bind_cols()</code> are renamed <code><a href="../reference/bind_rows_polars.html">bind_rows_polars()</a></code> and <code><a href="../reference/bind_cols_polars.html">bind_cols_polars()</a></code> respectively. This is because <code><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols()</a></code> are not S3 methods (this might change in future versions of <code>dplyr</code>).</p></li>
-</ul><p><strong>New features</strong></p>
-<ul><li><p>New function <code><a href="../reference/distinct.DataFrame.html">duplicated_rows()</a></code> that is the opposite of <code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/50" class="external-link">#50</a>).</p></li>
-<li><p>New argument <code>.id</code> in <code><a href="../reference/bind_rows_polars.html">bind_rows_polars()</a></code>.</p></li>
-<li><p><code><a href="../reference/bind_rows_polars.html">bind_rows_polars()</a></code> can now bind Data/LazyFrames that don’t have the same schema. Columns will be upcast to common types if necessary. Unknown columns will be filled with <code>NA</code>.</p></li>
-</ul><p><strong>Bug fixes</strong></p>
-<ul><li>
-<code><a href="https://tidyr.tidyverse.org/reference/complete.html" class="external-link">complete()</a></code> now works correctly on grouped data.</li>
-</ul><p><strong>Misc</strong></p>
-<ul><li>
-<code>relig_income</code> and <code>fish_encounters</code> are not reexported anymore since <code>tidyr</code> is now imported.</li>
-</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="tidypolars-020">tidypolars 0.2.0<a class="anchor" aria-label="anchor" href="#tidypolars-020"></a></h2>
 <p><code>tidypolars</code> requires <code>polars</code> &gt;= 0.9.0.</p>
