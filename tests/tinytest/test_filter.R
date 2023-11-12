@@ -115,33 +115,31 @@ expect_dim(
   c(100, 5)
 )
 
-# pl$disable_string_cache()
-#
-# expect_error(
-#   filter(pl_iris, Species %in% c("setosa", "virginica")),
-#   "string caches don't match"
-# )
-#
-# expect_dim(
-#   iris |>
-#     as_polars(with_string_cache = TRUE) |>
-#     filter(Species %in% c("setosa", "virginica")),
-#   c(100, 5)
-# )
-#
-# expect_dim(
-#   iris |>
-#     as_polars(with_string_cache = TRUE) |>
-#     filter(Species %in% c("setosa", "virginica")),
-#   c(50, 5)
-# )
-#
-# pl_iris3 <- as_polars(iris, with_string_cache = FALSE)
-#
-# expect_error(
-#   filter(pl_iris, Species %in% c("setosa", "foo")),
-#   "consider setting a global"
-# )
+pl$disable_string_cache()
+
+expect_error(
+  filter(pl_iris, Species %in% c("setosa", "virginica")),
+  "string caches don't match"
+)
+
+expect_dim(
+  iris |>
+    as_polars(with_string_cache = TRUE) |>
+    filter(Species %in% c("setosa", "virginica")),
+  c(100, 5)
+)
+
+expect_message(
+  iris |> as_polars(with_string_cache = TRUE),
+  "already globally enabled"
+)
+
+pl_iris3 <- as_polars(iris, with_string_cache = FALSE)
+
+expect_error(
+  filter(pl_iris, Species %in% c("setosa", "foo")),
+  "consider setting a global"
+)
 
 # between()
 
