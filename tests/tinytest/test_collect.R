@@ -17,7 +17,4 @@ expect_equal(
     filter(Species == "setosa")
 )
 
-expect_error(
-  collect(pl_iris),
-  "no applicable method"
-)
+expect_error(collect(pl_iris))

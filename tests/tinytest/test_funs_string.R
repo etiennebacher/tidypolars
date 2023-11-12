@@ -35,19 +35,21 @@ for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper", "nchar")) {
 
 }
 
-expect_equal(
-  mutate(test, foo = str_to_title(x1)) |>
-    pull(foo),
-  mutate(test_df, foo = str_to_title(x1)) |>
-    pull(foo)
-)
+if (polars::pl$polars_info()$features$full_features) {
+  expect_equal(
+    mutate(test, foo = str_to_title(x1)) |>
+      pull(foo),
+    mutate(test_df, foo = str_to_title(x1)) |>
+      pull(foo)
+  )
 
-expect_equal(
-  mutate(test, foo = toTitleCase(x6)) |>
-    pull(foo),
-  mutate(test_df, foo = toTitleCase(x6)) |>
-    pull(foo)
-)
+  expect_equal(
+    mutate(test, foo = toTitleCase(x6)) |>
+      pull(foo),
+    mutate(test_df, foo = toTitleCase(x6)) |>
+      pull(foo)
+  )
+}
 
 
 

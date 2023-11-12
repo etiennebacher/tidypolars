@@ -1,7 +1,7 @@
 Package: tidypolars
 Type: Package
 Title: Get the Power of Polars with the Syntax of the Tidyverse
-Version: 0.2.0.9000
+Version: 0.3.0.9000
 Authors@R: 
     person(given = "Etienne",
            family = "Bacher",
@@ -22,7 +22,7 @@ BugReports: https://github.com/etiennebacher/tidypolars/issues
 Depends: R (>= 4.1.0)
 Imports: 
     dplyr,
-    polars (>= 0.9.0),
+    polars (>= 0.10.0),
     rlang,
     tidyr,
     tidyselect

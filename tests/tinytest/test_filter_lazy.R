@@ -110,42 +110,23 @@ expect_dim(
   c(21, 11)
 )
 
-pl$enable_string_cache()
-
-expect_dim(
-  iris |>
-    as_polars() |>
-    filter(Species %in% c("setosa", "virginica")),
-  c(100, 5)
-)
-
-# pl$disable_string_cache()
-#
-# expect_error_lazy(
-#   filter(pl_iris, Species %in% c("setosa", "virginica")),
-#   "string caches don't match"
-# )
-#
+# See in as_polars()
 # expect_dim(
-#   iris |>
-#     as_polars(with_string_cache = TRUE) |>
-#     filter(Species %in% c("setosa", "virginica")),
+#   filter(pl_iris, Species %in% c("setosa", "virginica")),
 #   c(100, 5)
 # )
 #
 # expect_dim(
-#   iris |>
-#     as_polars(with_string_cache = TRUE) |>
-#     filter(Species %in% c("setosa", "virginica")),
+#   filter(pl_iris, Species %in% c("setosa", "foo")),
 #   c(50, 5)
 # )
-#
-# pl_iris3 <- as_polars(iris, with_string_cache = FALSE)
-#
-# expect_error_lazy(
-#   filter(pl_iris, Species %in% c("setosa", "foo")),
-#   "consider setting a global"
-# )
+
+pl_iris3 <- as_polars(iris, with_string_cache = FALSE)
+
+expect_error_lazy(
+  filter(pl_iris, Species %in% c("setosa", "foo")),
+  "consider setting a global"
+)
 
 # between()
 
