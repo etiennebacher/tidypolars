@@ -5,8 +5,8 @@
 #'
 #' @param .data An R dataframe.
 #' @param lazy Convert the data to lazy format.
-#' @param with_string_cache Enable the string cache. This allows more operations,
-#' such as comparing factors to strings but may cost some performance.
+#' @param with_string_cache Enable the string cache globally. This allows more
+#' operations, such as comparing factors to strings but may cost some performance.
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -18,23 +18,12 @@
 # nocov start
 as_polars <- function(.data, lazy = FALSE, with_string_cache = FALSE) {
 
-  # TODO: in r-polars, add string cache in pl$get_polars_options() so that I
-  # can know if it's already globally enabled
-
-  # can't disable it here because I can't still use filter() after that
-  # NOT GOOD: enabling it for one Data/lazyFrame will quietly enable it globally
-  # if (isTRUE(with_string_cache)) {
-  #   polars::pl$enable_string_cache(TRUE)
-  #   # on.exit(polars::pl$enable_string_cache(FALSE))
-  # }
-
   if (isTRUE(with_string_cache)) {
-    inform(
-      paste(
-        "This argument does nothing for now.",
-        "Please use `polars::pl$enable_string_cache(TRUE)` instead."
-      )
-    )
+    if (polars::pl$using_string_cache()) {
+      rlang::inform("String cache is already globally enabled.")
+    } else {
+      polars::pl$enable_string_cache()
+    }
   }
 
   if (isTRUE(lazy)) {
