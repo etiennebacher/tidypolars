@@ -11,8 +11,8 @@ as_polars(.data, lazy = FALSE, with_string_cache = FALSE)
 
 \item{lazy}{Convert the data to lazy format.}
 
-\item{with_string_cache}{Enable the string cache. This allows more operations,
-such as comparing factors to strings but may cost some performance.}
+\item{with_string_cache}{Enable the string cache globally. This allows more
+operations, such as comparing factors to strings but may cost some performance.}
 }
 \description{
 This operation is time- and memory-consuming. It should only be used for small
