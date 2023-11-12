@@ -1,5 +1,8 @@
 # tidypolars (development)
 
+* The argument `with_string_cache` in `as_polars()` now enables the string cache
+  globally if set to `TRUE` (#54).
+
 # tidypolars (0.3.0)
 
 `tidypolars` requires `polars` >= 0.10.0.
