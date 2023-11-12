@@ -138,6 +138,8 @@ expect_message(
   "already globally enabled"
 )
 
+pl$disable_string_cache()
+
 pl_iris3 <- as_polars(iris, with_string_cache = FALSE)
 
 expect_error_lazy(
