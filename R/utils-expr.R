@@ -211,10 +211,13 @@ translate_expr <- function(.data, quo, new_vars, env) {
           do.call(name, args),
           error = function(e) {
             if (!inherits(e, "tidypolars_error")) {
+              orig_name <- gsub("^pl_", "", name)
               abort(
-                paste0("Couldn't evaluate function `", name, "` in Polars. Are you ",
-                       "sure it returns a Polars expression?"),
-
+                c(
+                  paste0("Couldn't evaluate function `", orig_name, "()` in Polars."),
+                  "i" = "Are you sure it returns a Polars expression?"
+                ),
+                call = env
               )
             } else {
               abort(e$message, call = env)

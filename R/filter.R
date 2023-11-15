@@ -37,7 +37,7 @@ filter.DataFrame <- function(.data, ...) {
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
-  polars_exprs <- translate_dots(.data, ...)
+  polars_exprs <- translate_dots(.data, ..., env = rlang::current_env())
 
   if (is_grouped) {
     polars_exprs <- lapply(polars_exprs, \(x) x$over(grps))

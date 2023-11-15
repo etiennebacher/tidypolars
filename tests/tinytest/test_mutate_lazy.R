@@ -201,7 +201,7 @@ foo2 <<- function(x, y) {
 
 expect_error_lazy(
   mutate(pl_iris, x = foo2(Sepal.Length, Petal.Length)),
-  "Couldn't evaluate function `foo2`"
+  "Couldn't evaluate function `foo2\\(\\)`"
 )
 
 # embracing works

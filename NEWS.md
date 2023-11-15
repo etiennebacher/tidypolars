@@ -1,7 +1,14 @@
 # tidypolars (development)
 
+**New features**
+
 * The argument `with_string_cache` in `as_polars()` now enables the string cache
   globally if set to `TRUE` (#54).
+  
+**Misc**
+
+* Error messages coming from `mutate()`, `summarize()`, and `filter()` now give 
+  the right function call. 
 
 # tidypolars (0.3.0)
 

@@ -197,7 +197,7 @@ foo2 <<- function(x, y) {
 
 expect_error(
   mutate(pl_iris, x = foo2(Sepal.Length, Petal.Length)),
-  "Couldn't evaluate function `foo2`"
+  "Couldn't evaluate function `foo2\\(\\)`"
 )
 
 # embracing works

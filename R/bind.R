@@ -69,7 +69,7 @@ concat_ <- function(..., how, .id = NULL) {
 
   if (any_not_polars) {
     rlang::abort(
-      "All elements in `...` must be either DataFrames or LazyFrames).",
+      "All elements in `...` must be either DataFrames or LazyFrames.",
       call = caller_env()
     )
   }

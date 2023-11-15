@@ -181,10 +181,7 @@ cross_join.LazyFrame <- cross_join.DataFrame
 
 
 join_ <- function(x, y, by = NULL, how, suffix) {
-
-  check_polars_data(x)
-  check_polars_data(y)
-  check_same_class(x, y)
+  check_same_class(x, y, rlang::caller_env())
 
   if (!is.null(suffix) && length(suffix) != 2) {
     rlang::abort(
