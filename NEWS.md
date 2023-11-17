@@ -8,6 +8,8 @@
 * Better error message in `filter()` when comparing factors to strings while the
   string cache is disabled.
   
+* Basic support for `strptime()`.
+  
 **Bug fixes**
 
 * Improve robustness of sequential expressions in `mutate()` and `summarize()` 

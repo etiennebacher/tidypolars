@@ -95,9 +95,14 @@ pl_str_starts <- function(string, pattern, negate = FALSE, ...) {
   }
 }
 
-pl_str_strptime <- function(string, ...) {
+pl_str_strptime <- function(string, format, tz = "", ...) {
   check_empty_dots(...)
-  string$str$strptime()
+  if (grepl("%(I|H|c|T|M|p|r|R|S|X|z)", format)) {
+    datatype = pl$Datetime("us", tz = tz)
+  } else {
+    datatype = pl$Date
+  }
+  string$str$strptime(datatype = datatype, format = format)
 }
 
 pl_str_to_lower <- function(string, ...) {

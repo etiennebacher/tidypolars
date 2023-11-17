@@ -10,7 +10,8 @@ test_df <- data.frame(
   # MDY = c("03-26-2012", "01-01-2020", "12-14-2023")
   YMD_HMS = ymd_hms(c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00")),
   to_ymd_hms = c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00"),
-  to_ymd_hm = c("2012-03-26 12:00", "2020-01-01 12:00", "2023-12-14 12:00")
+  to_ymd_hm = c("2012-03-26 12:00", "2020-01-01 12:00", "2023-12-14 12:00"),
+  somedate = c("Jul 24 2014", "Dec 24 2015", "Jan 21 2016")
 )
 
 test <- pl$DataFrame(test_df)
@@ -59,3 +60,13 @@ for (i in c("hour", "minute", "second")) {
 #
 #   expect_equal(pol, res, info = i)
 # }
+
+
+# strptime
+
+expect_equal(
+  test |>
+    mutate(foo = strptime(somedate, "%b %d %Y")) |>
+    pull(foo),
+  as.Date(c("2014-07-24", "2015-12-24", "2016-01-21"))
+)
