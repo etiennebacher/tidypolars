@@ -16,7 +16,7 @@ expect_equal_lazy(
     x = NULL,
     mean_pl = mean(Petal.Length),
     foo = Sepal.Width + Petal.Width,
-    env = current_env()
+    env = rlang::current_env()
   ),
   list(
     pool_exprs_1 = list(
@@ -39,7 +39,7 @@ expect_equal_lazy(
     x = 1,
     x = 2,
     x = NULL,
-    env = current_env()
+    env = rlang::current_env()
   ),
   list(
     pool_exprs_1 = list(x = pl$lit(1)),
@@ -54,7 +54,7 @@ expect_equal_lazy(
     x = 1,
     x = "a",
     x = NULL,
-    env = current_env()
+    env = rlang::current_env()
   ),
   list(
     pool_exprs_1 = list(x = pl$lit(1)),
