@@ -217,9 +217,7 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
 
         tryCatch(
           {
-           if (name %in% known_ops) {
-             do.call(name, args)
-           } else if (name %in% user_defined) {
+           if (name %in% c(known_ops, user_defined)) {
              do.call(name, args)
            } else {
              args[["__tidypolars__new_vars"]] <- as.list(new_vars)
