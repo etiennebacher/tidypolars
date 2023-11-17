@@ -112,10 +112,9 @@ pl_is_between <- function(x, left, right, include_bounds = TRUE, ...) {
 
 pl_case_match <- function(x, ..., .data) {
   dots <- get_dots(...)
-  env <- dots$env
-  new_vars <- dots$new_vars
-  dots$env <- NULL
-  dots$new_vars <- NULL
+  env <- env_from_dots(...)
+  new_vars <- new_vars_from_dots(...)
+  dots <- clean_dots(...)
 
   x <- polars::pl$col(deparse(substitute(x)))
 
@@ -144,10 +143,9 @@ pl_case_match <- function(x, ..., .data) {
 
 pl_case_when <- function(..., .data) {
   dots <- get_dots(...)
-  env <- dots$env
-  new_vars <- dots$new_vars
-  dots$env <- NULL
-  dots$new_vars <- NULL
+  env <- env_from_dots(...)
+  new_vars <- new_vars_from_dots(...)
+  dots <- clean_dots(...)
 
   if (!".default" %in% names(dots)) {
     dots[[length(dots) + 1]] <- c(".default" = NA)

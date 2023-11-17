@@ -112,15 +112,15 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
           "case_match" =  {
             args <- call_args(expr)
             args$.data <- .data
-            args$new_vars <- as.list(new_vars)
-            args$env <- env
+            args[["__tidypolars__new_vars"]] <- as.list(new_vars)
+            args[["__tidypolars__env"]] <- env
             return(do.call(pl_case_match, args))
           },
           "case_when" = {
             args <- call_args(expr)
             args$.data <- .data
-            args$new_vars <- as.list(new_vars)
-            args$env <- env
+            args[["__tidypolars__new_vars"]] <- as.list(new_vars)
+            args[["__tidypolars__env"]] <- env
             return(do.call(pl_case_when, args))
           },
           "c" = ,
@@ -146,8 +146,8 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
           "if_else" =  {
             args <- call_args(expr)
             args$.data <- .data
-            args$new_vars <- as.list(new_vars)
-            args$env <- env
+            args[["__tidypolars__new_vars"]] <- as.list(new_vars)
+            args[["__tidypolars__env"]] <- env
             return(do.call(pl_ifelse, args))
           },
           "is.na" = {
@@ -222,8 +222,8 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
            } else if (name %in% user_defined) {
              do.call(name, args)
            } else {
-             args$new_vars <- as.list(new_vars)
-             args$env <- env
+             args[["__tidypolars__new_vars"]] <- as.list(new_vars)
+             args[["__tidypolars__env"]] <- env
              do.call(name, args)
            }
           },
@@ -284,8 +284,8 @@ get_globenv_functions <- function() {
 # exists in the R function but will not be used in the polars function.
 check_empty_dots <- function(...) {
   dots <- get_dots(...)
-  dots$new_vars <- NULL
-  dots$env <- NULL
+  dots[["__tidypolars__new_vars"]] <- NULL
+  dots[["__tidypolars__env"]] <- NULL
   if (length(dots) > 0) {
     fn <- deparse(match.call(call = sys.call(sys.parent()))[1])
     fn <- gsub("^pl\\_", "", fn)
@@ -304,8 +304,8 @@ check_empty_dots <- function(...) {
 # apply directly `...`, such as paste()
 clean_dots <- function(...) {
   dots <- get_dots(...)
-  dots$new_vars <- NULL
-  dots$env <- NULL
+  dots[["__tidypolars__new_vars"]] <- NULL
+  dots[["__tidypolars__env"]] <- NULL
   dots
 }
 
@@ -313,12 +313,12 @@ clean_dots <- function(...) {
 # pl_ifelse())
 new_vars_from_dots <- function(...) {
   dots <- get_dots(...)
-  dots[["new_vars"]]
+  dots[["__tidypolars__new_vars"]]
 }
 
 env_from_dots <- function(...) {
   dots <- get_dots(...)
-  dots[["env"]]
+  dots[["__tidypolars__env"]]
 }
 
 # Return a list of all functions / operations we know
