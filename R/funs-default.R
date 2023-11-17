@@ -111,7 +111,6 @@ pl_is_between <- function(x, left, right, include_bounds = TRUE, ...) {
 }
 
 pl_case_match <- function(x, ..., .data) {
-  dots <- get_dots(...)
   env <- env_from_dots(...)
   new_vars <- new_vars_from_dots(...)
   dots <- clean_dots(...)
@@ -142,7 +141,6 @@ pl_case_match <- function(x, ..., .data) {
 }
 
 pl_case_when <- function(..., .data) {
-  dots <- get_dots(...)
   env <- env_from_dots(...)
   new_vars <- new_vars_from_dots(...)
   dots <- clean_dots(...)
