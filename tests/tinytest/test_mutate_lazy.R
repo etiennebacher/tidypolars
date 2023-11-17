@@ -253,4 +253,19 @@ expect_equal_lazy(
   )
 )
 
+
+# correct sequential operations
+
+expect_equal_lazy(
+  iris[c(1, 2, 149, 150), ] |>
+    as_polars() |>
+    mutate(
+      x = Sepal.Length > 6,
+      y = x & Species == "virginica",
+      z = ifelse(y, Petal.Width, Petal.Length * Sepal.Width)
+    ) |>
+    pull(z),
+  c(4.9, 4.2, 2.3, 15.3)
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

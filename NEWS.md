@@ -5,6 +5,12 @@
 * The argument `with_string_cache` in `as_polars()` now enables the string cache
   globally if set to `TRUE` (#54).
   
+**Bug fixes**
+
+* Improve robustness of sequential expressions in `mutate()` and `summarize()` 
+  (i.e expressions that should be run one after the other because they depend on
+  variables created in the same call) (#58).
+  
 **Misc**
 
 * Error messages coming from `mutate()`, `summarize()`, and `filter()` now give 
