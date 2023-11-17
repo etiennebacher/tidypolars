@@ -131,8 +131,8 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
           "%in%" = {
             out <- tryCatch(
               {
-                lhs <- translate(expr[[2]], env = env)
-                rhs <- translate(expr[[3]], env = env)
+                lhs <- translate(expr[[2]], new_vars = new_vars, env = env)
+                rhs <- translate(expr[[3]], new_vars = new_vars, env = env)
                 if (is.list(rhs)) {
                   rhs <- unlist(rhs)
                 }
@@ -215,7 +215,6 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
           name <- paste0("pl_", name)
         }
 
-        # browser()
         tryCatch(
           {
            if (name %in% known_ops) {
