@@ -133,7 +133,7 @@ pl_str_remove_all <- function(string, pattern, ...) {
 }
 
 pl_paste0 <- function(..., collapse = NULL) {
-  pl$concat_str(clean_dots(...))
+  pl_paste(..., sep = "", collapse = collapse)
 }
 
 pl_paste <- function(..., sep = " ", collapse = NULL) {
@@ -142,8 +142,9 @@ pl_paste <- function(..., sep = " ", collapse = NULL) {
   if (!is.character(sep)) {
     sep <- sep$to_r()
   }
-  browser()
-  pl$concat_str(clean_dots(...), separator = sep)
+  # pl$concat_str() doesn't support a list input, which is problematic since
+  # clean_dots() has to return a list
+  pl$concat_list(clean_dots(...))$list$join(separator = sep)
 }
 
 pl_str_trim <- function(string, side = "both", ...) {
