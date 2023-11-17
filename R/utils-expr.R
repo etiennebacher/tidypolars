@@ -4,7 +4,7 @@ translate_dots <- function(.data, ..., env) {
   dots <- enexprs(...)
   new_vars <- c()
   out <- lapply(seq_along(dots), \(x) {
-    tmp <- translate_expr(.data = .data, dots[[x]], new_vars, env = env)
+    tmp <- translate_expr(.data = .data, dots[[x]], new_vars = new_vars, env = env)
     new_vars <<- c(new_vars, names(dots)[x])
     tmp
   })
@@ -22,7 +22,7 @@ translate_dots <- function(.data, ..., env) {
   out
 }
 
-translate_expr <- function(.data, quo, new_vars, env) {
+translate_expr <- function(.data, quo, env, new_vars = NULL) {
 
   names_data <- pl_colnames(.data)
 
@@ -51,7 +51,7 @@ translate_expr <- function(.data, quo, new_vars, env) {
     expr <- unpack_across(.data, expr)
   }
 
-  translate <- function(expr, env) {
+  translate <- function(expr, new_vars, env) {
 
     # prepare function and arg if the user provided an anonymous function in
     # across()
@@ -201,7 +201,7 @@ translate_expr <- function(.data, quo, new_vars, env) {
           }
         }
 
-        args <- lapply(as.list(expr[-1]), translate, env = env)
+        args <- lapply(as.list(expr[-1]), translate, new_vars = new_vars, env = env)
         if (name %in% known_functions) {
           name <- r_polars_funs$polars_funs[r_polars_funs$r_funs == name][1]
           name <- paste0("pl_", name)
@@ -235,9 +235,9 @@ translate_expr <- function(.data, quo, new_vars, env) {
 
   # happens because across() calls get split earlier
   if ((is.vector(expr) && length(expr) > 1) || is.list(expr)) {
-    lapply(expr, translate, env = env)
+    lapply(expr, translate, new_vars = new_vars, env = env)
   } else {
-    translate(expr, env = env)
+    translate(expr, new_vars = new_vars, env = env)
   }
 }
 
