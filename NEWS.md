@@ -5,6 +5,9 @@
 * The argument `with_string_cache` in `as_polars()` now enables the string cache
   globally if set to `TRUE` (#54).
   
+* Better error message in `filter()` when comparing factors to strings while the
+  string cache is disabled.
+  
 **Bug fixes**
 
 * Improve robustness of sequential expressions in `mutate()` and `summarize()` 

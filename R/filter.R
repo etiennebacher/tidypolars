@@ -47,7 +47,24 @@ filter.DataFrame <- function(.data, ...) {
   # in the filter() call. So it won't replace the "|" call.
   polars_exprs <- Reduce(`&`, polars_exprs)
 
-  out <- .data$filter(polars_exprs)
+  tryCatch(
+    {
+      out <- .data$filter(polars_exprs)
+    },
+    error = function(e) {
+      if (inherits(e, "RPolarsErr_error") &&
+          grepl("string caches don't match", e$message)) {
+        rlang::abort(
+          c(
+            "Comparing factor variables to strings is only possible when the string cache is enabled.",
+            "i" = "One solution is to convert the factor variable to a character variable.",
+            "i" = "Another solution is to enable the string cache, either with `pl$enable_string_cache()` or with `as_polars(with_string_cache = TRUE)`."
+          ),
+          call = caller_env(4)
+        )
+      }
+    }
+  )
   attr(out, "maintain_grp_order") <- mo
   attr(out, "pl_grps") <- grps
   out
