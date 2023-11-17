@@ -22,7 +22,7 @@ translate_dots <- function(.data, ..., env) {
   out
 }
 
-translate_expr <- function(.data, quo, env, new_vars = NULL) {
+translate_expr <- function(.data, quo, new_vars = NULL, env) {
 
   names_data <- pl_colnames(.data)
 
@@ -112,11 +112,15 @@ translate_expr <- function(.data, quo, env, new_vars = NULL) {
           "case_match" =  {
             args <- call_args(expr)
             args$.data <- .data
+            args$new_vars <- as.list(new_vars)
+            args$env <- env
             return(do.call(pl_case_match, args))
           },
           "case_when" = {
             args <- call_args(expr)
             args$.data <- .data
+            args$new_vars <- as.list(new_vars)
+            args$env <- env
             return(do.call(pl_case_when, args))
           },
           "c" = ,
@@ -142,6 +146,8 @@ translate_expr <- function(.data, quo, env, new_vars = NULL) {
           "if_else" =  {
             args <- call_args(expr)
             args$.data <- .data
+            args$new_vars <- as.list(new_vars)
+            args$env <- env
             return(do.call(pl_ifelse, args))
           },
           "is.na" = {
@@ -176,9 +182,11 @@ translate_expr <- function(.data, quo, env, new_vars = NULL) {
         known_ops <- k_funs$known_ops
         user_defined <- k_funs$user_defined
 
+        # If unknown function:
+        # - either anonymous function called in across()
+        # - or undefined function (typo, not run in the global env, etc.)
+
         if (!(name %in% c(known_functions, known_ops, user_defined))) {
-          # last possibility in function is unknown: it's an anonymous function
-          # defined in an across() call
           obj_name <- quo_name(expr)
           if (startsWith(obj_name, ".__tidypolars__across_fn")) {
             fn <- eval_bare(global_env()[[obj_name]])
@@ -207,8 +215,19 @@ translate_expr <- function(.data, quo, env, new_vars = NULL) {
           name <- paste0("pl_", name)
         }
 
+        # browser()
         tryCatch(
-          do.call(name, args),
+          {
+           if (name %in% known_ops) {
+             do.call(name, args)
+           } else if (name %in% user_defined) {
+             do.call(name, args)
+           } else {
+             args$new_vars <- as.list(new_vars)
+             args$env <- env
+             do.call(name, args)
+           }
+          },
           error = function(e) {
             if (!inherits(e, "tidypolars_error")) {
               orig_name <- gsub("^pl_", "", name)
@@ -266,6 +285,8 @@ get_globenv_functions <- function() {
 # exists in the R function but will not be used in the polars function.
 check_empty_dots <- function(...) {
   dots <- get_dots(...)
+  dots$new_vars <- NULL
+  dots$env <- NULL
   if (length(dots) > 0) {
     fn <- deparse(match.call(call = sys.call(sys.parent()))[1])
     fn <- gsub("^pl\\_", "", fn)
@@ -278,6 +299,27 @@ check_empty_dots <- function(...) {
       )
     )
   }
+}
+
+# Drop elements I added myself in translate_expr(). Used only in functions that
+# apply directly `...`, such as paste()
+clean_dots <- function(...) {
+  dots <- get_dots(...)
+  dots$new_vars <- NULL
+  dots$env <- NULL
+  dots
+}
+
+# Used when I need to call translate_expr() from an internal function (e.g
+# pl_ifelse())
+new_vars_from_dots <- function(...) {
+  dots <- get_dots(...)
+  dots[["new_vars"]]
+}
+
+env_from_dots <- function(...) {
+  dots <- get_dots(...)
+  dots[["env"]]
 }
 
 # Return a list of all functions / operations we know

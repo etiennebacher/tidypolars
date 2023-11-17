@@ -55,27 +55,33 @@ pl_approx_unique <- function(x, ...) {
   x$approx_unique()
 }
 
-pl_arccos <- function(x) {
+pl_arccos <- function(x, ...) {
+  check_empty_dots()
   x$arccos()
 }
 
-pl_arccosh <- function(x) {
+pl_arccosh <- function(x, ...) {
+  check_empty_dots()
   x$arccosh()
 }
 
-pl_arcsin <- function(x) {
+pl_arcsin <- function(x, ...) {
+  check_empty_dots()
   x$arcsin()
 }
 
-pl_arcsinh <- function(x) {
+pl_arcsinh <- function(x, ...) {
+  check_empty_dots()
   x$arcsinh()
 }
 
-pl_arctan <- function(x) {
+pl_arctan <- function(x, ...) {
+  check_empty_dots()
   x$arctan()
 }
 
-pl_arctanh <- function(x) {
+pl_arctanh <- function(x, ...) {
+  check_empty_dots()
   x$arctanh()
 }
 
@@ -106,6 +112,10 @@ pl_is_between <- function(x, left, right, include_bounds = TRUE, ...) {
 
 pl_case_match <- function(x, ..., .data) {
   dots <- get_dots(...)
+  env <- dots$env
+  new_vars <- dots$new_vars
+  dots$env <- NULL
+  dots$new_vars <- NULL
 
   x <- polars::pl$col(deparse(substitute(x)))
 
@@ -116,12 +126,12 @@ pl_case_match <- function(x, ..., .data) {
   out <- NULL
   for (y in seq_along(dots)) {
     if (y == length(dots)) {
-      otw <- translate_expr(.data, dots[[y]])
+      otw <- translate_expr(.data, dots[[y]], new_vars = new_vars, env = env)
       out <- out$otherwise(otw)
       next
     }
-    lhs <- translate_expr(.data, dots[[y]][[2]])
-    rhs <- translate_expr(.data, dots[[y]][[3]])
+    lhs <- translate_expr(.data, dots[[y]][[2]], new_vars = new_vars, env = env)
+    rhs <- translate_expr(.data, dots[[y]][[3]], new_vars = new_vars, env = env)
     if (is.null(out)) {
       out <- polars::pl$when(x$is_in(lhs))$then(rhs)
     } else {
@@ -132,10 +142,12 @@ pl_case_match <- function(x, ..., .data) {
   out
 }
 
-
-
 pl_case_when <- function(..., .data) {
   dots <- get_dots(...)
+  env <- dots$env
+  new_vars <- dots$new_vars
+  dots$env <- NULL
+  dots$new_vars <- NULL
 
   if (!".default" %in% names(dots)) {
     dots[[length(dots) + 1]] <- c(".default" = NA)
@@ -144,12 +156,12 @@ pl_case_when <- function(..., .data) {
   out <- NULL
   for (y in seq_along(dots)) {
     if (y == length(dots)) {
-      otw <- translate_expr(.data, dots[[y]])
+      otw <- translate_expr(.data, dots[[y]], new_vars = new_vars, env = env)
       out <- out$otherwise(otw)
       next
     }
-    lhs <- translate_expr(.data, dots[[y]][[2]])
-    rhs <- translate_expr(.data, dots[[y]][[3]])
+    lhs <- translate_expr(.data, dots[[y]][[2]], new_vars = new_vars, env = env)
+    rhs <- translate_expr(.data, dots[[y]][[3]], new_vars = new_vars, env = env)
 
     if (is.null(out)) {
       out <- polars::pl$when(lhs)$then(rhs)
@@ -171,14 +183,16 @@ pl_clip <- function(x, ...) {
 }
 
 pl_coalesce <- function(..., default = NULL) {
-  pl$coalesce(..., default)
+  pl$coalesce(clean_dots(...), default)
 }
 
-pl_cos <- function(x) {
+pl_cos <- function(x, ...) {
+  check_empty_dots()
   x$cos()
 }
 
-pl_cosh <- function(x) {
+pl_cosh <- function(x, ...) {
+  check_empty_dots()
   x$cosh()
 }
 
@@ -237,10 +251,14 @@ pl_hash <- function(x, ...) {
   x$hash()
 }
 
-pl_ifelse <- function(cond, yes, no, .data) {
-  cond <- translate_expr(.data, enexpr(cond))
-  yes <- translate_expr(.data, enexpr(yes))
-  no <- translate_expr(.data, enexpr(no))
+pl_ifelse <- function(cond, yes, no, .data, ...) {
+  check_empty_dots(...)
+  env <- env_from_dots(...)
+  new_vars <- new_vars_from_dots(...)
+
+  cond <- translate_expr(.data, enexpr(cond), new_vars = new_vars, env = env)
+  yes <- translate_expr(.data, enexpr(yes), new_vars = new_vars, env = env)
+  no <- translate_expr(.data, enexpr(no), new_vars = new_vars, env = env)
   pl$when(cond)$then(yes)$otherwise(no)
 }
 
@@ -410,11 +428,13 @@ pl_sum <- function(x, ...) {
   x$sum()
 }
 
-pl_tan <- function(x) {
+pl_tan <- function(x, ...) {
+  check_empty_dots()
   x$tan()
 }
 
-pl_tanh <- function(x) {
+pl_tanh <- function(x, ...) {
+  check_empty_dots()
   x$tanh()
 }
 

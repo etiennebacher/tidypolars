@@ -1,5 +1,6 @@
 
-pl_str_detect <- function(string, pattern, negate = FALSE) {
+pl_str_detect <- function(string, pattern, negate = FALSE, ...) {
+  check_empty_dots(...)
   out <- string$str$contains(pattern)
   if (isTRUE(negate)) {
     out$is_not()
@@ -19,7 +20,8 @@ pl_str_count_matches <- function(string, pattern = "", ...) {
   string$str$count_matches(pattern, literal = is_fixed)
 }
 
-pl_str_ends <- function(string, pattern, negate = FALSE) {
+pl_str_ends <- function(string, pattern, negate = FALSE, ...) {
+  check_empty_dots(...)
   out <- string$str$ends_with(pattern)
   if (isTRUE(negate)) {
     out$is_not()
@@ -29,7 +31,8 @@ pl_str_ends <- function(string, pattern, negate = FALSE) {
 }
 
 # group = 0 means the whole match
-pl_str_extract <- function(string, pattern, group = 0) {
+pl_str_extract <- function(string, pattern, group = 0, ...) {
+  check_empty_dots(...)
   string$str$extract(pattern, group_index = group)
 }
 
@@ -83,7 +86,8 @@ pl_str_slice <- function(string, start, end = NULL, ...) {
 #   string$str$splitn()
 # }
 
-pl_str_starts <- function(string, pattern, negate = FALSE) {
+pl_str_starts <- function(string, pattern, negate = FALSE, ...) {
+  check_empty_dots(...)
   if (isTRUE(negate)) {
     string$str$starts_with(pl$lit(pattern))$is_not()
   } else {
@@ -129,7 +133,7 @@ pl_str_remove_all <- function(string, pattern, ...) {
 }
 
 pl_paste0 <- function(..., collapse = NULL) {
-  pl$concat_str(...)
+  pl$concat_str(clean_dots(...))
 }
 
 pl_paste <- function(..., sep = " ", collapse = NULL) {
@@ -138,10 +142,12 @@ pl_paste <- function(..., sep = " ", collapse = NULL) {
   if (!is.character(sep)) {
     sep <- sep$to_r()
   }
-  pl$concat_str(..., separator = sep)
+  browser()
+  pl$concat_str(clean_dots(...), separator = sep)
 }
 
-pl_str_trim <- function(string, side = "both") {
+pl_str_trim <- function(string, side = "both", ...) {
+  check_empty_dots(...)
   switch(
     side,
     "both" = string$str$strip_chars(),
@@ -155,7 +161,8 @@ pl_trimws <- function(string, which = "both", ...) {
   pl_str_trim(string, side = which)
 }
 
-pl_str_pad <- function(string, width, side = "left", pad = " ", use_width = TRUE) {
+pl_str_pad <- function(string, width, side = "left", pad = " ", use_width = TRUE, ...) {
+  check_empty_dots(...)
   if (isFALSE(use_width)) {
     abort(
       '`str_pad()` doesn\'t work in a Polars DataFrame when `use_width = FALSE`',
@@ -176,10 +183,12 @@ pl_str_pad <- function(string, width, side = "left", pad = " ", use_width = TRUE
 
 # not in polars
 
-pl_word <- function(string, start = 1L, end = start, sep = " ") {
+pl_word <- function(string, start = 1L, end = start, sep = " ", ...) {
+  check_empty_dots(...)
   string$str$split(sep)$list$take((start:end) - 1L)$list$join(sep)
 }
 
-pl_str_squish <- function(string) {
+pl_str_squish <- function(string, ...) {
+  check_empty_dots(...)
   string$str$replace_all("\\s+", " ")$str$strip_chars()
 }
