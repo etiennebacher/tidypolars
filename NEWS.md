@@ -9,6 +9,12 @@
   string cache is disabled.
   
 * Basic support for `strptime()`.
+
+* New argument `.by` in `filter()`, `mutate()`, and `summarize()`, and new 
+  argument `by` in the `slice_*()` functions. This allows to do operations on
+  groups without using `group_by()` and `ungroup()`. See the 
+  [`dplyr` vignette](https://dplyr.tidyverse.org/reference/dplyr_by.html) for 
+  more information (#59).
   
 **Bug fixes**
 
