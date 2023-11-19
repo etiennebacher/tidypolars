@@ -21,7 +21,8 @@ frame if ungrouped).
 }}
 
 \item{.by}{Optionally, a selection of columns to group by for just this
-operation, functioning as an alternative to \code{group_by()}.}
+operation, functioning as an alternative to \code{group_by()}. The group order
+is not maintained, use \code{group_by()} if you want more control over it.}
 }
 \description{
 This creates new columns that are functions of existing variables. It
@@ -56,9 +57,11 @@ mutate(pl_iris, Sepal.Width = Sepal.Width*2)
 # grouped computation
 pl_iris |>
   group_by(Species) |>
-  mutate(
-    foo = mean(Sepal.Length)
-  )
+  mutate(foo = mean(Sepal.Length))
+
+# an alternative syntax for grouping is to use `.by`
+pl_iris |>
+  mutate(foo = mean(Sepal.Length), .by = Species)
 
 # across() is available
 pl_iris |>

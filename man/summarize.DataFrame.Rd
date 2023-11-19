@@ -27,7 +27,8 @@ frame if ungrouped).
 }}
 
 \item{.by}{Optionally, a selection of columns to group by for just this
-operation, functioning as an alternative to \code{group_by()}.}
+operation, functioning as an alternative to \code{group_by()}. The group order
+is not maintained, use \code{group_by()} if you want more control over it.}
 }
 \description{
 \code{summarize()} returns one row for each combination of grouping variables
@@ -40,6 +41,11 @@ and one column for each of the summary statistics that you have specified.
 mtcars |>
   as_polars() |>
   group_by(cyl) |>
-  summarize(gear = mean(gear), gear2 = sd(gear))
+  summarize(m_gear = mean(gear), sd_gear = sd(gear))
+
+# an alternative syntax is to use `.by`
+mtcars |>
+  as_polars() |>
+  summarize(m_gear = mean(gear), sd_gear = sd(gear), .by = cyl)
 \dontshow{\}) # examplesIf}
 }

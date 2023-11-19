@@ -4,7 +4,8 @@
 #' @param n The number of rows to select from the start or the end of the data.
 #' Cannot be used with `prop`.
 #' @param by Optionally, a selection of columns to group by for just this
-#'   operation, functioning as an alternative to `group_by()`.
+#'   operation, functioning as an alternative to `group_by()`. The group order
+#'   is not maintained, use `group_by()` if you want more control over it.
 #' @param ... Not used.
 #'
 #' @export

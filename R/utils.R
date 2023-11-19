@@ -60,3 +60,7 @@ get_grps <- function(.data, .by, env) {
   }
   grps
 }
+
+`%||%` <- function(x, y) {
+  if (is_null(x)) y else x
+}

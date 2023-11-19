@@ -25,6 +25,14 @@ expect_equal(
   factor(rep(c("setosa", "versicolor", "virginica"), each = 2))
 )
 
+expect_equal(
+  pl_iris |>
+    slice_head(pl_iris_g, n = 2, by = Species) |>
+    pull(Species) |>
+    sort(),
+  factor(rep(c("setosa", "versicolor", "virginica"), each = 2))
+)
+
 expect_dim(hd, c(6, 5))
 
 expect_equal(
@@ -37,6 +45,14 @@ tl <- slice_tail(pl_iris_g, n = 2)
 
 expect_equal(
   pull(tl, Species),
+  factor(rep(c("setosa", "versicolor", "virginica"), each = 2))
+)
+
+expect_equal(
+  pl_iris |>
+    slice_tail(pl_iris_g, n = 2, by = Species) |>
+    pull(Species) |>
+    sort(),
   factor(rep(c("setosa", "versicolor", "virginica"), each = 2))
 )
 
@@ -95,8 +111,14 @@ if (inherits(pl_iris, "DataFrame")) {
 
   expect_equal(
     pl_iris |>
-      group_by(Species) |>
-      slice_sample(prop = 0.1) |>
+      slice_sample(n = 5, by = Species) |>
+      nrow(),
+    15
+  )
+
+  expect_equal(
+    pl_iris |>
+      slice_sample(prop = 0.1, by = Species) |>
       nrow(),
     15
   )

@@ -18,7 +18,8 @@ will be combined with the & operator. Only rows for which all conditions
 evaluate to \code{TRUE} are kept.}
 
 \item{.by}{Optionally, a selection of columns to group by for just this
-operation, functioning as an alternative to \code{group_by()}.}
+operation, functioning as an alternative to \code{group_by()}. The group order
+is not maintained, use \code{group_by()} if you want more control over it.}
 }
 \description{
 This function is used to subset a data frame, retaining all rows that satisfy
@@ -43,5 +44,15 @@ iris2$Species <- as.character(iris2$Species)
 iris2 |>
   as_polars() |>
   filter(Species \%in\% c("setosa", "virginica"))
+
+# filter by group
+pl_iris |>
+  group_by(Species) |>
+  filter(Sepal.Length == max(Sepal.Length)) |>
+  ungroup()
+
+# an alternative syntax for grouping is to use `.by`
+pl_iris |>
+  filter(Sepal.Length == max(Sepal.Length), .by = Species)
 \dontshow{\}) # examplesIf}
 }

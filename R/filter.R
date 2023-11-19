@@ -30,6 +30,15 @@
 #'   as_polars() |>
 #'   filter(Species %in% c("setosa", "virginica"))
 #'
+#' # filter by group
+#' pl_iris |>
+#'   group_by(Species) |>
+#'   filter(Sepal.Length == max(Sepal.Length)) |>
+#'   ungroup()
+#'
+#' # an alternative syntax for grouping is to use `.by`
+#' pl_iris |>
+#'   filter(Sepal.Length == max(Sepal.Length), .by = Species)
 
 filter.DataFrame <- function(.data, ..., .by = NULL) {
   check_polars_data(.data)

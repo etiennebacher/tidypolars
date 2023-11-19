@@ -27,7 +27,8 @@
 Cannot be used with \code{prop}.}
 
 \item{by}{Optionally, a selection of columns to group by for just this
-operation, functioning as an alternative to \code{group_by()}.}
+operation, functioning as an alternative to \code{group_by()}. The group order
+is not maintained, use \code{group_by()} if you want more control over it.}
 
 \item{prop}{Proportion of rows to select. Cannot be used with \code{n}.}
 

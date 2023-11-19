@@ -13,7 +13,12 @@
 #' mtcars |>
 #'   as_polars() |>
 #'   group_by(cyl) |>
-#'   summarize(gear = mean(gear), gear2 = sd(gear))
+#'   summarize(m_gear = mean(gear), sd_gear = sd(gear))
+#'
+#' # an alternative syntax is to use `.by`
+#' mtcars |>
+#'   as_polars() |>
+#'   summarize(m_gear = mean(gear), sd_gear = sd(gear), .by = cyl)
 
 
 summarize.DataFrame <- function(.data, ..., .by = NULL) {
