@@ -13,14 +13,19 @@
 #' mtcars |>
 #'   as_polars() |>
 #'   group_by(cyl) |>
-#'   summarize(gear = mean(gear), gear2 = sd(gear))
+#'   summarize(m_gear = mean(gear), sd_gear = sd(gear))
+#'
+#' # an alternative syntax is to use `.by`
+#' mtcars |>
+#'   as_polars() |>
+#'   summarize(m_gear = mean(gear), sd_gear = sd(gear), .by = cyl)
 
 
-summarize.DataFrame <- function(.data, ...) {
+summarize.DataFrame <- function(.data, ..., .by = NULL) {
 
   check_polars_data(.data)
 
-  grps <- attributes(.data)$pl_grps
+  grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   if (is.null(mo)) mo <- FALSE
   is_grouped <- !is.null(grps)

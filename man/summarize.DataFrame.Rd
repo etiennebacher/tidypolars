@@ -7,13 +7,13 @@
 \alias{summarise.LazyFrame}
 \title{Summarize each group down to one row}
 \usage{
-\method{summarize}{DataFrame}(.data, ...)
+\method{summarize}{DataFrame}(.data, ..., .by = NULL)
 
-\method{summarise}{DataFrame}(.data, ...)
+\method{summarise}{DataFrame}(.data, ..., .by = NULL)
 
-\method{summarize}{LazyFrame}(.data, ...)
+\method{summarize}{LazyFrame}(.data, ..., .by = NULL)
 
-\method{summarise}{LazyFrame}(.data, ...)
+\method{summarise}{LazyFrame}(.data, ..., .by = NULL)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
@@ -25,6 +25,10 @@ the output. The value can be:
 frame if ungrouped).
 \item NULL, to remove the column.
 }}
+
+\item{.by}{Optionally, a selection of columns to group by for just this
+operation, functioning as an alternative to \code{group_by()}. The group order
+is not maintained, use \code{group_by()} if you want more control over it.}
 }
 \description{
 \code{summarize()} returns one row for each combination of grouping variables
@@ -37,6 +41,11 @@ and one column for each of the summary statistics that you have specified.
 mtcars |>
   as_polars() |>
   group_by(cyl) |>
-  summarize(gear = mean(gear), gear2 = sd(gear))
+  summarize(m_gear = mean(gear), sd_gear = sd(gear))
+
+# an alternative syntax is to use `.by`
+mtcars |>
+  as_polars() |>
+  summarize(m_gear = mean(gear), sd_gear = sd(gear), .by = cyl)
 \dontshow{\}) # examplesIf}
 }

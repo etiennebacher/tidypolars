@@ -12,6 +12,15 @@ expect_equal(
 )
 
 expect_equal(
+  summarize(pl_iris, x = mean(Sepal.Length), .by = Species) |>
+    pull(x) |>
+    sort(),
+  summarize(pl_iris_g, x = mean(Sepal.Length)) |>
+    pull(x) |>
+    sort()
+)
+
+expect_equal(
   summarize(pl_iris_g,
                x = sum(Sepal.Length),
                y = mean(Sepal.Length)) |>

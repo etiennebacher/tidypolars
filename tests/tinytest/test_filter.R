@@ -172,10 +172,26 @@ expect_equal(
   c(21.4, 24.4, 10.4)
 )
 
+expect_equal(
+  as_polars(mtcars) |>
+    filter(disp == max(disp), .by = cyl) |>
+    pull(mpg),
+  by_cyl |>
+    filter(disp == max(disp)) |>
+    pull(mpg)
+)
+
 expect_dim(
   as_polars(iris) |>
     group_by(Species) |>
     filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4),
+  c(123, 5)
+)
+
+expect_dim(
+  as_polars(iris) |>
+    filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4,
+           .by = Species),
   c(123, 5)
 )
 
@@ -193,7 +209,19 @@ expect_dim(
 
 expect_dim(
   foo |>
+    filter(all(x), .by = starts_with("g")),
+  c(2, 2)
+)
+
+expect_dim(
+  foo |>
     group_by(grp) |>
     filter(any(x)),
+  c(4, 2)
+)
+
+expect_dim(
+  foo |>
+    filter(any(x), .by = starts_with("g")),
   c(4, 2)
 )

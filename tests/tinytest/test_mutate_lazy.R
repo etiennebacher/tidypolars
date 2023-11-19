@@ -150,7 +150,16 @@ expect_equal_lazy(
   c(5.006, 5.936, 6.588)
 )
 
-out <- polars::pl$LazyFrame(mtcars) |>
+expect_equal_lazy(
+  pull(out, foo) |> unique(),
+  as_polars(iris) |>
+    mutate(foo = mean(Sepal.Length), .by = Species) |>
+    pull(foo) |>
+    unique()
+)
+
+pl_mtcars <- polars::pl$LazyFrame(mtcars)
+out <- pl_mtcars |>
   group_by(cyl, am) |>
   mutate(
     disp2 = disp / mean(disp)
@@ -168,6 +177,12 @@ expect_colnames(
     group_by(Species) |>
     mutate(Sepal.Length = NULL),
   names(iris)[2:5]
+)
+
+expect_equal_lazy(
+  pl_mtcars |>
+    mutate(disp2 = disp / mean(disp), .by = c(cyl, am)),
+  out
 )
 
 

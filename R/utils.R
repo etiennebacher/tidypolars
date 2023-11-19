@@ -44,3 +44,23 @@ unused_args <- function(...) {
     call = caller_env(2)
   )
 }
+
+get_grps <- function(.data, .by, env) {
+  grps <- attributes(.data)$pl_grps
+  inline_grps <- tidyselect_named_arg(.data, .by)
+  if (length(inline_grps) > 0) {
+    if (!is.null(grps)) {
+      abort(
+        "Can't supply `.by` when `.data` is a grouped DataFrame or LazyFrame.",
+        call = env
+      )
+    } else {
+      grps <- inline_grps
+    }
+  }
+  grps
+}
+
+`%||%` <- function(x, y) {
+  if (is_null(x)) y else x
+}

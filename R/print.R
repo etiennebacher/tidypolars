@@ -9,7 +9,7 @@
 print.DataFrame <- function(x, ...) { # nocov start
   grps <- attributes(x)$pl_grps
   is_grouped <- !is.null(grps)
-  mo <- attributes(x)$maintain_grp_order
+  mo <- attributes(x)$maintain_grp_order %||% FALSE
 
   if (is_grouped) {
     n_groups <- x$group_by(grps)$agg(pl$lit(1))$height

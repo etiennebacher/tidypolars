@@ -146,7 +146,16 @@ expect_equal(
   c(5.006, 5.936, 6.588)
 )
 
-out <- polars::pl$DataFrame(mtcars) |>
+expect_equal(
+  pull(out, foo) |> unique(),
+  as_polars(iris) |>
+    mutate(foo = mean(Sepal.Length), .by = Species) |>
+    pull(foo) |>
+    unique()
+)
+
+pl_mtcars <- polars::pl$DataFrame(mtcars)
+out <- pl_mtcars |>
   group_by(cyl, am) |>
   mutate(
     disp2 = disp / mean(disp)
@@ -164,6 +173,12 @@ expect_colnames(
     group_by(Species) |>
     mutate(Sepal.Length = NULL),
   names(iris)[2:5]
+)
+
+expect_equal(
+  pl_mtcars |>
+    mutate(disp2 = disp / mean(disp), .by = c(cyl, am)),
+  out
 )
 
 

@@ -16,6 +16,15 @@ expect_equal_lazy(
 )
 
 expect_equal_lazy(
+  summarize(pl_iris, x = mean(Sepal.Length), .by = Species) |>
+    pull(x) |>
+    sort(),
+  summarize(pl_iris_g, x = mean(Sepal.Length)) |>
+    pull(x) |>
+    sort()
+)
+
+expect_equal_lazy(
   summarize(pl_iris_g,
                x = sum(Sepal.Length),
                y = mean(Sepal.Length)) |>
