@@ -48,7 +48,7 @@ unused_args <- function(...) {
 get_grps <- function(.data, .by, env) {
   grps <- attributes(.data)$pl_grps
   inline_grps <- tidyselect_named_arg(.data, .by)
-  if (!is.null(inline_grps)) {
+  if (length(inline_grps) > 0) {
     if (!is.null(grps)) {
       abort(
         "Can't supply `.by` when `.data` is a grouped DataFrame or LazyFrame.",
