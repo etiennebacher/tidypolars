@@ -5,9 +5,9 @@
 \alias{filter.LazyFrame}
 \title{Keep rows that match a condition}
 \usage{
-\method{filter}{DataFrame}(.data, ...)
+\method{filter}{DataFrame}(.data, ..., .by = NULL)
 
-\method{filter}{LazyFrame}(.data, ...)
+\method{filter}{LazyFrame}(.data, ..., .by = NULL)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
@@ -16,6 +16,9 @@
 of the variables in the data. If multiple expressions are included, they
 will be combined with the & operator. Only rows for which all conditions
 evaluate to \code{TRUE} are kept.}
+
+\item{.by}{Optionally, a selection of columns to group by for just this
+operation, functioning as an alternative to \code{group_by()}.}
 }
 \description{
 This function is used to subset a data frame, retaining all rows that satisfy

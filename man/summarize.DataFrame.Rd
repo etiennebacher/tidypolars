@@ -7,13 +7,13 @@
 \alias{summarise.LazyFrame}
 \title{Summarize each group down to one row}
 \usage{
-\method{summarize}{DataFrame}(.data, ...)
+\method{summarize}{DataFrame}(.data, ..., .by = NULL)
 
-\method{summarise}{DataFrame}(.data, ...)
+\method{summarise}{DataFrame}(.data, ..., .by = NULL)
 
-\method{summarize}{LazyFrame}(.data, ...)
+\method{summarize}{LazyFrame}(.data, ..., .by = NULL)
 
-\method{summarise}{LazyFrame}(.data, ...)
+\method{summarise}{LazyFrame}(.data, ..., .by = NULL)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
@@ -25,6 +25,9 @@ the output. The value can be:
 frame if ungrouped).
 \item NULL, to remove the column.
 }}
+
+\item{.by}{Optionally, a selection of columns to group by for just this
+operation, functioning as an alternative to \code{group_by()}.}
 }
 \description{
 \code{summarize()} returns one row for each combination of grouping variables

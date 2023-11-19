@@ -10,6 +10,7 @@
 #' of the variables in the data. If multiple expressions are included, they
 #' will be combined with the & operator. Only rows for which all conditions
 #' evaluate to `TRUE` are kept.
+#' @inheritParams mutate.DataFrame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -30,10 +31,10 @@
 #'   filter(Species %in% c("setosa", "virginica"))
 #'
 
-filter.DataFrame <- function(.data, ...) {
+filter.DataFrame <- function(.data, ..., .by = NULL) {
   check_polars_data(.data)
 
-  grps <- attributes(.data)$pl_grps
+  grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 

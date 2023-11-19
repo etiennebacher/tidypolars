@@ -8,15 +8,15 @@
 \alias{slice_sample.DataFrame}
 \title{Subset rows of a Data/LazyFrame}
 \usage{
-\method{slice_tail}{DataFrame}(.data, ..., n)
+\method{slice_tail}{DataFrame}(.data, ..., n, by = NULL)
 
-\method{slice_tail}{LazyFrame}(.data, ..., n)
+\method{slice_tail}{LazyFrame}(.data, ..., n, by = NULL)
 
-\method{slice_head}{DataFrame}(.data, ..., n)
+\method{slice_head}{DataFrame}(.data, ..., n, by = NULL)
 
-\method{slice_head}{LazyFrame}(.data, ..., n)
+\method{slice_head}{LazyFrame}(.data, ..., n, by = NULL)
 
-\method{slice_sample}{DataFrame}(.data, ..., n = NULL, prop = NULL, replace = FALSE)
+\method{slice_sample}{DataFrame}(.data, ..., n = NULL, prop = NULL, replace = FALSE, by = NULL)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
@@ -25,6 +25,9 @@
 
 \item{n}{The number of rows to select from the start or the end of the data.
 Cannot be used with \code{prop}.}
+
+\item{by}{Optionally, a selection of columns to group by for just this
+operation, functioning as an alternative to \code{group_by()}.}
 
 \item{prop}{Proportion of rows to select. Cannot be used with \code{n}.}
 

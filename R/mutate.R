@@ -11,6 +11,8 @@
 #'   * A vector the same length as the current group (or the whole data
 #'    frame if ungrouped).
 #'   * NULL, to remove the column.
+#' @param .by Optionally, a selection of columns to group by for just this
+#'   operation, functioning as an alternative to `group_by()`.
 #'
 #' @details
 #'
@@ -65,11 +67,11 @@
 #' some_value <- 1
 #' mutate(pl_iris, x = {{ some_value }})
 
-mutate.DataFrame <- function(.data, ...) {
+mutate.DataFrame <- function(.data, ..., .by = NULL) {
 
   check_polars_data(.data)
 
-  grps <- attributes(.data)$pl_grps
+  grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   is_grouped <- !is.null(grps)
   to_drop <- list()
 
