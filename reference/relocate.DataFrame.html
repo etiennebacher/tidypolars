@@ -172,6 +172,25 @@ will move columns to the left-hand side; specifying both is an error.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 8.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 1.0 ┆ 4.0  ┆ 2.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └──────┴─────┴───────┴───────┴───┴─────┴─────┴──────┴──────┘</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">dat</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html" class="external-link">relocate</a></span><span class="op">(</span><span class="va">hp</span>, <span class="va">vs</span>, .after <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">last_col</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (32, 11)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────┬─────┬───────┬──────┬───┬──────┬──────┬───────┬─────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ mpg  ┆ cyl ┆ disp  ┆ drat ┆ … ┆ gear ┆ carb ┆ hp    ┆ vs  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---  ┆ --- ┆ ---   ┆ ---  ┆   ┆ ---  ┆ ---  ┆ ---   ┆ --- │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64  ┆ f64 ┆ f64   ┆ f64  ┆   ┆ f64  ┆ f64  ┆ f64   ┆ f64 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞══════╪═════╪═══════╪══════╪═══╪══════╪══════╪═══════╪═════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 3.9  ┆ … ┆ 4.0  ┆ 4.0  ┆ 110.0 ┆ 0.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 3.9  ┆ … ┆ 4.0  ┆ 4.0  ┆ 110.0 ┆ 0.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 3.85 ┆ … ┆ 4.0  ┆ 1.0  ┆ 93.0  ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 3.08 ┆ … ┆ 3.0  ┆ 1.0  ┆ 110.0 ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …   ┆ …     ┆ …    ┆ … ┆ …    ┆ …    ┆ …     ┆ …   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 4.22 ┆ … ┆ 5.0  ┆ 4.0  ┆ 264.0 ┆ 0.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 3.62 ┆ … ┆ 5.0  ┆ 6.0  ┆ 175.0 ┆ 0.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 3.54 ┆ … ┆ 5.0  ┆ 8.0  ┆ 335.0 ┆ 0.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 4.11 ┆ … ┆ 4.0  ┆ 2.0  ┆ 109.0 ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └──────┴─────┴───────┴──────┴───┴──────┴──────┴───────┴─────┘</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
