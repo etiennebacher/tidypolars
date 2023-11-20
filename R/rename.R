@@ -1,11 +1,11 @@
 #' Rename columns
 #'
 #' @param .data A Polars Data/LazyFrame
-#' @param ... For `rename()`, one of the following:
-#' * params like `new_name = "old_name"` to rename selected variables.
-#' * as above but params wrapped in a list
+#' @param ... For `rename()`, use `new_name = old_name` to rename selected
+#'   variables. It is also possible to use quotation marks, e.g
+#'   `"new_name" = "old_name"`.
 #'
-#'  For `rename_with`, additional arguments passed to `fn`.
+#'   For `rename_with`, additional arguments passed to `fn`.
 #' @param .fn Function to apply on column names
 #' @param .cols Columns on which to apply `fn`. Can be anything accepted by
 #'   `dplyr::select()`.
@@ -14,9 +14,7 @@
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_test <- polars::pl$DataFrame(mtcars)
 #'
-#' rename(pl_test, miles_per_gallon = "mpg", horsepower = "hp")
-#'
-#' rename(pl_test, list(miles_per_gallon = "mpg", horsepower = "hp"))
+#' rename(pl_test, miles_per_gallon = mpg, horsepower = "hp")
 #'
 #' rename(pl_test, `Miles per gallon` = "mpg", `Horse power` = "hp")
 #'
@@ -30,7 +28,9 @@
 
 rename.DataFrame <- function(.data, ...) {
   check_polars_data(.data)
-  .data$rename(...)
+  dots <- get_dots(...)
+  dots <- lapply(dots, rlang::as_name)
+  .data$rename(dots)
 }
 
 #' @rdname rename.DataFrame

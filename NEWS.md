@@ -1,5 +1,9 @@
 # tidypolars (development)
 
+**Breaking changes**
+
+* It is no longer possible to pass a list in `rename()`. 
+
 **New features**
 
 * The argument `with_string_cache` in `as_polars()` now enables the string cache
@@ -17,6 +21,8 @@
   [`dplyr` vignette](https://dplyr.tidyverse.org/reference/dplyr_by.html) for 
   more information (#59).
   
+* `rename()` now accepts unquoted names both old and new names.
+
 **Bug fixes**
 
 * Improve robustness of sequential expressions in `mutate()` and `summarize()` 

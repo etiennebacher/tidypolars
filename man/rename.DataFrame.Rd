@@ -18,11 +18,9 @@
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
 
-\item{...}{For \code{rename()}, one of the following:
-\itemize{
-\item params like \code{new_name = "old_name"} to rename selected variables.
-\item as above but params wrapped in a list
-}
+\item{...}{For \code{rename()}, use \code{new_name = old_name} to rename selected
+variables. It is also possible to use quotation marks, e.g
+\code{"new_name" = "old_name"}.
 
 For \code{rename_with}, additional arguments passed to \code{fn}.}
 
@@ -38,9 +36,7 @@ Rename columns
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pl_test <- polars::pl$DataFrame(mtcars)
 
-rename(pl_test, miles_per_gallon = "mpg", horsepower = "hp")
-
-rename(pl_test, list(miles_per_gallon = "mpg", horsepower = "hp"))
+rename(pl_test, miles_per_gallon = mpg, horsepower = "hp")
 
 rename(pl_test, `Miles per gallon` = "mpg", `Horse power` = "hp")
 

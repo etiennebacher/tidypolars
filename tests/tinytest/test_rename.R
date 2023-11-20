@@ -11,7 +11,7 @@ expect_true("n_cyl" %in% test1)
 expect_false("mpg" %in% test1)
 expect_false("cyl" %in% test1)
 
-test2 <- rename(pl_test, list(miles_per_gallon = "mpg", n_cyl = "cyl")) |>
+test2 <- rename(pl_test, miles_per_gallon = mpg, n_cyl = "cyl") |>
   tidypolars:::pl_colnames()
 
 expect_true("miles_per_gallon" %in% test2)
