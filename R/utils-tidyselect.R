@@ -5,7 +5,7 @@ tidyselect_dots <- function(.data, ...) {
     data <- .data$first()$to_data_frame()
   }
   check_where_arg(...)
-  names(tidyselect::eval_select(rlang::expr(c(...)), data))
+  names(tidyselect::eval_select(rlang::expr(c(...)), data, error_call = caller_env()))
 }
 
 
