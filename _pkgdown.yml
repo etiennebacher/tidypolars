@@ -4,7 +4,6 @@ template:
   bslib:
     base_font: {google: "Mulish"}
     heading_font: {google: "Mulish"}
-    code_font: {google: "Fira Code"}
     primary: "#0B7189"
 
 navbar:
