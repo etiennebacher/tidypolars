@@ -81,9 +81,10 @@
 
 
 <dt>...</dt>
-<dd><p>For <code><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename()</a></code>, one of the following:</p><ul><li><p>params like <code>new_name = "old_name"</code> to rename selected variables.</p></li>
-<li><p>as above but params wrapped in a list</p></li>
-</ul><p>For <code>rename_with</code>, additional arguments passed to <code>fn</code>.</p></dd>
+<dd><p>For <code><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename()</a></code>, use <code>new_name = old_name</code> to rename selected
+variables. It is also possible to use quotation marks, e.g
+<code>"new_name" = "old_name"</code>.</p>
+<p>For <code>rename_with</code>, additional arguments passed to <code>fn</code>.</p></dd>
 
 
 <dt>.fn</dt>
@@ -100,25 +101,7 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">pl_test</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="va">pl_test</span>, miles_per_gallon <span class="op">=</span> <span class="st">"mpg"</span>, horsepower <span class="op">=</span> <span class="st">"hp"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (32, 11)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────────────────┬─────┬───────┬────────────┬───┬─────┬─────┬──────┬──────┐</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ miles_per_gallon ┆ cyl ┆ disp  ┆ horsepower ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---              ┆ --- ┆ ---   ┆ ---        ┆   ┆ --- ┆ --- ┆ ---  ┆ ---  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64              ┆ f64 ┆ f64   ┆ f64        ┆   ┆ f64 ┆ f64 ┆ f64  ┆ f64  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ╞══════════════════╪═════╪═══════╪════════════╪═══╪═════╪═════╪══════╪══════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 21.0             ┆ 6.0 ┆ 160.0 ┆ 110.0      ┆ … ┆ 0.0 ┆ 1.0 ┆ 4.0  ┆ 4.0  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 21.0             ┆ 6.0 ┆ 160.0 ┆ 110.0      ┆ … ┆ 0.0 ┆ 1.0 ┆ 4.0  ┆ 4.0  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 22.8             ┆ 4.0 ┆ 108.0 ┆ 93.0       ┆ … ┆ 1.0 ┆ 1.0 ┆ 4.0  ┆ 1.0  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 21.4             ┆ 6.0 ┆ 258.0 ┆ 110.0      ┆ … ┆ 1.0 ┆ 0.0 ┆ 3.0  ┆ 1.0  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ …                ┆ …   ┆ …     ┆ …          ┆ … ┆ …   ┆ …   ┆ …    ┆ …    │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 15.8             ┆ 8.0 ┆ 351.0 ┆ 264.0      ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 4.0  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 19.7             ┆ 6.0 ┆ 145.0 ┆ 175.0      ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 6.0  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 15.0             ┆ 8.0 ┆ 301.0 ┆ 335.0      ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 8.0  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 21.4             ┆ 4.0 ┆ 121.0 ┆ 109.0      ┆ … ┆ 1.0 ┆ 1.0 ┆ 4.0  ┆ 2.0  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> └──────────────────┴─────┴───────┴────────────┴───┴─────┴─────┴──────┴──────┘</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="va">pl_test</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>miles_per_gallon <span class="op">=</span> <span class="st">"mpg"</span>, horsepower <span class="op">=</span> <span class="st">"hp"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="va">pl_test</span>, miles_per_gallon <span class="op">=</span> <span class="va">mpg</span>, horsepower <span class="op">=</span> <span class="st">"hp"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (32, 11)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────────────────┬─────┬───────┬────────────┬───┬─────┬─────┬──────┬──────┐</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ miles_per_gallon ┆ cyl ┆ disp  ┆ horsepower ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │</span>
