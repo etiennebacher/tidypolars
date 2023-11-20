@@ -72,6 +72,11 @@ filter.DataFrame <- function(.data, ..., .by = NULL) {
           ),
           call = caller_env(4)
         )
+      } else {
+        rlang::abort(
+          e$message,
+          call = caller_env(4)
+        )
       }
     }
   )
