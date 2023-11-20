@@ -35,6 +35,16 @@ expect_colnames(
   c("cyl", "disp", "drat", "qsec", "am", "gear", "carb", "mpg", "hp", "wt", "vs")
 )
 
+expect_colnames(
+  test |> relocate(hp, vs, .after = last_col()),
+  c("mpg", "cyl", "disp", "drat", "wt", "qsec", "am", "gear", "carb", "hp", "vs")
+)
+
+expect_colnames(
+  test |> relocate(hp, vs, .before = last_col()),
+  c("mpg", "cyl", "disp", "drat", "wt", "qsec", "am", "gear", "hp", "vs", "carb")
+)
+
 # errors
 expect_error_lazy(
   test |> relocate(mpg, .before = cyl, .after = drat),

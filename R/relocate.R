@@ -27,6 +27,9 @@
 #' # select helpers are also available
 #' dat |>
 #'   relocate(contains("[aeiou]"))
+#'
+#' dat |>
+#'   relocate(hp, vs, .after = last_col())
 
 relocate.DataFrame <- function(.data, ..., .before = NULL, .after = NULL) {
   check_polars_data(.data)
@@ -70,8 +73,13 @@ relocate.DataFrame <- function(.data, ..., .before = NULL, .after = NULL) {
     }
     lhs <- names_data[seq_len(limit)]
     lhs <- lhs[which(lhs %in% not_moving)]
-    rhs <- names_data[seq(limit + 1, ncol(.data))]
-    rhs <- rhs[which(rhs %in% not_moving)]
+    # we don't have RHS if we relocate columns to be in the last position
+    if (identical(lhs, not_moving)) {
+      rhs <- NULL
+    } else {
+      rhs <- names_data[seq(limit + 1, ncol(.data))]
+      rhs <- rhs[which(rhs %in% not_moving)]
+    }
     new_order <- c(lhs, vars, rhs)
   }
 

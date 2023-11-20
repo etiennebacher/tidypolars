@@ -8,7 +8,8 @@
 * Better error message in `filter()` when comparing factors to strings while the
   string cache is disabled.
   
-* Basic support for `strptime()`.
+* Basic support for `strptime()`. It is possible to use `strptime(*, strict = FALSE)`
+  to not error when the parsing of some characters fails.
 
 * New argument `.by` in `filter()`, `mutate()`, and `summarize()`, and new 
   argument `by` in the `slice_*()` functions. This allows to do operations on
@@ -21,6 +22,8 @@
 * Improve robustness of sequential expressions in `mutate()` and `summarize()` 
   (i.e expressions that should be run one after the other because they depend on
   variables created in the same call) (#58).
+  
+* `relocate()` now works correctly when `.after = last_col()`.
   
 **Misc**
 

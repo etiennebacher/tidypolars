@@ -42,5 +42,8 @@ dat |>
 # select helpers are also available
 dat |>
   relocate(contains("[aeiou]"))
+
+dat |>
+  relocate(hp, vs, .after = last_col())
 \dontshow{\}) # examplesIf}
 }
