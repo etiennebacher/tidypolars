@@ -163,7 +163,7 @@ benchmarks](https://duckdblabs.github.io/db-benchmark/).
 
 ``` r
 library(collapse, warn.conflicts = FALSE)
-#> collapse 2.0.2, see ?`collapse-package` or ?`collapse-documentation`
+#> collapse 2.0.3, see ?`collapse-package` or ?`collapse-documentation`
 
 large_iris <- data.table::rbindlist(rep(list(iris), 50000))
 large_iris_pl <- as_polars(large_iris, lazy = TRUE)
@@ -208,17 +208,17 @@ bench::mark(
       fsubset(Sepal.Length >= 4.5 & Sepal.Length <= 5.5)
   },
   check = FALSE,
-  iterations = 10
+  iterations = 20
 )
 #> Warning: Some expressions had a GC in every iteration; so filtering is
 #> disabled.
 #> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     141.97ms  168.5ms     5.91     26.6KB     0   
-#> 2 tidypolars 162.03ms 207.92ms     4.90     74.6KB     0   
-#> 3 dplyr         3.29s    3.43s     0.288   916.6MB     1.30
-#> 4 collapse    278.9ms 390.28ms     2.53    373.1MB     2.27
+#> 1 polars     151.74ms 176.11ms     5.76     26.5KB    0    
+#> 2 tidypolars 179.46ms 216.24ms     4.05    284.4KB    0.203
+#> 3 dplyr         3.22s    3.92s     0.257   916.6MB    0.989
+#> 4 collapse   312.42ms 435.57ms     2.28    373.1MB    2.28
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling

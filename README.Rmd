@@ -180,7 +180,7 @@ bench::mark(
       fsubset(Sepal.Length >= 4.5 & Sepal.Length <= 5.5)
   },
   check = FALSE,
-  iterations = 10
+  iterations = 20
 )
 
 # NOTE: do NOT take the "mem_alloc" results into account.
