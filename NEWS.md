@@ -36,6 +36,8 @@
 * Error messages coming from `mutate()`, `summarize()`, and `filter()` now give 
   the right function call. 
 
+* Faster tidy selection (#61).
+
 # tidypolars (0.3.0)
 
 `tidypolars` requires `polars` >= 0.10.0.
