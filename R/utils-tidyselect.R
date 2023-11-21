@@ -1,25 +1,25 @@
 tidyselect_dots <- function(.data, ...) {
-  if (inherits(.data, "LazyFrame")) {
-    data <- .data$first()$collect()$to_data_frame()
-  } else {
-    data <- .data$first()$to_data_frame()
-  }
+  data <- build_data_context(.data)
   check_where_arg(...)
   names(tidyselect::eval_select(rlang::expr(c(...)), data, error_call = caller_env()))
 }
 
-
 tidyselect_named_arg <- function(.data, cols) {
-  if (inherits(.data, "LazyFrame")) {
-    data <- .data$slice(offset = 0, length = 1)$collect()$to_data_frame()
-  } else {
-    data <- .data$slice(offset = 0, length = 1)$to_data_frame()
-  }
+  data <- build_data_context(.data)
   names(tidyselect::eval_select(cols, data = data))
 }
 
+# Rather than collecting a 1-row slice, it is faster to use the schema of the
+# data to recreate an empty DataFrame and convert it to R
+build_data_context <- function(.data) {
+  schema <- .data$schema
+  dat <- rep(list(NULL), length(schema))
+  names(dat) <- names(schema)
+  pl$DataFrame(dat, schema = schema)$to_data_frame()
+}
 
-#' Because the data used in selection is only a 1-row slice, where() can only
+
+#' Because the data used in selection is an empty DataFrame, where() can only
 #' be used to select depending on the type of columns, not on operations (like
 #' mean(), etc.)
 #' @noRd
