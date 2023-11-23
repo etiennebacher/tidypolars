@@ -30,6 +30,7 @@ arrange.DataFrame <- function(.data, ..., .by_group = FALSE) {
   direction <- rep(FALSE, out_length)
 
   grps <- attributes(.data)$pl_grps
+  mo <- attributes(data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
   vars <- lapply(seq_along(dots), \(x) {
@@ -54,7 +55,13 @@ arrange.DataFrame <- function(.data, ..., .by_group = FALSE) {
     vars <- c(grps, vars)
     direction <- c(rep(FALSE, length(grps)), direction)
   }
-  .data$sort(vars, descending = direction)
+
+  if (is_grouped) {
+    .data$sort(vars, descending = direction) |>
+      group_by(grps, maintain_order = mo)
+  } else {
+    .data$sort(vars, descending = direction)
+  }
 }
 
 #' @export

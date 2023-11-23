@@ -140,7 +140,7 @@ expect_colnames(
 # grouped data (checked with dplyr)
 
 out <- pl_iris |>
-  group_by(Species) |>
+  group_by(Species, maintain_order = TRUE) |>
   mutate(
     foo = mean(Sepal.Length)
   )
@@ -151,11 +151,35 @@ expect_equal_lazy(
 )
 
 expect_equal_lazy(
+  attr(out, "pl_grps"),
+  "Species"
+)
+
+expect_equal_lazy(
+  attr(out, "maintain_grp_order"),
+  TRUE
+)
+
+expect_equal_lazy(
   pull(out, foo) |> unique(),
   as_polars(iris) |>
     mutate(foo = mean(Sepal.Length), .by = Species) |>
     pull(foo) |>
     unique()
+)
+
+expect_equal_lazy(
+  as_polars(iris) |>
+    mutate(foo = mean(Sepal.Length), .by = Species) |>
+    attr("pl_grps"),
+  NULL
+)
+
+expect_equal_lazy(
+  as_polars(iris) |>
+    mutate(foo = mean(Sepal.Length), .by = Species) |>
+    attr("maintain_grp_order"),
+  NULL
 )
 
 pl_mtcars <- polars::pl$LazyFrame(mtcars)

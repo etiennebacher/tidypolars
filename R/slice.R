@@ -24,11 +24,17 @@ slice_tail.DataFrame <- function(.data, ..., n, by = NULL) {
 
   if (is_grouped) {
     non_grps <- setdiff(pl_colnames(.data), grps)
-    .data$group_by(grps, maintain_order = mo)$agg(
+    out <- .data$group_by(grps, maintain_order = mo)$agg(
       pl$all()$tail(n)
     )$explode(non_grps)
   } else {
-    .data$tail(n)
+    out <- .data$tail(n)
+  }
+
+  if (is_grouped && missing(by)) {
+    group_by(out, grps, maintain_order = mo)
+  } else {
+    out
   }
 }
 
@@ -47,11 +53,17 @@ slice_head.DataFrame <- function(.data, ..., n, by = NULL) {
 
   if (is_grouped) {
     non_grps <- setdiff(pl_colnames(.data), grps)
-    .data$group_by(grps, maintain_order = mo)$agg(
+    out <- .data$group_by(grps, maintain_order = mo)$agg(
       pl$all()$head(n)
     )$explode(non_grps)
   } else {
-    .data$head(n)
+    out <- .data$head(n)
+  }
+
+  if (is_grouped && missing(by)) {
+    group_by(out, grps, maintain_order = mo)
+  } else {
+    out
   }
 }
 
@@ -89,10 +101,16 @@ slice_sample.DataFrame <- function(.data, ..., n = NULL, prop = NULL, replace = 
 
   if (is_grouped) {
     non_grps <- setdiff(pl_colnames(.data), grps)
-    .data$group_by(grps, maintain_order = mo)$agg(
+    out <- .data$group_by(grps, maintain_order = mo)$agg(
       pl$all()$sample(n = n, frac = prop, with_replacement = replace)
     )$explode(non_grps)
   } else {
-    .data$sample(n = n, frac = prop, with_replacement = replace)
+    out <- .data$sample(n = n, frac = prop, with_replacement = replace)
+  }
+
+  if (is_grouped && missing(by)) {
+    group_by(out, grps, maintain_order = mo)
+  } else {
+    out
   }
 }

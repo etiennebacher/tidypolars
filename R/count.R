@@ -18,9 +18,20 @@
 
 count.DataFrame <- function(x, ..., sort = FALSE, name = "n") {
   check_polars_data(x)
+
+  grps <- attributes(x)$pl_grps
+  mo <- attributes(x)$maintain_grp_order
+  is_grouped <- !is.null(grps)
+
   vars <- tidyselect_dots(x, ...)
-  vars <- c(attributes(x)$pl_grps, vars)
-  count_(x, vars, sort = sort, name = name, new_col = FALSE)
+  vars <- c(grps, vars)
+  out <- count_(x, vars, sort = sort, name = name, new_col = FALSE)
+
+  if (is_grouped) {
+    group_by(out, grps, maintain_order = mo)
+  } else {
+    out
+  }
 }
 
 #' @rdname count.DataFrame
@@ -32,9 +43,20 @@ count.LazyFrame <- count.DataFrame
 
 add_count.DataFrame <- function(x, ..., sort = FALSE, name = "n") {
   check_polars_data(x)
+
+  grps <- attributes(x)$pl_grps
+  mo <- attributes(x)$maintain_grp_order
+  is_grouped <- !is.null(grps)
+
   vars <- tidyselect_dots(x, ...)
-  vars <- c(attributes(x)$pl_grps, vars)
-  count_(x, vars, sort = sort, name = name, new_col = TRUE)
+  vars <- c(grps, vars)
+  out <- count_(x, vars, sort = sort, name = name, new_col = TRUE)
+
+  if (is_grouped) {
+    group_by(out, grps, maintain_order = mo)
+  } else {
+    out
+  }
 }
 
 #' @rdname count.DataFrame

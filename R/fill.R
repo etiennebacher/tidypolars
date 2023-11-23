@@ -38,6 +38,7 @@ fill.DataFrame <- function(data, ..., .direction = c("down", "up", "downup", "up
 
   grps <- attributes(data)$pl_grps
   is_grouped <- !is.null(grps)
+  mo <- attributes(data)$maintain_grp_order
 
   expr <- polars::pl$col(vars)
   expr <- switch(
@@ -52,7 +53,12 @@ fill.DataFrame <- function(data, ..., .direction = c("down", "up", "downup", "up
     expr <- expr$over(grps)
   }
 
-  data$with_columns(expr)
+  if (is_grouped) {
+    data$with_columns(expr) |>
+      group_by(grps, maintain_order = mo)
+  } else {
+    data$with_columns(expr)
+  }
 }
 
 #' @export

@@ -80,9 +80,11 @@ filter.DataFrame <- function(.data, ..., .by = NULL) {
       }
     }
   )
-  attr(out, "maintain_grp_order") <- mo
-  attr(out, "pl_grps") <- grps
-  out
+  if (is_grouped && missing(.by)) {
+    group_by(out, grps, maintain_order = mo)
+  } else {
+    out
+  }
 }
 
 #' @rdname filter.DataFrame

@@ -30,6 +30,9 @@
   variables created in the same call) (#58).
   
 * `relocate()` now works correctly when `.after = last_col()`.
+
+* All functions that work on grouped data now correctly restore the groups 
+  structure (#62).
   
 **Misc**
 

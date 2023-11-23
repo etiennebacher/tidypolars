@@ -49,4 +49,30 @@ expect_colnames(
   names(iris)[2:5]
 )
 
+# attributes ------------------------
+
+expect_equal_lazy(
+  summarize(pl_iris_g, x = mean(Sepal.Length)) |>
+    attr("pl_grps"),
+  "Species"
+)
+
+expect_equal_lazy(
+  summarize(pl_iris_g, x = mean(Sepal.Length)) |>
+    attr("maintain_grp_order"),
+  TRUE
+)
+
+expect_equal_lazy(
+  summarize(pl_iris, x = mean(Sepal.Length), .by = Species) |>
+    attr("pl_grps"),
+  NULL
+)
+
+expect_equal_lazy(
+  summarize(pl_iris, x = mean(Sepal.Length), .by = Species) |>
+    attr("maintain_grp_order"),
+  NULL
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

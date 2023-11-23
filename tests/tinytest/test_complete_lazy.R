@@ -62,4 +62,14 @@ expect_equal_lazy(
   )
 )
 
+expect_equal_lazy(
+  attr(out, "pl_grps"),
+  "g"
+)
+
+expect_equal_lazy(
+  attr(out, "maintain_grp_order"),
+  TRUE
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

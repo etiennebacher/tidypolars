@@ -57,3 +57,13 @@ expect_equal(
     c = c(4, NA, NA, 6, 5)
   )
 )
+
+expect_equal(
+  attr(out, "pl_grps"),
+  "g"
+)
+
+expect_equal(
+  attr(out, "maintain_grp_order"),
+  TRUE
+)

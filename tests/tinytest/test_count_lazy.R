@@ -54,4 +54,27 @@ expect_dim(
   c(32, 12)
 )
 
+
+test_grp <- group_by(test, am, maintain_order = TRUE)
+
+expect_equal_lazy(
+  attr(count(test_grp), "pl_grps"),
+  "am"
+)
+
+expect_equal_lazy(
+  attr(add_count(test_grp), "pl_grps"),
+  "am"
+)
+
+expect_equal_lazy(
+  attr(count(test_grp), "maintain_grp_order"),
+  TRUE
+)
+
+expect_equal_lazy(
+  attr(add_count(test_grp), "maintain_grp_order"),
+  TRUE
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

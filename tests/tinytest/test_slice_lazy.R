@@ -19,6 +19,8 @@ expect_equal_lazy(
   check.attributes = FALSE
 )
 
+# grouped head ----------------------------
+
 pl_iris_g <- pl_iris |>
   group_by(Species, maintain_order = TRUE)
 
@@ -44,6 +46,18 @@ expect_equal_lazy(
   c(7, 6.4)
 )
 
+expect_equal_lazy(
+  attr(hd, "pl_grps"),
+  "Species"
+)
+
+expect_equal_lazy(
+  attr(hd, "maintain_grp_order"),
+  TRUE
+)
+
+
+# grouped tail ----------------------------
 
 tl <- slice_tail(pl_iris_g, n = 2)
 
@@ -65,6 +79,16 @@ expect_dim(tl, c(6, 5))
 expect_equal_lazy(
   pull(tl, Sepal.Length)[3:4],
   c(5.1, 5.7)
+)
+
+expect_equal_lazy(
+  attr(tl, "pl_grps"),
+  "Species"
+)
+
+expect_equal_lazy(
+  attr(tl, "maintain_grp_order"),
+  TRUE
 )
 
 # slice_sample ---------------------------------------------------
@@ -115,6 +139,22 @@ if (inherits(pl_iris, "DataFrame")) {
 
   expect_equal_lazy(
     pl_iris |>
+      group_by(Species) |>
+      slice_sample(n = 5) |>
+      attr("pl_grps"),
+    "Species"
+  )
+
+  expect_equal_lazy(
+    pl_iris |>
+      group_by(Species, maintain_order = TRUE) |>
+      slice_sample(n = 5) |>
+      attr("maintain_grp_order"),
+    TRUE
+  )
+
+  expect_equal_lazy(
+    pl_iris |>
       slice_sample(n = 5, by = Species) |>
       nrow(),
     15
@@ -125,6 +165,20 @@ if (inherits(pl_iris, "DataFrame")) {
       slice_sample(prop = 0.1, by = Species) |>
       nrow(),
     15
+  )
+
+  expect_equal_lazy(
+    pl_iris |>
+      slice_sample(prop = 0.1, by = Species) |>
+      attr("pl_grps"),
+    NULL
+  )
+
+  expect_equal_lazy(
+    pl_iris |>
+      slice_sample(prop = 0.1, by = Species) |>
+      attr("maintain_grp_order"),
+    NULL
   )
 }
 

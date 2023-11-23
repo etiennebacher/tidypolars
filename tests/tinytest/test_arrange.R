@@ -60,3 +60,17 @@ expect_equal(
     pull(x2),
   c(1, 2, 3, 5, 1)
 )
+
+# groups: regroup after operation
+
+expect_equal(
+  arrange(test_grp, x2) |> attr("pl_grps"),
+  "x1"
+)
+
+test_grp <- group_by(test, x1, x2)
+
+expect_equal(
+  arrange(test_grp, value) |> attr("pl_grps"),
+  c("x1", "x2")
+)

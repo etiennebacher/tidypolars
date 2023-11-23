@@ -50,7 +50,11 @@ summarize.DataFrame <- function(.data, ..., .by = NULL) {
     }
   }
 
-  .data
+  if (is_grouped && missing(.by)) {
+    group_by(.data, grps, maintain_order = mo)
+  } else {
+    .data
+  }
 }
 
 #' @rdname summarize.DataFrame
