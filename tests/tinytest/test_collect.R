@@ -18,3 +18,17 @@ expect_equal(
 )
 
 expect_error(collect(pl_iris))
+
+out <- pl_iris_lazy |>
+  group_by(Species, maintain_order = TRUE) |>
+  collect()
+
+expect_equal(
+  attr(out, "pl_grps"),
+  "Species"
+)
+
+expect_equal(
+  attr(out, "maintain_grp_order"),
+  TRUE
+)

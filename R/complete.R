@@ -62,7 +62,7 @@ complete.DataFrame <- function(data, ..., fill = list()) {
     out <- replace_na(out, fill)
   }
 
-  if (isTRUE(is_grouped)) {
+  if (is_grouped) {
     out |>
       relocate(grps, .before = 1) |>
       group_by(grps, maintain_order = mo)

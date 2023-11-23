@@ -57,7 +57,11 @@ collect.LazyFrame <- function(
     collect_in_background = FALSE,
     ...
   ) {
-  x$collect(
+  grps <- attributes(x)$pl_grps
+  mo <- attributes(x)$maintain_grp_order
+  is_grouped <- !is.null(grps)
+
+  out <- x$collect(
     type_coercion = type_coercion,
     predicate_pushdown = predicate_pushdown,
     projection_pushdown = projection_pushdown,
@@ -69,4 +73,11 @@ collect.LazyFrame <- function(
     streaming = streaming,
     collect_in_background = collect_in_background
   )
+
+  if (is_grouped) {
+    out |>
+      group_by(grps, maintain_order = mo)
+  } else {
+    out
+  }
 }
