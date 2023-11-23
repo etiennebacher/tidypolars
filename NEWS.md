@@ -23,9 +23,6 @@
   
 * `rename()` now accepts unquoted names both old and new names.
 
-* All functions that work on grouped data now correctly restore the groups 
-  structure (#62).
-
 **Bug fixes**
 
 * Improve robustness of sequential expressions in `mutate()` and `summarize()` 
@@ -33,6 +30,9 @@
   variables created in the same call) (#58).
   
 * `relocate()` now works correctly when `.after = last_col()`.
+
+* All functions that work on grouped data now correctly restore the groups 
+  structure (#62).
   
 **Misc**
 
