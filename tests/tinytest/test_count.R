@@ -49,3 +49,26 @@ expect_dim(
   add_count(test, cyl, am, sort = TRUE, name = "count"),
   c(32, 12)
 )
+
+
+test_grp <- group_by(test, am, maintain_order = TRUE)
+
+expect_equal(
+  attr(count(test_grp), "pl_grps"),
+  "am"
+)
+
+expect_equal(
+  attr(add_count(test_grp), "pl_grps"),
+  "am"
+)
+
+expect_equal(
+  attr(count(test_grp), "maintain_grp_order"),
+  TRUE
+)
+
+expect_equal(
+  attr(add_count(test_grp), "maintain_grp_order"),
+  TRUE
+)

@@ -167,7 +167,7 @@ expect_dim(
 # with grouped data
 
 by_cyl <- polars::pl$LazyFrame(mtcars) |>
-  group_by(cyl)
+  group_by(cyl, maintain_order = TRUE)
 
 expect_equal_lazy(
   by_cyl |>
@@ -197,6 +197,20 @@ expect_dim(
     filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4,
            .by = Species),
   c(123, 5)
+)
+
+expect_equal_lazy(
+  by_cyl |>
+    filter(disp == max(disp)) |>
+    attr("pl_grps"),
+  "cyl"
+)
+
+expect_equal_lazy(
+  by_cyl |>
+    filter(disp == max(disp)) |>
+    attr("maintain_grp_order"),
+  TRUE
 )
 
 foo <- pl$LazyFrame(
@@ -229,5 +243,20 @@ expect_dim(
     filter(any(x), .by = starts_with("g")),
   c(4, 2)
 )
+
+expect_equal_lazy(
+  foo |>
+    filter(all(x), .by = starts_with("g")) |>
+    attr("pl_grps"),
+  NULL
+)
+
+expect_equal_lazy(
+  foo |>
+    filter(all(x), .by = starts_with("g")) |>
+    attr("maintain_grp_order"),
+  NULL
+)
+
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

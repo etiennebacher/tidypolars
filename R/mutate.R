@@ -75,6 +75,7 @@ mutate.DataFrame <- function(.data, ..., .by = NULL) {
   check_polars_data(.data)
 
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
+  mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
   to_drop <- list()
 
@@ -97,7 +98,11 @@ mutate.DataFrame <- function(.data, ..., .by = NULL) {
     }
   }
 
-  .data
+  if (is_grouped && missing(.by)) {
+    group_by(.data, grps, maintain_order = mo)
+  } else {
+    .data
+  }
 }
 
 #' @rdname mutate.DataFrame

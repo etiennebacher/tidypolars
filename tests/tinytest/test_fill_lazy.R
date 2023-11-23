@@ -41,7 +41,7 @@ pl_grouped <- polars::pl$LazyFrame(
   x = c(NA, 1, NA, NA, 2, NA),
   y = c(3, NA, 4, NA, 3, 1)
 ) |>
-  group_by(grp)
+  group_by(grp, maintain_order = TRUE)
 
 expect_equal_lazy(
   fill(pl_grouped, everything(), .direction = "down") |>
@@ -59,6 +59,19 @@ expect_equal_lazy(
   fill(pl_grouped, everything(), .direction = "updown") |>
     pull(y),
   c(3, 4, 4, 3, 3, 1)
+)
+
+
+expect_equal_lazy(
+  fill(pl_grouped, everything(), .direction = "down") |>
+    attr("pl_grps"),
+  "grp"
+)
+
+expect_equal_lazy(
+  fill(pl_grouped, everything(), .direction = "down") |>
+    attr("maintain_grp_order"),
+  TRUE
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

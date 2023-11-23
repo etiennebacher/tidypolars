@@ -23,6 +23,9 @@
   
 * `rename()` now accepts unquoted names both old and new names.
 
+* All functions that work on grouped data now correctly restore the groups 
+  structure (#62).
+
 **Bug fixes**
 
 * Improve robustness of sequential expressions in `mutate()` and `summarize()` 

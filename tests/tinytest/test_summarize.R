@@ -44,3 +44,29 @@ expect_colnames(
   summarize(pl_iris_g, Sepal.Length = NULL),
   names(iris)[2:5]
 )
+
+# attributes ------------------------
+
+expect_equal(
+  summarize(pl_iris_g, x = mean(Sepal.Length)) |>
+    attr("pl_grps"),
+  "Species"
+)
+
+expect_equal(
+  summarize(pl_iris_g, x = mean(Sepal.Length)) |>
+    attr("maintain_grp_order"),
+  TRUE
+)
+
+expect_equal(
+  summarize(pl_iris, x = mean(Sepal.Length), .by = Species) |>
+    attr("pl_grps"),
+  NULL
+)
+
+expect_equal(
+  summarize(pl_iris, x = mean(Sepal.Length), .by = Species) |>
+    attr("maintain_grp_order"),
+  NULL
+)

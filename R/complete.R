@@ -64,8 +64,8 @@ complete.DataFrame <- function(data, ..., fill = list()) {
 
   if (isTRUE(is_grouped)) {
     out |>
-      relocate(tidyselect::all_of(grps), .before = 1) |>
-      group_by(tidyselect::all_of(grps), maintain_order = mo)
+      relocate(grps, .before = 1) |>
+      group_by(grps, maintain_order = mo)
   } else {
     out
   }
