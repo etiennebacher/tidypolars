@@ -95,11 +95,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ ---   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ str ┆ f64 ┆ i32   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═══════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 2.0 ┆ 2     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 2.0 ┆ 5     │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 1.0 ┆ 1     │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 3.0 ┆ 3     │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 5.0 ┆ 5     │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ c   ┆ 1.0 ┆ 4     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 3.0 ┆ 4     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 5.0 ┆ 2     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ c   ┆ 1.0 ┆ 3     │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴───────┘</span>
 <span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">pl_test</span>, <span class="va">x1</span>, <span class="op">-</span><span class="va">x2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (5, 3)</span>
@@ -108,11 +108,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ ---   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ str ┆ f64 ┆ i32   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═══════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 3.0 ┆ 3     │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 2.0 ┆ 2     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 3.0 ┆ 4     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 2.0 ┆ 5     │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 1.0 ┆ 1     │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 5.0 ┆ 5     │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ c   ┆ 1.0 ┆ 4     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 5.0 ┆ 2     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ c   ┆ 1.0 ┆ 3     │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴───────┘</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># if the data is grouped, you need to specify `.by_group = TRUE` to sort by</span></span></span>
@@ -126,11 +126,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ ---   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ str ┆ f64 ┆ i32   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═══════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 3.0 ┆ 3     │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 2.0 ┆ 2     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 3.0 ┆ 4     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 2.0 ┆ 5     │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 1.0 ┆ 1     │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 5.0 ┆ 5     │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ c   ┆ 1.0 ┆ 4     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 5.0 ┆ 2     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ c   ┆ 1.0 ┆ 3     │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴───────┘</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Groups [3]: x1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Maintain order: FALSE</span>
