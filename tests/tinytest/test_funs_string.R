@@ -484,6 +484,20 @@ expect_equal(
     pull(foo)
 )
 
+expect_equal(
+  mutate(test, foo = str_detect(x5, fixed("."))) |>
+    pull(foo),
+  mutate(test_df, foo = str_detect(x5, fixed("."))) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = grepl(".", x5, fixed = TRUE)) |>
+    pull(foo),
+  mutate(test_df, foo = grepl(".", x5, fixed = TRUE)) |>
+    pull(foo)
+)
+
 expect_warning(
   mutate(test, foo = grepl("e", x1, ignore.case = TRUE)),
   "will not be used"

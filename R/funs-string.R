@@ -1,7 +1,8 @@
 
 pl_str_detect <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
-  out <- string$str$contains(pattern)
+  is_fixed <- isTRUE(attr(pattern, "stringr_attr") == "fixed")
+  out <- string$str$contains(pattern, literal = is_fixed)
   if (isTRUE(negate)) {
     out$is_not()
   } else {
@@ -9,9 +10,11 @@ pl_str_detect <- function(string, pattern, negate = FALSE, ...) {
   }
 }
 
-pl_grepl <- function(pattern, x, ...) {
-  check_empty_dots(...)
-  pl_str_detect(string = x, pattern = pattern)
+pl_grepl <- function(pattern, x, fixed = FALSE, ...) {
+  if (isTRUE(fixed)) {
+    attr(x, "stringr_attr") <- "fixed"
+  }
+  pl_str_detect(string = x, pattern = pattern, ...)
 }
 
 pl_str_count_matches <- function(string, pattern = "", ...) {

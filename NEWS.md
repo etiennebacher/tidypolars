@@ -23,6 +23,9 @@
   
 * `rename()` now accepts unquoted names both old and new names.
 
+* Support fixed regexes in `str_detect()` (using `fixed()`) and in `grepl()` 
+  (using `fixed = TRUE`).
+
 **Bug fixes**
 
 * Improve robustness of sequential expressions in `mutate()` and `summarize()` 
