@@ -56,32 +56,32 @@ pl_approx_unique <- function(x, ...) {
 }
 
 pl_arccos <- function(x, ...) {
-  check_empty_dots()
+  check_empty_dots(...)
   x$arccos()
 }
 
 pl_arccosh <- function(x, ...) {
-  check_empty_dots()
+  check_empty_dots(...)
   x$arccosh()
 }
 
 pl_arcsin <- function(x, ...) {
-  check_empty_dots()
+  check_empty_dots(...)
   x$arcsin()
 }
 
 pl_arcsinh <- function(x, ...) {
-  check_empty_dots()
+  check_empty_dots(...)
   x$arcsinh()
 }
 
 pl_arctan <- function(x, ...) {
-  check_empty_dots()
+  check_empty_dots(...)
   x$arctan()
 }
 
 pl_arctanh <- function(x, ...) {
-  check_empty_dots()
+  check_empty_dots(...)
   x$arctanh()
 }
 
@@ -183,12 +183,12 @@ pl_coalesce <- function(..., default = NULL) {
 }
 
 pl_cos <- function(x, ...) {
-  check_empty_dots()
+  check_empty_dots(...)
   x$cos()
 }
 
 pl_cosh <- function(x, ...) {
-  check_empty_dots()
+  check_empty_dots(...)
   x$cosh()
 }
 
@@ -425,12 +425,12 @@ pl_sum <- function(x, ...) {
 }
 
 pl_tan <- function(x, ...) {
-  check_empty_dots()
+  check_empty_dots(...)
   x$tan()
 }
 
 pl_tanh <- function(x, ...) {
-  check_empty_dots()
+  check_empty_dots(...)
   x$tanh()
 }
 
