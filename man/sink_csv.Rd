@@ -7,7 +7,8 @@
 sink_csv(
   .data,
   path,
-  has_header = TRUE,
+  include_bom = FALSE,
+  include_header = TRUE,
   separator = ",",
   line_terminator = "\\n",
   quote = "\\"",
@@ -32,7 +33,10 @@ sink_csv(
 
 \item{path}{Output file (must be a \code{.parquet} file).}
 
-\item{has_header}{Whether to include header in the CSV output.}
+\item{include_bom}{Whether to include UTF-8 BOM (byte order mark) in the CSV
+output.}
+
+\item{include_header}{Whether to include header in the CSV output.}
 
 \item{separator}{Separate CSV fields with this symbol.}
 

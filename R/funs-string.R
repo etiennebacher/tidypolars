@@ -4,7 +4,7 @@ pl_str_detect <- function(string, pattern, negate = FALSE, ...) {
   is_fixed <- isTRUE(attr(pattern, "stringr_attr") == "fixed")
   out <- string$str$contains(pattern, literal = is_fixed)
   if (isTRUE(negate)) {
-    out$is_not()
+    out$not()
   } else {
     out
   }
@@ -27,7 +27,7 @@ pl_str_ends <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
   out <- string$str$ends_with(pattern)
   if (isTRUE(negate)) {
-    out$is_not()
+    out$not()
   } else {
     out
   }
@@ -92,7 +92,7 @@ pl_str_slice <- function(string, start, end = NULL, ...) {
 pl_str_starts <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
   if (isTRUE(negate)) {
-    string$str$starts_with(pl$lit(pattern))$is_not()
+    string$str$starts_with(pl$lit(pattern))$not()
   } else {
     string$str$starts_with(pl$lit(pattern))
   }
@@ -194,7 +194,7 @@ pl_str_pad <- function(string, width, side = "left", pad = " ", use_width = TRUE
 
 pl_word <- function(string, start = 1L, end = start, sep = " ", ...) {
   check_empty_dots(...)
-  string$str$split(sep)$list$take((start:end) - 1L)$list$join(sep)
+  string$str$split(sep)$list$gather((start:end) - 1L)$list$join(sep)
 }
 
 pl_str_squish <- function(string, ...) {

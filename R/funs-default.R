@@ -194,22 +194,22 @@ pl_cosh <- function(x, ...) {
 
 pl_cumcount <- function(x, ...) {
   check_empty_dots(...)
-  x$cumcount()
+  x$cum_count()
 }
 
 pl_cummin <- function(x, ...) {
   check_empty_dots(...)
-  x$cummin()
+  x$cum_min()
 }
 
 pl_cumprod <- function(x, ...) {
   check_empty_dots(...)
-  x$cumprod()
+  x$cum_prod()
 }
 
 pl_cumsum <- function(x, ...) {
   check_empty_dots(...)
-  x$cumsum()
+  x$cum_sum()
 }
 
 pl_cumulative_eval <- function(x, ...) {

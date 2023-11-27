@@ -3,3 +3,5 @@
 #' @import tidyr
 #' @export
 NULL
+
+data <- NULL

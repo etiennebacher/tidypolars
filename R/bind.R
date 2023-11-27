@@ -27,7 +27,7 @@
 #' bind_rows_polars(p1, p2, .id = "id")
 
 bind_rows_polars <- function(..., .id = NULL) {
-  concat_(..., how = "diagonal", .id = .id)
+  concat_(..., how = "diagonal_relaxed", .id = .id)
 }
 
 #' Append multiple Data/LazyFrames next to each other
@@ -96,7 +96,7 @@ concat_ <- function(..., how, .id = NULL) {
   }
 
   if (how == "diagonal") {
-    pl$concat(dots, how = how, to_supertypes = TRUE)
+    pl$concat(dots, how = how)
   } else {
     pl$concat(dots, how = how)
   }

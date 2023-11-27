@@ -5,7 +5,9 @@
 #' crashes because of too small memory.
 #'
 #' @param .data A Polars LazyFrame.
-#' @param has_header Whether to include header in the CSV output.
+#' @param include_bom Whether to include UTF-8 BOM (byte order mark) in the CSV
+#' output.
+#' @param include_header Whether to include header in the CSV output.
 #' @param separator Separate CSV fields with this symbol.
 #' @param line_terminator String used to end each row.
 #' @param quote Byte to use as quoting character.
@@ -61,7 +63,8 @@
 sink_csv <- function(
     .data,
     path,
-    has_header = TRUE,
+    include_bom = FALSE,
+    include_header = TRUE,
     separator = ",",
     line_terminator = "\n",
     quote = '"',
@@ -87,7 +90,8 @@ sink_csv <- function(
 
   .data$sink_csv(
     path = path,
-    has_header = has_header,
+    include_bom = include_bom,
+    include_header = include_header,
     separator = separator,
     line_terminator = line_terminator,
     quote = quote,
