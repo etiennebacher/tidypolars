@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,6 +54,26 @@
       <small>Source: <a href="https://github.com/etiennebacher/tidypolars/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.4.0" id="tidypolars-040">tidypolars 0.4.0<a class="anchor" aria-label="anchor" href="#tidypolars-040"></a></h2>
+<p><code>tidypolars</code> requires <code>polars</code> &gt;= 0.11.0.</p>
+<p><strong>Breaking changes</strong></p>
+<ul><li>It is no longer possible to pass a list in <code><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename()</a></code>.</li>
+</ul><p><strong>New features</strong></p>
+<ul><li><p>The argument <code>with_string_cache</code> in <code><a href="../reference/as_polars.html">as_polars()</a></code> now enables the string cache globally if set to <code>TRUE</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/54" class="external-link">#54</a>).</p></li>
+<li><p>Better error message in <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code> when comparing factors to strings while the string cache is disabled.</p></li>
+<li><p>Basic support for <code><a href="https://rdrr.io/r/base/strptime.html" class="external-link">strptime()</a></code>. It is possible to use <code>strptime(*, strict = FALSE)</code> to not error when the parsing of some characters fails.</p></li>
+<li><p>New argument <code>.by</code> in <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code>, and <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code>, and new argument <code>by</code> in the <code>slice_*()</code> functions. This allows to do operations on groups without using <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup()</a></code>. See the <a href="https://dplyr.tidyverse.org/reference/dplyr_by.html" class="external-link"><code>dplyr</code> vignette</a> for more information (<a href="https://github.com/etiennebacher/tidypolars/issues/59" class="external-link">#59</a>).</p></li>
+<li><p><code><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename()</a></code> now accepts unquoted names both old and new names.</p></li>
+<li><p>Support fixed regexes in <code>str_detect()</code> (using <code>fixed()</code>) and in <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl()</a></code> (using <code>fixed = TRUE</code>).</p></li>
+</ul><p><strong>Bug fixes</strong></p>
+<ul><li><p>Improve robustness of sequential expressions in <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> (i.e expressions that should be run one after the other because they depend on variables created in the same call) (<a href="https://github.com/etiennebacher/tidypolars/issues/58" class="external-link">#58</a>).</p></li>
+<li><p><code><a href="https://dplyr.tidyverse.org/reference/relocate.html" class="external-link">relocate()</a></code> now works correctly when <code>.after = last_col()</code>.</p></li>
+<li><p>All functions that work on grouped data now correctly restore the groups structure (<a href="https://github.com/etiennebacher/tidypolars/issues/62" class="external-link">#62</a>).</p></li>
+</ul><p><strong>Misc</strong></p>
+<ul><li><p>Error messages coming from <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code>, and <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code> now give the right function call.</p></li>
+<li><p>Faster tidy selection (<a href="https://github.com/etiennebacher/tidypolars/issues/61" class="external-link">#61</a>).</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="tidypolars-020">tidypolars 0.2.0<a class="anchor" aria-label="anchor" href="#tidypolars-020"></a></h2>
 <p><code>tidypolars</code> requires <code>polars</code> &gt;= 0.9.0.</p>

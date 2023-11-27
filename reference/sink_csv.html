@@ -14,7 +14,7 @@ crashes because of too small memory."><!-- mathjax --><script src="https://cdnjs
     
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,7 +70,8 @@ crashes because of too small memory.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sink_csv</span><span class="op">(</span></span>
 <span>  <span class="va">.data</span>,</span>
 <span>  <span class="va">path</span>,</span>
-<span>  has_header <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  include_bom <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  include_header <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  separator <span class="op">=</span> <span class="st">","</span>,</span>
 <span>  line_terminator <span class="op">=</span> <span class="st">"\n"</span>,</span>
 <span>  quote <span class="op">=</span> <span class="st">"\""</span>,</span>
@@ -101,7 +102,12 @@ crashes because of too small memory.</p>
 <dd><p>Output file (must be a <code>.parquet</code> file).</p></dd>
 
 
-<dt>has_header</dt>
+<dt>include_bom</dt>
+<dd><p>Whether to include UTF-8 BOM (byte order mark) in the CSV
+output.</p></dd>
+
+
+<dt>include_header</dt>
 <dd><p>Whether to include header in the CSV output.</p></dd>
 
 
