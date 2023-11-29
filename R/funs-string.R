@@ -1,3 +1,24 @@
+pl_grepl <- function(pattern, x, fixed = FALSE, ...) {
+  if (isTRUE(fixed)) {
+    attr(x, "stringr_attr") <- "fixed"
+  }
+  pl_str_detect(string = x, pattern = pattern, ...)
+}
+
+pl_paste0 <- function(..., collapse = NULL) {
+  pl_paste(..., sep = "", collapse = collapse)
+}
+
+pl_paste <- function(..., sep = " ", collapse = NULL) {
+  # TODO: hacky, I do this because specifying e.g sep = "--" gets wrapped into
+  # Utf8() and doesn't work inside concat_str
+  if (!is.character(sep)) {
+    sep <- sep$to_r()
+  }
+  # pl$concat_str() doesn't support a list input, which is problematic since
+  # clean_dots() has to return a list
+  pl$concat_list(clean_dots(...))$list$join(separator = sep)
+}
 
 pl_str_detect <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
@@ -10,14 +31,7 @@ pl_str_detect <- function(string, pattern, negate = FALSE, ...) {
   }
 }
 
-pl_grepl <- function(pattern, x, fixed = FALSE, ...) {
-  if (isTRUE(fixed)) {
-    attr(x, "stringr_attr") <- "fixed"
-  }
-  pl_str_detect(string = x, pattern = pattern, ...)
-}
-
-pl_str_count_matches <- function(string, pattern = "", ...) {
+pl_str_count <- function(string, pattern = "", ...) {
   check_empty_dots(...)
   is_fixed <- isTRUE(attr(pattern, "stringr_attr") == "fixed")
   string$str$count_matches(pattern, literal = is_fixed)
@@ -52,7 +66,37 @@ pl_str_length <- function(string, ...) {
   string$str$len_chars()
 }
 
-pl_str_len_chars <- pl_str_length
+pl_nchar <- pl_str_length
+
+pl_str_pad <- function(string, width, side = "left", pad = " ", use_width = TRUE, ...) {
+  check_empty_dots(...)
+  if (isFALSE(use_width)) {
+    abort(
+      '`str_pad()` doesn\'t work in a Polars DataFrame when `use_width = FALSE`',
+      class = "tidypolars_error"
+    )
+  }
+  switch(
+    side,
+    "both" = abort(
+      '`str_pad()` doesn\'t work in a Polars DataFrame when `side = "both"`',
+      class = "tidypolars_error"
+    ),
+    # polars and dplyr have the opposite understanding for "side"
+    "left" = string$str$pad_start(width = width, fillchar = pad),
+    "right" = string$str$pad_end(width = width, fillchar = pad)
+  )
+}
+
+pl_str_remove <- function(string, pattern, ...) {
+  check_empty_dots(...)
+  string$str$replace(pattern, "")
+}
+
+pl_str_remove_all <- function(string, pattern, ...) {
+  check_empty_dots(...)
+  string$str$replace_all(pattern, "")
+}
 
 pl_str_replace <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
@@ -66,7 +110,12 @@ pl_str_replace_all <- function(string, pattern, replacement, ...) {
   string$str$replace_all(pattern, replacement)
 }
 
-pl_str_slice <- function(string, start, end = NULL, ...) {
+pl_str_squish <- function(string, ...) {
+  check_empty_dots(...)
+  string$str$replace_all("\\s+", " ")$str$strip_chars()
+}
+
+pl_str_sub <- function(string, start, end = NULL, ...) {
   check_empty_dots(...)
   # polars is 0-indexed
   if (start > 0) start <- start - 1
@@ -98,22 +147,11 @@ pl_str_starts <- function(string, pattern, negate = FALSE, ...) {
   }
 }
 
-pl_str_strptime <- function(string, format, tz = "", strict = TRUE, ...) {
-  check_empty_dots(...)
-  if (grepl("%(I|H|c|T|M|p|r|R|S|X|z)", format)) {
-    datatype = pl$Datetime("us", tz = tz)
-  } else {
-    datatype = pl$Date
-  }
-  string$str$strptime(datatype = datatype, format = format, strict = strict)
-}
-
 pl_str_to_lower <- function(string, ...) {
   check_empty_dots(...)
   string$str$to_lowercase()
 }
 pl_tolower <- pl_str_to_lower
-
 
 pl_str_to_upper <- function(string, ...) {
   check_empty_dots(...)
@@ -127,33 +165,6 @@ pl_str_to_title <- function(string, ...) {
   string$str$to_titlecase()
 }
 pl_toTitleCase <- pl_str_to_title
-
-# not in polars
-pl_str_remove <- function(string, pattern, ...) {
-  check_empty_dots(...)
-  string$str$replace(pattern, "")
-}
-
-# not in polars
-pl_str_remove_all <- function(string, pattern, ...) {
-  check_empty_dots(...)
-  string$str$replace_all(pattern, "")
-}
-
-pl_paste0 <- function(..., collapse = NULL) {
-  pl_paste(..., sep = "", collapse = collapse)
-}
-
-pl_paste <- function(..., sep = " ", collapse = NULL) {
-  # TODO: hacky, I do this because specifying e.g sep = "--" gets wrapped into
-  # Utf8() and doesn't work inside concat_str
-  if (!is.character(sep)) {
-    sep <- sep$to_r()
-  }
-  # pl$concat_str() doesn't support a list input, which is problematic since
-  # clean_dots() has to return a list
-  pl$concat_list(clean_dots(...))$list$join(separator = sep)
-}
 
 pl_str_trim <- function(string, side = "both", ...) {
   check_empty_dots(...)
@@ -170,34 +181,7 @@ pl_trimws <- function(string, which = "both", ...) {
   pl_str_trim(string, side = which)
 }
 
-pl_str_pad <- function(string, width, side = "left", pad = " ", use_width = TRUE, ...) {
-  check_empty_dots(...)
-  if (isFALSE(use_width)) {
-    abort(
-      '`str_pad()` doesn\'t work in a Polars DataFrame when `use_width = FALSE`',
-      class = "tidypolars_error"
-    )
-  }
-  switch(
-    side,
-    "both" = abort(
-      '`str_pad()` doesn\'t work in a Polars DataFrame when `side = "both"`',
-      class = "tidypolars_error"
-    ),
-    # polars and dplyr have the opposite understanding for "side"
-    "left" = string$str$pad_start(width = width, fillchar = pad),
-    "right" = string$str$pad_end(width = width, fillchar = pad)
-  )
-}
-
-# not in polars
-
 pl_word <- function(string, start = 1L, end = start, sep = " ", ...) {
   check_empty_dots(...)
   string$str$split(sep)$list$gather((start:end) - 1L)$list$join(sep)
-}
-
-pl_str_squish <- function(string, ...) {
-  check_empty_dots(...)
-  string$str$replace_all("\\s+", " ")$str$strip_chars()
 }
