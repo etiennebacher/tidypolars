@@ -1,13 +1,3 @@
-pl_default_round <- function(x, ...) {
-  check_empty_dots(...)
-  x$default$round()
-}
-
-pl_round <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$round()
-}
-
 pl_cast_time_unit <- function(x, ...) {
   check_empty_dots(...)
   x$dt$cast_time_unit()
@@ -28,15 +18,14 @@ pl_day <- function(x, ...) {
   x$dt$day()
 }
 
-pl_mday <- pl_day
-
-pl_yday <- function(x, ...) {
-  x$dt$ordinal_day()
-}
-
 pl_days <- function(x, ...) {
   check_empty_dots(...)
   x$dt$days()
+}
+
+pl_default_round <- function(x, ...) {
+  check_empty_dots(...)
+  x$default$round()
 }
 
 pl_epoch <- function(x, ...) {
@@ -89,6 +78,9 @@ pl_minutes <- function(x, ...) {
   x$dt$minutes()
 }
 
+pl_mday <- pl_day
+
+
 pl_month <- function(x, ...) {
   check_empty_dots(...)
   x$dt$month()
@@ -122,11 +114,6 @@ pl_quarter <- function(x, ...) {
 pl_replace_time_zone <- function(x, ...) {
   check_empty_dots(...)
   x$dt$replace_time_zone()
-}
-
-pl_default_round <- function(x, ...) {
-  check_empty_dots(...)
-  x$default$round()
 }
 
 pl_round <- function(x, ...) {
@@ -194,6 +181,10 @@ pl_with_time_unit <- function(x, ...) {
 pl_year <- function(x, ...) {
   check_empty_dots(...)
   x$dt$year()
+}
+
+pl_yday <- function(x, ...) {
+  x$dt$ordinal_day()
 }
 
 pl_ymd_hms <- function(x, ...) {
