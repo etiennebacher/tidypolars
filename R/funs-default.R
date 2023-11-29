@@ -30,7 +30,7 @@ pl_sum <- function(x, ...) {
   x$sum()
 }
 
-pl_std <- function(x, ddof = 1, ...) {
+pl_sd <- function(x, ddof = 1, ...) {
   check_empty_dots(...)
   x$std(ddof = ddof)
 }
@@ -55,32 +55,32 @@ pl_approx_unique <- function(x, ...) {
   x$approx_unique()
 }
 
-pl_arccos <- function(x, ...) {
+pl_acos <- function(x, ...) {
   check_empty_dots(...)
   x$arccos()
 }
 
-pl_arccosh <- function(x, ...) {
+pl_acosh <- function(x, ...) {
   check_empty_dots(...)
   x$arccosh()
 }
 
-pl_arcsin <- function(x, ...) {
+pl_asin <- function(x, ...) {
   check_empty_dots(...)
   x$arcsin()
 }
 
-pl_arcsinh <- function(x, ...) {
+pl_asinh <- function(x, ...) {
   check_empty_dots(...)
   x$arcsinh()
 }
 
-pl_arctan <- function(x, ...) {
+pl_atan <- function(x, ...) {
   check_empty_dots(...)
   x$arctan()
 }
 
-pl_arctanh <- function(x, ...) {
+pl_atanh <- function(x, ...) {
   check_empty_dots(...)
   x$arctanh()
 }
@@ -105,7 +105,7 @@ pl_arg_unique <- function(x, ...) {
   x$arg_unique()
 }
 
-pl_is_between <- function(x, left, right, include_bounds = TRUE, ...) {
+pl_between <- function(x, left, right, include_bounds = TRUE, ...) {
   check_empty_dots(...)
   x$is_between(start = left, end = right, include_bounds = include_bounds)
 }
@@ -168,7 +168,7 @@ pl_case_when <- function(..., .data) {
   out
 }
 
-pl_ceil <- function(x, ...) {
+pl_ceiling <- function(x, ...) {
   check_empty_dots(...)
   x$ceil()
 }
@@ -273,7 +273,7 @@ pl_is_duplicated <- function(x, ...) {
   x$is_duplicated()
 }
 
-pl_is_finite <- function(x, ...) {
+pl_is.finite <- function(x, ...) {
   check_empty_dots(...)
   x$is_finite()
 }
@@ -283,17 +283,17 @@ pl_is_first <- function(x, ...) {
   x$is_first()
 }
 
-pl_is_infinite <- function(x, ...) {
+pl_is.infinite <- function(x, ...) {
   check_empty_dots(...)
   x$is_infinite()
 }
 
-pl_is_nan <- function(x, ...) {
+pl_is.nan <- function(x, ...) {
   check_empty_dots(...)
   x$is_nan()
 }
 
-pl_is_null <- function(x, ...) {
+pl_is.null <- function(x, ...) {
   check_empty_dots(...)
   x$is_null()
 }
@@ -373,7 +373,7 @@ pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
   x$sample(n = size, with_replacement = replace, shuffle = TRUE)
 }
 
-pl_shift <- function(x, n = 1, k = NULL, ...) {
+pl_lag <- function(x, n = 1, k = NULL, ...) {
   check_empty_dots(...)
   if (!is.null(k)) n <- k
   x$shift(n)

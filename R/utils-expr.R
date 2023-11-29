@@ -211,7 +211,6 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
 
         args <- lapply(as.list(expr[-1]), translate, new_vars = new_vars, env = env)
         if (name %in% known_functions) {
-          name <- r_polars_funs$polars_funs[r_polars_funs$r_funs == name][1]
           name <- paste0("pl_", name)
         }
 
