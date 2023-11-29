@@ -1,5 +1,10 @@
 # tidypolars (development version)
 
+**Misc**
+
+* Simplify the procedure to support new functions.
+
+
 # tidypolars 0.4.0
 
 `tidypolars` requires `polars` >= 0.11.0.
