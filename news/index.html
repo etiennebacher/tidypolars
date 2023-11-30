@@ -59,6 +59,9 @@
 <p><strong>Breaking changes</strong></p>
 <ul><li>
 <code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code> now errors if the argument <code>.cols</code> is not provided (either named or unnamed). This behavior was deprecated in <code>dplyr</code> 1.1.0.</li>
+</ul><p><strong>Bug fixes</strong></p>
+<ul><li>
+<code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> no longer errors when <code>across(everything(), ...)</code> is used with <code>.by</code>.</li>
 </ul><p><strong>Misc</strong></p>
 <ul><li>Simplify the procedure to support new functions.</li>
 </ul></div>
