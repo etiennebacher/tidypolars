@@ -34,7 +34,14 @@ summarize.DataFrame <- function(.data, ..., .by = NULL) {
     rlang::abort("`summarize()` only works on grouped data.")
   }
 
-  polars_exprs <- translate_dots(.data = .data, ..., env = rlang::current_env())
+  # do not take the groups into account, especially useful when applying across()
+  # on everything()
+  .data_for_translation <- select(.data, -all_of(grps))
+  polars_exprs <- translate_dots(
+    .data = .data_for_translation,
+    ...,
+    env = rlang::current_env()
+  )
 
   for (i in seq_along(polars_exprs)) {
     sub <- polars_exprs[[i]]

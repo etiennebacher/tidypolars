@@ -4,6 +4,11 @@
 
 * `across()` now errors if the argument `.cols` is not provided (either named or
   unnamed). This behavior was deprecated in `dplyr` 1.1.0.
+  
+**Bug fixes**
+
+* `summarize()` no longer errors when `across(everything(), ...)` is used with
+  `.by`.
 
 **Misc**
 

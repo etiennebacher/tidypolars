@@ -285,20 +285,22 @@ expect_error(
   "You must supply the argument `.cols`"
 )
 
-# test .by
+# test .by with across + everything
 
 test3 <- mtcars |>
   head(n = 5) |>
   as_polars() |>
-  mutate(across(everything(), .fns = mean), .by = "cyl") |>
-  distinct()
+  summarize(across(everything(), .fns = mean), .by = "cyl") |>
+  distinct() |>
+  arrange(cyl)
 
 expect_equal(
   test3 |> pull(cyl),
-  c(6, 4, 8)
+  c(4, 6, 8)
 )
 
 expect_equal(
   test3 |> pull(hp),
-  c(110, 93, 175)
+  c(93, 110, 175)
 )
+
