@@ -29,15 +29,15 @@ expect_equal(
 )
 
 expect_equal(
-  summarize(pl_iris_g,
-               x = 1) |>
+  summarize(pl_iris_g, x = 1) |>
     pull(x),
   rep(1, 3)
 )
 
-expect_error(
-  summarize(pl_iris, x = mean(Sepal.Length)),
-  pattern = "only works on grouped data"
+expect_equal(
+  summarize(pl_iris, x = mean(Petal.Length)) |>
+    pull(x),
+  3.758
 )
 
 expect_colnames(

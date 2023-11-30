@@ -30,10 +30,6 @@ summarize.DataFrame <- function(.data, ..., .by = NULL) {
   if (is.null(mo)) mo <- FALSE
   is_grouped <- !is.null(grps)
 
-  if (!is_grouped) {
-    rlang::abort("`summarize()` only works on grouped data.")
-  }
-
   # do not take the groups into account, especially useful when applying across()
   # on everything()
   .data_for_translation <- select(.data, -all_of(grps))
@@ -49,7 +45,11 @@ summarize.DataFrame <- function(.data, ..., .by = NULL) {
     sub <- compact(sub)
 
     if (length(sub) > 0) {
-      .data <- .data$group_by(grps, maintain_order = mo)$agg(sub)
+      if (is_grouped) {
+        .data <- .data$group_by(grps, maintain_order = mo)$agg(sub)
+      } else {
+        .data <- .data$select(sub)
+      }
     }
 
     if (length(to_drop) > 0) {
