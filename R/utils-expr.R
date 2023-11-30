@@ -48,7 +48,7 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
 
   # split across() call early
   if (length(expr) > 1 && safe_deparse(expr[[1]]) == "across") {
-    expr <- unpack_across(.data, expr)
+    expr <- unpack_across(.data, expr, env)
   }
 
   translate <- function(expr, new_vars, env) {
