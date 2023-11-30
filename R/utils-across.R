@@ -80,12 +80,14 @@ build_separate_calls <- function(.cols, .fns, .names, .data) {
 get_arg <- function(name, position, expr) {
   out <- if (name %in% names(expr)) {
     expr[[name]]
-  } else {
-    # I provide the position in across() but the call to "across" takes the
-    # first slot of the list
-    if (position + 1 <= length(expr)) {
-      expr[[position + 1]]
-    }
+  } else if (length(expr) > 2 && position + 1 <= length(expr)) {
+    expr[[position + 1]]
+  }
+
+  if (is.null(out) && name == ".cols") {
+    rlang::abort(
+      "You must supply the argument `.cols` in `across()`."
+    )
   }
   # drop the list() call if the user provided a list of functions
   if (name == ".fns" && length(out) > 1 && safe_deparse(out[[1]]) == "list") {

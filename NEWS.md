@@ -1,5 +1,10 @@
 # tidypolars (development version)
 
+**Breaking changes**
+
+* `across()` now errors if the argument `.cols` is not provided (either named or
+  unnamed). This behavior was deprecated in `dplyr` 1.1.0.
+
 **Misc**
 
 * Simplify the procedure to support new functions.

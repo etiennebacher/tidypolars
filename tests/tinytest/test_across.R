@@ -276,3 +276,29 @@ expect_colnames(
   test2,
   setdiff(colnames(mtcars), "gear")
 )
+
+
+# Need to specify .cols (either named or unnamed)
+
+expect_error(
+  mutate(test, across(.fns = mean)),
+  "You must supply the argument `.cols`"
+)
+
+# test .by
+
+test3 <- mtcars |>
+  head(n = 5) |>
+  as_polars() |>
+  mutate(across(everything(), .fns = mean), .by = "cyl") |>
+  distinct()
+
+expect_equal(
+  test3 |> pull(cyl),
+  c(6, 4, 8)
+)
+
+expect_equal(
+  test3 |> pull(hp),
+  c(110, 93, 175)
+)
