@@ -15,7 +15,7 @@
 * It is now possible to use `desc(x1)` in `arrange()` to sort in decreasing 
   order of `x1` (this is equivalent to `-x1`).
   
-* Add support for argument `names_prefix` in `pivot_longer()`.
+* Add support for argument `names_prefix` in `pivot_longer()` and `pivot_wider()`.
 
 **Bug fixes**
 

@@ -26,6 +26,27 @@ expect_equal(
   c(1, 1, 1, NA, NA)
 )
 
+# names prefix
+
+prefixed <- pl_fish_encounters |>
+  pivot_wider(names_from = station, values_from = seen, names_prefix = "foo_") |>
+  slice_head(n = 5)
+
+expect_equal(
+  names(prefixed)[11:12],
+  c("foo_MAE", "foo_MAW")
+)
+
+expect_error(
+  pl_fish_encounters |>
+    pivot_wider(
+      names_from = station,
+      values_from = seen,
+      names_prefix = c("foo1", "foo2")
+    ),
+  "must be of length 1"
+)
+
 # fill values
 
 filled <- pl_fish_encounters |>
