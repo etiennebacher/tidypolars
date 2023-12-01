@@ -51,7 +51,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Pivot Data/LazyFrame from long to wide</h1>
-      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/tidypolars/blob/HEAD/R/pivot.R" class="external-link"><code>R/pivot.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/tidypolars/blob/HEAD/R/pivot_wider.R" class="external-link"><code>R/pivot_wider.R</code></a></small>
       <div class="d-none name"><code>pivot_wider.DataFrame.Rd</code></div>
     </div>
 
@@ -62,10 +62,26 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for DataFrame</span></span>
-<span><span class="fu">pivot_wider</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span>, <span class="va">id_cols</span>, <span class="va">names_from</span>, <span class="va">values_from</span>, values_fill <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">pivot_wider</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  <span class="va">id_cols</span>,</span>
+<span>  <span class="va">names_from</span>,</span>
+<span>  <span class="va">values_from</span>,</span>
+<span>  names_prefix <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  values_fill <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for LazyFrame</span></span>
-<span><span class="fu">pivot_wider</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span>, <span class="va">id_cols</span>, <span class="va">names_from</span>, <span class="va">values_from</span>, values_fill <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">pivot_wider</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  <span class="va">id_cols</span>,</span>
+<span>  <span class="va">names_from</span>,</span>
+<span>  <span class="va">values_from</span>,</span>
+<span>  names_prefix <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  values_fill <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -91,6 +107,12 @@ used for the names of the new columns.</p></dd>
 <dt>values_from</dt>
 <dd><p>The (quoted or unquoted) column name whose values will be
 used to fill the new columns.</p></dd>
+
+
+<dt>names_prefix</dt>
+<dd><p>String added to the start of every variable name. This is
+particularly useful if <code>names_from</code> is a numeric vector and you want to
+create syntactic variable names.</p></dd>
 
 
 <dt>values_fill</dt>
