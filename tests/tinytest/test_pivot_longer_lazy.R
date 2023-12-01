@@ -58,4 +58,30 @@ expect_equal_lazy(
 )
 
 
+# names_prefix
+
+pl_billboard <- polars::pl$LazyFrame(tidyr::billboard)
+
+expect_equal_lazy(
+  pl_billboard |>
+    pivot_longer(
+      cols = starts_with("wk"),
+      names_to = "week",
+      names_prefix = "wk",
+    ) |>
+    head(3) |>
+    pull(week),
+  c("1", "2", "3")
+)
+
+expect_error_lazy(
+  pl_billboard |>
+    pivot_longer(
+      cols = starts_with("wk"),
+      names_to = "week",
+      names_prefix = c("wk", "foo"),
+    ),
+  "must be of length 1"
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

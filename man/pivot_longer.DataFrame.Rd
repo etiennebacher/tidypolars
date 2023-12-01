@@ -5,9 +5,23 @@
 \alias{pivot_longer.LazyFrame}
 \title{Pivot Data/LazyFrame from wide to long}
 \usage{
-\method{pivot_longer}{DataFrame}(data, cols, ..., names_to = "name", values_to = "value")
+\method{pivot_longer}{DataFrame}(
+  data,
+  cols,
+  ...,
+  names_to = "name",
+  names_prefix = NULL,
+  values_to = "value"
+)
 
-\method{pivot_longer}{LazyFrame}(data, cols, ..., names_to = "name", values_to = "value")
+\method{pivot_longer}{LazyFrame}(
+  data,
+  cols,
+  ...,
+  names_to = "name",
+  names_prefix = NULL,
+  values_to = "value"
+)
 }
 \arguments{
 \item{data}{A Polars Data/LazyFrame}
@@ -19,6 +33,9 @@
 
 \item{names_to}{The (quoted) name of the column that will contain the column
 names specified by \code{cols}.}
+
+\item{names_prefix}{A regular expression used to remove matching text from
+the start of each variable name.}
 
 \item{values_to}{A string specifying the name of the column to create from the
 data stored in cell values.}
@@ -33,5 +50,16 @@ pl_relig_income
 
 pl_relig_income |>
   pivot_longer(!religion, names_to = "income", values_to = "count")
+
+pl_billboard <- polars::pl$DataFrame(tidyr::billboard)
+pl_billboard
+
+pl_billboard |>
+  pivot_longer(
+    cols = starts_with("wk"),
+    names_to = "week",
+    names_prefix = "wk",
+    values_to = "rank",
+  )
 \dontshow{\}) # examplesIf}
 }

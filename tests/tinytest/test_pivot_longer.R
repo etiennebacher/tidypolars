@@ -53,3 +53,29 @@ expect_equal(
   c(528, 407, 321, 258, 597)
 )
 
+
+# names_prefix
+
+pl_billboard <- polars::pl$DataFrame(tidyr::billboard)
+
+expect_equal(
+  pl_billboard |>
+    pivot_longer(
+      cols = starts_with("wk"),
+      names_to = "week",
+      names_prefix = "wk",
+    ) |>
+    head(3) |>
+    pull(week),
+  c("1", "2", "3")
+)
+
+expect_error(
+  pl_billboard |>
+    pivot_longer(
+      cols = starts_with("wk"),
+      names_to = "week",
+      names_prefix = c("wk", "foo"),
+    ),
+  "must be of length 1"
+)
