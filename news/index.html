@@ -57,11 +57,11 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
 <p><strong>Breaking changes</strong></p>
-<ul><li>
-<code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code> now errors if the argument <code>.cols</code> is not provided (either named or unnamed). This behavior was deprecated in <code>dplyr</code> 1.1.0.</li>
+<ul><li><p><code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code> now errors if the argument <code>.cols</code> is not provided (either named or unnamed). This behavior was deprecated in <code>dplyr</code> 1.1.0.</p></li>
+<li><p>It is no longer possible to use <code>!</code> in <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange()</a></code> to sort by decreasing order, for compatibility with <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">dplyr::arrange()</a></code>. Use <code>-</code> or <code><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc()</a></code> instead.</p></li>
 </ul><p><strong>New features</strong></p>
-<ul><li>
-<code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> now works on ungrouped data and returns a 1-row output.</li>
+<ul><li><p><code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> now works on ungrouped data and returns a 1-row output.</p></li>
+<li><p>It is now possible to use <code>desc(x1)</code> in <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange()</a></code> to sort in decreasing order of <code>x1</code> (this is equivalent to <code>-x1</code>).</p></li>
 </ul><p><strong>Bug fixes</strong></p>
 <ul><li>
 <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> no longer errors when <code>across(everything(), ...)</code> is used with <code>.by</code>.</li>
