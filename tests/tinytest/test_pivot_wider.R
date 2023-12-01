@@ -47,6 +47,22 @@ expect_error(
   "must be of length 1"
 )
 
+# names sep
+
+pl_us_rent_income <- polars::pl$DataFrame(tidyr::us_rent_income)
+
+sep <- pl_us_rent_income |>
+  pivot_wider(
+    names_from = variable,
+    names_sep = ".",
+    values_from = c(estimate, moe)
+  )
+
+expect_equal(
+  names(sep)[3:6],
+  c("estimate.income", "estimate.rent", "moe.income", "moe.rent")
+)
+
 # fill values
 
 filled <- pl_fish_encounters |>

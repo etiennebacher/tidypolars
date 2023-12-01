@@ -17,6 +17,8 @@
   
 * Add support for argument `names_prefix` in `pivot_longer()` and `pivot_wider()`.
 
+* Add support for argument `names_sep` in `pivot_wider()`.
+
 **Bug fixes**
 
 * `summarize()` no longer errors when `across(everything(), ...)` is used with

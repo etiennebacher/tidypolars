@@ -12,6 +12,7 @@
   names_from,
   values_from,
   names_prefix = NULL,
+  names_sep = NULL,
   values_fill = NULL
 )
 
@@ -22,6 +23,7 @@
   names_from,
   values_from,
   names_prefix = NULL,
+  names_sep = NULL,
   values_fill = NULL
 )
 }
@@ -42,6 +44,10 @@ used to fill the new columns.}
 \item{names_prefix}{String added to the start of every variable name. This is
 particularly useful if \code{names_from} is a numeric vector and you want to
 create syntactic variable names.}
+
+\item{names_sep}{If \code{names_from} or \code{values_from} contains multiple variables,
+this will be used to join their values together into a single string to use
+as a column name.}
 
 \item{values_fill}{A scalar that will be used to replace missing values in the
 new columns. Note that the type of this value will be applied to new columns.

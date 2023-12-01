@@ -10,6 +10,9 @@
 #' @param names_prefix String added to the start of every variable name. This is
 #'  particularly useful if `names_from` is a numeric vector and you want to
 #'  create syntactic variable names.
+#' @param names_sep If `names_from` or `values_from` contains multiple variables,
+#'  this will be used to join their values together into a single string to use
+#'  as a column name.
 #' @param values_fill A scalar that will be used to replace missing values in the
 #'   new columns. Note that the type of this value will be applied to new columns.
 #'   For example, if you provide a character value to fill numeric columns, then
@@ -31,7 +34,8 @@
 #'   pivot_wider(names_from = station, values_from = seen, values_fill = "a")
 
 pivot_wider.DataFrame <- function(data, ..., id_cols, names_from, values_from,
-                                  names_prefix = NULL, values_fill = NULL) {
+                                  names_prefix = NULL, names_sep = NULL,
+                                  values_fill = NULL) {
 
   check_polars_data(data)
 
@@ -47,8 +51,26 @@ pivot_wider.DataFrame <- function(data, ..., id_cols, names_from, values_from,
   data <- data$pivot(
     values = value_vars,
     columns = names_vars,
-    index = id_vars
+    index = id_vars,
+    separator = names_sep
   )
+
+  if (length(value_vars) > 1) {
+    tmp <- paste(value_vars, collapse = "|")
+    old_names <- grep(
+      paste0("^(", tmp, ")", names_sep, names_vars),
+      names(data),
+      value = TRUE
+    )
+    new_names <- gsub(
+      paste0("^(", tmp, ")", names_sep, "(", names_vars, ")"),
+      "\\1",
+      old_names
+    )
+    replacements <- as.list(old_names)
+    names(replacements) <- new_names
+    data <- data$rename(replacements)
+  }
 
   if (!is.null(names_prefix)) {
     if (length(names_prefix) > 1) {
