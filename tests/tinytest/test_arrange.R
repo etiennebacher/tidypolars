@@ -20,8 +20,13 @@ expect_equal(
 )
 
 expect_equal(
-  arrange(test, -x1),
-  arrange(test, !x1)
+  arrange(test, desc(x1)),
+  arrange(test, -x1)
+)
+
+expect_equal(
+  arrange(test, desc(x1), desc(x2)),
+  arrange(test, -x1, -x2)
 )
 
 expect_equal(

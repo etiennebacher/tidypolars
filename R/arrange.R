@@ -35,7 +35,7 @@ arrange.DataFrame <- function(.data, ..., .by_group = FALSE) {
 
   vars <- lapply(seq_along(dots), \(x) {
       out <- as.character(dots[[x]])
-      if (length(out) == 2 && out[1] %in% c("-", "!")) {
+      if (length(out) == 2 && out[1] %in% c("-", "desc")) {
         out <- as.character(dots[[x]][2])
         direction[x] <<- TRUE
       }

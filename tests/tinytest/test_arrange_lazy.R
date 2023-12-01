@@ -24,8 +24,13 @@ expect_equal_lazy(
 )
 
 expect_equal_lazy(
-  arrange(test, -x1),
-  arrange(test, !x1)
+  arrange(test, desc(x1)),
+  arrange(test, -x1)
+)
+
+expect_equal_lazy(
+  arrange(test, desc(x1), desc(x2)),
+  arrange(test, -x1, -x2)
 )
 
 expect_equal_lazy(
