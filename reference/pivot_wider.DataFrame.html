@@ -69,6 +69,7 @@
 <span>  <span class="va">names_from</span>,</span>
 <span>  <span class="va">values_from</span>,</span>
 <span>  names_prefix <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  names_sep <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  values_fill <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -80,6 +81,7 @@
 <span>  <span class="va">names_from</span>,</span>
 <span>  <span class="va">values_from</span>,</span>
 <span>  names_prefix <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  names_sep <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  values_fill <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -113,6 +115,12 @@ used to fill the new columns.</p></dd>
 <dd><p>String added to the start of every variable name. This is
 particularly useful if <code>names_from</code> is a numeric vector and you want to
 create syntactic variable names.</p></dd>
+
+
+<dt>names_sep</dt>
+<dd><p>If <code>names_from</code> or <code>values_from</code> contains multiple variables,
+this will be used to join their values together into a single string to use
+as a column name.</p></dd>
 
 
 <dt>values_fill</dt>
