@@ -10,14 +10,15 @@ pl_paste0 <- function(..., collapse = NULL) {
 }
 
 pl_paste <- function(..., sep = " ", collapse = NULL) {
-  # TODO: hacky, I do this because specifying e.g sep = "--" gets wrapped into
-  # Utf8() and doesn't work inside concat_str
-  if (!is.character(sep)) {
-    sep <- sep$to_r()
-  }
   # pl$concat_str() doesn't support a list input, which is problematic since
   # clean_dots() has to return a list
   pl$concat_list(clean_dots(...))$list$join(separator = sep)
+}
+
+pl_str_count <- function(string, pattern = "", ...) {
+  check_empty_dots(...)
+  is_fixed <- isTRUE(attr(pattern, "stringr_attr") == "fixed")
+  string$str$count_matches(pattern, literal = is_fixed)
 }
 
 pl_str_detect <- function(string, pattern, negate = FALSE, ...) {
@@ -29,12 +30,6 @@ pl_str_detect <- function(string, pattern, negate = FALSE, ...) {
   } else {
     out
   }
-}
-
-pl_str_count <- function(string, pattern = "", ...) {
-  check_empty_dots(...)
-  is_fixed <- isTRUE(attr(pattern, "stringr_attr") == "fixed")
-  string$str$count_matches(pattern, literal = is_fixed)
 }
 
 pl_str_ends <- function(string, pattern, negate = FALSE, ...) {

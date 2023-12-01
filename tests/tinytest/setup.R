@@ -1,8 +1,6 @@
 lf <- list.files("tests/tinytest", pattern = "^test")
 eager <- lf[grep("lazy", lf, invert = TRUE)]
 
-# TODO: the only exceptions should be: benchmark, bind, collect, describe,
-# fetch, pivot_wider, sink_parquet
 exceptions <- c("test_benchmark.R", "test_bind_cols.R", "test_collect.R",
                 "test_describe.R", "test_fetch.R",
                 "test_pivot_wider.R", "test_sink_csv.R", "test_sink_parquet.R",

@@ -2,7 +2,7 @@ source("helpers.R")
 using("tidypolars")
 
 # TODO: enable bind_cols() for LazyFrames, need with_context()
-# https://github.com/pola-rs/polars/issues/2856#issuecomment-1209621687
+# https://github.com/pola-rs/polars/issues/10203
 l <- list(
   polars::pl$DataFrame(
     x = sample(letters, 20),
