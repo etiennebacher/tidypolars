@@ -9,12 +9,12 @@
 #'
 #' @param .data A Polars LazyFrame
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' query <- mtcars |>
 #'   as_polars(lazy = TRUE) |>
-#'   pl_arrange(drat) |>
-#'   pl_filter(cyl == 3) |>
-#'   pl_select(mpg)
+#'   arrange(drat) |>
+#'   filter(cyl == 3) |>
+#'   select(mpg)
 #'
 #' describe_plan(query)
 #'

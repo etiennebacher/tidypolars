@@ -11,6 +11,9 @@
 #'   * A vector the same length as the current group (or the whole data
 #'    frame if ungrouped).
 #'   * NULL, to remove the column.
+#' @param .by Optionally, a selection of columns to group by for just this
+#'   operation, functioning as an alternative to `group_by()`. The group order
+#'   is not maintained, use `group_by()` if you want more control over it.
 #'
 #' @details
 #'
@@ -26,34 +29,36 @@
 #' Polars syntax.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_iris <- polars::pl$DataFrame(iris)
 #'
 #' # classic operation
-#' pl_mutate(pl_iris, x = Sepal.Width + Sepal.Length)
+#' mutate(pl_iris, x = Sepal.Width + Sepal.Length)
 #'
 #' # logical operation
-#' pl_mutate(pl_iris, x = Sepal.Width > Sepal.Length & Petal.Width > Petal.Length)
+#' mutate(pl_iris, x = Sepal.Width > Sepal.Length & Petal.Width > Petal.Length)
 #'
 #' # overwrite existing variable
-#' pl_mutate(pl_iris, Sepal.Width = Sepal.Width*2)
+#' mutate(pl_iris, Sepal.Width = Sepal.Width*2)
 #'
 #' # grouped computation
 #' pl_iris |>
-#'   pl_group_by(Species) |>
-#'   pl_mutate(
-#'     foo = mean(Sepal.Length)
-#'   )
+#'   group_by(Species) |>
+#'   mutate(foo = mean(Sepal.Length))
+#'
+#' # an alternative syntax for grouping is to use `.by`
+#' pl_iris |>
+#'   mutate(foo = mean(Sepal.Length), .by = Species)
 #'
 #' # across() is available
 #' pl_iris |>
-#'   pl_mutate(
+#'   mutate(
 #'     across(.cols = contains("Sepal"), .fns = mean, .names = "{.fn}_of_{.col}")
 #'   )
 #
 #' # It can receive several types of functions:
 #' pl_iris |>
-#'   pl_mutate(
+#'   mutate(
 #'     across(
 #'       .cols = contains("Sepal"),
 #'       .fns = list(mean = mean, sd = ~ sd(.x)),
@@ -63,19 +68,19 @@
 #'
 #' # Embracing an external variable works
 #' some_value <- 1
-#' pl_mutate(pl_iris, x = {{ some_value }})
+#' mutate(pl_iris, x = {{ some_value }})
 
-
-pl_mutate <- function(.data, ...) {
+mutate.DataFrame <- function(.data, ..., .by = NULL) {
 
   check_polars_data(.data)
 
-  grps <- attributes(.data)$pl_grps
+  grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
+  mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
   is_rowwise <- attributes(.data)$grp_type == "rowwise"
   to_drop <- list()
 
-  polars_exprs <- translate_dots(.data = .data, ..., env = rlang::caller_env())
+  polars_exprs <- translate_dots(.data = .data, ..., env = rlang::current_env())
 
   for (i in seq_along(polars_exprs)) {
     sub <- polars_exprs[[i]]
@@ -94,5 +99,13 @@ pl_mutate <- function(.data, ...) {
     }
   }
 
-  .data
+  if (is_grouped && missing(.by)) {
+    group_by(.data, grps, maintain_order = mo)
+  } else {
+    .data
+  }
 }
+
+#' @rdname mutate.DataFrame
+#' @export
+mutate.LazyFrame <- mutate.DataFrame

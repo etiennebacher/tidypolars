@@ -1,10 +1,10 @@
 #' Create a column with unique id per row values
 #'
-#' @inheritParams pl_select
+#' @inheritParams select.DataFrame
 #' @param new_col Name of the new column
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' mtcars |>
 #'   as_polars() |>
 #'   make_unique_id(am, gear)

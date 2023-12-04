@@ -1,35 +1,43 @@
 #' Summarize each group down to one row
 #'
-#' `pl_summarize()` returns one row for each combination of grouping variables
-#' (one difference with `dplyr::summarize()` is that `pl_summarize()` only
+#' `summarize()` returns one row for each combination of grouping variables
+#' (one difference with `dplyr::summarize()` is that `summarize()` only
 #' accepts grouped data). It will contain one column for each grouping variable
 #' and one column for each of the summary statistics that you have specified.
 #'
 #' @param .data A Polars Data/LazyFrame
-#' @inheritParams pl_mutate
+#' @inheritParams mutate.DataFrame
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' mtcars |>
 #'   as_polars() |>
-#'   pl_group_by(cyl) |>
-#'   pl_summarize(gear = mean(gear), gear2 = sd(gear))
+#'   group_by(cyl) |>
+#'   summarize(m_gear = mean(gear), sd_gear = sd(gear))
+#'
+#' # an alternative syntax is to use `.by`
+#' mtcars |>
+#'   as_polars() |>
+#'   summarize(m_gear = mean(gear), sd_gear = sd(gear), .by = cyl)
 
 
-pl_summarize <- function(.data, ...) {
+summarize.DataFrame <- function(.data, ..., .by = NULL) {
 
   check_polars_data(.data)
 
-  grps <- attributes(.data)$pl_grps
+  grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   if (is.null(mo)) mo <- FALSE
   is_grouped <- !is.null(grps)
 
-  if (!is_grouped) {
-    rlang::abort("`pl_summarize()` only works on grouped data.")
-  }
-
-  polars_exprs <- translate_dots(.data = .data, ..., env = rlang::caller_env())
+  # do not take the groups into account, especially useful when applying across()
+  # on everything()
+  .data_for_translation <- select(.data, -all_of(grps))
+  polars_exprs <- translate_dots(
+    .data = .data_for_translation,
+    ...,
+    env = rlang::current_env()
+  )
 
   for (i in seq_along(polars_exprs)) {
     sub <- polars_exprs[[i]]
@@ -37,7 +45,11 @@ pl_summarize <- function(.data, ...) {
     sub <- compact(sub)
 
     if (length(sub) > 0) {
-      .data <- .data$groupby(grps, maintain_order = mo)$agg(sub)
+      if (is_grouped) {
+        .data <- .data$group_by(grps, maintain_order = mo)$agg(sub)
+      } else {
+        .data <- .data$select(sub)
+      }
     }
 
     if (length(to_drop) > 0) {
@@ -45,9 +57,21 @@ pl_summarize <- function(.data, ...) {
     }
   }
 
-  .data
+  if (is_grouped && missing(.by)) {
+    group_by(.data, grps, maintain_order = mo)
+  } else {
+    .data
+  }
 }
 
-#' @rdname pl_summarize
+#' @rdname summarize.DataFrame
 #' @export
-pl_summarise <- pl_summarize
+summarise.DataFrame <- summarize.DataFrame
+
+#' @rdname summarize.DataFrame
+#' @export
+summarize.LazyFrame <- summarize.DataFrame
+
+#' @rdname summarize.DataFrame
+#' @export
+summarise.LazyFrame <- summarize.DataFrame

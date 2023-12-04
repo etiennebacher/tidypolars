@@ -1,45 +1,116 @@
-#' Subset the first or last rows of a Data/LazyFrame
+#' Subset rows of a Data/LazyFrame
 #'
 #' @param .data A Polars Data/LazyFrame
 #' @param n The number of rows to select from the start or the end of the data.
+#' Cannot be used with `prop`.
+#' @param by Optionally, a selection of columns to group by for just this
+#'   operation, functioning as an alternative to `group_by()`. The group order
+#'   is not maintained, use `group_by()` if you want more control over it.
+#' @param ... Not used.
 #'
-#' @rdname pl_slice
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_test <- polars::pl$DataFrame(iris)
-#' pl_slice_head(pl_test, 3)
-#' pl_slice_tail(pl_test, 3)
+#' slice_head(pl_test, n = 3)
+#' slice_tail(pl_test, n = 3)
+#' slice_sample(pl_test, n = 5)
+#' slice_sample(pl_test, prop = 0.1)
 
-pl_slice_tail <- function(.data, n = 5) {
+slice_tail.DataFrame <- function(.data, ..., n, by = NULL) {
   check_polars_data(.data)
-  grps <- attributes(.data)$pl_grps
+  grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
   if (is_grouped) {
     non_grps <- setdiff(pl_colnames(.data), grps)
-    .data$groupby(grps, maintain_order = mo)$agg(
+    out <- .data$group_by(grps, maintain_order = mo)$agg(
       pl$all()$tail(n)
     )$explode(non_grps)
   } else {
-    .data$tail(n)
+    out <- .data$tail(n)
+  }
+
+  if (is_grouped && missing(by)) {
+    group_by(out, grps, maintain_order = mo)
+  } else {
+    out
   }
 }
 
-#' @rdname pl_slice
+#' @rdname slice_tail.DataFrame
 #' @export
-pl_slice_head <- function(.data, n = 5) {
+slice_tail.LazyFrame <- slice_tail.DataFrame
+
+#' @rdname slice_tail.DataFrame
+#' @export
+
+slice_head.DataFrame <- function(.data, ..., n, by = NULL) {
   check_polars_data(.data)
-  grps <- attributes(.data)$pl_grps
+  grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
   if (is_grouped) {
     non_grps <- setdiff(pl_colnames(.data), grps)
-    .data$groupby(grps, maintain_order = mo)$agg(
+    out <- .data$group_by(grps, maintain_order = mo)$agg(
       pl$all()$head(n)
     )$explode(non_grps)
   } else {
-    .data$head(n)
+    out <- .data$head(n)
+  }
+
+  if (is_grouped && missing(by)) {
+    group_by(out, grps, maintain_order = mo)
+  } else {
+    out
+  }
+}
+
+#' @rdname slice_tail.DataFrame
+#' @export
+slice_head.LazyFrame <- slice_head.DataFrame
+
+
+#' @param prop Proportion of rows to select. Cannot be used with `n`.
+#' @param replace Perform the sampling with replacement (`TRUE`) or without
+#' (`FALSE`).
+#'
+#' @rdname slice_tail.DataFrame
+#' @export
+
+slice_sample.DataFrame <- function(.data, ..., n = NULL, prop = NULL, replace = FALSE, by = NULL) {
+  check_polars_data(.data)
+
+  grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
+  mo <- attributes(.data)$maintain_grp_order
+  is_grouped <- !is.null(grps)
+
+  # arguments don't have the same name in polars so I check inputs here
+  if (!is.null(n) && !is.null(prop)) {
+    abort("You must provide either `n` or `prop`, not both.")
+  }
+  if (is.null(n) && is.null(prop)) {
+    n <- 1
+  }
+  if (isFALSE(replace) &&
+      ((!is.null(n) && n > nrow(.data)) ||
+       (!is.null(prop) && prop > 1))) {
+    abort("Cannot take more rows than the total number of rows when `replace = FALSE`.")
+  }
+
+  if (is_grouped) {
+    non_grps <- setdiff(pl_colnames(.data), grps)
+    out <- .data$group_by(grps, maintain_order = mo)$agg(
+      pl$all()$sample(n = n, frac = prop, with_replacement = replace)
+    )$explode(non_grps)
+  } else {
+    out <- .data$sample(n = n, frac = prop, with_replacement = replace)
+  }
+
+  if (is_grouped && missing(by)) {
+    group_by(out, grps, maintain_order = mo)
+  } else {
+    out
   }
 }

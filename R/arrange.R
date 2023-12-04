@@ -5,24 +5,23 @@
 #' @param .by_group If `TRUE`, will sort data within groups.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_test <- polars::pl$DataFrame(
 #'   x1 = c("a", "a", "b", "a", "c"),
 #'   x2 = c(2, 1, 5, 3, 1),
 #'   value = sample(1:5)
 #' )
 #'
-#' pl_arrange(pl_test, x1)
-#' pl_arrange(pl_test, x1, -x2)
+#' arrange(pl_test, x1)
+#' arrange(pl_test, x1, -x2)
 #'
 #' # if the data is grouped, you need to specify `.by_group = TRUE` to sort by
 #' # the groups first
 #' pl_test |>
-#'   pl_group_by(x1) |>
-#'   pl_arrange(-x2, .by_group = TRUE)
+#'   group_by(x1) |>
+#'   arrange(-x2, .by_group = TRUE)
 
-
-pl_arrange <- function(.data, ..., .by_group = FALSE) {
+arrange.DataFrame <- function(.data, ..., .by_group = FALSE) {
 
   check_polars_data(.data)
 
@@ -31,11 +30,12 @@ pl_arrange <- function(.data, ..., .by_group = FALSE) {
   direction <- rep(FALSE, out_length)
 
   grps <- attributes(.data)$pl_grps
+  mo <- attributes(data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
   vars <- lapply(seq_along(dots), \(x) {
       out <- as.character(dots[[x]])
-      if (length(out) == 2 && out[1] %in% c("-", "!")) {
+      if (length(out) == 2 && out[1] %in% c("-", "desc")) {
         out <- as.character(dots[[x]][2])
         direction[x] <<- TRUE
       }
@@ -55,5 +55,14 @@ pl_arrange <- function(.data, ..., .by_group = FALSE) {
     vars <- c(grps, vars)
     direction <- c(rep(FALSE, length(grps)), direction)
   }
-  .data$sort(vars, descending = direction)
+
+  if (is_grouped) {
+    .data$sort(vars, descending = direction) |>
+      group_by(grps, maintain_order = mo)
+  } else {
+    .data$sort(vars, descending = direction)
+  }
 }
+
+#' @export
+arrange.LazyFrame <- arrange.DataFrame

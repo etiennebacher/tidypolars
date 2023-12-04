@@ -18,7 +18,9 @@ column numbers, select helpers, etc.}
 Create a column with unique id per row values
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 mtcars |>
   as_polars() |>
   make_unique_id(am, gear)
+\dontshow{\}) # examplesIf}
 }

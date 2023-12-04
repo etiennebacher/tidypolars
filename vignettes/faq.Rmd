@@ -48,6 +48,7 @@ are equivalent in terms of performance.
 ```{r}
 library(polars)
 library(tidypolars)
+library(dplyr, warn.conflicts = FALSE)
 
 pl_test <- pl$DataFrame(
   grp = sample(letters, 1e7, TRUE),
@@ -57,14 +58,14 @@ pl_test <- pl$DataFrame(
 
 bench::mark(
   polars = pl_test$
-    groupby("grp")$
+    group_by("grp")$
     agg(
       pl$col('val1')$mean()$alias('x'), 
       pl$col('val2')$sum()$alias('y')
     ),
   tidypolars = pl_test |> 
-    pl_group_by(grp) |> 
-    pl_summarize(
+    group_by(grp) |> 
+    summarize(
       x = mean(val1),
       y = sum(val2)
     ),
@@ -76,7 +77,7 @@ bench::mark(
   polars = pl_test$
     filter(pl$col("grp") == "a" | pl$col("grp") == "b"),
   tidypolars = pl_test |> 
-    pl_filter(grp == "a" | grp == "b"),
+    filter(grp == "a" | grp == "b"),
   check = FALSE,
   iterations = 15
 )

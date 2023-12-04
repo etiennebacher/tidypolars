@@ -11,7 +11,8 @@ expect_equal(
     Petal.Length = Petal.Length / x,
     x = NULL,
     mean_pl = mean(Petal.Length),
-    foo = Sepal.Width + Petal.Width
+    foo = Sepal.Width + Petal.Width,
+    env = rlang::current_env()
   ),
   list(
     pool_exprs_1 = list(
@@ -33,7 +34,8 @@ expect_equal(
     pl_iris,
     x = 1,
     x = 2,
-    x = NULL
+    x = NULL,
+    env = rlang::current_env()
   ),
   list(
     pool_exprs_1 = list(x = pl$lit(1)),
@@ -47,11 +49,17 @@ expect_equal(
     pl_iris,
     x = 1,
     x = "a",
-    x = NULL
+    x = NULL,
+    env = rlang::current_env()
   ),
   list(
     pool_exprs_1 = list(x = pl$lit(1)),
     pool_exprs_2 = list(x = pl$lit("a")),
     pool_exprs_3 = list(x = NULL)
   )
+)
+
+expect_error(
+  mutate(pl_iris, Sepal.Length = dplyr::lag(Sepal.Length)),
+  "doesn't work when expressions contain"
 )

@@ -1,45 +1,77 @@
 #' Complete a data frame with missing combinations of data
 #'
 #' Turns implicit missing values into explicit missing values. This is useful
-#' for completing missing combinations of data. Note that this function doesn't
-#' work with grouped data yet.
+#' for completing missing combinations of data.
 #'
-#' @param .data A Polars Data/LazyFrame
-#' @inheritParams pl_select
+#' @param data A Polars Data/LazyFrame
+#' @inheritParams select.DataFrame
+#' @param fill A named list that for each variable supplies a single value to
+#' use instead of `NA` for missing combinations.
 #'
 #' @export
-#' @examples
-#' test <- polars::pl$DataFrame(
-#'   country = c("France", "France", "UK", "UK", "Spain"),
-#'   year = c(2020, 2021, 2019, 2020, 2022),
-#'   value = c(1, 2, 3, 4, 5)
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
+#' df <- polars::pl$DataFrame(
+#'   group = c(1:2, 1, 2),
+#'   item_id = c(1:2, 2, 3),
+#'   item_name = c("a", "a", "b", "b"),
+#'   value1 = c(1, NA, 3, 4),
+#'   value2 = 4:7
 #' )
-#' test
+#' df
 #'
-#' pl_complete(test, country, year)
+#' df |> complete(group, item_id, item_name)
+#'
+#' df |>
+#'   complete(
+#'     group, item_id, item_name,
+#'     fill = list(value1 = 0, value2 = 99)
+#'   )
+#'
+#' df |>
+#'   group_by(group, maintain_order = TRUE) |>
+#'   complete(item_id, item_name)
 
-pl_complete <- function(.data, ...) {
+complete.DataFrame <- function(data, ..., fill = list()) {
 
-  check_polars_data(.data)
-  vars <- tidyselect_dots(.data, ...)
-  if (length(vars) < 2) return(.data)
+  check_polars_data(data)
+  vars <- tidyselect_dots(data, ...)
+  if (length(vars) < 2) return(data)
 
-  grps <- attributes(.data)$pl_grps
-  mo <- attributes(.data)$maintain_grp_order
+  grps <- attributes(data)$pl_grps
+  mo <- attributes(data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
-  chain <- .data$select(pl$col(vars)$unique()$sort()$implode())
+  if (isTRUE(is_grouped)) {
+    chain <- data$group_by(grps, maintain_order = mo)$agg(pl$col(vars)$unique()$sort())
+  } else {
+    chain <- data$select(pl$col(vars)$unique()$sort()$implode())
+  }
+
   for (i in 1:length(vars)) {
     chain <- chain$explode(vars[i])
   }
-  out <- chain$join(.data, on = vars, how = 'left')
 
   if (isTRUE(is_grouped)) {
+    out <- chain$join(data, on = c(grps, vars), how = 'left')
+  } else {
+    out <- chain$join(data, on = vars, how = 'left')
+  }
+
+  # TODO: implement argument `explicit`
+  if (length(fill) > 0) {
+    out <- replace_na(out, fill)
+  }
+
+  if (is_grouped) {
     out |>
-      pl_relocate(tidyselect::all_of(grps), .before = 1) |>
-      pl_group_by(tidyselect::all_of(grps))
+      relocate(grps, .before = 1) |>
+      group_by(grps, maintain_order = mo)
   } else {
     out
   }
 
 }
+
+#' @rdname complete.DataFrame
+#' @export
+complete.LazyFrame <- complete.DataFrame

@@ -4,21 +4,21 @@
 #' This is useful in the common output format where values are not repeated, and
 #' are only recorded when they change.
 #'
-#' With grouped Data/LazyFrames, pl_fill() will be applied within each group,
+#' With grouped Data/LazyFrames, fill() will be applied within each group,
 #' meaning that it won't fill across group boundaries.
 #'
-#' @param .data A Polars Data/LazyFrame
-#' @inheritParams pl_select
-#' @param direction Direction in which to fill missing values. Either "down"
+#' @param data A Polars Data/LazyFrame
+#' @inheritParams select.DataFrame
+#' @param .direction Direction in which to fill missing values. Either "down"
 #'    (the default), "up", "downup" (i.e. first down and then up) or "updown"
 #'    (first up and then down).
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 #'
-#' pl_fill(pl_test, everything(), direction = "down")
-#' pl_fill(pl_test, everything(), direction = "up")
+#' fill(pl_test, everything(), .direction = "down")
+#' fill(pl_test, everything(), .direction = "up")
 #'
 #' # with grouped data, it doesn't use values from other groups
 #' pl_grouped <- polars::pl$DataFrame(
@@ -26,22 +26,23 @@
 #'   x = c(1, NA, NA, NA, 2, NA),
 #'   y = c(3, NA, 4, NA, 3, 1)
 #' ) |>
-#'   pl_group_by(grp)
+#'   group_by(grp)
 #'
-#' pl_fill(pl_grouped, x, y, direction = "down")
+#' fill(pl_grouped, x, y, .direction = "down")
 
-pl_fill <- function(.data, ..., direction = c("down", "up", "downup", "updown")) {
+fill.DataFrame <- function(data, ..., .direction = c("down", "up", "downup", "updown")) {
 
-  check_polars_data(.data)
-  vars <- tidyselect_dots(.data, ...)
-  direction <- match.arg(direction)
+  check_polars_data(data)
+  vars <- tidyselect_dots(data, ...)
+  .direction <- match.arg(.direction)
 
-  grps <- attributes(.data)$pl_grps
+  grps <- attributes(data)$pl_grps
   is_grouped <- !is.null(grps)
+  mo <- attributes(data)$maintain_grp_order
 
   expr <- polars::pl$col(vars)
   expr <- switch(
-    direction,
+    .direction,
     "down" = expr$fill_null(strategy = 'forward'),
     "up" = expr$fill_null(strategy = 'backward'),
     "downup" = expr$fill_null(strategy = 'forward')$fill_null(strategy = 'backward'),
@@ -52,5 +53,13 @@ pl_fill <- function(.data, ..., direction = c("down", "up", "downup", "updown"))
     expr <- expr$over(grps)
   }
 
-  .data$with_columns(expr)
+  if (is_grouped) {
+    data$with_columns(expr) |>
+      group_by(grps, maintain_order = mo)
+  } else {
+    data$with_columns(expr)
+  }
 }
+
+#' @export
+fill.LazyFrame <- fill.DataFrame

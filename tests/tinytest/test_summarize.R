@@ -3,35 +3,70 @@ using("tidypolars")
 
 pl_iris <- polars::pl$DataFrame(iris)
 pl_iris_g <- pl_iris |>
-  pl_group_by(Species, maintain_order = TRUE)
+  group_by(Species, maintain_order = TRUE)
 
 expect_equal(
-  pl_summarize(pl_iris_g, x = mean(Sepal.Length)) |>
-    pl_pull(x),
+  summarize(pl_iris_g, x = mean(Sepal.Length)) |>
+    pull(x),
   c(5.006, 5.936, 6.588)
 )
 
 expect_equal(
-  pl_summarize(pl_iris_g,
+  summarize(pl_iris, x = mean(Sepal.Length), .by = Species) |>
+    pull(x) |>
+    sort(),
+  summarize(pl_iris_g, x = mean(Sepal.Length)) |>
+    pull(x) |>
+    sort()
+)
+
+expect_equal(
+  summarize(pl_iris_g,
                x = sum(Sepal.Length),
                y = mean(Sepal.Length)) |>
-    pl_pull(y),
+    pull(y),
   c(5.006, 5.936, 6.588)
 )
 
 expect_equal(
-  pl_summarize(pl_iris_g,
-               x = 1) |>
-    pl_pull(x),
+  summarize(pl_iris_g, x = 1) |>
+    pull(x),
   rep(1, 3)
 )
 
-expect_error(
-  pl_summarize(pl_iris, x = mean(Sepal.Length)),
-  pattern = "only works on grouped data"
+expect_equal(
+  summarize(pl_iris, x = mean(Petal.Length)) |>
+    pull(x),
+  3.758
 )
 
 expect_colnames(
-  pl_summarize(pl_iris_g, Sepal.Length = NULL),
+  summarize(pl_iris_g, Sepal.Length = NULL),
   names(iris)[2:5]
+)
+
+# attributes ------------------------
+
+expect_equal(
+  summarize(pl_iris_g, x = mean(Sepal.Length)) |>
+    attr("pl_grps"),
+  "Species"
+)
+
+expect_equal(
+  summarize(pl_iris_g, x = mean(Sepal.Length)) |>
+    attr("maintain_grp_order"),
+  TRUE
+)
+
+expect_equal(
+  summarize(pl_iris, x = mean(Sepal.Length), .by = Species) |>
+    attr("pl_grps"),
+  NULL
+)
+
+expect_equal(
+  summarize(pl_iris, x = mean(Sepal.Length), .by = Species) |>
+    attr("maintain_grp_order"),
+  NULL
 )

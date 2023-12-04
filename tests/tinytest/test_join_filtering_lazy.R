@@ -17,14 +17,14 @@ test2 <- polars::pl$LazyFrame(
 )
 
 expect_equal_lazy(
-  pl_semi_join(test, test2, by = c("x", "y")),
+  semi_join(test, test2, by = c("x", "y")),
   pl$LazyFrame(
     x = c(1, 2), y = c(1, 2), z = c(1, 2)
   )
 )
 
 expect_equal_lazy(
-  pl_anti_join(test, test2, by = c("x", "y")),
+  anti_join(test, test2, by = c("x", "y")),
   pl$LazyFrame(
     x = 3, y = 3, z = 3
   )

@@ -12,8 +12,7 @@ coverage](https://codecov.io/gh/etiennebacher/tidypolars/branch/main/graph/badge
 
 ------------------------------------------------------------------------
 
-:warning: If you’re looking for the Python package “tidypolars”, you’re
-on the wrong repo. The right one is here:
+:warning: This is the R package “tidypolars”. The Python one is here:
 [markfairbanks/tidypolars](https://github.com/markfairbanks/tidypolars)
 :warning:
 
@@ -25,19 +24,18 @@ on the wrong repo. The right one is here:
 
 ## Motivation
 
-`polars` (both the Rust source and the R implementation) are amazing
-packages. I won’t argue here for the interest of using `polars`, there
-are already a lot of resources on [its
-website](https://rpolars.github.io/).
+`polars` is a DataFrame library written in Rust and with bindings in
+several languages, [including R](https://rpolars.github.io/). I won’t
+argue here for the interest of using `polars`, there are already a lot
+of resources on [its website](https://www.pola.rs/).
 
-One characteristic of `polars` is that its syntax is 1) quite verbose,
-and 2) very close to the `pandas` syntax in Python. While this makes it
-easy to read, it is **yet another syntax to learn** for R users that are
-accustomed so far to either base R, `data.table` or the `tidyverse`.
+The R package `polars` was made to mimic very closely the original
+Python syntax, which is quite verbose. While this makes it easy to read,
+it is **yet another syntax to learn** for R users that are accustomed so
+far to either base R, `data.table` or the `tidyverse`.
 
-The objective of `tidypolars` is to **provide functions that are very
-close to the `tidyverse` ones** but that call the `polars` functions
-under the hood so that we don’t lose any of its capacities.
+The objective of `tidypolars` is to **provide the power and speed of
+`polars` while keeping the `tidyverse` syntax**.
 
 ## Installation
 
@@ -151,16 +149,21 @@ pl$DataFrame(iris)$
 #> └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘
 ```
 
-Since most of the work is simply rewriting `tidyverse` code into
-`polars` syntax, `tidypolars` is extremely close to `polars`
-performance.
+Since most of the work is rewriting `tidyverse` code into `polars`
+syntax, `tidypolars` and `polars` have very similar performance.
 
 <details>
 <summary>
 Click to see a small benchmark
 </summary>
 
+For more serious benchmarks about `polars`, take a look at [DuckDB
+benchmarks](https://duckdblabs.github.io/db-benchmark/).
+
 ``` r
+library(collapse, warn.conflicts = FALSE)
+#> collapse 2.0.6, see ?`collapse-package` or ?`collapse-documentation`
+
 large_iris <- data.table::rbindlist(rep(list(iris), 50000))
 large_iris_pl <- as_polars(large_iris, lazy = TRUE)
 
@@ -195,17 +198,26 @@ bench::mark(
       ) |>
       filter(between(Sepal.Length, 4.5, 5.5))
   },
+  collapse = {
+    large_iris |>
+      fselect(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")) |>
+      fmutate(
+        petal_type = data.table::fifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+      ) |>
+      fsubset(Sepal.Length >= 4.5 & Sepal.Length <= 5.5)
+  },
   check = FALSE,
-  iterations = 10
+  iterations = 20
 )
 #> Warning: Some expressions had a GC in every iteration; so filtering is
 #> disabled.
-#> # A tibble: 3 × 6
+#> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars      112.9ms 131.47ms     7.69     25.6KB    0    
-#> 2 tidypolars  130.7ms 154.82ms     6.17     69.4KB    0.617
-#> 3 dplyr          2.1s    2.31s     0.436   916.7MB    1.66
+#> 1 polars      72.08ms  78.51ms    12.6      27.5KB    0    
+#> 2 tidypolars   87.4ms 106.85ms     8.24    308.9KB    0.412
+#> 3 dplyr         2.37s    2.59s     0.387   916.6MB    1.39 
+#> 4 collapse   254.79ms 303.53ms     3.27    373.1MB    3.11
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling

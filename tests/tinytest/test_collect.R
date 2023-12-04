@@ -5,19 +5,30 @@ pl_iris <- pl$DataFrame(iris)
 pl_iris_lazy <- pl$LazyFrame(iris)
 
 expect_equal(
-  pl_collect(pl_iris_lazy),
+  collect(pl_iris_lazy),
   pl_iris
 )
 
 expect_equal(
   pl_iris_lazy |>
-    pl_filter(Species == "setosa") |>
-    pl_collect(),
+    filter(Species == "setosa") |>
+    collect(),
   pl_iris |>
-    pl_filter(Species == "setosa")
+    filter(Species == "setosa")
 )
 
-expect_error(
-  pl_collect(pl_iris),
-  "can only be used on a LazyFrame"
+expect_error(collect(pl_iris))
+
+out <- pl_iris_lazy |>
+  group_by(Species, maintain_order = TRUE) |>
+  collect()
+
+expect_equal(
+  attr(out, "pl_grps"),
+  "Species"
+)
+
+expect_equal(
+  attr(out, "maintain_grp_order"),
+  TRUE
 )

@@ -8,16 +8,16 @@ test <- polars::pl$DataFrame(
   name_day = c("Monday", "Thursday", "Wednesday")
 )
 
-out1 <- pl_unite(test, col = "full_date", year, month, day, sep = "-")
+out1 <- unite(test, col = "full_date", year, month, day, sep = "-")
 
 expect_equal(
-   pl_pull(out1, full_date),
+   pull(out1, full_date),
    c("2009-10-11", "2010-11-22", "2011-12-28")
 )
 
 expect_dim(out1, c(3, 2))
 
-out2 <- pl_unite(test, col = "full_date", year, month, day, sep = "-", remove = FALSE)
+out2 <- unite(test, col = "full_date", year, month, day, sep = "-", remove = FALSE)
 
 expect_dim(out2, c(3, 5))
 
@@ -27,9 +27,9 @@ test2 <- polars::pl$DataFrame(
   surname = c("Smith", "Thompson", "Jones")
 )
 
-out3 <- pl_unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
+out3 <- unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
 
 expect_equal(
-  pl_pull(out3, full_name),
+  pull(out3, full_name),
   c("John T. Smith", "Jack  Thompson", "Thomas F. Jones")
 )

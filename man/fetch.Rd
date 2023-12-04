@@ -55,7 +55,7 @@ an alpha state). Default is \code{FALSE}.}
 \description{
 Fetch is a way to collect only the first \code{n} rows of a LazyFrame. It is
 mainly used to test that a query runs as expected on a subset of the data
-before using \code{pl_collect()} on the full query. Note that fetching \code{n} rows
+before using \code{collect()} on the full query. Note that fetching \code{n} rows
 doesn't mean that the output will actually contain \code{n} rows, see the section
 'Details' for more information.
 }
@@ -68,6 +68,7 @@ On the other hand, appending some rows during the query can lead to an output
 that has more rows than \code{n_rows}.
 }
 \examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 dat_lazy <- polars::pl$DataFrame(iris)$lazy()
 
 # this will return 30 rows
@@ -76,9 +77,10 @@ fetch(dat_lazy, 30)
 # this will return less than 30 rows because there are less than 30 matches
 # for this filter in the whole dataset
 dat_lazy |>
-  pl_filter(Sepal.Length > 7.0) |>
+  filter(Sepal.Length > 7.0) |>
   fetch(30)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
-\code{\link[=pl_collect]{pl_collect()}} for applying a lazy query on the full data.
+\code{\link[=collect]{collect()}} for applying a lazy query on the full data.
 }

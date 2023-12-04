@@ -1,10 +1,10 @@
 source("helpers.R")
 using("tidypolars")
 
-pl_fish_encounters <- polars::pl$DataFrame(fish_encounters)
+pl_fish_encounters <- polars::pl$DataFrame(tidyr::fish_encounters)
 
 out <- pl_fish_encounters |>
-  pl_pivot_wider(names_from = station, values_from = seen)
+  pivot_wider(names_from = station, values_from = seen)
 
 # basic checks
 
@@ -15,28 +15,65 @@ expect_colnames(out, c("fish", "Release", "I80_1", "Lisbon", "Rstr", "Base_TD",
 
 # check values
 
-first <- pl_slice_head(out)
+first <- slice_head(out, n = 5)
 
 expect_equal(
-  pl_pull(first, I80_1),
+  pull(first, I80_1),
   rep(1, 5)
 )
 expect_equal(
-  pl_pull(first, BCE2),
+  pull(first, BCE2),
   c(1, 1, 1, NA, NA)
+)
+
+# names prefix
+
+prefixed <- pl_fish_encounters |>
+  pivot_wider(names_from = station, values_from = seen, names_prefix = "foo_") |>
+  slice_head(n = 5)
+
+expect_equal(
+  names(prefixed)[11:12],
+  c("foo_MAE", "foo_MAW")
+)
+
+expect_error(
+  pl_fish_encounters |>
+    pivot_wider(
+      names_from = station,
+      values_from = seen,
+      names_prefix = c("foo1", "foo2")
+    ),
+  "must be of length 1"
+)
+
+# names sep
+
+pl_us_rent_income <- polars::pl$DataFrame(tidyr::us_rent_income)
+
+sep <- pl_us_rent_income |>
+  pivot_wider(
+    names_from = variable,
+    names_sep = ".",
+    values_from = c(estimate, moe)
+  )
+
+expect_equal(
+  names(sep)[3:6],
+  c("estimate.income", "estimate.rent", "moe.income", "moe.rent")
 )
 
 # fill values
 
 filled <- pl_fish_encounters |>
-  pl_pivot_wider(names_from = station, values_from = seen, values_fill = 0) |>
-  pl_slice_head()
+  pivot_wider(names_from = station, values_from = seen, values_fill = 0) |>
+  slice_head(n = 5)
 
 expect_equal(
-  pl_pull(filled, I80_1),
+  pull(filled, I80_1),
   rep(1, 5)
 )
 expect_equal(
-  pl_pull(filled, BCE2),
+  pull(filled, BCE2),
   c(1, 1, 1, 0, 0)
 )

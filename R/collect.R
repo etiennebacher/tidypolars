@@ -4,7 +4,7 @@
 #' execution plan, optimizes it in the background and performs it. The result
 #' is loaded in the R session.
 #'
-#' @param .data A Polars LazyFrame
+#' @param x A Polars LazyFrame
 #' @param type_coercion Coerce types such that operations succeed and run on
 #' minimal required memory (default is `TRUE`).
 #' @param predicate_pushdown Applies filters as early as possible at scan level
@@ -29,21 +29,22 @@
 #' will start in background. Get a handle which later can be converted into the
 #' resulting DataFrame. Useful in interactive mode to not lock R session (default
 #' is `FALSE`).
+#' @inheritParams slice_tail.DataFrame
 #'
 #' @export
 #' @seealso [fetch()] for applying a lazy query on a subset of the data.
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' dat_lazy <- polars::pl$DataFrame(iris)$lazy()
-#' pl_collect(dat_lazy)
+#' collect(dat_lazy)
 #'
-#' # you can build a query and add pl_collect() as the last piece
+#' # you can build a query and add collect() as the last piece
 #' dat_lazy |>
-#'   pl_select(starts_with("Sepal")) |>
-#'   pl_filter(between(Sepal.Length, 5, 6)) |>
-#'   pl_collect()
+#'   select(starts_with("Sepal")) |>
+#'   filter(between(Sepal.Length, 5, 6)) |>
+#'   collect()
 
-pl_collect <- function(
-    .data,
+collect.LazyFrame <- function(
+    x,
     type_coercion = TRUE,
     predicate_pushdown = TRUE,
     projection_pushdown = TRUE,
@@ -53,12 +54,14 @@ pl_collect <- function(
     comm_subexpr_elim = TRUE,
     no_optimization = FALSE,
     streaming = FALSE,
-    collect_in_background = FALSE
+    collect_in_background = FALSE,
+    ...
   ) {
-  if (!inherits(.data, "LazyFrame")) {
-    rlang::abort("`collect()` can only be used on a LazyFrame.")
-  }
-  .data$collect(
+  grps <- attributes(x)$pl_grps
+  mo <- attributes(x)$maintain_grp_order
+  is_grouped <- !is.null(grps)
+
+  out <- x$collect(
     type_coercion = type_coercion,
     predicate_pushdown = predicate_pushdown,
     projection_pushdown = projection_pushdown,
@@ -70,4 +73,11 @@ pl_collect <- function(
     streaming = streaming,
     collect_in_background = collect_in_background
   )
+
+  if (is_grouped) {
+    out |>
+      group_by(grps, maintain_order = mo)
+  } else {
+    out
+  }
 }

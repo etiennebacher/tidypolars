@@ -11,23 +11,23 @@ pl_colnames <- function(x) {
   }
 }
 
-check_polars_data <- function(x) {
+check_polars_data <- function(x, env = caller_env()) {
   if (!inherits(x, "DataFrame") && !inherits(x, "LazyFrame")) {
     rlang::abort(
       "The data must be a Polars DataFrame or LazyFrame.",
-      call = caller_env()
+      call = env
     )
   }
 }
 
-check_same_class <- function(x, y) {
+check_same_class <- function(x, y, env = caller_env()) {
   if (class(x) != class(y)) {
     rlang::abort(
-      paste0(
-        "Both objects must be of the same class. Currently, `x` is a ",
-        class(x), " and `y` is a ", class(y), "."
+      c(
+        "Both objects must be of the same class.",
+        "i" = paste0("Currently, `x` is a ", class(x)[1], " and `y` is a ", class(y)[1], ".")
       ),
-      call = caller_env(2)
+      call = env
     )
   }
 }

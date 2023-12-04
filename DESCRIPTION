@@ -1,7 +1,7 @@
 Package: tidypolars
 Type: Package
-Title: Provide the Functionalities of Polars with the Syntax of the Tidyverse
-Version: 0.1.0.9000
+Title: Get the Power of Polars with the Syntax of the Tidyverse
+Version: 0.4.0.9000
 Authors@R: 
     person(given = "Etienne",
            family = "Bacher",
@@ -15,23 +15,23 @@ Description: Polars is an amazing cross-language tool for manipulating very larg
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3.9000
+RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 URL: https://www.tidypolars.etiennebacher.com/, https://etiennebacher.r-universe.dev/tidypolars
 BugReports: https://github.com/etiennebacher/tidypolars/issues
 Depends: R (>= 4.1.0)
 Imports: 
-    polars,
+    dplyr,
+    polars (>= 0.11.0),
     rlang,
+    tidyr,
     tidyselect
 Suggests: 
     bench,
     data.table,
-    dplyr,
     knitr,
     lubridate,
     rmarkdown,
-    tidyr,
     tinytest
 Remotes:
     markvanderloo/tinytest/pkg

@@ -39,7 +39,7 @@ it is possible to pass R functions directly to a Polars Data/LazyFrame, it is
 optimizations. 
 
 Indeed, Polars comes with dozens of built-in functions for maths (`median`, 
-`var`, `arccos`, ...), string manipulation (`n_chars`, `starts`, ...), and date-time 
+`var`, `arccos`, ...), string manipulation (`len_chars`, `starts`, ...), and date-time 
 (`hour`, `quarter`, `ordinal_day`, ...). All of these functions are optimized
 internally and are ran in parallel under the hood, which will not be the case if
 we pass R functions.
@@ -228,9 +228,11 @@ out <- tribble(
   "`base`", "`sort`",  
   "`base`", "`sqrt`", 
   "`stats`", "`sd`", 
+  "`base`", "`strptime`",
   "`base`", "`tan`", 
   "`base`", "`tanh`",
   "`base`", "`tolower`",
+  "`tools`", "`toTitleCase`",
   "`base`", "`toupper`",
   "`stats`", "`var`",
   "`dplyr`", "`between`",
@@ -255,6 +257,7 @@ out <- tribble(
   "`stringr`", "`str_sub`",
   "`stringr`", "`str_trim`",
   "`stringr`", "`str_to_lower`",
+  "`stringr`", "`str_to_title`",
   "`stringr`", "`str_to_upper`",
   "`stringr`", "`word`"
 ) |> 

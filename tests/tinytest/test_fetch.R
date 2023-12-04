@@ -11,7 +11,7 @@ expect_equal(
 
 expect_equal(
   pl_iris_lazy |>
-    pl_filter(Sepal.Length > 7) |>
+    filter(Sepal.Length > 7) |>
     fetch(n_rows = 30) |>
     nrow(),
   12

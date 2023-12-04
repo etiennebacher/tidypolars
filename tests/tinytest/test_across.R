@@ -6,12 +6,12 @@ test <- polars::pl$DataFrame(head(mtcars))
 # single word function
 
 expect_equal(
-  pl_mutate(
+  mutate(
     test,
     across(.cols = contains("a"), mean),
     cyl = cyl + 1
   ),
-  pl_mutate(
+  mutate(
     test,
     drat = mean(drat),
     am = mean(am),
@@ -24,12 +24,12 @@ expect_equal(
 # purrr-style function
 
 expect_equal(
-  pl_mutate(
+  mutate(
     test,
     across(.cols = contains("a"), ~ mean(.x)),
     cyl = cyl + 1
   ),
-  pl_mutate(
+  mutate(
     test,
     drat = mean(drat),
     am = mean(am),
@@ -42,11 +42,11 @@ expect_equal(
 # anonymous functions has to return a Polars expression
 
 expect_equal(
-  pl_mutate(
+  mutate(
     test,
     across(.cols = contains("ar"), \(x) x$mean())
   ),
-  pl_mutate(
+  mutate(
     test,
     gear = mean(gear),
     carb = mean(carb)
@@ -54,7 +54,7 @@ expect_equal(
 )
 
 expect_equal(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = contains("ar"),
@@ -64,7 +64,7 @@ expect_equal(
       )
     )
   ),
-  pl_mutate(
+  mutate(
     test,
     gear_mean = mean(gear),
     gear_std = sd(gear),
@@ -74,7 +74,7 @@ expect_equal(
 )
 
 expect_colnames(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = contains("ar"),
@@ -85,7 +85,7 @@ expect_colnames(
 )
 
 expect_colnames(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = gear,
@@ -96,7 +96,7 @@ expect_colnames(
 )
 
 expect_error(
-  pl_mutate(
+  mutate(
     test,
     across(.cols = contains("a"), \(x) mean(x)),
   ),
@@ -111,7 +111,7 @@ foo <<- function(x) {
 }
 
 expect_equal(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = contains("a"),
@@ -119,7 +119,7 @@ expect_equal(
     ),
     cyl = cyl + 1
   ),
-  pl_mutate(
+  mutate(
     test,
     drat = foo(drat),
     am = foo(am),
@@ -133,14 +133,14 @@ expect_equal(
 
 expect_equal(
   test |>
-    pl_group_by(am) |>
-    pl_mutate(
+    group_by(am) |>
+    mutate(
       across(
         .cols = contains("a"),
         ~ mean(.x)
       )
     ) |>
-    pl_pull(carb),
+    pull(carb),
   c(3, 3, 3, 1.333, 1.333, 1.333),
   tolerance = 1e-3
 )
@@ -148,7 +148,7 @@ expect_equal(
 # argument .names
 
 expect_colnames(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = contains("a"),
@@ -164,7 +164,7 @@ expect_colnames(
 )
 
 expect_colnames(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = contains("a"),
@@ -180,7 +180,7 @@ expect_colnames(
 )
 
 expect_colnames(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = contains("a"),
@@ -198,29 +198,29 @@ expect_colnames(
 # List of functions ---------------
 
 expect_equal(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = mpg,
       list(mean, median)
     )
   ),
-  pl_mutate(test, mpg_1 = mean(mpg), mpg_2 = median(mpg))
+  mutate(test, mpg_1 = mean(mpg), mpg_2 = median(mpg))
 )
 
 expect_equal(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = mpg,
       list(my_mean = mean, my_median = median)
     )
   ),
-  pl_mutate(test, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg))
+  mutate(test, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg))
 )
 
 expect_equal(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = mpg,
@@ -228,11 +228,11 @@ expect_equal(
       .nms = "{.col}_foo_{.fn}"
     )
   ),
-  pl_mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
+  mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
 )
 
 expect_equal(
-  pl_mutate(
+  mutate(
     test,
     across(
       .cols = mpg,
@@ -240,35 +240,35 @@ expect_equal(
       .nms = "{.col}_foo_{.fn}"
     )
   ),
-  pl_mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
+  mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
 )
 
 # just one check for summarize()
 
-test_grp <- pl_group_by(test, cyl, maintain_order = TRUE)
+test_grp <- group_by(test, cyl, maintain_order = TRUE)
 
 expect_equal(
-  pl_summarize(
+  summarize(
     test_grp,
     across(
       .cols = mpg,
       list(my_mean = mean, my_median = median)
     )
   ),
-  pl_summarize(test_grp, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg)) |>
+  summarize(test_grp, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg)) |>
     to_r()
 )
 
 
 # sequence of expressions modifying the same vars works
 
-test2 <- pl_mutate(
+test2 <- mutate(
   test, across(contains("a"), mean),
   am = 1, gear = NULL
 )
 
 expect_equal(
-  pl_pull(test2, am) |> unique(),
+  pull(test2, am) |> unique(),
   1
 )
 
@@ -276,3 +276,31 @@ expect_colnames(
   test2,
   setdiff(colnames(mtcars), "gear")
 )
+
+
+# Need to specify .cols (either named or unnamed)
+
+expect_error(
+  mutate(test, across(.fns = mean)),
+  "You must supply the argument `.cols`"
+)
+
+# test .by with across + everything
+
+test3 <- mtcars |>
+  head(n = 5) |>
+  as_polars() |>
+  summarize(across(everything(), .fns = mean), .by = "cyl") |>
+  distinct() |>
+  arrange(cyl)
+
+expect_equal(
+  test3 |> pull(cyl),
+  c(4, 6, 8)
+)
+
+expect_equal(
+  test3 |> pull(hp),
+  c(93, 110, 175)
+)
+

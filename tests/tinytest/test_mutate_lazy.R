@@ -10,54 +10,54 @@ pl_iris <- polars::pl$LazyFrame(iris)
 # Basic ops: +, -, *, /
 
 expect_equal_lazy(
-  pl_mutate(pl_iris, x = Sepal.Width + Sepal.Length) |>
-    pl_pull(x),
+  mutate(pl_iris, x = Sepal.Width + Sepal.Length) |>
+    pull(x),
   iris$Sepal.Width + iris$Sepal.Length
 )
 expect_equal_lazy(
-  pl_mutate(pl_iris, x = Sepal.Width - Sepal.Length + Petal.Length) |>
-    pl_pull(x),
+  mutate(pl_iris, x = Sepal.Width - Sepal.Length + Petal.Length) |>
+    pull(x),
   iris$Sepal.Width - iris$Sepal.Length + iris$Petal.Length
 )
 expect_equal_lazy(
-  pl_mutate(pl_iris, x = Sepal.Width*Sepal.Length) |>
-    pl_pull(x),
+  mutate(pl_iris, x = Sepal.Width*Sepal.Length) |>
+    pull(x),
   iris$Sepal.Width*iris$Sepal.Length
 )
 expect_equal_lazy(
-  pl_mutate(pl_iris, x = Sepal.Width/Sepal.Length) |>
-    pl_pull(x),
+  mutate(pl_iris, x = Sepal.Width/Sepal.Length) |>
+    pull(x),
   iris$Sepal.Width/iris$Sepal.Length
 )
 
 # Logical ops
 
 expect_equal_lazy(
-  pl_mutate(pl_iris, x = Sepal.Width > Sepal.Length) |>
-    pl_pull(x),
+  mutate(pl_iris, x = Sepal.Width > Sepal.Length) |>
+    pull(x),
   iris$Sepal.Width > iris$Sepal.Length
 )
 expect_equal_lazy(
-  pl_mutate(pl_iris, x = Sepal.Width > Sepal.Length & Petal.Width > Petal.Length) |>
-    pl_pull(x),
+  mutate(pl_iris, x = Sepal.Width > Sepal.Length & Petal.Width > Petal.Length) |>
+    pull(x),
   iris$Sepal.Width > iris$Sepal.Length & iris$Petal.Width > iris$Petal.Length
 )
 
 expect_false(
-  pl_mutate(pl_iris, x = all(Sepal.Length/2 > Sepal.Width)) |>
-    pl_pull(x) |>
+  mutate(pl_iris, x = all(Sepal.Length/2 > Sepal.Width)) |>
+    pull(x) |>
     unique()
 )
 
 expect_true(
-  pl_mutate(pl_iris, x = all(Sepal.Width > 0)) |>
-    pl_pull(x) |>
+  mutate(pl_iris, x = all(Sepal.Width > 0)) |>
+    pull(x) |>
     unique()
 )
 
 expect_false(
-  pl_mutate(pl_iris, x = any(Sepal.Width > Sepal.Length)) |>
-    pl_pull(x) |>
+  mutate(pl_iris, x = any(Sepal.Width > Sepal.Length)) |>
+    pull(x) |>
     unique()
 )
 
@@ -70,52 +70,52 @@ test <- pl$LazyFrame(
 )
 
 expect_equal_lazy(
-  pl_mutate(test, x = x1 %in% letters) |>
-    pl_pull(x),
+  mutate(test, x = x1 %in% letters) |>
+    pull(x),
   c(TRUE, TRUE, FALSE, TRUE, TRUE)
 )
 
 expect_equal_lazy(
-  pl_mutate(test, x = x1 %in% letters & x2 < 3) |>
-    pl_pull(x),
+  mutate(test, x = x1 %in% letters & x2 < 3) |>
+    pull(x),
   c(TRUE, TRUE, FALSE, FALSE, TRUE)
 )
 
 # Overwrite existing vars
 
 expect_equal_lazy(
-  pl_mutate(pl_iris, Sepal.Width = Sepal.Width*2) |>
-    pl_pull(Sepal.Width),
+  mutate(pl_iris, Sepal.Width = Sepal.Width*2) |>
+    pull(Sepal.Width),
   iris$Sepal.Width*2
 )
 
 # Scalar
 
 expect_equal_lazy(
-  pl_mutate(pl_iris, Sepal.Width = 2) |>
-    pl_pull(Sepal.Width) |>
+  mutate(pl_iris, Sepal.Width = 2) |>
+    pull(Sepal.Width) |>
     unique(),
   2
 )
 
 expect_equal_lazy(
-  pl_mutate(pl_iris, Sepal.Width = "a") |>
-    pl_pull(Sepal.Width) |>
+  mutate(pl_iris, Sepal.Width = "a") |>
+    pull(Sepal.Width) |>
     unique(),
   "a"
 )
 
 expect_error_lazy(
-  pl_mutate(pl_iris, Sepal.Width = 1:2)
+  mutate(pl_iris, Sepal.Width = 1:2)
 )
 
 expect_error_lazy(
-  pl_mutate(pl_iris, Sepal.Width = letters[1:2])
+  mutate(pl_iris, Sepal.Width = letters[1:2])
 )
 
 # Several exprs
 
-out <- pl_mutate(
+out <- mutate(
   pl_iris,
   Sepal.Width = Sepal.Width*2,
   Petal.Width = Petal.Width*3
@@ -123,8 +123,8 @@ out <- pl_mutate(
 
 expect_equal_lazy(
   c(
-    pl_pull(out, Sepal.Width),
-    pl_pull(out, Petal.Width)
+    pull(out, Sepal.Width),
+    pull(out, Petal.Width)
   ),
   c(iris$Sepal.Width*2, iris$Petal.Width*3)
 )
@@ -132,7 +132,7 @@ expect_equal_lazy(
 # drop columns
 
 expect_colnames(
-  pl_mutate(pl_iris, Sepal.Length = 1, Species = NULL),
+  mutate(pl_iris, Sepal.Length = 1, Species = NULL),
   names(iris)[1:4]
 )
 
@@ -140,41 +140,80 @@ expect_colnames(
 # grouped data (checked with dplyr)
 
 out <- pl_iris |>
-  pl_group_by(Species) |>
-  pl_mutate(
+  group_by(Species, maintain_order = TRUE) |>
+  mutate(
     foo = mean(Sepal.Length)
   )
 
 expect_equal_lazy(
-  pl_pull(out, foo) |> unique(),
+  pull(out, foo) |> unique(),
   c(5.006, 5.936, 6.588)
 )
 
-out <- polars::pl$LazyFrame(mtcars) |>
-  pl_group_by(cyl, am) |>
-  pl_mutate(
-    disp2 = disp / mean(disp)
-  ) |>
-  pl_ungroup()
+expect_equal_lazy(
+  attr(out, "pl_grps"),
+  "Species"
+)
 
 expect_equal_lazy(
-  out |> pl_slice_head(5) |> pl_pull(disp2),
+  attr(out, "maintain_grp_order"),
+  TRUE
+)
+
+expect_equal_lazy(
+  pull(out, foo) |> unique(),
+  as_polars(iris) |>
+    mutate(foo = mean(Sepal.Length), .by = Species) |>
+    pull(foo) |>
+    unique()
+)
+
+expect_equal_lazy(
+  as_polars(iris) |>
+    mutate(foo = mean(Sepal.Length), .by = Species) |>
+    attr("pl_grps"),
+  NULL
+)
+
+expect_equal_lazy(
+  as_polars(iris) |>
+    mutate(foo = mean(Sepal.Length), .by = Species) |>
+    attr("maintain_grp_order"),
+  NULL
+)
+
+pl_mtcars <- polars::pl$LazyFrame(mtcars)
+out <- pl_mtcars |>
+  group_by(cyl, am) |>
+  mutate(
+    disp2 = disp / mean(disp)
+  ) |>
+  ungroup()
+
+expect_equal_lazy(
+  out |> slice_head(n = 5) |> pull(disp2),
   c(1.032258, 1.032258, 1.153692, 1.261305, 1.006664),
   tolerance = 1e5
 )
 
 expect_colnames(
   pl_iris |>
-    pl_group_by(Species) |>
-    pl_mutate(Sepal.Length = NULL),
+    group_by(Species) |>
+    mutate(Sepal.Length = NULL),
   names(iris)[2:5]
+)
+
+expect_equal_lazy(
+  pl_mtcars |>
+    mutate(disp2 = disp / mean(disp), .by = c(cyl, am)),
+  out
 )
 
 
 # warning
 
 expect_warning(
-  pl_mutate(pl_iris, foo = mean(Sepal.Length, na.rm = TRUE)),
+  mutate(pl_iris, foo = mean(Sepal.Length, na.rm = TRUE)),
   pattern = "will not be used: `na.rm`"
 )
 
@@ -188,8 +227,8 @@ foo <<- function(x, y) {
 }
 
 expect_equal_lazy(
-  pl_mutate(pl_iris, x = foo(Sepal.Length, Petal.Length)) |>
-    pl_pull(x),
+  mutate(pl_iris, x = foo(Sepal.Length, Petal.Length)) |>
+    pull(x),
   rep(mean(iris$Sepal.Length) + mean(iris$Petal.Length), nrow(iris))
 )
 
@@ -200,8 +239,8 @@ foo2 <<- function(x, y) {
 }
 
 expect_error_lazy(
-  pl_mutate(pl_iris, x = foo2(Sepal.Length, Petal.Length)),
-  "Couldn't evaluate function `foo2`"
+  mutate(pl_iris, x = foo2(Sepal.Length, Petal.Length)),
+  "Couldn't evaluate function `foo2\\(\\)`"
 )
 
 # embracing works
@@ -209,20 +248,20 @@ expect_error_lazy(
 some_value <<- 1
 
 expect_equal_lazy(
-  pl_mutate(pl_iris, x = {{ some_value }}),
-  pl_mutate(pl_iris, x = 1)
+  mutate(pl_iris, x = {{ some_value }}),
+  mutate(pl_iris, x = 1)
 )
 
 expect_equal_lazy(
-  pl_mutate(pl_iris, x = some_value + Sepal.Length),
-  pl_mutate(pl_iris, x = 1 + Sepal.Length)
+  mutate(pl_iris, x = some_value + Sepal.Length),
+  mutate(pl_iris, x = 1 + Sepal.Length)
 )
 
 # reorder of expressions works
 
 expect_equal_lazy(
   pl_iris |>
-    pl_mutate(
+    mutate(
       x = Sepal.Length * 3,
       Petal.Length = Petal.Length / x,
       x = NULL,
@@ -241,7 +280,7 @@ expect_equal_lazy(
 
 expect_equal_lazy(
   pl_iris |>
-    pl_mutate(
+    mutate(
       x = 1,
       x = NULL,
       mean_pl = mean(Petal.Length),
@@ -251,6 +290,21 @@ expect_equal_lazy(
     mean_pl = pl$col("Petal.Length")$mean(),
     x = 2
   )
+)
+
+
+# correct sequential operations
+
+expect_equal_lazy(
+  iris[c(1, 2, 149, 150), ] |>
+    as_polars() |>
+    mutate(
+      x = Sepal.Length > 6,
+      y = x & Species == "virginica",
+      z = ifelse(y, Petal.Width, Petal.Length * Sepal.Width)
+    ) |>
+    pull(z),
+  c(4.9, 4.2, 2.3, 15.3)
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

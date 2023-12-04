@@ -1,7 +1,6 @@
 source("helpers.R")
 using("tidypolars")
 
-library(dplyr, warn.conflicts = FALSE)
 library(lubridate, warn.conflicts = FALSE)
 
 test_df <- data.frame(
@@ -11,7 +10,8 @@ test_df <- data.frame(
   # MDY = c("03-26-2012", "01-01-2020", "12-14-2023")
   YMD_HMS = ymd_hms(c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00")),
   to_ymd_hms = c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00"),
-  to_ymd_hm = c("2012-03-26 12:00", "2020-01-01 12:00", "2023-12-14 12:00")
+  to_ymd_hm = c("2012-03-26 12:00", "2020-01-01 12:00", "2023-12-14 12:00"),
+  somedate = c("Jul 24 2014", "Dec 24 2015", "Jan 21 2016")
 )
 
 test <- pl$DataFrame(test_df)
@@ -20,10 +20,10 @@ test <- pl$DataFrame(test_df)
 for (i in c("year", "month", "day", "quarter", "week", "mday", "yday"
             # TODO: "wday" (see pl_dt_weekday())
             )) {
-  pol <- paste0("pl_mutate(test, foo = ", i, "(YMD))") |>
+  pol <- paste0("mutate(test, foo = ", i, "(YMD))") |>
     str2lang() |>
     eval() |>
-    pl_pull(foo)
+    pull(foo)
 
   res <- paste0("mutate(test_df, foo = ", i, "(YMD))") |>
     str2lang() |>
@@ -34,10 +34,10 @@ for (i in c("year", "month", "day", "quarter", "week", "mday", "yday"
 }
 
 for (i in c("hour", "minute", "second")) {
-  pol <- paste0("pl_mutate(test, foo = ", i, "(YMD_HMS))") |>
+  pol <- paste0("mutate(test, foo = ", i, "(YMD_HMS))") |>
     str2lang() |>
     eval() |>
-    pl_pull(foo)
+    pull(foo)
 
   res <- paste0("mutate(test_df, foo = ", i, "(YMD_HMS))") |>
     str2lang() |>
@@ -49,7 +49,7 @@ for (i in c("hour", "minute", "second")) {
 
 # TODO: fix timezone attributes
 # for (i in c("ymd_hms", "ymd_hm")) {
-#   pol <- paste0("pl_mutate(test, to_", i, "  = ", i, "(to_", i, "))") |>
+#   pol <- paste0("mutate(test, to_", i, "  = ", i, "(to_", i, "))") |>
 #     str2lang() |>
 #     eval() |>
 #     to_r()
@@ -60,3 +60,13 @@ for (i in c("hour", "minute", "second")) {
 #
 #   expect_equal(pol, res, info = i)
 # }
+
+
+# strptime
+
+expect_equal(
+  test |>
+    mutate(foo = strptime(somedate, "%b %d %Y")) |>
+    pull(foo),
+  as.Date(c("2014-07-24", "2015-12-24", "2016-01-21"))
+)

@@ -4,27 +4,27 @@ using("tidypolars")
 pl_iris <- as_polars(iris)
 
 expect_dim(
-  pl_filter(pl_iris, Species == "setosa"),
+  filter(pl_iris, Species == "setosa"),
   c(50, 5)
 )
 
 expect_dim(
-  pl_filter(pl_iris, Sepal.Length < 5 & Species == "setosa"),
+  filter(pl_iris, Sepal.Length < 5 & Species == "setosa"),
   c(20, 5)
 )
 
 expect_dim(
-  pl_filter(pl_iris, Sepal.Length < 5, Species == "setosa"),
+  filter(pl_iris, Sepal.Length < 5, Species == "setosa"),
   c(20, 5)
 )
 
 expect_dim(
-  pl_filter(pl_iris, Sepal.Length < 5 | Species == "setosa"),
+  filter(pl_iris, Sepal.Length < 5 | Species == "setosa"),
   c(52, 5)
 )
 
 expect_dim(
-  pl_filter(pl_iris, Sepal.Length < Sepal.Width + Petal.Length),
+  filter(pl_iris, Sepal.Length < Sepal.Width + Petal.Length),
   c(115, 5)
 )
 
@@ -35,19 +35,19 @@ iris2[c(3, 8, 58, 133), "Species"] <- NA
 pl_iris_2 <- pl$DataFrame(iris2)
 
 expect_dim(
-  pl_filter(pl_iris_2, is.na(Species)),
+  filter(pl_iris_2, is.na(Species)),
   c(4, 5)
 )
 expect_dim(
-  pl_filter(pl_iris_2, !is.na(Species)),
+  filter(pl_iris_2, !is.na(Species)),
   c(146, 5)
 )
 expect_dim(
-  pl_filter(pl_iris_2, Species == "setosa", !is.na(Species)),
+  filter(pl_iris_2, Species == "setosa", !is.na(Species)),
   c(48, 5)
 )
 expect_dim(
-  pl_filter(pl_iris_2, Species == "setosa" | is.na(Species)),
+  filter(pl_iris_2, Species == "setosa" | is.na(Species)),
   c(52, 5)
 )
 
@@ -56,19 +56,19 @@ iris2[c(3, 8, 58, 133), "Sepal.Length"] <- NaN
 pl_iris_2 <- pl$DataFrame(iris2)
 
 expect_dim(
-  pl_filter(pl_iris_2, is.nan(Sepal.Length)),
+  filter(pl_iris_2, is.nan(Sepal.Length)),
   c(4, 5)
 )
 expect_dim(
-  pl_filter(pl_iris_2, !is.nan(Sepal.Length)),
+  filter(pl_iris_2, !is.nan(Sepal.Length)),
   c(146, 5)
 )
 expect_dim(
-  pl_filter(pl_iris_2, Species == "setosa", !is.nan(Sepal.Length)),
+  filter(pl_iris_2, Species == "setosa", !is.nan(Sepal.Length)),
   c(48, 5)
 )
 expect_dim(
-  pl_filter(pl_iris_2, Species == "setosa" | is.nan(Sepal.Length)),
+  filter(pl_iris_2, Species == "setosa" | is.nan(Sepal.Length)),
   c(52, 5)
 )
 
@@ -77,87 +77,136 @@ expect_dim(
 pl_mtcars <- pl$DataFrame(mtcars)
 
 expect_dim(
-  pl_filter(pl_mtcars, cyl %in% 4:5),
+  filter(pl_mtcars, cyl %in% 4:5),
   c(11, 11)
 )
 
 expect_dim(
-  pl_filter(pl_mtcars, cyl %in% 4:5 & am %in% 1),
+  filter(pl_mtcars, cyl %in% 4:5 & am %in% 1),
   c(8, 11)
 )
 
 expect_dim(
-  pl_filter(pl_mtcars, cyl %in% 4:5, am %in% 1),
+  filter(pl_mtcars, cyl %in% 4:5, am %in% 1),
   c(8, 11)
 )
 
 expect_dim(
-  pl_filter(pl_mtcars, cyl %in% 4:5 | am %in% 1),
+  filter(pl_mtcars, cyl %in% 4:5 | am %in% 1),
   c(16, 11)
 )
 
 expect_dim(
-  pl_filter(pl_mtcars, cyl %in% 4:5, vs == 1),
+  filter(pl_mtcars, cyl %in% 4:5, vs == 1),
   c(10, 11)
 )
 
 expect_dim(
-  pl_filter(pl_mtcars, cyl %in% 4:5 | carb == 4),
+  filter(pl_mtcars, cyl %in% 4:5 | carb == 4),
   c(21, 11)
 )
 
-# See in as_polars()
-# expect_dim(
-#   pl_filter(pl_iris, Species %in% c("setosa", "virginica")),
-#   c(100, 5)
-# )
-#
-# expect_dim(
-#   pl_filter(pl_iris, Species %in% c("setosa", "foo")),
-#   c(50, 5)
-# )
+pl$enable_string_cache()
+
+expect_dim(
+  iris |>
+    as_polars() |>
+    filter(Species %in% c("setosa", "virginica")),
+  c(100, 5)
+)
+
+pl$disable_string_cache()
+
+expect_error(
+  filter(pl_iris, Species %in% c("setosa", "virginica")),
+  "Comparing factor variables to strings is only possible when the string cache is enabled"
+)
+
+expect_dim(
+  iris |>
+    as_polars(with_string_cache = TRUE) |>
+    filter(Species %in% c("setosa", "virginica")),
+  c(100, 5)
+)
+
+expect_message(
+  iris |> as_polars(with_string_cache = TRUE),
+  "already globally enabled"
+)
+
+pl$disable_string_cache()
 
 pl_iris3 <- as_polars(iris, with_string_cache = FALSE)
 
 expect_error(
-  pl_filter(pl_iris, Species %in% c("setosa", "foo")),
-  "consider setting a global"
+  filter(pl_iris, Species %in% c("setosa", "foo")),
+  "Comparing factor variables to strings is only possible when the string cache is enabled"
 )
 
 # between()
 
 expect_dim(
-  pl_filter(pl_iris, between(Sepal.Length, 5, 6)),
+  filter(pl_iris, between(Sepal.Length, 5, 6)),
   c(67, 5)
 )
 
 expect_dim(
-  pl_filter(pl_iris, between(Sepal.Length, 5, 6), Species == "setosa"),
+  filter(pl_iris, between(Sepal.Length, 5, 6), Species == "setosa"),
   c(30, 5)
 )
 
 expect_dim(
-  pl_filter(pl_iris, between(Sepal.Length, 5, 6, include_bounds = FALSE)),
+  filter(pl_iris, between(Sepal.Length, 5, 6, include_bounds = FALSE)),
   c(51, 5)
 )
 
 # with grouped data
 
 by_cyl <- polars::pl$DataFrame(mtcars) |>
-  pl_group_by(cyl)
+  group_by(cyl, maintain_order = TRUE)
 
 expect_equal(
   by_cyl |>
-    pl_filter(disp == max(disp)) |>
-    pl_pull(mpg),
+    filter(disp == max(disp)) |>
+    pull(mpg),
   c(21.4, 24.4, 10.4)
+)
+
+expect_equal(
+  as_polars(mtcars) |>
+    filter(disp == max(disp), .by = cyl) |>
+    pull(mpg),
+  by_cyl |>
+    filter(disp == max(disp)) |>
+    pull(mpg)
 )
 
 expect_dim(
   as_polars(iris) |>
-    pl_group_by(Species) |>
-    pl_filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4),
+    group_by(Species) |>
+    filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4),
   c(123, 5)
+)
+
+expect_dim(
+  as_polars(iris) |>
+    filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4,
+           .by = Species),
+  c(123, 5)
+)
+
+expect_equal(
+  by_cyl |>
+    filter(disp == max(disp)) |>
+    attr("pl_grps"),
+  "cyl"
+)
+
+expect_equal(
+  by_cyl |>
+    filter(disp == max(disp)) |>
+    attr("maintain_grp_order"),
+  TRUE
 )
 
 foo <- pl$DataFrame(
@@ -167,14 +216,41 @@ foo <- pl$DataFrame(
 
 expect_dim(
   foo |>
-    pl_group_by(grp) |>
-    pl_filter(all(x)),
+    group_by(grp) |>
+    filter(all(x)),
   c(2, 2)
 )
 
 expect_dim(
   foo |>
-    pl_group_by(grp) |>
-    pl_filter(any(x)),
+    filter(all(x), .by = starts_with("g")),
+  c(2, 2)
+)
+
+expect_dim(
+  foo |>
+    group_by(grp) |>
+    filter(any(x)),
   c(4, 2)
 )
+
+expect_dim(
+  foo |>
+    filter(any(x), .by = starts_with("g")),
+  c(4, 2)
+)
+
+expect_equal(
+  foo |>
+    filter(all(x), .by = starts_with("g")) |>
+    attr("pl_grps"),
+  NULL
+)
+
+expect_equal(
+  foo |>
+    filter(all(x), .by = starts_with("g")) |>
+    attr("maintain_grp_order"),
+  NULL
+)
+

@@ -55,7 +55,7 @@
 #' @return Writes a `.parquet` file with the content of the LazyFrame.
 #' @export
 #'
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' \dontrun{
 #' # This is an example workflow where sink_parquet() is not very useful because
 #' # the data would fit in memory. It simply is an example of using it at the
@@ -72,8 +72,8 @@
 #' # In a new R session, we could read this file as a LazyFrame, do some operations,
 #' # and write it to a parquet file without ever collecting it in the R session:
 #' polars::pl$scan_csv(file_csv) |>
-#'   pl_filter(cyl %in% c(4, 6), mpg > 22) |>
-#'   pl_mutate(
+#'   filter(cyl %in% c(4, 6), mpg > 22) |>
+#'   mutate(
 #'     hp_gear_ratio = hp / gear
 #'   ) |>
 #'   sink_parquet(path = file_parquet)
@@ -102,19 +102,19 @@ sink_parquet <- function(
   }
 
   .data$sink_parquet(
-    path,
-    compression = "zstd",
-    compression_level = 3,
-    statistics = FALSE,
-    row_group_size = NULL,
-    data_pagesize_limit = NULL,
-    maintain_order = TRUE,
-    type_coercion = TRUE,
-    predicate_pushdown = TRUE,
-    projection_pushdown = TRUE,
-    simplify_expression = TRUE,
-    slice_pushdown = TRUE,
-    no_optimization = FALSE
+    path = path,
+    compression = compression,
+    compression_level = compression_level,
+    statistics = statistics,
+    row_group_size = row_group_size,
+    data_pagesize_limit = data_pagesize_limit,
+    maintain_order = maintain_order,
+    type_coercion = type_coercion,
+    predicate_pushdown = predicate_pushdown,
+    projection_pushdown = projection_pushdown,
+    simplify_expression = simplify_expression,
+    slice_pushdown = slice_pushdown,
+    no_optimization = no_optimization
   )
 
 }

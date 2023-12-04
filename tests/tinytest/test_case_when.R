@@ -9,40 +9,40 @@ test <- pl$DataFrame(
 
 expect_equal(
   test |>
-    pl_mutate(
+    mutate(
       y = case_when(
         x1 == 'a' ~ "foo",
         x2 == 3 ~ "bar",
         .default = "hi there"
       )
     ) |>
-    pl_pull(y),
+    pull(y),
   c("foo", "foo", "hi there", "foo", "hi there")
 )
 
 expect_equal(
   test |>
-    pl_mutate(
+    mutate(
       y = case_when(
         x1 %in% 'a' ~ "foo",
         x2 == 3 ~ "bar",
         .default = "hi there"
       )
     ) |>
-    pl_pull(y),
+    pull(y),
   c("foo", "foo", "hi there", "foo", "hi there")
 )
 
 expect_equal(
   test |>
-    pl_mutate(
+    mutate(
       y = case_when(
         x1 %in% 'a' & x2 == 2 ~ "foo",
         x2 == 3 ~ "bar",
         .default = "hi there"
       )
     ) |>
-    pl_pull(y),
+    pull(y),
   c("foo", "hi there", "hi there", "bar", "hi there")
 )
 
@@ -50,12 +50,12 @@ expect_equal(
 
 expect_equal(
   test |>
-    pl_mutate(
+    mutate(
       y = case_when(
         x1 == 'a' ~ "foo",
         x2 == 3 ~ "bar"
       )
     ) |>
-    pl_pull(y),
+    pull(y),
   c("foo", "foo", NA, "foo", NA)
 )

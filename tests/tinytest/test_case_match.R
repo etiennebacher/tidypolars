@@ -9,7 +9,7 @@ test <- pl$DataFrame(
 
 expect_equal(
   test |>
-    pl_mutate(
+    mutate(
       y = case_match(
         x1,
         'a' ~ "foo",
@@ -17,32 +17,32 @@ expect_equal(
         .default = "hi there"
       )
     ) |>
-    pl_pull(y),
+    pull(y),
   c("foo", "foo", "bar", "foo", "hi there")
 )
 
 expect_equal(
   test |>
-    pl_mutate(
+    mutate(
       y = case_match(
         x1,
         c('a', 'c') ~ "foo",
         'b' ~ "bar"
       )
     ) |>
-    pl_pull(y),
+    pull(y),
   c("foo", "foo", "bar", "foo", "foo")
 )
 
 expect_equal(
   test |>
-    pl_mutate(
+    mutate(
       y = case_match(
         x2,
         1:3 ~ "foo",
         .default = "bar"
       )
     ) |>
-    pl_pull(y),
+    pull(y),
   c("foo", "foo", "bar", "foo", "foo")
 )

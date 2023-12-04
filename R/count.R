@@ -1,58 +1,87 @@
 #' Count the observations in each group
 #'
-#' @param .data A Polars Data/LazyFrame
-#' @inheritParams pl_select
+#' @param x A Polars Data/LazyFrame
+#' @inheritParams select.DataFrame
 #' @param sort If `TRUE`, will show the largest groups at the top.
 #' @param name Name of the new column.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' test <- polars::pl$DataFrame(mtcars)
-#' pl_count(test, cyl)
+#' count(test, cyl)
 #'
-#' pl_count(test, cyl, am)
+#' count(test, cyl, am)
 #'
-#' pl_count(test, cyl, am, sort = TRUE, name = "count")
+#' count(test, cyl, am, sort = TRUE, name = "count")
 #'
-#' pl_add_count(test, cyl, am, sort = TRUE, name = "count")
+#' add_count(test, cyl, am, sort = TRUE, name = "count")
 
-pl_count <- function(.data, ..., sort = FALSE, name = "n") {
-  check_polars_data(.data)
-  vars <- tidyselect_dots(.data, ...)
-  vars <- c(attributes(.data)$pl_grps, vars)
-  count_(.data, vars, sort = sort, name = name, new_col = FALSE)
+count.DataFrame <- function(x, ..., sort = FALSE, name = "n") {
+  check_polars_data(x)
+
+  grps <- attributes(x)$pl_grps
+  mo <- attributes(x)$maintain_grp_order
+  is_grouped <- !is.null(grps)
+
+  vars <- tidyselect_dots(x, ...)
+  vars <- c(grps, vars)
+  out <- count_(x, vars, sort = sort, name = name, new_col = FALSE)
+
+  if (is_grouped) {
+    group_by(out, grps, maintain_order = mo)
+  } else {
+    out
+  }
 }
 
+#' @rdname count.DataFrame
+#' @export
+count.LazyFrame <- count.DataFrame
 
-#' @rdname pl_count
+#' @rdname count.DataFrame
 #' @export
 
-pl_add_count <- function(.data, ..., sort = FALSE, name = "n") {
-  check_polars_data(.data)
-  vars <- tidyselect_dots(.data, ...)
-  vars <- c(attributes(.data)$pl_grps, vars)
-  count_(.data, vars, sort = sort, name = name, new_col = TRUE)
+add_count.DataFrame <- function(x, ..., sort = FALSE, name = "n") {
+  check_polars_data(x)
+
+  grps <- attributes(x)$pl_grps
+  mo <- attributes(x)$maintain_grp_order
+  is_grouped <- !is.null(grps)
+
+  vars <- tidyselect_dots(x, ...)
+  vars <- c(grps, vars)
+  out <- count_(x, vars, sort = sort, name = name, new_col = TRUE)
+
+  if (is_grouped) {
+    group_by(out, grps, maintain_order = mo)
+  } else {
+    out
+  }
 }
 
-count_ <- function(.data, vars, sort, name, new_col = FALSE) {
+#' @rdname count.DataFrame
+#' @export
+add_count.LazyFrame <- add_count.DataFrame
+
+count_ <- function(x, vars, sort, name, new_col = FALSE) {
 
   if (isTRUE(new_col)) {
     if (length(vars) == 0) {
-      out <- .data$with_columns(
+      out <- x$with_columns(
         pl$count()$alias(name)
       )
     } else {
-      out <- .data$with_columns(
+      out <- x$with_columns(
         pl$count()$alias(name)$over(vars)
       )
     }
   } else {
     if (length(vars) == 0) {
-      out <- .data$select(
+      out <- x$select(
         pl$count()$alias(name)
       )
     } else {
-      out <- .data$groupby(vars, maintain_order = FALSE)$agg(
+      out <- x$group_by(vars, maintain_order = FALSE)$agg(
         pl$count()$alias(name)
       )
     }
