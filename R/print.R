@@ -6,7 +6,7 @@
 #' @export
 #' @noRd
 
-print.DataFrame <- function(x, ...) { # nocov start
+print.RPolarsDataFrame <- function(x, ...) { # nocov start
   grps <- attributes(x)$pl_grps
   is_grouped <- !is.null(grps)
   mo <- attributes(x)$maintain_grp_order %||% FALSE

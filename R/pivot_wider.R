@@ -17,7 +17,7 @@
 #'   new columns. Note that the type of this value will be applied to new columns.
 #'   For example, if you provide a character value to fill numeric columns, then
 #'   all these columns will be converted to character.
-#' @inheritParams slice_tail.DataFrame
+#' @inheritParams slice_tail.RPolarsDataFrame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -33,7 +33,7 @@
 #' pl_fish_encounters |>
 #'   pivot_wider(names_from = station, values_from = seen, values_fill = "a")
 
-pivot_wider.DataFrame <- function(data, ..., id_cols, names_from, values_from,
+pivot_wider.RPolarsDataFrame <- function(data, ..., id_cols, names_from, values_from,
                                   names_prefix = NULL, names_sep = NULL,
                                   values_fill = NULL) {
 
@@ -92,6 +92,6 @@ pivot_wider.DataFrame <- function(data, ..., id_cols, names_from, values_from,
   }
 }
 
-#' @rdname pivot_wider.DataFrame
+#' @rdname pivot_wider.RPolarsDataFrame
 #' @export
-pivot_wider.LazyFrame <- pivot_wider.DataFrame
+pivot_wider.RPolarsLazyFrame <- pivot_wider.RPolarsDataFrame

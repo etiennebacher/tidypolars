@@ -10,7 +10,7 @@
 #' of the variables in the data. If multiple expressions are included, they
 #' will be combined with the & operator. Only rows for which all conditions
 #' evaluate to `TRUE` are kept.
-#' @inheritParams mutate.DataFrame
+#' @inheritParams mutate.RPolarsDataFrame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -40,7 +40,7 @@
 #' pl_iris |>
 #'   filter(Sepal.Length == max(Sepal.Length), .by = Species)
 
-filter.DataFrame <- function(.data, ..., .by = NULL) {
+filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
   check_polars_data(.data)
 
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
@@ -87,6 +87,6 @@ filter.DataFrame <- function(.data, ..., .by = NULL) {
   }
 }
 
-#' @rdname filter.DataFrame
+#' @rdname filter.RPolarsDataFrame
 #' @export
-filter.LazyFrame <- filter.DataFrame
+filter.RPolarsLazyFrame <- filter.RPolarsDataFrame

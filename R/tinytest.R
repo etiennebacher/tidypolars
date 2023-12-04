@@ -3,7 +3,7 @@
 #' @export
 #' @keywords internal
 expect_colnames <- function(x, y) {
-  if (inherits(x, "LazyFrame")) {
+  if (inherits(x, "RPolarsLazyFrame")) {
     x <- x$collect()
   }
   res <- identical(x$columns, y)
@@ -18,7 +18,7 @@ expect_colnames <- function(x, y) {
 #' @export
 #' @keywords internal
 expect_dim <- function(x, y) {
-  if (inherits(x, "LazyFrame")) {
+  if (inherits(x, "RPolarsLazyFrame")) {
     x <- x$collect()
   }
   res <- identical(dim(x), y)
@@ -33,10 +33,10 @@ expect_dim <- function(x, y) {
 #' @export
 #' @keywords internal
 expect_equal <- function(x, y, ...) {
-  if (inherits(x, "DataFrame")) {
+  if (inherits(x, "RPolarsDataFrame")) {
     x <- x$to_data_frame()
   }
-  if (inherits(y, "DataFrame")) {
+  if (inherits(y, "RPolarsDataFrame")) {
     y <- y$to_data_frame()
   }
   tinytest::expect_equal(
@@ -51,10 +51,10 @@ expect_equal <- function(x, y, ...) {
 #' @export
 #' @keywords internal
 expect_equal_lazy <- function(x, y, ...) {
-  if (inherits(x, "LazyFrame")) {
+  if (inherits(x, "RPolarsLazyFrame")) {
     x <- x$collect()$to_data_frame()
   }
-  if (inherits(y, "LazyFrame")) {
+  if (inherits(y, "RPolarsLazyFrame")) {
     y <- y$collect()$to_data_frame()
   }
   dots <- get_dots(...)

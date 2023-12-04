@@ -9,7 +9,7 @@
 #'  the start of each variable name.
 #' @param values_to A string specifying the name of the column to create from the
 #'  data stored in cell values.
-#' @inheritParams slice_tail.DataFrame
+#' @inheritParams slice_tail.RPolarsDataFrame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -30,7 +30,7 @@
 #'     values_to = "rank",
 #'   )
 
-pivot_longer.DataFrame <- function(data, cols, ..., names_to = "name",
+pivot_longer.RPolarsDataFrame <- function(data, cols, ..., names_to = "name",
                                    names_prefix = NULL,
                                    values_to = "value") {
 
@@ -59,6 +59,6 @@ pivot_longer.DataFrame <- function(data, cols, ..., names_to = "name",
   out
 }
 
-#' @rdname pivot_longer.DataFrame
+#' @rdname pivot_longer.RPolarsDataFrame
 #' @export
-pivot_longer.LazyFrame <- pivot_longer.DataFrame
+pivot_longer.RPolarsLazyFrame <- pivot_longer.RPolarsDataFrame

@@ -4,7 +4,7 @@
 #' for completing missing combinations of data.
 #'
 #' @param data A Polars Data/LazyFrame
-#' @inheritParams select.DataFrame
+#' @inheritParams select.RPolarsDataFrame
 #' @param fill A named list that for each variable supplies a single value to
 #' use instead of `NA` for missing combinations.
 #'
@@ -31,7 +31,7 @@
 #'   group_by(group, maintain_order = TRUE) |>
 #'   complete(item_id, item_name)
 
-complete.DataFrame <- function(data, ..., fill = list()) {
+complete.RPolarsDataFrame <- function(data, ..., fill = list()) {
 
   check_polars_data(data)
   vars <- tidyselect_dots(data, ...)
@@ -72,6 +72,6 @@ complete.DataFrame <- function(data, ..., fill = list()) {
 
 }
 
-#' @rdname complete.DataFrame
+#' @rdname complete.RPolarsDataFrame
 #' @export
-complete.LazyFrame <- complete.DataFrame
+complete.RPolarsLazyFrame <- complete.RPolarsDataFrame

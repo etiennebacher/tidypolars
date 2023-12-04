@@ -16,7 +16,7 @@
 #' slice_sample(pl_test, n = 5)
 #' slice_sample(pl_test, prop = 0.1)
 
-slice_tail.DataFrame <- function(.data, ..., n, by = NULL) {
+slice_tail.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
   check_polars_data(.data)
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
@@ -38,14 +38,14 @@ slice_tail.DataFrame <- function(.data, ..., n, by = NULL) {
   }
 }
 
-#' @rdname slice_tail.DataFrame
+#' @rdname slice_tail.RPolarsDataFrame
 #' @export
-slice_tail.LazyFrame <- slice_tail.DataFrame
+slice_tail.RPolarsLazyFrame <- slice_tail.RPolarsDataFrame
 
-#' @rdname slice_tail.DataFrame
+#' @rdname slice_tail.RPolarsDataFrame
 #' @export
 
-slice_head.DataFrame <- function(.data, ..., n, by = NULL) {
+slice_head.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
   check_polars_data(.data)
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
@@ -67,19 +67,19 @@ slice_head.DataFrame <- function(.data, ..., n, by = NULL) {
   }
 }
 
-#' @rdname slice_tail.DataFrame
+#' @rdname slice_tail.RPolarsDataFrame
 #' @export
-slice_head.LazyFrame <- slice_head.DataFrame
+slice_head.RPolarsLazyFrame <- slice_head.RPolarsDataFrame
 
 
 #' @param prop Proportion of rows to select. Cannot be used with `n`.
 #' @param replace Perform the sampling with replacement (`TRUE`) or without
 #' (`FALSE`).
 #'
-#' @rdname slice_tail.DataFrame
+#' @rdname slice_tail.RPolarsDataFrame
 #' @export
 
-slice_sample.DataFrame <- function(.data, ..., n = NULL, prop = NULL, replace = FALSE, by = NULL) {
+slice_sample.RPolarsDataFrame <- function(.data, ..., n = NULL, prop = NULL, replace = FALSE, by = NULL) {
   check_polars_data(.data)
 
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())

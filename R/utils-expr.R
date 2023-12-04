@@ -190,7 +190,7 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
             suppressWarnings({
               tr <- try(do.call(fn, list(args)), silent = TRUE)
             })
-            if (inherits(tr, "Expr")) {
+            if (inherits(tr, "RPolarsExpr")) {
               return(tr)
             } else {
               abort(

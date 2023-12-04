@@ -97,7 +97,7 @@ sink_parquet <- function(
     no_optimization = FALSE
   ) {
 
-  if (!inherits(.data, "LazyFrame")) {
+  if (!inherits(.data, "RPolarsLazyFrame")) {
     rlang::abort("`sink_parquet()` can only be used on a LazyFrame.")
   }
 
