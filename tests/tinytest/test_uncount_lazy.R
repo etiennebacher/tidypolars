@@ -5,7 +5,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-test <- pl$LazyFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
+test <- polars::pl$LazyFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
 
 expect_equal_lazy(
   uncount(test, n),

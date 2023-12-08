@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-test <- pl$DataFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
+test <- polars::pl$DataFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
 
 expect_equal(
   uncount(test, n),
