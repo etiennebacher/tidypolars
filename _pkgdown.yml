@@ -68,4 +68,5 @@ reference:
       - pivot_wider.DataFrame
       - replace_na.DataFrame
       - separate.DataFrame
+      - uncount.DataFrame
       - unite.DataFrame

@@ -19,6 +19,8 @@
 
 * Add support for arguments `names_prefix` and `names_sep` in `pivot_wider()`.
 
+* Add support for `tidyr::uncount()`.
+
 **Bug fixes**
 
 * `summarize()` no longer errors when `across(everything(), ...)` is used with
