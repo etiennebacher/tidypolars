@@ -13,7 +13,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' test <- pl$DataFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
+#' test <- polars::pl$DataFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
 #' test
 #'
 #' uncount(test, n)
