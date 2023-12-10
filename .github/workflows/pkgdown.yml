@@ -31,11 +31,15 @@ jobs:
         with:
           use-public-rspm: true
 
-      - name: Dependencies
+      - name: Install polars
         run: |
           install.packages("polars", repos = "https://rpolars.r-universe.dev")
-          install.packages(c("pkgdown", "rprojroot", "bench", "dplyr", "tidyr", "data.table"))
         shell: Rscript {0}
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::pkgdown, local::.
+          needs: website
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)
