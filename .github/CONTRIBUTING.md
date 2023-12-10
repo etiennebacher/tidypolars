@@ -30,8 +30,8 @@ possible, try to illustrate your proposal or the bug with a minimal
   [Markdown
   syntax](https://cran.r-project.org/web/packages/roxygen2/vignettes/markdown.html),
   for documentation.
-- If your PR is a user-visible change, you may add a bullet to the top
-  of `NEWS.md` describing the changes made. You may optionally add your
+- If your PR is a user-visible change, you may add a bullet point in
+  `NEWS.md` describing the changes made. You may optionally add your
   GitHub username, and links to relevant issue(s)/PR(s).
 
 ### How to add support for an R function in `tidypolars`?
@@ -146,5 +146,5 @@ test_pl |>
     ## │ dac ┆ true        │
     ## └─────┴─────────────┘
 
-Finally, the only left to do is to add some tests in the
+Finally, the only thing left to do is to add some tests in the
 `tests/tinytest` folder.
