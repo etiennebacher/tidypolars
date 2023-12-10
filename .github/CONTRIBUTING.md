@@ -30,9 +30,6 @@ possible, try to illustrate your proposal or the bug with a minimal
   [Markdown
   syntax](https://cran.r-project.org/web/packages/roxygen2/vignettes/markdown.html),
   for documentation.
-- tidypolars uses
-  [testthat](https://cran.r-project.org/package=testthat). Adding tests
-  to the PR makes it easier for me to merge your PR into the code base.
 - If your PR is a user-visible change, you may add a bullet to the top
   of `NEWS.md` describing the changes made. You may optionally add your
   GitHub username, and links to relevant issue(s)/PR(s).
