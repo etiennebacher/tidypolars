@@ -21,10 +21,16 @@
 
 * Add support for `tidyr::uncount()`.
 
+* All `*_join()` functions now work when `by` is a specification created by 
+  `dplyr::join_by()`. Notice that this is limited to equality joins for now.
+
 **Bug fixes**
 
 * `summarize()` no longer errors when `across(everything(), ...)` is used with
   `.by`.
+
+* All `*_join()` functions no longer error when a named vector is provided in 
+  the argument `by`.
 
 **Misc**
 
@@ -79,7 +85,7 @@
 
 * Faster tidy selection (#61).
 
-# tidypolars (0.3.0)
+# tidypolars 0.3.0
 
 `tidypolars` requires `polars` >= 0.10.0.
 
