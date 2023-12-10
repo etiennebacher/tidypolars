@@ -34,7 +34,7 @@ jobs:
       - name: Dependencies
         run: |
           install.packages("polars", repos = "https://rpolars.r-universe.dev")
-          install.packages(c("pkgdown", "bench", "dplyr", "tidyr", "data.table"))
+          install.packages(c("pkgdown", "rprojroot", "bench", "dplyr", "tidyr", "data.table"))
         shell: Rscript {0}
 
       - name: Build site
