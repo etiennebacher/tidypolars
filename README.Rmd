@@ -189,3 +189,9 @@ bench::mark(
 </details>
 
 
+## Contributing
+
+Did you find some errors in the documentation? Do you want `tidypolars` to support
+more functions?
+
+Take a look at the [contributing guide](https://tidypolars.etiennebacher.com/CONTRIBUTING.html)!
