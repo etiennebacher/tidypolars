@@ -22,12 +22,12 @@ expect_equal(
 
 expect_equal(
   uncount(test, 2),
-  pl$DataFrame(x = c("a", "a", "b", "b"), y = c(100, 100, 101, 101))
+  pl$DataFrame(x = c("a", "a", "b", "b"), y = c(100, 100, 101, 101), n = c(1, 1, 2, 2))
 )
 
 # with expression
 
 expect_equal(
-  uncount(test, 2),
-  pl$DataFrame(x = c("a", "a", "b"), y = c(100, 100, 101))
+  uncount(test, 2 / n),
+  pl$DataFrame(x = c("a", "a", "b"), y = c(100, 100, 101), n = c(1, 1, 2))
 )

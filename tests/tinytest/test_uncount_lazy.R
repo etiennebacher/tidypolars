@@ -26,14 +26,14 @@ expect_equal_lazy(
 
 expect_equal_lazy(
   uncount(test, 2),
-  pl$LazyFrame(x = c("a", "a", "b", "b"), y = c(100, 100, 101, 101))
+  pl$LazyFrame(x = c("a", "a", "b", "b"), y = c(100, 100, 101, 101), n = c(1, 1, 2, 2))
 )
 
 # with expression
 
 expect_equal_lazy(
-  uncount(test, 2),
-  pl$LazyFrame(x = c("a", "a", "b"), y = c(100, 100, 101))
+  uncount(test, 2 / n),
+  pl$LazyFrame(x = c("a", "a", "b"), y = c(100, 100, 101), n = c(1, 1, 2))
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
