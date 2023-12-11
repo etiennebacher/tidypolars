@@ -1,7 +1,8 @@
 #' @import rlang
 
 translate_dots <- function(.data, ..., env) {
-  dots <- enexprs(...)
+  dots <- enquos(...)
+  dots <- lapply(dots, quo_squash)
   new_vars <- c()
   out <- lapply(seq_along(dots), \(x) {
     tmp <- translate_expr(.data = .data, dots[[x]], new_vars = new_vars, env = env)

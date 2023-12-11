@@ -23,6 +23,11 @@
 
 * All `*_join()` functions now work when `by` is a specification created by 
   `dplyr::join_by()`. Notice that this is limited to equality joins for now.
+  
+* You can now use the "embrace" operator `{{ }}` to pass unquoted column names
+  (among other things) as arguments of custom functions. See the ["Programming
+  with dplyr" vignette](https://dplyr.tidyverse.org/dev/articles/programming.html)
+  for some examples.
 
 **Bug fixes**
 
