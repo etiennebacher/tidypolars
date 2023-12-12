@@ -6,6 +6,18 @@ pl_iris <- polars::pl$DataFrame(iris)
 # Basic ops: +, -, *, /
 
 expect_equal(
+  mutate(pl_iris, x = 1 + 1) |>
+    pull(x),
+  rep(2, 150)
+)
+
+expect_equal(
+  mutate(pl_iris, x = 1 + 1, foo = x + 1) |>
+    pull(x),
+  rep(2, 150)
+)
+
+expect_equal(
   mutate(pl_iris, x = Sepal.Width + Sepal.Length) |>
     pull(x),
   iris$Sepal.Width + iris$Sepal.Length

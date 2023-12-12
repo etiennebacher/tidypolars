@@ -42,6 +42,8 @@
 * All `*_join()` functions no longer error when a named vector is provided in 
   the argument `by`.
   
+* Expressions with values only are not named "literal" anymore.
+
 **Misc**
 
 * Simplify the procedure to support new functions.
