@@ -67,6 +67,7 @@
 <li><p>Add support for <code><a href="https://tidyr.tidyverse.org/reference/uncount.html" class="external-link">tidyr::uncount()</a></code>.</p></li>
 <li><p>All <code>*_join()</code> functions now work when <code>by</code> is a specification created by <code><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">dplyr::join_by()</a></code>. Notice that this is limited to equality joins for now.</p></li>
 <li><p>You can now use the “embrace” operator <code>{{ }}</code> to pass unquoted column names (among other things) as arguments of custom functions. See the <a href="https://dplyr.tidyverse.org/dev/articles/programming.html" class="external-link">“Programming with dplyr” vignette</a> for some examples.</p></li>
+<li><p><code><a href="../reference/bind_cols_polars.html">bind_cols_polars()</a></code> now works with two <code>LazyFrame</code>s, but not more.</p></li>
 </ul><p><strong>Bug fixes</strong></p>
 <ul><li><p><code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> no longer errors when <code>across(everything(), ...)</code> is used with <code>.by</code>.</p></li>
 <li><p>All <code>*_join()</code> functions no longer error when a named vector is provided in the argument <code>by</code>.</p></li>
