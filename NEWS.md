@@ -31,6 +31,9 @@
   
 * `bind_cols_polars()` now works with two `LazyFrame`s, but not more.
 
+* Support for `.env$` and `.data$` pronouns in expressions of `filter()`, 
+  `mutate()` and `summarize()`.
+
 **Bug fixes**
 
 * `summarize()` no longer errors when `across(everything(), ...)` is used with
@@ -38,7 +41,7 @@
 
 * All `*_join()` functions no longer error when a named vector is provided in 
   the argument `by`.
-
+  
 **Misc**
 
 * Simplify the procedure to support new functions.

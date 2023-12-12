@@ -18,6 +18,13 @@ translate_dots <- function(.data, ..., env) {
   names(out) <- names(dots)
 
   # across() returns a nested list
+  out <- lapply(out, function(x) {
+    if (is.list(x)) {
+      x
+    } else {
+      list(x)
+    }
+  })
   out <- unlist(out, recursive = FALSE, use.names = TRUE)
   out <- reorder_exprs(out)
   out
@@ -100,6 +107,17 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
 
         switch(
           name,
+          # .data$ -> consider the RHS of $ as a classic column name
+          # .env$ -> eval the RHS of $ in the caller env
+          "$" = {
+            first_term <- expr[[2]]
+            if (first_term == ".data") {
+              return(translate(expr[[3]]))
+            } else if (first_term == ".env") {
+              out <- tryCatch(eval_tidy(expr[[3]], env = caller_env()), error = identity)
+              return(out)
+            }
+          },
           "(" = {
             return(translate(expr[[2]]))
           },
@@ -344,6 +362,16 @@ reorder_exprs <- function(exprs) {
   names(lhs_vars) <- paste0("pool_vars_", seq_along(exprs))
 
   for (i in seq_along(exprs)) {
+    # "1 + 1" is of type "language" so I cannot transform the literal values
+    # as polars_constant in the translate() function.
+    # This is the last moment where I can do it.
+    if (typeof(exprs[[i]]) %in% c("character", "logical", "integer", "double")) {
+      if (!is.list(exprs)) {
+        exprs <- as.list(exprs)
+      }
+      exprs[[i]] <- pl$lit(exprs[[i]])
+    }
+
     if (i == 1) {
       lhs_vars[[1]] <- names(exprs)[i]
       next
