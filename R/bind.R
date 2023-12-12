@@ -95,9 +95,31 @@ concat_ <- function(..., how, .id = NULL) {
     })
   }
 
-  if (how == "diagonal") {
+  switch(
+    how,
+    "horizontal" = {
+      # TODO: provide a "name_repair" option
+      all_names <- unlist(lapply(dots, names), use.names = FALSE)
+      if (anyDuplicated(all_names) > 0) {
+        rlang::abort(
+          "`bind_cols_polars()` doesn't work when there are duplicated names across Data/LazyFrames.",
+          call = caller_env()
+        )
+      }
+
+      if (inherits(dots[[1]], "DataFrame")) {
+        return(pl$concat(dots, how = how))
+      } else {
+        if (length(dots) > 2) {
+          rlang::abort(
+            "`bind_cols_polars()` doesn't work with more than two LazyFrames.",
+            call = caller_env()
+          )
+        }
+        dots[[1]]$with_context(dots[[2]])$select(pl$all())
+      }
+    },
+    # default
     pl$concat(dots, how = how)
-  } else {
-    pl$concat(dots, how = how)
-  }
+  )
 }

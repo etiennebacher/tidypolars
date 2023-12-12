@@ -28,6 +28,8 @@
   (among other things) as arguments of custom functions. See the ["Programming
   with dplyr" vignette](https://dplyr.tidyverse.org/dev/articles/programming.html)
   for some examples.
+  
+* `bind_cols_polars()` now works with two `LazyFrame`s, but not more.
 
 **Bug fixes**
 

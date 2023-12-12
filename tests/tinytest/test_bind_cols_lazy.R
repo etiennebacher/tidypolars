@@ -1,12 +1,16 @@
+### [GENERATED AUTOMATICALLY] Update test_bind_cols.R instead.
+
+Sys.setenv('TIDYPOLARS_TEST' = TRUE)
+
 source("helpers.R")
 using("tidypolars")
 
 l <- list(
-  polars::pl$DataFrame(
+  polars::pl$LazyFrame(
     x = sample(letters, 20),
     y = sample(1:100, 20)
   ),
-  polars::pl$DataFrame(
+  polars::pl$LazyFrame(
     a = sample(letters, 20),
     z = sample(1:100, 20)
   )
@@ -18,16 +22,16 @@ expect_dim(
 )
 
 
-p1 <- pl$DataFrame(
+p1 <- pl$LazyFrame(
   x = sample(letters, 20),
   y = sample(1:100, 20)
 )
-p2 <- pl$DataFrame(
+p2 <- pl$LazyFrame(
   z = sample(letters, 20),
   w = sample(1:100, 20)
 )
 
-expect_equal(
+expect_equal_lazy(
   bind_cols_polars(p1, p2),
   bind_cols_polars(list(p1, p2))
 )
@@ -36,17 +40,17 @@ expect_equal(
 # for now, error if duplicated col names
 
 l2 <- list(
-  polars::pl$DataFrame(
+  polars::pl$LazyFrame(
     x = sample(letters, 20),
     y = sample(1:100, 20)
   ),
-  polars::pl$DataFrame(
+  polars::pl$LazyFrame(
     y = sample(letters, 20),
     z = sample(1:100, 20)
   )
 )
 
-expect_error(
+expect_error_lazy(
   bind_cols_polars(l2),
   "duplicated names"
 )
@@ -56,13 +60,13 @@ l3 <- list(
     x = sample(letters, 20),
     y = sample(1:100, 20)
   ),
-  polars::pl$DataFrame(
+  polars::pl$LazyFrame(
     y = sample(letters, 20),
     z = sample(1:100, 20)
   )
 )
 
-expect_error(
+expect_error_lazy(
   bind_cols_polars(l3),
   "must be either"
 )
@@ -72,14 +76,14 @@ expect_error(
 
 l4 <- append(
   l,
-  polars::pl$DataFrame(
+  polars::pl$LazyFrame(
     v = sample(letters, 20),
     w = sample(1:100, 20)
   )
 )
 
 if (Sys.getenv("TIDYPOLARS_TEST") == "TRUE") {
-  expect_error(
+  expect_error_lazy(
     bind_cols_polars(l4),
     "doesn't work with more than two"
   )
@@ -93,3 +97,5 @@ if (Sys.getenv("TIDYPOLARS_TEST") == "TRUE") {
 }
 
 
+
+Sys.setenv('TIDYPOLARS_TEST' = FALSE)
