@@ -33,6 +33,9 @@
 
 * Support for `.env$` and `.data$` pronouns in expressions of `filter()`, 
   `mutate()` and `summarize()`.
+  
+* Support named vector in the argument `pattern` of `str_replace_all()`, where
+  names are patterns and values are replacements.
 
 **Bug fixes**
 
