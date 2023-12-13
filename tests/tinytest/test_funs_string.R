@@ -237,6 +237,13 @@ expect_equal(
     pull(foo)
 )
 
+expect_equal(
+  mutate(test, foo = str_replace_all(x1, c("LL" = "ll", "( )" = "\\1\\1"))) |>
+    pull(foo),
+  mutate(test_df, foo = str_replace_all(x1, c("LL" = "ll", "( )" = "\\1\\1"))) |>
+    pull(foo)
+)
+
 # TODO: https://github.com/pola-rs/polars/issues/12110
 # expect_equal(
 #   mutate(test, foo = str_replace_all(x1, "[aeiou]", toupper)) |>
