@@ -53,11 +53,14 @@ bind_rows_polars <- function(..., .id = NULL) {
 
 # bind_* functions are not generics: https://github.com/tidyverse/dplyr/issues/6905
 
-bind_cols_polars <- function(...) {
-  concat_(..., how = "horizontal")
+bind_cols_polars <- function(
+    ...,
+    .name_repair = c("unique", "universal", "check_unique", "minimal")
+  ) {
+  concat_(..., how = "horizontal", .name_repair = .name_repair)
 }
 
-concat_ <- function(..., how, .id = NULL) {
+concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
   dots <- rlang::list2(...)
   if (length(dots) == 1 && rlang::is_bare_list(dots[[1]])) {
     dots <- dots[[1]]
@@ -101,9 +104,34 @@ concat_ <- function(..., how, .id = NULL) {
       # TODO: provide a "name_repair" option
       all_names <- unlist(lapply(dots, names), use.names = FALSE)
       if (anyDuplicated(all_names) > 0) {
-        rlang::abort(
-          "`bind_cols_polars()` doesn't work when there are duplicated names across Data/LazyFrames.",
-          call = caller_env()
+        dupes <- get_dupes(all_names)
+        switch(
+          .name_repair,
+          "check_unique" = {
+              msg <- make_dupes_msg(dupes)
+              rlang::abort(
+                c(
+                  "Names must be unique.",
+                  "x" = "These names are duplicated (`variable` (locations)):",
+                  " " = msg
+                ),
+                call = caller_env()
+              )
+          },
+          "minimal" = {
+            rlang::abort(
+              c(
+                "Argument `.name_repair = \"minimal\"` doesn't work on Polars Data/LazyFrames.",
+                "i" = "Either provide unique names or use `.name_repair = \"universal\"`."
+              ),
+              call = caller_env()
+            )
+          },
+          "universal" = {
+            dupes <- names(dupes)
+            vctrs::vec_as_names(dupes, repair = "universal")
+            browser()
+          }
         )
       }
 
