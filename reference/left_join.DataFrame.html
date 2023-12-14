@@ -163,7 +163,16 @@ the keys.</p>
 <dd><p>Variables to join by. If <code>NULL</code>, the default, <code>*_join()</code> will
 perform a natural join, using all variables in common across <code>x</code> and <code>y</code>. A
 message lists the variables so that you can check they're correct; suppress
-the message by supplying <code>by</code> explicitly.</p></dd>
+the message by supplying <code>by</code> explicitly.</p>
+<p><code>by</code> can take a character vector, like <code>c("x", "y")</code> if <code>x</code> and <code>y</code> are
+in both datasets. To join on variables that don't have the same name, use
+equalities in the character vector, like <code>c("x1" = "x2", "y")</code>. If you use
+a character vector, the join can only be done using strict equality.</p>
+<p>Finally, <code>by</code> can be a specification created by <code><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">dplyr::join_by()</a></code>. Contrary
+to the input as character vector shown above, <code><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by()</a></code> uses unquoted column
+names, e.g <code>join_by(x1 == x2, y)</code>. It also uses equality and inequality
+operators <code>==</code>, <code>&gt;</code> and similar. <strong>For now, only equality operators are
+supported</strong>.</p></dd>
 
 
 <dt>copy, keep</dt>
@@ -185,20 +194,20 @@ character vector of length 2.</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  y1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">test2</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  y2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  z2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">7</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">test</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 3)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┬─────┐</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ y   ┆ z   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ y1  ┆ z   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ --- │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64 ┆ f64 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═════╡</span>
@@ -210,7 +219,7 @@ character vector of length 2.</p></dd>
 <span class="r-in"><span><span class="va">test2</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 3)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┬─────┐</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ y   ┆ z2  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ y2  ┆ z2  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ --- │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64 ┆ f64 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═════╡</span>
@@ -219,11 +228,25 @@ character vector of length 2.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 4.0 ┆ 7.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴─────┘</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># default is to use common columns, here "x" only</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">test</span>, <span class="va">test2</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Joining by `x`, `y`</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Joining by `x`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 5)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┬─────┬──────┬──────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ y1  ┆ z   ┆ y2   ┆ z2   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ --- ┆ ---  ┆ ---  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64 ┆ f64 ┆ f64  ┆ f64  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═════╪══════╪══════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 1.0 ┆ 1.0 ┆ 1.0  ┆ 4.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2.0 ┆ 2.0 ┆ 2.0 ┆ 2.0  ┆ 5.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 3.0 ┆ 3.0 ┆ 3.0 ┆ null ┆ null │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴─────┴──────┴──────┘</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># we can specify the columns on which to join with join_by()...</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">test</span>, <span class="va">test2</span>, by <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y1</span> <span class="op">==</span> <span class="va">y2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 4)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┬─────┬──────┐</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ y   ┆ z   ┆ z2   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ y1  ┆ z   ┆ z2   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ --- ┆ ---  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64 ┆ f64 ┆ f64  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═════╪══════╡</span>
@@ -232,50 +255,37 @@ character vector of length 2.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 3.0 ┆ 3.0 ┆ 3.0 ┆ null │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴─────┴──────┘</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">test</span>, <span class="va">test2</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Joining by `x`, `y`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (2, 4)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┬─────┬─────┐</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ y   ┆ z   ┆ z2  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ --- ┆ --- │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64 ┆ f64 ┆ f64 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═════╪═════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 1.0 ┆ 1.0 ┆ 4.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2.0 ┆ 2.0 ┆ 2.0 ┆ 5.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴─────┴─────┘</span>
+<span class="r-in"><span><span class="co"># ... or with a character vector</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">test</span>, <span class="va">test2</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y1"</span> <span class="op">=</span> <span class="st">"y2"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 4)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┬─────┬──────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ y1  ┆ z   ┆ z2   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ --- ┆ ---  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64 ┆ f64 ┆ f64  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═════╪══════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 1.0 ┆ 1.0 ┆ 4.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2.0 ┆ 2.0 ┆ 2.0 ┆ 5.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 3.0 ┆ 3.0 ┆ 3.0 ┆ null │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴─────┴──────┘</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">full_join</a></span><span class="op">(</span><span class="va">test</span>, <span class="va">test2</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Joining by `x`, `y`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (4, 4)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┬──────┬──────┐</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ y   ┆ z    ┆ z2   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ ---  ┆ ---  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64 ┆ f64  ┆ f64  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪══════╪══════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 1.0 ┆ 1.0  ┆ 4.0  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2.0 ┆ 2.0 ┆ 2.0  ┆ 5.0  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 4.0 ┆ null ┆ 7.0  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 3.0 ┆ 3.0 ┆ 3.0  ┆ null │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴──────┴──────┘</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Show how the arg 'suffix' works:</span></span></span>
+<span class="r-in"><span><span class="co"># we can customize the suffix of common column names not used to join</span></span></span>
 <span class="r-in"><span><span class="va">test2</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  y1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">7</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">test</span>, <span class="va">test2</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"_left"</span>, <span class="st">"_right"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 4)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┬────────┬─────────┐</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ y   ┆ z_left ┆ z_right │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ ---    ┆ ---     │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64 ┆ f64    ┆ f64     │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪════════╪═════════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 1.0 ┆ 1.0    ┆ 4.0     │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2.0 ┆ 2.0 ┆ 2.0    ┆ 5.0     │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 3.0 ┆ 3.0 ┆ 3.0    ┆ null    │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴────────┴─────────┘</span>
+<span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">test</span>, <span class="va">test2</span>, by <span class="op">=</span> <span class="st">"x"</span>, suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"_left"</span>, <span class="st">"_right"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 5)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────────┬────────┬──────────┬─────────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ y1_left ┆ z_left ┆ y1_right ┆ z_right │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ ---     ┆ ---    ┆ ---      ┆ ---     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64     ┆ f64    ┆ f64      ┆ f64     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════════╪════════╪══════════╪═════════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 1.0     ┆ 1.0    ┆ 1.0      ┆ 4.0     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2.0 ┆ 2.0     ┆ 2.0    ┆ 2.0      ┆ 5.0     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 3.0 ┆ 3.0     ┆ 3.0    ┆ null     ┆ null    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────────┴────────┴──────────┴─────────┘</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

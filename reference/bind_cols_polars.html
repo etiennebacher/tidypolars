@@ -61,7 +61,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bind_cols_polars</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bind_cols_polars</span><span class="op">(</span><span class="va">...</span>, .name_repair <span class="op">=</span> <span class="st">"unique"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -71,6 +71,11 @@
 either be a Data/LazyFrame, or a list of Data/LazyFrames. Columns are matched
 by name. All Data/LazyFrames must have the same number of rows and there
 mustn't be duplicated column names.</p></dd>
+
+
+<dt>.name_repair</dt>
+<dd><p>Can be <code>"unique"</code>, <code>"universal"</code>, <code>"check_unique"</code>,
+<code>"minimal"</code>. See <code><a href="https://vctrs.r-lib.org/reference/vec_as_names.html" class="external-link">vctrs::vec_as_names()</a></code> for the explanations for each value.</p></dd>
 
 </dl></div>
 
@@ -92,15 +97,15 @@ mustn't be duplicated column names.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ --- ┆ --- │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ str ┆ i32 ┆ str ┆ i32 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═════╪═════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 47  ┆ m   ┆ 10  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ s   ┆ 25  ┆ z   ┆ 7   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ w   ┆ 58  ┆ j   ┆ 21  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ i   ┆ 95  ┆ c   ┆ 66  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ q   ┆ 52  ┆ u   ┆ 100 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ t   ┆ 3   ┆ d   ┆ 14  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ n   ┆ 59  ┆ b   ┆ 29  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ i   ┆ 75  ┆ y   ┆ 81  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …   ┆ …   ┆ …   ┆ …   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ c   ┆ 52  ┆ g   ┆ 64  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ h   ┆ 80  ┆ f   ┆ 60  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ u   ┆ 18  ┆ q   ┆ 38  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ e   ┆ 62  ┆ h   ┆ 24  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ h   ┆ 83  ┆ m   ┆ 94  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ y   ┆ 54  ┆ a   ┆ 97  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f   ┆ 39  ┆ s   ┆ 55  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ z   ┆ 93  ┆ l   ┆ 63  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴─────┴─────┘</span>
 <span class="r-in"><span><span class="fu">bind_cols_polars</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (20, 4)</span>
@@ -109,15 +114,15 @@ mustn't be duplicated column names.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ --- ┆ --- │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ str ┆ i32 ┆ str ┆ i32 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═════╪═════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 47  ┆ m   ┆ 10  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ s   ┆ 25  ┆ z   ┆ 7   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ w   ┆ 58  ┆ j   ┆ 21  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ i   ┆ 95  ┆ c   ┆ 66  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ q   ┆ 52  ┆ u   ┆ 100 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ t   ┆ 3   ┆ d   ┆ 14  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ n   ┆ 59  ┆ b   ┆ 29  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ i   ┆ 75  ┆ y   ┆ 81  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …   ┆ …   ┆ …   ┆ …   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ c   ┆ 52  ┆ g   ┆ 64  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ h   ┆ 80  ┆ f   ┆ 60  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ u   ┆ 18  ┆ q   ┆ 38  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ e   ┆ 62  ┆ h   ┆ 24  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ h   ┆ 83  ┆ m   ┆ 94  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ y   ┆ 54  ┆ a   ┆ 97  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f   ┆ 39  ┆ s   ┆ 55  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ z   ┆ 93  ┆ l   ┆ 63  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴─────┴─────┘</span>
 </code></pre></div>
     </div>
