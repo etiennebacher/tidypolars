@@ -31,6 +31,8 @@
   
 * `bind_cols_polars()` now works with two `LazyFrame`s, but not more.
 
+* Add support for argument `.name_repair` in `bind_cols_polars()` (#74).
+
 * Support for `.env$` and `.data$` pronouns in expressions of `filter()`, 
   `mutate()` and `summarize()`.
   

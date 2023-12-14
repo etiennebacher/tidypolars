@@ -25,7 +25,8 @@ Imports:
     polars (>= 0.11.0),
     rlang,
     tidyr,
-    tidyselect
+    tidyselect,
+    vctrs
 Suggests: 
     bench,
     data.table,
