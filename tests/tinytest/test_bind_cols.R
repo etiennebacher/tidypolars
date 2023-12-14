@@ -32,25 +32,6 @@ expect_equal(
   bind_cols_polars(list(p1, p2))
 )
 
-
-# for now, error if duplicated col names
-
-l2 <- list(
-  polars::pl$DataFrame(
-    x = sample(letters, 20),
-    y = sample(1:100, 20)
-  ),
-  polars::pl$DataFrame(
-    y = sample(letters, 20),
-    z = sample(1:100, 20)
-  )
-)
-
-expect_error(
-  bind_cols_polars(l2),
-  "duplicated names"
-)
-
 l3 <- list(
   data.frame(
     x = sample(letters, 20),
@@ -93,3 +74,53 @@ if (Sys.getenv("TIDYPOLARS_TEST") == "TRUE") {
 }
 
 
+# arg ".name_repair"
+
+l5 <- list(
+  pl$DataFrame(a = 1, x = 2, y = 3),
+  pl$DataFrame(z = 1, x = 2, y = 3)
+)
+
+options(rlib_message_verbosity = "quiet")
+
+expect_equal(
+  names(bind_cols_polars(l5)),
+  c("a", "x...2", "y...3", "z", "x...5", "y...6")
+)
+
+expect_equal(
+  names(bind_cols_polars(l5, .name_repair = "universal")),
+  c("a", "x...2", "y...3", "z", "x...5", "y...6")
+)
+
+expect_error(
+  bind_cols_polars(l5, .name_repair = "check_unique"),
+  "Names must be unique"
+)
+
+expect_error(
+  bind_cols_polars(l5, .name_repair = "minimal"),
+  "Either provide unique names or use"
+)
+
+expect_error(
+  bind_cols_polars(l5, .name_repair = "blahblah"),
+  "must be one of"
+)
+
+l6 <- list(
+  pl$DataFrame(x = 1)$rename(list(" " = "x")),
+  pl$DataFrame(x = 1)$rename(list(" " = "x"))
+)
+
+expect_equal(
+  names(bind_cols_polars(l6)),
+  c(" ...1", " ...2")
+)
+
+expect_equal(
+  names(bind_cols_polars(l6, .name_repair = "universal")),
+  c("....1", "....2")
+)
+
+options(rlib_message_verbosity = "default")
