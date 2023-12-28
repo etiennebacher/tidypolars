@@ -26,7 +26,7 @@
 #' # using expressions
 #' uncount(test, 2 / n)
 
-uncount.DataFrame <- function(data, weights, ..., .remove = TRUE, .id = NULL) {
+uncount.RPolarsDataFrame <- function(data, weights, ..., .remove = TRUE, .id = NULL) {
 
   check_polars_data(data)
   weights_quo <- enquo(weights)
@@ -45,6 +45,6 @@ uncount.DataFrame <- function(data, weights, ..., .remove = TRUE, .id = NULL) {
   out
 }
 
-#' @rdname uncount.DataFrame
+#' @rdname uncount.RPolarsDataFrame
 #' @export
-uncount.LazyFrame <- uncount.DataFrame
+uncount.RPolarsLazyFrame <- uncount.RPolarsDataFrame

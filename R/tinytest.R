@@ -21,7 +21,7 @@ expect_dim <- function(x, y) {
   if (inherits(x, "RPolarsLazyFrame")) {
     x <- x$collect()
   }
-  res <- identical(dim(x), y)
+  res <- all.equal(dim(x), y)
   tinytest::tinytest(
     result = res,
     call = sys.call(sys.parent(1))

@@ -29,44 +29,44 @@ reference:
     desc: |
       Functions coming from `dplyr`
     contents:
-      - add_count.DataFrame
-      - anti_join.DataFrame
-      - arrange.DataFrame
+      - add_count.RPolarsDataFrame
+      - anti_join.RPolarsDataFrame
+      - arrange.RPolarsDataFrame
       - bind_cols_polars
       - bind_rows_polars
-      - collect.LazyFrame
-      - count.DataFrame
-      - cross_join.DataFrame
-      - distinct.DataFrame
-      - filter.DataFrame
-      - full_join.DataFrame
-      - group_by.DataFrame
-      - inner_join.DataFrame
-      - left_join.DataFrame
-      - mutate.DataFrame
-      - pull.DataFrame
-      - relocate.DataFrame
-      - rename.DataFrame
-      - rename_with.DataFrame
-      - right_join.DataFrame
-      - select.DataFrame
-      - semi_join.DataFrame
-      - separate.DataFrame
-      - slice_head.DataFrame
-      - slice_tail.DataFrame
-      - slice_sample.DataFrame
-      - summarize.DataFrame
-      - ungroup.DataFrame
+      - collect.RPolarsLazyFrame
+      - count.RPolarsDataFrame
+      - cross_join.RPolarsDataFrame
+      - distinct.RPolarsDataFrame
+      - filter.RPolarsDataFrame
+      - full_join.RPolarsDataFrame
+      - group_by.RPolarsDataFrame
+      - inner_join.RPolarsDataFrame
+      - left_join.RPolarsDataFrame
+      - mutate.RPolarsDataFrame
+      - pull.RPolarsDataFrame
+      - relocate.RPolarsDataFrame
+      - rename.RPolarsDataFrame
+      - rename_with.RPolarsDataFrame
+      - right_join.RPolarsDataFrame
+      - select.RPolarsDataFrame
+      - semi_join.RPolarsDataFrame
+      - separate.RPolarsDataFrame
+      - slice_head.RPolarsDataFrame
+      - slice_tail.RPolarsDataFrame
+      - slice_sample.RPolarsDataFrame
+      - summarize.RPolarsDataFrame
+      - ungroup.RPolarsDataFrame
   - title: From `tidyr`
     desc: |
       Functions coming from `tidyr`
     contents:
-      - complete.DataFrame
-      - drop_na.DataFrame
-      - fill.DataFrame
-      - pivot_longer.DataFrame
-      - pivot_wider.DataFrame
-      - replace_na.DataFrame
-      - separate.DataFrame
-      - uncount.DataFrame
-      - unite.DataFrame
+      - complete.RPolarsDataFrame
+      - drop_na.RPolarsDataFrame
+      - fill.RPolarsDataFrame
+      - pivot_longer.RPolarsDataFrame
+      - pivot_wider.RPolarsDataFrame
+      - replace_na.RPolarsDataFrame
+      - separate.RPolarsDataFrame
+      - uncount.RPolarsDataFrame
+      - unite.RPolarsDataFrame

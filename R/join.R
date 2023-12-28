@@ -81,7 +81,7 @@ right_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
 full_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
                                 suffix = c(".x", ".y"), ..., keep = NULL) {
   unused_args(copy, keep)
-  join_(x = x, y = y, by = by, how = "outer", suffix = suffix)
+  join_(x = x, y = y, by = by, how = "outer_coalesce", suffix = suffix)
 }
 
 #' @rdname left_join.RPolarsDataFrame
