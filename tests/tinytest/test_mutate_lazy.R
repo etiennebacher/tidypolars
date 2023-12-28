@@ -10,6 +10,18 @@ pl_iris <- polars::pl$LazyFrame(iris)
 # Basic ops: +, -, *, /
 
 expect_equal_lazy(
+  mutate(pl_iris, x = 1 + 1) |>
+    pull(x),
+  rep(2, 150)
+)
+
+expect_equal_lazy(
+  mutate(pl_iris, x = 1 + 1, foo = x + 1) |>
+    pull(x),
+  rep(2, 150)
+)
+
+expect_equal_lazy(
   mutate(pl_iris, x = Sepal.Width + Sepal.Length) |>
     pull(x),
   iris$Sepal.Width + iris$Sepal.Length

@@ -29,6 +29,7 @@ knitr::opts_chunk$set(
 * [Motivation](#motivation)
 * [Installation](#installation)
 * [Example](#example)
+* [Contributing](#contributing)
 
 
 ## Motivation
@@ -136,8 +137,10 @@ benchmarks](https://duckdblabs.github.io/db-benchmark/).
 ```{r}
 library(collapse, warn.conflicts = FALSE)
 
-large_iris <- data.table::rbindlist(rep(list(iris), 50000))
+large_iris <- data.table::rbindlist(rep(list(iris), 100000))
 large_iris_pl <- as_polars(large_iris, lazy = TRUE)
+
+format(nrow(large_iris), big.mark = ",")
 
 bench::mark(
   polars = {
@@ -179,7 +182,7 @@ bench::mark(
       fsubset(Sepal.Length >= 4.5 & Sepal.Length <= 5.5)
   },
   check = FALSE,
-  iterations = 20
+  iterations = 40
 )
 
 # NOTE: do NOT take the "mem_alloc" results into account.
@@ -189,3 +192,9 @@ bench::mark(
 </details>
 
 
+## Contributing
+
+Did you find some errors in the documentation? Do you want `tidypolars` to support
+more functions?
+
+Take a look at the [contributing guide](https://tidypolars.etiennebacher.com/CONTRIBUTING.html)!

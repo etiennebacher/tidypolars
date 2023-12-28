@@ -21,6 +21,7 @@ coverage](https://codecov.io/gh/etiennebacher/tidypolars/branch/main/graph/badge
 - [Motivation](#motivation)
 - [Installation](#installation)
 - [Example](#example)
+- [Contributing](#contributing)
 
 ## Motivation
 
@@ -162,10 +163,13 @@ benchmarks](https://duckdblabs.github.io/db-benchmark/).
 
 ``` r
 library(collapse, warn.conflicts = FALSE)
-#> collapse 2.0.6, see ?`collapse-package` or ?`collapse-documentation`
+#> collapse 2.0.7, see ?`collapse-package` or ?`collapse-documentation`
 
-large_iris <- data.table::rbindlist(rep(list(iris), 50000))
+large_iris <- data.table::rbindlist(rep(list(iris), 100000))
 large_iris_pl <- as_polars(large_iris, lazy = TRUE)
+
+format(nrow(large_iris), big.mark = ",")
+#> [1] "15,000,000"
 
 bench::mark(
   polars = {
@@ -207,17 +211,17 @@ bench::mark(
       fsubset(Sepal.Length >= 4.5 & Sepal.Length <= 5.5)
   },
   check = FALSE,
-  iterations = 20
+  iterations = 40
 )
 #> Warning: Some expressions had a GC in every iteration; so filtering is
 #> disabled.
 #> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars      72.08ms  78.51ms    12.6      27.5KB    0    
-#> 2 tidypolars   87.4ms 106.85ms     8.24    308.9KB    0.412
-#> 3 dplyr         2.37s    2.59s     0.387   916.6MB    1.39 
-#> 4 collapse   254.79ms 303.53ms     3.27    373.1MB    3.11
+#> 1 polars     166.06ms  213.1ms     4.23    27.53KB    0    
+#> 2 tidypolars 193.66ms    274ms     2.92   308.88KB    0.146
+#> 3 dplyr         6.11s     6.4s     0.155    1.79GB    0.414
+#> 4 collapse   589.21ms  767.2ms     1.30   745.96MB    1.17
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
@@ -225,3 +229,11 @@ bench::mark(
 ```
 
 </details>
+
+## Contributing
+
+Did you find some errors in the documentation? Do you want `tidypolars`
+to support more functions?
+
+Take a look at the [contributing
+guide](https://tidypolars.etiennebacher.com/CONTRIBUTING.html)!

@@ -97,7 +97,18 @@
 \item{by}{Variables to join by. If \code{NULL}, the default, \verb{*_join()} will
 perform a natural join, using all variables in common across \code{x} and \code{y}. A
 message lists the variables so that you can check they're correct; suppress
-the message by supplying \code{by} explicitly.}
+the message by supplying \code{by} explicitly.
+
+\code{by} can take a character vector, like \code{c("x", "y")} if \code{x} and \code{y} are
+in both datasets. To join on variables that don't have the same name, use
+equalities in the character vector, like \code{c("x1" = "x2", "y")}. If you use
+a character vector, the join can only be done using strict equality.
+
+Finally, \code{by} can be a specification created by \code{dplyr::join_by()}. Contrary
+to the input as character vector shown above, \code{join_by()} uses unquoted column
+names, e.g \code{join_by(x1 == x2, y)}. It also uses equality and inequality
+operators \code{==}, \code{>} and similar. \strong{For now, only equality operators are
+supported}.}
 
 \item{copy, keep}{Not used.}
 
@@ -115,13 +126,13 @@ the keys.
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 test <- polars::pl$DataFrame(
   x = c(1, 2, 3),
-  y = c(1, 2, 3),
+  y1 = c(1, 2, 3),
   z = c(1, 2, 3)
 )
 
 test2 <- polars::pl$DataFrame(
   x = c(1, 2, 4),
-  y = c(1, 2, 4),
+  y2 = c(1, 2, 4),
   z2 = c(4, 5, 7)
 )
 
@@ -129,19 +140,22 @@ test
 
 test2
 
+# default is to use common columns, here "x" only
 left_join(test, test2)
 
-inner_join(test, test2)
+# we can specify the columns on which to join with join_by()...
+left_join(test, test2, by = join_by(x, y1 == y2))
 
-full_join(test, test2)
+# ... or with a character vector
+left_join(test, test2, by = c("x", "y1" = "y2"))
 
-# Show how the arg 'suffix' works:
+# we can customize the suffix of common column names not used to join
 test2 <- polars::pl$DataFrame(
   x = c(1, 2, 4),
-  y = c(1, 2, 4),
+  y1 = c(1, 2, 4),
   z = c(4, 5, 7)
 )
 
-left_join(test, test2, by = c("x", "y"), suffix = c("_left", "_right"))
+left_join(test, test2, by = "x", suffix = c("_left", "_right"))
 \dontshow{\}) # examplesIf}
 }

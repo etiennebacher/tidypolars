@@ -234,6 +234,20 @@ expect_equal_lazy(
     pull(foo)
 )
 
+expect_equal_lazy(
+  mutate(test, foo = str_replace_all(x1, c("LL" = "ll", " " = "_"))) |>
+    pull(foo),
+  mutate(test_df, foo = str_replace_all(x1, c("LL" = "ll", " " = "_"))) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  mutate(test, foo = str_replace_all(x1, c("LL" = "ll", "( )" = "\\1\\1"))) |>
+    pull(foo),
+  mutate(test_df, foo = str_replace_all(x1, c("LL" = "ll", "( )" = "\\1\\1"))) |>
+    pull(foo)
+)
+
 # TODO: https://github.com/pola-rs/polars/issues/12110
 # expect_equal_lazy(
 #   mutate(test, foo = str_replace_all(x1, "[aeiou]", toupper)) |>

@@ -30,12 +30,12 @@ jobs:
       - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
+          extra-repositories: 'https://rpolars.r-universe.dev'
 
-      - name: Dependencies
-        run: |
-          install.packages("polars", repos = "https://rpolars.r-universe.dev")
-          install.packages(c("pkgdown", "bench", "dplyr", "tidyr", "data.table"))
-        shell: Rscript {0}
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::pkgdown, local::.
+          needs: website
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)

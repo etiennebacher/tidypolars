@@ -1,7 +1,8 @@
 #' @import rlang
 
 translate_dots <- function(.data, ..., env) {
-  dots <- enexprs(...)
+  dots <- enquos(...)
+  dots <- lapply(dots, quo_squash)
   new_vars <- c()
   out <- lapply(seq_along(dots), \(x) {
     tmp <- translate_expr(.data = .data, dots[[x]], new_vars = new_vars, env = env)
@@ -17,6 +18,13 @@ translate_dots <- function(.data, ..., env) {
   names(out) <- names(dots)
 
   # across() returns a nested list
+  out <- lapply(out, function(x) {
+    if (is.list(x)) {
+      x
+    } else {
+      list(x)
+    }
+  })
   out <- unlist(out, recursive = FALSE, use.names = TRUE)
   out <- reorder_exprs(out)
   out
@@ -88,6 +96,7 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
       language = {
         name <- as.character(expr[[1]])
         if (length(name) == 3 && name[[1]] == "::") {
+          # TODO
           abort(
             c(
               "tidypolars doesn't work when expressions contain `<pkg>::`.",
@@ -99,6 +108,23 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
 
         switch(
           name,
+          # .data$ -> consider the RHS of $ as a classic column name
+          # .env$ -> eval the RHS of $ in the caller env
+          "$" = {
+            first_term <- expr[[2]]
+            if (first_term == ".data") {
+              return(translate(expr[[3]]))
+            } else if (first_term == ".env") {
+              # TODO: "env" is the environment inside the mutate()/... call
+              # unsure why I can't just eval this with env_parent(env) to get the
+              # environment in which mutate() /... was called
+              out <- tryCatch(
+                eval_tidy(expr[[3]], env = caller_env(n = 8)),
+                error = identity
+              )
+              return(out)
+            }
+          },
           "(" = {
             return(translate(expr[[2]]))
           },
@@ -172,16 +198,16 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
           }
         )
 
-        k_funs <- get_known_functions()
-        known_functions <- k_funs$known_functions
-        known_ops <- k_funs$known_ops
-        user_defined <- k_funs$user_defined
+        is_known <- is_function_known(name)
+        known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
+                       "&", "|", "!")
+        user_defined <- get_globenv_functions()
 
         # If unknown function:
         # - either anonymous function called in across()
         # - or undefined function (typo, not run in the global env, etc.)
 
-        if (!(name %in% c(known_functions, known_ops, user_defined))) {
+        if (!is_known && !(name %in% c(known_ops, user_defined))) {
           obj_name <- quo_name(expr)
           if (startsWith(obj_name, ".__tidypolars__across_fn")) {
             fn <- eval_bare(global_env()[[obj_name]])
@@ -205,7 +231,7 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
         }
 
         args <- lapply(as.list(expr[-1]), translate, new_vars = new_vars, env = env)
-        if (name %in% known_functions) {
+        if (is_known) {
           name <- paste0("pl_", name)
         }
 
@@ -313,17 +339,15 @@ env_from_dots <- function(...) {
   dots[["__tidypolars__env"]]
 }
 
-# Return a list of all functions / operations we know
-get_known_functions <- function() {
-  known_functions <- r_polars_funs$r_funs
-  known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
-                 "&", "|", "!")
-  user_defined <- get_globenv_functions()
-  list(
-    known_functions = known_functions,
-    known_ops = known_ops,
-    user_defined = user_defined
-  )
+is_function_known <- function(name) {
+  with_prefix <- paste0("pl_", name)
+  ev <- try(environment(eval(parse(text = with_prefix))), silent = TRUE)
+  if (inherits(ev, "try-error")) {
+    env_tidypolars <- NULL
+  } else {
+    env_tidypolars <- ev
+  }
+  !is.null(env_tidypolars[[with_prefix]])
 }
 
 
@@ -343,6 +367,16 @@ reorder_exprs <- function(exprs) {
   names(lhs_vars) <- paste0("pool_vars_", seq_along(exprs))
 
   for (i in seq_along(exprs)) {
+    # "1 + 1" is of type "language" so I cannot transform the literal values
+    # as polars_constant in the translate() function.
+    # This is the last moment where I can do it.
+    if (typeof(exprs[[i]]) %in% c("character", "logical", "integer", "double")) {
+      if (!is.list(exprs)) {
+        exprs <- as.list(exprs)
+      }
+      exprs[[i]] <- pl$lit(exprs[[i]])
+    }
+
     if (i == 1) {
       lhs_vars[[1]] <- names(exprs)[i]
       next
