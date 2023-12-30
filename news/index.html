@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,7 +55,8 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.5.0" id="tidypolars-050">tidypolars 0.5.0<a class="anchor" aria-label="anchor" href="#tidypolars-050"></a></h2>
+<p><code>tidypolars</code> requires <code>polars</code> &gt;= 0.12.0.</p>
 <p><strong>Breaking changes</strong></p>
 <ul><li><p><code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code> now errors if the argument <code>.cols</code> is not provided (either named or unnamed). This behavior was deprecated in <code>dplyr</code> 1.1.0.</p></li>
 <li><p>It is no longer possible to use <code>!</code> in <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange()</a></code> to sort by decreasing order, for compatibility with <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">dplyr::arrange()</a></code>. Use <code>-</code> or <code><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc()</a></code> instead.</p></li>
@@ -71,6 +72,7 @@
 <li><p>Add support for argument <code>.name_repair</code> in <code><a href="../reference/bind_cols_polars.html">bind_cols_polars()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/74" class="external-link">#74</a>).</p></li>
 <li><p>Support for <code>.env$</code> and <code>.data$</code> pronouns in expressions of <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code>.</p></li>
 <li><p>Support named vector in the argument <code>pattern</code> of <code><a href="https://stringr.tidyverse.org/reference/str_replace.html" class="external-link">str_replace_all()</a></code>, where names are patterns and values are replacements.</p></li>
+<li><p>Using <code>%in%</code> for factor variables doesn’t require enabling the string cache anymore.</p></li>
 </ul><p><strong>Bug fixes</strong></p>
 <ul><li><p><code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> no longer errors when <code>across(everything(), ...)</code> is used with <code>.by</code>.</p></li>
 <li><p>All <code>*_join()</code> functions no longer error when a named vector is provided in the argument <code>by</code>.</p></li>
@@ -105,7 +107,7 @@
 <ul><li><p>All functions starting with <code>pl_</code> have been removed to the benefit of the S3 methods. For example, <code>pl_distinct()</code> doesn’t exist anymore so the only way to use it is to load <code>dplyr</code> and to use <code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct()</a></code> on a Polars DataFrame or LazyFrame. This is to avoid confusion about compatibility with <code>dplyr</code> and <code>tidyr</code>. See <a href="https://github.com/etiennebacher/tidypolars/issues/49" class="external-link">#49</a> for a more detailed explanation.</p></li>
 <li><p><code>pl_bind_rows()</code> and <code>pl_bind_cols()</code> are renamed <code><a href="../reference/bind_rows_polars.html">bind_rows_polars()</a></code> and <code><a href="../reference/bind_cols_polars.html">bind_cols_polars()</a></code> respectively. This is because <code><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols()</a></code> are not S3 methods (this might change in future versions of <code>dplyr</code>).</p></li>
 </ul><p><strong>New features</strong></p>
-<ul><li><p>New function <code><a href="../reference/distinct.DataFrame.html">duplicated_rows()</a></code> that is the opposite of <code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/50" class="external-link">#50</a>).</p></li>
+<ul><li><p>New function <code><a href="../reference/distinct.RPolarsDataFrame.html">duplicated_rows()</a></code> that is the opposite of <code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/50" class="external-link">#50</a>).</p></li>
 <li><p>New argument <code>.id</code> in <code><a href="../reference/bind_rows_polars.html">bind_rows_polars()</a></code>.</p></li>
 <li><p><code><a href="../reference/bind_rows_polars.html">bind_rows_polars()</a></code> can now bind Data/LazyFrames that don’t have the same schema. Columns will be upcast to common types if necessary. Unknown columns will be filled with <code>NA</code>.</p></li>
 </ul><p><strong>Bug fixes</strong></p>
