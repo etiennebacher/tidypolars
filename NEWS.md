@@ -1,4 +1,4 @@
-# tidypolars (development version)
+# tidypolars 0.5.0
 
 `tidypolars` requires `polars` >= 0.12.0.
 
