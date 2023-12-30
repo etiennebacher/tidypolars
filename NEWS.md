@@ -1,5 +1,7 @@
 # tidypolars (development version)
 
+`tidypolars` requires `polars` >= 0.12.0.
+
 **Breaking changes**
 
 * `across()` now errors if the argument `.cols` is not provided (either named or
