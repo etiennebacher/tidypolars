@@ -23,7 +23,7 @@
 #' @param suffix If there are non-joined duplicate variables in `x` and `y`,
 #' these suffixes will be added to the output to disambiguate them. Should be a
 #' character vector of length 2.
-#' @inheritParams slice_tail.DataFrame
+#' @inheritParams slice_tail.RPolarsDataFrame
 #' @param copy,keep Not used.
 #'
 #' @export
@@ -62,51 +62,51 @@
 #'
 #' left_join(test, test2, by = "x", suffix = c("_left", "_right"))
 
-left_join.DataFrame <- function(x, y, by = NULL, copy = NULL,
+left_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
                                 suffix = c(".x", ".y"), ..., keep = NULL) {
   unused_args(copy, keep)
   join_(x = x, y = y, by = by, how = "left", suffix = suffix)
 }
 
-#' @rdname left_join.DataFrame
+#' @rdname left_join.RPolarsDataFrame
 #' @export
-right_join.DataFrame <- function(x, y, by = NULL, copy = NULL,
+right_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
                                  suffix = c(".x", ".y"), ..., keep = NULL) {
   unused_args(copy, keep)
   join_(x = x, y = y, by = by, how = "right", suffix = suffix)
 }
 
-#' @rdname left_join.DataFrame
+#' @rdname left_join.RPolarsDataFrame
 #' @export
-full_join.DataFrame <- function(x, y, by = NULL, copy = NULL,
+full_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
                                 suffix = c(".x", ".y"), ..., keep = NULL) {
   unused_args(copy, keep)
-  join_(x = x, y = y, by = by, how = "outer", suffix = suffix)
+  join_(x = x, y = y, by = by, how = "outer_coalesce", suffix = suffix)
 }
 
-#' @rdname left_join.DataFrame
+#' @rdname left_join.RPolarsDataFrame
 #' @export
-inner_join.DataFrame <- function(x, y, by = NULL, copy = NULL,
+inner_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
                                  suffix = c(".x", ".y"), ..., keep = NULL) {
   unused_args(copy, keep)
   join_(x = x, y = y, by = by, how = "inner", suffix = suffix)
 }
 
-#' @rdname left_join.DataFrame
+#' @rdname left_join.RPolarsDataFrame
 #' @export
-left_join.LazyFrame <- left_join.DataFrame
+left_join.RPolarsLazyFrame <- left_join.RPolarsDataFrame
 
-#' @rdname left_join.DataFrame
+#' @rdname left_join.RPolarsDataFrame
 #' @export
-right_join.LazyFrame <- right_join.DataFrame
+right_join.RPolarsLazyFrame <- right_join.RPolarsDataFrame
 
-#' @rdname left_join.DataFrame
+#' @rdname left_join.RPolarsDataFrame
 #' @export
-full_join.LazyFrame <- full_join.DataFrame
+full_join.RPolarsLazyFrame <- full_join.RPolarsDataFrame
 
-#' @rdname left_join.DataFrame
+#' @rdname left_join.RPolarsDataFrame
 #' @export
-inner_join.LazyFrame <- inner_join.DataFrame
+inner_join.RPolarsLazyFrame <- inner_join.RPolarsDataFrame
 
 #' Filtering joins
 #'
@@ -116,7 +116,7 @@ inner_join.LazyFrame <- inner_join.DataFrame
 #' * `anti_join()` return all rows from `x` without a match in `y`.
 #'
 #' @param x,y Two Polars Data/LazyFrames
-#' @inheritParams left_join.DataFrame
+#' @inheritParams left_join.RPolarsDataFrame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -142,31 +142,31 @@ inner_join.LazyFrame <- inner_join.DataFrame
 #' # only keep the rows of `test` that don't have matching keys in `test2`
 #' anti_join(test, test2, by = c("x", "y"))
 
-semi_join.DataFrame <- function(x, y, by = NULL, ...) {
+semi_join.RPolarsDataFrame <- function(x, y, by = NULL, ...) {
   join_(x = x, y = y, by = by, how = "semi", suffix = NULL)
 }
 
-#' @rdname semi_join.DataFrame
+#' @rdname semi_join.RPolarsDataFrame
 #' @export
 
-anti_join.DataFrame <- function(x, y, by = NULL, ...) {
+anti_join.RPolarsDataFrame <- function(x, y, by = NULL, ...) {
   join_(x = x, y = y, by = by, how = "anti", suffix = NULL)
 }
 
-#' @rdname semi_join.DataFrame
+#' @rdname semi_join.RPolarsDataFrame
 #' @export
-semi_join.LazyFrame <- semi_join.DataFrame
+semi_join.RPolarsLazyFrame <- semi_join.RPolarsDataFrame
 
-#' @rdname semi_join.DataFrame
+#' @rdname semi_join.RPolarsDataFrame
 #' @export
-anti_join.LazyFrame <- anti_join.DataFrame
+anti_join.RPolarsLazyFrame <- anti_join.RPolarsDataFrame
 
 #' Cross join
 #'
 #' Cross joins match each row in `x` to every row in `y`, resulting in a dataset
 #' with `nrow(x) * nrow(y)` rows.
 #'
-#' @inheritParams left_join.DataFrame
+#' @inheritParams left_join.RPolarsDataFrame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -186,13 +186,13 @@ anti_join.LazyFrame <- anti_join.DataFrame
 #'
 #' cross_join(test, test2)
 
-cross_join.DataFrame <- function(x, y, suffix = c(".x", ".y"), ...) {
+cross_join.RPolarsDataFrame <- function(x, y, suffix = c(".x", ".y"), ...) {
   join_(x = x, y = y, by = NULL, how = "cross", suffix = suffix)
 }
 
-#' @rdname cross_join.DataFrame
+#' @rdname cross_join.RPolarsDataFrame
 #' @export
-cross_join.LazyFrame <- cross_join.DataFrame
+cross_join.RPolarsLazyFrame <- cross_join.RPolarsDataFrame
 
 
 join_ <- function(x, y, by = NULL, how, suffix) {
@@ -235,8 +235,8 @@ join_ <- function(x, y, by = NULL, how, suffix) {
   )
 
   if (
-    (inherits(x, "DataFrame") && inherits(y, "DataFrame")) ||
-    (inherits(x, "LazyFrame") && inherits(y, "LazyFrame"))
+    (inherits(x, "RPolarsDataFrame") && inherits(y, "RPolarsDataFrame")) ||
+    (inherits(x, "RPolarsLazyFrame") && inherits(y, "RPolarsLazyFrame"))
   ) {
     if (how == "right") {
       out <- y$join(other = x, left_on = left_on, right_on = right_on, how = "left")

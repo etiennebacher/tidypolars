@@ -2,7 +2,7 @@
 #'
 #' @param data A Polars Data/LazyFrame
 #' @param col The name of the new column, as a string or symbol.
-#' @inheritParams select.DataFrame
+#' @inheritParams select.RPolarsDataFrame
 #' @param sep Separator to use between values.
 #' @param remove If `TRUE`, remove input columns from the output Data/LazyFrame.
 #' @param na.rm If `TRUE`, missing values will be replaced with an empty string
@@ -31,7 +31,7 @@
 #' unite(test2, col = "full_name", everything(), sep = " ")
 #' unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
 
-unite.DataFrame <- function(data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE) {
+unite.RPolarsDataFrame <- function(data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE) {
 
   check_polars_data(data)
   vars <- tidyselect_dots(data, ...)
@@ -55,6 +55,6 @@ unite.DataFrame <- function(data, col, ..., sep = "_", remove = TRUE, na.rm = FA
   }
 }
 
-#' @rdname unite.DataFrame
+#' @rdname unite.RPolarsDataFrame
 #' @export
-unite.LazyFrame <- unite.DataFrame
+unite.RPolarsLazyFrame <- unite.RPolarsDataFrame

@@ -1,7 +1,7 @@
 #' Count the observations in each group
 #'
 #' @param x A Polars Data/LazyFrame
-#' @inheritParams select.DataFrame
+#' @inheritParams select.RPolarsDataFrame
 #' @param sort If `TRUE`, will show the largest groups at the top.
 #' @param name Name of the new column.
 #'
@@ -16,7 +16,7 @@
 #'
 #' add_count(test, cyl, am, sort = TRUE, name = "count")
 
-count.DataFrame <- function(x, ..., sort = FALSE, name = "n") {
+count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
   check_polars_data(x)
 
   grps <- attributes(x)$pl_grps
@@ -34,14 +34,14 @@ count.DataFrame <- function(x, ..., sort = FALSE, name = "n") {
   }
 }
 
-#' @rdname count.DataFrame
+#' @rdname count.RPolarsDataFrame
 #' @export
-count.LazyFrame <- count.DataFrame
+count.RPolarsLazyFrame <- count.RPolarsDataFrame
 
-#' @rdname count.DataFrame
+#' @rdname count.RPolarsDataFrame
 #' @export
 
-add_count.DataFrame <- function(x, ..., sort = FALSE, name = "n") {
+add_count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
   check_polars_data(x)
 
   grps <- attributes(x)$pl_grps
@@ -59,9 +59,9 @@ add_count.DataFrame <- function(x, ..., sort = FALSE, name = "n") {
   }
 }
 
-#' @rdname count.DataFrame
+#' @rdname count.RPolarsDataFrame
 #' @export
-add_count.LazyFrame <- add_count.DataFrame
+add_count.RPolarsLazyFrame <- add_count.RPolarsDataFrame
 
 count_ <- function(x, vars, sort, name, new_col = FALSE) {
 

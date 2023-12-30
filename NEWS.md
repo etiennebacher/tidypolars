@@ -38,6 +38,9 @@
   
 * Support named vector in the argument `pattern` of `str_replace_all()`, where
   names are patterns and values are replacements.
+  
+* Using `%in%` for factor variables doesn't require enabling the string cache
+  anymore.
 
 **Bug fixes**
 

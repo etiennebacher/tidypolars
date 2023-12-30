@@ -29,7 +29,7 @@
 #' will start in background. Get a handle which later can be converted into the
 #' resulting DataFrame. Useful in interactive mode to not lock R session (default
 #' is `FALSE`).
-#' @inheritParams slice_tail.DataFrame
+#' @inheritParams slice_tail.RPolarsDataFrame
 #'
 #' @export
 #' @seealso [fetch()] for applying a lazy query on a subset of the data.
@@ -43,7 +43,7 @@
 #'   filter(between(Sepal.Length, 5, 6)) |>
 #'   collect()
 
-collect.LazyFrame <- function(
+collect.RPolarsLazyFrame <- function(
     x,
     type_coercion = TRUE,
     predicate_pushdown = TRUE,

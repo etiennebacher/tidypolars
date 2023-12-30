@@ -6,13 +6,13 @@
 #' @noRd
 
 pl_colnames <- function(x) {
-  if (inherits(x, "DataFrame") || inherits(x, "LazyFrame")) {
+  if (inherits(x, "RPolarsDataFrame") || inherits(x, "RPolarsLazyFrame")) {
     x$columns
   }
 }
 
 check_polars_data <- function(x, env = caller_env()) {
-  if (!inherits(x, "DataFrame") && !inherits(x, "LazyFrame")) {
+  if (!inherits(x, "RPolarsDataFrame") && !inherits(x, "RPolarsLazyFrame")) {
     rlang::abort(
       "The data must be a Polars DataFrame or LazyFrame.",
       call = env

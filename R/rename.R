@@ -26,21 +26,21 @@
 #'
 #' rename_with(pl_test_2, \(x) tolower(gsub(".", "_", x, fixed = TRUE)))
 
-rename.DataFrame <- function(.data, ...) {
+rename.RPolarsDataFrame <- function(.data, ...) {
   check_polars_data(.data)
   dots <- get_dots(...)
   dots <- lapply(dots, rlang::as_name)
   .data$rename(dots)
 }
 
-#' @rdname rename.DataFrame
+#' @rdname rename.RPolarsDataFrame
 #' @export
-rename.LazyFrame <- rename.DataFrame
+rename.RPolarsLazyFrame <- rename.RPolarsDataFrame
 
-#' @rdname rename.DataFrame
+#' @rdname rename.RPolarsDataFrame
 #' @export
 
-rename_with.DataFrame <- function(.data, .fn, .cols = tidyselect::everything(), ...) {
+rename_with.RPolarsDataFrame <- function(.data, .fn, .cols = tidyselect::everything(), ...) {
   check_polars_data(.data)
   to_replace <- tidyselect_named_arg(.data, rlang::enquo(.cols))
   new <- do.call(.fn, list(to_replace, ...))
@@ -49,6 +49,6 @@ rename_with.DataFrame <- function(.data, .fn, .cols = tidyselect::everything(), 
   .data$rename(mapping)
 }
 
-#' @rdname rename.DataFrame
+#' @rdname rename.RPolarsDataFrame
 #' @export
-rename_with.LazyFrame <- rename_with.DataFrame
+rename_with.RPolarsLazyFrame <- rename_with.RPolarsDataFrame

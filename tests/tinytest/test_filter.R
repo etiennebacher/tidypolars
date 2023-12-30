@@ -106,20 +106,11 @@ expect_dim(
   c(21, 11)
 )
 
-pl$enable_string_cache()
-
 expect_dim(
   iris |>
     as_polars() |>
     filter(Species %in% c("setosa", "virginica")),
   c(100, 5)
-)
-
-pl$disable_string_cache()
-
-expect_error(
-  filter(pl_iris, Species %in% c("setosa", "virginica")),
-  "Comparing factor variables to strings is only possible when the string cache is enabled"
 )
 
 expect_dim(
@@ -134,14 +125,6 @@ expect_message(
   "already globally enabled"
 )
 
-pl$disable_string_cache()
-
-pl_iris3 <- as_polars(iris, with_string_cache = FALSE)
-
-expect_error(
-  filter(pl_iris, Species %in% c("setosa", "foo")),
-  "Comparing factor variables to strings is only possible when the string cache is enabled"
-)
 
 # between()
 

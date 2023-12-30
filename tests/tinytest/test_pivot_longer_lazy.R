@@ -69,9 +69,11 @@ expect_equal_lazy(
       names_to = "week",
       names_prefix = "wk",
     ) |>
+    arrange(artist, track, date.entered, week) |>
     head(3) |>
     pull(week),
-  c("1", "2", "3")
+  # polars and dplyr sort strings differently: for polars, "10" comes before "2"
+  c("1", "10", "11")
 )
 
 expect_error_lazy(

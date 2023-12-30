@@ -70,7 +70,7 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
   }
 
   any_not_polars <- any(vapply(dots, \(y) {
-    !inherits(y, "DataFrame") && !inherits(y, "LazyFrame")
+    !inherits(y, "RPolarsDataFrame") && !inherits(y, "RPolarsLazyFrame")
   }, FUN.VALUE = logical(1L)))
 
   if (any_not_polars) {
@@ -81,7 +81,7 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
   }
 
   all_df_or_lf <- all(vapply(dots, \(y) {
-    inherits(y, "DataFrame") || inherits(y, "LazyFrame")
+    inherits(y, "RPolarsDataFrame") || inherits(y, "RPolarsLazyFrame")
   }, FUN.VALUE = logical(1L)))
 
   if (!all_df_or_lf) {
@@ -147,7 +147,7 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
         }
       }
 
-      if (inherits(dots[[1]], "DataFrame")) {
+      if (inherits(dots[[1]], "RPolarsDataFrame")) {
         return(pl$concat(dots, how = how))
       } else {
         if (length(dots) > 2) {

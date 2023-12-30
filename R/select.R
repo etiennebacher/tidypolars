@@ -15,12 +15,12 @@
 #' select(pl_iris, starts_with("Sepal"))
 #' select(pl_iris, -ends_with("Length"))
 
-select.DataFrame <- function(.data, ...) {
+select.RPolarsDataFrame <- function(.data, ...) {
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
   .data$select(vars)
 }
 
-#' @rdname select.DataFrame
+#' @rdname select.RPolarsDataFrame
 #' @export
-select.LazyFrame <- select.DataFrame
+select.RPolarsLazyFrame <- select.RPolarsDataFrame
