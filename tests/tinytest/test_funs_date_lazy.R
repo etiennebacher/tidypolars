@@ -75,4 +75,43 @@ expect_equal_lazy(
   as.Date(c("2014-07-24", "2015-12-24", "2016-01-21"))
 )
 
+
+# isoyear (test taken from the lubridate test suite)
+
+df <- read.table(textConnection(
+  "Sat 1 Jan 2005 	2005-01-01 	2004-W53-6
+     Sun 2 Jan 2005 	2005-01-02 	2004-W53-7
+     Sat 31 Dec 2005 	2005-12-31 	2005-W52-6
+     Mon 1 Jan 2007 	2007-01-01 	2007-W01-1 	Both years 2007 start with the same day.
+     Sun 30 Dec 2007 	2007-12-30 	2007-W52-7
+     Mon 31 Dec 2007 	2007-12-31 	2008-W01-1
+     Tue 1 Jan 2008 	2008-01-01 	2008-W01-2 	Gregorian year 2008 is a leap year. ISO year 2008 is 2 days shorter: 1 day longer at the start, 3 days shorter at the end.
+     Sun 28 Dec 2008 	2008-12-28 	2008-W52-7 	ISO year 2009 begins three days before the end of Gregorian 2008.
+     Mon 29 Dec 2008 	2008-12-29 	2009-W01-1
+     Tue 30 Dec 2008 	2008-12-30 	2009-W01-2
+     Wed 31 Dec 2008 	2008-12-31 	2009-W01-3
+     Thu 1 Jan 2009 	2009-01-01 	2009-W01-4
+     Thu 31 Dec 2009 	2009-12-31 	2009-W53-4 	ISO year 2009 has 53 weeks and ends three days into Gregorian year 2010.
+     Fri 1 Jan 2010 	2010-01-01 	2009-W53-5
+     Sat 2 Jan 2010 	2010-01-02 	2009-W53-6
+     Sun 3 Jan 2010 	2010-01-03 	2009-W53-7"
+),
+sep = "\t", fill = T, stringsAsFactors = F, header = F
+)
+
+names(df) <- c("Gregorian", "ymd", "iso", "note")
+df <- mutate(
+  df,
+  ymd = ymd(ymd),
+  isoweek = as.numeric(gsub(".*W([0-9]+).*", "\\1", iso)),
+  isoyear = as.numeric(gsub("^([0-9]+).*", "\\1", iso))
+)
+df_pl <- as_polars(df)
+
+expect_equal_lazy(
+  mutate(df_pl, ymd = isoyear(ymd)) |>
+    pull(ymd),
+  df$isoyear
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
