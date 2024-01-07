@@ -7,7 +7,7 @@
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' mtcars |>
-#'   as_polars() |>
+#'   as_polars_df() |>
 #'   describe(percentiles = c(0.2, 0.4, 0.6, 0.8))
 
 describe <- function(.data, percentiles = c(0.25, 0.75)) {
