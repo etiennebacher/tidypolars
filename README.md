@@ -218,10 +218,10 @@ bench::mark(
 #> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     136.84ms 190.21ms     4.35    27.78KB    0    
-#> 2 tidypolars 266.12ms 377.95ms     2.03    290.7KB    0.152
-#> 3 dplyr         3.38s    3.71s     0.197    1.79GB    0.572
-#> 4 collapse   342.53ms  422.1ms     2.37   745.96MB    2.25
+#> 1 polars     114.03ms  139.3ms     5.71    27.78KB    0    
+#> 2 tidypolars 188.24ms 232.54ms     3.28    290.7KB    0.246
+#> 3 dplyr         3.31s    3.52s     0.271    1.79GB    0.786
+#> 4 collapse   326.57ms 405.23ms     2.50   745.96MB    2.38
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling

@@ -135,7 +135,7 @@ For more serious benchmarks about `polars`, take a look at [DuckDB
 benchmarks](https://duckdblabs.github.io/db-benchmark/).
 
 ```{r}
-library(collapse, warn.conflicts = FALSE)k
+library(collapse, warn.conflicts = FALSE)
 
 large_iris <- data.table::rbindlist(rep(list(iris), 100000))
 large_iris_pl <- as_polars_lf(large_iris)
