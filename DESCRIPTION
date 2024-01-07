@@ -1,7 +1,7 @@
 Package: tidypolars
 Type: Package
 Title: Get the Power of Polars with the Syntax of the Tidyverse
-Version: 0.5.0
+Version: 0.5.0.9000
 Authors@R: 
     person(given = "Etienne",
            family = "Bacher",

@@ -96,7 +96,7 @@ the exact same code:
 library(tidypolars)
 
 iris |> 
-  as_polars() |> 
+  as_polars_df() |> 
   select(starts_with(c("Sep", "Pet"))) |> 
   mutate(
     petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
@@ -138,7 +138,7 @@ benchmarks](https://duckdblabs.github.io/db-benchmark/).
 library(collapse, warn.conflicts = FALSE)
 
 large_iris <- data.table::rbindlist(rep(list(iris), 100000))
-large_iris_pl <- as_polars(large_iris, lazy = TRUE)
+large_iris_pl <- as_polars_lf(large_iris)
 
 format(nrow(large_iris), big.mark = ",")
 

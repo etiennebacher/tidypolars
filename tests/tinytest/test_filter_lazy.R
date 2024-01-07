@@ -5,7 +5,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-pl_iris <- as_polars(iris)
+pl_iris <- as_polars_df(iris)
 
 expect_dim(
   filter(pl_iris, Species == "setosa"),
@@ -112,21 +112,16 @@ expect_dim(
 
 expect_dim(
   iris |>
-    as_polars() |>
+    as_polars_df() |>
     filter(Species %in% c("setosa", "virginica")),
   c(100, 5)
 )
 
 expect_dim(
   iris |>
-    as_polars(with_string_cache = TRUE) |>
+    as_polars_df() |>
     filter(Species %in% c("setosa", "virginica")),
   c(100, 5)
-)
-
-expect_message(
-  iris |> as_polars(with_string_cache = TRUE),
-  "already globally enabled"
 )
 
 
@@ -160,7 +155,7 @@ expect_equal_lazy(
 )
 
 expect_equal_lazy(
-  as_polars(mtcars) |>
+  as_polars_df(mtcars) |>
     filter(disp == max(disp), .by = cyl) |>
     pull(mpg),
   by_cyl |>
@@ -169,14 +164,14 @@ expect_equal_lazy(
 )
 
 expect_dim(
-  as_polars(iris) |>
+  as_polars_df(iris) |>
     group_by(Species) |>
     filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4),
   c(123, 5)
 )
 
 expect_dim(
-  as_polars(iris) |>
+  as_polars_df(iris) |>
     filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4,
            .by = Species),
   c(123, 5)

@@ -42,7 +42,7 @@ filter(pl_iris, between(Sepal.Length, 5, 6, include_bounds = FALSE))
 iris2 <- iris
 iris2$Species <- as.character(iris2$Species)
 iris2 |>
-  as_polars() |>
+  as_polars_df() |>
   filter(Species \%in\% c("setosa", "virginica"))
 
 # filter by group

@@ -23,7 +23,7 @@ queries are read from bottom to top.
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 query <- mtcars |>
-  as_polars(lazy = TRUE) |>
+  as_polars_lf() |>
   arrange(drat) |>
   filter(cyl == 3) |>
   select(mpg)

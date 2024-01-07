@@ -102,7 +102,7 @@ df <- mutate(
   isoweek = as.numeric(gsub(".*W([0-9]+).*", "\\1", iso)),
   isoyear = as.numeric(gsub("^([0-9]+).*", "\\1", iso))
 )
-df_pl <- as_polars(df)
+df_pl <- as_polars_df(df)
 
 expect_equal(
   mutate(df_pl, ymd = isoyear(ymd)) |>
