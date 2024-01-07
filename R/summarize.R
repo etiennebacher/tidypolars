@@ -11,13 +11,13 @@
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' mtcars |>
-#'   as_polars() |>
+#'   as_polars_df() |>
 #'   group_by(cyl) |>
 #'   summarize(m_gear = mean(gear), sd_gear = sd(gear))
 #'
 #' # an alternative syntax is to use `.by`
 #' mtcars |>
-#'   as_polars() |>
+#'   as_polars_df() |>
 #'   summarize(m_gear = mean(gear), sd_gear = sd(gear), .by = cyl)
 
 

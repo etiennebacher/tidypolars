@@ -25,7 +25,7 @@ to a lower int before being converted to R.
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 iris |>
-  as_polars() |>
+  as_polars_df() |>
   filter(Sepal.Length > 6) |>
   to_r()
 \dontshow{\}) # examplesIf}

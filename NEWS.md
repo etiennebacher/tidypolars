@@ -1,3 +1,16 @@
+# tidypolars (development version)
+
+**Breaking changes**
+
+* `as_polars()` doesn't have an argument `with_string_cache` anymore. When set
+  to `TRUE`, this enabled the string cache globally, which could lead to 
+  undesirable side effects.
+  
+**Deprecations**
+
+* `as_polars()` is deprecated and will be removed in 0.7.0. Use `as_polars_lf()`
+  or `as_polars_df()` instead.
+
 # tidypolars 0.5.0
 
 `tidypolars` requires `polars` >= 0.12.0.

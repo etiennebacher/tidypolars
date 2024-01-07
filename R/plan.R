@@ -11,7 +11,7 @@
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' query <- mtcars |>
-#'   as_polars(lazy = TRUE) |>
+#'   as_polars_lf |>
 #'   arrange(drat) |>
 #'   filter(cyl == 3) |>
 #'   select(mpg)

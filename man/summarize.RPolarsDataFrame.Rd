@@ -39,13 +39,13 @@ and one column for each of the summary statistics that you have specified.
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 mtcars |>
-  as_polars() |>
+  as_polars_df() |>
   group_by(cyl) |>
   summarize(m_gear = mean(gear), sd_gear = sd(gear))
 
 # an alternative syntax is to use `.by`
 mtcars |>
-  as_polars() |>
+  as_polars_df() |>
   summarize(m_gear = mean(gear), sd_gear = sd(gear), .by = cyl)
 \dontshow{\}) # examplesIf}
 }
