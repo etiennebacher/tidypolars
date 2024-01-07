@@ -36,7 +36,7 @@
     
     <a class="navbar-brand me-2" href="index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -149,11 +149,11 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.tidypolars.etiennebacher.com/" class="external-link">tidypolars</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Registered S3 method overwritten by 'tidypolars':</span></span>
-<span><span class="co">#&gt;   method          from  </span></span>
-<span><span class="co">#&gt;   print.DataFrame polars</span></span>
+<span><span class="co">#&gt;   method                 from  </span></span>
+<span><span class="co">#&gt;   print.RPolarsDataFrame polars</span></span>
 <span></span>
 <span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sep"</span>, <span class="st">"Pet"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    petal_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="op">(</span><span class="va">Petal.Length</span> <span class="op">/</span> <span class="va">Petal.Width</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span>, <span class="st">"long"</span>, <span class="st">"large"</span><span class="op">)</span></span>
@@ -211,7 +211,7 @@ Click to see a small benchmark
 <span><span class="co">#&gt; collapse 2.0.7, see ?`collapse-package` or ?`collapse-documentation`</span></span>
 <span></span>
 <span><span class="va">large_iris</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">rbindlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="fl">100000</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">large_iris_pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="va">large_iris</span>, lazy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">large_iris_pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_lf.html" class="external-link">as_polars_lf</a></span><span class="op">(</span><span class="va">large_iris</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">large_iris</span><span class="op">)</span>, big.mark <span class="op">=</span> <span class="st">","</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "15,000,000"</span></span>
@@ -263,10 +263,10 @@ Click to see a small benchmark
 <span><span class="co">#&gt; # A tibble: 4 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars     166.06ms  213.1ms     4.23    27.53KB    0    </span></span>
-<span><span class="co">#&gt; 2 tidypolars 193.66ms    274ms     2.92   308.88KB    0.146</span></span>
-<span><span class="co">#&gt; 3 dplyr         6.11s     6.4s     0.155    1.79GB    0.414</span></span>
-<span><span class="co">#&gt; 4 collapse   589.21ms  767.2ms     1.30   745.96MB    1.17</span></span>
+<span><span class="co">#&gt; 1 polars     114.03ms  139.3ms     5.71    27.78KB    0    </span></span>
+<span><span class="co">#&gt; 2 tidypolars 188.24ms 232.54ms     3.28    290.7KB    0.246</span></span>
+<span><span class="co">#&gt; 3 dplyr         3.31s    3.52s     0.271    1.79GB    0.786</span></span>
+<span><span class="co">#&gt; 4 collapse   326.57ms 405.23ms     2.50   745.96MB    2.38</span></span>
 <span></span>
 <span><span class="co"># NOTE: do NOT take the "mem_alloc" results into account.</span></span>
 <span><span class="co"># `bench::mark()` doesn't report the accurate memory usage for packages calling</span></span>
