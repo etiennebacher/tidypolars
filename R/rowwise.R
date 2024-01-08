@@ -1,5 +1,5 @@
 
-pl_rowwise <- function(.data, ...) {
+rowwise.RPolarsDataFrame <- function(.data, ...) {
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
   # need to clone, otherwise the data gets attributes, even if unassigned

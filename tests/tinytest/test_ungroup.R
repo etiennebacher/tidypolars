@@ -9,6 +9,6 @@ expect_equal(
 )
 
 expect_equal(
-  test |> pl_rowwise(am, cyl) |> pl_ungroup(),
+  test |> rowwise(am, cyl) |> pl_ungroup(),
   test
 )

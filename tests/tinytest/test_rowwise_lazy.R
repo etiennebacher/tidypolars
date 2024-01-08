@@ -6,7 +6,7 @@ source("helpers.R")
 using("tidypolars")
 
 test <- polars::pl$LazyFrame(x = c(2, 2), y = c(2, 3), z = c(5, NA)) |>
-  pl_rowwise()
+  rowwise()
 
 expect_equal_lazy(
   test |>
@@ -30,7 +30,7 @@ expect_equal_lazy(
 )
 
 test2 <- polars::pl$LazyFrame(x = c(TRUE, TRUE), y = c(TRUE, FALSE), z = c(TRUE, NA)) |>
-  pl_rowwise()
+  rowwise()
 
 # TODO: uncomment this once r-polars has caught up py-polars
 # expect_equal_lazy(
