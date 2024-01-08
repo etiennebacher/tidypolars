@@ -8,7 +8,7 @@ rowwise.RPolarsDataFrame <- function(.data, ...) {
   if (!is.null(attributes(.data2)$pl_grps)) {
     rlang::abort("Cannot use `rowwise()` on grouped data.")
   }
-  attr(.data2, "pl_grps") <- vars
+  # attr(.data2, "pl_grps") <- vars
   attr(.data2, "grp_type") <- "rowwise"
   .data2
 }

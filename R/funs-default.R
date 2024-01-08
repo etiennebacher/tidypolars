@@ -28,10 +28,18 @@ pl_max <- function(x, ...) {
   x$max()
 }
 
-pl_sum <- function(x, ...) {
-  check_empty_dots(...)
-  x <- check_rowwise(x)
-  x$sum()
+pl_sum <- function(..., na.rm = FALSE) {
+  if (isTRUE(na.rm)) {
+    rlang::inform("Argument `na.rm` in `sum()` is ignored.")
+  }
+  x <- check_rowwise_dots(...)
+  # browser()
+  if (isTRUE(x$is_rowwise)) {
+    x$expr$list$eval(pl$element()$sum())$explode()
+  } else {
+    pl$sum(expr)
+  }
+
 }
 
 pl_sd <- function(x, ddof = 1, ...) {
@@ -432,10 +440,10 @@ pl_sqrt <- function(x, ...) {
   x$sqrt()
 }
 
-pl_sum <- function(x, ...) {
-  check_empty_dots(...)
-  x$sum()
-}
+# pl_sum <- function(x, ...) {
+#   check_empty_dots(...)
+#   x$sum()
+# }
 
 pl_tan <- function(x, ...) {
   check_empty_dots(...)

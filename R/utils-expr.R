@@ -468,3 +468,16 @@ check_rowwise <- function(x) {
   }
   out
 }
+
+check_rowwise_dots <- function(...) {
+  is_rowwise <- rlang::caller_env(7)[["is_rowwise"]]
+  dots <- get_dots(...)
+  dots[["__tidypolars__new_vars"]] <- NULL
+  dots[["__tidypolars__env"]] <- NULL
+  if (isTRUE(is_rowwise)) {
+    out <- pl$concat_list(dots)
+  } else {
+    out <- x
+  }
+  return(list(is_rowwise = is_rowwise, expr = out))
+}
