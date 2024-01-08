@@ -1,4 +1,4 @@
-
+#' @export
 rowwise.RPolarsDataFrame <- function(.data, ...) {
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
@@ -6,7 +6,7 @@ rowwise.RPolarsDataFrame <- function(.data, ...) {
   .data2 <- .data$clone()
 
   if (!is.null(attributes(.data2)$pl_grps)) {
-    abort("Cannot use `rowwise()` on grouped data.")
+    rlang::abort("Cannot use `rowwise()` on grouped data.")
   }
   attr(.data2, "pl_grps") <- vars
   attr(.data2, "grp_type") <- "rowwise"
