@@ -5,7 +5,7 @@
 #' also possible to keep either the first occurrence, the last occurence or
 #' remove all duplicates.
 #'
-#' @inheritParams select.DataFrame
+#' @inheritParams select.RPolarsDataFrame
 #' @param keep Either "first" (keep the first occurrence of the duplicated row),
 #'  "last" (last occurrence) or "none" (remove all ofccurences of duplicated
 #'  rows).
@@ -27,18 +27,18 @@
 #' duplicated_rows(pl_test)
 #' duplicated_rows(pl_test, iso_o, iso_d)
 
-distinct.DataFrame <- function(.data, ..., keep = "first", maintain_order = TRUE) {
+distinct.RPolarsDataFrame <- function(.data, ..., keep = "first", maintain_order = TRUE) {
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
   if (length(vars) == 0) vars <- pl_colnames(.data)
   .data$unique(subset = vars, keep = keep, maintain_order = maintain_order)
 }
 
-#' @rdname distinct.DataFrame
+#' @rdname distinct.RPolarsDataFrame
 #' @export
-distinct.LazyFrame <- distinct.DataFrame
+distinct.RPolarsLazyFrame <- distinct.RPolarsDataFrame
 
-#' @rdname distinct.DataFrame
+#' @rdname distinct.RPolarsDataFrame
 #' @export
 
 duplicated_rows <- function(.data, ...) {

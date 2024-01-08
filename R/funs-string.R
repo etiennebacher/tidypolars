@@ -101,8 +101,20 @@ pl_str_replace <- function(string, pattern, replacement, ...) {
 
 pl_str_replace_all <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
-  replacement <- parse_replacement(replacement)
-  string$str$replace_all(pattern, replacement)
+  # named pattern means that names are patterns and values are replacements
+  names_pattern <- names(pattern)
+  if (!is.null(names_pattern)) {
+    out <- string
+    for (i in seq_along(pattern)) {
+      pattern[i] <- parse_replacement(pattern[i])
+      out <- out$str$replace_all(names_pattern[i], pattern[i])
+    }
+  } else {
+    replacement <- parse_replacement(replacement)
+    out <- string$str$replace_all(pattern, replacement)
+  }
+
+  out
 }
 
 pl_str_squish <- function(string, ...) {

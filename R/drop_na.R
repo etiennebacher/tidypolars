@@ -4,8 +4,8 @@
 #' possible to specify a subset of variables so that only missing values in these
 #' variables will be considered.
 #'
-#' @inheritParams select.DataFrame
-#' @inheritParams slice_tail.DataFrame
+#' @inheritParams select.RPolarsDataFrame
+#' @inheritParams slice_tail.RPolarsDataFrame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -17,12 +17,12 @@
 #' drop_na(pl_tmp)
 #' drop_na(pl_tmp, hp, mpg)
 
-drop_na.DataFrame <- function(data, ...) {
+drop_na.RPolarsDataFrame <- function(data, ...) {
   check_polars_data(data)
   vars <- tidyselect_dots(data, ...)
   data$drop_nulls(vars)
 }
 
-#' @rdname drop_na.DataFrame
+#' @rdname drop_na.RPolarsDataFrame
 #' @export
-drop_na.LazyFrame <- drop_na.DataFrame
+drop_na.RPolarsLazyFrame <- drop_na.RPolarsDataFrame

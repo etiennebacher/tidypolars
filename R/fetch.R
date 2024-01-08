@@ -8,7 +8,7 @@
 #'
 #' @param .data A Polars LazyFrame
 #' @param n_rows Number of rows to fetch.
-#' @inheritParams collect.LazyFrame
+#' @inheritParams collect.RPolarsLazyFrame
 #'
 #' @details
 #' The parameter `n_rows` indicates how many rows from the LazyFrame should be
@@ -45,7 +45,7 @@ fetch <- function(
     no_optimization = FALSE,
     streaming = FALSE
 ) {
-  if (!inherits(.data, "LazyFrame")) {
+  if (!inherits(.data, "RPolarsLazyFrame")) {
     rlang::abort("`fetch()` can only be used on a LazyFrame.")
   }
   .data$fetch(

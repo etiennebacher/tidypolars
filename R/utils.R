@@ -64,3 +64,26 @@ get_grps <- function(.data, .by, env) {
 `%||%` <- function(x, y) {
   if (is_null(x)) y else x
 }
+
+# takes a character vector, returns a named list where the name is the duplicated
+# value and the values are its positions
+get_dupes <- function(x) {
+  y <- table(x)
+  dup <- names(y[y > 1])
+  out <- lapply(dup, function(z) which(x == z))
+  names(out) <- dup
+  out
+}
+
+make_dupes_msg <- function(x) {
+  msgs <- vector("list", length = length(x))
+  for (i in seq_along(x)) {
+    msgs[[i]] <- paste0("`", names(x)[i], "` (", toString(x[[i]]), ")")
+  }
+  if (length(msgs) > 3) {
+    final_msg <- paste0(toString(msgs[1:3]), ", ...")
+  } else {
+    final_msg <- toString(msgs)
+  }
+  final_msg
+}

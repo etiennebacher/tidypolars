@@ -84,7 +84,7 @@ sink_csv <- function(
     no_optimization = FALSE
   ) {
 
-  if (!inherits(.data, "LazyFrame")) {
+  if (!inherits(.data, "RPolarsLazyFrame")) {
     rlang::abort("`sink_csv()` can only be used on a LazyFrame.")
   }
 

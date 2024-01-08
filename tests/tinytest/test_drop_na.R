@@ -30,3 +30,4 @@ expect_error(
   drop_na(pl_tmp, foo),
   "don't exist"
 )
+

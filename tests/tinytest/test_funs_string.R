@@ -35,7 +35,7 @@ for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper", "nchar")) {
 
 }
 
-if (polars::pl$polars_info()$features$full_features) {
+if (polars::polars_info()$features$full_features) {
   expect_equal(
     mutate(test, foo = str_to_title(x1)) |>
       pull(foo),
@@ -227,6 +227,20 @@ expect_equal(
   mutate(test, foo = str_replace_all(x1, "([aeiou])", "\\1")) |>
     pull(foo),
   mutate(test_df, foo = str_replace_all(x1, "([aeiou])", "\\1")) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = str_replace_all(x1, c("LL" = "ll", " " = "_"))) |>
+    pull(foo),
+  mutate(test_df, foo = str_replace_all(x1, c("LL" = "ll", " " = "_"))) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = str_replace_all(x1, c("LL" = "ll", "( )" = "\\1\\1"))) |>
+    pull(foo),
+  mutate(test_df, foo = str_replace_all(x1, c("LL" = "ll", "( )" = "\\1\\1"))) |>
     pull(foo)
 )
 

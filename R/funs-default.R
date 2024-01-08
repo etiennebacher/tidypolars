@@ -191,6 +191,10 @@ pl_coalesce <- function(..., default = NULL) {
   pl$coalesce(clean_dots(...), default)
 }
 
+# pl_consecutive_id <- function(...) {
+#   check_empty_dots(...)
+# }
+
 pl_cos <- function(x, ...) {
   check_empty_dots(...)
   x$cos()

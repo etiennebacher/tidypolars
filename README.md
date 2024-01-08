@@ -21,6 +21,7 @@ coverage](https://codecov.io/gh/etiennebacher/tidypolars/branch/main/graph/badge
 - [Motivation](#motivation)
 - [Installation](#installation)
 - [Example](#example)
+- [Contributing](#contributing)
 
 ## Motivation
 
@@ -90,11 +91,11 @@ and keep the exact same code:
 ``` r
 library(tidypolars)
 #> Registered S3 method overwritten by 'tidypolars':
-#>   method          from  
-#>   print.DataFrame polars
+#>   method                 from  
+#>   print.RPolarsDataFrame polars
 
 iris |> 
-  as_polars() |> 
+  as_polars_df() |> 
   select(starts_with(c("Sep", "Pet"))) |> 
   mutate(
     petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
@@ -162,10 +163,13 @@ benchmarks](https://duckdblabs.github.io/db-benchmark/).
 
 ``` r
 library(collapse, warn.conflicts = FALSE)
-#> collapse 2.0.6, see ?`collapse-package` or ?`collapse-documentation`
+#> collapse 2.0.7, see ?`collapse-package` or ?`collapse-documentation`
 
-large_iris <- data.table::rbindlist(rep(list(iris), 50000))
-large_iris_pl <- as_polars(large_iris, lazy = TRUE)
+large_iris <- data.table::rbindlist(rep(list(iris), 100000))
+large_iris_pl <- as_polars_lf(large_iris)
+
+format(nrow(large_iris), big.mark = ",")
+#> [1] "15,000,000"
 
 bench::mark(
   polars = {
@@ -207,17 +211,17 @@ bench::mark(
       fsubset(Sepal.Length >= 4.5 & Sepal.Length <= 5.5)
   },
   check = FALSE,
-  iterations = 20
+  iterations = 40
 )
 #> Warning: Some expressions had a GC in every iteration; so filtering is
 #> disabled.
 #> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars      72.08ms  78.51ms    12.6      27.5KB    0    
-#> 2 tidypolars   87.4ms 106.85ms     8.24    308.9KB    0.412
-#> 3 dplyr         2.37s    2.59s     0.387   916.6MB    1.39 
-#> 4 collapse   254.79ms 303.53ms     3.27    373.1MB    3.11
+#> 1 polars     114.03ms  139.3ms     5.71    27.78KB    0    
+#> 2 tidypolars 188.24ms 232.54ms     3.28    290.7KB    0.246
+#> 3 dplyr         3.31s    3.52s     0.271    1.79GB    0.786
+#> 4 collapse   326.57ms 405.23ms     2.50   745.96MB    2.38
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
@@ -225,3 +229,11 @@ bench::mark(
 ```
 
 </details>
+
+## Contributing
+
+Did you find some errors in the documentation? Do you want `tidypolars`
+to support more functions?
+
+Take a look at the [contributing
+guide](https://tidypolars.etiennebacher.com/CONTRIBUTING.html)!

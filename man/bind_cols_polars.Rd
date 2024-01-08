@@ -4,13 +4,16 @@
 \alias{bind_cols_polars}
 \title{Append multiple Data/LazyFrames next to each other}
 \usage{
-bind_cols_polars(...)
+bind_cols_polars(..., .name_repair = "unique")
 }
 \arguments{
 \item{...}{Polars DataFrames or LazyFrames to combine. Each argument can
 either be a Data/LazyFrame, or a list of Data/LazyFrames. Columns are matched
 by name. All Data/LazyFrames must have the same number of rows and there
 mustn't be duplicated column names.}
+
+\item{.name_repair}{Can be \code{"unique"}, \code{"universal"}, \code{"check_unique"},
+\code{"minimal"}. See \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}} for the explanations for each value.}
 }
 \description{
 Append multiple Data/LazyFrames next to each other

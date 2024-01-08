@@ -10,6 +10,18 @@ pl_iris <- polars::pl$LazyFrame(iris)
 # Basic ops: +, -, *, /
 
 expect_equal_lazy(
+  mutate(pl_iris, x = 1 + 1) |>
+    pull(x),
+  rep(2, 150)
+)
+
+expect_equal_lazy(
+  mutate(pl_iris, x = 1 + 1, foo = x + 1) |>
+    pull(x),
+  rep(2, 150)
+)
+
+expect_equal_lazy(
   mutate(pl_iris, x = Sepal.Width + Sepal.Length) |>
     pull(x),
   iris$Sepal.Width + iris$Sepal.Length
@@ -162,21 +174,21 @@ expect_equal_lazy(
 
 expect_equal_lazy(
   pull(out, foo) |> unique(),
-  as_polars(iris) |>
+  as_polars_df(iris) |>
     mutate(foo = mean(Sepal.Length), .by = Species) |>
     pull(foo) |>
     unique()
 )
 
 expect_equal_lazy(
-  as_polars(iris) |>
+  as_polars_df(iris) |>
     mutate(foo = mean(Sepal.Length), .by = Species) |>
     attr("pl_grps"),
   NULL
 )
 
 expect_equal_lazy(
-  as_polars(iris) |>
+  as_polars_df(iris) |>
     mutate(foo = mean(Sepal.Length), .by = Species) |>
     attr("maintain_grp_order"),
   NULL
@@ -297,7 +309,7 @@ expect_equal_lazy(
 
 expect_equal_lazy(
   iris[c(1, 2, 149, 150), ] |>
-    as_polars() |>
+    as_polars_df() |>
     mutate(
       x = Sepal.Length > 6,
       y = x & Species == "virginica",

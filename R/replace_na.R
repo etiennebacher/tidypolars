@@ -5,7 +5,7 @@
 #'   columns, or a named list with the column name and the value that will be
 #'   used to replace `NA` in it. **The column type will be automatically
 #'   converted to the type of the replacement value.**
-#' @inheritParams slice_tail.DataFrame
+#' @inheritParams slice_tail.RPolarsDataFrame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -20,7 +20,7 @@
 #' # be careful to use the same type for the replacement and for the column!
 #' replace_na(pl_test, list(x = "a", y = "unknown"))
 
-replace_na.DataFrame <- function(data, replace, ...) {
+replace_na.RPolarsDataFrame <- function(data, replace, ...) {
 
   check_polars_data(data)
   is_scalar <- length(replace) == 1 && !is.list(replace)
@@ -38,6 +38,6 @@ replace_na.DataFrame <- function(data, replace, ...) {
   }
 }
 
-#' @rdname replace_na.DataFrame
+#' @rdname replace_na.RPolarsDataFrame
 #' @export
-replace_na.LazyFrame <- replace_na.DataFrame
+replace_na.RPolarsLazyFrame <- replace_na.RPolarsDataFrame

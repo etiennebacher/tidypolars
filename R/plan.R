@@ -11,7 +11,7 @@
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' query <- mtcars |>
-#'   as_polars(lazy = TRUE) |>
+#'   as_polars_lf() |>
 #'   arrange(drat) |>
 #'   filter(cyl == 3) |>
 #'   select(mpg)
@@ -22,7 +22,7 @@
 
 # nocov start
 describe_plan <- function(.data) {
-  if (!inherits(.data, "LazyFrame")) {
+  if (!inherits(.data, "RPolarsLazyFrame")) {
     rlang::abort("`describe_plan()` only works on a LazyFrame.")
   }
   .data$describe_plan()
@@ -32,7 +32,7 @@ describe_plan <- function(.data) {
 #' @rdname describe_plan
 
 describe_optimized_plan <- function(.data) {
-  if (!inherits(.data, "LazyFrame")) {
+  if (!inherits(.data, "RPolarsLazyFrame")) {
     rlang::abort("`describe_optimized_plan()` only works on a LazyFrame.")
   }
   .data$describe_optimized_plan()

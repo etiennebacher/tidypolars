@@ -16,7 +16,7 @@
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' iris |>
-#'   as_polars() |>
+#'   as_polars_df() |>
 #'   filter(Sepal.Length > 6) |>
 #'   to_r()
 
@@ -32,11 +32,11 @@ to_r <- function(.data, shrink_i64 = TRUE) {
   }
 
   # for testing only
-  if (inherits(.data, "LazyFrame") && Sys.getenv("TIDYPOLARS_TEST") == "TRUE") {
+  if (inherits(.data, "RPolarsLazyFrame") && Sys.getenv("TIDYPOLARS_TEST") == "TRUE") {
     return(.data$collect()$to_data_frame())
   }
 
-  if (inherits(.data, "DataFrame")) {
+  if (inherits(.data, "RPolarsDataFrame")) {
     .data$to_data_frame()
   }
 }

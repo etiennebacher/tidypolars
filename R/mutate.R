@@ -70,7 +70,7 @@
 #' some_value <- 1
 #' mutate(pl_iris, x = {{ some_value }})
 
-mutate.DataFrame <- function(.data, ..., .by = NULL) {
+mutate.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
 
   check_polars_data(.data)
 
@@ -106,6 +106,6 @@ mutate.DataFrame <- function(.data, ..., .by = NULL) {
   }
 }
 
-#' @rdname mutate.DataFrame
+#' @rdname mutate.RPolarsDataFrame
 #' @export
-mutate.LazyFrame <- mutate.DataFrame
+mutate.RPolarsLazyFrame <- mutate.RPolarsDataFrame

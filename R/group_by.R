@@ -14,7 +14,7 @@
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' by_cyl <- mtcars |>
-#'   as_polars() |>
+#'   as_polars_df() |>
 #'   group_by(cyl)
 #'
 #' by_cyl
@@ -26,7 +26,7 @@
 #' by_cyl |> filter(disp == max(disp))
 #'
 
-group_by.DataFrame <- function(.data, ..., maintain_order = FALSE) {
+group_by.RPolarsDataFrame <- function(.data, ..., maintain_order = FALSE) {
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
   # need to clone, otherwise the data gets attributes, even if unassigned
@@ -37,20 +37,20 @@ group_by.DataFrame <- function(.data, ..., maintain_order = FALSE) {
 }
 
 #' @param x A Polars Data/LazyFrame
-#' @rdname group_by.DataFrame
+#' @rdname group_by.RPolarsDataFrame
 #' @export
 
-ungroup.DataFrame <- function(x, ...) {
+ungroup.RPolarsDataFrame <- function(x, ...) {
   attributes(x)$pl_grps <- NULL
   attributes(x)$maintain_grp_order <- NULL
   attributes(.data)$grp_type <- NULL
   x
 }
 
-#' @rdname group_by.DataFrame
+#' @rdname group_by.RPolarsDataFrame
 #' @export
-group_by.LazyFrame <- group_by.DataFrame
+group_by.RPolarsLazyFrame <- group_by.RPolarsDataFrame
 
-#' @rdname group_by.DataFrame
+#' @rdname group_by.RPolarsDataFrame
 #' @export
-ungroup.LazyFrame <- ungroup.DataFrame
+ungroup.RPolarsLazyFrame <- ungroup.RPolarsDataFrame

@@ -93,7 +93,7 @@ expect_equal_lazy(
 
 # slice_sample ---------------------------------------------------
 
-if (inherits(pl_iris, "DataFrame")) {
+if (inherits(pl_iris, "RPolarsDataFrame")) {
   expect_equal_lazy(
     slice_sample(pl_iris, n = 5) |> nrow(),
     5

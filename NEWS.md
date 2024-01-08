@@ -2,6 +2,21 @@
 
 **Breaking changes**
 
+* `as_polars()` doesn't have an argument `with_string_cache` anymore. When set
+  to `TRUE`, this enabled the string cache globally, which could lead to 
+  undesirable side effects.
+  
+**Deprecations**
+
+* `as_polars()` is deprecated and will be removed in 0.7.0. Use `as_polars_lf()`
+  or `as_polars_df()` instead.
+
+# tidypolars 0.5.0
+
+`tidypolars` requires `polars` >= 0.12.0.
+
+**Breaking changes**
+
 * `across()` now errors if the argument `.cols` is not provided (either named or
   unnamed). This behavior was deprecated in `dplyr` 1.1.0.
   
@@ -19,10 +34,38 @@
 
 * Add support for arguments `names_prefix` and `names_sep` in `pivot_wider()`.
 
+* Add support for `tidyr::uncount()`.
+
+* All `*_join()` functions now work when `by` is a specification created by 
+  `dplyr::join_by()`. Notice that this is limited to equality joins for now.
+  
+* You can now use the "embrace" operator `{{ }}` to pass unquoted column names
+  (among other things) as arguments of custom functions. See the ["Programming
+  with dplyr" vignette](https://dplyr.tidyverse.org/dev/articles/programming.html)
+  for some examples.
+  
+* `bind_cols_polars()` now works with two `LazyFrame`s, but not more.
+
+* Add support for argument `.name_repair` in `bind_cols_polars()` (#74).
+
+* Support for `.env$` and `.data$` pronouns in expressions of `filter()`, 
+  `mutate()` and `summarize()`.
+  
+* Support named vector in the argument `pattern` of `str_replace_all()`, where
+  names are patterns and values are replacements.
+  
+* Using `%in%` for factor variables doesn't require enabling the string cache
+  anymore.
+
 **Bug fixes**
 
 * `summarize()` no longer errors when `across(everything(), ...)` is used with
   `.by`.
+
+* All `*_join()` functions no longer error when a named vector is provided in 
+  the argument `by`.
+  
+* Expressions with values only are not named "literal" anymore.
 
 **Misc**
 
@@ -77,7 +120,7 @@
 
 * Faster tidy selection (#61).
 
-# tidypolars (0.3.0)
+# tidypolars 0.3.0
 
 `tidypolars` requires `polars` >= 0.10.0.
 

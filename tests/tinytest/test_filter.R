@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-pl_iris <- as_polars(iris)
+pl_iris <- as_polars_df(iris)
 
 expect_dim(
   filter(pl_iris, Species == "setosa"),
@@ -106,42 +106,20 @@ expect_dim(
   c(21, 11)
 )
 
-pl$enable_string_cache()
-
 expect_dim(
   iris |>
-    as_polars() |>
+    as_polars_df() |>
     filter(Species %in% c("setosa", "virginica")),
   c(100, 5)
 )
 
-pl$disable_string_cache()
-
-expect_error(
-  filter(pl_iris, Species %in% c("setosa", "virginica")),
-  "Comparing factor variables to strings is only possible when the string cache is enabled"
-)
-
 expect_dim(
   iris |>
-    as_polars(with_string_cache = TRUE) |>
+    as_polars_df() |>
     filter(Species %in% c("setosa", "virginica")),
   c(100, 5)
 )
 
-expect_message(
-  iris |> as_polars(with_string_cache = TRUE),
-  "already globally enabled"
-)
-
-pl$disable_string_cache()
-
-pl_iris3 <- as_polars(iris, with_string_cache = FALSE)
-
-expect_error(
-  filter(pl_iris, Species %in% c("setosa", "foo")),
-  "Comparing factor variables to strings is only possible when the string cache is enabled"
-)
 
 # between()
 
@@ -173,7 +151,7 @@ expect_equal(
 )
 
 expect_equal(
-  as_polars(mtcars) |>
+  as_polars_df(mtcars) |>
     filter(disp == max(disp), .by = cyl) |>
     pull(mpg),
   by_cyl |>
@@ -182,14 +160,14 @@ expect_equal(
 )
 
 expect_dim(
-  as_polars(iris) |>
+  as_polars_df(iris) |>
     group_by(Species) |>
     filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4),
   c(123, 5)
 )
 
 expect_dim(
-  as_polars(iris) |>
+  as_polars_df(iris) |>
     filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4,
            .by = Species),
   c(123, 5)

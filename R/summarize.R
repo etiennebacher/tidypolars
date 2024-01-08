@@ -6,22 +6,22 @@
 #' and one column for each of the summary statistics that you have specified.
 #'
 #' @param .data A Polars Data/LazyFrame
-#' @inheritParams mutate.DataFrame
+#' @inheritParams mutate.RPolarsDataFrame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' mtcars |>
-#'   as_polars() |>
+#'   as_polars_df() |>
 #'   group_by(cyl) |>
 #'   summarize(m_gear = mean(gear), sd_gear = sd(gear))
 #'
 #' # an alternative syntax is to use `.by`
 #' mtcars |>
-#'   as_polars() |>
+#'   as_polars_df() |>
 #'   summarize(m_gear = mean(gear), sd_gear = sd(gear), .by = cyl)
 
 
-summarize.DataFrame <- function(.data, ..., .by = NULL) {
+summarize.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
 
   check_polars_data(.data)
 
@@ -64,14 +64,14 @@ summarize.DataFrame <- function(.data, ..., .by = NULL) {
   }
 }
 
-#' @rdname summarize.DataFrame
+#' @rdname summarize.RPolarsDataFrame
 #' @export
-summarise.DataFrame <- summarize.DataFrame
+summarise.RPolarsDataFrame <- summarize.RPolarsDataFrame
 
-#' @rdname summarize.DataFrame
+#' @rdname summarize.RPolarsDataFrame
 #' @export
-summarize.LazyFrame <- summarize.DataFrame
+summarize.RPolarsLazyFrame <- summarize.RPolarsDataFrame
 
-#' @rdname summarize.DataFrame
+#' @rdname summarize.RPolarsDataFrame
 #' @export
-summarise.LazyFrame <- summarize.DataFrame
+summarise.RPolarsLazyFrame <- summarize.RPolarsDataFrame

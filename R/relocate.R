@@ -3,14 +3,14 @@
 #' Use `relocate()` to change column positions, using the same syntax as
 #' `select()` to make it easy to move blocks of columns at once.
 #'
-#' @inheritParams select.DataFrame
+#' @inheritParams select.RPolarsDataFrame
 #' @param .before,.after Column name (either quoted or unquoted) that
 #' indicates the destination of columns selected by `...`. Supplying neither
 #' will move columns to the left-hand side; specifying both is an error.
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' dat <- as_polars(mtcars)
+#' dat <- as_polars_df(mtcars)
 #'
 #' dat |>
 #'   relocate(hp, vs, .before = cyl)
@@ -31,7 +31,7 @@
 #' dat |>
 #'   relocate(hp, vs, .after = last_col())
 
-relocate.DataFrame <- function(.data, ..., .before = NULL, .after = NULL) {
+relocate.RPolarsDataFrame <- function(.data, ..., .before = NULL, .after = NULL) {
   check_polars_data(.data)
 
   if (!missing(.before) && !missing(.after)) {
@@ -86,6 +86,6 @@ relocate.DataFrame <- function(.data, ..., .before = NULL, .after = NULL) {
   .data$select(new_order)
 }
 
-#' @rdname relocate.DataFrame
+#' @rdname relocate.RPolarsDataFrame
 #' @export
-relocate.LazyFrame <- relocate.DataFrame
+relocate.RPolarsLazyFrame <- relocate.RPolarsDataFrame

@@ -84,6 +84,23 @@ expect_error_lazy(
   "must be of length 2"
 )
 
+# suffix + join_by
+
+expect_colnames(
+  left_join(test, test2, by = join_by(x, y)),
+  c("x", "y", "z.x", "z.y")
+)
+
+expect_colnames(
+  left_join(test, test2, by = join_by(x, y), suffix = c(".hi", ".hello")),
+  c("x", "y", "z.hi", "z.hello")
+)
+
+expect_error_lazy(
+  left_join(test, test2, by = join_by(x, y), suffix = c(".hi")),
+  "must be of length 2"
+)
+
 
 # input class
 
