@@ -314,3 +314,38 @@ expect_equal(
     pull(z),
   c(4.9, 4.2, 2.3, 15.3)
 )
+
+# argument .keep
+
+expect_error(
+  mutate(pl_iris, x = 1, .keep = "foo"),
+  "must be one of"
+)
+
+expect_colnames(
+  mutate(pl_iris, x = Sepal.Length, y = Species, .keep = "used"),
+  c("Sepal.Length", "Species", "x", "y")
+)
+
+expect_colnames(
+  mutate(pl_iris, x = Sepal.Length, y = Species, .keep = "unused"),
+  c("Sepal.Width", "Petal.Length", "Petal.Width", "x", "y")
+)
+
+expect_colnames(
+  mutate(pl_iris, x = Sepal.Length, y = Species, .keep = "none"),
+  c("x", "y")
+)
+
+pl_grp <- pl_iris |>
+  group_by(Species, maintain_order = TRUE)
+
+expect_colnames(
+  mutate(pl_grp, x = Sepal.Length, .keep = "used"),
+  c("Sepal.Length", "Species", "x")
+)
+
+expect_colnames(
+  mutate(pl_grp, x = Sepal.Length, .keep = "unused"),
+  c("Sepal.Width", "Petal.Length", "Petal.Width", "x")
+)

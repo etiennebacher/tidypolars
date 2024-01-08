@@ -70,9 +70,15 @@
 #' some_value <- 1
 #' mutate(pl_iris, x = {{ some_value }})
 
-mutate.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
+mutate.RPolarsDataFrame <- function(
+    .data,
+    ...,
+    .by = NULL,
+    .keep = c("all", "used", "unused", "none")
+  ) {
 
   check_polars_data(.data)
+  rlang::arg_match(.keep)
 
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
@@ -81,10 +87,20 @@ mutate.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
 
   polars_exprs <- translate_dots(.data = .data, ..., env = rlang::current_env())
 
+  used <- c()
+  orig_names <- names(.data)
+
   for (i in seq_along(polars_exprs)) {
     sub <- polars_exprs[[i]]
     to_drop <- names(empty_elems(sub))
     sub <- compact(sub)
+
+    used <- c(
+      used,
+      lapply(sub, \(x) x$meta$root_names()) |>
+        unlist() |>
+        unique()
+    )
 
     if (length(sub) > 0) {
       if (is_grouped) {
@@ -95,6 +111,19 @@ mutate.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
 
     if (length(to_drop) > 0) {
       .data <- .data$drop(to_drop)
+    }
+  }
+
+  if (.keep != "all") {
+    new_vars <- setdiff(names(.data), orig_names)
+    not_used <- setdiff(orig_names, used)
+    not_used <- setdiff(not_used, grps)
+    if (.keep == "used") {
+      .data <- .data$drop(not_used)
+    } else if (.keep == "unused") {
+      .data <- .data$drop(used)
+    } else if (.keep == "none") {
+      .data <- .data$drop(c(not_used, used))
     }
   }
 
