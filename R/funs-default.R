@@ -8,24 +8,41 @@ pl_abs <- function(x, ...) {
 pl_mean <- function(x, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x)
-  x$mean()
+  if (isTRUE(x$is_rowwise)) {
+    x$expr$list$eval(pl$element()$mean())$explode()
+  } else {
+    x$expr$mean()
+  }
 }
 
 pl_median <- function(x, ...) {
   check_empty_dots(...)
-  x$median()
+  x <- check_rowwise(x)
+  if (isTRUE(x$is_rowwise)) {
+    x$expr$list$eval(pl$element()$median())$explode()
+  } else {
+    x$expr$median()
+  }
 }
 
 pl_min <- function(x, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x)
-  x$min()
+  if (isTRUE(x$is_rowwise)) {
+    x$expr$list$eval(pl$element()$min())$explode()
+  } else {
+    x$expr$min()
+  }
 }
 
 pl_max <- function(x, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x)
-  x$max()
+  if (isTRUE(x$is_rowwise)) {
+    x$expr$list$eval(pl$element()$max())$explode()
+  } else {
+    x$expr$max()
+  }
 }
 
 pl_sum <- function(..., na.rm = FALSE) {
@@ -33,19 +50,21 @@ pl_sum <- function(..., na.rm = FALSE) {
     rlang::inform("Argument `na.rm` in `sum()` is ignored.")
   }
   x <- check_rowwise_dots(...)
-  # browser()
   if (isTRUE(x$is_rowwise)) {
     x$expr$list$eval(pl$element()$sum())$explode()
   } else {
-    pl$sum(expr)
+    x$expr$sum()
   }
-
 }
 
 pl_sd <- function(x, ddof = 1, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x)
-  x$std(ddof = ddof)
+  if (isTRUE(x$is_rowwise)) {
+    x$expr$list$eval(pl$element()$std(ddof = ddof))$explode()
+  } else {
+    x$expr$std(ddof = ddof)
+  }
 }
 
 pl_floor <- function(x, ...) {

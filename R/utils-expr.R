@@ -462,11 +462,11 @@ reorder_exprs <- function(exprs) {
 check_rowwise <- function(x) {
   is_rowwise <- rlang::caller_env(7)[["is_rowwise"]]
   if (is.list(x) && isTRUE(is_rowwise)) {
-    out <- pl$concat_list(x)$arr
+    out <- pl$concat_list(x)
   } else {
     out <- x
   }
-  out
+  list(is_rowwise = is_rowwise, expr = out)
 }
 
 check_rowwise_dots <- function(...) {
@@ -477,7 +477,7 @@ check_rowwise_dots <- function(...) {
   if (isTRUE(is_rowwise)) {
     out <- pl$concat_list(dots)
   } else {
-    out <- x
+    out <- dots[[1]]
   }
-  return(list(is_rowwise = is_rowwise, expr = out))
+  list(is_rowwise = is_rowwise, expr = out)
 }

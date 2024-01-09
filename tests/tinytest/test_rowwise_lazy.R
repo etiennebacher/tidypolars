@@ -10,22 +10,22 @@ test <- polars::pl$LazyFrame(x = c(2, 2), y = c(2, 3), z = c(5, NA)) |>
 
 expect_equal_lazy(
   test |>
-    pl_mutate(m = mean(c(x, y, z))) |>
-    pl_pull(m),
+    mutate(m = mean(c(x, y, z))) |>
+    pull(m),
   c(3, 2.5)
 )
 
 expect_equal_lazy(
   test |>
-    pl_mutate(m = min(c(x, y, z))) |>
-    pl_pull(m),
+    mutate(m = min(c(x, y, z))) |>
+    pull(m),
   c(2, 2)
 )
 
 expect_equal_lazy(
   test |>
-    pl_mutate(m = max(c(x, y, z))) |>
-    pl_pull(m),
+    mutate(m = max(c(x, y, z))) |>
+    pull(m),
   c(5, 3)
 )
 
@@ -35,15 +35,15 @@ test2 <- polars::pl$LazyFrame(x = c(TRUE, TRUE), y = c(TRUE, FALSE), z = c(TRUE,
 # TODO: uncomment this once r-polars has caught up py-polars
 # expect_equal_lazy(
 #   test |>
-#     pl_mutate(m = all(c(x, y, z))) |>
-#     pl_pull(m),
+#     mutate(m = all(c(x, y, z))) |>
+#     pull(m),
 #   c(TRUE, FALSE)
 # )
 #
 # expect_equal_lazy(
 #   test |>
-#     pl_mutate(m = any(c(x, y, z))) |>
-#     pl_pull(m),
+#     mutate(m = any(c(x, y, z))) |>
+#     pull(m),
 #   c(TRUE, TRUE)
 # )
 

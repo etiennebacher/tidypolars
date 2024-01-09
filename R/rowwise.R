@@ -12,3 +12,7 @@ rowwise.RPolarsDataFrame <- function(.data, ...) {
   attr(.data2, "grp_type") <- "rowwise"
   .data2
 }
+
+#' @rdname rowwise.RPolarsDataFrame
+#' @export
+rowwise.RPolarsLazyFrame <- rowwise.RPolarsDataFrame
