@@ -5,9 +5,9 @@
 \alias{mutate.RPolarsLazyFrame}
 \title{Create, modify, and delete columns}
 \usage{
-\method{mutate}{RPolarsDataFrame}(.data, ..., .by = NULL)
+\method{mutate}{RPolarsDataFrame}(.data, ..., .by = NULL, .keep = c("all", "used", "unused", "none"))
 
-\method{mutate}{RPolarsLazyFrame}(.data, ..., .by = NULL)
+\method{mutate}{RPolarsLazyFrame}(.data, ..., .by = NULL, .keep = c("all", "used", "unused", "none"))
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
@@ -23,6 +23,20 @@ frame if ungrouped).
 \item{.by}{Optionally, a selection of columns to group by for just this
 operation, functioning as an alternative to \code{group_by()}. The group order
 is not maintained, use \code{group_by()} if you want more control over it.}
+
+\item{.keep}{Control which columns from \code{.data} are retained in the output.
+Grouping columns and columns created by \code{...} are always kept.
+\itemize{
+\item \code{"all"} retains all columns from .data. This is the default.
+\item \code{"used"} retains only the columns used in ... to create new columns. This is
+useful for checking your work, as it displays inputs and outputs side-by-
+side.
+\item \code{"unused"} retains only the columns not used in \code{...} to create new columns.
+This is useful if you generate new columns, but no longer need the columns
+used to generate them.
+\item \code{"none"} doesn't retain any extra columns from \code{.data}. Only the grouping
+variables and columns created by \code{...} are kept.
+}}
 }
 \description{
 This creates new columns that are functions of existing variables. It
@@ -30,16 +44,11 @@ can also modify (if the name is the same as an existing column) and
 delete columns (by setting their value to NULL).
 }
 \details{
-A lot of functions available in base R (cos, sin, multiplying, etc.) or
+A lot of functions available in base R (cos, mean, multiplying, etc.) or
 in other packages (dplyr::lag(), etc.) are implemented in an efficient
-way in Polars. These functions will be automatically translated to Polars
+way in Polars. These functions are automatically translated to Polars
 syntax under the hood so that you can continue using the classic R syntax and
 functions.
-
-If a Polars built-in replacement doesn't exist (for example for custom
-functions), the R function will be passed to \code{map()} in the Polars workflow.
-Note that this is slower than using functions that can be translated to
-Polars syntax.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
