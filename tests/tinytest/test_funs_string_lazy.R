@@ -39,7 +39,7 @@ for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper", "nchar")) {
 
 }
 
-if (polars::pl$polars_info()$features$full_features) {
+if (polars::polars_info()$features$full_features) {
   expect_equal_lazy(
     mutate(test, foo = str_to_title(x1)) |>
       pull(foo),

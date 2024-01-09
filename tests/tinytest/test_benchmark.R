@@ -9,7 +9,7 @@ tmp <- rep(list(mtcars), 4*1e5)
 # EAGER
 
 dat <- data.table::rbindlist(tmp) |>
-  as_polars()
+  as_polars_df()
 
 x <- bench::mark(
   polars = dat$
@@ -42,7 +42,7 @@ expect_true(
 # LAZY
 
 dat <- data.table::rbindlist(tmp) |>
-  as_polars(lazy = TRUE)
+  as_polars_lf()
 
 x <- bench::mark(
   polars = dat$

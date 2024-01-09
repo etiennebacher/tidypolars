@@ -18,7 +18,7 @@ Summary statistics for a Polars DataFrame
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 mtcars |>
-  as_polars() |>
+  as_polars_df() |>
   describe(percentiles = c(0.2, 0.4, 0.6, 0.8))
 \dontshow{\}) # examplesIf}
 }

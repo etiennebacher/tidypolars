@@ -112,7 +112,7 @@ library(tidypolars)
 library(polars)
 
 mtcars |> 
-  as_polars() |> 
+  as_polars_df() |> 
   mutate(x = sd(mpg, na.rm = TRUE))
 ```
 
@@ -144,7 +144,7 @@ any other function:
 
 ```{r}
 mtcars |> 
-  as_polars() |> 
+  as_polars_df() |> 
   mutate(x = pl_standardize(mpg))
 ```
 
@@ -157,7 +157,7 @@ columns. It accepts built-in functions, UDFs, and anonymous functions.
 
 ```{r}
 mtcars |> 
-  as_polars() |> 
+  as_polars_df() |> 
   mutate(
     across(
       .cols = contains("a"),
@@ -171,7 +171,7 @@ expression:
 
 ```{r error=TRUE}
 mtcars |> 
-  as_polars() |> 
+  as_polars_df() |> 
   mutate(
     across(
       .cols = contains("a"),

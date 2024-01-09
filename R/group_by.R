@@ -14,7 +14,7 @@
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' by_cyl <- mtcars |>
-#'   as_polars() |>
+#'   as_polars_df() |>
 #'   group_by(cyl)
 #'
 #' by_cyl

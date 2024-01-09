@@ -289,7 +289,7 @@ expect_error(
 
 test3 <- mtcars |>
   head(n = 5) |>
-  as_polars() |>
+  as_polars_df() |>
   summarize(across(everything(), .fns = mean), .by = "cyl") |>
   distinct() |>
   arrange(cyl)

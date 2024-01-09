@@ -25,7 +25,7 @@ Use \code{relocate()} to change column positions, using the same syntax as
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-dat <- as_polars(mtcars)
+dat <- as_polars_df(mtcars)
 
 dat |>
   relocate(hp, vs, .before = cyl)

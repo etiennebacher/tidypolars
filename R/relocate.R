@@ -10,7 +10,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' dat <- as_polars(mtcars)
+#' dat <- as_polars_df(mtcars)
 #'
 #' dat |>
 #'   relocate(hp, vs, .before = cyl)
