@@ -1,15 +1,18 @@
 # tidypolars (development version)
 
-**Breaking changes**
+**Breaking changes and deprecations**
+  
+* `as_polars()` is deprecated and will be removed in 0.7.0. Use `as_polars_lf()`
+  or `as_polars_df()` instead.
 
 * `as_polars()` doesn't have an argument `with_string_cache` anymore. When set
   to `TRUE`, this enabled the string cache globally, which could lead to 
   undesirable side effects.
   
-**Deprecations**
+**New features**
 
-* `as_polars()` is deprecated and will be removed in 0.7.0. Use `as_polars_lf()`
-  or `as_polars_df()` instead.
+* Add support for argument `.keep` in `mutate()` (#80).
+
 
 # tidypolars 0.5.0
 
