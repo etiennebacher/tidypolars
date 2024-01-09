@@ -347,5 +347,10 @@ expect_colnames(
 
 expect_colnames(
   mutate(pl_grp, x = Sepal.Length, .keep = "unused"),
-  c("Sepal.Width", "Petal.Length", "Petal.Width", "x")
+  c("Sepal.Width", "Petal.Length", "Petal.Width", "Species", "x")
+)
+
+expect_colnames(
+  mutate(pl_grp, x = Sepal.Length, .keep = "none"),
+  c("Species", "x")
 )
