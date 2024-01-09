@@ -28,17 +28,16 @@ expect_equal(
 test2 <- polars::pl$DataFrame(x = c(TRUE, TRUE), y = c(TRUE, FALSE), z = c(TRUE, NA)) |>
   rowwise()
 
-# TODO: uncomment this once r-polars has caught up py-polars
-# expect_equal(
-#   test |>
-#     mutate(m = all(c(x, y, z))) |>
-#     pull(m),
-#   c(TRUE, FALSE)
-# )
-#
-# expect_equal(
-#   test |>
-#     mutate(m = any(c(x, y, z))) |>
-#     pull(m),
-#   c(TRUE, TRUE)
-# )
+expect_equal(
+  test2 |>
+    mutate(m = all(c(x, y, z))) |>
+    pull(m),
+  c(TRUE, FALSE)
+)
+
+expect_equal(
+  test2 |>
+    mutate(m = any(c(x, y, z))) |>
+    pull(m),
+  c(TRUE, TRUE)
+)

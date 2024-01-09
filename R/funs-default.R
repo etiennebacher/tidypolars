@@ -75,13 +75,22 @@ pl_floor <- function(x, ...) {
 pl_all <- function(x, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x)
-  x$all()
+  if (isTRUE(x$is_rowwise)) {
+    browser()
+    pl$all_horizontal(unlist(x$expr))
+  } else {
+    x$expr$all()
+  }
 }
 
 pl_any <- function(x, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x)
-  x$any()
+  if (isTRUE(x$is_rowwise)) {
+    pl$any_horizontal(x$expr)
+  } else {
+    x$expr$any()
+  }
 }
 
 pl_approx_unique <- function(x, ...) {
