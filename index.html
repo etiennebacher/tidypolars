@@ -11,6 +11,12 @@
     of tidypolars is to improve the ease-of-use of Polars in R by providing
     tidyverse syntax to polars.">
 <title>Get the Power of Polars with the Syntax of the Tidyverse • tidypolars</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Mulish-0.4.8/font.css" rel="stylesheet">
@@ -23,6 +29,7 @@
     will look odd to many R users who are not used to Python syntax. The objective
     of tidypolars is to improve the ease-of-use of Polars in R by providing
     tidyverse syntax to polars.">
+<meta property="og:image" content="/logo.svg">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -81,8 +88,10 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="tidypolars">tidypolars<a class="anchor" aria-label="anchor" href="#tidypolars"></a>
-</h1></div>
+<div class="page-header">
+<img src="logo.svg" class="logo" alt=""><h1 id="tidypolars-">tidypolars <a class="anchor" aria-label="anchor" href="#tidypolars-"></a>
+</h1>
+</div>
 <!-- badges: start -->
 
 <hr>
@@ -263,10 +272,10 @@ Click to see a small benchmark
 <span><span class="co">#&gt; # A tibble: 4 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars     114.03ms  139.3ms     5.71    27.78KB    0    </span></span>
-<span><span class="co">#&gt; 2 tidypolars 188.24ms 232.54ms     3.28    290.7KB    0.246</span></span>
-<span><span class="co">#&gt; 3 dplyr         3.31s    3.52s     0.271    1.79GB    0.786</span></span>
-<span><span class="co">#&gt; 4 collapse   326.57ms 405.23ms     2.50   745.96MB    2.38</span></span>
+<span><span class="co">#&gt; 1 polars     161.36ms 205.42ms     4.22    27.86KB    0    </span></span>
+<span><span class="co">#&gt; 2 tidypolars 197.96ms 268.42ms     3.13   290.98KB    0.235</span></span>
+<span><span class="co">#&gt; 3 dplyr         5.14s    5.78s     0.168    1.79GB    0.491</span></span>
+<span><span class="co">#&gt; 4 collapse    490.3ms  618.3ms     1.56   745.96MB    1.37</span></span>
 <span></span>
 <span><span class="co"># NOTE: do NOT take the "mem_alloc" results into account.</span></span>
 <span><span class="co"># `bench::mark()` doesn't report the accurate memory usage for packages calling</span></span>
