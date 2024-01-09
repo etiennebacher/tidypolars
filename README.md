@@ -1,5 +1,5 @@
 
-# tidypolars
+# tidypolars <img src="man/figures/logo.png" align="right" height="138" alt="" />
 
 <!-- badges: start -->
 
@@ -218,10 +218,10 @@ bench::mark(
 #> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     114.03ms  139.3ms     5.71    27.78KB    0    
-#> 2 tidypolars 188.24ms 232.54ms     3.28    290.7KB    0.246
-#> 3 dplyr         3.31s    3.52s     0.271    1.79GB    0.786
-#> 4 collapse   326.57ms 405.23ms     2.50   745.96MB    2.38
+#> 1 polars     161.36ms 205.42ms     4.22    27.86KB    0    
+#> 2 tidypolars 197.96ms 268.42ms     3.13   290.98KB    0.235
+#> 3 dplyr         5.14s    5.78s     0.168    1.79GB    0.491
+#> 4 collapse    490.3ms  618.3ms     1.56   745.96MB    1.37
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
