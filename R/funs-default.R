@@ -76,8 +76,7 @@ pl_all <- function(x, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x)
   if (isTRUE(x$is_rowwise)) {
-    browser()
-    pl$all_horizontal(unlist(x$expr))
+    x$expr$list$eval(pl$element()$all())$explode()
   } else {
     x$expr$all()
   }
@@ -87,7 +86,7 @@ pl_any <- function(x, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x)
   if (isTRUE(x$is_rowwise)) {
-    pl$any_horizontal(x$expr)
+    x$expr$list$eval(pl$element()$any())$explode()
   } else {
     x$expr$any()
   }
