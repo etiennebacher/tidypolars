@@ -13,7 +13,7 @@ expect_equal_lazy(
 )
 
 expect_equal_lazy(
-  test |> rowwise(am, cyl) |> pl_ungroup(),
+  test |> rowwise(am, cyl) |> ungroup(),
   test
 )
 
