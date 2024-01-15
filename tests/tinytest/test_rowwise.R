@@ -5,6 +5,11 @@ test <- polars::pl$DataFrame(x = c(2, 2), y = c(2, 3), z = c(5, NA)) |>
   rowwise()
 
 expect_equal(
+  pl$DataFrame(iris) |> rowwise() |> ungroup(),
+  pl$DataFrame(iris)
+)
+
+expect_equal(
   test |>
     mutate(m = mean(c(x, y, z))) |>
     pull(m),
