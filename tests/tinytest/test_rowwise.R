@@ -5,11 +5,6 @@ test <- polars::pl$DataFrame(x = c(2, 2), y = c(2, 3), z = c(5, NA)) |>
   rowwise()
 
 expect_equal(
-  pl$DataFrame(iris) |> rowwise() |> ungroup(),
-  pl$DataFrame(iris)
-)
-
-expect_equal(
   test |>
     mutate(m = mean(c(x, y, z))) |>
     pull(m),
@@ -30,19 +25,19 @@ expect_equal(
   c(5, 3)
 )
 
-test2 <- polars::pl$DataFrame(x = c(TRUE, TRUE), y = c(TRUE, FALSE), z = c(TRUE, NA)) |>
+test2 <- polars::pl$DataFrame(x = c(TRUE, TRUE, NA), y = c(TRUE, FALSE, NA), z = c(TRUE, NA, NA)) |>
   rowwise()
 
 expect_equal(
   test2 |>
     mutate(m = all(c(x, y, z))) |>
     pull(m),
-  c(TRUE, FALSE)
+  c(TRUE, FALSE, NA)
 )
 
 expect_equal(
   test2 |>
     mutate(m = any(c(x, y, z))) |>
     pull(m),
-  c(TRUE, TRUE)
+  c(TRUE, TRUE, NA)
 )

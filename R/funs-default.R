@@ -76,7 +76,13 @@ pl_all <- function(x, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x)
   if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$all())$explode()
+    # I have to use pl$all_horizontal() because nulls are not well handled when
+    # I do the $list$eval() stuff.
+    # This requires passing the column names to pl$all_horizontal, it doesn't
+    # accept a list of expression
+    lapply(x$expr, function(y) y$meta$root_names()) |>
+      unlist() |>
+      pl$all_horizontal()
   } else {
     x$expr$all()
   }
@@ -84,9 +90,15 @@ pl_all <- function(x, ...) {
 
 pl_any <- function(x, ...) {
   check_empty_dots(...)
-  x <- check_rowwise(x)
+  x <- check_rowwise(x, concat = FALSE)
   if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$any())$explode()
+    # I have to use pl$any_horizontal() because nulls are not well handled when
+    # I do the $list$eval() stuff.
+    # This requires passing the column names to pl$any_horizontal, it doesn't
+    # accept a list of expression
+    lapply(x$expr, function(y) y$meta$root_names()) |>
+      unlist() |>
+      pl$any_horizontal()
   } else {
     x$expr$any()
   }
@@ -472,11 +484,6 @@ pl_sqrt <- function(x, ...) {
   check_empty_dots(...)
   x$sqrt()
 }
-
-# pl_sum <- function(x, ...) {
-#   check_empty_dots(...)
-#   x$sum()
-# }
 
 pl_tan <- function(x, ...) {
   check_empty_dots(...)
