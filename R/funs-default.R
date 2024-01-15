@@ -72,6 +72,11 @@ pl_floor <- function(x, ...) {
   x$floor()
 }
 
+
+### TODO: the handling below is not good, it doesn't take into account expressions
+### need to fix pl$any_horizontal() and pl$all_horizontal() so that they accept
+### a list of Expr?
+
 pl_all <- function(x, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x)

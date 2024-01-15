@@ -13,6 +13,13 @@ expect_equal(
 
 expect_equal(
   test |>
+    mutate(m = sum(c(x, y, z))) |>
+    pull(m),
+  c(9, 5)
+)
+
+expect_equal(
+  test |>
     mutate(m = min(c(x, y, z))) |>
     pull(m),
   c(2, 2)
@@ -33,6 +40,13 @@ expect_equal(
     mutate(m = all(c(x, y, z))) |>
     pull(m),
   c(TRUE, FALSE, NA)
+)
+
+expect_equal(
+  test2 |>
+    mutate(m = all(c(x, y, !z))) |>
+    pull(m),
+  c(FALSE, FALSE, NA)
 )
 
 expect_equal(

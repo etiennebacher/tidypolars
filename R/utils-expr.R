@@ -478,6 +478,7 @@ check_rowwise <- function(x, concat = TRUE) {
 
 check_rowwise_dots <- function(...) {
   is_rowwise <- rlang::caller_env(7)[["is_rowwise"]]
+  browser()
   dots <- get_dots(...)
   dots[["__tidypolars__new_vars"]] <- NULL
   dots[["__tidypolars__env"]] <- NULL
