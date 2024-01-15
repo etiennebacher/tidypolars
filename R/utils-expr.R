@@ -146,6 +146,9 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
           },
           "c" = {
             expr[[1]] <- NULL
+            if (isTRUE(attr(expr, "do_not_split", TRUE))) {
+              return(polars_constant(unlist(expr)))
+            }
             return(lapply(expr, translate))
           },
           ":" = {
