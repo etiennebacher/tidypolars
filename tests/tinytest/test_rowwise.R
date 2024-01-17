@@ -32,6 +32,11 @@ expect_equal(
   c(5, 3)
 )
 
+# Note: the default behavior with only NA is different between R (and therefore
+# dplyr) and polars:
+# - Polars all() returns TRUE if only NA, R returns NA (unless na.rm = TRUE)
+# - Polars any() returns FALSE if only NA, R returns NA (unless na.rm = TRUE)
+
 test2 <- polars::pl$DataFrame(x = c(TRUE, TRUE, NA), y = c(TRUE, FALSE, NA), z = c(TRUE, NA, NA)) |>
   rowwise()
 
@@ -39,19 +44,26 @@ expect_equal(
   test2 |>
     mutate(m = all(c(x, y, z))) |>
     pull(m),
-  c(TRUE, FALSE, NA)
+  c(TRUE, FALSE, TRUE)
 )
 
 expect_equal(
   test2 |>
     mutate(m = all(c(x, y, !z))) |>
     pull(m),
-  c(FALSE, FALSE, NA)
+  c(FALSE, FALSE, TRUE)
 )
 
 expect_equal(
   test2 |>
     mutate(m = any(c(x, y, z))) |>
     pull(m),
-  c(TRUE, TRUE, NA)
+  c(TRUE, TRUE, FALSE)
+)
+
+expect_equal(
+  test2 |>
+    mutate(m = any(c(x, y, !z))) |>
+    pull(m),
+  c(TRUE, TRUE, FALSE)
 )

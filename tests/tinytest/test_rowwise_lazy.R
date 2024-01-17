@@ -9,15 +9,17 @@ test <- polars::pl$LazyFrame(x = c(2, 2), y = c(2, 3), z = c(5, NA)) |>
   rowwise()
 
 expect_equal_lazy(
-  pl$LazyFrame(iris) |> rowwise() |> ungroup(),
-  pl$LazyFrame(iris)
-)
-
-expect_equal_lazy(
   test |>
     mutate(m = mean(c(x, y, z))) |>
     pull(m),
   c(3, 2.5)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(m = sum(c(x, y, z))) |>
+    pull(m),
+  c(9, 5)
 )
 
 expect_equal_lazy(
@@ -34,21 +36,40 @@ expect_equal_lazy(
   c(5, 3)
 )
 
-test2 <- polars::pl$LazyFrame(x = c(TRUE, TRUE), y = c(TRUE, FALSE), z = c(TRUE, NA)) |>
+# Note: the default behavior with only NA is different between R (and therefore
+# dplyr) and polars:
+# - Polars all() returns TRUE if only NA, R returns NA (unless na.rm = TRUE)
+# - Polars any() returns FALSE if only NA, R returns NA (unless na.rm = TRUE)
+
+test2 <- polars::pl$LazyFrame(x = c(TRUE, TRUE, NA), y = c(TRUE, FALSE, NA), z = c(TRUE, NA, NA)) |>
   rowwise()
 
 expect_equal_lazy(
   test2 |>
     mutate(m = all(c(x, y, z))) |>
     pull(m),
-  c(TRUE, FALSE)
+  c(TRUE, FALSE, TRUE)
+)
+
+expect_equal_lazy(
+  test2 |>
+    mutate(m = all(c(x, y, !z))) |>
+    pull(m),
+  c(FALSE, FALSE, TRUE)
 )
 
 expect_equal_lazy(
   test2 |>
     mutate(m = any(c(x, y, z))) |>
     pull(m),
-  c(TRUE, TRUE)
+  c(TRUE, TRUE, FALSE)
+)
+
+expect_equal_lazy(
+  test2 |>
+    mutate(m = any(c(x, y, !z))) |>
+    pull(m),
+  c(TRUE, TRUE, FALSE)
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

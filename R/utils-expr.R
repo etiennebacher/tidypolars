@@ -462,30 +462,32 @@ reorder_exprs <- function(exprs) {
 }
 
 
-check_rowwise <- function(x, concat = TRUE) {
+# Check rowwise when we have a named arg (e.g mean(c(x, y)))
+check_rowwise <- function(x) {
   is_rowwise <- rlang::caller_env(7)[["is_rowwise"]]
   if (is.list(x) && isTRUE(is_rowwise)) {
-    if (isTRUE(concat)) {
-      out <- pl$concat_list(x)
-    } else {
-      out <- x
-    }
+    out <- pl$concat_list(x)
   } else {
     out <- x
   }
   list(is_rowwise = is_rowwise, expr = out)
 }
 
+# Check rowwise when we have dots (e.g sum(x, y, 1, z))
 check_rowwise_dots <- function(...) {
   is_rowwise <- rlang::caller_env(7)[["is_rowwise"]]
-  browser()
   dots <- get_dots(...)
   dots[["__tidypolars__new_vars"]] <- NULL
   dots[["__tidypolars__env"]] <- NULL
+  dots <- unlist(dots)
   if (isTRUE(is_rowwise)) {
     out <- pl$concat_list(dots)
   } else {
-    out <- dots[[1]]
+    if (is.list(dots)) {
+      out <- dots[[1]]
+    } else {
+      out <- dots
+    }
   }
   list(is_rowwise = is_rowwise, expr = out)
 }

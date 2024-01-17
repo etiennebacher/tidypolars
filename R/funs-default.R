@@ -73,37 +73,24 @@ pl_floor <- function(x, ...) {
 }
 
 
-### TODO: the handling below is not good, it doesn't take into account expressions
-### need to fix pl$any_horizontal() and pl$all_horizontal() so that they accept
-### a list of Expr?
+### NOTE: the behaviour of polars' all() and any() is equivalent to passing
+### na.rm = TRUE in R all() and any(). This is consistent with $sum() for example.
 
-pl_all <- function(x, ...) {
+pl_all <- function(x, ..., na.rm = FALSE) {
   check_empty_dots(...)
   x <- check_rowwise(x)
   if (isTRUE(x$is_rowwise)) {
-    # I have to use pl$all_horizontal() because nulls are not well handled when
-    # I do the $list$eval() stuff.
-    # This requires passing the column names to pl$all_horizontal, it doesn't
-    # accept a list of expression
-    lapply(x$expr, function(y) y$meta$root_names()) |>
-      unlist() |>
-      pl$all_horizontal()
+    x$expr$list$eval(pl$element()$all())$explode()
   } else {
     x$expr$all()
   }
 }
 
-pl_any <- function(x, ...) {
+pl_any <- function(x, ..., na.rm = FALSE) {
   check_empty_dots(...)
-  x <- check_rowwise(x, concat = FALSE)
+  x <- check_rowwise(x)
   if (isTRUE(x$is_rowwise)) {
-    # I have to use pl$any_horizontal() because nulls are not well handled when
-    # I do the $list$eval() stuff.
-    # This requires passing the column names to pl$any_horizontal, it doesn't
-    # accept a list of expression
-    lapply(x$expr, function(y) y$meta$root_names()) |>
-      unlist() |>
-      pl$any_horizontal()
+    x$expr$list$eval(pl$element()$any())$explode()
   } else {
     x$expr$any()
   }
