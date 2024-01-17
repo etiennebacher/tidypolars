@@ -1,4 +1,30 @@
+#' Group input by rows
+#'
+#' @description
+#' \[EXPERIMENTAL\]
+#'
+#' `rowwise()` allows you to compute on a Data/LazyFrame a row-at-a-time. This
+#' is most useful when a vectorised function doesn't exist.
+#'
+#' `rowwise()` produces another type of grouped data, and therefore can be
+#' removed with `ungroup()`.
+#'
+#' @inheritParams select.RPolarsDataFrame
+#'
 #' @export
+#' @return A Polars Data/LazyFrame.
+#' @examples
+#' df <- pl$DataFrame(x = c(1, 3, 4), y = c(2, 1, 5), z = c(2, 3, 1))
+#'
+#' # Compute the mean of x, y, z in each row
+#' df |>
+#'  rowwise() |>
+#'  mutate(m = mean(c(x, y, z)))
+#'
+#' # Compute the min and max of x and y in each row
+#' df |>
+#'  rowwise() |>
+#'  mutate(min = min(c(x, y)), max = max(c(x, y)))
 rowwise.RPolarsDataFrame <- function(.data, ...) {
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
