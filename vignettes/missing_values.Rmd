@@ -1,0 +1,58 @@
+---
+title: "About missing values"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{About missing values}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+Dealing with missing values is extremely important, whatever the context in which you use `tidypolars`. This vignette documents some important information about how `polars` and therefore `tidypolars` handles missing values. 
+
+Here, we will compare `dplyr` and `tidypolars` code, but the explanations stand for `R` in general and for `polars`.
+
+# The `na.rm` argument
+
+If you ever worked with data that had missing values (`NA`), you probably used the argument `na.rm` or some of its variants (`na_rm`, `remove_na`, etc.). Let us be clear about this: **`polars` doesn't have this kind of argument**. `polars` automatically removes missing values, and you cannot change this behavior. Let's see this with this brief example:
+
+```{r}
+library(dplyr, warn.conflicts = FALSE)
+library(tidypolars)
+
+# R returns NA if `na.rm = FALSE` (the default)
+test <- data.frame(x = c(1:3, NA))
+test |> 
+  mutate(m = mean(x))
+
+# polars simply removes the missing value
+test |> 
+  as_polars_df() |> 
+  mutate(m = mean(x))
+```
+
+This is the case for all functions with a `na.rm` argument, e.g `all()`:
+
+```{r}
+test <- data.frame(x = c(TRUE, TRUE, NA))
+
+# R
+test |> 
+  mutate(all = all(x), any = any(x))
+
+# polars 
+test |> 
+  as_polars_df() |> 
+  mutate(all = all(x), any = any(x))
+```
+
+# Solution
+
+Know your data, and ensure that there are no missing values. The function `describe()` shows how many missing values there are:
