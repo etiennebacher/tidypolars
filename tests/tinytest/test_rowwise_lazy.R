@@ -72,4 +72,21 @@ expect_equal_lazy(
   c(TRUE, TRUE, FALSE)
 )
 
+
+# rowwise mode is kept after operations
+
+expect_equal_lazy(
+  (test2 |>
+    mutate(m = all(c(x, y, z))) |>
+    attributes())$grp_type,
+  "rowwise"
+)
+
+expect_equal_lazy(
+  (test2 |>
+    summarize(m = all(c(x, y, z))) |>
+    attributes())$grp_type,
+  "rowwise"
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

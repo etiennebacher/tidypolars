@@ -142,6 +142,8 @@ mutate.RPolarsDataFrame <- function(
 
   if (is_grouped && missing(.by)) {
     group_by(.data, grps, maintain_order = mo)
+  } else if (isTRUE(is_rowwise)) {
+    rowwise(.data)
   } else {
     .data
   }

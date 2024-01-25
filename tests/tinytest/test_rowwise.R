@@ -67,3 +67,20 @@ expect_equal(
     pull(m),
   c(TRUE, TRUE, FALSE)
 )
+
+
+# rowwise mode is kept after operations
+
+expect_equal(
+  (test2 |>
+    mutate(m = all(c(x, y, z))) |>
+    attributes())$grp_type,
+  "rowwise"
+)
+
+expect_equal(
+  (test2 |>
+    summarize(m = all(c(x, y, z))) |>
+    attributes())$grp_type,
+  "rowwise"
+)

@@ -29,6 +29,7 @@ summarize.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
   mo <- attributes(.data)$maintain_grp_order
   if (is.null(mo)) mo <- FALSE
   is_grouped <- !is.null(grps)
+  is_rowwise <- attributes(.data)$grp_type == "rowwise"
 
   # do not take the groups into account, especially useful when applying across()
   # on everything()
@@ -59,6 +60,8 @@ summarize.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
 
   if (is_grouped && missing(.by)) {
     group_by(.data, grps, maintain_order = mo)
+  } else if (isTRUE(is_rowwise)) {
+    rowwise(.data)
   } else {
     .data
   }
