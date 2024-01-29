@@ -22,7 +22,7 @@ BugReports: https://github.com/etiennebacher/tidypolars/issues
 Depends: R (>= 4.1.0)
 Imports: 
     dplyr,
-    polars (>= 0.12.0),
+    polars (>= 0.13.0),
     rlang,
     tidyr,
     tidyselect,
