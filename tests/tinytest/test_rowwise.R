@@ -6,7 +6,10 @@ test <- polars::pl$DataFrame(x = c(2, 2), y = c(2, 3), z = c(5, NA)) |>
 
 expect_equal(
   test |>
-    mutate(m = mean(c(x, y, z))) |>
+    mutate(
+      m = mean(c(x, y, z)),
+      s = sum(c(x, y, z))
+    ) |>
     pull(m),
   c(3, 2.5)
 )
@@ -83,4 +86,20 @@ expect_equal(
     summarize(m = all(c(x, y, z))) |>
     attributes())$grp_type,
   "rowwise"
+)
+
+# can't apply rowwise on grouped data, and vice versa
+
+expect_error(
+  polars::as_polars_df(mtcars) |>
+    group_by(cyl) |>
+    rowwise(),
+  "Cannot use "
+)
+
+expect_error(
+  polars::as_polars_df(mtcars) |>
+    rowwise() |>
+    group_by(cyl),
+  "Cannot use "
 )

@@ -28,7 +28,19 @@
 
 group_by.RPolarsDataFrame <- function(.data, ..., maintain_order = FALSE) {
   check_polars_data(.data)
+  if (isTRUE(attributes(.data)$grp_type == "rowwise")) {
+    rlang::abort(
+      c(
+        "Cannot use `group_by()` if `rowwise()` is also used.",
+        "i" = "Use `ungroup()` first, and then `group_by()`."
+      )
+    )
+  }
+
   vars <- tidyselect_dots(.data, ...)
+  if (length(vars) == 0) {
+    return(.data)
+  }
   # need to clone, otherwise the data gets attributes, even if unassigned
   .data2 <- .data$clone()
   attr(.data2, "pl_grps") <- vars
