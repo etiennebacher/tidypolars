@@ -41,6 +41,7 @@ reference:
       - filter.RPolarsDataFrame
       - full_join.RPolarsDataFrame
       - group_by.RPolarsDataFrame
+      - group_vars.RPolarsDataFrame
       - inner_join.RPolarsDataFrame
       - left_join.RPolarsDataFrame
       - mutate.RPolarsDataFrame

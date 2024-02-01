@@ -15,8 +15,9 @@
 
 * Add support for argument `.keep` in `mutate()` (#80).
 
-* *Experimental* support of `rowwise()` (#40).
+* Add support for `group_vars()` and `group_keys()` (#81).
 
+* *Experimental* support of `rowwise()` (#40).
 
 # tidypolars 0.5.0
 
