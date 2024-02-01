@@ -3,19 +3,20 @@
 #' `group_vars()` returns a character vector with the names of the grouping
 #' variables. `group_keys()` returns a data frame with one row per group.
 #'
-#' @inheritParams select.RPolarsDataFrame
+#' @param x,.tbl A Polars Data/LazyFrame
+#' @param ... Not used.
 #'
 #' @export
-#' @examples
+#' @examplesIf require("dplyr", quietly = TRUE)
 #' pl_g <- polars::as_polars_df(mtcars) |>
 #'   group_by(cyl, am)
 #'
 #' group_vars(pl_g)
 #'
 #' group_keys(pl_g)
-group_vars.RPolarsDataFrame <- function(.data) {
-  check_polars_data(.data)
-  grps <- attributes(.data)$pl_grps
+group_vars.RPolarsDataFrame <- function(x) {
+  check_polars_data(x)
+  grps <- attributes(x)$pl_grps
   if (length(grps) > 0) {
     grps
   } else {
@@ -29,11 +30,11 @@ group_vars.RPolarsLazyFrame <- group_vars.RPolarsDataFrame
 
 #' @rdname group_vars.RPolarsDataFrame
 #' @export
-group_keys.RPolarsDataFrame <- function(.data) {
-  check_polars_data(.data)
-  grps <- attributes(.data)$pl_grps
+group_keys.RPolarsDataFrame <- function(.tbl, ...) {
+  check_polars_data(.tbl)
+  grps <- attributes(.tbl)$pl_grps
   if (length(grps) > 0) {
-    out = .data$group_by(grps)$
+    out = .tbl$group_by(grps)$
       agg(pl$lit(1))$
       drop("literal")$
       sort(grps)
