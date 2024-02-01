@@ -15,6 +15,8 @@
 
 * Add support for argument `.keep` in `mutate()` (#80).
 
+* Add support for `group_vars()` and `group_keys()` (#81).
+
 
 # tidypolars 0.5.0
 
