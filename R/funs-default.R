@@ -7,32 +7,64 @@ pl_abs <- function(x, ...) {
 
 pl_mean <- function(x, ...) {
   check_empty_dots(...)
-  x$mean()
+  x <- check_rowwise(x, ...)
+  if (isTRUE(x$is_rowwise)) {
+    x$expr$list$eval(pl$element()$mean())$explode()
+  } else {
+    x$expr$mean()
+  }
 }
 
 pl_median <- function(x, ...) {
   check_empty_dots(...)
-  x$median()
+  x <- check_rowwise(x, ...)
+  if (isTRUE(x$is_rowwise)) {
+    x$expr$list$eval(pl$element()$median())$explode()
+  } else {
+    x$expr$median()
+  }
 }
 
 pl_min <- function(x, ...) {
   check_empty_dots(...)
-  x$min()
+  x <- check_rowwise(x, ...)
+  if (isTRUE(x$is_rowwise)) {
+    x$expr$list$eval(pl$element()$min())$explode()
+  } else {
+    x$expr$min()
+  }
 }
 
 pl_max <- function(x, ...) {
   check_empty_dots(...)
-  x$max()
+  x <- check_rowwise(x, ...)
+  if (isTRUE(x$is_rowwise)) {
+    x$expr$list$eval(pl$element()$max())$explode()
+  } else {
+    x$expr$max()
+  }
 }
 
-pl_sum <- function(x, ...) {
-  check_empty_dots(...)
-  x$sum()
+pl_sum <- function(..., na.rm = FALSE) {
+  if (isTRUE(na.rm)) {
+    rlang::inform("Argument `na.rm` in `sum()` is ignored.")
+  }
+  x <- check_rowwise_dots(...)
+  if (isTRUE(x$is_rowwise)) {
+    x$expr$list$eval(pl$element()$sum())$explode()
+  } else {
+    x$expr$sum()
+  }
 }
 
 pl_sd <- function(x, ddof = 1, ...) {
   check_empty_dots(...)
-  x$std(ddof = ddof)
+  x <- check_rowwise(x, ...)
+  if (isTRUE(x$is_rowwise)) {
+    x$expr$list$eval(pl$element()$std(ddof = ddof))$explode()
+  } else {
+    x$expr$std(ddof = ddof)
+  }
 }
 
 pl_floor <- function(x, ...) {
@@ -40,14 +72,28 @@ pl_floor <- function(x, ...) {
   x$floor()
 }
 
-pl_all <- function(x, ...) {
+
+### NOTE: the behaviour of polars' all() and any() is equivalent to passing
+### na.rm = TRUE in R all() and any(). This is consistent with $sum() for example.
+
+pl_all <- function(x, ..., na.rm = FALSE) {
   check_empty_dots(...)
-  x$all()
+  x <- check_rowwise(x, ...)
+  if (isTRUE(x$is_rowwise)) {
+    x$expr$list$eval(pl$element()$all())$explode()
+  } else {
+    x$expr$all()
+  }
 }
 
-pl_any <- function(x, ...) {
+pl_any <- function(x, ..., na.rm = FALSE) {
   check_empty_dots(...)
-  x$any()
+  x <- check_rowwise(x, ...)
+  if (isTRUE(x$is_rowwise)) {
+    x$expr$list$eval(pl$element()$any())$explode()
+  } else {
+    x$expr$any()
+  }
 }
 
 pl_approx_unique <- function(x, ...) {
@@ -87,11 +133,13 @@ pl_atanh <- function(x, ...) {
 
 pl_arg_max <- function(x, ...) {
   check_empty_dots(...)
+  x <- check_rowwise(x, ...)
   x$arg_max()
 }
 
 pl_arg_min <- function(x, ...) {
   check_empty_dots(...)
+  x <- check_rowwise(x, ...)
   x$arg_min()
 }
 
@@ -128,6 +176,9 @@ pl_case_match <- function(x, ..., .data) {
       out <- out$otherwise(otw)
       next
     }
+    # add a special attr so we don't convert a vector on the LHS as a list of
+    # pl$lit()
+    attr(dots[[y]][[2]], "do_not_split") <- TRUE
     lhs <- translate_expr(.data, dots[[y]][[2]], new_vars = new_vars, env = env)
     rhs <- translate_expr(.data, dots[[y]][[3]], new_vars = new_vars, env = env)
     if (is.null(out)) {
@@ -156,6 +207,9 @@ pl_case_when <- function(..., .data) {
       out <- out$otherwise(otw)
       next
     }
+    # add a special attr so we don't convert a vector on the LHS as a list of
+    # pl$lit()
+    attr(dots[[y]][[2]], "do_not_split") <- TRUE
     lhs <- translate_expr(.data, dots[[y]][[2]], new_vars = new_vars, env = env)
     rhs <- translate_expr(.data, dots[[y]][[3]], new_vars = new_vars, env = env)
 
@@ -421,11 +475,6 @@ pl_sort <- function(x, ...) {
 pl_sqrt <- function(x, ...) {
   check_empty_dots(...)
   x$sqrt()
-}
-
-pl_sum <- function(x, ...) {
-  check_empty_dots(...)
-  x$sum()
 }
 
 pl_tan <- function(x, ...) {

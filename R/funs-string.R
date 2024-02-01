@@ -106,8 +106,8 @@ pl_str_replace_all <- function(string, pattern, replacement, ...) {
   if (!is.null(names_pattern)) {
     out <- string
     for (i in seq_along(pattern)) {
-      pattern[i] <- parse_replacement(pattern[i])
-      out <- out$str$replace_all(names_pattern[i], pattern[i])
+      pattern[[i]] <- parse_replacement(pattern[[i]])
+      out <- out$str$replace_all(names_pattern[i], pattern[[i]])
     }
   } else {
     replacement <- parse_replacement(replacement)

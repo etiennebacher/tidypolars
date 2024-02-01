@@ -95,6 +95,7 @@ mutate.RPolarsDataFrame <- function(
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
+  is_rowwise <- attributes(.data)$grp_type == "rowwise"
   to_drop <- list()
 
   polars_exprs <- translate_dots(.data = .data, ..., env = rlang::current_env())
@@ -141,6 +142,8 @@ mutate.RPolarsDataFrame <- function(
 
   if (is_grouped && missing(.by)) {
     group_by(.data, grps, maintain_order = mo)
+  } else if (isTRUE(is_rowwise)) {
+    rowwise(.data)
   } else {
     .data
   }

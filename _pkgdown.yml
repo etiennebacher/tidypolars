@@ -50,6 +50,7 @@ reference:
       - rename.RPolarsDataFrame
       - rename_with.RPolarsDataFrame
       - right_join.RPolarsDataFrame
+      - rowwise.RPolarsDataFrame
       - select.RPolarsDataFrame
       - semi_join.RPolarsDataFrame
       - separate.RPolarsDataFrame

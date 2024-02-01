@@ -144,7 +144,13 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
             args[["__tidypolars__env"]] <- env
             return(do.call(pl_case_when, args))
           },
-          "c" = ,
+          "c" = {
+            expr[[1]] <- NULL
+            if (isTRUE(attr(expr, "do_not_split", TRUE))) {
+              return(polars_constant(unlist(expr)))
+            }
+            return(lapply(expr, translate))
+          },
           ":" = {
             out <- tryCatch(eval_tidy(expr, env = caller_env()), error = identity)
             return(out)
@@ -202,6 +208,20 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
         known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
                        "&", "|", "!")
         user_defined <- get_globenv_functions()
+
+        if (!missing(env) && isTRUE(env$is_rowwise)) {
+          shortlist <- c("mean", "min", "max", "sum", "all", "any")
+          if (!name %in% shortlist) {
+            rlang::abort(
+              c(
+                "x" = paste0("Can't use function `", name, "()` in rowwise mode."),
+                "i" = "For now, `rowwise()` only works on the following functions:",
+                "i" = "`mean()`, `min()`, `max()`, `sum()`, `all()`, `any()`"
+              ),
+              call = env
+            )
+          }
+        }
 
         # If unknown function:
         # - either anonymous function called in across()
@@ -453,4 +473,36 @@ reorder_exprs <- function(exprs) {
   }
 
   pool_exprs
+}
+
+
+# Check rowwise when we have a named arg (e.g mean(c(x, y)))
+check_rowwise <- function(x, ...) {
+  dots <- get_dots(...)
+  is_rowwise <- dots[["__tidypolars__env"]]$is_rowwise
+  if (is.list(x) && isTRUE(is_rowwise)) {
+    out <- pl$concat_list(x)
+  } else {
+    out <- x
+  }
+  list(is_rowwise = is_rowwise, expr = out)
+}
+
+# Check rowwise when we have dots (e.g sum(x, y, 1, z))
+check_rowwise_dots <- function(...) {
+  dots <- get_dots(...)
+  is_rowwise <- dots[["__tidypolars__env"]]$is_rowwise
+  dots[["__tidypolars__new_vars"]] <- NULL
+  dots[["__tidypolars__env"]] <- NULL
+  dots <- unlist(dots)
+  if (isTRUE(is_rowwise)) {
+    out <- pl$concat_list(dots)
+  } else {
+    if (is.list(dots)) {
+      out <- dots[[1]]
+    } else {
+      out <- dots
+    }
+  }
+  list(is_rowwise = is_rowwise, expr = out)
 }

@@ -4,6 +4,11 @@ using("tidypolars")
 test <- pl$DataFrame(mtcars)
 
 expect_equal(
-  test |> group_by(am, cyl) |> ungroup(),
-  test
+  test |> group_by(am, cyl) |> ungroup() |> attributes(),
+  attributes(test)
+)
+
+expect_equal(
+  test |> rowwise(am, cyl) |> ungroup() |> attributes(),
+  attributes(test)
 )
