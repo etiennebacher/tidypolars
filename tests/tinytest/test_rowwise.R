@@ -71,6 +71,13 @@ expect_equal(
   c(TRUE, TRUE, FALSE)
 )
 
+# can only use rowwise() on a subset of functions
+
+expect_error(
+  test2 |> mutate(m = range(c(x, y, !z))),
+  "Can't use function"
+)
+
 
 # rowwise mode is kept after operations
 
@@ -103,3 +110,4 @@ expect_error(
     group_by(cyl),
   "Cannot use "
 )
+

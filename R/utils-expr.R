@@ -209,6 +209,20 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
                        "&", "|", "!")
         user_defined <- get_globenv_functions()
 
+        if (!missing(env) && isTRUE(env$is_rowwise)) {
+          shortlist <- c("mean", "min", "max", "sum", "all", "any")
+          if (!name %in% shortlist) {
+            rlang::abort(
+              c(
+                "x" = paste0("Can't use function `", name, "()` in rowwise mode."),
+                "i" = "For now, `rowwise()` only works on the following functions:",
+                "i" = "`mean()`, `min()`, `max()`, `sum()`, `all()`, `any()`"
+              ),
+              call = env
+            )
+          }
+        }
+
         # If unknown function:
         # - either anonymous function called in across()
         # - or undefined function (typo, not run in the global env, etc.)
