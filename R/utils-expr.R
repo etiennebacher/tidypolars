@@ -477,8 +477,9 @@ reorder_exprs <- function(exprs) {
 
 
 # Check rowwise when we have a named arg (e.g mean(c(x, y)))
-check_rowwise <- function(x) {
-  is_rowwise <- rlang::caller_env(7)[["is_rowwise"]]
+check_rowwise <- function(x, ...) {
+  dots <- get_dots(...)
+  is_rowwise <- dots[["__tidypolars__env"]]$is_rowwise
   if (is.list(x) && isTRUE(is_rowwise)) {
     out <- pl$concat_list(x)
   } else {
@@ -489,8 +490,8 @@ check_rowwise <- function(x) {
 
 # Check rowwise when we have dots (e.g sum(x, y, 1, z))
 check_rowwise_dots <- function(...) {
-  is_rowwise <- rlang::caller_env(7)[["is_rowwise"]]
   dots <- get_dots(...)
+  is_rowwise <- dots[["__tidypolars__env"]]$is_rowwise
   dots[["__tidypolars__new_vars"]] <- NULL
   dots[["__tidypolars__env"]] <- NULL
   dots <- unlist(dots)

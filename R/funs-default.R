@@ -7,7 +7,7 @@ pl_abs <- function(x, ...) {
 
 pl_mean <- function(x, ...) {
   check_empty_dots(...)
-  x <- check_rowwise(x)
+  x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
     x$expr$list$eval(pl$element()$mean())$explode()
   } else {
@@ -17,7 +17,7 @@ pl_mean <- function(x, ...) {
 
 pl_median <- function(x, ...) {
   check_empty_dots(...)
-  x <- check_rowwise(x)
+  x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
     x$expr$list$eval(pl$element()$median())$explode()
   } else {
@@ -27,7 +27,7 @@ pl_median <- function(x, ...) {
 
 pl_min <- function(x, ...) {
   check_empty_dots(...)
-  x <- check_rowwise(x)
+  x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
     x$expr$list$eval(pl$element()$min())$explode()
   } else {
@@ -37,7 +37,7 @@ pl_min <- function(x, ...) {
 
 pl_max <- function(x, ...) {
   check_empty_dots(...)
-  x <- check_rowwise(x)
+  x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
     x$expr$list$eval(pl$element()$max())$explode()
   } else {
@@ -59,7 +59,7 @@ pl_sum <- function(..., na.rm = FALSE) {
 
 pl_sd <- function(x, ddof = 1, ...) {
   check_empty_dots(...)
-  x <- check_rowwise(x)
+  x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
     x$expr$list$eval(pl$element()$std(ddof = ddof))$explode()
   } else {
@@ -78,7 +78,7 @@ pl_floor <- function(x, ...) {
 
 pl_all <- function(x, ..., na.rm = FALSE) {
   check_empty_dots(...)
-  x <- check_rowwise(x)
+  x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
     x$expr$list$eval(pl$element()$all())$explode()
   } else {
@@ -88,7 +88,7 @@ pl_all <- function(x, ..., na.rm = FALSE) {
 
 pl_any <- function(x, ..., na.rm = FALSE) {
   check_empty_dots(...)
-  x <- check_rowwise(x)
+  x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
     x$expr$list$eval(pl$element()$any())$explode()
   } else {
@@ -133,13 +133,13 @@ pl_atanh <- function(x, ...) {
 
 pl_arg_max <- function(x, ...) {
   check_empty_dots(...)
-  x <- check_rowwise(x)
+  x <- check_rowwise(x, ...)
   x$arg_max()
 }
 
 pl_arg_min <- function(x, ...) {
   check_empty_dots(...)
-  x <- check_rowwise(x)
+  x <- check_rowwise(x, ...)
   x$arg_min()
 }
 
