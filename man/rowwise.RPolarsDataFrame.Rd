@@ -22,10 +22,8 @@ A Polars Data/LazyFrame.
 [EXPERIMENTAL]
 
 \code{rowwise()} allows you to compute on a Data/LazyFrame a row-at-a-time. This
-is most useful when a vectorised function doesn't exist.
-
-\code{rowwise()} produces another type of grouped data, and therefore can be
-removed with \code{ungroup()}.
+is most useful when a vectorised function doesn't exist. \code{rowwise()} produces
+another type of grouped data, and therefore can be removed with \code{ungroup()}.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}

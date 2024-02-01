@@ -20,7 +20,6 @@
 #'   as_polars_df() |>
 #'   summarize(m_gear = mean(gear), sd_gear = sd(gear), .by = cyl)
 
-
 summarize.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
 
   check_polars_data(.data)

@@ -4,10 +4,8 @@
 #' \[EXPERIMENTAL\]
 #'
 #' `rowwise()` allows you to compute on a Data/LazyFrame a row-at-a-time. This
-#' is most useful when a vectorised function doesn't exist.
-#'
-#' `rowwise()` produces another type of grouped data, and therefore can be
-#' removed with `ungroup()`.
+#' is most useful when a vectorised function doesn't exist. `rowwise()` produces
+#' another type of grouped data, and therefore can be removed with `ungroup()`.
 #'
 #' @inheritParams select.RPolarsDataFrame
 #'
