@@ -133,6 +133,9 @@
     <loc>/reference/replace_na.RPolarsDataFrame.html</loc>
   </url>
   <url>
+    <loc>/reference/rowwise.RPolarsDataFrame.html</loc>
+  </url>
+  <url>
     <loc>/reference/select.RPolarsDataFrame.html</loc>
   </url>
   <url>
