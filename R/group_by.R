@@ -55,7 +55,7 @@ group_by.RPolarsDataFrame <- function(.data, ..., maintain_order = FALSE) {
 ungroup.RPolarsDataFrame <- function(x, ...) {
   attributes(x)$pl_grps <- NULL
   attributes(x)$maintain_grp_order <- NULL
-  attributes(.data)$grp_type <- NULL
+  attributes(x)$grp_type <- NULL
   x
 }
 
