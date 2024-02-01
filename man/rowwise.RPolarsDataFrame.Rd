@@ -28,7 +28,8 @@ is most useful when a vectorised function doesn't exist.
 removed with \code{ungroup()}.
 }
 \examples{
-df <- pl$DataFrame(x = c(1, 3, 4), y = c(2, 1, 5), z = c(2, 3, 1))
+\dontshow{if (require("dplyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+df <- polars::pl$DataFrame(x = c(1, 3, 4), y = c(2, 1, 5), z = c(2, 3, 1))
 
 # Compute the mean of x, y, z in each row
 df |>
@@ -39,4 +40,5 @@ df |>
 df |>
  rowwise() |>
  mutate(min = min(c(x, y)), max = max(c(x, y)))
+\dontshow{\}) # examplesIf}
 }

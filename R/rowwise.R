@@ -13,8 +13,8 @@
 #'
 #' @export
 #' @return A Polars Data/LazyFrame.
-#' @examples
-#' df <- pl$DataFrame(x = c(1, 3, 4), y = c(2, 1, 5), z = c(2, 3, 1))
+#' @examplesIf require("dplyr", quietly = TRUE)
+#' df <- polars::pl$DataFrame(x = c(1, 3, 4), y = c(2, 1, 5), z = c(2, 3, 1))
 #'
 #' # Compute the mean of x, y, z in each row
 #' df |>
