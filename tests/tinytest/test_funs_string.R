@@ -134,6 +134,34 @@ expect_equal(
     pull(foo)
 )
 
+# Use a variable as pattern (in same mutate() call)
+expect_equal(
+  test |>
+    mutate(
+      pattern = c("\\d", "[a-z]{1,4}"),
+      foo = str_extract(x2, pattern)
+    ) |>
+    pull(foo),
+  test_df |>
+    mutate(
+      pattern = c("\\d", "[a-z]{1,4}"),
+      foo = str_extract(x2, pattern)
+    ) |>
+    pull(foo)
+)
+
+# Use a variable as pattern (in different mutate() call)
+expect_equal(
+  test |>
+    mutate(pattern = c("\\d", "[a-z]{1,4}")) |>
+    mutate(foo = str_extract(x2, pattern)) |>
+    pull(foo),
+  test_df |>
+    mutate(pattern = c("\\d", "[a-z]{1,4}")) |>
+    mutate(foo = str_extract(x2, pattern)) |>
+    pull(foo)
+)
+
 expect_equal(
   mutate(test, foo = str_extract(x2, "([a-z]+) of ([a-z]+)", group = 2)) |>
     pull(foo),

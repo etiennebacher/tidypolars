@@ -68,21 +68,21 @@ count_ <- function(x, vars, sort, name, new_col = FALSE) {
   if (isTRUE(new_col)) {
     if (length(vars) == 0) {
       out <- x$with_columns(
-        pl$count()$alias(name)
+        pl$len()$alias(name)
       )
     } else {
       out <- x$with_columns(
-        pl$count()$alias(name)$over(vars)
+        pl$len()$alias(name)$over(vars)
       )
     }
   } else {
     if (length(vars) == 0) {
       out <- x$select(
-        pl$count()$alias(name)
+        pl$len()$alias(name)
       )
     } else {
       out <- x$group_by(vars, maintain_order = FALSE)$agg(
-        pl$count()$alias(name)
+        pl$len()$alias(name)
       )
     }
   }

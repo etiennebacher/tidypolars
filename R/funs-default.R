@@ -176,9 +176,6 @@ pl_case_match <- function(x, ..., .data) {
       out <- out$otherwise(otw)
       next
     }
-    # add a special attr so we don't convert a vector on the LHS as a list of
-    # pl$lit()
-    attr(dots[[y]][[2]], "do_not_split") <- TRUE
     lhs <- translate_expr(.data, dots[[y]][[2]], new_vars = new_vars, env = env)
     rhs <- translate_expr(.data, dots[[y]][[3]], new_vars = new_vars, env = env)
     if (is.null(out)) {
@@ -207,9 +204,6 @@ pl_case_when <- function(..., .data) {
       out <- out$otherwise(otw)
       next
     }
-    # add a special attr so we don't convert a vector on the LHS as a list of
-    # pl$lit()
-    attr(dots[[y]][[2]], "do_not_split") <- TRUE
     lhs <- translate_expr(.data, dots[[y]][[2]], new_vars = new_vars, env = env)
     rhs <- translate_expr(.data, dots[[y]][[3]], new_vars = new_vars, env = env)
 
