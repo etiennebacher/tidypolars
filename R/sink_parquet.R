@@ -101,7 +101,7 @@ sink_parquet <- function(
     rlang::abort("`sink_parquet()` can only be used on a LazyFrame.")
   }
 
-  out <- .data$sink_parquet(
+  .data$sink_parquet(
     path = path,
     compression = compression,
     compression_level = compression_level,
@@ -117,6 +117,5 @@ sink_parquet <- function(
     no_optimization = no_optimization
   )
 
-  add_tidypolars_class(out)
 }
 

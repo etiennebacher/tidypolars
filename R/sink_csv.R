@@ -88,7 +88,7 @@ sink_csv <- function(
     rlang::abort("`sink_csv()` can only be used on a LazyFrame.")
   }
 
-  out <- .data$sink_csv(
+  .data$sink_csv(
     path = path,
     include_bom = include_bom,
     include_header = include_header,
@@ -111,6 +111,5 @@ sink_csv <- function(
     no_optimization = no_optimization
   )
 
-  add_tidypolars_class(out)
 }
 
