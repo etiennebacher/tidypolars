@@ -78,11 +78,13 @@ filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
       }
     }
   )
-  if (is_grouped && missing(.by)) {
+  out <- if (is_grouped && missing(.by)) {
     group_by(out, grps, maintain_order = mo)
   } else {
     out
   }
+
+  add_tidypolars_class(out)
 }
 
 #' @rdname filter.RPolarsDataFrame

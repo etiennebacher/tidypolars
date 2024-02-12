@@ -83,7 +83,8 @@ relocate.RPolarsDataFrame <- function(.data, ..., .before = NULL, .after = NULL)
     new_order <- c(lhs, vars, rhs)
   }
 
-  .data$select(new_order)
+  out <- .data$select(new_order)
+  add_tidypolars_class(out)
 }
 
 #' @rdname relocate.RPolarsDataFrame

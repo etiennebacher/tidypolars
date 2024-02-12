@@ -20,6 +20,11 @@ check_polars_data <- function(x, env = caller_env()) {
   }
 }
 
+add_tidypolars_class <- function(x) {
+  class(x) <- c("tidypolars", class(x))
+  x
+}
+
 check_same_class <- function(x, y, env = caller_env()) {
   if (class(x) != class(y)) {
     rlang::abort(

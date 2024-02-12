@@ -2,7 +2,7 @@
 
 `tidypolars` requires `polars` >= 0.14.0.
 
-**Breaking changes and deprecations**
+## Breaking changes and deprecations
   
 * `as_polars()` is deprecated and will be removed in 0.7.0. Use `as_polars_lf()`
   or `as_polars_df()` instead.
@@ -11,7 +11,7 @@
   to `TRUE`, this enabled the string cache globally, which could lead to 
   undesirable side effects.
   
-**New features**
+## New features
 
 * Add support for argument `.keep` in `mutate()` (#80).
 
@@ -20,12 +20,16 @@
 * **Experimental** support of `rowwise()`. For now, this is limited to a few 
   functions: `mean()`, `min()`, `max()`, `sum()`, `all()`, `any()`. `rowwise()`
   and `group_by()` cannot be used at the same time (#40).
+  
+* All functions that return a polars `Data/LazyFrame` now add the class 
+  `"tidypolars"` to the output (#86).
+
 
 # tidypolars 0.5.0
 
 `tidypolars` requires `polars` >= 0.12.0.
 
-**Breaking changes**
+## Breaking changes
 
 * `across()` now errors if the argument `.cols` is not provided (either named or
   unnamed). This behavior was deprecated in `dplyr` 1.1.0.
@@ -33,7 +37,7 @@
 * It is no longer possible to use `!` in `arrange()` to sort by decreasing order,
   for compatibility with `dplyr::arrange()`. Use `-` or `desc()` instead.
   
-**New features**
+## New features
 
 * `summarize()` now works on ungrouped data and returns a 1-row output.
 
@@ -67,7 +71,7 @@
 * Using `%in%` for factor variables doesn't require enabling the string cache
   anymore.
 
-**Bug fixes**
+## Bug fixes
 
 * `summarize()` no longer errors when `across(everything(), ...)` is used with
   `.by`.
@@ -77,7 +81,7 @@
   
 * Expressions with values only are not named "literal" anymore.
 
-**Misc**
+## Misc
 
 * Simplify the procedure to support new functions.
 
@@ -86,11 +90,11 @@
 
 `tidypolars` requires `polars` >= 0.11.0.
 
-**Breaking changes**
+## Breaking changes
 
 * It is no longer possible to pass a list in `rename()`. 
 
-**New features**
+## New features
 
 * The argument `with_string_cache` in `as_polars()` now enables the string cache
   globally if set to `TRUE` (#54).
@@ -112,7 +116,7 @@
 * Support fixed regexes in `str_detect()` (using `fixed()`) and in `grepl()` 
   (using `fixed = TRUE`).
 
-**Bug fixes**
+## Bug fixes
 
 * Improve robustness of sequential expressions in `mutate()` and `summarize()` 
   (i.e expressions that should be run one after the other because they depend on
@@ -123,18 +127,19 @@
 * All functions that work on grouped data now correctly restore the groups 
   structure (#62).
   
-**Misc**
+## Misc
 
 * Error messages coming from `mutate()`, `summarize()`, and `filter()` now give 
   the right function call. 
 
 * Faster tidy selection (#61).
 
+
 # tidypolars 0.3.0
 
 `tidypolars` requires `polars` >= 0.10.0.
 
-**Breaking changes**
+## Breaking changes
 
 * All functions starting with `pl_` have been removed to the benefit of the S3
   methods. For example, `pl_distinct()` doesn't exist anymore so the only way to
@@ -146,7 +151,7 @@
   `bind_cols_polars()` respectively. This is because `bind_rows()` and `bind_cols()`
   are not S3 methods (this might change in future versions of `dplyr`).
 
-**New features**
+## New features
 
 * New function `duplicated_rows()` that is the opposite of `distinct()` (#50).
 
@@ -156,11 +161,11 @@
   schema. Columns will be upcast to common types if necessary. Unknown columns 
   will be filled with `NA`.
   
-**Bug fixes**
+## Bug fixes
 
 * `complete()` now works correctly on grouped data.
 
-**Misc**
+## Misc
 
 * `relig_income` and `fish_encounters` are not reexported anymore since `tidyr` 
   is now imported.
@@ -170,7 +175,7 @@
 
 `tidypolars` requires `polars` >= 0.9.0.
 
-**New features**
+## New features
 
 * Rename `pl_fetch()` to `fetch()`.
 
@@ -185,11 +190,11 @@
 * Support replacements with captured groups like `\\1` in `stringr::str_replace()`
   and `stringr::str_replace_all()`.
 
-**Bug fixes**
+## Bug fixes
 
 * `sink_parquet()` didn't use the user inputs (apart from the `path`).
   
-**Misc**
+## Misc
 
 * Clearer error message when an expression contains `<pkg>::`. This is not 
   supported for now but could potentially be implemented later.
@@ -199,7 +204,7 @@
 
 # tidypolars 0.1.0
 
-**New features**
+## New features
 
 * Support `as.numeric()`, `as.character()`, `as.logical()`, `grepl()`, and
   `paste()` in expressions in `pl_filter()`, `pl_mutate()` and `pl_summarize()`.
@@ -214,14 +219,14 @@
 
 * Add all optimization parameters in `collect()`.
 
-**Bug fixes**
+## Bug fixes
 
 * Fix `pl_mutate()` and `pl_summarize()` when expressions use some variables 
   previously created or modified (#10, #37).
   
 * Fix bug in `pl_filter()` when passing a vector in the RHS of `%in%`.
   
-**Misc**
+## Misc
 
 * Improve the backend to translate R expressions into Polars expressions. This
   also led to a complete rewriting of the vignette "R and Polars expressions" 

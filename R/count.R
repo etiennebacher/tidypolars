@@ -87,11 +87,12 @@ count_ <- function(x, vars, sort, name, new_col = FALSE) {
     }
   }
 
-  if (isTRUE(sort)) {
-    out <- out$sort(name, descending = TRUE)
+  out <- if (isTRUE(sort)) {
+    out$sort(name, descending = TRUE)
   } else if (length(vars) > 0) {
-    out <- out$sort(vars)
+    out$sort(vars)
   }
 
-  out
+  print(out)
+  add_tidypolars_class(out)
 }

@@ -108,9 +108,11 @@ slice_sample.RPolarsDataFrame <- function(.data, ..., n = NULL, prop = NULL, rep
     out <- .data$sample(n = n, frac = prop, with_replacement = replace)
   }
 
-  if (is_grouped && missing(by)) {
+  out <- if (is_grouped && missing(by)) {
     group_by(out, grps, maintain_order = mo)
   } else {
     out
   }
+
+  add_tidypolars_class(out)
 }

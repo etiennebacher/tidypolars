@@ -20,6 +20,7 @@ describe <- function(.data, percentiles = c(0.25, 0.75)) {
       "All values of `percentiles` must be between 0 and 1."
     )
   }
-  .data$describe(percentiles)
+  out <- .data$describe(percentiles)
+  add_tidypolars_class(out)
 }
 

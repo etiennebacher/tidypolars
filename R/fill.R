@@ -53,12 +53,14 @@ fill.RPolarsDataFrame <- function(data, ..., .direction = c("down", "up", "downu
     expr <- expr$over(grps)
   }
 
-  if (is_grouped) {
+  out <- if (is_grouped) {
     data$with_columns(expr) |>
       group_by(grps, maintain_order = mo)
   } else {
     data$with_columns(expr)
   }
+
+  add_tidypolars_class(out)
 }
 
 #' @export
