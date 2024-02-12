@@ -101,7 +101,7 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
     })
   }
 
-  switch(
+  out <- switch(
     how,
     "horizontal" = {
       all_names <- unlist(lapply(dots, names), use.names = FALSE)
@@ -148,7 +148,7 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
       }
 
       if (inherits(dots[[1]], "RPolarsDataFrame")) {
-        return(pl$concat(dots, how = how))
+        pl$concat(dots, how = how)
       } else {
         if (length(dots) > 2) {
           rlang::abort(
@@ -162,4 +162,5 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
     # default
     pl$concat(dots, how = how)
   )
+  add_tidypolars_class(out)
 }

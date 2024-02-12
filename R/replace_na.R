@@ -25,7 +25,7 @@ replace_na.RPolarsDataFrame <- function(data, replace, ...) {
   check_polars_data(data)
   is_scalar <- length(replace) == 1 && !is.list(replace)
 
-  if (is_scalar) {
+  out <- if (is_scalar) {
     data$with_columns(
       pl$all()$fill_null(replace)
     )
@@ -36,6 +36,8 @@ replace_na.RPolarsDataFrame <- function(data, replace, ...) {
     }
     data$with_columns(exprs)
   }
+
+  add_tidypolars_class(out)
 }
 
 #' @rdname replace_na.RPolarsDataFrame

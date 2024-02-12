@@ -18,8 +18,9 @@ make_unique_id <- function(.data, ..., new_col = "hash") {
   }
   vars <- tidyselect_dots(.data, ...)
   if (length(vars) == 0) vars <- pl_colnames(.data)
-  .data$with_columns(
+  out <- .data$with_columns(
     pl$struct(vars)$hash()$alias(new_col)
   )
+  add_tidypolars_class(out)
 }
 

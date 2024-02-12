@@ -11,6 +11,8 @@ test <- pl$LazyFrame(
   value = sample(1:5)
 )
 
+expect_is_tidypolars(arrange(test, x1))
+
 expect_equal_lazy(
   arrange(test, x1) |>
     pull(x1),

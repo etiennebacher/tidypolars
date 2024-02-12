@@ -7,6 +7,8 @@ test <- polars::pl$DataFrame(
   value = c(1, 2, 3, 4, 5)
 )
 
+expect_is_tidypolars(complete(test, country, year))
+
 expect_dim(
   complete(test, country, year),
   c(12, 3)

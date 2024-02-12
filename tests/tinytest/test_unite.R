@@ -10,6 +10,8 @@ test <- polars::pl$DataFrame(
 
 out1 <- unite(test, col = "full_date", year, month, day, sep = "-")
 
+expect_is_tidypolars(out1)
+
 expect_equal(
    pull(out1, full_date),
    c("2009-10-11", "2010-11-22", "2011-12-28")

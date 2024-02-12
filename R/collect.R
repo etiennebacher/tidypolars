@@ -74,10 +74,12 @@ collect.RPolarsLazyFrame <- function(
     collect_in_background = collect_in_background
   )
 
-  if (is_grouped) {
+  out <- if (is_grouped) {
     out |>
       group_by(grps, maintain_order = mo)
   } else {
     out
   }
+
+  add_tidypolars_class(out)
 }

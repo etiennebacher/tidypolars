@@ -5,6 +5,8 @@ test <- pl$DataFrame(
   x = c(NA, "x.y", "x.z", "y.z")
 )
 
+expect_is_tidypolars(separate(test, x, into = c("foo", "foo2"), sep = "."))
+
 expect_equal(
   separate(test, x, into = c("foo", "foo2"), sep = ".") |>
     pull(foo),

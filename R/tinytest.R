@@ -81,3 +81,11 @@ test_all_tidypolars <- function() {
   source("tests/tinytest/setup.R")
   tinytest::test_all(testdir = "tests/tinytest")
 }
+
+#' `tinytest` helper
+#'
+#' @export
+#' @keywords internal
+expect_is_tidypolars <- function(x) {
+  tinytest::expect_true(inherits(x, "tidypolars"))
+}

@@ -8,13 +8,13 @@ using("tidypolars")
 test <- pl$LazyFrame(mtcars)
 
 expect_equal_lazy(
-  test |> group_by(am, cyl) |> ungroup() |> attributes(),
-  attributes(test)
+  test |> group_by(am, cyl) |> ungroup() |> attributes() |> length(),
+  1
 )
 
 expect_equal_lazy(
-  test |> rowwise(am, cyl) |> ungroup() |> attributes(),
-  attributes(test)
+  test |> rowwise(am, cyl) |> ungroup() |> attributes() |> length(),
+  1
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

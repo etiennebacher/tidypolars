@@ -48,11 +48,13 @@ unite.RPolarsDataFrame <- function(data, col, ..., sep = "_", remove = TRUE, na.
 
   out <- data$with_columns(pl$concat_str(vars_concat, separator = sep)$alias(col))
 
-  if (isTRUE(remove)) {
+  out <- if (isTRUE(remove)) {
     out$drop(vars)
   } else {
     out
   }
+
+  add_tidypolars_class(out)
 }
 
 #' @rdname unite.RPolarsDataFrame

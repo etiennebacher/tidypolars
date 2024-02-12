@@ -3,6 +3,8 @@ using("tidypolars")
 
 test <- pl$DataFrame(mtcars)
 
+expect_is_tidypolars(make_unique_id(test, am, gear))
+
 expect_equal(
   make_unique_id(test, am, gear) |>
     slice_head(n = 3) |>

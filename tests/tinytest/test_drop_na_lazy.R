@@ -10,6 +10,8 @@ tmp[1:3, "mpg"] <- NA
 tmp[4, "hp"] <- NA
 pl_tmp <- polars::pl$LazyFrame(tmp)
 
+expect_is_tidypolars(drop_na(pl_tmp, drat))
+
 expect_dim(
   drop_na(pl_tmp, drat),
   c(32, 11)

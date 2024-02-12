@@ -7,6 +7,8 @@ pl_test <- polars::pl$DataFrame(
   y = c(3, NA, 4, NA, 3, 1)
 )
 
+expect_is_tidypolars(fill(pl_test, everything(), .direction = "down"))
+
 expect_equal(
   fill(pl_test, everything(), .direction = "down") |>
     pull(x),

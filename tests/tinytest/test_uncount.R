@@ -3,6 +3,8 @@ using("tidypolars")
 
 test <- polars::pl$DataFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
 
+expect_is_tidypolars(uncount(test, n))
+
 expect_equal(
   uncount(test, n),
   pl$DataFrame(x = c("a", "b", "b"), y = c(100, 101, 101))

@@ -3,6 +3,8 @@ using("tidypolars")
 
 test <- pl$DataFrame(mtcars)
 
+expect_is_tidypolars(describe(test))
+
 expect_equal(
   describe(test) |>
     pull(describe),

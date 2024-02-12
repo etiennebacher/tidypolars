@@ -7,6 +7,8 @@ using("tidypolars")
 
 test <- polars::pl$LazyFrame(mtcars)
 
+expect_is_tidypolars(count(test))
+
 expect_equal_lazy(
   count(test) |> pull(n),
   32

@@ -62,7 +62,7 @@ complete.RPolarsDataFrame <- function(data, ..., fill = list()) {
     out <- replace_na(out, fill)
   }
 
-  if (is_grouped) {
+  out <- if (is_grouped) {
     out |>
       relocate(grps, .before = 1) |>
       group_by(grps, maintain_order = mo)
@@ -70,6 +70,7 @@ complete.RPolarsDataFrame <- function(data, ..., fill = list()) {
     out
   }
 
+  add_tidypolars_class(out)
 }
 
 #' @rdname complete.RPolarsDataFrame

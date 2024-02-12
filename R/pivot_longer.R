@@ -56,7 +56,7 @@ pivot_longer.RPolarsDataFrame <- function(data, cols, ..., names_to = "name",
       )
   }
 
-  out
+  add_tidypolars_class(out)
 }
 
 #' @rdname pivot_longer.RPolarsDataFrame

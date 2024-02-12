@@ -8,6 +8,8 @@ using("tidypolars")
 test <- polars::pl$LazyFrame(x = c(2, 2), y = c(2, 3), z = c(5, NA)) |>
   rowwise()
 
+expect_is_tidypolars(test)
+
 expect_equal_lazy(
   test |>
     mutate(

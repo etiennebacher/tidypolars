@@ -7,6 +7,8 @@ test <- pl$DataFrame(
   value = sample(1:5)
 )
 
+expect_is_tidypolars(arrange(test, x1))
+
 expect_equal(
   arrange(test, x1) |>
     pull(x1),

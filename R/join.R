@@ -245,13 +245,14 @@ join_ <- function(x, y, by = NULL, how, suffix) {
     }
   }
 
-  if (length(dupes) > 0) {
+  out <- if (length(dupes) > 0) {
     mapping <- as.list(c(dupes, paste0(dupes, "_right")))
     names(mapping) <- c(paste0(dupes, suffix[1]), paste0(dupes, suffix[2]))
     out$rename(mapping)
   } else {
     out
   }
+  add_tidypolars_class(out)
 }
 
 

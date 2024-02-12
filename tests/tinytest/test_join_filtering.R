@@ -14,6 +14,9 @@ test2 <- polars::pl$DataFrame(
   z2 = c(1, 2, 4)
 )
 
+expect_is_tidypolars(semi_join(test, test2))
+expect_is_tidypolars(anti_join(test, test2))
+
 expect_equal(
   semi_join(test, test2, by = c("x", "y")),
   pl$DataFrame(

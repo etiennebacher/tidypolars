@@ -75,4 +75,6 @@ expect_equal_lazy(
   NULL
 )
 
+expect_is_tidypolars(summarize(pl_iris, x = mean(Sepal.Length), .by = Species))
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

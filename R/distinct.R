@@ -31,7 +31,8 @@ distinct.RPolarsDataFrame <- function(.data, ..., keep = "first", maintain_order
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
   if (length(vars) == 0) vars <- pl_colnames(.data)
-  .data$unique(subset = vars, keep = keep, maintain_order = maintain_order)
+  out <- .data$unique(subset = vars, keep = keep, maintain_order = maintain_order)
+  add_tidypolars_class(out)
 }
 
 #' @rdname distinct.RPolarsDataFrame
@@ -45,5 +46,6 @@ duplicated_rows <- function(.data, ...) {
   check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
   if (length(vars) == 0) vars <- pl_colnames(.data)
-  .data$filter(pl$struct(vars)$is_duplicated())
+  out <- .data$filter(pl$struct(vars)$is_duplicated())
+  add_tidypolars_class(out)
 }

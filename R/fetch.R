@@ -48,7 +48,7 @@ fetch <- function(
   if (!inherits(.data, "RPolarsLazyFrame")) {
     rlang::abort("`fetch()` can only be used on a LazyFrame.")
   }
-  .data$fetch(
+  out <- .data$fetch(
     n_rows = n_rows,
     type_coercion = type_coercion,
     predicate_pushdown = predicate_pushdown,
@@ -60,4 +60,6 @@ fetch <- function(
     no_optimization = no_optimization,
     streaming = streaming
   )
+
+  add_tidypolars_class(out)
 }

@@ -7,6 +7,8 @@ using("tidypolars")
 
 test <- pl$LazyFrame(mtcars)
 
+expect_is_tidypolars(make_unique_id(test, am, gear))
+
 expect_equal_lazy(
   make_unique_id(test, am, gear) |>
     slice_head(n = 3) |>

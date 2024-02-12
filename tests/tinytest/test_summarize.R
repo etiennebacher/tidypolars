@@ -70,3 +70,5 @@ expect_equal(
     attr("maintain_grp_order"),
   NULL
 )
+
+expect_is_tidypolars(summarize(pl_iris, x = mean(Sepal.Length), .by = Species))

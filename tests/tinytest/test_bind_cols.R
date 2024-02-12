@@ -12,6 +12,8 @@ l <- list(
   )
 )
 
+expect_is_tidypolars(bind_cols_polars(l))
+
 expect_dim(
   bind_cols_polars(l),
   c(20, 4)

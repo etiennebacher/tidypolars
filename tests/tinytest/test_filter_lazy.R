@@ -7,6 +7,8 @@ using("tidypolars")
 
 pl_iris <- as_polars_df(iris)
 
+expect_is_tidypolars(filter(pl_iris, Species == "setosa"))
+
 expect_dim(
   filter(pl_iris, Species == "setosa"),
   c(50, 5)

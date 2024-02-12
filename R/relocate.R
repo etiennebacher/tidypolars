@@ -52,7 +52,7 @@ relocate.RPolarsDataFrame <- function(.data, ..., .before = NULL, .after = NULL)
   }
 
   vars <- tidyselect_dots(.data, ...)
-  if (length(vars) == 0) return(.data)
+  if (length(vars) == 0) return(add_tidypolars_class(.data))
 
   not_moving <- setdiff(names_data, vars)
 
@@ -83,7 +83,8 @@ relocate.RPolarsDataFrame <- function(.data, ..., .before = NULL, .after = NULL)
     new_order <- c(lhs, vars, rhs)
   }
 
-  .data$select(new_order)
+  out <- .data$select(new_order)
+  add_tidypolars_class(out)
 }
 
 #' @rdname relocate.RPolarsDataFrame

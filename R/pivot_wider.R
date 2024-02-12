@@ -83,13 +83,15 @@ pivot_wider.RPolarsDataFrame <- function(data, ..., id_cols, names_from, values_
     data <- data$rename(new_names)
   }
 
-  if (!is.null(values_fill)) {
+  out <- if (!is.null(values_fill)) {
     data$with_columns(
       pl$col(new_cols)$fill_null(values_fill)
     )
   } else {
     data
   }
+
+  add_tidypolars_class(out)
 }
 
 #' @rdname pivot_wider.RPolarsDataFrame

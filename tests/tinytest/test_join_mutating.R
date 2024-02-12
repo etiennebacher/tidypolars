@@ -15,6 +15,11 @@ test2 <- polars::pl$DataFrame(
   z2 = c(4, 5, 7)
 )
 
+expect_is_tidypolars(left_join(test, test2))
+expect_is_tidypolars(right_join(test, test2))
+expect_is_tidypolars(full_join(test, test2))
+expect_is_tidypolars(inner_join(test, test2))
+
 expect_equal(
   left_join(test, test2),
   pl$DataFrame(
