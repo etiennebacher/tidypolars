@@ -7,6 +7,8 @@ pl_test <- pl$DataFrame(
   value = 1:6
 )
 
+expect_is_tidypolars(distinct(pl_test))
+
 expect_dim(
   distinct(pl_test),
   c(6, 3)

@@ -6,6 +6,8 @@ pl_fish_encounters <- polars::pl$DataFrame(tidyr::fish_encounters)
 out <- pl_fish_encounters |>
   pivot_wider(names_from = station, values_from = seen)
 
+expect_is_tidypolars(out)
+
 # basic checks
 
 expect_equal(dim(out), c(19, 12))

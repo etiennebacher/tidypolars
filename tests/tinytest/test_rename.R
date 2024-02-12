@@ -3,8 +3,10 @@ using("tidypolars")
 
 pl_test <- polars::pl$DataFrame(mtcars)
 
+expect_is_tidypolars(rename(pl_test, miles_per_gallon = "mpg"))
+
 test1 <- rename(pl_test, miles_per_gallon = "mpg", n_cyl = "cyl") |>
-  tidypolars:::pl_colnames()
+  pl_colnames()
 
 expect_true("miles_per_gallon" %in% test1)
 expect_true("n_cyl" %in% test1)
@@ -12,7 +14,7 @@ expect_false("mpg" %in% test1)
 expect_false("cyl" %in% test1)
 
 test2 <- rename(pl_test, miles_per_gallon = mpg, n_cyl = "cyl") |>
-  tidypolars:::pl_colnames()
+  pl_colnames()
 
 expect_true("miles_per_gallon" %in% test2)
 expect_true("n_cyl" %in% test2)
@@ -20,7 +22,7 @@ expect_false("mpg" %in% test2)
 expect_false("cyl" %in% test2)
 
 test3 <- rename_with(pl_test, toupper, c(mpg, cyl)) |>
-  tidypolars:::pl_colnames()
+  pl_colnames()
 
 expect_true("MPG" %in% test3)
 expect_true("CYL" %in% test3)
@@ -28,14 +30,14 @@ expect_false("mpg" %in% test3)
 expect_false("cyl" %in% test3)
 
 test3bis <- rename_with(pl_test, toupper) |>
-  tidypolars:::pl_colnames()
+  pl_colnames()
 
 expect_true("DISP" %in% test3bis)
 expect_true("DRAT" %in% test3bis)
 expect_false("mpg" %in% test3bis)
 
 test4 <- rename_with(pl_test, toupper, contains("p")) |>
-  tidypolars:::pl_colnames()
+  pl_colnames()
 
 expect_true("MPG" %in% test4)
 expect_true("DISP" %in% test4)

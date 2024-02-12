@@ -31,11 +31,13 @@ slice_tail.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
     out <- .data$tail(n)
   }
 
-  if (is_grouped && missing(by)) {
+  out <- if (is_grouped && missing(by)) {
     group_by(out, grps, maintain_order = mo)
   } else {
     out
   }
+
+  add_tidypolars_class(out)
 }
 
 #' @rdname slice_tail.RPolarsDataFrame
@@ -60,11 +62,13 @@ slice_head.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
     out <- .data$head(n)
   }
 
-  if (is_grouped && missing(by)) {
+  out <- if (is_grouped && missing(by)) {
     group_by(out, grps, maintain_order = mo)
   } else {
     out
   }
+
+  add_tidypolars_class(out)
 }
 
 #' @rdname slice_tail.RPolarsDataFrame

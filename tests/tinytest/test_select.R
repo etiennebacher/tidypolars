@@ -3,6 +3,8 @@ using("tidypolars")
 
 pl_iris <- polars::pl$DataFrame(iris)
 
+expect_is_tidypolars(select(pl_iris, c("Sepal.Length", "Sepal.Width")))
+
 expect_colnames(
   select(pl_iris, c("Sepal.Length", "Sepal.Width")),
   c("Sepal.Length", "Sepal.Width")

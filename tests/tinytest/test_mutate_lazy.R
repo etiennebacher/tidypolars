@@ -7,6 +7,8 @@ using("tidypolars")
 
 pl_iris <- polars::pl$LazyFrame(iris)
 
+expect_is_tidypolars(mutate(pl_iris, x = 1 + 1))
+
 # Basic ops: +, -, *, /
 
 expect_equal_lazy(

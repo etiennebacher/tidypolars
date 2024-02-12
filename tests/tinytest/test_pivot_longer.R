@@ -6,6 +6,8 @@ pl_relig_income <- polars::pl$DataFrame(tidyr::relig_income)
 out <- pl_relig_income |>
   pivot_longer(!religion, names_to = "income", values_to = "count")
 
+expect_is_tidypolars(out)
+
 # basic checks
 
 expect_dim(out, c(180, 3))

@@ -7,6 +7,9 @@ using("tidypolars")
 
 pl_iris <- polars::pl$LazyFrame(iris)
 
+expect_is_tidypolars(slice_head(pl_iris, n = 1))
+expect_is_tidypolars(slice_tail(pl_iris, n = 1))
+
 expect_equal_lazy(
   slice_head(pl_iris, n = 5),
   head(iris, n = 5),
@@ -94,6 +97,8 @@ expect_equal_lazy(
 # slice_sample ---------------------------------------------------
 
 if (inherits(pl_iris, "RPolarsDataFrame")) {
+  expect_is_tidypolars(slice_sample(pl_iris, prop = 0.1))
+
   expect_equal_lazy(
     slice_sample(pl_iris, n = 5) |> nrow(),
     5

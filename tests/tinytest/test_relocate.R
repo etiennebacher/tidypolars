@@ -3,6 +3,9 @@ using("tidypolars")
 
 test <- polars::pl$DataFrame(mtcars)
 
+expect_is_tidypolars(relocate(test))
+expect_is_tidypolars(relocate(test, hp, .before = cyl))
+
 expect_colnames(
   test |> relocate(hp, vs, .before = cyl),
   c("mpg", "hp", "vs", "cyl", "disp", "drat", "wt", "qsec", "am", "gear", "carb")

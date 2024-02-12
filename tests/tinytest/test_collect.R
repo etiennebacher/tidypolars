@@ -4,6 +4,8 @@ using("tidypolars")
 pl_iris <- pl$DataFrame(iris)
 pl_iris_lazy <- pl$LazyFrame(iris)
 
+expect_is_tidypolars(collect(pl_iris_lazy))
+
 expect_equal(
   collect(pl_iris_lazy),
   pl_iris

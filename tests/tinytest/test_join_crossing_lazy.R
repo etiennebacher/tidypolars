@@ -15,6 +15,8 @@ test2 <- polars::pl$LazyFrame(
   language = c("english", "japanese", "portuguese")
 )
 
+expect_is_tidypolars(cross_join(test, test2))
+
 expect_dim(
   cross_join(test, test2),
   c(9, 4)

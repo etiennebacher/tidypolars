@@ -7,6 +7,8 @@ using("tidypolars")
 
 test <- polars::pl$LazyFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
 
+expect_is_tidypolars(uncount(test, n))
+
 expect_equal_lazy(
   uncount(test, n),
   pl$LazyFrame(x = c("a", "b", "b"), y = c(100, 101, 101))

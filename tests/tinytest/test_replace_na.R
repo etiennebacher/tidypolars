@@ -3,6 +3,8 @@ using("tidypolars")
 
 pl_test <- pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 
+expect_is_tidypolars(replace_na(pl_test, 0))
+
 expect_equal(
   replace_na(pl_test, 0) |>
     to_r(),

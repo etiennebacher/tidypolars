@@ -3,6 +3,8 @@ using("tidypolars")
 
 test <- polars::pl$DataFrame(mtcars)
 
+expect_is_tidypolars(count(test))
+
 expect_equal(
   count(test) |> pull(n),
   32
