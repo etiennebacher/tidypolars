@@ -153,9 +153,9 @@ pl_arg_unique <- function(x, ...) {
   x$arg_unique()
 }
 
-pl_between <- function(x, left, right, include_bounds = TRUE, ...) {
+pl_between <- function(x, left, right, ...) {
   check_empty_dots(...)
-  x$is_between(start = left, end = right, include_bounds = include_bounds)
+  x$is_between(lower_bound = left, upper_bound = right, closed = "both")
 }
 
 pl_case_match <- function(x, ..., .data) {
