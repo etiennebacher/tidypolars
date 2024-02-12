@@ -81,11 +81,11 @@ mustn't be duplicated column names.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rpolars.github.io/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="fl">20</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rpolars.github.io/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="fl">20</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  w <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, <span class="fl">20</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
@@ -101,7 +101,9 @@ mustn't be duplicated column names.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ z   ┆ 34  ┆ b   ┆ 38  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ d   ┆ 35  ┆ s   ┆ 68  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f   ┆ 89  ┆ n   ┆ 65  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ i   ┆ 86  ┆ a   ┆ 6   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …   ┆ …   ┆ …   ┆ …   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ l   ┆ 17  ┆ k   ┆ 41  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ q   ┆ 52  ┆ j   ┆ 42  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ w   ┆ 56  ┆ w   ┆ 66  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ s   ┆ 97  ┆ y   ┆ 26  │</span>
@@ -118,7 +120,9 @@ mustn't be duplicated column names.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ z   ┆ 34  ┆ b   ┆ 38  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ d   ┆ 35  ┆ s   ┆ 68  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f   ┆ 89  ┆ n   ┆ 65  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ i   ┆ 86  ┆ a   ┆ 6   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …   ┆ …   ┆ …   ┆ …   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ l   ┆ 17  ┆ k   ┆ 41  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ q   ┆ 52  ┆ j   ┆ 42  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ w   ┆ 56  ┆ w   ┆ 66  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ s   ┆ 97  ┆ y   ┆ 26  │</span>

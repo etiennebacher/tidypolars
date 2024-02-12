@@ -133,7 +133,7 @@ all these columns will be converted to character.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">pl_fish_encounters</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="fu">tidyr</span><span class="fu">::</span><span class="va"><a href="https://tidyr.tidyverse.org/reference/fish_encounters.html" class="external-link">fish_encounters</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">pl_fish_encounters</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rpolars.github.io/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="fu">tidyr</span><span class="fu">::</span><span class="va"><a href="https://tidyr.tidyverse.org/reference/fish_encounters.html" class="external-link">fish_encounters</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">pl_fish_encounters</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">pivot_wider</span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">station</span>, values_from <span class="op">=</span> <span class="va">seen</span><span class="op">)</span></span></span>
@@ -147,7 +147,9 @@ all these columns will be converted to character.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4843 ┆ 1       ┆ 1     ┆ 1      ┆ … ┆ 1    ┆ 1    ┆ 1    ┆ 1    │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4844 ┆ 1       ┆ 1     ┆ 1      ┆ … ┆ 1    ┆ 1    ┆ 1    ┆ 1    │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4845 ┆ 1       ┆ 1     ┆ 1      ┆ … ┆ null ┆ null ┆ null ┆ null │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4847 ┆ 1       ┆ 1     ┆ 1      ┆ … ┆ null ┆ null ┆ null ┆ null │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …       ┆ …     ┆ …      ┆ … ┆ …    ┆ …    ┆ …    ┆ …    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4861 ┆ 1       ┆ 1     ┆ 1      ┆ … ┆ 1    ┆ 1    ┆ 1    ┆ 1    │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4862 ┆ 1       ┆ 1     ┆ 1      ┆ … ┆ 1    ┆ 1    ┆ null ┆ null │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4863 ┆ 1       ┆ 1     ┆ null   ┆ … ┆ null ┆ null ┆ null ┆ null │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4864 ┆ 1       ┆ 1     ┆ null   ┆ … ┆ null ┆ null ┆ null ┆ null │</span>
@@ -166,7 +168,9 @@ all these columns will be converted to character.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4843 ┆ 1.0     ┆ 1.0   ┆ 1.0    ┆ … ┆ 1.0  ┆ 1.0  ┆ 1.0 ┆ 1.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4844 ┆ 1.0     ┆ 1.0   ┆ 1.0    ┆ … ┆ 1.0  ┆ 1.0  ┆ 1.0 ┆ 1.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4845 ┆ 1.0     ┆ 1.0   ┆ 1.0    ┆ … ┆ 0.0  ┆ 0.0  ┆ 0.0 ┆ 0.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4847 ┆ 1.0     ┆ 1.0   ┆ 1.0    ┆ … ┆ 0.0  ┆ 0.0  ┆ 0.0 ┆ 0.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …       ┆ …     ┆ …      ┆ … ┆ …    ┆ …    ┆ …   ┆ …   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4861 ┆ 1.0     ┆ 1.0   ┆ 1.0    ┆ … ┆ 1.0  ┆ 1.0  ┆ 1.0 ┆ 1.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4862 ┆ 1.0     ┆ 1.0   ┆ 1.0    ┆ … ┆ 1.0  ┆ 1.0  ┆ 0.0 ┆ 0.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4863 ┆ 1.0     ┆ 1.0   ┆ 0.0    ┆ … ┆ 0.0  ┆ 0.0  ┆ 0.0 ┆ 0.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4864 ┆ 1.0     ┆ 1.0   ┆ 0.0    ┆ … ┆ 0.0  ┆ 0.0  ┆ 0.0 ┆ 0.0 │</span>
@@ -186,7 +190,9 @@ all these columns will be converted to character.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4843 ┆ 1       ┆ 1     ┆ 1      ┆ … ┆ 1    ┆ 1    ┆ 1   ┆ 1   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4844 ┆ 1       ┆ 1     ┆ 1      ┆ … ┆ 1    ┆ 1    ┆ 1   ┆ 1   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4845 ┆ 1       ┆ 1     ┆ 1      ┆ … ┆ a    ┆ a    ┆ a   ┆ a   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4847 ┆ 1       ┆ 1     ┆ 1      ┆ … ┆ a    ┆ a    ┆ a   ┆ a   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …       ┆ …     ┆ …      ┆ … ┆ …    ┆ …    ┆ …   ┆ …   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4861 ┆ 1       ┆ 1     ┆ 1      ┆ … ┆ 1    ┆ 1    ┆ 1   ┆ 1   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4862 ┆ 1       ┆ 1     ┆ 1      ┆ … ┆ 1    ┆ 1    ┆ a   ┆ a   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4863 ┆ 1       ┆ 1     ┆ a      ┆ … ┆ a    ┆ a    ┆ a   ┆ a   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4864 ┆ 1       ┆ 1     ┆ a      ┆ … ┆ a    ┆ a    ┆ a   ┆ a   │</span>

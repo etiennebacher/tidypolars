@@ -105,7 +105,7 @@ large datasets and prevents the use of streaming.</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">by_cyl</span> <span class="op">&lt;-</span> <span class="va">mtcars</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rpolars.github.io/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">by_cyl</span></span></span>
@@ -119,7 +119,9 @@ large datasets and prevents the use of streaming.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 4.0  ┆ 4.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 1.0 ┆ 4.0  ┆ 1.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 0.0 ┆ 3.0  ┆ 1.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 0.0 ┆ 3.0  ┆ 2.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …   ┆ …    ┆ …    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 1.0 ┆ 5.0  ┆ 2.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 4.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 6.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 8.0  │</span>
@@ -138,8 +140,8 @@ large datasets and prevents the use of streaming.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ ---        ┆ ---        │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64        ┆ f64        │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪════════════╪════════════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 105.136364 ┆ 82.636364  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 353.1      ┆ 209.214286 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 105.136364 ┆ 82.636364  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 183.314286 ┆ 122.285714 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴────────────┴────────────┘</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Groups [3]: cyl</span>

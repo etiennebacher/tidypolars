@@ -98,7 +98,7 @@ identifier for each created row.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span>, y <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">101</span>, n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rpolars.github.io/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span>, y <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">101</span>, n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">test</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (2, 3)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┬─────┐</span>
@@ -127,11 +127,11 @@ identifier for each created row.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┬─────┐</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ y   ┆ id  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ --- │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ str ┆ i32 ┆ f64 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ str ┆ i32 ┆ u32 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 100 ┆ 1.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 101 ┆ 1.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 101 ┆ 2.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 100 ┆ 1   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 101 ┆ 1   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 101 ┆ 2   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴─────┘</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># using constants</span></span></span>

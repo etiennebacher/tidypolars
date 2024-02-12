@@ -176,13 +176,10 @@ automatically drops the missing values). Internally,
 and throws a message if this is not the case:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.tidypolars.etiennebacher.com/" class="external-link">tidypolars</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Registered S3 method overwritten by 'tidypolars':</span></span>
-<span><span class="co">#&gt;   method                 from  </span></span>
-<span><span class="co">#&gt;   print.RPolarsDataFrame polars</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pola-rs/r-polars" class="external-link">polars</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rpolars.github.io/" class="external-link">polars</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rpolars.github.io/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">mpg</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: </span></span>
 <span><span class="co">#&gt; Not all arguments of sd() are used by Polars.</span></span>
@@ -197,7 +194,9 @@ and throws a message if this is not the case:</p>
 <span><span class="co">#&gt; │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 6.026948 │</span></span>
 <span><span class="co">#&gt; │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 6.026948 │</span></span>
 <span><span class="co">#&gt; │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ 6.026948 │</span></span>
+<span><span class="co">#&gt; │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ 6.026948 │</span></span>
 <span><span class="co">#&gt; │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …        │</span></span>
+<span><span class="co">#&gt; │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ 6.026948 │</span></span>
 <span><span class="co">#&gt; │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ 6.026948 │</span></span>
 <span><span class="co">#&gt; │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ 6.026948 │</span></span>
 <span><span class="co">#&gt; │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ 6.026948 │</span></span>
@@ -228,7 +227,7 @@ call:</p>
 use it like any other function:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rpolars.github.io/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu">pl_standardize</span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; shape: (32, 12)</span></span>
 <span><span class="co">#&gt; ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────────┐</span></span>
@@ -240,7 +239,9 @@ use it like any other function:</p>
 <span><span class="co">#&gt; │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 0.150885  │</span></span>
 <span><span class="co">#&gt; │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 0.449543  │</span></span>
 <span><span class="co">#&gt; │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ 0.217253  │</span></span>
+<span><span class="co">#&gt; │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ -0.230735 │</span></span>
 <span><span class="co">#&gt; │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …         │</span></span>
+<span><span class="co">#&gt; │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ 1.710547  │</span></span>
 <span><span class="co">#&gt; │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ -0.711907 │</span></span>
 <span><span class="co">#&gt; │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ -0.064813 │</span></span>
 <span><span class="co">#&gt; │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ -0.844644 │</span></span>
@@ -256,7 +257,7 @@ functions) to a selection of columns. It accepts built-in functions,
 UDFs, and anonymous functions.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rpolars.github.io/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span></span>
 <span>      .cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"a"</span><span class="op">)</span>,</span>
@@ -273,7 +274,9 @@ UDFs, and anonymous functions.</p>
 <span><span class="co">#&gt; │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 0.737804 ┆ 2.8125    ┆ 0.735203   ┆ 1.6152 │</span></span>
 <span><span class="co">#&gt; │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 0.737804 ┆ 2.8125    ┆ -1.122152  ┆ 1.6152 │</span></span>
 <span><span class="co">#&gt; │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.737804 ┆ 2.8125    ┆ -1.122152  ┆ 1.6152 │</span></span>
+<span><span class="co">#&gt; │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.737804 ┆ 2.8125    ┆ -0.503034  ┆ 1.6152 │</span></span>
 <span><span class="co">#&gt; │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …        ┆ …         ┆ …          ┆ …      │</span></span>
+<span><span class="co">#&gt; │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 0.737804 ┆ 2.8125    ┆ -0.503034  ┆ 1.6152 │</span></span>
 <span><span class="co">#&gt; │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 0.737804 ┆ 2.8125    ┆ 0.735203   ┆ 1.6152 │</span></span>
 <span><span class="co">#&gt; │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 0.737804 ┆ 2.8125    ┆ 1.97344    ┆ 1.6152 │</span></span>
 <span><span class="co">#&gt; │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 0.737804 ┆ 2.8125    ┆ 3.211677   ┆ 1.6152 │</span></span>
@@ -283,7 +286,7 @@ UDFs, and anonymous functions.</p>
 return a Polars expression:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rpolars.github.io/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span></span>
 <span>      .cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"a"</span><span class="op">)</span>,</span>

@@ -91,7 +91,7 @@ column numbers, select helpers, etc.</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="va">mtcars</span></span></span>
 <span class="r-in"><span><span class="va">tmp</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="st">"mpg"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
 <span class="r-in"><span><span class="va">tmp</span><span class="op">[</span><span class="fl">4</span>, <span class="st">"hp"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
-<span class="r-in"><span><span class="va">pl_tmp</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pl_tmp</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rpolars.github.io/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">drop_na</span><span class="op">(</span><span class="va">pl_tmp</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (28, 11)</span>
@@ -104,7 +104,9 @@ column numbers, select helpers, etc.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 18.1 ┆ 6.0 ┆ 225.0 ┆ 105.0 ┆ … ┆ 1.0 ┆ 0.0 ┆ 3.0  ┆ 1.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.3 ┆ 8.0 ┆ 360.0 ┆ 245.0 ┆ … ┆ 0.0 ┆ 0.0 ┆ 3.0  ┆ 4.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 24.4 ┆ 4.0 ┆ 146.7 ┆ 62.0  ┆ … ┆ 1.0 ┆ 0.0 ┆ 4.0  ┆ 2.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 22.8 ┆ 4.0 ┆ 140.8 ┆ 95.0  ┆ … ┆ 1.0 ┆ 0.0 ┆ 4.0  ┆ 2.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …   ┆ …    ┆ …    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 1.0 ┆ 5.0  ┆ 2.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 4.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 6.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 8.0  │</span>
@@ -121,7 +123,9 @@ column numbers, select helpers, etc.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 18.1 ┆ 6.0 ┆ 225.0 ┆ 105.0 ┆ … ┆ 1.0 ┆ 0.0 ┆ 3.0  ┆ 1.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.3 ┆ 8.0 ┆ 360.0 ┆ 245.0 ┆ … ┆ 0.0 ┆ 0.0 ┆ 3.0  ┆ 4.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 24.4 ┆ 4.0 ┆ 146.7 ┆ 62.0  ┆ … ┆ 1.0 ┆ 0.0 ┆ 4.0  ┆ 2.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 22.8 ┆ 4.0 ┆ 140.8 ┆ 95.0  ┆ … ┆ 1.0 ┆ 0.0 ┆ 4.0  ┆ 2.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …   ┆ …    ┆ …    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 1.0 ┆ 5.0  ┆ 2.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 4.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 6.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 8.0  │</span>

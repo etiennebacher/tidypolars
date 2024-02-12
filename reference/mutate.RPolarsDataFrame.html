@@ -119,7 +119,7 @@ functions.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">pl_iris</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">pl_iris</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rpolars.github.io/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># classic operation</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">pl_iris</span>, x <span class="op">=</span> <span class="va">Sepal.Width</span> <span class="op">+</span> <span class="va">Sepal.Length</span><span class="op">)</span></span></span>
@@ -133,7 +133,9 @@ functions.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ 7.9 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ setosa    ┆ 7.9 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ setosa    ┆ 7.7 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.0          ┆ 3.6         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ 8.6 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …            ┆ …           ┆ …            ┆ …           ┆ …         ┆ …   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.7          ┆ 3.0         ┆ 5.2          ┆ 2.3         ┆ virginica ┆ 9.7 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.3          ┆ 2.5         ┆ 5.0          ┆ 1.9         ┆ virginica ┆ 8.8 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ virginica ┆ 9.5 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ virginica ┆ 9.6 │</span>
@@ -152,7 +154,9 @@ functions.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ false │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ setosa    ┆ false │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ setosa    ┆ false │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.0          ┆ 3.6         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ false │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …            ┆ …           ┆ …            ┆ …           ┆ …         ┆ …     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.7          ┆ 3.0         ┆ 5.2          ┆ 2.3         ┆ virginica ┆ false │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.3          ┆ 2.5         ┆ 5.0          ┆ 1.9         ┆ virginica ┆ false │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ virginica ┆ false │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ virginica ┆ false │</span>
@@ -171,7 +175,9 @@ functions.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.9          ┆ 6.0         ┆ 1.4          ┆ 0.2         ┆ setosa    │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.7          ┆ 6.4         ┆ 1.3          ┆ 0.2         ┆ setosa    │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.6          ┆ 6.2         ┆ 1.5          ┆ 0.2         ┆ setosa    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.0          ┆ 7.2         ┆ 1.4          ┆ 0.2         ┆ setosa    │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …            ┆ …           ┆ …            ┆ …           ┆ …         │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.7          ┆ 6.0         ┆ 5.2          ┆ 2.3         ┆ virginica │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.3          ┆ 5.0         ┆ 5.0          ┆ 1.9         ┆ virginica │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.5          ┆ 6.0         ┆ 5.2          ┆ 2.0         ┆ virginica │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.2          ┆ 6.8         ┆ 5.4          ┆ 2.3         ┆ virginica │</span>
@@ -192,7 +198,9 @@ functions.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ 5.006 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ setosa    ┆ 5.006 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ setosa    ┆ 5.006 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.0          ┆ 3.6         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ 5.006 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …            ┆ …           ┆ …            ┆ …           ┆ …         ┆ …     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.7          ┆ 3.0         ┆ 5.2          ┆ 2.3         ┆ virginica ┆ 6.588 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.3          ┆ 2.5         ┆ 5.0          ┆ 1.9         ┆ virginica ┆ 6.588 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ virginica ┆ 6.588 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ virginica ┆ 6.588 │</span>
@@ -214,7 +222,9 @@ functions.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ 5.006 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ setosa    ┆ 5.006 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ setosa    ┆ 5.006 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.0          ┆ 3.6         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ 5.006 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …            ┆ …           ┆ …            ┆ …           ┆ …         ┆ …     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.7          ┆ 3.0         ┆ 5.2          ┆ 2.3         ┆ virginica ┆ 6.588 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.3          ┆ 2.5         ┆ 5.0          ┆ 1.9         ┆ virginica ┆ 6.588 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ virginica ┆ 6.588 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ virginica ┆ 6.588 │</span>
@@ -237,7 +247,9 @@ functions.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ 5.843333     ┆ 3.057333    │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ setosa    ┆ 5.843333     ┆ 3.057333    │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ setosa    ┆ 5.843333     ┆ 3.057333    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.0          ┆ 3.6         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ 5.843333     ┆ 3.057333    │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …            ┆ …           ┆ …            ┆ …           ┆ …         ┆ …            ┆ …           │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.7          ┆ 3.0         ┆ 5.2          ┆ 2.3         ┆ virginica ┆ 5.843333     ┆ 3.057333    │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.3          ┆ 2.5         ┆ 5.0          ┆ 1.9         ┆ virginica ┆ 5.843333     ┆ 3.057333    │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ virginica ┆ 5.843333     ┆ 3.057333    │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ virginica ┆ 5.843333     ┆ 3.057333    │</span>
@@ -264,7 +276,9 @@ functions.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.9       ┆ 3.0       ┆ 1.4       ┆ 0.2       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.7       ┆ 3.2       ┆ 1.3       ┆ 0.2       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.6       ┆ 3.1       ┆ 1.5       ┆ 0.2       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.0       ┆ 3.6       ┆ 1.4       ┆ 0.2       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …         ┆ …         ┆ …         ┆ …         ┆ … ┆ …         ┆ …         ┆ …         ┆ …        │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.7       ┆ 3.0       ┆ 5.2       ┆ 2.3       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.3       ┆ 2.5       ┆ 5.0       ┆ 1.9       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.5       ┆ 3.0       ┆ 5.2       ┆ 2.0       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.2       ┆ 3.4       ┆ 5.4       ┆ 2.3       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │</span>
@@ -284,7 +298,9 @@ functions.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ 1.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ setosa    ┆ 1.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ setosa    ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.0          ┆ 3.6         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ 1.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …            ┆ …           ┆ …            ┆ …           ┆ …         ┆ …   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.7          ┆ 3.0         ┆ 5.2          ┆ 2.3         ┆ virginica ┆ 1.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.3          ┆ 2.5         ┆ 5.0          ┆ 1.9         ┆ virginica ┆ 1.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ virginica ┆ 1.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ virginica ┆ 1.0 │</span>

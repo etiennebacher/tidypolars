@@ -85,7 +85,7 @@ datasets. Use <code>polars</code> original functions to read files instead.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># this function is deprecated, use as_polars_lf() or as_polars_df() instead</span></span></span>
 <span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rpolars.github.io/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (32, 11)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────┬─────┬───────┬───────┬───┬─────┬─────┬──────┬──────┐</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │</span>
@@ -96,15 +96,20 @@ datasets. Use <code>polars</code> original functions to read files instead.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 4.0  ┆ 4.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 1.0 ┆ 4.0  ┆ 1.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 0.0 ┆ 3.0  ┆ 1.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 0.0 ┆ 3.0  ┆ 2.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …   ┆ …    ┆ …    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 1.0 ┆ 5.0  ┆ 2.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 4.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 6.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 8.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 1.0 ┆ 4.0  ┆ 2.0  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └──────┴─────┴───────┴───────┴───┴─────┴─────┴──────┴──────┘</span>
 <span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_lf.html" class="external-link">as_polars_lf</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "polars LazyFrame naive plan: (run ldf$describe_optimized_plan() to see the optimized plan)"</span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rpolars.github.io/man/as_polars_lf.html" class="external-link">as_polars_lf</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> polars LazyFrame</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $describe_optimized_plan() : Show the optimized query plan.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Naive plan:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DF ["mpg", "cyl", "disp", "hp"]; PROJECT */11 COLUMNS; SELECTION: "None"</span>
 </code></pre></div>
     </div>
