@@ -5,12 +5,12 @@
 \alias{rowwise.RPolarsLazyFrame}
 \title{Group input by rows}
 \usage{
-\method{rowwise}{RPolarsDataFrame}(.data, ...)
+\method{rowwise}{RPolarsDataFrame}(data, ...)
 
-\method{rowwise}{RPolarsLazyFrame}(.data, ...)
+\method{rowwise}{RPolarsLazyFrame}(data, ...)
 }
 \arguments{
-\item{.data}{A Polars Data/LazyFrame}
+\item{data}{A Polars Data/LazyFrame}
 
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}
