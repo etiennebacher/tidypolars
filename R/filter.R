@@ -22,8 +22,6 @@
 #'
 #' filter(pl_iris, Species == "setosa" | is.na(Species))
 #'
-#' filter(pl_iris, between(Sepal.Length, 5, 6, include_bounds = FALSE))
-#'
 #' iris2 <- iris
 #' iris2$Species <- as.character(iris2$Species)
 #' iris2 |>

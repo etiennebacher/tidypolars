@@ -7,7 +7,7 @@
 #' is most useful when a vectorised function doesn't exist. `rowwise()` produces
 #' another type of grouped data, and therefore can be removed with `ungroup()`.
 #'
-#' @inheritParams select.RPolarsDataFrame
+#' @inheritParams drop_na.RPolarsDataFrame
 #'
 #' @export
 #' @return A Polars Data/LazyFrame.
@@ -23,21 +23,21 @@
 #' df |>
 #'  rowwise() |>
 #'  mutate(min = min(c(x, y)), max = max(c(x, y)))
-rowwise.RPolarsDataFrame <- function(.data, ...) {
-  check_polars_data(.data)
+rowwise.RPolarsDataFrame <- function(data, ...) {
+  check_polars_data(data)
 
-  if (!is.null(attributes(.data)$pl_grps)) {
+  if (!is.null(attributes(data)$pl_grps)) {
     rlang::abort("Cannot use `rowwise()` on grouped data.")
   }
 
-  vars <- tidyselect_dots(.data, ...)
+  vars <- tidyselect_dots(data, ...)
   # need to clone, otherwise the data gets attributes, even if unassigned
-  .data2 <- .data$clone()
+  data2 <- data$clone()
   if (length(vars) > 0) {
-    attr(.data2, "pl_grps") <- vars
+    attr(data2, "pl_grps") <- vars
   }
-  attr(.data2, "grp_type") <- "rowwise"
-  .data2
+  attr(data2, "grp_type") <- "rowwise"
+  data2
 }
 
 #' @rdname rowwise.RPolarsDataFrame

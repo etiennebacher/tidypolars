@@ -45,6 +45,12 @@ pl_str_ends <- function(string, pattern, negate = FALSE, ...) {
 # group = 0 means the whole match
 pl_str_extract <- function(string, pattern, group = 0, ...) {
   check_empty_dots(...)
+  # if pattern wasn't passed to pl$col() at this point then it must be parsed
+  # as a literal otherwise extract() will error because can't find a column
+  # named as pattern
+  if (!inherits(pattern, "RPolarsExpr")) {
+    pattern <- pl$lit(pattern)
+  }
   string$str$extract(pattern, group_index = group)
 }
 
@@ -95,7 +101,9 @@ pl_str_remove_all <- function(string, pattern, ...) {
 
 pl_str_replace <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
-  replacement <- parse_replacement(replacement)
+  if (is.character(replacement)) {
+    replacement <- parse_replacement(replacement)
+  }
   string$str$replace(pattern, replacement)
 }
 

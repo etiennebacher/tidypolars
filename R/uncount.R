@@ -39,7 +39,7 @@ uncount.RPolarsDataFrame <- function(data, weights, ..., .remove = TRUE, .id = N
   }
 
   if (!is.null(.id)) {
-    out <- out$with_columns((pl$col(names(out)[1])$cum_count()$over(names(out)) + 1)$alias(.id))
+    out <- out$with_columns((pl$col(names(out)[1])$cum_count()$over(names(out)))$alias(.id))
   }
 
   out

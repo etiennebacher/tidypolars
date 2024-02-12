@@ -133,11 +133,6 @@ expect_dim(
   c(30, 5)
 )
 
-expect_dim(
-  filter(pl_iris, between(Sepal.Length, 5, 6, include_bounds = FALSE)),
-  c(51, 5)
-)
-
 # with grouped data
 
 by_cyl <- polars::pl$DataFrame(mtcars) |>

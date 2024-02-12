@@ -146,10 +146,15 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
           },
           "c" = {
             expr[[1]] <- NULL
-            if (isTRUE(attr(expr, "do_not_split", TRUE))) {
-              return(polars_constant(unlist(expr)))
+            if (
+              # we may pass a named vector in str_replace_all() for instance
+              !is.null(names(expr)) |
+              # we may pass a vector of column names
+              any(vapply(expr, is.symbol, FUN.VALUE = logical(1L)))
+            ) {
+              return(lapply(expr, translate))
             }
-            return(lapply(expr, translate))
+            return(polars_constant(unlist(expr)))
           },
           ":" = {
             out <- tryCatch(eval_tidy(expr, env = caller_env()), error = identity)
