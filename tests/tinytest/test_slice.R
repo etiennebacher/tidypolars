@@ -96,6 +96,11 @@ if (inherits(pl_iris, "RPolarsDataFrame")) {
   expect_is_tidypolars(slice_sample(pl_iris, prop = 0.1))
 
   expect_equal(
+    slice_sample(pl_iris) |> nrow(),
+    1
+  )
+
+  expect_equal(
     slice_sample(pl_iris, n = 5) |> nrow(),
     5
   )
