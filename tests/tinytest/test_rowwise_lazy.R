@@ -29,6 +29,13 @@ expect_equal_lazy(
 
 expect_equal_lazy(
   test |>
+    mutate(m = median(c(x, y, z))) |>
+    pull(m),
+  c(2, 2.5)
+)
+
+expect_equal_lazy(
+  test |>
     mutate(m = min(c(x, y, z))) |>
     pull(m),
   c(2, 2)

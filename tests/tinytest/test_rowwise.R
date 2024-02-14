@@ -25,6 +25,13 @@ expect_equal(
 
 expect_equal(
   test |>
+    mutate(m = median(c(x, y, z))) |>
+    pull(m),
+  c(2, 2.5)
+)
+
+expect_equal(
+  test |>
     mutate(m = min(c(x, y, z))) |>
     pull(m),
   c(2, 2)
