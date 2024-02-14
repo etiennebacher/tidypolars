@@ -24,6 +24,7 @@
 * All functions that return a polars `Data/LazyFrame` now add the class 
   `"tidypolars"` to the output (#86).
 
+* Support `which.min()` and `which.max()`.
 
 # tidypolars 0.5.0
 

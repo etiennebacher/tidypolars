@@ -96,11 +96,6 @@ pl_any <- function(x, ..., na.rm = FALSE) {
   }
 }
 
-pl_approx_unique <- function(x, ...) {
-  check_empty_dots(...)
-  x$approx_unique()
-}
-
 pl_acos <- function(x, ...) {
   check_empty_dots(...)
   x$arccos()
@@ -131,16 +126,14 @@ pl_atanh <- function(x, ...) {
   x$arctanh()
 }
 
-pl_arg_max <- function(x, ...) {
+pl_which.max <- function(x, ...) {
   check_empty_dots(...)
-  x <- check_rowwise(x, ...)
-  x$arg_max()
+  x$arg_max() + 1
 }
 
-pl_arg_min <- function(x, ...) {
+pl_which.min <- function(x, ...) {
   check_empty_dots(...)
-  x <- check_rowwise(x, ...)
-  x$arg_min()
+  x$arg_min() + 1
 }
 
 pl_arg_sort <- function(x, ...) {
