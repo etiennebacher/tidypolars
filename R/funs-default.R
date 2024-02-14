@@ -141,11 +141,6 @@ pl_arg_sort <- function(x, ...) {
   x$arg_sort()
 }
 
-pl_arg_unique <- function(x, ...) {
-  check_empty_dots(...)
-  x$arg_unique()
-}
-
 pl_between <- function(x, left, right, ...) {
   check_empty_dots(...)
   x$is_between(lower_bound = left, upper_bound = right, closed = "both")
@@ -214,11 +209,6 @@ pl_ceiling <- function(x, ...) {
   x$ceil()
 }
 
-pl_clip <- function(x, ...) {
-  check_empty_dots(...)
-  x$clip()
-}
-
 pl_coalesce <- function(..., default = NULL) {
   pl$coalesce(clean_dots(...), default)
 }
@@ -272,11 +262,6 @@ pl_duplicated <- function(x, ...) {
   x$duplicated()
 }
 
-pl_entropy <- function(x, ...) {
-  check_empty_dots(...)
-  x$entropy()
-}
-
 pl_exp <- function(x, ...) {
   check_empty_dots(...)
   x$exp()
@@ -285,11 +270,6 @@ pl_exp <- function(x, ...) {
 pl_first <- function(x, ...) {
   check_empty_dots(...)
   x$first()
-}
-
-pl_hash <- function(x, ...) {
-  check_empty_dots(...)
-  x$hash()
 }
 
 pl_ifelse <- function(cond, yes, no, .data, ...) {
@@ -424,11 +404,6 @@ pl_lag <- function(x, n = 1, k = NULL, ...) {
   x$shift(n)
 }
 
-pl_shuffle <- function(x, ...) {
-  check_empty_dots(...)
-  x$shuffle()
-}
-
 pl_sign <- function(x, ...) {
   check_empty_dots(...)
   x$sign()
@@ -502,11 +477,6 @@ pl_ewm_std <- function(x, ddof = 1, ...) {
 pl_ewm_var <- function(x, ddof = 1, ...) {
   check_empty_dots(...)
   x$ewm_var(ddof = ddof)
-}
-
-pl_xor <- function(x, ...) {
-  check_empty_dots(...)
-  x$xor()
 }
 
 pl_n_unique <- function(x, ...) {
