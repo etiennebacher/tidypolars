@@ -464,21 +464,6 @@ pl_var <- function(x, ddof = 1, ...) {
   x$var(ddof = ddof)
 }
 
-pl_ewm_mean <- function(x, ddof = 1, ...) {
-  check_empty_dots(...)
-  x$ewm_mean(ddof = ddof)
-}
-
-pl_ewm_std <- function(x, ddof = 1, ...) {
-  check_empty_dots(...)
-  x$ewm_std(ddof = ddof)
-}
-
-pl_ewm_var <- function(x, ddof = 1, ...) {
-  check_empty_dots(...)
-  x$ewm_var(ddof = ddof)
-}
-
 pl_n_unique <- function(x, ...) {
   check_empty_dots(...)
   x$n_unique()
