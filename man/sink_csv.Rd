@@ -25,13 +25,14 @@ sink_csv(
   projection_pushdown = TRUE,
   simplify_expression = TRUE,
   slice_pushdown = TRUE,
-  no_optimization = FALSE
+  no_optimization = FALSE,
+  inherit_optimization = FALSE
 )
 }
 \arguments{
 \item{.data}{A Polars LazyFrame.}
 
-\item{path}{Output file (must be a \code{.parquet} file).}
+\item{path}{Output file (must be a \code{.csv} file).}
 
 \item{include_bom}{Whether to include UTF-8 BOM (byte order mark) in the CSV
 output.}

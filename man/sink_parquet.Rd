@@ -18,7 +18,8 @@ sink_parquet(
   projection_pushdown = TRUE,
   simplify_expression = TRUE,
   slice_pushdown = TRUE,
-  no_optimization = FALSE
+  no_optimization = FALSE,
+  inherit_optimization = FALSE
 )
 }
 \arguments{

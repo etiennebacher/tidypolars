@@ -5,6 +5,7 @@
 #' crashes because of too small memory.
 #'
 #' @param .data A Polars LazyFrame.
+#' @param path Output file (must be a `.csv` file).
 #' @param include_bom Whether to include UTF-8 BOM (byte order mark) in the CSV
 #' output.
 #' @param include_header Whether to include header in the CSV output.
@@ -81,7 +82,8 @@ sink_csv <- function(
     projection_pushdown = TRUE,
     simplify_expression = TRUE,
     slice_pushdown = TRUE,
-    no_optimization = FALSE
+    no_optimization = FALSE,
+    inherit_optimization = FALSE
   ) {
 
   if (!inherits(.data, "RPolarsLazyFrame")) {
@@ -108,7 +110,8 @@ sink_csv <- function(
     projection_pushdown = projection_pushdown,
     simplify_expression = simplify_expression,
     slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization
+    no_optimization = no_optimization,
+    inherit_optimization = inherit_optimization
   )
 
 }

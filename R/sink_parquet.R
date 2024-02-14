@@ -94,7 +94,8 @@ sink_parquet <- function(
     projection_pushdown = TRUE,
     simplify_expression = TRUE,
     slice_pushdown = TRUE,
-    no_optimization = FALSE
+    no_optimization = FALSE,
+    inherit_optimization = FALSE
   ) {
 
   if (!inherits(.data, "RPolarsLazyFrame")) {
@@ -114,7 +115,8 @@ sink_parquet <- function(
     projection_pushdown = projection_pushdown,
     simplify_expression = simplify_expression,
     slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization
+    no_optimization = no_optimization,
+    inherit_optimization = inherit_optimization
   )
 
 }
