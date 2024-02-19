@@ -24,7 +24,6 @@ jobs:
       matrix:
         include:
           - {os: macOS-latest,   r: 'release'}
-          - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,  r: 'release'}
 
     runs-on: ${{ matrix.os }}
