@@ -51,6 +51,8 @@
 #' @param no_optimization Sets the following optimizations to `FALSE`:
 #' `predicate_pushdown`, `projection_pushdown`,  `slice_pushdown`,
 #' `simplify_expression`. Default is `FALSE`.
+#' @param inherit_optimization Use existing optimization settings regardless of
+#' the settings specified in this function call. Default is `FALSE`.
 #'
 #' @return Writes a `.parquet` file with the content of the LazyFrame.
 #' @export
