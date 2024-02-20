@@ -256,7 +256,7 @@ expect_equal(
     )
   ),
   summarize(test_grp, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg)) |>
-    to_r()
+    as.data.frame()
 )
 
 

@@ -52,7 +52,7 @@ for (i in c("hour", "minute", "second")) {
 #   pol <- paste0("mutate(test, to_", i, "  = ", i, "(to_", i, "))") |>
 #     str2lang() |>
 #     eval() |>
-#     to_r()
+#     as.data.frame()
 #
 #   res <- paste0("mutate(test_df, to_", i, "  = ", i, "(to_", i, "))") |>
 #     str2lang() |>

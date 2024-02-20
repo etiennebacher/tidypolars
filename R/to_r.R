@@ -1,5 +1,7 @@
 #' Convert a Polars DataFrame to an R data.frame
 #'
+#' \[DEPRECATED\] Use `as.data.frame()` or `as_tibble()` instead.
+#'
 #' This is a simple wrapper of `$to_data_frame()` present in `polars`. This is
 #' only to make this function work in a pipe workflow.
 #'
@@ -21,6 +23,14 @@
 #'   to_r()
 
 to_r <- function(.data, shrink_i64 = TRUE) {
+
+  rlang::warn(
+    c(
+      "!" = "`to_r()` is deprecated and will be removed in tidypolars 0.7.0.",
+      "i" = "Use `as.data.frame()` or `as_tibble()` instead."
+    ),
+    call = caller_env()
+  )
 
   if (isTRUE(shrink_i64)) {
     i64_cols <- which(sapply(.data$schema, \(x) x == pl$Int64))
