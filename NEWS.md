@@ -12,7 +12,7 @@
   undesirable side effects.
   
 * `to_r()` is deprecated and will be removed in 0.7.0. Use `as.data.frame()` or
-  `as_tibble()` instead. This used to silently return a `LazyFrame` if a the 
+  `as_tibble()` instead. This used to silently return a `LazyFrame` if the 
   input was `LazyFrame`. It now throws an error.
   
 ## New features
