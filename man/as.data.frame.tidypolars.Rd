@@ -16,9 +16,9 @@ explicitly call \code{collect()}.}
 \item{...}{Not used.}
 }
 \description{
-This is a simple wrapper of \verb{$to_data_frame()} present in \code{polars} that makes
-it easier to convert a polars \link[=DataFrame_class]{DataFrame} to a \code{\link{data.frame}} or to a
-\code{\link[tibble:tibble]{tibble}} in a pipe workflow.
+This is a simple wrapper around \verb{$to_data_frame()} present in \code{polars} that
+makes it easier to convert a polars \link[=DataFrame_class]{DataFrame} to a
+\code{\link{data.frame}} or a \code{\link[tibble:tibble]{tibble}} in a pipe workflow.
 }
 \section{About int64}{
  Int64 is a format accepted in Polars but not natively

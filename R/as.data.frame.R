@@ -1,8 +1,8 @@
 #' Convert a Polars DataFrame to an R data.frame or to a tibble
 #'
-#' This is a simple wrapper of `$to_data_frame()` present in `polars` that makes
-#' it easier to convert a polars [DataFrame][DataFrame_class] to a [`data.frame`] or to a
-#' [`tibble`][tibble::tibble] in a pipe workflow.
+#' This is a simple wrapper around `$to_data_frame()` present in `polars` that
+#' makes it easier to convert a polars [DataFrame][DataFrame_class] to a
+#' [`data.frame`] or a [`tibble`][tibble::tibble] in a pipe workflow.
 #'
 #' @param x A Polars DataFrame. To convert a LazyFrame, you first need to
 #'   explicitly call `collect()`.
