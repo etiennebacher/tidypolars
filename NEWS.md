@@ -15,7 +15,7 @@
   `as_tibble()` instead. This used to silently return a `LazyFrame` if the 
   input was `LazyFrame`. It now automatically collects the `LazyFrame` (#88).
   
-* `pull()` nows automatically collect input `LazyFrame` (#89).
+* `pull()` nows automatically collects input `LazyFrame` (#89).
   
 ## New features
 
