@@ -8,7 +8,7 @@
 #' @param int64_conversion How should Int64 values be handled when converting a
 #'   polars object to R? See the documentation in
 #'   [`polars::as.data.frame.RPolarsDataFrame`].
-#' @param ... Not used.
+#' @param ... Options passed to [`polars::as.data.frame.RPolarsDataFrame`].
 #'
 #' @section About int64: Int64 is a format accepted in Polars but not natively
 #'   in R (the package `bit64` helps with that).
