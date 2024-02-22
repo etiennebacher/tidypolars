@@ -15,12 +15,12 @@
 pull.RPolarsDataFrame <- function(.data, var, ...) {
   check_polars_data(.data)
   var <- tidyselect_named_arg(.data, rlang::enquo(var))
+  out <- add_tidypolars_class(.data)
   # for testing only
   if (inherits(.data, "RPolarsLazyFrame") && Sys.getenv("TIDYPOLARS_TEST") == "TRUE") {
-    return(to_r(.data$collect()$select(pl$col(var)))[[1]])
+    out <- out$collect()
   }
-
-  to_r(.data$select(pl$col(var)))[[1]]
+  as.data.frame(out$select(pl$col(var)))[[1]]
 }
 
 #' @rdname pull.RPolarsDataFrame

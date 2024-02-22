@@ -14,7 +14,7 @@ navbar:
 reference:
   - title: Polars-specific functions
     desc: |
-      Functionalities from Polars
+      Functionalities from Polars.
     contents:
       - as_polars
       - describe
@@ -25,9 +25,10 @@ reference:
       - sink_csv
       - sink_parquet
       - to_r
+
   - title: From `dplyr`
     desc: |
-      Functions coming from `dplyr`
+      Functions coming from `dplyr`.
     contents:
       - add_count.RPolarsDataFrame
       - anti_join.RPolarsDataFrame
@@ -59,9 +60,10 @@ reference:
       - slice_sample.RPolarsDataFrame
       - summarize.RPolarsDataFrame
       - ungroup.RPolarsDataFrame
+
   - title: From `tidyr`
     desc: |
-      Functions coming from `tidyr`
+      Functions coming from `tidyr`.
     contents:
       - complete.RPolarsDataFrame
       - drop_na.RPolarsDataFrame
@@ -72,3 +74,9 @@ reference:
       - separate.RPolarsDataFrame
       - uncount.RPolarsDataFrame
       - unite.RPolarsDataFrame
+
+  - title: Other
+    desc: |
+      Other functions or S3 methods.
+    contents:
+      - as_tibble.tidypolars

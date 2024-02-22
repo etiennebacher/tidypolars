@@ -38,7 +38,7 @@ expect_equal_lazy(
 expect_equal_lazy(
   arrange(test, x1, -x2) |>
     select(starts_with("x")) |>
-    to_r(),
+    as.data.frame(),
   data.frame(
     x1 = c("a", "a", "a", "b", "c"),
     x2 = c(3, 2, 1, 5, 1)

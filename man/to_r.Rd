@@ -13,10 +13,12 @@ object is returned as-is.}
 \item{shrink_i64}{Try to shrink i64 to i32 or lower. See Details.}
 }
 \description{
-This is a simple wrapper of \verb{$to_data_frame()} present in \code{polars}. This is
-only to make this function work in a pipe workflow.
+[DEPRECATED] Use \code{as.data.frame()} or \code{as_tibble()} instead.
 }
 \details{
+This is a simple wrapper of \verb{$to_data_frame()} present in \code{polars}. This is
+only to make this function work in a pipe workflow.
+
 Int64 is a format accepted in Polars but not natively in R (the package \code{bit64}
 helps with that). Therefore, int64 values will give infinitely small values
 when converted to R. If \code{shrink_i64} is \code{TRUE}, int64 columns will be shrunk

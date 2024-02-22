@@ -11,6 +11,10 @@
   to `TRUE`, this enabled the string cache globally, which could lead to 
   undesirable side effects.
   
+* `to_r()` is deprecated and will be removed in 0.7.0. Use `as.data.frame()` or
+  `as_tibble()` instead. This used to silently return a `LazyFrame` if the 
+  input was `LazyFrame`. It now automatically collects the `LazyFrame` (#88).
+  
 ## New features
 
 * Add support for argument `.keep` in `mutate()` (#80).
