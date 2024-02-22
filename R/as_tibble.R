@@ -31,5 +31,11 @@ as_tibble.tidypolars <- function(
     int64_conversion = polars::polars_options()$int64_conversion,
     ...
   ) {
-  dplyr::as_tibble(as.data.frame(x, ...))
+  dplyr::as_tibble(as.data.frame(x, int64_conversion = int64_conversion, ...))
 }
+
+#' @export
+as_tibble.RPolarsDataFrame <- as_tibble.tidypolars
+
+#' @export
+as_tibble.RPolarsLazyFrame <- as_tibble.tidypolars
