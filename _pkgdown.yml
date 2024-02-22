@@ -79,4 +79,4 @@ reference:
     desc: |
       Other functions or S3 methods.
     contents:
-      - as.data.frame.tidypolars
+      - as_tibble.tidypolars
