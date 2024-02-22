@@ -40,6 +40,9 @@
     <loc>/reference/as_polars.html</loc>
   </url>
   <url>
+    <loc>/reference/as_tibble.tidypolars.html</loc>
+  </url>
+  <url>
     <loc>/reference/bind_cols_polars.html</loc>
   </url>
   <url>
