@@ -32,7 +32,7 @@ the possible options.
 }
 
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 iris |>
   as_polars_df() |>
   filter(Sepal.Length > 6) |>

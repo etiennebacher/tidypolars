@@ -21,7 +21,7 @@
 #'   the possible options.
 #'
 #' @export
-#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
+#' @examplesIf require("dplyr", quietly = TRUE)
 #' iris |>
 #'   as_polars_df() |>
 #'   filter(Sepal.Length > 6) |>
