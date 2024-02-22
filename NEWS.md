@@ -15,6 +15,8 @@
   `as_tibble()` instead. This used to silently return a `LazyFrame` if the 
   input was `LazyFrame`. It now automatically collects the `LazyFrame` (#88).
   
+* `pull()` nows automatically collect input `LazyFrame` (#89).
+  
 ## New features
 
 * Add support for argument `.keep` in `mutate()` (#80).
@@ -29,6 +31,7 @@
   `"tidypolars"` to the output (#86).
 
 * Support `which.min()` and `which.max()`.
+
 
 # tidypolars 0.5.0
 
