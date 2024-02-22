@@ -12,7 +12,7 @@
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
 
-\item{var}{A quoted or unquoted variable name}
+\item{var}{A quoted or unquoted variable name, or a variable index.}
 
 \item{...}{Not used.}
 }
@@ -20,8 +20,8 @@
 This returns an R vector and not a Polars Series.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pl_test <- polars::pl$DataFrame(iris)
+\dontshow{if (require("dplyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+pl_test <- as_polars_df(iris)
 pull(pl_test, Sepal.Length)
 pull(pl_test, "Sepal.Length")
 \dontshow{\}) # examplesIf}
