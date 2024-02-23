@@ -558,3 +558,8 @@ pl_value_counts <- function(x, ...) {
   check_empty_dots(...)
   x$value_counts()
 }
+
+pl_n <- function(...) {
+  check_empty_dots()
+  pl$len()
+}

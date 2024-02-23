@@ -30,7 +30,7 @@
 * All functions that return a polars `Data/LazyFrame` now add the class 
   `"tidypolars"` to the output (#86).
 
-* Support `which.min()` and `which.max()`.
+* Support `which.min()`, `which.max()`, `dplyr::n()`.
 
 
 # tidypolars 0.5.0
