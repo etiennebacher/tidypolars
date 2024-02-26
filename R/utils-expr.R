@@ -110,17 +110,39 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
           name,
           # .data$ -> consider the RHS of $ as a classic column name
           # .env$ -> eval the RHS of $ in the caller env
+          #
+          # Same thing with [[ but I pass the expressions in sym()
+          "[[" = {
+            first_term <- expr[[2]]
+            if (first_term == ".data") {
+              return(polars_col(expr[[3]]))
+            } else if (first_term == ".env") {
+              # TODO: "env" is the environment inside the mutate()/... call
+              # unsure why I can't just eval this with env_parent(env) to get the
+              # environment in which mutate() /... was called
+              out <- tryCatch(
+                eval_tidy(sym(expr[[3]]), env = caller_env(n = 8)),
+                error = function(e) {
+                  rlang::abort(e$message, call = env)
+                }
+              )
+              return(out)
+            }
+          } ,
           "$" = {
             first_term <- expr[[2]]
             if (first_term == ".data") {
-              return(translate(expr[[3]]))
+              dep <- rlang::as_string(expr[[3]])
+              return(polars_col(dep))
             } else if (first_term == ".env") {
               # TODO: "env" is the environment inside the mutate()/... call
               # unsure why I can't just eval this with env_parent(env) to get the
               # environment in which mutate() /... was called
               out <- tryCatch(
                 eval_tidy(expr[[3]], env = caller_env(n = 8)),
-                error = identity
+                error = function(e) {
+                  rlang::abort(e$message, call = env)
+                }
               )
               return(out)
             }

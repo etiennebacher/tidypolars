@@ -32,6 +32,9 @@
 
 * Support `which.min()`, `which.max()`, `dplyr::n()`.
 
+* Support `.data[[` and `.env[[` in addition to `.data$` and `.env$`. Better
+  error messages when the objects specified in `.data` or `.env` don't exist.
+
 
 # tidypolars 0.5.0
 
