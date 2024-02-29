@@ -89,26 +89,26 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">test</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>ends_with_c <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_starts.html" class="external-link">str_ends</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"c"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 3 × 2</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   x     ends_with_c</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;chr&gt; &lt;lgl&gt;      </span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 abc   TRUE       </span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 a1    FALSE      </span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 dac   TRUE</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="do">## # A tibble: 3 × 2</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="do">##   x     ends_with_c</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="do">##   &lt;chr&gt; &lt;lgl&gt;      </span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="do">## 1 abc   TRUE       </span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="do">## 2 a1    FALSE      </span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="do">## 3 dac   TRUE</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">test_pl</span><span class="op">$</span><span class="fu">with_columns</span><span class="op">(</span></span>
 <span>  ends_with_c <span class="op">=</span> <span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"x"</span><span class="op">)</span><span class="op">$</span><span class="va">str</span><span class="op">$</span><span class="fu">ends_with</span><span class="op">(</span><span class="st">"c"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## shape: (3, 2)</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ┌─────┬─────────────┐</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">## │ x   ┆ ends_with_c │</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="do">## │ --- ┆ ---         │</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="do">## │ str ┆ bool        │</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="do">## ╞═════╪═════════════╡</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="do">## │ abc ┆ true        │</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="do">## │ a1  ┆ false       │</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="do">## │ dac ┆ true        │</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="do">## └─────┴─────────────┘</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="do">## shape: (3, 2)</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="do">## ┌─────┬─────────────┐</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="do">## │ x   ┆ ends_with_c │</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="do">## │ --- ┆ ---         │</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="do">## │ str ┆ bool        │</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="do">## ╞═════╪═════════════╡</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="do">## │ abc ┆ true        │</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="do">## │ a1  ┆ false       │</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="do">## │ dac ┆ true        │</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="do">## └─────┴─────────────┘</span></span></code></pre></div>
 <p>What interests us is the expression inside the <code>$with_columns()</code> call. Now that we know the <code>polars</code> translation, let’s put this in a function that <code>tidypolars</code> will know. Internally, <code>tidypolars</code> will prefix the function name (<code>str_ends</code>) with <code>pl_</code> and look for it in the translated functions.</p>
 <p>Depending on the function we translate, it can be stored in different places. This function only works on strings, we can store it in <a href="https://github.com/etiennebacher/tidypolars/blob/main/R/funs-string.R" class="external-link"><code>R/funs-string.R</code></a>. Once we add support for the <code>negate</code> argument, this is what it will look like:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -125,22 +125,22 @@
 <p>Once the package is reloaded, we can use this function in a <code>tidypolars</code> workflow:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.tidypolars.etiennebacher.com/" class="external-link">tidypolars</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Registered S3 method overwritten by 'tidypolars':</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   method          from  </span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   print.DataFrame polars</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="do">## Registered S3 method overwritten by 'tidypolars':</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="do">##   method          from  </span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="do">##   print.DataFrame polars</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">test_pl</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>ends_with_c <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_starts.html" class="external-link">str_ends</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"c"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## shape: (3, 2)</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ┌─────┬─────────────┐</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="do">## │ x   ┆ ends_with_c │</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="do">## │ --- ┆ ---         │</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="do">## │ str ┆ bool        │</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="do">## ╞═════╪═════════════╡</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="do">## │ abc ┆ true        │</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="do">## │ a1  ┆ false       │</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="do">## │ dac ┆ true        │</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="do">## └─────┴─────────────┘</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="do">## shape: (3, 2)</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="do">## ┌─────┬─────────────┐</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="do">## │ x   ┆ ends_with_c │</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="do">## │ --- ┆ ---         │</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="do">## │ str ┆ bool        │</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="do">## ╞═════╪═════════════╡</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="do">## │ abc ┆ true        │</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="do">## │ a1  ┆ false       │</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="do">## │ dac ┆ true        │</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="do">## └─────┴─────────────┘</span></span></code></pre></div>
 <p>Finally, the only thing left to do is to add some tests in the <code>tests/tinytest</code> folder.</p>
 </div>
 </div>
