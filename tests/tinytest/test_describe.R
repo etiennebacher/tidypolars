@@ -7,19 +7,19 @@ expect_is_tidypolars(describe(test))
 
 expect_equal(
   describe(test) |>
-    pull(describe),
+    pull(statistic),
   c("count", "null_count", "mean", "std", "min", "25%", "50%", "75%", "max")
 )
 
 expect_equal(
   describe(test, percentiles = c(0.2, 0.4)) |>
-    pull(describe),
+    pull(statistic),
   c("count", "null_count", "mean", "std", "min", "20%", "40%", "50%", "max")
 )
 
 expect_equal(
   describe(test, percentiles = c(0.2, 0.4, NULL)) |>
-    pull(describe),
+    pull(statistic),
   c("count", "null_count", "mean", "std", "min", "20%", "40%", "50%", "max")
 )
 
