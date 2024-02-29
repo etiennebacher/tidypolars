@@ -21,7 +21,9 @@ check_polars_data <- function(x, env = caller_env()) {
 }
 
 add_tidypolars_class <- function(x) {
-  class(x) <- c("tidypolars", class(x))
+  if (!inherits(x, "tidypolars")) {
+    class(x) <- c("tidypolars", class(x))
+  }
   x
 }
 
