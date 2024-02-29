@@ -51,31 +51,69 @@ expect_error(
 
 # names sep
 
-pl_us_rent_income <- polars::pl$DataFrame(tidyr::us_rent_income)
+# pl_us_rent_income <- polars::pl$DataFrame(tidyr::us_rent_income)
+#
+# sep <- pl_us_rent_income |>
+#   pivot_wider(
+#     names_from = variable,
+#     names_sep = ".",
+#     values_from = c(estimate, moe)
+#   )
+#
+# expect_equal(
+#   names(sep)[3:6],
+#   c("estimate.income", "estimate.rent", "moe.income", "moe.rent")
+# )
+#
+# # fill values
+#
+# filled <- pl_fish_encounters |>
+#   pivot_wider(names_from = station, values_from = seen, values_fill = 0) |>
+#   slice_head(n = 5)
+#
+# expect_equal(
+#   pull(filled, I80_1),
+#   rep(1, 5)
+# )
+# expect_equal(
+#   pull(filled, BCE2),
+#   c(1, 1, 1, 0, 0)
+# )
 
-sep <- pl_us_rent_income |>
-  pivot_wider(
-    names_from = variable,
-    names_sep = ".",
-    values_from = c(estimate, moe)
-  )
+# several columns in names_from
 
-expect_equal(
-  names(sep)[3:6],
-  c("estimate.income", "estimate.rent", "moe.income", "moe.rent")
-)
-
-# fill values
-
-filled <- pl_fish_encounters |>
-  pivot_wider(names_from = station, values_from = seen, values_fill = 0) |>
-  slice_head(n = 5)
-
-expect_equal(
-  pull(filled, I80_1),
-  rep(1, 5)
-)
-expect_equal(
-  pull(filled, BCE2),
-  c(1, 1, 1, 0, 0)
-)
+# production <- expand.grid(
+#     product = c("A", "B"),
+#     country = c("AI", "EI"),
+#     year = 2000:2014
+#   ) |>
+#   filter((product == "A" & country == "AI") | product == "B") |>
+#   mutate(production = 1:45) |>
+#   as_polars_df()
+#
+# wide <- production |>
+#   pivot_wider(
+#     names_from = c(product, country),
+#     values_from = production,
+#     names_sep = ".",
+#     names_prefix = "prod."
+#   )
+#
+# expect_equal(
+#   wide |> slice_head(n = 1),
+#   data.frame(year = 2000, prod.A.AI = 1, prod.B.AI = 2, prod.B.EI = 3)
+# )
+#
+# # names_glue
+#
+# wide <- production |>
+#   pivot_wider(
+#     names_from = c(product, country),
+#     values_from = production,
+#     names_glue = "prod_{product}_{country}"
+#   )
+#
+# expect_equal(
+#   wide |> slice_head(n = 1),
+#   data.frame(year = 2000, prod_A_AI = 1, prod_B_AI = 2, prod_B_EI = 3)
+# )

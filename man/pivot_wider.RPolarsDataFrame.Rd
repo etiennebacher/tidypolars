@@ -8,22 +8,22 @@
 \method{pivot_wider}{RPolarsDataFrame}(
   data,
   ...,
-  id_cols,
   names_from,
   values_from,
-  names_prefix = NULL,
-  names_sep = NULL,
+  names_prefix = "",
+  names_sep = "_",
+  names_glue = NULL,
   values_fill = NULL
 )
 
 \method{pivot_wider}{RPolarsLazyFrame}(
   data,
   ...,
-  id_cols,
   names_from,
   values_from,
-  names_prefix = NULL,
-  names_sep = NULL,
+  names_prefix = "",
+  names_sep = "_",
+  names_glue = NULL,
   values_fill = NULL
 )
 }
@@ -31,9 +31,6 @@
 \item{data}{A Polars Data/LazyFrame}
 
 \item{...}{Not used.}
-
-\item{id_cols}{Defaults to all columns in data except for the columns specified
-through \code{names_from} and \code{values_from}.}
 
 \item{names_from}{The (quoted or unquoted) column name whose values will be
 used for the names of the new columns.}
@@ -45,14 +42,18 @@ used to fill the new columns.}
 particularly useful if \code{names_from} is a numeric vector and you want to
 create syntactic variable names.}
 
-\item{names_sep}{If \code{names_from} or \code{values_from} contains multiple variables,
-this will be used to join their values together into a single string to use
-as a column name.}
+\item{names_sep}{If \code{names_from} or \code{values_from} contains multiple
+variables, this will be used to join their values together into a single
+string to use as a column name.}
 
-\item{values_fill}{A scalar that will be used to replace missing values in the
-new columns. Note that the type of this value will be applied to new columns.
-For example, if you provide a character value to fill numeric columns, then
-all these columns will be converted to character.}
+\item{names_glue}{Instead of \code{names_sep} and \code{names_prefix}, you can supply a
+\code{glue} specification that uses the \code{names_from} columns to create custom
+column names.}
+
+\item{values_fill}{A scalar that will be used to replace missing values in
+the new columns. Note that the type of this value will be applied to new
+columns. For example, if you provide a character value to fill numeric
+columns, then all these columns will be converted to character.}
 }
 \description{
 Pivot Data/LazyFrame from long to wide
