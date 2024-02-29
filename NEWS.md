@@ -34,6 +34,10 @@
 
 * Support `.data[[` and `.env[[` in addition to `.data$` and `.env$`. Better
   error messages when the objects specified in `.data` or `.env` don't exist.
+  
+## Bug fixes
+
+* `pull()` now errors when `var` is of length > 1.
 
 
 # tidypolars 0.5.0
