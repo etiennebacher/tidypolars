@@ -4,6 +4,9 @@
 unpack_across <- function(.data, expr, env) {
   .cols <- get_arg(".cols", 1, expr, env)
   .cols <- tidyselect_named_arg(.data, enquo(.cols))
+  if (isTRUE(env$is_grouped)) {
+    .cols <- setdiff(.cols, env$grps)
+  }
   .fns <- get_arg(".fns", 2, expr, env)
   .names <- get_arg(".names", 3, expr, env)
 

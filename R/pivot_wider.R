@@ -60,11 +60,23 @@ pivot_wider.RPolarsDataFrame <- function(data, ..., names_from, values_from,
     distinct() |>
     as.data.frame()
 
-  # browser()
-
   if (!is.null(names_glue)) {
     final_cols <- glue::glue_data(final_cols, names_glue)
     names_prefix <- NULL
+
+  # polars adds names_from in the middle of the generated names so I remove it
+  } else if (length(value_vars) > 1 && length(names_vars) == 1) {
+    old_names <- grep(
+      paste0(names_sep, names_vars, names_sep),
+      names(new_data),
+      value = TRUE
+    )
+    new_names <- gsub(
+      paste0(names_sep, names_vars, names_sep),
+      names_sep,
+      old_names
+    )
+    final_cols <- new_names
   } else {
     final_cols <- do.call(paste, c(final_cols, sep = names_sep))
   }
