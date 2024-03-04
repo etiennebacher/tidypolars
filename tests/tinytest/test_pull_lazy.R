@@ -22,4 +22,13 @@ expect_equal_lazy(
   mtcars$mpg
 )
 
+expect_error_lazy(
+  pull(test, dplyr::all_of(c("mpg", "drat"))),
+  "can only extract one column"
+)
+
+expect_error_lazy(
+  pull(test, mpg, drat, hp)
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
