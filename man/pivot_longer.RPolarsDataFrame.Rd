@@ -3,7 +3,7 @@
 \name{pivot_longer.RPolarsDataFrame}
 \alias{pivot_longer.RPolarsDataFrame}
 \alias{pivot_longer.RPolarsLazyFrame}
-\title{Pivot Data/LazyFrame from wide to long}
+\title{Pivot a Data/LazyFrame from wide to long}
 \usage{
 \method{pivot_longer}{RPolarsDataFrame}(
   data,
@@ -41,7 +41,7 @@ the start of each variable name.}
 data stored in cell values.}
 }
 \description{
-Pivot Data/LazyFrame from wide to long
+Pivot a Data/LazyFrame from wide to long
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}

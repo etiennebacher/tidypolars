@@ -2,8 +2,7 @@
 % Please edit documentation in R/pivot_wider.R
 \name{pivot_wider.RPolarsDataFrame}
 \alias{pivot_wider.RPolarsDataFrame}
-\alias{pivot_wider.RPolarsLazyFrame}
-\title{Pivot Data/LazyFrame from long to wide}
+\title{Pivot a DataFrame from long to wide}
 \usage{
 \method{pivot_wider}{RPolarsDataFrame}(
   data,
@@ -15,27 +14,16 @@
   names_glue = NULL,
   values_fill = NULL
 )
-
-\method{pivot_wider}{RPolarsLazyFrame}(
-  data,
-  ...,
-  names_from,
-  values_from,
-  names_prefix = "",
-  names_sep = "_",
-  names_glue = NULL,
-  values_fill = NULL
-)
 }
 \arguments{
-\item{data}{A Polars Data/LazyFrame}
+\item{data}{A Polars DataFrame (LazyFrames are not supported).}
 
 \item{...}{Not used.}
 
-\item{names_from}{The (quoted or unquoted) column name whose values will be
+\item{names_from}{The (quoted or unquoted) column names whose values will be
 used for the names of the new columns.}
 
-\item{values_from}{The (quoted or unquoted) column name whose values will be
+\item{values_from}{The (quoted or unquoted) column names whose values will be
 used to fill the new columns.}
 
 \item{names_prefix}{String added to the start of every variable name. This is
@@ -56,7 +44,7 @@ columns. For example, if you provide a character value to fill numeric
 columns, then all these columns will be converted to character.}
 }
 \description{
-Pivot Data/LazyFrame from long to wide
+Pivot a DataFrame from long to wide
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -71,5 +59,24 @@ pl_fish_encounters |>
 # be careful about the type of the replacement value!
 pl_fish_encounters |>
   pivot_wider(names_from = station, values_from = seen, values_fill = "a")
+
+# using "names_glue" to specify the names of new columns
+production <- expand.grid(
+  product = c("A", "B"),
+  country = c("AI", "EI"),
+  year = 2000:2014
+) |>
+  filter((product == "A" & country == "AI") | product == "B") |>
+  mutate(production = 1:45) |>
+  as_polars_df()
+
+production
+
+production |>
+  pivot_wider(
+    names_from = c(product, country),
+    values_from = production,
+    names_glue = "prod_{product}_{country}"
+  )
 \dontshow{\}) # examplesIf}
 }

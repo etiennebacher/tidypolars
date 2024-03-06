@@ -82,38 +82,55 @@ expect_equal(
 
 # several columns in names_from
 
-# production <- expand.grid(
-#     product = c("A", "B"),
-#     country = c("AI", "EI"),
-#     year = 2000:2014
-#   ) |>
-#   filter((product == "A" & country == "AI") | product == "B") |>
-#   mutate(production = 1:45) |>
-#   as_polars_df()
-#
-# wide <- production |>
-#   pivot_wider(
-#     names_from = c(product, country),
-#     values_from = production,
-#     names_sep = ".",
-#     names_prefix = "prod."
-#   )
-#
-# expect_equal(
-#   wide |> slice_head(n = 1),
-#   data.frame(year = 2000, prod.A.AI = 1, prod.B.AI = 2, prod.B.EI = 3)
-# )
-#
-# # names_glue
-#
-# wide <- production |>
-#   pivot_wider(
-#     names_from = c(product, country),
-#     values_from = production,
-#     names_glue = "prod_{product}_{country}"
-#   )
-#
-# expect_equal(
-#   wide |> slice_head(n = 1),
-#   data.frame(year = 2000, prod_A_AI = 1, prod_B_AI = 2, prod_B_EI = 3)
-# )
+production <- expand.grid(
+    product = c("A", "B"),
+    country = c("AI", "EI"),
+    year = 2000:2014
+  ) |>
+  filter((product == "A" & country == "AI") | product == "B") |>
+  mutate(production = 1:45) |>
+  as_polars_df()
+
+wide <- production |>
+  pivot_wider(
+    names_from = c(product, country),
+    values_from = production,
+    names_sep = ".",
+    names_prefix = "prod."
+  )
+
+expect_equal(
+  wide |> slice_head(n = 1),
+  data.frame(year = 2000, prod.A.AI = 1, prod.B.AI = 2, prod.B.EI = 3)
+)
+
+# names_glue
+
+wide <- production |>
+  pivot_wider(
+    names_from = c(product, country),
+    values_from = production,
+    names_glue = "prod_{product}_{country}"
+  )
+
+expect_equal(
+  wide |> slice_head(n = 1),
+  data.frame(year = 2000, prod_A_AI = 1, prod_B_AI = 2, prod_B_EI = 3)
+)
+
+wide <- production |>
+  pivot_wider(
+    names_from = product,
+    values_from = production,
+    names_glue = "prod_{product}"
+  )
+
+expect_equal(
+  wide |> slice_head(n = 2),
+  data.frame(
+    country = factor(c("AI", "EI")),
+    year = c(2000, 2000),
+    prod_A = c(1, NA),
+    prod_B = c(2, 3)
+  )
+)

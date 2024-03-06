@@ -1,8 +1,9 @@
-#' Pivot Data/LazyFrame from long to wide
+#' Pivot a DataFrame from long to wide
 #'
-#' @param names_from The (quoted or unquoted) column name whose values will be
+#' @param data A Polars DataFrame (LazyFrames are not supported).
+#' @param names_from The (quoted or unquoted) column names whose values will be
 #'   used for the names of the new columns.
-#' @param values_from The (quoted or unquoted) column name whose values will be
+#' @param values_from The (quoted or unquoted) column names whose values will be
 #'   used to fill the new columns.
 #' @param names_prefix String added to the start of every variable name. This is
 #'   particularly useful if `names_from` is a numeric vector and you want to
@@ -32,6 +33,25 @@
 #' # be careful about the type of the replacement value!
 #' pl_fish_encounters |>
 #'   pivot_wider(names_from = station, values_from = seen, values_fill = "a")
+#'
+#' # using "names_glue" to specify the names of new columns
+#' production <- expand.grid(
+#'   product = c("A", "B"),
+#'   country = c("AI", "EI"),
+#'   year = 2000:2014
+#' ) |>
+#'   filter((product == "A" & country == "AI") | product == "B") |>
+#'   mutate(production = 1:45) |>
+#'   as_polars_df()
+#'
+#' production
+#'
+#' production |>
+#'   pivot_wider(
+#'     names_from = c(product, country),
+#'     values_from = production,
+#'     names_glue = "prod_{product}_{country}"
+#'   )
 
 pivot_wider.RPolarsDataFrame <- function(data, ..., names_from, values_from,
                                   names_prefix = "", names_sep = "_", names_glue = NULL,
@@ -119,7 +139,3 @@ pivot_wider.RPolarsDataFrame <- function(data, ..., names_from, values_from,
 
   add_tidypolars_class(out)
 }
-
-#' @rdname pivot_wider.RPolarsDataFrame
-#' @export
-pivot_wider.RPolarsLazyFrame <- pivot_wider.RPolarsDataFrame
