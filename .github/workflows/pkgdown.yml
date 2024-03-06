@@ -48,3 +48,5 @@ jobs:
           clean: false
           branch: gh-pages
           folder: docs
+          ### Added by me
+          clean: true
