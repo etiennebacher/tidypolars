@@ -1,4 +1,4 @@
-#' Pivot Data/LazyFrame from wide to long
+#' Pivot a Data/LazyFrame from wide to long
 #'
 #' @param data A Polars Data/LazyFrame
 #' @param cols Columns to pivot into longer format. Can be anything accepted by

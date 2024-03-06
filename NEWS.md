@@ -1,3 +1,14 @@
+# tidypolars (development version)
+
+## New features
+
+* Several improvements and changes for `pivot_wider()` (#95):
+
+  * `names_from` can now takes several variables;
+  * add support for `names_glue`;
+  * default value of `names_sep` now is `_`, for consistency with `tidyr`;
+  * fix documentation as `pivot_wider()` doesn't work on LazyFrame.
+
 # tidypolars 0.6.0
 
 `tidypolars` requires `polars` >= 0.15.0.
