@@ -1,6 +1,6 @@
-# tidypolars (development version)
+# tidypolars 0.6.0
 
-`tidypolars` requires `polars` >= 0.14.0.
+`tidypolars` requires `polars` >= 0.15.0.
 
 ## Breaking changes and deprecations
   
