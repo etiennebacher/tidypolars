@@ -224,9 +224,23 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
             )
             return(out)
           },
+
+          ### stringr functions
           "fixed" = {
             out <- expr[[2]]
             attr(out, "stringr_attr") <- "fixed"
+            return(out)
+          },
+          "regex" = {
+            out <- expr[[2]]
+            case_insensitive <- if ("ignore_case" %in% names(expr)) {
+              expr$ignore_case
+            } else if (length(expr) >= 3) {
+              expr[[3]]
+            } else {
+              FALSE
+            }
+            attr(out, "case_insensitive") <- case_insensitive
             return(out)
           }
         )

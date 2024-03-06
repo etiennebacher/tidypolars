@@ -18,12 +18,22 @@ pl_paste <- function(..., sep = " ", collapse = NULL) {
 pl_str_count <- function(string, pattern = "", ...) {
   check_empty_dots(...)
   is_fixed <- isTRUE(attr(pattern, "stringr_attr") == "fixed")
+  is_case_insensitive <- isTRUE(attr(pattern, "case_insensitive"))
+  if (is_case_insensitive) {
+    print("here")
+    pattern <- paste0("(?i)", pattern)
+  }
   string$str$count_matches(pattern, literal = is_fixed)
 }
 
 pl_str_detect <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
   is_fixed <- isTRUE(attr(pattern, "stringr_attr") == "fixed")
+  is_case_insensitive <- isTRUE(attr(pattern, "case_insensitive"))
+  if (is_case_insensitive) {
+    pattern <- paste0("(?i)", pattern)
+  }
+
   out <- string$str$contains(pattern, literal = is_fixed)
   if (isTRUE(negate)) {
     out$not()
@@ -54,7 +64,7 @@ pl_str_extract <- function(string, pattern, group = 0, ...) {
   string$str$extract(pattern, group_index = group)
 }
 
-# TODO: argument "simplify" should be allowed. It requirest the method "unnest"
+# TODO: argument "simplify" should be allowed. It requires the method "unnest"
 # for "struct". When it is implement in r-polars, use this:
 # $list$to_struct()$struct$unnest()
 pl_str_extract_all <- function(string, pattern, ...) {
