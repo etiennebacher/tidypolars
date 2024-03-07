@@ -134,3 +134,59 @@ expect_equal(
     prod_B = c(2, 3)
   )
 )
+
+# error when overwriting existing column
+
+df <- pl$DataFrame(
+  a = c(1, 1),
+  key = c("a", "b"),
+  val = c(1, 2)
+)
+
+expect_error(pivot_wider(df, names_from = key, values_from = val))
+
+# `names_from` must be supplied if `name` isn't in `data`
+
+df <- pl$DataFrame(key = "x", val = 1)
+expect_error(
+  pivot_wider(df, values_from = val),
+  "Column `name` doesn't exist"
+)
+
+# `values_from` must be supplied if `value` isn't in `data`
+
+df <- pl$DataFrame(key = "x", val = 1)
+expect_error(
+  pivot_wider(df, names_from = key),
+  "Column `value` doesn't exist"
+)
+
+# `names_from` must identify at least 1 column
+
+df <- pl$DataFrame(key = "x", val = 1)
+expect_error(
+  pivot_wider(df, names_from = starts_with("foo"), values_from = val),
+  "at least one variable in `names_from`"
+)
+
+# `values_from` must identify at least 1 column
+
+df <- pl$DataFrame(key = "x", val = 1)
+expect_error(
+  pivot_wider(df, names_from = key, values_from = starts_with("foo")),
+  "at least one variable in `values_from`"
+)
+
+# `id_cols = everything()` excludes `names_from` and `values_from`
+
+df <- pl$DataFrame(key = "x", name = "a", value = 1L)
+expect_equal(
+  pivot_wider(df, id_cols = everything()),
+  data.frame(key = "x", a = 1L)
+)
+
+# `id_cols` can't select columns from `names_from` or `values_from`
+
+df <- pl$DataFrame(name = c("x", "y"), value = c(1, 2))
+expect_error(pivot_wider(df, id_cols = name, names_from = name, values_from = value))
+expect_error(pivot_wider(df, id_cols = value, names_from = name, values_from = value))

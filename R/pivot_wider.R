@@ -1,6 +1,16 @@
 #' Pivot a DataFrame from long to wide
 #'
 #' @param data A Polars DataFrame (LazyFrames are not supported).
+#' @param ... Not used.
+#' @param id_cols A set of columns that uniquely identify each observation.
+#'   Typically used when you have redundant variables, i.e. variables whose
+#'   values are perfectly correlated with existing variables.
+#'
+#'   Defaults to all columns in data except for the columns specified through
+#'   `names_from` and `values_from`. If a tidyselect expression is supplied, it
+#'   will be evaluated on data after removing the columns specified through
+#'   `names_from` and `values_from`.
+#'
 #' @param names_from The (quoted or unquoted) column names whose values will be
 #'   used for the names of the new columns.
 #' @param values_from The (quoted or unquoted) column names whose values will be
@@ -18,7 +28,6 @@
 #'   the new columns. Note that the type of this value will be applied to new
 #'   columns. For example, if you provide a character value to fill numeric
 #'   columns, then all these columns will be converted to character.
-#' @inheritParams slice_tail.RPolarsDataFrame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -53,16 +62,36 @@
 #'     names_glue = "prod_{product}_{country}"
 #'   )
 
-pivot_wider.RPolarsDataFrame <- function(data, ..., names_from, values_from,
-                                  names_prefix = "", names_sep = "_", names_glue = NULL,
-                                  values_fill = NULL) {
+pivot_wider.RPolarsDataFrame <- function(
+    data,
+    ...,
+    id_cols = NULL,
+    names_from = name,
+    values_from = value,
+    names_prefix = "",
+    names_sep = "_",
+    names_glue = NULL,
+    values_fill = NULL
+  ) {
 
   check_polars_data(data)
 
   data_names <- pl_colnames(data)
   value_vars <- tidyselect_named_arg(data, rlang::enquo(values_from))
   names_vars <- tidyselect_named_arg(data, rlang::enquo(names_from))
-  id_vars <- data_names[!data_names %in% c(value_vars, names_vars)]
+  id_cols <- setdiff(
+    tidyselect_named_arg(data, rlang::enquo(id_cols)),
+    c(value_vars, names_vars)
+  )
+  id_vars <- id_cols %||% data_names[!data_names %in% c(value_vars, names_vars)]
+
+  if (length(value_vars) == 0) {
+    rlang::abort("Must select at least one variable in `values_from`.")
+  }
+
+  if (length(names_vars) == 0) {
+    rlang::abort("Must select at least one variable in `names_from`.")
+  }
 
   new_data <- data$pivot(
     values = value_vars,

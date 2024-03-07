@@ -5,7 +5,7 @@
 * Several improvements and changes for `pivot_wider()` (#95):
 
   * `names_from` can now takes several variables;
-  * add support for `names_glue`;
+  * add support for `id_cols` and `names_glue`;
   * default value of `names_sep` now is `_`, for consistency with `tidyr`;
   * fix documentation as `pivot_wider()` doesn't work on LazyFrame.
 

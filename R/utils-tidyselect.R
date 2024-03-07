@@ -6,7 +6,9 @@ tidyselect_dots <- function(.data, ...) {
 
 tidyselect_named_arg <- function(.data, cols) {
   data <- build_data_context(.data)
-  names(tidyselect::eval_select(cols, data = data))
+  out <- names(tidyselect::eval_select(cols, data = data, error_call = caller_env()))
+  if (length(out) == 0) return(NULL)
+  out
 }
 
 # Rather than collecting a 1-row slice, it is faster to use the schema of the

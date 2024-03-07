@@ -7,8 +7,9 @@
 \method{pivot_wider}{RPolarsDataFrame}(
   data,
   ...,
-  names_from,
-  values_from,
+  id_cols = NULL,
+  names_from = name,
+  values_from = value,
   names_prefix = "",
   names_sep = "_",
   names_glue = NULL,
@@ -19,6 +20,15 @@
 \item{data}{A Polars DataFrame (LazyFrames are not supported).}
 
 \item{...}{Not used.}
+
+\item{id_cols}{A set of columns that uniquely identify each observation.
+Typically used when you have redundant variables, i.e. variables whose
+values are perfectly correlated with existing variables.
+
+Defaults to all columns in data except for the columns specified through
+\code{names_from} and \code{values_from}. If a tidyselect expression is supplied, it
+will be evaluated on data after removing the columns specified through
+\code{names_from} and \code{values_from}.}
 
 \item{names_from}{The (quoted or unquoted) column names whose values will be
 used for the names of the new columns.}
