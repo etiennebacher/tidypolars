@@ -549,4 +549,47 @@ expect_warning(
   "will not be used"
 )
 
+
+# regex() ---------------------------------------------------------
+
+expect_equal_lazy(
+  mutate(test, foo = str_detect(x1, regex("hello", ignore_case = TRUE))) |>
+    pull(foo),
+  mutate(test_df, foo = str_detect(x1, regex("hello", ignore_case = TRUE))) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  mutate(test, foo = str_count(x1, regex("hello", ignore_case = FALSE))) |>
+    pull(foo),
+  mutate(test_df, foo = str_count(x1, regex("hello", ignore_case = FALSE))) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  mutate(test, foo = str_starts(x1, regex("hel", ignore_case = TRUE))) |>
+    pull(foo),
+  mutate(test_df, foo = str_starts(x1, regex("hel", ignore_case = TRUE))) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  mutate(test, foo = str_ends(x1, regex("me", ignore_case = TRUE))) |>
+    pull(foo),
+  mutate(test_df, foo = str_ends(x1, regex("me", ignore_case = TRUE))) |>
+    pull(foo)
+)
+
+expect_warning(
+  mutate(test, foo = str_detect(x1, regex("hello", multiline = TRUE))),
+  "tidypolars only supports the argument `ignore_case` in `regex()`.",
+  fixed = TRUE
+)
+
+expect_warning(
+  mutate(test, foo = str_detect(x1, regex("hello", ignore_case = TRUE, multiline = TRUE))),
+  "tidypolars only supports the argument `ignore_case` in `regex()`.",
+  fixed = TRUE
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

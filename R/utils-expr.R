@@ -232,13 +232,20 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
             return(out)
           },
           "regex" = {
-            out <- expr[[2]]
-            case_insensitive <- if ("ignore_case" %in% names(expr)) {
-              expr$ignore_case
-            } else if (length(expr) >= 3) {
-              expr[[3]]
-            } else {
-              FALSE
+            out <- select_by_name_or_position(expr, "pattern", 1, env = env)
+            case_insensitive <- select_by_name_or_position(
+              expr, "ignore_case", 2, default = FALSE, env = env
+            )
+            names_expr <- names(expr)
+            unexpected_names <- setdiff(names_expr[names_expr != ""], c("pattern", "ignore_case"))
+            if (length(unexpected_names) > 0) {
+              rlang::warn(
+                c(
+                  "tidypolars only supports the argument `ignore_case` in `regex()`.",
+                  "i" = paste("Unexpected argument(s):", toString(unexpected_names))
+                ),
+                call = env
+              )
             }
             attr(out, "case_insensitive") <- case_insensitive
             return(out)
@@ -546,4 +553,15 @@ check_rowwise_dots <- function(...) {
     }
   }
   list(is_rowwise = is_rowwise, expr = out)
+}
+
+# Modify pattern if case insensitive, return info on whether it should be
+# literal
+check_pattern <- function(x) {
+  is_fixed <- isTRUE(attr(x, "stringr_attr") == "fixed")
+  is_case_insensitive <- isTRUE(attr(x, "case_insensitive"))
+  if (is_case_insensitive) {
+    x <- paste0("(?i)", x)
+  }
+  list(pattern = x, is_fixed = is_fixed, is_case_insensitive = is_case_insensitive)
 }

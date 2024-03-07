@@ -87,3 +87,17 @@ make_dupes_msg <- function(x) {
   }
   final_msg
 }
+
+# Extract an argument value from a quosure, first by its name if it's named,
+# then by its expected position
+select_by_name_or_position <- function(expr, name, position, default, env) {
+  # first position is the operator in expr, so I add 1 to get the real position
+  position <- position + 1
+  if (name %in% names(expr)) {
+    expr[[name]]
+  } else if (length(expr) >= position) {
+    expr[[position]]
+  } else {
+    default
+  }
+}
