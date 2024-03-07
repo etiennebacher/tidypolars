@@ -560,9 +560,9 @@ expect_equal_lazy(
 )
 
 expect_equal_lazy(
-  mutate(test, foo = str_count(x1, regex("hello", ignore_case = FALSE))) |>
+  mutate(test, foo = str_count(x1, regex("hello", ignore_case = TRUE))) |>
     pull(foo),
-  mutate(test_df, foo = str_count(x1, regex("hello", ignore_case = FALSE))) |>
+  mutate(test_df, foo = str_count(x1, regex("hello", ignore_case = TRUE))) |>
     pull(foo)
 )
 
