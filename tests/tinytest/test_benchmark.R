@@ -50,8 +50,8 @@ x <- bench::mark(
     with_columns(
       pl$when(
         (pl$col("cyl") >= 6)
-      )$then("large")$
-        otherwise("small")$
+      )$then(pl$lit("large"))$
+        otherwise(pl$lit("small"))$
         alias("cyl_type")
     )$
     filter(pl$col("disp") / pl$col("gear") > 40)$
@@ -62,8 +62,9 @@ x <- bench::mark(
       cyl_type = ifelse(cyl >= 6, "large", "small")
     ) |>
     filter(disp / gear > 40) |>
-    collect(),
-  iterations = 5
+    compute(),
+  iterations = 5,
+  check = FALSE
 )
 
 times <- as.numeric(x$median)

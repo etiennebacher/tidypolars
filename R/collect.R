@@ -43,7 +43,7 @@
 #'   filter(between(Sepal.Length, 5, 6)) |>
 #'   collect()
 
-collect.RPolarsLazyFrame <- function(
+compute.RPolarsLazyFrame <- function(
     x,
     type_coercion = TRUE,
     predicate_pushdown = TRUE,
@@ -82,4 +82,47 @@ collect.RPolarsLazyFrame <- function(
   }
 
   add_tidypolars_class(out)
+}
+
+
+#' @rdname compute.RPolarsLazyFrame
+#' @export
+collect.RPolarsLazyFrame <- function(
+    x,
+    type_coercion = TRUE,
+    predicate_pushdown = TRUE,
+    projection_pushdown = TRUE,
+    simplify_expression = TRUE,
+    slice_pushdown = TRUE,
+    comm_subplan_elim = TRUE,
+    comm_subexpr_elim = TRUE,
+    no_optimization = FALSE,
+    streaming = FALSE,
+    collect_in_background = FALSE,
+    ...
+) {
+  grps <- attributes(x)$pl_grps
+  mo <- attributes(x)$maintain_grp_order
+  is_grouped <- !is.null(grps)
+
+  out <- x$collect(
+    type_coercion = type_coercion,
+    predicate_pushdown = predicate_pushdown,
+    projection_pushdown = projection_pushdown,
+    simplify_expression = simplify_expression,
+    slice_pushdown = slice_pushdown,
+    comm_subplan_elim = comm_subplan_elim,
+    comm_subexpr_elim = comm_subexpr_elim,
+    no_optimization = no_optimization,
+    streaming = streaming,
+    collect_in_background = collect_in_background
+  ) |>
+    as.data.frame()
+
+  if (is_grouped) {
+    out |>
+      group_by(grps)
+  } else {
+    out
+  }
 }
