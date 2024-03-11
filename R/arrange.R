@@ -43,7 +43,7 @@ arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
     }) |>
     unlist()
 
-  not_exist <- which(!vars %in% pl_colnames(.data))
+  not_exist <- which(!vars %in% names(.data))
   if (length(not_exist) > 0) {
     vars <- vars[-not_exist]
     direction <- direction[-not_exist]

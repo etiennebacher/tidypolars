@@ -38,7 +38,7 @@ relocate.RPolarsDataFrame <- function(.data, ..., .before = NULL, .after = NULL)
     rlang::abort("You can specify either `.before` or `.after` but not both.")
   }
 
-  names_data <- pl_colnames(.data)
+  names_data <- names(.data)
 
   if (missing(.before) && missing(.after)) {
     .before <- names_data[1]

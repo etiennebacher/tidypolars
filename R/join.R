@@ -215,7 +215,7 @@ join_ <- function(x, y, by = NULL, how, suffix) {
   }
 
   if (is.null(by) && how != "cross") {
-    by <- intersect(pl_colnames(x), pl_colnames(y))
+    by <- intersect(names(x), names(y))
     if (length(by) == 0) {
       rlang::abort(
         c(
@@ -248,8 +248,8 @@ join_ <- function(x, y, by = NULL, how, suffix) {
   }
 
   dupes <- intersect(
-    setdiff(pl_colnames(x), by),
-    setdiff(pl_colnames(y), by)
+    setdiff(names(x), by),
+    setdiff(names(y), by)
   )
 
   if (how == "right") {

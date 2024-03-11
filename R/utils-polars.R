@@ -1,16 +1,3 @@
-#' Get column names of a Polars Data/LazyFrame
-#'
-#' @param x A Polars Data/LazyFrame
-#'
-#' @return A character vector with the column names
-#' @noRd
-
-pl_colnames <- function(x) {
-  if (inherits(x, "RPolarsDataFrame") || inherits(x, "RPolarsLazyFrame")) {
-    x$columns
-  }
-}
-
 check_polars_data <- function(x, env = caller_env()) {
   if (!inherits(x, "RPolarsDataFrame") && !inherits(x, "RPolarsLazyFrame")) {
     rlang::abort(

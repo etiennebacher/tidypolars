@@ -32,7 +32,7 @@ translate_dots <- function(.data, ..., env) {
 
 translate_expr <- function(.data, quo, new_vars = NULL, env) {
 
-  names_data <- pl_colnames(.data)
+  names_data <- names(.data)
 
   if (!is_quosure(quo)) {
     quo <- enquo(quo)
