@@ -196,7 +196,16 @@ cross_join.RPolarsLazyFrame <- cross_join.RPolarsDataFrame
 
 
 join_ <- function(x, y, by = NULL, how, suffix) {
-  check_same_class(x, y, rlang::caller_env())
+  all_df_or_lf <-
+    all(vapply(list(x, y), inherits, what = "RPolarsDataFrame", FUN.VALUE = logical(1L))) ||
+    all(vapply(list(x, y), inherits, what = "RPolarsLazyFrame", FUN.VALUE = logical(1L)))
+
+  if (!all_df_or_lf) {
+    rlang::abort(
+      "`x` and `y` must be either two DataFrames or two LazyFrames.",
+      call = caller_env()
+    )
+  }
 
   if (!is.null(suffix) && length(suffix) != 2) {
     rlang::abort(
@@ -207,6 +216,15 @@ join_ <- function(x, y, by = NULL, how, suffix) {
 
   if (is.null(by) && how != "cross") {
     by <- intersect(pl_colnames(x), pl_colnames(y))
+    if (length(by) == 0) {
+      rlang::abort(
+        c(
+          "`by` must be supplied when `x` and `y` have no common variables.",
+          "i" = "Use `cross_join()` to perform a cross-join."
+        ),
+        call = caller_env()
+      )
+    }
     rlang::inform(
       paste0("Joining by ", paste("`", by, "`", collapse = ", ", sep = ""))
     )
@@ -234,15 +252,10 @@ join_ <- function(x, y, by = NULL, how, suffix) {
     setdiff(pl_colnames(y), by)
   )
 
-  if (
-    (inherits(x, "RPolarsDataFrame") && inherits(y, "RPolarsDataFrame")) ||
-    (inherits(x, "RPolarsLazyFrame") && inherits(y, "RPolarsLazyFrame"))
-  ) {
-    if (how == "right") {
-      out <- y$join(other = x, left_on = left_on, right_on = right_on, how = "left")
-    } else {
-      out <- x$join(other = y, left_on = left_on, right_on = right_on, how = how)
-    }
+  if (how == "right") {
+    out <- y$join(other = x, left_on = left_on, right_on = right_on, how = "left")
+  } else {
+    out <- x$join(other = y, left_on = left_on, right_on = right_on, how = how)
   }
 
   out <- if (length(dupes) > 0) {

@@ -13,6 +13,15 @@ test <- polars::pl$LazyFrame(
   z = c(1, 2, 3)
 )
 
+# No common variables
+
+expect_error_lazy(
+  left_join(test, polars::pl$LazyFrame(iris)),
+  "`by` must be supplied when `x` and `y` have no common variables"
+)
+
+# check output
+
 test2 <- polars::pl$LazyFrame(
   x = c(1, 2, 4),
   y = c(1, 2, 4),
@@ -64,6 +73,30 @@ expect_warning(
 expect_warning(
   left_join(test, test2, copy = TRUE),
   "Unused arguments: copy"
+)
+
+# different variable names to join by
+
+test3 <- polars::pl$LazyFrame(
+  x2 = c(1, 2, 4),
+  y2 = c(1, 2, 4),
+  z3 = c(4, 5, 7)
+)
+
+expect_equal_lazy(
+  left_join(test, test3, join_by(x == x2, y == y2)),
+  pl$LazyFrame(
+    x = 1:3, y = 1:3,
+    z = 1:3, z3 = c(4, 5, NA)
+  )
+)
+
+expect_equal_lazy(
+  left_join(test, test3, c("x" = "x2", "y" = "y2")),
+  pl$LazyFrame(
+    x = 1:3, y = 1:3,
+    z = 1:3, z3 = c(4, 5, NA)
+  )
 )
 
 # suffix
@@ -121,8 +154,17 @@ test2 <- polars::pl$LazyFrame(
 )
 
 expect_error_lazy(
-  left_join(test, test2),
-  "must be of the same class"
+  left_join(test, iris),
+  "must be either two DataFrames or two LazyFrames"
+)
+
+expect_equal_lazy(
+  test2 |>
+    mutate(foo = 1) |>  # adds class "tidypolars"
+    left_join(test2) |>
+    select(-foo),
+  test2 |>
+    left_join(test2)
 )
 
 options(rlib_message_verbosity = "default")
