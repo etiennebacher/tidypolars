@@ -8,6 +8,9 @@
   * add support for `id_cols` and `names_glue`;
   * default value of `names_sep` now is `_`, for consistency with `tidyr`;
   * fix documentation as `pivot_wider()` doesn't work on LazyFrame.
+  
+* Add support for `stringr::regex()`. Note that only the argument `ignore_case`
+  is supported for now (#97).
 
 # tidypolars 0.6.0
 

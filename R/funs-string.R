@@ -17,14 +17,14 @@ pl_paste <- function(..., sep = " ", collapse = NULL) {
 
 pl_str_count <- function(string, pattern = "", ...) {
   check_empty_dots(...)
-  is_fixed <- isTRUE(attr(pattern, "stringr_attr") == "fixed")
-  string$str$count_matches(pattern, literal = is_fixed)
+  pattern <- check_pattern(pattern)
+  string$str$count_matches(pattern$pattern, literal = pattern$is_fixed)
 }
 
 pl_str_detect <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
-  is_fixed <- isTRUE(attr(pattern, "stringr_attr") == "fixed")
-  out <- string$str$contains(pattern, literal = is_fixed)
+  pattern <- check_pattern(pattern)
+  out <- string$str$contains(pattern$pattern, literal = pattern$is_fixed)
   if (isTRUE(negate)) {
     out$not()
   } else {
@@ -34,32 +34,42 @@ pl_str_detect <- function(string, pattern, negate = FALSE, ...) {
 
 pl_str_ends <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
-  out <- string$str$ends_with(pattern)
-  if (isTRUE(negate)) {
-    out$not()
+  pattern <- check_pattern(pattern)
+
+  # it seems that ends_with doesn't accept a regex
+  # https://github.com/pola-rs/polars/issues/6778#issuecomment-1425774894
+  if (isTRUE(pattern$is_case_insensitive)) {
+    out <- string$str$contains(paste0(pattern$pattern, "$"))
   } else {
-    out
+    out <- string$str$ends_with(pattern$pattern)
   }
+
+  if (isTRUE(negate)) {
+    out <- out$not()
+  }
+  out
 }
 
 # group = 0 means the whole match
 pl_str_extract <- function(string, pattern, group = 0, ...) {
   check_empty_dots(...)
+  pattern <- check_pattern(pattern)
   # if pattern wasn't passed to pl$col() at this point then it must be parsed
   # as a literal otherwise extract() will error because can't find a column
   # named as pattern
-  if (!inherits(pattern, "RPolarsExpr")) {
-    pattern <- pl$lit(pattern)
+  if (!inherits(pattern$pattern, "RPolarsExpr")) {
+    pattern$pattern <- pl$lit(pattern$pattern)
   }
-  string$str$extract(pattern, group_index = group)
+  string$str$extract(pattern$pattern, group_index = group)
 }
 
-# TODO: argument "simplify" should be allowed. It requirest the method "unnest"
+# TODO: argument "simplify" should be allowed. It requires the method "unnest"
 # for "struct". When it is implement in r-polars, use this:
 # $list$to_struct()$struct$unnest()
 pl_str_extract_all <- function(string, pattern, ...) {
   check_empty_dots(...)
-  string$str$extract_all(pattern)
+  pattern <- check_pattern(pattern)
+  string$str$extract_all(pattern$pattern)
 }
 
 pl_str_length <- function(string, ...) {
@@ -91,20 +101,23 @@ pl_str_pad <- function(string, width, side = "left", pad = " ", use_width = TRUE
 
 pl_str_remove <- function(string, pattern, ...) {
   check_empty_dots(...)
-  string$str$replace(pattern, "")
+  pattern <- check_pattern(pattern)
+  string$str$replace(pattern$pattern, "")
 }
 
 pl_str_remove_all <- function(string, pattern, ...) {
   check_empty_dots(...)
-  string$str$replace_all(pattern, "")
+  pattern <- check_pattern(pattern)
+  string$str$replace_all(pattern$pattern, "")
 }
 
 pl_str_replace <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
+  pattern <- check_pattern(pattern)
   if (is.character(replacement)) {
     replacement <- parse_replacement(replacement)
   }
-  string$str$replace(pattern, replacement)
+  string$str$replace(pattern$pattern, replacement)
 }
 
 pl_str_replace_all <- function(string, pattern, replacement, ...) {
@@ -118,8 +131,9 @@ pl_str_replace_all <- function(string, pattern, replacement, ...) {
       out <- out$str$replace_all(names_pattern[i], pattern[[i]])
     }
   } else {
+    pattern <- check_pattern(pattern)
     replacement <- parse_replacement(replacement)
-    out <- string$str$replace_all(pattern, replacement)
+    out <- string$str$replace_all(pattern$pattern, replacement)
   }
 
   out
@@ -128,6 +142,24 @@ pl_str_replace_all <- function(string, pattern, replacement, ...) {
 pl_str_squish <- function(string, ...) {
   check_empty_dots(...)
   string$str$replace_all("\\s+", " ")$str$strip_chars()
+}
+
+pl_str_starts <- function(string, pattern, negate = FALSE, ...) {
+  check_empty_dots(...)
+  pattern <- check_pattern(pattern)
+
+  # it seems that starts_with doesn't accept a regex
+  # https://github.com/pola-rs/polars/issues/6778#issuecomment-1425774894
+  if (isTRUE(pattern$is_case_insensitive)) {
+    out <- string$str$contains(paste0("^", pattern$pattern))
+  } else {
+    out <- string$str$starts_with(pattern$pattern)
+  }
+
+  if (isTRUE(negate)) {
+    out <- out$not()
+  }
+  out
 }
 
 pl_str_sub <- function(string, start, end = NULL, ...) {
@@ -152,15 +184,6 @@ pl_str_sub <- function(string, start, end = NULL, ...) {
 #   check_empty_dots(...)
 #   string$str$splitn()
 # }
-
-pl_str_starts <- function(string, pattern, negate = FALSE, ...) {
-  check_empty_dots(...)
-  if (isTRUE(negate)) {
-    string$str$starts_with(pl$lit(pattern))$not()
-  } else {
-    string$str$starts_with(pl$lit(pattern))
-  }
-}
 
 pl_str_to_lower <- function(string, ...) {
   check_empty_dots(...)
