@@ -123,7 +123,7 @@ pl_str_replace <- function(string, pattern, replacement, ...) {
 pl_str_replace_all <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
   # named pattern means that names are patterns and values are replacements
-  names_pattern <- names(pattern$pattern)
+  names_pattern <- names(pattern)
   if (!is.null(names_pattern)) {
     out <- string
     for (i in seq_along(pattern)) {
