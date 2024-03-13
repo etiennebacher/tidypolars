@@ -53,13 +53,14 @@ pl_str_ends <- function(string, pattern, negate = FALSE, ...) {
 # group = 0 means the whole match
 pl_str_extract <- function(string, pattern, group = 0, ...) {
   check_empty_dots(...)
+  pattern <- check_pattern(pattern)
   # if pattern wasn't passed to pl$col() at this point then it must be parsed
   # as a literal otherwise extract() will error because can't find a column
   # named as pattern
-  if (!inherits(pattern, "RPolarsExpr")) {
-    pattern <- pl$lit(pattern)
+  if (!inherits(pattern$pattern, "RPolarsExpr")) {
+    pattern$pattern <- pl$lit(pattern$pattern)
   }
-  string$str$extract(pattern, group_index = group)
+  string$str$extract(pattern$pattern, group_index = group)
 }
 
 # TODO: argument "simplify" should be allowed. It requires the method "unnest"
@@ -67,7 +68,8 @@ pl_str_extract <- function(string, pattern, group = 0, ...) {
 # $list$to_struct()$struct$unnest()
 pl_str_extract_all <- function(string, pattern, ...) {
   check_empty_dots(...)
-  string$str$extract_all(pattern)
+  pattern <- check_pattern(pattern)
+  string$str$extract_all(pattern$pattern)
 }
 
 pl_str_length <- function(string, ...) {
@@ -99,26 +101,29 @@ pl_str_pad <- function(string, width, side = "left", pad = " ", use_width = TRUE
 
 pl_str_remove <- function(string, pattern, ...) {
   check_empty_dots(...)
-  string$str$replace(pattern, "")
+  pattern <- check_pattern(pattern)
+  string$str$replace(pattern$pattern, "")
 }
 
 pl_str_remove_all <- function(string, pattern, ...) {
   check_empty_dots(...)
-  string$str$replace_all(pattern, "")
+  pattern <- check_pattern(pattern)
+  string$str$replace_all(pattern$pattern, "")
 }
 
 pl_str_replace <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
+  pattern <- check_pattern(pattern)
   if (is.character(replacement)) {
     replacement <- parse_replacement(replacement)
   }
-  string$str$replace(pattern, replacement)
+  string$str$replace(pattern$pattern, replacement)
 }
 
 pl_str_replace_all <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
   # named pattern means that names are patterns and values are replacements
-  names_pattern <- names(pattern)
+  names_pattern <- names(pattern$pattern)
   if (!is.null(names_pattern)) {
     out <- string
     for (i in seq_along(pattern)) {
@@ -126,8 +131,9 @@ pl_str_replace_all <- function(string, pattern, replacement, ...) {
       out <- out$str$replace_all(names_pattern[i], pattern[[i]])
     }
   } else {
+    pattern <- check_pattern(pattern)
     replacement <- parse_replacement(replacement)
-    out <- string$str$replace_all(pattern, replacement)
+    out <- string$str$replace_all(pattern$pattern, replacement)
   }
 
   out
