@@ -26,26 +26,21 @@ knitr::opts_chunk$set(
 
 ---
 
-* [Motivation](#motivation)
-* [Installation](#installation)
-* [Example](#example)
-* [Contributing](#contributing)
+<!-- * [Motivation](#motivation) -->
+<!-- * [Installation](#installation) -->
+<!-- * [Example](#example) -->
+<!-- * [Contributing](#contributing) -->
 
 
-## Motivation
+## Overview
 
-`polars` is a DataFrame library written in Rust and with bindings in several
-languages, [including R](https://rpolars.github.io/). I won't argue here for the
-interest of using `polars`, there are already a lot of resources on [its
-website](https://www.pola.rs/).
+`tidypolars` provides a [`polars`](https://rpolars.github.io/) backend for the
+`tidyverse`. The aim of `tidypolars` is to enable users to keep their existing
+`tidyverse` code while using `polars` in the background to benefit from large
+performance gains.
 
-The R package `polars` was made to mimic very closely the original Python syntax,
-which is quite verbose. While this makes it easy to read, it is **yet another 
-syntax to learn** for R users that are accustomed so far to either base R, 
-`data.table` or the `tidyverse`.
-
-The objective of `tidypolars` is to **provide the power and speed of `polars` 
-while keeping the `tidyverse` syntax**. 
+See the example below and the ["Getting started" vignette](https://tidypolars.etiennebacher.com/articles/tidypolars) for a gentle 
+introduction to `tidypolars`.
 
 
 ## Installation
@@ -194,7 +189,8 @@ bench::mark(
 
 ## Contributing
 
-Did you find some errors in the documentation? Do you want `tidypolars` to support
-more functions?
+Did you find some bugs or some errors in the documentation? Do you want 
+`tidypolars` to support more functions?
 
-Take a look at the [contributing guide](https://tidypolars.etiennebacher.com/CONTRIBUTING.html)!
+Take a look at the [contributing guide](https://tidypolars.etiennebacher.com/CONTRIBUTING.html) for instructions
+on bug report and pull requests.

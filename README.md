@@ -18,25 +18,21 @@ coverage](https://codecov.io/gh/etiennebacher/tidypolars/branch/main/graph/badge
 
 ------------------------------------------------------------------------
 
-- [Motivation](#motivation)
-- [Installation](#installation)
-- [Example](#example)
-- [Contributing](#contributing)
+<!-- * [Motivation](#motivation) -->
+<!-- * [Installation](#installation) -->
+<!-- * [Example](#example) -->
+<!-- * [Contributing](#contributing) -->
 
-## Motivation
+## Overview
 
-`polars` is a DataFrame library written in Rust and with bindings in
-several languages, [including R](https://rpolars.github.io/). I won’t
-argue here for the interest of using `polars`, there are already a lot
-of resources on [its website](https://www.pola.rs/).
+`tidypolars` provides a [`polars`](https://rpolars.github.io/) backend
+for the `tidyverse`. The aim of `tidypolars` is to enable users to keep
+their existing `tidyverse` code while using `polars` in the background
+to benefit from large performance gains.
 
-The R package `polars` was made to mimic very closely the original
-Python syntax, which is quite verbose. While this makes it easy to read,
-it is **yet another syntax to learn** for R users that are accustomed so
-far to either base R, `data.table` or the `tidyverse`.
-
-The objective of `tidypolars` is to **provide the power and speed of
-`polars` while keeping the `tidyverse` syntax**.
+See the example below and the [“Getting started”
+vignette](https://tidypolars.etiennebacher.com/articles/tidypolars) for
+a gentle introduction to `tidypolars`.
 
 ## Installation
 
@@ -90,9 +86,6 @@ and keep the exact same code:
 
 ``` r
 library(tidypolars)
-#> Registered S3 method overwritten by 'tidypolars':
-#>   method                 from  
-#>   print.RPolarsDataFrame polars
 
 iris |> 
   as_polars_df() |> 
@@ -163,7 +156,7 @@ benchmarks](https://duckdblabs.github.io/db-benchmark/).
 
 ``` r
 library(collapse, warn.conflicts = FALSE)
-#> collapse 2.0.7, see ?`collapse-package` or ?`collapse-documentation`
+#> collapse 2.0.10, see ?`collapse-package` or ?`collapse-documentation`
 
 large_iris <- data.table::rbindlist(rep(list(iris), 100000))
 large_iris_pl <- as_polars_lf(large_iris)
@@ -218,10 +211,10 @@ bench::mark(
 #> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     161.36ms 205.42ms     4.22    27.86KB    0    
-#> 2 tidypolars 197.96ms 268.42ms     3.13   290.98KB    0.235
-#> 3 dplyr         5.14s    5.78s     0.168    1.79GB    0.491
-#> 4 collapse    490.3ms  618.3ms     1.56   745.96MB    1.37
+#> 1 polars     139.61ms 164.92ms     5.06    19.17KB    0.127
+#> 2 tidypolars 160.79ms 197.81ms     4.68    333.3KB    1.17 
+#> 3 dplyr         3.37s    3.53s     0.279    1.79GB    0.817
+#> 4 collapse   333.22ms 449.74ms     2.18   745.96MB    1.97
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
@@ -232,8 +225,9 @@ bench::mark(
 
 ## Contributing
 
-Did you find some errors in the documentation? Do you want `tidypolars`
-to support more functions?
+Did you find some bugs or some errors in the documentation? Do you want
+`tidypolars` to support more functions?
 
 Take a look at the [contributing
-guide](https://tidypolars.etiennebacher.com/CONTRIBUTING.html)!
+guide](https://tidypolars.etiennebacher.com/CONTRIBUTING.html) for
+instructions on bug report and pull requests.

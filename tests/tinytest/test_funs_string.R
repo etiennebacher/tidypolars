@@ -116,6 +116,21 @@ expect_equal(
     pull(foo)
 )
 
+expect_equal(
+  mutate(test, foo = str_starts(x1, regex("hel", ignore_case = TRUE))) |>
+    pull(foo),
+  mutate(test_df, foo = str_starts(x1, regex("hel", ignore_case = TRUE))) |>
+    pull(foo)
+)
+
+
+
+expect_equal(
+  mutate(test, foo = str_ends(x1, regex("me", ignore_case = TRUE))) |>
+    pull(foo),
+  mutate(test_df, foo = str_ends(x1, regex("me", ignore_case = TRUE))) |>
+    pull(foo)
+)
 
 
 # extract / extract _all -------------------------------------------------------
@@ -166,6 +181,20 @@ expect_equal(
   mutate(test, foo = str_extract(x2, "([a-z]+) of ([a-z]+)", group = 2)) |>
     pull(foo),
   mutate(test_df, foo = str_extract(x2, "([a-z]+) of ([a-z]+)", group = 2)) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = str_extract(x7, regex("[a-z]", ignore_case = TRUE))) |>
+    pull(foo),
+  mutate(test_df, foo = str_extract(x7, regex("[a-z]", ignore_case = TRUE))) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = str_extract_all(x1, regex("[a-z]", ignore_case = TRUE))) |>
+    pull(foo),
+  mutate(test_df, foo = str_extract_all(x1, regex("[a-z]", ignore_case = TRUE))) |>
     pull(foo)
 )
 
@@ -224,6 +253,13 @@ expect_equal(
 )
 
 expect_equal(
+  mutate(test, foo = str_replace(x1, regex("l", ignore_case = TRUE), "-")) |>
+    pull(foo),
+  mutate(test_df, foo = str_replace(x1, regex("l", ignore_case = TRUE), "-")) |>
+    pull(foo)
+)
+
+expect_equal(
   mutate(test, foo = str_replace(x1, "([aeiou])", "\\1\\1")) |>
     pull(foo),
   mutate(test_df, foo = str_replace(x1, "([aeiou])", "\\1\\1")) |>
@@ -248,6 +284,13 @@ expect_equal(
   mutate(test, foo = str_replace_all(x1, "[aeiou]", "-")) |>
     pull(foo),
   mutate(test_df, foo = str_replace_all(x1, "[aeiou]", "-")) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = str_replace_all(x1, regex("[aeiou]", ignore_case = TRUE), "-")) |>
+    pull(foo),
+  mutate(test_df, foo = str_replace_all(x1, regex("[aeiou]", ignore_case = TRUE), "-")) |>
     pull(foo)
 )
 
@@ -292,6 +335,13 @@ expect_equal(
 )
 
 expect_equal(
+  mutate(test, foo = str_remove(x1, regex("l", ignore_case = TRUE))) |>
+    pull(foo),
+  mutate(test_df, foo = str_remove(x1, regex("l", ignore_case = TRUE))) |>
+    pull(foo)
+)
+
+expect_equal(
   mutate(test, foo = str_remove(x2, "[[:digit:]]")) |>
     pull(foo),
   mutate(test_df, foo = str_remove(x2, "[[:digit:]]")) |>
@@ -305,6 +355,12 @@ expect_equal(
     pull(foo)
 )
 
+expect_equal(
+  mutate(test, foo = str_remove_all(x1, regex("[aeiou]", ignore_case = TRUE))) |>
+    pull(foo),
+  mutate(test_df, foo = str_remove_all(x1, regex("[aeiou]", ignore_case = TRUE))) |>
+    pull(foo)
+)
 
 # sub ---------------------------------------------------------------------
 
@@ -360,6 +416,13 @@ expect_equal(
   mutate(test, foo = str_count(x5, fixed("."))) |>
     pull(foo),
   mutate(test_df, foo = str_count(x5, fixed("."))) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = str_count(x1, regex("hello", ignore_case = TRUE))) |>
+    pull(foo),
+  mutate(test_df, foo = str_count(x1, regex("hello", ignore_case = TRUE))) |>
     pull(foo)
 )
 
@@ -534,6 +597,13 @@ expect_equal(
 )
 
 expect_equal(
+  mutate(test, foo = str_detect(x1, regex("hello", ignore_case = TRUE))) |>
+    pull(foo),
+  mutate(test_df, foo = str_detect(x1, regex("hello", ignore_case = TRUE))) |>
+    pull(foo)
+)
+
+expect_equal(
   mutate(test, foo = grepl(".", x5, fixed = TRUE)) |>
     pull(foo),
   mutate(test_df, foo = grepl(".", x5, fixed = TRUE)) |>
@@ -543,4 +613,19 @@ expect_equal(
 expect_warning(
   mutate(test, foo = grepl("e", x1, ignore.case = TRUE)),
   "will not be used"
+)
+
+
+# regex() ---------------------------------------------------------
+
+expect_warning(
+  mutate(test, foo = str_detect(x1, regex("hello", multiline = TRUE))),
+  "tidypolars only supports the argument `ignore_case` in `regex()`.",
+  fixed = TRUE
+)
+
+expect_warning(
+  mutate(test, foo = str_detect(x1, regex("hello", ignore_case = TRUE, multiline = TRUE))),
+  "tidypolars only supports the argument `ignore_case` in `regex()`.",
+  fixed = TRUE
 )

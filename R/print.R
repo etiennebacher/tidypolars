@@ -12,13 +12,10 @@ print.tidypolars <- function(x, ...) { # nocov start
   mo <- attributes(x)$maintain_grp_order %||% FALSE
   rowwise <- attributes(x)$grp_type == "rowwise"
 
-  if (is_grouped) {
-    n_groups <- x$group_by(grps)$agg(pl$lit(1))$height
-  }
-
   x$print()
 
-  if (is_grouped) {
+  if (is_grouped && inherits(x, "RPolarsDataFrame")) {
+    n_groups <- x$group_by(grps)$agg(pl$lit(1))$height
     cat(paste0(
       "Groups [", format(n_groups, big.mark = ","), "]: ",
       toString(grps), "\n")

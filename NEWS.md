@@ -1,5 +1,10 @@
 # tidypolars (development version)
 
+## Breaking changes
+
+* `as_polars()` is now removed. It was deprecated in 0.7.0. Use `as_polars_df()`
+  or `as_polars_lf()` instead.
+
 ## New features
 
 * Several improvements and changes for `pivot_wider()` (#95):
@@ -8,6 +13,9 @@
   * add support for `id_cols` and `names_glue`;
   * default value of `names_sep` now is `_`, for consistency with `tidyr`;
   * fix documentation as `pivot_wider()` doesn't work on LazyFrame.
+  
+* Add support for `stringr::regex()`. Note that only the argument `ignore_case`
+  is supported for now (#97).
 
 # tidypolars 0.6.0
 

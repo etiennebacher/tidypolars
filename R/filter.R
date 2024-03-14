@@ -66,7 +66,7 @@ filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
           c(
             "Comparing factor variables to strings is only possible when the string cache is enabled.",
             "i" = "One solution is to convert the factor variable to a character variable.",
-            "i" = "Another solution is to enable the string cache, either with `pl$enable_string_cache()` or with `as_polars(with_string_cache = TRUE)`."
+            "i" = "Another solution is to enable the string cache, either with `pl$enable_string_cache()`."
           ),
           call = caller_env(4)
         )

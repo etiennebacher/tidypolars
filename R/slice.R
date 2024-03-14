@@ -23,7 +23,7 @@ slice_tail.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
   is_grouped <- !is.null(grps)
 
   if (is_grouped) {
-    non_grps <- setdiff(pl_colnames(.data), grps)
+    non_grps <- setdiff(names(.data), grps)
     out <- .data$group_by(grps, maintain_order = mo)$agg(
       pl$all()$tail(n)
     )$explode(non_grps)
@@ -54,7 +54,7 @@ slice_head.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
   is_grouped <- !is.null(grps)
 
   if (is_grouped) {
-    non_grps <- setdiff(pl_colnames(.data), grps)
+    non_grps <- setdiff(names(.data), grps)
     out <- .data$group_by(grps, maintain_order = mo)$agg(
       pl$all()$head(n)
     )$explode(non_grps)
@@ -104,7 +104,7 @@ slice_sample.RPolarsDataFrame <- function(.data, ..., n = NULL, prop = NULL, rep
   }
 
   if (is_grouped) {
-    non_grps <- setdiff(pl_colnames(.data), grps)
+    non_grps <- setdiff(names(.data), grps)
     out <- .data$group_by(grps, maintain_order = mo)$agg(
       pl$all()$sample(n = n, frac = prop, with_replacement = replace)
     )$explode(non_grps)

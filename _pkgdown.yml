@@ -14,7 +14,6 @@ reference:
     desc: |
       Functionalities from Polars.
     contents:
-      - as_polars
       - describe
       - describe_plan
       - describe_optimized_plan

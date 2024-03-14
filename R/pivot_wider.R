@@ -76,7 +76,7 @@ pivot_wider.RPolarsDataFrame <- function(
 
   check_polars_data(data)
 
-  data_names <- pl_colnames(data)
+  data_names <- names(data)
   value_vars <- tidyselect_named_arg(data, rlang::enquo(values_from))
   names_vars <- tidyselect_named_arg(data, rlang::enquo(names_from))
   id_cols <- setdiff(
