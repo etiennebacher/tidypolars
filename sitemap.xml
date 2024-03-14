@@ -46,10 +46,10 @@
     <loc>/reference/bind_rows_polars.html</loc>
   </url>
   <url>
-    <loc>/reference/collect.RPolarsLazyFrame.html</loc>
+    <loc>/reference/complete.RPolarsDataFrame.html</loc>
   </url>
   <url>
-    <loc>/reference/complete.RPolarsDataFrame.html</loc>
+    <loc>/reference/compute.RPolarsLazyFrame.html</loc>
   </url>
   <url>
     <loc>/reference/count.RPolarsDataFrame.html</loc>
@@ -158,9 +158,6 @@
   </url>
   <url>
     <loc>/reference/summarize.RPolarsDataFrame.html</loc>
-  </url>
-  <url>
-    <loc>/reference/to_r.html</loc>
   </url>
   <url>
     <loc>/reference/uncount.RPolarsDataFrame.html</loc>

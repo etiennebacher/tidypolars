@@ -226,7 +226,7 @@ Click to see a small benchmark
 <span>        petal_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="op">(</span><span class="va">Petal.Length</span> <span class="op">/</span> <span class="va">Petal.Width</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span>, <span class="st">"long"</span>, <span class="st">"large"</span><span class="op">)</span></span>
 <span>      <span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/between.html" class="external-link">between</a></span><span class="op">(</span><span class="va">Sepal.Length</span>, <span class="fl">4.5</span>, <span class="fl">5.5</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">}</span>,</span>
 <span>  dplyr <span class="op">=</span> <span class="op">{</span></span>
 <span>    <span class="va">large_iris</span> <span class="op">|&gt;</span></span>
@@ -247,15 +247,16 @@ Click to see a small benchmark
 <span>  check <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  iterations <span class="op">=</span> <span class="fl">40</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; polars: closing concurrent R handler</span></span>
 <span><span class="co">#&gt; Warning: Some expressions had a GC in every iteration; so filtering is</span></span>
 <span><span class="co">#&gt; disabled.</span></span>
 <span><span class="co">#&gt; # A tibble: 4 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars     139.61ms 164.92ms     5.06    19.17KB    0.127</span></span>
-<span><span class="co">#&gt; 2 tidypolars 160.79ms 197.81ms     4.68    333.3KB    1.17 </span></span>
-<span><span class="co">#&gt; 3 dplyr         3.37s    3.53s     0.279    1.79GB    0.817</span></span>
-<span><span class="co">#&gt; 4 collapse   333.22ms 449.74ms     2.18   745.96MB    1.97</span></span>
+<span><span class="co">#&gt; 1 polars     154.99ms 194.61ms     3.92    19.17KB   0.0980</span></span>
+<span><span class="co">#&gt; 2 tidypolars 192.96ms 246.28ms     3.58   331.18KB   0.895 </span></span>
+<span><span class="co">#&gt; 3 dplyr         4.46s    5.33s     0.174    1.79GB   0.493 </span></span>
+<span><span class="co">#&gt; 4 collapse   425.41ms  660.2ms     1.20   745.96MB   1.14</span></span>
 <span></span>
 <span><span class="co"># NOTE: do NOT take the "mem_alloc" results into account.</span></span>
 <span><span class="co"># `bench::mark()` doesn't report the accurate memory usage for packages calling</span></span>
