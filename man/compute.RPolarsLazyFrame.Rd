@@ -78,7 +78,8 @@ is \code{FALSE}).}
 \description{
 \code{compute()} checks the query, optimizes it in the background, and runs it.
 The output is a \link[polars:DataFrame_class]{Polars DataFrame}. \code{collect()} is
-similar to \code{compute()} but converts the output to an R \link{data.frame}.
+similar to \code{compute()} but converts the output to an R \link{data.frame}, which
+consumes more memory.
 
 Until \code{tidypolars} 0.7.0, there was only \code{collect()} and it was used to
 collect a LazyFrame into a Polars DataFrame. This usage is still valid for

@@ -3,7 +3,8 @@
 #' @description
 #' `compute()` checks the query, optimizes it in the background, and runs it.
 #' The output is a [Polars DataFrame][polars::DataFrame_class]. `collect()` is
-#' similar to `compute()` but converts the output to an R [data.frame].
+#' similar to `compute()` but converts the output to an R [data.frame], which
+#' consumes more memory.
 #'
 #' Until `tidypolars` 0.7.0, there was only `collect()` and it was used to
 #' collect a LazyFrame into a Polars DataFrame. This usage is still valid for

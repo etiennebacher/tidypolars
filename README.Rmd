@@ -158,7 +158,7 @@ bench::mark(
         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
       ) |> 
       filter(between(Sepal.Length, 4.5, 5.5)) |> 
-      collect()
+      compute()
   },
   dplyr = {
     large_iris |>

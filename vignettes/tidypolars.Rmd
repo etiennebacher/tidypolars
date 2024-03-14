@@ -68,7 +68,7 @@ who_pl |>
   head()
 ```
 
-If you use Polars lazy API, you need to call `collect()` at the end of the 
+If you use Polars lazy API, you need to call `compute()` at the end of the 
 chained expression to evaluate the query:
 
 ```{r}
@@ -80,7 +80,7 @@ who_pl_lazy |>
   select(iso3, year, matches("^newrel(.*)_f")) |> 
   arrange(iso3, year) |> 
   rename_with(.fn = toupper) |> 
-  collect() |> 
+  compute() |> 
   head()
 ```
 

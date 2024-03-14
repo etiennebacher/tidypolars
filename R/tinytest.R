@@ -52,10 +52,10 @@ expect_equal <- function(x, y, ...) {
 #' @keywords internal
 expect_equal_lazy <- function(x, y, ...) {
   if (inherits(x, "RPolarsLazyFrame")) {
-    x <- x$collect()
+    x <- x$collect()$to_data_frame()
   }
   if (inherits(y, "RPolarsLazyFrame")) {
-    y <- y$collect()
+    y <- y$collect()$to_data_frame()
   }
   dots <- get_dots(...)
   if (isTRUE(dots$skip_for_lazy)) {
