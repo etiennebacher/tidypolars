@@ -124,13 +124,7 @@ workflow:
 
 ``` r
 library(tidypolars, warn.conflicts = FALSE)
-```
 
-    ## Registered S3 method overwritten by 'tidypolars':
-    ##   method          from  
-    ##   print.DataFrame polars
-
-``` r
 test_pl |> 
   mutate(ends_with_c = str_ends(x, "c"))
 ```
@@ -148,3 +142,16 @@ test_pl |>
 
 Finally, the only thing left to do is to add some tests in the
 `tests/tinytest` folder.
+
+### Testing changes
+
+`tidypolars` uses
+[`tinytest`](https://cran.r-project.org/web/packages/tinytest/) for
+checking that functions have the expected output. If changes affect the
+behavior of some functions (for example when adding an extra argument),
+add some tests in the related file in `tests/tinytest`.
+
+Note that you only need to edit the file with `test_<function name>.R`.
+Files ending with `_lazy.R` are automatically generated. Use
+`devtools::load_all()` and `test_all_tidypolars()` to run the test
+suite.
