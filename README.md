@@ -185,7 +185,7 @@ bench::mark(
         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
       ) |> 
       filter(between(Sepal.Length, 4.5, 5.5)) |> 
-      collect()
+      compute()
   },
   dplyr = {
     large_iris |>
@@ -206,15 +206,16 @@ bench::mark(
   check = FALSE,
   iterations = 40
 )
+#> polars: closing concurrent R handler
 #> Warning: Some expressions had a GC in every iteration; so filtering is
 #> disabled.
 #> # A tibble: 4 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     139.61ms 164.92ms     5.06    19.17KB    0.127
-#> 2 tidypolars 160.79ms 197.81ms     4.68    333.3KB    1.17 
-#> 3 dplyr         3.37s    3.53s     0.279    1.79GB    0.817
-#> 4 collapse   333.22ms 449.74ms     2.18   745.96MB    1.97
+#> 1 polars     154.99ms 194.61ms     3.92    19.17KB   0.0980
+#> 2 tidypolars 192.96ms 246.28ms     3.58   331.18KB   0.895 
+#> 3 dplyr         4.46s    5.33s     0.174    1.79GB   0.493 
+#> 4 collapse   425.41ms  660.2ms     1.20   745.96MB   1.14
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
