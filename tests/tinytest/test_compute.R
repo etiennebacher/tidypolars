@@ -4,26 +4,26 @@ using("tidypolars")
 pl_iris <- pl$DataFrame(iris)
 pl_iris_lazy <- pl$LazyFrame(iris)
 
-expect_is_tidypolars(collect(pl_iris_lazy))
+expect_is_tidypolars(compute(pl_iris_lazy))
 
 expect_equal(
-  collect(pl_iris_lazy),
+  compute(pl_iris_lazy),
   pl_iris
 )
 
 expect_equal(
   pl_iris_lazy |>
     filter(Species == "setosa") |>
-    collect(),
+    compute(),
   pl_iris |>
     filter(Species == "setosa")
 )
 
-expect_error(collect(pl_iris))
+expect_error(compute(pl_iris))
 
 out <- pl_iris_lazy |>
   group_by(Species, maintain_order = TRUE) |>
-  collect()
+  compute()
 
 expect_equal(
   attr(out, "pl_grps"),
