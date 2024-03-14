@@ -87,14 +87,14 @@
     
 <p>The first thing to do before using <code>tidypolars</code> is to get
 some data as a Polars <code>DataFrame</code> or <code>LazyFrame</code>.
-You can read a CSV file with <code>polars::pl$read_csv()</code> (to
-import it as a <code>DataFrame</code>) or with
-<code>polars::pl$scan_csv()</code> (to import it as a
-<code>LazyFrame</code>).</p>
-<p>You could also read the file with other packages and then convert it
-with <code><a href="../reference/as_polars.html">as_polars()</a></code> (with the argument
-<code>lazy = TRUE</code> if you want to make it a
-<code>LazyFrame</code>).</p>
+You can read files with <code>polars::pl$read_*()</code> functions (to
+import them as <code>DataFrame</code>s) or with
+<code>polars::pl$scan_*()</code> functions (to import them as
+<code>LazyFrame</code>s). <code>polars</code> can read various file
+formats, such as CSV, Parquet, or JSON.</p>
+<p>You could also read data with other packages and then convert it with
+<code><a href="https://rpolars.github.io/man/as_polars_df.html" class="external-link">as_polars_df()</a></code> (of <code><a href="https://rpolars.github.io/man/as_polars_lf.html" class="external-link">as_polars_lf()</a></code> if you want
+to make it a <code>LazyFrame</code>).</p>
 <p>Here, we’re going to use the <code>who</code> dataset that is
 available in the <code>tidyr</code> package. I import it both as a
 classic R <code>data.frame</code> and as a Polars <code>DataFrame</code>
@@ -107,14 +107,12 @@ so that we can easily compare <code>dplyr</code> and
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">who_df</span> <span class="op">&lt;-</span> <span class="fu">tidyr</span><span class="fu">::</span><span class="va"><a href="https://tidyr.tidyverse.org/reference/who.html" class="external-link">who</a></span></span>
-<span><span class="va">who_pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="fu">tidyr</span><span class="fu">::</span><span class="va"><a href="https://tidyr.tidyverse.org/reference/who.html" class="external-link">who</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: <span style="color: #BB0000;">✖</span> `as_polars(...)` is deprecated and will be removed in tidypolars 0.7.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">ℹ</span> Please use `as_polars_df()` instead.</span></span></code></pre></div>
+<span><span class="va">who_pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rpolars.github.io/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="fu">tidyr</span><span class="fu">::</span><span class="va"><a href="https://tidyr.tidyverse.org/reference/who.html" class="external-link">who</a></span><span class="op">)</span></span></code></pre></div>
 <p><code>tidypolars</code> provides methods for <code>dplyr</code> and
 <code>tidyr</code> S3 generics. In simpler words, it means that you can
 use the same functions on a Polars <code>DataFrame</code> or
 <code>LazyFrame</code> as in a classic <code>tidyverse</code> workflow
-and it should just work (if it doesn’t, feel free to <a href="https://github.com/etiennebacher/tidypolars/issues" class="external-link">open an
+and it should just work (if it doesn’t, please <a href="https://github.com/etiennebacher/tidypolars/issues" class="external-link">open an
 issue</a>). Note that you still need to load <code>dplyr</code> and
 <code>tidyr</code> in your code.</p>
 <p>Here’s an example of some <code>dplyr</code> and <code>tidyr</code>
@@ -163,9 +161,7 @@ code on the classic R <code>data.frame</code>:</p>
 <p>If you use Polars lazy API, you need to call <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code>
 at the end of the chained expression to evaluate the query:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">who_pl_lazy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_polars.html">as_polars</a></span><span class="op">(</span><span class="fu">tidyr</span><span class="fu">::</span><span class="va"><a href="https://tidyr.tidyverse.org/reference/who.html" class="external-link">who</a></span>, lazy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: <span style="color: #BB0000;">✖</span> `as_polars(..., lazy = TRUE)` is deprecated and will be removed in tidypolars 0.7.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">ℹ</span> Please use `as_polars_lf()` instead.</span></span>
+<code class="sourceCode R"><span><span class="va">who_pl_lazy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rpolars.github.io/man/as_polars_lf.html" class="external-link">as_polars_lf</a></span><span class="op">(</span><span class="fu">tidyr</span><span class="fu">::</span><span class="va"><a href="https://tidyr.tidyverse.org/reference/who.html" class="external-link">who</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">who_pl_lazy</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -194,7 +190,8 @@ at the end of the chained expression to evaluate the query:</p>
 these are used inside <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code> or
 <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code>, <code>tidypolars</code> will automatically
 convert them to use the Polars engine under the hood. Take a look at the
-vignette “R and Polars expressions” for more information.</p>
+vignette <a href="https://tidypolars.etiennebacher.com/articles/r-and-polars-expressions" class="external-link">“R
+and Polars expressions”</a> for more information.</p>
   </main>
 </div>
 

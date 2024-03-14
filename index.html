@@ -87,18 +87,11 @@
 <hr>
 <p><span class="emoji" data-emoji="warning">⚠️</span> This is the R package “tidypolars”. The Python one is here: <a href="https://github.com/markfairbanks/tidypolars" class="external-link">markfairbanks/tidypolars</a> <span class="emoji" data-emoji="warning">⚠️</span></p>
 <hr>
-<ul>
-<li><a href="#motivation">Motivation</a></li>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#example">Example</a></li>
-<li><a href="#contributing">Contributing</a></li>
-</ul>
-<div class="section level2">
-<h2 id="motivation">Motivation<a class="anchor" aria-label="anchor" href="#motivation"></a>
+<!-- * [Motivation](#motivation) --><!-- * [Installation](#installation) --><!-- * [Example](#example) --><!-- * [Contributing](#contributing) --><div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p><code>polars</code> is a DataFrame library written in Rust and with bindings in several languages, <a href="https://rpolars.github.io/" class="external-link">including R</a>. I won’t argue here for the interest of using <code>polars</code>, there are already a lot of resources on <a href="https://www.pola.rs/" class="external-link">its website</a>.</p>
-<p>The R package <code>polars</code> was made to mimic very closely the original Python syntax, which is quite verbose. While this makes it easy to read, it is <strong>yet another syntax to learn</strong> for R users that are accustomed so far to either base R, <code>data.table</code> or the <code>tidyverse</code>.</p>
-<p>The objective of <code>tidypolars</code> is to <strong>provide the power and speed of <code>polars</code> while keeping the <code>tidyverse</code> syntax</strong>.</p>
+<p><code>tidypolars</code> provides a <a href="https://rpolars.github.io/" class="external-link"><code>polars</code></a> backend for the <code>tidyverse</code>. The aim of <code>tidypolars</code> is to enable users to keep their existing <code>tidyverse</code> code while using <code>polars</code> in the background to benefit from large performance gains.</p>
+<p>See the example below and the <a href="https://tidypolars.etiennebacher.com/articles/tidypolars" class="external-link">“Getting started” vignette</a> for a gentle introduction to <code>tidypolars</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -147,9 +140,6 @@
 <p>With <code>tidypolars</code>, you can provide a Polars <code>DataFrame</code> or <code>LazyFrame</code> and keep the exact same code:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.tidypolars.etiennebacher.com/" class="external-link">tidypolars</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Registered S3 method overwritten by 'tidypolars':</span></span>
-<span><span class="co">#&gt;   method                 from  </span></span>
-<span><span class="co">#&gt;   print.RPolarsDataFrame polars</span></span>
 <span></span>
 <span><span class="va">iris</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rpolars.github.io/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -207,7 +197,7 @@ Click to see a small benchmark
 </summary><p>For more serious benchmarks about <code>polars</code>, take a look at <a href="https://duckdblabs.github.io/db-benchmark/" class="external-link">DuckDB benchmarks</a>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sebkrantz.github.io/collapse/" class="external-link">collapse</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; collapse 2.0.7, see ?`collapse-package` or ?`collapse-documentation`</span></span>
+<span><span class="co">#&gt; collapse 2.0.10, see ?`collapse-package` or ?`collapse-documentation`</span></span>
 <span></span>
 <span><span class="va">large_iris</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">rbindlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="fl">100000</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">large_iris_pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rpolars.github.io/man/as_polars_lf.html" class="external-link">as_polars_lf</a></span><span class="op">(</span><span class="va">large_iris</span><span class="op">)</span></span>
@@ -262,10 +252,10 @@ Click to see a small benchmark
 <span><span class="co">#&gt; # A tibble: 4 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars     161.36ms 205.42ms     4.22    27.86KB    0    </span></span>
-<span><span class="co">#&gt; 2 tidypolars 197.96ms 268.42ms     3.13   290.98KB    0.235</span></span>
-<span><span class="co">#&gt; 3 dplyr         5.14s    5.78s     0.168    1.79GB    0.491</span></span>
-<span><span class="co">#&gt; 4 collapse    490.3ms  618.3ms     1.56   745.96MB    1.37</span></span>
+<span><span class="co">#&gt; 1 polars     139.61ms 164.92ms     5.06    19.17KB    0.127</span></span>
+<span><span class="co">#&gt; 2 tidypolars 160.79ms 197.81ms     4.68    333.3KB    1.17 </span></span>
+<span><span class="co">#&gt; 3 dplyr         3.37s    3.53s     0.279    1.79GB    0.817</span></span>
+<span><span class="co">#&gt; 4 collapse   333.22ms 449.74ms     2.18   745.96MB    1.97</span></span>
 <span></span>
 <span><span class="co"># NOTE: do NOT take the "mem_alloc" results into account.</span></span>
 <span><span class="co"># `bench::mark()` doesn't report the accurate memory usage for packages calling</span></span>
@@ -275,8 +265,8 @@ Click to see a small benchmark
 <div class="section level2">
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
 </h2>
-<p>Did you find some errors in the documentation? Do you want <code>tidypolars</code> to support more functions?</p>
-<p>Take a look at the <a href="https://tidypolars.etiennebacher.com/CONTRIBUTING.html" class="external-link">contributing guide</a>!</p>
+<p>Did you find some bugs or some errors in the documentation? Do you want <code>tidypolars</code> to support more functions?</p>
+<p>Take a look at the <a href="https://tidypolars.etiennebacher.com/CONTRIBUTING.html" class="external-link">contributing guide</a> for instructions on bug report and pull requests.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
