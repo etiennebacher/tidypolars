@@ -1,8 +1,14 @@
 #' Collect a LazyFrame
 #'
-#' Polars LazyFrames are not loaded in memory. Running `collect()` checks the
-#' execution plan, optimizes it in the background and performs it. The result
-#' is loaded in the R session.
+#' @description
+#' `compute()` checks the query, optimizes it in the background, and runs it.
+#' The output is a [Polars DataFrame][polars::DataFrame_class]. `collect()` is
+#' similar to `compute()` but converts the output to an R [data.frame].
+#'
+#' Until `tidypolars` 0.7.0, there was only `collect()` and it was used to
+#' collect a LazyFrame into a Polars DataFrame. This usage is still valid for
+#' now but will change in 0.8.0 to automatically convert a DataFrame to a
+#' `data.frame`. Use `compute()` to have a Polars DataFrame as output.
 #'
 #' @param x A Polars LazyFrame
 #' @param type_coercion Coerce types such that operations succeed and run on
@@ -35,14 +41,14 @@
 #' @seealso [fetch()] for applying a lazy query on a subset of the data.
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' dat_lazy <- polars::pl$DataFrame(iris)$lazy()
-#' collect(dat_lazy)
 #'
-#' # you can build a query and add collect() as the last piece
+#' compute(dat_lazy)
+#'
+#' # you can build a query and add compute() as the last piece
 #' dat_lazy |>
 #'   select(starts_with("Sepal")) |>
 #'   filter(between(Sepal.Length, 5, 6)) |>
-#'   collect()
-
+#'   compute()
 compute.RPolarsLazyFrame <- function(
     x,
     type_coercion = TRUE,
@@ -99,30 +105,53 @@ collect.RPolarsLazyFrame <- function(
     no_optimization = FALSE,
     streaming = FALSE,
     collect_in_background = FALSE,
+    verbose = TRUE,
     ...
 ) {
-  grps <- attributes(x)$pl_grps
-  mo <- attributes(x)$maintain_grp_order
-  is_grouped <- !is.null(grps)
-
-  out <- x$collect(
-    type_coercion = type_coercion,
-    predicate_pushdown = predicate_pushdown,
-    projection_pushdown = projection_pushdown,
-    simplify_expression = simplify_expression,
-    slice_pushdown = slice_pushdown,
-    comm_subplan_elim = comm_subplan_elim,
-    comm_subexpr_elim = comm_subexpr_elim,
-    no_optimization = no_optimization,
-    streaming = streaming,
-    collect_in_background = collect_in_background
-  ) |>
-    as.data.frame()
-
-  if (is_grouped) {
-    out |>
-      group_by(grps)
-  } else {
-    out
+  if (isTRUE(verbose)) {
+    rlang::warn(
+      "As of `tidypolars` 0.8.0, `collect()` automatically convert the Polars DataFrame to a standard R data.frame. Use `compute()` instead (with the same arguments) to have a Polars DataFrame as output.\nUse `verbose = FALSE` to remove this warning."
+    )
   }
+  x |>
+    compute(
+      type_coercion = type_coercion,
+      predicate_pushdown = predicate_pushdown,
+      projection_pushdown = projection_pushdown,
+      simplify_expression = simplify_expression,
+      slice_pushdown = slice_pushdown,
+      comm_subplan_elim = comm_subplan_elim,
+      comm_subexpr_elim = comm_subexpr_elim,
+      no_optimization = no_optimization,
+      streaming = streaming,
+      collect_in_background = collect_in_background
+    )
 }
+# collect.RPolarsLazyFrame <- function(
+#     x,
+#     type_coercion = TRUE,
+#     predicate_pushdown = TRUE,
+#     projection_pushdown = TRUE,
+#     simplify_expression = TRUE,
+#     slice_pushdown = TRUE,
+#     comm_subplan_elim = TRUE,
+#     comm_subexpr_elim = TRUE,
+#     no_optimization = FALSE,
+#     streaming = FALSE,
+#     collect_in_background = FALSE,
+#     ...
+# ) {
+#   x |>
+#     as.data.frame(
+#       type_coercion = type_coercion,
+#       predicate_pushdown = predicate_pushdown,
+#       projection_pushdown = projection_pushdown,
+#       simplify_expression = simplify_expression,
+#       slice_pushdown = slice_pushdown,
+#       comm_subplan_elim = comm_subplan_elim,
+#       comm_subexpr_elim = comm_subexpr_elim,
+#       no_optimization = no_optimization,
+#       streaming = streaming,
+#       collect_in_background = collect_in_background
+#     )
+# }

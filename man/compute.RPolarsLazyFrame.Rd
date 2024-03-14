@@ -32,6 +32,7 @@
   no_optimization = FALSE,
   streaming = FALSE,
   collect_in_background = FALSE,
+  verbose = TRUE,
   ...
 )
 }
@@ -75,20 +76,26 @@ is \code{FALSE}).}
 \item{...}{Not used.}
 }
 \description{
-Polars LazyFrames are not loaded in memory. Running \code{collect()} checks the
-execution plan, optimizes it in the background and performs it. The result
-is loaded in the R session.
+\code{compute()} checks the query, optimizes it in the background, and runs it.
+The output is a \link[polars:DataFrame_class]{Polars DataFrame}. \code{collect()} is
+similar to \code{compute()} but converts the output to an R \link{data.frame}.
+
+Until \code{tidypolars} 0.7.0, there was only \code{collect()} and it was used to
+collect a LazyFrame into a Polars DataFrame. This usage is still valid for
+now but will change in 0.8.0 to automatically convert a DataFrame to a
+\code{data.frame}. Use \code{compute()} to have a Polars DataFrame as output.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 dat_lazy <- polars::pl$DataFrame(iris)$lazy()
-collect(dat_lazy)
 
-# you can build a query and add collect() as the last piece
+compute(dat_lazy)
+
+# you can build a query and add compute() as the last piece
 dat_lazy |>
   select(starts_with("Sepal")) |>
   filter(between(Sepal.Length, 5, 6)) |>
-  collect()
+  compute()
 \dontshow{\}) # examplesIf}
 }
 \seealso{
