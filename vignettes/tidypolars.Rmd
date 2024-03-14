@@ -15,12 +15,13 @@ knitr::opts_chunk$set(
 ```
 
 The first thing to do before using `tidypolars` is to get some data as a Polars
-`DataFrame` or `LazyFrame`. You can read a CSV file with `polars::pl$read_csv()`
-(to import it as a `DataFrame`) or with `polars::pl$scan_csv()` (to import it
-as a `LazyFrame`).
+`DataFrame` or `LazyFrame`. You can read files with `polars::pl$read_*()`
+functions (to import them as `DataFrame`s) or with `polars::pl$scan_*()` 
+functions (to import them as `LazyFrame`s). `polars` can read various file 
+formats, such as CSV, Parquet, or JSON.
 
-You could also read the file with other packages and then convert it with
-`as_polars()` (with the argument `lazy = TRUE` if you want to make it a 
+You could also read data with other packages and then convert it with
+`as_polars_df()` (of `as_polars_lf()` if you want to make it a 
 `LazyFrame`). 
 
 Here, we're going to use the `who` dataset that is available in the `tidyr` 
@@ -34,13 +35,13 @@ library(dplyr, warn.conflicts = FALSE)
 library(tidyr, warn.conflicts = FALSE)
 
 who_df <- tidyr::who
-who_pl <- as_polars(tidyr::who)
+who_pl <- as_polars_df(tidyr::who)
 ```
 
 `tidypolars` provides methods for `dplyr` and `tidyr` S3 generics. In simpler words, it 
 means that you can use the same functions on a Polars `DataFrame` or `LazyFrame`
 as in a classic `tidyverse` workflow and it should just work (if it doesn't,
-feel free to [open an issue](https://github.com/etiennebacher/tidypolars/issues)).
+please [open an issue](https://github.com/etiennebacher/tidypolars/issues)).
 Note that you still need to load `dplyr` and `tidyr` in your code.
 
 Here's an example of some `dplyr` and `tidyr` code on the classic R `data.frame`:
@@ -71,7 +72,7 @@ If you use Polars lazy API, you need to call `collect()` at the end of the
 chained expression to evaluate the query:
 
 ```{r}
-who_pl_lazy <- as_polars(tidyr::who, lazy = TRUE)
+who_pl_lazy <- as_polars_lf(tidyr::who)
 
 who_pl_lazy |> 
   filter(year > 1990) |> 
@@ -87,4 +88,4 @@ who_pl_lazy |>
 `tidypolars` also supports many functions from `base`, `lubridate` or `stringr`.
 When these are used inside `filter()`, `mutate()` or `summarize()`, `tidypolars`
 will automatically convert them to use the Polars engine under the hood. Take
-a look at the vignette "R and Polars expressions" for more information.
+a look at the vignette ["R and Polars expressions"](https://tidypolars.etiennebacher.com/articles/r-and-polars-expressions) for more information.
