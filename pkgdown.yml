@@ -1,9 +1,0 @@
-pandoc: 3.1.11
-pkgdown: 2.0.7
-pkgdown_sha: ~
-articles:
-  faq: faq.html
-  r-and-polars-expressions: r-and-polars-expressions.html
-  tidypolars: tidypolars.html
-last_built: 2024-03-14T15:26Z
-
