@@ -84,48 +84,43 @@ pl_second <- function(x, ...) {
 
 # Durations --------------------------------------
 
-### Not in polars
-# pl_dyears <- function(x) {
-#   x$dt$years()
-# }
-#
-# pl_dmonths <- function(x) {
-#   x$dt$months()
-# }
-#
-# pl_dweeks <- function(x) {
-#   x$dt$weeks()
+# TODO: annoying to parse `...` because of partial matching of args, e.g
+# duration(second = 3, weeks = 1) and duration(second = 3, we = 1) are the same
+# pl_duration <- function(num = NULL, units = "seconds", ...) {
+#   pl$duration(weeks = x)
 # }
 
-### TODO: all of the following is wrong and requires pl$duration()
+pl_dweeks <- function(x, ...) {
+  pl$duration(weeks = x)
+}
 
-# pl_ddays <- function(x) {
-#   x$dt$days()
-# }
-#
-# pl_dhours <- function(x) {
-#   x$dt$hours()
-# }
-#
-# pl_dminutes <- function(x) {
-#   x$dt$minutes()
-# }
-#
-# pl_dseconds <- function(x) {
-#   x$dt$seconds()
-# }
-#
-# pl_dmilliseconds <- function(x) {
-#   x$dt$milliseconds()
-# }
-#
-# pl_dmicroseconds <- function(x) {
-#   x$dt$microseconds()
-# }
-#
-# pl_dnanoseconds <- function(x) {
-#   x$dt$nanoseconds()
-# }
+pl_ddays <- function(x, ...) {
+  pl$duration(days = x)
+}
+
+pl_dhours <- function(x, ...) {
+  pl$duration(hours = x)
+}
+
+pl_dminutes <- function(x, ...) {
+  pl$duration(minutes = x)
+}
+
+pl_dseconds <- function(x, ...) {
+  pl$duration(seconds = x)
+}
+
+pl_dmilliseconds <- function(x, ...) {
+  pl$duration(milliseconds = x)
+}
+
+pl_dmicroseconds <- function(x, ...) {
+  pl$duration(microseconds = x)
+}
+
+pl_dnanoseconds <- function(x, ...) {
+  pl$duration(nanoseconds = x)
+}
 
 # Periods --------------------------------------
 

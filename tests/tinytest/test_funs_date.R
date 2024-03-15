@@ -4,14 +4,15 @@ using("tidypolars")
 library(lubridate, warn.conflicts = FALSE)
 
 test_df <- data.frame(
-  YMD = as.Date(c("2012-03-26", "2020-01-01", "2023-12-14")),
+  YMD = as.Date(c("2012-03-26", "2020-01-01", "2023-12-14", NA)),
+  YMD_tz = ymd(c("2012-03-26", "2020-01-01", "2023-12-14", NA), tz = "America/Chicago"),
   # DMY = c("26-03-2012", "01-01-2020", "14-12-2023"),
   # YDM = c("2012-26-03", "2020-01-01", "2023-14-12"),
   # MDY = c("03-26-2012", "01-01-2020", "12-14-2023")
-  YMD_HMS = ymd_hms(c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00")),
-  to_ymd_hms = c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00"),
-  to_ymd_hm = c("2012-03-26 12:00", "2020-01-01 12:00", "2023-12-14 12:00"),
-  somedate = c("Jul 24 2014", "Dec 24 2015", "Jan 21 2016")
+  YMD_HMS = ymd_hms(c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00", NA)),
+  to_ymd_hms = c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00", NA),
+  to_ymd_hm = c("2012-03-26 12:00", "2020-01-01 12:00", "2023-12-14 12:00", NA),
+  somedate = c("Jul 24 2014", "Dec 24 2015", "Jan 21 2016", NA)
 )
 
 test <- pl$DataFrame(test_df)
@@ -68,7 +69,7 @@ expect_equal(
   test |>
     mutate(foo = strptime(somedate, "%b %d %Y")) |>
     pull(foo),
-  as.Date(c("2014-07-24", "2015-12-24", "2016-01-21"))
+  as.Date(c("2014-07-24", "2015-12-24", "2016-01-21", NA))
 )
 
 
@@ -109,3 +110,51 @@ expect_equal(
     pull(ymd),
   df$isoyear
 )
+
+
+# durations
+
+expect_equal(
+  test |>
+    mutate(foo = YMD + dweeks(3) + ddays(5)) |>
+    pull(foo),
+  test_df |>
+    mutate(foo = YMD + dweeks(3) + ddays(5)) |>
+    pull(foo)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = YMD_tz + dweeks(3) + ddays(5)) |>
+    pull(foo),
+  test_df |>
+    mutate(foo = YMD_tz + dweeks(3) + ddays(5)) |>
+    pull(foo)
+)
+
+# TODO: should return NAs
+expect_error(
+  test |>
+    mutate(foo = NA + dweeks(3) + ddays(5)) |>
+    pull(foo)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = YMD_HMS + dhours(3) + dminutes(5)) |>
+    pull(foo),
+  test_df |>
+    mutate(foo = YMD_HMS + dhours(3) + dminutes(5)) |>
+    pull(foo)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = YMD_HMS + dseconds(3) + dmilliseconds(5)) |>
+    pull(foo),
+  test_df |>
+    mutate(foo = YMD_HMS + dseconds(3) + dmilliseconds(5)) |>
+    pull(foo)
+)
+
+# TODO: will be hard to check for accuracy for microseconds and nanoseconds

@@ -25,6 +25,9 @@
   
 * Add support for `stringr::regex()`. Note that only the argument `ignore_case`
   is supported for now (#97).
+  
+* Add support for several `lubridate` functions: `dweeks()`, `ddays()`, 
+  `dhours()`, `dminutes()`, `dseconds()`, `dmilliseconds()`.
 
 # tidypolars 0.6.0
 
