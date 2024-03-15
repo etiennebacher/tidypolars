@@ -4,9 +4,6 @@ template:
   bslib:
     primary: "#0B7189"
 
-development:
-  mode: auto
-
 navbar:
   structure:
     left:  [intro, articles, reference, news]
