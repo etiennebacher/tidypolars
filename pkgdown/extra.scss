@@ -9,6 +9,10 @@ on 2024-03-16
 	background-color: #f2f2f2 !important;
 }
 
+.page-header {
+	min-height: 1rem !important;
+}
+
 @media (min-width: 1400px) {
   body {
     font-size: calc(inherit + 0.2rem);
