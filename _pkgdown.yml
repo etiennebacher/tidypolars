@@ -3,6 +3,11 @@ template:
   bootstrap: 5
   bslib:
     primary: "#0B7189"
+    line-height-base: 1.7
+
+authors:
+  Etienne Bacher:
+    href: https://www.etiennebacher.com
 
 navbar:
   structure:

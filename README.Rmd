@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# tidypolars <img src="man/figures/logo.png" align="right" height="138" alt="" />
+# tidypolars
 
 <!-- badges: start -->
 [![check](https://github.com/etiennebacher/tidypolars/actions/workflows/check.yml/badge.svg)](https://github.com/etiennebacher/tidypolars/actions/workflows/check.yml)
@@ -194,3 +194,8 @@ Did you find some bugs or some errors in the documentation? Do you want
 
 Take a look at the [contributing guide](https://tidypolars.etiennebacher.com/CONTRIBUTING.html) for instructions
 on bug report and pull requests.
+
+
+## Acknowledgements
+
+The website theme was heavily inspired by Matthew Kay's `ggblend` package: https://mjskay.github.io/ggblend/.
