@@ -10,6 +10,11 @@ safe_deparse <- function (x, ...) {
          collapse = " ")
 }
 
+toupper_first <- function(x) {
+  substr(x, 1, 1) <- toupper(substr(x, 1, 1))
+  x
+}
+
 # sort of equivalent of purrr::compact()
 # takes a list, returns a list
 compact <- function(x) {
