@@ -56,19 +56,15 @@ arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
     direction <- c(rep(FALSE, length(grps)), direction)
   }
 
-  final_expr <- if (is_grouped) {
-    expr(
-      .data$sort(!!vars, descending = !!direction)$group_by(!!grps, maintain_order = !!mo)
-    )
+  .data <- add_tidypolars_class(.data)
+
+  out <- if (is_grouped) {
+    .data$sort(vars, descending = direction)$group_by(grps, maintain_order = !!mo)
   } else {
-    expr(.data$sort(!!vars, descending = !!direction))
+    .data$sort(vars, descending = direction)
   }
 
-  out <- eval_bare(final_expr) |>
-    add_tidypolars_class()
-
-  attr(out, "polars_expression") <- final_expr
-  out
+  add_tidypolars_class(out)
 }
 
 #' @export

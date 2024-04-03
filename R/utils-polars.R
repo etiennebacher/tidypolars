@@ -25,3 +25,34 @@ check_same_class <- function(x, y, env = caller_env()) {
     )
   }
 }
+
+
+modify_env <- function(data, env) {
+  eapply(env, function(fun) {
+    marker <- identical(fun, polars:::RPolarsDataFrame[["sort"]])
+    function(...) {
+      # if (marker) browser()
+      fmls <- fn_fmls(fun)
+      fmls[[length(fmls) + 1]] <- quote(expr = )
+      names(fmls)[length(fmls)] <- "self"
+      formals(fun) <- fmls
+
+      args = list2(...)
+      expr = call2(quote(fun), !!!args)
+      fc = as.list(frame_call())
+      fc1 = fc[[1]]
+      fc[[1]] <- NULL
+      fc <- lapply(fc, eval_bare, env = caller_env())
+      full_call <- call2(fc1, !!!fc)
+      fc[["self"]] <- data
+      # assign(
+      #   as.character(length(expr_env) + 1),
+      #   full_call,
+      #   envir = expr_env
+      # )
+      out = call2(fun, !!!fc) |> eval_bare()
+      attr(out, "polars_expression") <- full_call
+      out
+    }
+  })
+}
