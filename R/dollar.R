@@ -9,5 +9,16 @@
 #' @export
 show_query.tidypolars <- function(x) {
   cat("Pure polars expression:\n\n")
-  attributes(x)$polars_expression
+  attrs <- attributes(x)$polars_expression
+  lapply(seq_along(attrs), function(x) {
+    e <- deparse(attrs[[x]])
+    if (x == 1) {
+      gsub("^\\.data\\$", "<data>$\\\n  ", e)
+    } else {
+      gsub("^\\.data\\$", "$\\\n  ", e)
+    }
+  }) |>
+    unlist() |>
+    paste(collapse = "") |>
+    cat()
 }

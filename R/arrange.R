@@ -64,7 +64,7 @@ arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
     .data$sort(vars, descending = direction)
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @export

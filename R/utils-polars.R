@@ -51,8 +51,14 @@ modify_env <- function(data, env) {
       #   envir = expr_env
       # )
       out = call2(fun, !!!fc) |> eval_bare()
-      attr(out, "polars_expression") <- full_call
-      out
+      attr_pl <- attr(data, "polars_expression")
+      if (is.null(attr_pl)) {
+        attr(out, "polars_expression") <- list(full_call)
+      } else {
+        attr(out, "polars_expression") <- attr_pl
+        attr(out, "polars_expression")[[length(attr_pl) + 1]] <- full_call
+      }
+      add_tidypolars_class(out)
     }
   })
 }
