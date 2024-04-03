@@ -56,8 +56,6 @@ arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
     direction <- c(rep(FALSE, length(grps)), direction)
   }
 
-  .data <- add_tidypolars_class(.data)
-
   out <- if (is_grouped) {
     .data$sort(vars, descending = direction)$group_by(grps, maintain_order = !!mo)
   } else {

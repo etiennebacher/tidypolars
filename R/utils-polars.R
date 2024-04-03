@@ -5,6 +5,7 @@ check_polars_data <- function(x, env = caller_env()) {
       call = env
     )
   }
+  add_tidypolars_class(x)
 }
 
 add_tidypolars_class <- function(x) {
@@ -29,9 +30,7 @@ check_same_class <- function(x, y, env = caller_env()) {
 
 modify_env <- function(data, env) {
   eapply(env, function(fun) {
-    marker <- identical(fun, polars:::RPolarsDataFrame[["sort"]])
     function(...) {
-      # if (marker) browser()
       fmls <- fn_fmls(fun)
       fmls[[length(fmls) + 1]] <- quote(expr = )
       names(fmls)[length(fmls)] <- "self"

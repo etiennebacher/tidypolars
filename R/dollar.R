@@ -1,8 +1,19 @@
 `$.tidypolars` <- function(x, name) {
-  TidyPolarsDataFrame <- modify_env(
-    data = x,
-    env_clone(polars:::RPolarsDataFrame)
-  )
+  whitelist <- c("shape", "schema", "height", "width")
+  if (name %in% whitelist) {
+    NextMethod("$")
+  }
+  if (name == "agg") {
+    TidyPolarsDataFrame <- modify_env(
+      data = x,
+      env_clone(polars:::RPolarsGroupBy)
+    )
+  } else {
+    TidyPolarsDataFrame <- modify_env(
+      data = x,
+      env_clone(polars:::RPolarsDataFrame)
+    )
+  }
   TidyPolarsDataFrame[[name]]
 }
 
@@ -10,15 +21,12 @@
 show_query.tidypolars <- function(x) {
   cat("Pure polars expression:\n\n")
   attrs <- attributes(x)$polars_expression
-  lapply(seq_along(attrs), function(x) {
+  out <- lapply(seq_along(attrs), function(x) {
     e <- deparse(attrs[[x]])
-    if (x == 1) {
-      gsub("^\\.data\\$", "<data>$\\\n  ", e)
-    } else {
-      gsub("^\\.data\\$", "$\\\n  ", e)
-    }
+    gsub("^[^\\$]+", "$\\\n  ", e)
   }) |>
     unlist() |>
-    paste(collapse = "") |>
-    cat()
+    paste(collapse = "")
+  out <- paste0("<data>", out)
+  cat(out)
 }
