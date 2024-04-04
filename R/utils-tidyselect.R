@@ -22,7 +22,7 @@ build_data_context <- function(.data) {
 
 # Dirty hack to get the schema when the data has the class "tidypolars".
 # .data$schema doesn't work well since I overwrite polars methods for class
-# "tidypolarse.
+# "tidypolars".
 get_schema <- function(.data) {
   if (inherits(.data, "RPolarsDataFrame")) {
     polars:::`$.RPolarsDataFrame`(.data, "schema")

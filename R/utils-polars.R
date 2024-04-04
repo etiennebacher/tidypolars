@@ -67,7 +67,7 @@ modify_env <- function(data, env, fun_name) {
       # if (marker) browser()
 
       # If the attribute to store the "pure" polars expressions already exists,
-      # we append the nex expressions to it.
+      # we append the next expressions to it.
       attr_pl <- attr(data, "polars_expression")
       if (is.null(attr_pl)) {
         attr(out, "polars_expression") <- list(full_call)
