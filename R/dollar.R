@@ -3,20 +3,14 @@
   if (name %in% whitelist) {
     NextMethod("$")
   }
-  if (name == "agg") {
-    TidyPolarsDataFrame <- modify_env(
-      data = x,
-      env_clone(polars:::RPolarsGroupBy),
-      fun_name = name
-    )
-  } else {
-    TidyPolarsDataFrame <- modify_env(
-      data = x,
-      env_clone(polars:::RPolarsDataFrame),
-      fun_name = name
-    )
-  }
-  TidyPolarsDataFrame[[name]]
+
+  class_2 <- class(x)[2]
+  my_new_env <- modify_env(
+    data = x,
+    env_clone(ns_env("polars")[[class_2]]),
+    fun_name = name
+  )
+  my_new_env[[name]]
 }
 
 #' @export
