@@ -56,6 +56,7 @@ reference:
       - select.RPolarsDataFrame
       - semi_join.RPolarsDataFrame
       - separate.RPolarsDataFrame
+      - show_query.tidypolars
       - slice_head.RPolarsDataFrame
       - slice_tail.RPolarsDataFrame
       - slice_sample.RPolarsDataFrame
