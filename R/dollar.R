@@ -6,12 +6,14 @@
   if (name == "agg") {
     TidyPolarsDataFrame <- modify_env(
       data = x,
-      env_clone(polars:::RPolarsGroupBy)
+      env_clone(polars:::RPolarsGroupBy),
+      fun_name = name
     )
   } else {
     TidyPolarsDataFrame <- modify_env(
       data = x,
-      env_clone(polars:::RPolarsDataFrame)
+      env_clone(polars:::RPolarsDataFrame),
+      fun_name = name
     )
   }
   TidyPolarsDataFrame[[name]]
@@ -22,7 +24,7 @@ show_query.tidypolars <- function(x) {
   cat("Pure polars expression:\n\n")
   attrs <- attributes(x)$polars_expression
   out <- lapply(seq_along(attrs), function(x) {
-    e <- deparse(attrs[[x]])
+    e <- attrs[[x]]
     gsub("^[^\\$]+\\$", "$\\\n  ", e)
   }) |>
     unlist() |>
