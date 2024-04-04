@@ -25,7 +25,8 @@ show_query.tidypolars <- function(x) {
   attrs <- attributes(x)$polars_expression
   out <- lapply(seq_along(attrs), function(x) {
     e <- attrs[[x]]
-    gsub("^[^\\$]+\\$", "$\\\n  ", e)
+    e <- gsub("^[^\\$]+\\$", "$", e)
+    gsub("^\\$", "$\\\n  ", e)
   }) |>
     unlist() |>
     paste(collapse = "")
