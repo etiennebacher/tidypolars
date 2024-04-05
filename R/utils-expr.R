@@ -346,11 +346,11 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
 }
 
 polars_constant <- function(x) {
-  polars::pl$lit(x)
+  pl$lit(x)
 }
 
 polars_col <- function(x) {
-  polars::pl$col(x)
+  pl$col(x)
 }
 
 # Look for user-defined functions in the global environment

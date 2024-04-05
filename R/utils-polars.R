@@ -58,6 +58,7 @@ modify_this_polars_function <- function(env, fun_name, data, caller_env) {
     fc1 <- fc[[1]]
     fc[[1]] <- NULL
     fc <- lapply(fc, \(x) {
+      if (fun_name == "with_columns") browser()
       if (is.call(x)) {
         foo <- eval_bare(x, env = caller_env)
         attrs <- attributes(foo)$polars_expression |>
@@ -82,6 +83,7 @@ modify_this_polars_function <- function(env, fun_name, data, caller_env) {
         fc <- fc[-unnamed_nulls]
       }
     }
+
 
     # Prepare the call that will be stored in the attributes of the output so
     # that show_query() can access it.
@@ -133,8 +135,20 @@ modify_this_polars_function <- function(env, fun_name, data, caller_env) {
 # This one should only be called from modify_env() and we will only use the
 # attributes of the output RPolarsExpr.
 
-modify_this_polars_expr <- function(env, fun_name, data) {
+modify_this_polars_expr <- function(env, fun_name, data, out) {
   fun <- env[[fun_name]]
+  # if (fun_name == "root_names") browser()
+
+  subns <- c("bin", "cat", "dt", "meta", "str", "struct")
+  if (fun_name %in% subns) {
+    fmls <- fn_fmls(fun)
+    fmls[[length(fmls) + 1]] <- quote(expr = )
+    names(fmls)[length(fmls)] <- "self"
+    formals(fun) <- fmls
+    out <- add_tidypolars_expr_class(fun(data))
+    return(out)
+  }
+
   function(...) {
 
     # Manually add the "self" argument, that will take the data from
@@ -166,7 +180,10 @@ modify_this_polars_expr <- function(env, fun_name, data) {
     # call that will be stored in the attributes because the value of "data"
     # is strange when we call RPolarsGroupBy methods.
     fc[["self"]] <- data
-    out <- call2(fun, !!!fc) |> eval_bare()
+
+    if (is.null(out)) {
+      out <- call2(fun, !!!fc) |> eval_bare()
+    }
 
     # If the attribute to store the "pure" polars expressions already exists,
     # we append the next expressions to it.
@@ -191,7 +208,11 @@ modify_this_polars_expr <- function(env, fun_name, data) {
       }
       attr(out, "polars_expression")[[length(attr_pl) + 1]] <- full_call
     }
-    add_tidypolars_expr_class(out)
+    if (inherits(out, c("RPolarsDataFrame", "RPolarsLazyFrame"))) {
+      add_tidypolars_class(out)
+    } else if (inherits(out, "RPolarsExpr")) {
+      add_tidypolars_expr_class(out)
+    }
   }
 }
 

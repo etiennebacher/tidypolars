@@ -84,7 +84,7 @@ filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
     out
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname filter.RPolarsDataFrame

@@ -21,13 +21,31 @@
 
 #' @export
 "$.tidypolars_expr" <- function(x, name) {
+  subns <- c("bin", "cat", "dt", "meta", "str", "struct")
+  # accepted_methods <- setdiff(ls(polars:::RPolarsExpr), subns)
+  accepted_methods <- ls(polars:::RPolarsExpr)
+  out <- NULL
+
+
+
+  # if (name == "root_names") browser()
+
   env_to_use <- if (name %in% ls(pl)) {
     pl
-  } else if (name %in% ls(polars:::RPolarsExpr)) {
+  } else if (name %in% accepted_methods) {
     polars:::RPolarsExpr
-  } else {
-    return(NextMethod("$"))
   }
-  expr_to_use <- modify_this_polars_expr(env = env_to_use, fun_name = name, data = x)
+
+  if (is.environment(x)) {
+    env_to_use <- x
+    x <- attributes(x)$self
+  }
+
+  # else if (name %in% subns) {
+  #   env_to_use <- NextMethod("$")
+  #   out <- NextMethod("$")
+  # }
+
+  expr_to_use <- modify_this_polars_expr(env = env_to_use, fun_name = name, data = x, out = out)
   expr_to_use
 }
