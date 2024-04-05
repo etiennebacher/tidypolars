@@ -1,28 +1,26 @@
 #' @export
 "$.tidypolars" <- function(x, name) {
+
+  # Do not overwrite those functions
   whitelist <- c("shape", "schema", "height", "width", "columns", "set_optimization_toggle", "print")
   if (name %in% whitelist) {
     return(NextMethod("$"))
   }
 
   ce <- caller_env()
-
-  class_2 <- class(x)[2]
-  my_new_env <- modify_env(
-    data = x,
-    env_clone(ns_env("polars")[[class_2]]),
-    fun_name = name,
-    caller_env = ce
+  env_to_use <- switch(
+    class(x)[2],
+    "RPolarsDataFrame" = ns_env("polars")[["RPolarsDataFrame"]],
+    "RPolarsLazyFrame" = ns_env("polars")[["RPolarsLazyFrame"]],
+    abort("Internal error: don't know what environment to use.")
   )
-  my_new_env[[name]]
+
+  fn_to_use <- modify_this_function(env = env_to_use, fun_name = name, data = x, caller_env = ce)
+  fn_to_use
 }
 
 #' @export
 "$.RPolarsExpr" <- function(x, name) {
-  my_new_expr_env <- modify_expr_env(
-    data = x,
-    env_clone(polars:::RPolarsExpr),
-    fun_name = name
-  )
-  my_new_expr_env[[name]]
+  expr_to_use <- modify_this_expr(env = polars:::RPolarsExpr, fun_name = name, data = x)
+  expr_to_use
 }
