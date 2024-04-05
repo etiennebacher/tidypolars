@@ -15,6 +15,14 @@ add_tidypolars_class <- function(x) {
   x
 }
 
+add_tidypolars_expr_class <- function(x) {
+  if (!inherits(x, "tidypolars_expr")) {
+    class(x) <- c("tidypolars_expr", class(x))
+  }
+  x
+}
+
+
 check_same_class <- function(x, y, env = caller_env()) {
   if (class(x) != class(y)) {
     rlang::abort(
@@ -183,6 +191,12 @@ modify_this_polars_expr <- function(env, fun_name, data) {
       }
       attr(out, "polars_expression")[[length(attr_pl) + 1]] <- full_call
     }
-    out
+    add_tidypolars_expr_class(out)
   }
 }
+
+# I need to add the "tidypolars_expr" manually because all (?) Polars expr
+# will start with pl$ and it has to go through "$.tidypolars_expr".
+pl <- lapply(env_clone(polars:::pl), add_tidypolars_expr_class) |>
+  as.environment() |>
+  add_tidypolars_expr_class()

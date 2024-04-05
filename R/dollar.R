@@ -20,7 +20,14 @@
 }
 
 #' @export
-"$.RPolarsExpr" <- function(x, name) {
-  expr_to_use <- modify_this_polars_expr(env = polars:::RPolarsExpr, fun_name = name, data = x)
+"$.tidypolars_expr" <- function(x, name) {
+  env_to_use <- if (name %in% ls(pl)) {
+    pl
+  } else if (name %in% ls(polars:::RPolarsExpr)) {
+    polars:::RPolarsExpr
+  } else {
+    return(NextMethod("$"))
+  }
+  expr_to_use <- modify_this_polars_expr(env = env_to_use, fun_name = name, data = x)
   expr_to_use
 }
