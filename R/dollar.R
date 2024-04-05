@@ -1,8 +1,8 @@
 #' @export
 "$.tidypolars" <- function(x, name) {
-  whitelist <- c("shape", "schema", "height", "width", "columns")
+  whitelist <- c("shape", "schema", "height", "width", "columns", "set_optimization_toggle", "print")
   if (name %in% whitelist) {
-    NextMethod("$")
+    return(NextMethod("$"))
   }
 
   ce <- caller_env()

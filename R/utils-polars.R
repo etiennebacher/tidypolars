@@ -30,7 +30,11 @@ check_same_class <- function(x, y, env = caller_env()) {
 
 modify_env <- function(data, env, fun_name, caller_env) {
   eapply(env, function(fun) {
-    marker <- identical(fun, polars:::RPolarsDataFrame[["with_columns"]])
+
+    # A small snippet to browse the internals for a specific case.
+    # Use "if (marker) browser()" below
+    # marker <- identical(fun, polars:::RPolarsDataFrame[["print"]])
+
     function(...) {
 
       # Manually add the "self" argument, that will take the data from
@@ -59,9 +63,22 @@ modify_env <- function(data, env, fun_name, caller_env) {
             parse_expr()
           return(attrs)
         } else {
+          if (deparse(x) == "...") return(NULL)
           eval_bare(x, env = caller_env)
         }
       })
+      if (length(fc) > 0) {
+        unnamed_nulls <- vapply(
+          seq_along(fc),
+          \(x) (!is.null(names(fc)) && names(fc)[x] == "") & is.null(fc[[x]]),
+          FUN.VALUE = logical(1L)
+        ) |>
+          which()
+
+        if (length(unnamed_nulls) > 0) {
+          fc <- fc[-unnamed_nulls]
+        }
+      }
 
       # Prepare the call that will be stored in the attributes of the output so
       # that show_query() can access it.
