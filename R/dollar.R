@@ -15,12 +15,12 @@
     abort("Internal error: don't know what environment to use.")
   )
 
-  fn_to_use <- modify_this_function(env = env_to_use, fun_name = name, data = x, caller_env = ce)
+  fn_to_use <- modify_this_polars_function(env = env_to_use, fun_name = name, data = x, caller_env = ce)
   fn_to_use
 }
 
 #' @export
 "$.RPolarsExpr" <- function(x, name) {
-  expr_to_use <- modify_this_expr(env = polars:::RPolarsExpr, fun_name = name, data = x)
+  expr_to_use <- modify_this_polars_expr(env = polars:::RPolarsExpr, fun_name = name, data = x)
   expr_to_use
 }

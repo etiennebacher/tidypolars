@@ -28,7 +28,7 @@ check_same_class <- function(x, y, env = caller_env()) {
 }
 
 
-modify_this_function <- function(env, fun_name, data, caller_env) {
+modify_this_polars_function <- function(env, fun_name, data, caller_env) {
   fun <- env[[fun_name]]
   function(...) {
 
@@ -125,7 +125,7 @@ modify_this_function <- function(env, fun_name, data, caller_env) {
 # This one should only be called from modify_env() and we will only use the
 # attributes of the output RPolarsExpr.
 
-modify_this_expr <- function(env, fun_name, data) {
+modify_this_polars_expr <- function(env, fun_name, data) {
   fun <- env[[fun_name]]
   function(...) {
 
