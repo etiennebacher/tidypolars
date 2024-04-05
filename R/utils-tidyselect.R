@@ -14,21 +14,10 @@ tidyselect_named_arg <- function(.data, cols) {
 # Rather than collecting a 1-row slice, it is faster to use the schema of the
 # data to recreate an empty DataFrame and convert it to R
 build_data_context <- function(.data) {
-  schema <- get_schema(.data)
+  schema <- .data$schema
   dat <- rep(list(NULL), length(schema))
   names(dat) <- names(schema)
   pl$DataFrame(dat, schema = schema)$to_data_frame()
-}
-
-# Dirty hack to get the schema when the data has the class "tidypolars".
-# .data$schema doesn't work well since I overwrite polars methods for class
-# "tidypolars".
-get_schema <- function(.data) {
-  if (inherits(.data, "RPolarsDataFrame")) {
-    polars:::`$.RPolarsDataFrame`(.data, "schema")
-  } else if (inherits(.data, "RPolarsLazyFrame")) {
-    polars:::`$.RPolarsLazyFrame`(.data, "schema")
-  }
 }
 
 
