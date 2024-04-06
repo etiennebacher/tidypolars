@@ -177,7 +177,6 @@ modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
     # First we capture unevaluated args, then we evaluate each of them in the
     # caller env, which would be the env in arrange.RPolarsDataFrame() for
     # example.
-
     fc <- as.list(frame_call())
     fc1 <- fc[[1]]
     fc[[1]] <- NULL
@@ -191,23 +190,22 @@ modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
           })
         } else {
           attrs <- attributes(foo)$polars_expression
-          # browser()
-          inner_expr <- lapply(seq_along(attrs), function(d) {
-            if (d == 1) return(attrs[[d]])
-            gsub("^.*\\$", "$", attrs[[d]])
-          }) |>
-            unlist() |>
-            paste(collapse = "") |>
-            parse_expr() |>
-            list()
+          if (!is.null(attrs)) {
+            inner_expr <- lapply(seq_along(attrs), function(d) {
+              if (d == 1) return(attrs[[d]])
+              gsub("^.*\\$", "$", attrs[[d]])
+            }) |>
+              unlist() |>
+              paste(collapse = "") |>
+              parse_expr() |>
+              list()
+          }
+          names(inner_expr) <- names(foo)
         }
-        names(inner_expr) <- names(foo)
         inner_expr <<- inner_expr
       }
       foo
     })
-
-    # if (fun_name == "is_in") browser()
 
 
     # Prepare the call that will be stored in the attributes of the output so
