@@ -26,10 +26,6 @@
   accepted_methods <- ls(polars:::RPolarsExpr)
   out <- NULL
 
-
-
-  # if (name == "root_names") browser()
-
   env_to_use <- if (name %in% ls(pl)) {
     pl
   } else if (name %in% accepted_methods) {
@@ -46,6 +42,12 @@
   #   out <- NextMethod("$")
   # }
 
-  expr_to_use <- modify_this_polars_expr(env = env_to_use, fun_name = name, data = x, out = out)
+  # if (name == "is_in") browser()
+  ce <- caller_env()
+  expr_to_use <- modify_this_polars_expr(env = env_to_use, fun_name = name, data = x, out = out, caller_env = ce)
   expr_to_use
+}
+
+">.tidypolars_expr" <- function(x, name) {
+  x$gt(name)
 }

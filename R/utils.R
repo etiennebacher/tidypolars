@@ -26,6 +26,24 @@ empty_elems <- function(x) {
   Filter(\(y) length(y) == 0, x)
 }
 
+# takes a list, drop all elements that are NULL and are unnamed
+drop_empty_unnamed <- function(x) {
+  if (length(x) > 0) {
+    unnamed_nulls <- vapply(
+      seq_along(x),
+      \(y) (!is.null(names(x)) && names(x)[y] == "") & is.null(x[[y]]),
+      FUN.VALUE = logical(1L)
+    ) |>
+      which()
+
+    if (length(unnamed_nulls) > 0) {
+      x <- x[-unnamed_nulls]
+    }
+  }
+  x
+}
+
+
 # take a string, replace \\1 by $1, \\2 by $2, etc.
 # this is to match Polars syntax for regexes
 parse_replacement <- function(x) {

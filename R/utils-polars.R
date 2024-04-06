@@ -57,8 +57,9 @@ modify_this_polars_function <- function(env, fun_name, data, caller_env) {
     fc <- as.list(frame_call())
     fc1 <- fc[[1]]
     fc[[1]] <- NULL
+    inner_expr <- NULL
     fc <- lapply(fc, \(x) {
-      if (fun_name == "with_columns") browser()
+      # if (fun_name == "filter") browser()
       if (is.call(x)) {
         foo <- eval_bare(x, env = caller_env)
         attrs <- attributes(foo)$polars_expression |>
@@ -68,27 +69,39 @@ modify_this_polars_function <- function(env, fun_name, data, caller_env) {
         return(attrs)
       } else {
         if (deparse(x) == "...") return(NULL)
-        eval_bare(x, env = caller_env)
+        foo <- eval_bare(x, env = caller_env)
+        if (fun_name %in%  c("filter", "with_columns")) {
+          if (is.list(foo)) {
+            inner_expr <- lapply(seq_along(foo), function(expr_idx) {
+              parse_expr(attributes(foo[[expr_idx]])$polars_expression[[1]])
+            })
+          } else {
+            attrs <- attributes(foo)$polars_expression
+            inner_expr <- lapply(seq_along(attrs), function(d) {
+              if (d == 1) return(attrs[[d]])
+              gsub("[^\\$]\\$", "$", attrs[[d]])
+            }) |>
+              unlist() |>
+              paste(collapse = "") |>
+              parse_expr() |>
+              list()
+          }
+          names(inner_expr) <- names(foo)
+          inner_expr <<- inner_expr
+        }
+        foo
       }
     })
-    if (length(fc) > 0) {
-      unnamed_nulls <- vapply(
-        seq_along(fc),
-        \(x) (!is.null(names(fc)) && names(fc)[x] == "") & is.null(fc[[x]]),
-        FUN.VALUE = logical(1L)
-      ) |>
-        which()
-
-      if (length(unnamed_nulls) > 0) {
-        fc <- fc[-unnamed_nulls]
-      }
-    }
-
+    fc <- drop_empty_unnamed(fc)
 
     # Prepare the call that will be stored in the attributes of the output so
     # that show_query() can access it.
     args <- list2(...)
-    full_call <- call2(fc1, !!!fc)
+    if (!is.null(inner_expr)) {
+      full_call <- call2(fc1, !!!inner_expr)
+    } else {
+      full_call <- call2(fc1, !!!fc)
+    }
     full_call <- safe_deparse(full_call)
 
     # Evaluate the call to the polars function. Do this AFTER producing the
@@ -135,7 +148,7 @@ modify_this_polars_function <- function(env, fun_name, data, caller_env) {
 # This one should only be called from modify_env() and we will only use the
 # attributes of the output RPolarsExpr.
 
-modify_this_polars_expr <- function(env, fun_name, data, out) {
+modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
   fun <- env[[fun_name]]
   # if (fun_name == "root_names") browser()
 
@@ -168,12 +181,43 @@ modify_this_polars_expr <- function(env, fun_name, data, out) {
     fc <- as.list(frame_call())
     fc1 <- fc[[1]]
     fc[[1]] <- NULL
-    fc <- lapply(fc, eval_bare, env = caller_env())
+    inner_expr <- NULL
+    fc <- lapply(fc, \(x) {
+      foo <- eval_bare(x, env = caller_env)
+      if (! fun_name %in% c("DataFrame", "col", "lit")) {
+        if (is.list(foo)) {
+          inner_expr <- lapply(seq_along(foo), function(expr_idx) {
+            parse_expr(attributes(foo[[expr_idx]])$polars_expression[[1]])
+          })
+        } else {
+          attrs <- attributes(foo)$polars_expression
+          # browser()
+          inner_expr <- lapply(seq_along(attrs), function(d) {
+            if (d == 1) return(attrs[[d]])
+            gsub("^.*\\$", "$", attrs[[d]])
+          }) |>
+            unlist() |>
+            paste(collapse = "") |>
+            parse_expr() |>
+            list()
+        }
+        names(inner_expr) <- names(foo)
+        inner_expr <<- inner_expr
+      }
+      foo
+    })
+
+    # if (fun_name == "is_in") browser()
+
 
     # Prepare the call that will be stored in the attributes of the output so
     # that show_query() can access it.
     args <- list2(...)
-    full_call <- call2(fc1, !!!fc)
+    if (!is.null(inner_expr)) {
+      full_call <- call2(fc1, !!!inner_expr)
+    } else {
+      full_call <- call2(fc1, !!!fc)
+    }
     full_call <- safe_deparse(full_call)
 
     # Evaluate the call to the polars function. Do this AFTER producing the
