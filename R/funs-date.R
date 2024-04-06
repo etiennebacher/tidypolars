@@ -226,6 +226,7 @@ pl_strptime <- function(string, format, tz = "", strict = TRUE, ...) {
   } else {
     datatype = pl$Date
   }
+  # TODO: polars 0.16.0: replace datatype by dtype
   string$str$strptime(datatype = datatype, format = format, strict = strict)
 }
 

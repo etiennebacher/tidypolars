@@ -28,6 +28,11 @@
   
 * Add support for several `lubridate` functions: `dweeks()`, `ddays()`, 
   `dhours()`, `dminutes()`, `dseconds()`, `dmilliseconds()`.
+  
+* When a `polars` function called internally fails, the original error message
+  is now displayed.
+  
+* Add support for `group_split()` (for `DataFrame` only).
 
 # tidypolars 0.6.0
 

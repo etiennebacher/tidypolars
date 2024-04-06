@@ -319,7 +319,7 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
               abort(
                 c(
                   paste0("Couldn't evaluate function `", orig_name, "()` in Polars."),
-                  "i" = "Are you sure it returns a Polars expression?"
+                  "x" = toupper_first(conditionMessage(e))
                 ),
                 call = env
               )
