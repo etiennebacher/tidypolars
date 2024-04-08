@@ -74,7 +74,7 @@ modify_this_polars_function <- function(env, fun_name, data, caller_env) {
           if (is.list(foo)) {
             inner_expr <- lapply(seq_along(foo), function(expr_idx) {
               d <- attributes(foo[[expr_idx]])$polars_expression
-              gsub("[^\\$]\\$", "$", d) |>
+              gsub("^[^\\$]\\$", "$", d) |>
                 paste(collapse = "") |>
                 parse_expr()
             })
@@ -82,7 +82,7 @@ modify_this_polars_function <- function(env, fun_name, data, caller_env) {
             attrs <- attributes(foo)$polars_expression
             inner_expr <- lapply(seq_along(attrs), function(d) {
               if (d == 1) return(attrs[[d]])
-              gsub("[^\\$]\\$", "$", attrs[[d]])
+              gsub("^[^\\$]\\$", "$", attrs[[d]])
             }) |>
               unlist() |>
               paste(collapse = "") |>

@@ -51,3 +51,55 @@
 ">.tidypolars_expr" <- function(x, name) {
   x$gt(name)
 }
+
+">=.tidypolars_expr" <- function(x, name) {
+  x$gt_eq(name)
+}
+
+"<.tidypolars_expr" <- function(x, name) {
+  x$lt(name)
+}
+
+"<=.tidypolars_expr" <- function(x, name) {
+  x$lt_eq(name)
+}
+
+"==.tidypolars_expr" <- function(x, name) {
+  x$eq(name)
+}
+
+"!=.tidypolars_expr" <- function(x, name) {
+  x$neq(name)
+}
+
+"+.tidypolars_expr" <- function(x, name) {
+  x$add(name)
+}
+
+"*.tidypolars_expr" <- function(x, name) {
+  x$mul(name)
+}
+
+"-.tidypolars_expr" <- function(x, name) {
+  x$sub(name)
+}
+
+"/.tidypolars_expr" <- function(x, name) {
+  x$div(name)
+}
+
+"^.tidypolars_expr" <- function(x, name) {
+  x$pow(name)
+}
+
+"|.tidypolars_expr" <- function(x, name) {
+  x$or(name)
+}
+
+"&.tidypolars_expr" <- function(x, name) {
+  x$and(name)
+}
+
+"!.tidypolars_expr" <- function(x, name) {
+  x$not(name)
+}
