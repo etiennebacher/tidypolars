@@ -27,6 +27,7 @@ Imports:
     rlang,
     tidyr,
     tidyselect,
+    utils,
     vctrs
 Suggests: 
     bench,
