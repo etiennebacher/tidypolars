@@ -73,7 +73,10 @@ modify_this_polars_function <- function(env, fun_name, data, caller_env) {
         if (fun_name %in%  c("filter", "with_columns")) {
           if (is.list(foo)) {
             inner_expr <- lapply(seq_along(foo), function(expr_idx) {
-              parse_expr(attributes(foo[[expr_idx]])$polars_expression[[1]])
+              d <- attributes(foo[[expr_idx]])$polars_expression
+              gsub("[^\\$]\\$", "$", d) |>
+                paste(collapse = "") |>
+                parse_expr()
             })
           } else {
             attrs <- attributes(foo)$polars_expression
@@ -207,6 +210,7 @@ modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
       foo
     })
 
+    # if (!is.null(inner_expr)) browser()
 
     # Prepare the call that will be stored in the attributes of the output so
     # that show_query() can access it.

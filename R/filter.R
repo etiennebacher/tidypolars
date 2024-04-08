@@ -51,10 +51,6 @@ filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
     polars_exprs <- lapply(polars_exprs, \(x) x$over(grps))
   }
 
-  # this is only applied between expressions that were separated by a comma
-  # in the filter() call. So it won't replace the "|" call.
-  polars_exprs <- Reduce(`&`, polars_exprs)
-
   tryCatch(
     {
       out <- .data$filter(polars_exprs)
