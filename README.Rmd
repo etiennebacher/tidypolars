@@ -131,9 +131,11 @@ benchmarks](https://duckdblabs.github.io/db-benchmark/).
 
 ```{r}
 library(collapse, warn.conflicts = FALSE)
+library(dtplyr)
 
 large_iris <- data.table::rbindlist(rep(list(iris), 100000))
 large_iris_pl <- as_polars_lf(large_iris)
+large_iris_dt <- lazy_dt(large_iris)
 
 format(nrow(large_iris), big.mark = ",")
 
@@ -167,6 +169,15 @@ bench::mark(
         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
       ) |>
       filter(between(Sepal.Length, 4.5, 5.5))
+  },
+  dtplyr = {
+    large_iris_dt |>
+      select(starts_with(c("Sep", "Pet"))) |>
+      mutate(
+        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+      ) |>
+      filter(between(Sepal.Length, 4.5, 5.5)) |> 
+      as.data.frame()
   },
   collapse = {
     large_iris |>
