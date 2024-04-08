@@ -27,12 +27,12 @@ Imports:
     rlang,
     tidyr,
     tidyselect,
+    utils,
     vctrs
 Suggests: 
     bench,
     data.table,
     knitr,
-    jsonlite,
     lubridate,
     rmarkdown,
     tibble,

@@ -1,3 +1,5 @@
+utils::globalVariables(c("name", "value"))
+
 get_dots <- function(...) {
   eval(substitute(alist(...)))
 }
