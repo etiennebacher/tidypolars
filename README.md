@@ -156,10 +156,12 @@ benchmarks](https://duckdblabs.github.io/db-benchmark/).
 
 ``` r
 library(collapse, warn.conflicts = FALSE)
-#> collapse 2.0.10, see ?`collapse-package` or ?`collapse-documentation`
+#> collapse 2.0.11, see ?`collapse-package` or ?`collapse-documentation`
+library(dtplyr)
 
 large_iris <- data.table::rbindlist(rep(list(iris), 100000))
 large_iris_pl <- as_polars_lf(large_iris)
+large_iris_dt <- lazy_dt(large_iris)
 
 format(nrow(large_iris), big.mark = ",")
 #> [1] "15,000,000"
@@ -195,6 +197,15 @@ bench::mark(
       ) |>
       filter(between(Sepal.Length, 4.5, 5.5))
   },
+  dtplyr = {
+    large_iris_dt |>
+      select(starts_with(c("Sep", "Pet"))) |>
+      mutate(
+        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+      ) |>
+      filter(between(Sepal.Length, 4.5, 5.5)) |> 
+      as.data.frame()
+  },
   collapse = {
     large_iris |>
       fselect(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")) |>
@@ -208,13 +219,14 @@ bench::mark(
 )
 #> Warning: Some expressions had a GC in every iteration; so filtering is
 #> disabled.
-#> # A tibble: 4 × 6
+#> # A tibble: 5 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     137.55ms 163.64ms     4.13    19.25KB    0.103
-#> 2 tidypolars 158.98ms 192.56ms     4.83   331.49KB    1.21 
-#> 3 dplyr         3.48s    3.79s     0.254    1.79GB    0.743
-#> 4 collapse   353.39ms 452.07ms     2.18   745.96MB    1.96
+#> 1 polars      126.4ms 288.63ms     2.89     19.6KB   0.0722
+#> 2 tidypolars 152.53ms 202.25ms     4.37   332.28KB   1.09  
+#> 3 dplyr         5.62s    6.06s     0.164    1.79GB   0.476 
+#> 4 dtplyr     835.67ms    1.03s     0.957    1.72GB   2.34  
+#> 5 collapse   487.95ms 653.16ms     1.50   745.96MB   1.09
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
