@@ -36,6 +36,8 @@
 #' will start in background. Get a handle which later can be converted into the
 #' resulting DataFrame. Useful in interactive mode to not lock R session (default
 #' is `FALSE`).
+#' @param verbose If `TRUE` (default), show the deprecation warning on the
+#' usage of `collect()`.
 #' @inheritParams slice_tail.RPolarsDataFrame
 #'
 #' @export

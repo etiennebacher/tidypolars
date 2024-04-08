@@ -74,6 +74,9 @@ resulting DataFrame. Useful in interactive mode to not lock R session (default
 is \code{FALSE}).}
 
 \item{...}{Not used.}
+
+\item{verbose}{If \code{TRUE} (default), show the deprecation warning on the
+usage of \code{collect()}.}
 }
 \description{
 \code{compute()} checks the query, optimizes it in the background, and runs it.
