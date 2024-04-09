@@ -22,13 +22,15 @@
 #' @export
 "$.tidypolars_expr" <- function(x, name) {
   subns <- c("bin", "cat", "dt", "meta", "str", "struct")
-  # accepted_methods <- setdiff(ls(polars:::RPolarsExpr), subns)
-  accepted_methods <- ls(polars:::RPolarsExpr)
   out <- NULL
 
   env_to_use <- if (name %in% ls(pl)) {
     pl
-  } else if (name %in% accepted_methods) {
+  } else if (name == "then") {
+    polars:::RPolarsWhen
+  } else if (name == "otherwise") {
+    polars:::RPolarsThen
+  } else if (name %in% ls(polars:::RPolarsExpr)) {
     polars:::RPolarsExpr
   }
 

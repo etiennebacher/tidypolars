@@ -154,7 +154,6 @@ modify_this_polars_function <- function(env, fun_name, data, caller_env) {
 
 modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
   fun <- env[[fun_name]]
-  # if (fun_name == "root_names") browser()
 
   subns <- c("bin", "cat", "dt", "meta", "str", "struct")
   if (fun_name %in% subns) {
@@ -197,7 +196,7 @@ modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
           if (!is.null(attrs)) {
             inner_expr <- lapply(seq_along(attrs), function(d) {
               if (d == 1) return(attrs[[d]])
-              gsub("^.*\\$", "$", attrs[[d]])
+              gsub("^[^\\$]\\$", "$", attrs[[d]])
             }) |>
               unlist() |>
               paste(collapse = "") |>
@@ -210,8 +209,6 @@ modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
       }
       foo
     })
-
-    # if (!is.null(inner_expr)) browser()
 
     # Prepare the call that will be stored in the attributes of the output so
     # that show_query() can access it.
@@ -257,7 +254,7 @@ modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
     }
     if (inherits(out, c("RPolarsDataFrame", "RPolarsLazyFrame"))) {
       add_tidypolars_class(out)
-    } else if (inherits(out, "RPolarsExpr")) {
+    } else if (inherits(out, c("RPolarsExpr", "RPolarsWhen", "RPolarsThen"))) {
       add_tidypolars_expr_class(out)
     }
   }
