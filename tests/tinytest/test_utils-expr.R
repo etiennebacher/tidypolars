@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-pl_iris <- pl$DataFrame(iris)
+pl_iris <- polars::pl$DataFrame(iris)
 translate_dots <- tidypolars:::translate_dots
 
 expect_equal(

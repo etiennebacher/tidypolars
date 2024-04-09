@@ -31,7 +31,7 @@ expect_is_tidypolars(inner_join(test, test2))
 
 expect_equal(
   left_join(test, test2),
-  pl$DataFrame(
+  polars::pl$DataFrame(
     x = 1:3, y = 1:3,
     z = 1:3, z2 = c(4, 5, NA)
   )
@@ -39,7 +39,7 @@ expect_equal(
 
 expect_equal(
   right_join(test, test2),
-  pl$DataFrame(
+  polars::pl$DataFrame(
     x = c(1, 2, 4), y = c(1, 2, 4),
     z2 = c(4, 5, 7), z = c(1, 2, NA)
   )
@@ -47,7 +47,7 @@ expect_equal(
 
 expect_equal(
   full_join(test, test2),
-  pl$DataFrame(
+  polars::pl$DataFrame(
     x = c(1, 2, 4, 3), y = c(1, 2, 4, 3),
     z = c(1, 2, NA, 3), z2 = c(4, 5, 7, NA)
   )
@@ -55,7 +55,7 @@ expect_equal(
 
 expect_equal(
   inner_join(test, test2),
-  pl$DataFrame(
+  polars::pl$DataFrame(
     x = c(1, 2), y = c(1, 2),
     z = c(1, 2), z2 = c(4, 5)
   )
@@ -81,7 +81,7 @@ test3 <- polars::pl$DataFrame(
 
 expect_equal(
   left_join(test, test3, join_by(x == x2, y == y2)),
-  pl$DataFrame(
+  polars::pl$DataFrame(
     x = 1:3, y = 1:3,
     z = 1:3, z3 = c(4, 5, NA)
   )
@@ -89,7 +89,7 @@ expect_equal(
 
 expect_equal(
   left_join(test, test3, c("x" = "x2", "y" = "y2")),
-  pl$DataFrame(
+  polars::pl$DataFrame(
     x = 1:3, y = 1:3,
     z = 1:3, z3 = c(4, 5, NA)
   )

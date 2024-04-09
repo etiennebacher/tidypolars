@@ -19,14 +19,14 @@ expect_is_tidypolars(anti_join(test, test2))
 
 expect_equal(
   semi_join(test, test2, by = c("x", "y")),
-  pl$DataFrame(
+  polars::pl$DataFrame(
     x = c(1, 2), y = c(1, 2), z = c(1, 2)
   )
 )
 
 expect_equal(
   anti_join(test, test2, by = c("x", "y")),
-  pl$DataFrame(
+  polars::pl$DataFrame(
     x = 3, y = 3, z = 3
   )
 )
@@ -47,14 +47,14 @@ test4 <- polars::pl$DataFrame(
 
 expect_equal(
   semi_join(test3, test4, by = c("x", "y1" = "y2")),
-  pl$DataFrame(
+  polars::pl$DataFrame(
     x = c(1, 2), y1 = c(1, 2), z = c(1, 2)
   )
 )
 
 expect_equal(
   anti_join(test3, test4, by = c("x", "y1" = "y2")),
-  pl$DataFrame(
+  polars::pl$DataFrame(
     x = 3, y1 = 3, z = 3
   )
 )
@@ -64,14 +64,14 @@ expect_equal(
 
 expect_equal(
   semi_join(test3, test4, by = join_by(x, y1 == y2)),
-  pl$DataFrame(
+  polars::pl$DataFrame(
     x = c(1, 2), y1 = c(1, 2), z = c(1, 2)
   )
 )
 
 expect_equal(
   anti_join(test3, test4, by = join_by(x, y1 == y2)),
-  pl$DataFrame(
+  polars::pl$DataFrame(
     x = 3, y1 = 3, z = 3
   )
 )

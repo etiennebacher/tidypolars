@@ -12,6 +12,8 @@
     class(x)[2],
     "RPolarsDataFrame" = ns_env("polars")[["RPolarsDataFrame"]],
     "RPolarsLazyFrame" = ns_env("polars")[["RPolarsLazyFrame"]],
+    "RPolarsGroupBy" = ns_env("polars")[["RPolarsGroupBy"]],
+    "RPolarsLazyGroupBy" = ns_env("polars")[["RPolarsLazyGroupBy"]],
     abort("Internal error: don't know what environment to use.")
   )
 

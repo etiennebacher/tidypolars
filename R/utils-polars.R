@@ -254,7 +254,7 @@ modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
     }
     if (inherits(out, c("RPolarsDataFrame", "RPolarsLazyFrame"))) {
       add_tidypolars_class(out)
-    } else if (inherits(out, c("RPolarsExpr", "RPolarsWhen", "RPolarsThen"))) {
+    } else if (inherits(out, c("RPolarsExpr", "RPolarsWhen", "RPolarsThen", "RPolarsGroupBy", "RPolarsLazyGroupBy"))) {
       add_tidypolars_expr_class(out)
     }
   }

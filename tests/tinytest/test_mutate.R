@@ -73,7 +73,7 @@ expect_false(
 
 # %in% operator
 
-test <- pl$DataFrame(
+test <- polars::pl$DataFrame(
   x1 = c("a", "a", "foo", "a", "c"),
   x2 = c(2, 1, 5, 3, 1),
   value = sample(1:5)

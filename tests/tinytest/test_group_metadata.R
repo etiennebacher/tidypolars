@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-test <- pl$DataFrame(
+test <- polars::pl$DataFrame(
   x1 = c("a", "a", "b", "a", "c")
 )
 
@@ -15,7 +15,7 @@ expect_equal(
   data.frame()
 )
 
-test2 <- pl$DataFrame(mtcars) |>
+test2 <- polars::pl$DataFrame(mtcars) |>
   group_by(cyl, am)
 
 expect_equal(

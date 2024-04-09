@@ -1,14 +1,14 @@
 source("helpers.R")
 using("tidypolars")
 
-spl <- pl$DataFrame(iris) |>
+spl <- polars::pl$DataFrame(iris) |>
   group_split(Species)
 
 expect_equal(length(spl), 3)
 expect_equal(lapply(spl, nrow), list(50, 50, 50))
 
 
-test <- pl$DataFrame(iris) |>
+test <- polars::pl$DataFrame(iris) |>
   group_by(Species)
 
 spl2 <- group_split(test)

@@ -21,8 +21,7 @@
 #'
 #' query
 
-show_query.tidypolars <- function(x) {
-  cat("Pure polars expression:\n\n")
+show_query.tidypolars <- function(x, show = TRUE) {
   attrs <- attributes(x)$polars_expression
   out <- lapply(seq_along(attrs), function(x) {
     e <- attrs[[x]]
@@ -32,6 +31,9 @@ show_query.tidypolars <- function(x) {
     unlist() |>
     paste(collapse = "")
   out <- paste0("<data>", out)
-  cat(out)
+  if (isTRUE(show)) {
+    cat("Pure polars expression:\n\n")
+    cat(out)
+  }
   invisible(out)
 }

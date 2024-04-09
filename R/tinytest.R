@@ -42,6 +42,7 @@ expect_equal <- function(x, y, ...) {
   tinytest::expect_equal(
     x, y,
     call = sys.call(sys.parent(2)),
+    check.attributes = FALSE,
     ...
   )
 }

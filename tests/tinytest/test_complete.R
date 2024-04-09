@@ -41,7 +41,7 @@ expect_equal(
 
 # groups -------------------------------------------------------
 
-df <- pl$DataFrame(
+df <- polars::pl$DataFrame(
   g = c("a", "b", "a"),
   a = c(1L, 1L, 2L),
   b = c("a", "a", "b"),

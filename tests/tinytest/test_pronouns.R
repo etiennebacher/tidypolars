@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-test <- pl$DataFrame(x = c(1, 1, 1), y = 4:6, z = c("a", "a", "b"))
+test <- polars::pl$DataFrame(x = c(1, 1, 1), y = 4:6, z = c("a", "a", "b"))
 
 x <- 10
 
