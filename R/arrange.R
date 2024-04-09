@@ -23,7 +23,7 @@
 
 arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
 
-  check_polars_data(.data)
+  .data <- check_polars_data(.data)
 
   dots <- get_dots(...)
   out_length <- length(dots)

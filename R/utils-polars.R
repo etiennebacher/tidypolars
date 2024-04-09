@@ -5,6 +5,7 @@ check_polars_data <- function(x, env = caller_env()) {
       call = env
     )
   }
+  x <- x$clone()
   add_tidypolars_class(x)
 }
 

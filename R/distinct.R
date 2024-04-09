@@ -28,7 +28,7 @@
 #' duplicated_rows(pl_test, iso_o, iso_d)
 
 distinct.RPolarsDataFrame <- function(.data, ..., keep = "first", maintain_order = TRUE) {
-  check_polars_data(.data)
+  .data <- check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
   if (length(vars) == 0) vars <- names(.data)
   out <- .data$unique(subset = vars, keep = keep, maintain_order = maintain_order)
@@ -43,7 +43,7 @@ distinct.RPolarsLazyFrame <- distinct.RPolarsDataFrame
 #' @export
 
 duplicated_rows <- function(.data, ...) {
-  check_polars_data(.data)
+  .data <- check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
   if (length(vars) == 0) vars <- names(.data)
   out <- .data$filter(pl$struct(vars)$is_duplicated())

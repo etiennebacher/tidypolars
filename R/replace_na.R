@@ -22,7 +22,7 @@
 
 replace_na.RPolarsDataFrame <- function(data, replace, ...) {
 
-  check_polars_data(data)
+  data <- check_polars_data(data)
   is_scalar <- length(replace) == 1 && !is.list(replace)
 
   out <- if (is_scalar) {

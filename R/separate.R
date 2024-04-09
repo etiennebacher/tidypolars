@@ -22,7 +22,7 @@
 separate.RPolarsDataFrame <- function(data, col, into, sep = " ",
                                remove = TRUE, ...) {
 
-  check_polars_data(data)
+  data <- check_polars_data(data)
   col <- deparse(substitute(col))
 
   into_len <- length(into) - 1

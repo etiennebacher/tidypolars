@@ -89,7 +89,7 @@ mutate.RPolarsDataFrame <- function(
     .keep = c("all", "used", "unused", "none")
   ) {
 
-  check_polars_data(.data)
+  .data <- check_polars_data(.data)
   .keep <- rlang::arg_match0(.keep, values = c("all", "used", "unused", "none"))
 
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())

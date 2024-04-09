@@ -33,7 +33,7 @@
 
 complete.RPolarsDataFrame <- function(data, ..., fill = list()) {
 
-  check_polars_data(data)
+  data <- check_polars_data(data)
   vars <- tidyselect_dots(data, ...)
   if (length(vars) < 2) return(data)
 
