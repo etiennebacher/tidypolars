@@ -45,7 +45,7 @@ group_by.RPolarsDataFrame <- function(.data, ..., maintain_order = FALSE) {
   .data2 <- .data$clone()
   attr(.data2, "pl_grps") <- vars
   attr(.data2, "maintain_grp_order") <- maintain_order
-  add_tidypolars_class(.data2)
+  .data2
 }
 
 #' @param x A Polars Data/LazyFrame

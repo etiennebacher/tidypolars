@@ -37,7 +37,7 @@ rowwise.RPolarsDataFrame <- function(data, ...) {
     attr(data2, "pl_grps") <- vars
   }
   attr(data2, "grp_type") <- "rowwise"
-  add_tidypolars_class(data2)
+  data2
 }
 
 #' @rdname rowwise.RPolarsDataFrame

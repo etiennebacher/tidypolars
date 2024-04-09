@@ -70,7 +70,7 @@ complete.RPolarsDataFrame <- function(data, ..., fill = list()) {
     out
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname complete.RPolarsDataFrame

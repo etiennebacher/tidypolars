@@ -166,5 +166,5 @@ pivot_wider.RPolarsDataFrame <- function(
     new_data
   }
 
-  add_tidypolars_class(out)
+  out
 }

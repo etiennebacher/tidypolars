@@ -90,7 +90,7 @@ compute.RPolarsLazyFrame <- function(
     out
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 

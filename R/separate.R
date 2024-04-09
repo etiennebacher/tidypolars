@@ -42,7 +42,7 @@ separate.RPolarsDataFrame <- function(data, col, into, sep = " ",
     data <- data$drop(col)
   }
 
-  add_tidypolars_class(data)
+  data
 }
 
 #' @rdname separate.RPolarsDataFrame

@@ -54,7 +54,7 @@ unite.RPolarsDataFrame <- function(data, col, ..., sep = "_", remove = TRUE, na.
     out
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname unite.RPolarsDataFrame

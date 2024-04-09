@@ -19,7 +19,7 @@ select.RPolarsDataFrame <- function(.data, ...) {
   .data <- check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
   out <- .data$select(vars)
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname select.RPolarsDataFrame

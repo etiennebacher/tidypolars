@@ -31,7 +31,7 @@ rename.RPolarsDataFrame <- function(.data, ...) {
   dots <- get_dots(...)
   dots <- lapply(dots, rlang::as_name)
   out <- .data$rename(dots)
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname rename.RPolarsDataFrame
@@ -48,7 +48,7 @@ rename_with.RPolarsDataFrame <- function(.data, .fn, .cols = tidyselect::everyth
   mapping <- as.list(to_replace)
   names(mapping) <- new
   out <- .data$rename(mapping)
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname rename.RPolarsDataFrame

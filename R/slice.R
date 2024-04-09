@@ -37,7 +37,7 @@ slice_tail.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
     out
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname slice_tail.RPolarsDataFrame
@@ -68,7 +68,7 @@ slice_head.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
     out
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname slice_tail.RPolarsDataFrame
@@ -118,5 +118,5 @@ slice_sample.RPolarsDataFrame <- function(.data, ..., n = NULL, prop = NULL, rep
     out
   }
 
-  add_tidypolars_class(out)
+  out
 }

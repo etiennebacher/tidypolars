@@ -65,7 +65,7 @@ summarize.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
     .data
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname summarize.RPolarsDataFrame

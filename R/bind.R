@@ -162,5 +162,5 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
     # default
     pl$concat(dots, how = how)
   )
-  add_tidypolars_class(out)
+  out
 }

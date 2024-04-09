@@ -60,7 +60,7 @@ fill.RPolarsDataFrame <- function(data, ..., .direction = c("down", "up", "downu
     data$with_columns(expr)
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @export

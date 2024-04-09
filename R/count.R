@@ -59,7 +59,7 @@ add_count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
     out
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname count.RPolarsDataFrame

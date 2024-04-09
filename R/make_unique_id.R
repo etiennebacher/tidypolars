@@ -21,6 +21,6 @@ make_unique_id <- function(.data, ..., new_col = "hash") {
   out <- .data$with_columns(
     pl$struct(vars)$hash()$alias(new_col)
   )
-  add_tidypolars_class(out)
+  out
 }
 

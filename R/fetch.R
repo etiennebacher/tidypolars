@@ -61,5 +61,5 @@ fetch <- function(
     streaming = streaming
   )
 
-  add_tidypolars_class(out)
+  out
 }
