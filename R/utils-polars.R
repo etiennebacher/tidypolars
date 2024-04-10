@@ -42,7 +42,6 @@ check_same_class <- function(x, y, env = caller_env()) {
 modify_this_polars_function <- function(env, fun_name, data, caller_env) {
   fun <- env[[fun_name]]
   function(...) {
-
     # Manually add the "self" argument, that will take the data from
     # `$.tidypolars`. Otherwise, the "self" value in the Polars function is
     # unknown when we execute this function below.
@@ -62,14 +61,15 @@ modify_this_polars_function <- function(env, fun_name, data, caller_env) {
     fc[[1]] <- NULL
     inner_expr <- NULL
     fc <- lapply(fc, \(x) {
-      # if (fun_name == "filter") browser()
       if (is.call(x)) {
         foo <- eval_bare(x, env = caller_env)
         attrs <- attributes(foo)$polars_expression |>
           unlist() |>
-          paste(collapse = "") |>
-          parse_expr()
-        return(attrs)
+          paste(collapse = "")
+
+        if (!is.null(attrs) && attrs != "") {
+          parse_expr(attrs)
+        }
       } else {
         if (deparse(x) == "...") return(NULL)
         foo <- eval_bare(x, env = caller_env)
@@ -191,7 +191,10 @@ modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
       if (! fun_name %in% c("DataFrame", "LazyFrame", "col", "lit")) {
         if (is.list(foo)) {
           inner_expr <- lapply(seq_along(foo), function(expr_idx) {
-            parse_expr(attributes(foo[[expr_idx]])$polars_expression[[1]])
+            out <- attributes(foo[[expr_idx]])$polars_expression[[1]]
+            if (!is.null(out)) {
+              parse_expr(out)
+            }
           })
         } else {
           attrs <- attributes(foo)$polars_expression

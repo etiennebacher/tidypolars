@@ -91,6 +91,8 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
     )
   }
 
+  dots <- lapply(dots, add_tidypolars_class)
+
   if (!is.null(.id)) {
     dots <- lapply(seq_along(dots), \(x) {
       dots[[x]]$

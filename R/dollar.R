@@ -3,7 +3,8 @@
 
   # Do not overwrite those functions
   whitelist <- c("shape", "schema", "height", "width", "columns",
-                 "set_optimization_toggle", "print", "clone")
+                 "set_optimization_toggle", "print", "clone", "to_list",
+                 "to_data_frame")
   if (name %in% whitelist) {
     return(NextMethod("$"))
   }
