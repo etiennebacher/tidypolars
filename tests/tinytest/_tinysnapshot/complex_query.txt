@@ -1,0 +1,7 @@
+Pure polars expression:
+
+<data>$
+  melt(id_vars = "religion", value_vars = c("<$10k", "$10-20k", "$20-30k", "$30-40k", "$40-50k", "$50-75k", "$75-100k", "$100-150k", ">150k", "Don't know/refused"), variable_name = "income", value_name = "count")$
+  sort("religion")$
+  drop_nulls(character(0))$
+  sort(c("religion", "count"), descending = c(FALSE, FALSE))

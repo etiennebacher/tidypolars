@@ -1,0 +1,4 @@
+Pure polars expression:
+
+<data>$
+  with_columns(x = pl$col("Petal.Length")$div(pl$col("Petal.Width"))$gt(3))

@@ -1,0 +1,4 @@
+Pure polars expression:
+
+<data>$
+  filter(pl$col("Sepal.Length")$gt(5), pl$col("Species")$is_in(pl$lit(c("setosa", "virginica"))))
