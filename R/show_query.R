@@ -21,7 +21,7 @@
 #'
 #' query
 
-show_query.tidypolars <- function(x, show = TRUE) {
+show_query.tidypolars <- function(x) {
   attrs <- attributes(x)$polars_expression
   out <- lapply(seq_along(attrs), function(x) {
     e <- attrs[[x]]
@@ -30,10 +30,14 @@ show_query.tidypolars <- function(x, show = TRUE) {
   }) |>
     unlist() |>
     paste(collapse = "")
-  out <- paste0("<data>", out)
-  if (isTRUE(show)) {
-    cat("Pure polars expression:\n\n")
-    cat(out)
-  }
+
+  class(out) <- c("tidypolars_query", class(out))
   invisible(out)
+}
+
+#' @exportS3Method
+print.tidypolars_query <- function(x) {
+  x <- paste0("<data>", x)
+  cat("Pure polars expression:\n\n")
+  cat(x)
 }
