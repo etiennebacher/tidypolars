@@ -21,7 +21,7 @@ test_df <- data.frame(
   x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons")
 )
 
-test <- pl$LazyFrame(test_df)
+test <- polars::pl$LazyFrame(test_df)
 
 for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper", "nchar")) {
 

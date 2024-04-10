@@ -45,7 +45,7 @@ expect_equal_lazy(
 
 # groups -------------------------------------------------------
 
-df <- pl$LazyFrame(
+df <- polars::pl$LazyFrame(
   g = c("a", "b", "a"),
   a = c(1L, 1L, 2L),
   b = c("a", "a", "b"),

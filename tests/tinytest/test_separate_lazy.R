@@ -5,7 +5,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-test <- pl$LazyFrame(
+test <- polars::pl$LazyFrame(
   x = c(NA, "x.y", "x.z", "y.z")
 )
 
@@ -24,7 +24,7 @@ expect_equal_lazy(
 )
 
 
-test2 <- pl$LazyFrame(
+test2 <- polars::pl$LazyFrame(
   x = c(NA, "x y", "x z", "y z")
 )
 

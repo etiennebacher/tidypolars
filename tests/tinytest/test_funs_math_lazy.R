@@ -12,7 +12,7 @@ test_df <- data.frame(
   value_trigo = seq(0, 0.4, 0.1)
 )
 
-test <- pl$LazyFrame(test_df)
+test <- polars::pl$LazyFrame(test_df)
 
 # auto <- r_polars_funs[!is.na(r_polars_funs$category), ]
 # auto$r_funs |> constructive::construct()

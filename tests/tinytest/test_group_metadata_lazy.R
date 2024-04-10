@@ -5,7 +5,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-test <- pl$LazyFrame(
+test <- polars::pl$LazyFrame(
   x1 = c("a", "a", "b", "a", "c")
 )
 
@@ -19,7 +19,7 @@ expect_equal_lazy(
   data.frame()
 )
 
-test2 <- pl$LazyFrame(mtcars) |>
+test2 <- polars::pl$LazyFrame(mtcars) |>
   group_by(cyl, am)
 
 expect_equal_lazy(

@@ -5,7 +5,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-pl_iris <- pl$LazyFrame(iris)
+pl_iris <- polars::pl$LazyFrame(iris)
 translate_dots <- tidypolars:::translate_dots
 
 expect_equal_lazy(

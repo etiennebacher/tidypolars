@@ -57,7 +57,8 @@ arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
   }
 
   out <- if (is_grouped) {
-    .data$sort(vars, descending = direction)$group_by(grps, maintain_order = mo)
+    .data$sort(vars, descending = direction) |>
+      group_by(grps, maintain_order = mo)
   } else {
     .data$sort(vars, descending = direction)
   }

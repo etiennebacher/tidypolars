@@ -29,11 +29,11 @@ expect_equal_lazy(
   rep(1:2, each = 20)
 )
 
-p1 <- pl$LazyFrame(
+p1 <- polars::pl$LazyFrame(
   x = sample(letters, 20),
   y = sample(1:100, 20)
 )
-p2 <- pl$LazyFrame(
+p2 <- polars::pl$LazyFrame(
   x = sample(letters, 20),
   y = sample(1:100, 20)
 )

@@ -19,7 +19,7 @@ test_df <- data.frame(
   somedate = c("Jul 24 2014", "Dec 24 2015", "Jan 21 2016", NA)
 )
 
-test <- pl$LazyFrame(test_df)
+test <- polars::pl$LazyFrame(test_df)
 
 
 for (i in c("year", "month", "day", "quarter", "week", "mday", "yday"

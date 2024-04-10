@@ -5,7 +5,9 @@ check_polars_data <- function(x, env = caller_env()) {
       call = env
     )
   }
+  attrs <- attributes(x)
   x <- x$clone()
+  attributes(x) <- modifyList(attributes(x), attrs)
   add_tidypolars_class(x)
 }
 
@@ -186,7 +188,7 @@ modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
     inner_expr <- NULL
     fc <- lapply(fc, \(x) {
       foo <- eval_bare(x, env = caller_env)
-      if (! fun_name %in% c("DataFrame", "col", "lit")) {
+      if (! fun_name %in% c("DataFrame", "LazyFrame", "col", "lit")) {
         if (is.list(foo)) {
           inner_expr <- lapply(seq_along(foo), function(expr_idx) {
             parse_expr(attributes(foo[[expr_idx]])$polars_expression[[1]])

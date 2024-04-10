@@ -5,7 +5,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-test <- pl$LazyFrame(mtcars)
+test <- polars::pl$LazyFrame(mtcars)
 
 expect_equal_lazy(
   test |> group_by(am, cyl) |> ungroup() |> attributes() |> length(),

@@ -2,7 +2,8 @@
 "$.tidypolars" <- function(x, name) {
 
   # Do not overwrite those functions
-  whitelist <- c("shape", "schema", "height", "width", "columns", "set_optimization_toggle", "print")
+  whitelist <- c("shape", "schema", "height", "width", "columns",
+                 "set_optimization_toggle", "print", "clone")
   if (name %in% whitelist) {
     return(NextMethod("$"))
   }
