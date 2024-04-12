@@ -19,7 +19,13 @@
     abort("Internal error: don't know what environment to use.")
   )
 
-  fn_to_use <- modify_this_polars_function(env = env_to_use, fun_name = name, data = x, caller_env = ce)
+  fn_to_use <- modify_this_polars_function(
+    env = env_to_use,
+    env_name = class(x)[2],
+    fun_name = name,
+    data = x,
+    caller_env = ce
+  )
   fn_to_use
 }
 

@@ -39,7 +39,7 @@ check_same_class <- function(x, y, env = caller_env()) {
 }
 
 
-modify_this_polars_function <- function(env, fun_name, data, caller_env) {
+modify_this_polars_function <- function(env, env_name, fun_name, data, caller_env) {
   fun <- env[[fun_name]]
   function(...) {
     # Manually add the "self" argument, that will take the data from
@@ -60,6 +60,7 @@ modify_this_polars_function <- function(env, fun_name, data, caller_env) {
     fc1 <- fc[[1]]
     fc[[1]] <- NULL
     inner_expr <- NULL
+
     fc <- lapply(fc, \(x) {
       if (is.call(x)) {
         foo <- eval_bare(x, env = caller_env)
@@ -68,10 +69,26 @@ modify_this_polars_function <- function(env, fun_name, data, caller_env) {
           paste(collapse = "")
 
         if (!is.null(attrs) && attrs != "") {
-          parse_expr(attrs)
+          inner_expr <<- parse_expr(attrs)
+        }
+      } else if (deparse(x) == "...") {
+        if (length(fc) > 1) {
+          foo <- NULL
+        } else {
+          foo <- dots_list(...)
+          if (is.list(foo[[1]])) {
+            foo <- unlist(foo, recursive = FALSE)
+          }
+
+          attrs <- attributes(foo)$polars_expression |>
+            unlist() |>
+            paste(collapse = "")
+
+          if (!is.null(attrs) && attrs != "") {
+            inner_expr <<- parse_expr(attrs)
+          }
         }
       } else {
-        if (deparse(x) == "...") return(NULL)
         foo <- eval_bare(x, env = caller_env)
         if (fun_name %in%  c("filter", "with_columns")) {
           if (is.list(foo)) {
@@ -95,16 +112,16 @@ modify_this_polars_function <- function(env, fun_name, data, caller_env) {
           names(inner_expr) <- names(foo)
           inner_expr <<- inner_expr
         }
-        foo
       }
+      foo
     })
     fc <- drop_empty_unnamed(fc)
+    # if (fun_name == "select" && env_name == "RPolarsDataFrame") browser()
 
     # Prepare the call that will be stored in the attributes of the output so
     # that show_query() can access it.
-    args <- list2(...)
     if (!is.null(inner_expr)) {
-      full_call <- call2(fc1, !!!inner_expr)
+      full_call <- call2(fc1, !!!list(inner_expr))
     } else {
       full_call <- call2(fc1, !!!fc)
     }
@@ -167,6 +184,11 @@ modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
     return(out)
   }
 
+  dt <- names(polars:::pl$dtypes)
+  if (fun_name %in% dt) {
+    return(fun)
+  }
+
   function(...) {
 
     # Manually add the "self" argument, that will take the data from
@@ -217,7 +239,6 @@ modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
 
     # Prepare the call that will be stored in the attributes of the output so
     # that show_query() can access it.
-    args <- list2(...)
     if (!is.null(inner_expr)) {
       full_call <- call2(fc1, !!!inner_expr)
     } else {
