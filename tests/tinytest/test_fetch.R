@@ -7,8 +7,7 @@ expect_is_tidypolars(fetch(pl_iris_lazy, n_rows = 30))
 
 expect_equal(
   fetch(pl_iris_lazy, n_rows = 30),
-  iris[1:30, ],
-  check.attributes = FALSE
+  iris[1:30, ]
 )
 
 expect_equal(

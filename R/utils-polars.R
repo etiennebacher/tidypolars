@@ -94,29 +94,36 @@ modify_this_polars_function <- function(env, env_name, fun_name, data, caller_en
           if (is.list(foo)) {
             inner_expr <- lapply(seq_along(foo), function(expr_idx) {
               d <- attributes(foo[[expr_idx]])$polars_expression
-              gsub("^[^\\$]\\$", "$", d) |>
+              if (is.null(d)) return(d)
+              vapply(
+                seq_along(d),
+                \(x) if (x == 1) d[[x]] else gsub("^[^\\$]+\\$", "$", d[[x]]),
+                FUN.VALUE = character(1)
+              ) |>
                 paste(collapse = "") |>
                 parse_expr()
             })
           } else {
             attrs <- attributes(foo)$polars_expression
-            inner_expr <- lapply(seq_along(attrs), function(d) {
-              if (d == 1) return(attrs[[d]])
-              gsub("^[^\\$]\\$", "$", attrs[[d]])
-            }) |>
-              unlist() |>
-              paste(collapse = "") |>
-              parse_expr() |>
-              list()
+            if (!is.null(attrs)) {
+              inner_expr <- lapply(seq_along(attrs), function(d) {
+                if (d == 1) return(attrs[[d]])
+                gsub("^[^\\$]+\\$", "$", attrs[[d]])
+              }) |>
+                unlist() |>
+                paste(collapse = "") |>
+                parse_expr() |>
+                list()
+
+              names(inner_expr) <- names(foo)
+              inner_expr <<- inner_expr
+            }
           }
-          names(inner_expr) <- names(foo)
-          inner_expr <<- inner_expr
         }
       }
       foo
     })
     fc <- drop_empty_unnamed(fc)
-    # if (fun_name == "select" && env_name == "RPolarsDataFrame") browser()
 
     # Prepare the call that will be stored in the attributes of the output so
     # that show_query() can access it.
@@ -171,11 +178,12 @@ modify_this_polars_function <- function(env, env_name, fun_name, data, caller_en
 # This one should only be called from modify_env() and we will only use the
 # attributes of the output RPolarsExpr.
 
-modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
+modify_this_polars_expr <- function(env, env_name, fun_name, data, out, caller_env) {
   fun <- env[[fun_name]]
 
   subns <- c("bin", "cat", "dt", "meta", "str", "struct")
-  if (fun_name %in% subns) {
+  # if (fun_name == "struct") browser()
+  if (!is.na(env_name) && fun_name %in% subns) {
     fmls <- fn_fmls(fun)
     fmls[[length(fmls) + 1]] <- quote(expr = )
     names(fmls)[length(fmls)] <- "self"
@@ -186,7 +194,8 @@ modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
 
   dt <- names(polars:::pl$dtypes)
   if (fun_name %in% dt) {
-    return(fun)
+    attr(fun, "polars_expression") <- paste0("pl$", fun_name)
+    return(add_tidypolars_expr_class(fun))
   }
 
   function(...) {
@@ -208,6 +217,10 @@ modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
     fc1 <- fc[[1]]
     fc[[1]] <- NULL
     inner_expr <- NULL
+
+    # print(fun_name)
+    # if (fun_name == "root_names") browser()
+
     fc <- lapply(fc, \(x) {
       foo <- eval_bare(x, env = caller_env)
       if (! fun_name %in% c("DataFrame", "LazyFrame", "col", "lit")) {
@@ -223,7 +236,7 @@ modify_this_polars_expr <- function(env, fun_name, data, out, caller_env) {
           if (!is.null(attrs)) {
             inner_expr <- lapply(seq_along(attrs), function(d) {
               if (d == 1) return(attrs[[d]])
-              gsub("^[^\\$]\\$", "$", attrs[[d]])
+              gsub("^[^\\$]+\\$", "$", attrs[[d]])
             }) |>
               unlist() |>
               paste(collapse = "") |>

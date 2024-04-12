@@ -31,10 +31,11 @@
 
 #' @export
 "$.tidypolars_expr" <- function(x, name) {
-  subns <- c("bin", "cat", "dt", "meta", "str", "struct")
   out <- NULL
 
-  env_to_use <- if (name %in% ls(pl)) {
+  # Some methods are in "pl" and in "Expr", e.g implode(). "pl" is an environment
+  # while "Expr" is a simple class
+  env_to_use <- if (is.environment(x) && name %in% ls(pl)) {
     pl
   } else if (name == "then") {
     polars:::RPolarsWhen
@@ -49,14 +50,15 @@
     x <- attributes(x)$self
   }
 
-  # else if (name %in% subns) {
-  #   env_to_use <- NextMethod("$")
-  #   out <- NextMethod("$")
-  # }
-
-  # if (name == "is_in") browser()
   ce <- caller_env()
-  expr_to_use <- modify_this_polars_expr(env = env_to_use, fun_name = name, data = x, out = out, caller_env = ce)
+  expr_to_use <- modify_this_polars_expr(
+    env = env_to_use,
+    env_name = class(x)[2],
+    fun_name = name,
+    data = x,
+    out = out,
+    caller_env = ce
+  )
   expr_to_use
 }
 
@@ -112,6 +114,6 @@
   x$and(name)
 }
 
-"!.tidypolars_expr" <- function(x, name) {
-  x$not(name)
+"!.tidypolars_expr" <- function(x) {
+  x$not()
 }
