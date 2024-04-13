@@ -1,4 +1,4 @@
-#' @export
+#' @exportS3Method
 "$.tidypolars" <- function(x, name) {
 
   # Do not overwrite those functions
@@ -29,7 +29,7 @@
   fn_to_use
 }
 
-#' @export
+#' @exportS3Method
 "$.tidypolars_expr" <- function(x, name) {
   out <- NULL
 
@@ -62,6 +62,7 @@
   expr_to_use
 }
 
+#' @exportS3Method
 ">.tidypolars_expr" <- function(x, name) {
   if (inherits(x, "RPolarsExpr")) {
     x$gt(name)
@@ -70,6 +71,7 @@
   }
 }
 
+#' @exportS3Method
 ">=.tidypolars_expr" <- function(x, name) {
   if (inherits(x, "RPolarsExpr")) {
     x$gt_eq(name)
@@ -78,6 +80,7 @@
   }
 }
 
+#' @exportS3Method
 "<.tidypolars_expr" <- function(x, name) {
   if (inherits(x, "RPolarsExpr")) {
     x$lt(name)
@@ -86,6 +89,7 @@
   }
 }
 
+#' @exportS3Method
 "<=.tidypolars_expr" <- function(x, name) {
   if (inherits(x, "RPolarsExpr")) {
     x$lt_eq(name)
@@ -94,6 +98,7 @@
   }
 }
 
+#' @exportS3Method
 "==.tidypolars_expr" <- function(x, name) {
   if (inherits(x, "RPolarsExpr")) {
     x$eq(name)
@@ -102,6 +107,7 @@
   }
 }
 
+#' @exportS3Method
 "!=.tidypolars_expr" <- function(x, name) {
   if (inherits(x, "RPolarsExpr")) {
     x$neq(name)
@@ -110,6 +116,7 @@
   }
 }
 
+#' @exportS3Method
 "+.tidypolars_expr" <- function(x, name) {
   if (inherits(x, "RPolarsExpr")) {
     x$add(name)
@@ -118,6 +125,7 @@
   }
 }
 
+#' @exportS3Method
 "*.tidypolars_expr" <- function(x, name) {
   if (inherits(x, "RPolarsExpr")) {
     x$mul(name)
@@ -126,6 +134,7 @@
   }
 }
 
+#' @exportS3Method
 "-.tidypolars_expr" <- function(x, name) {
   if (inherits(x, "RPolarsExpr")) {
     x$sub(name)
@@ -134,6 +143,7 @@
   }
 }
 
+#' @exportS3Method
 "/.tidypolars_expr" <- function(x, name) {
   if (inherits(x, "RPolarsExpr")) {
     x$div(name)
@@ -142,6 +152,7 @@
   }
 }
 
+#' @exportS3Method
 "^.tidypolars_expr" <- function(x, name) {
   if (inherits(x, "RPolarsExpr")) {
     x$pow(name)
@@ -150,6 +161,7 @@
   }
 }
 
+#' @exportS3Method
 "|.tidypolars_expr" <- function(x, name) {
   if (inherits(x, "RPolarsExpr")) {
     x$or(name)
@@ -158,6 +170,7 @@
   }
 }
 
+#' @exportS3Method
 "&.tidypolars_expr" <- function(x, name) {
   if (inherits(x, "RPolarsExpr")) {
     x$and(name)
@@ -166,6 +179,7 @@
   }
 }
 
+#' @exportS3Method
 "!.tidypolars_expr" <- function(x) {
   if (inherits(x, "RPolarsExpr")) {
     x$not()
