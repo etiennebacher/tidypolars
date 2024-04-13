@@ -37,6 +37,7 @@ Suggests:
     rmarkdown,
     rstudioapi,
     tibble,
+    tinysnapshot,
     tinytest
 Remotes:
     markvanderloo/tinytest/pkg

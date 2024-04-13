@@ -4,10 +4,12 @@
 \alias{show_query.tidypolars}
 \title{Show the polars query equivalent to the tidyverse code}
 \usage{
-\method{show_query}{tidypolars}(x)
+\method{show_query}{tidypolars}(x, ...)
 }
 \arguments{
 \item{x}{A Polars Data/LazyFrame}
+
+\item{...}{Not used.}
 }
 \value{
 Prints the polars code in the console and invisibly returns the

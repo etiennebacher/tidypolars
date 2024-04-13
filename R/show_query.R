@@ -3,6 +3,7 @@
 #' This function converts the tidyverse query into Polars code.
 #'
 #' @inheritParams count.RPolarsDataFrame
+#' @param ... Not used.
 #'
 #' @return Prints the polars code in the console and invisibly returns the
 #' query as a character vector.
@@ -21,7 +22,7 @@
 #'
 #' query
 
-show_query.tidypolars <- function(x) {
+show_query.tidypolars <- function(x, ...) {
   attrs <- attributes(x)$polars_expression
   out <- lapply(seq_along(attrs), function(x) {
     e <- attrs[[x]]
