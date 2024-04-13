@@ -52,3 +52,42 @@ expect_snapshot_print(
       show_query()
   }
 )
+
+expect_snapshot_print(
+  label = "across_reused_vars",
+  {
+    mtcars |>
+      as_polars_df() |>
+      mutate(
+        across(.cols = contains("a"), mean),
+        cyl2 = cyl + carb
+      ) |>
+      show_query()
+  }
+)
+
+expect_snapshot_print(
+  label = "across_twice",
+  {
+    mtcars |>
+      as_polars_df() |>
+      mutate(
+        across(.cols = contains("a"), mean),
+        across(.cols = contains("y"), var)
+      ) |>
+      show_query()
+  }
+)
+
+expect_snapshot_print(
+  label = "by_arg",
+  {
+    mtcars |>
+      as_polars_df() |>
+      mutate(
+        across(.cols = contains("a"), mean),
+        .by = c(am, cyl)
+      ) |>
+      show_query()
+  }
+)
