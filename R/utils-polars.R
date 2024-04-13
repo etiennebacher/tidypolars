@@ -61,6 +61,9 @@ modify_this_polars_function <- function(env, env_name, fun_name, data, caller_en
     fc[[1]] <- NULL
     inner_expr <- NULL
 
+    # print(fun_name)
+    if (fun_name == "with_columns") browser()
+
     fc <- lapply(fc, \(x) {
       if (is.call(x)) {
         foo <- eval_bare(x, env = caller_env)
@@ -90,6 +93,7 @@ modify_this_polars_function <- function(env, env_name, fun_name, data, caller_en
         }
       } else {
         foo <- eval_bare(x, env = caller_env)
+        # browser()
         if (fun_name %in%  c("filter", "with_columns")) {
           if (is.list(foo)) {
             inner_expr <- lapply(seq_along(foo), function(expr_idx) {
@@ -114,11 +118,11 @@ modify_this_polars_function <- function(env, env_name, fun_name, data, caller_en
                 paste(collapse = "") |>
                 parse_expr() |>
                 list()
-
-              names(inner_expr) <- names(foo)
-              inner_expr <<- inner_expr
             }
           }
+
+          names(inner_expr) <- names(foo)
+          inner_expr <<- inner_expr
         }
       }
       foo
@@ -181,8 +185,7 @@ modify_this_polars_function <- function(env, env_name, fun_name, data, caller_en
 modify_this_polars_expr <- function(env, env_name, fun_name, data, out, caller_env) {
   fun <- env[[fun_name]]
 
-  subns <- c("bin", "cat", "dt", "meta", "str", "struct")
-  # if (fun_name == "struct") browser()
+  subns <- c("arr", "bin", "cat", "dt", "list", "meta", "str", "struct")
   if (!is.na(env_name) && fun_name %in% subns) {
     fmls <- fn_fmls(fun)
     fmls[[length(fmls) + 1]] <- quote(expr = )
@@ -219,7 +222,7 @@ modify_this_polars_expr <- function(env, env_name, fun_name, data, out, caller_e
     inner_expr <- NULL
 
     # print(fun_name)
-    # if (fun_name == "root_names") browser()
+    # if (fun_name == "lit") browser()
 
     fc <- lapply(fc, \(x) {
       foo <- eval_bare(x, env = caller_env)
@@ -265,7 +268,15 @@ modify_this_polars_expr <- function(env, env_name, fun_name, data, out, caller_e
     fc[["self"]] <- data
 
     if (is.null(out)) {
-      out <- call2(fun, !!!fc) |> eval_bare()
+      out <- call2(
+        fun,
+        !!!lapply(fc, \(x) {
+            if (inherits(x, "RPolarsDataType")) {
+              class(x) <- setdiff(class(x), "tidypolars_expr")
+            }
+            x
+          })
+        ) |> eval_bare()
     }
 
     # If the attribute to store the "pure" polars expressions already exists,
