@@ -99,8 +99,6 @@ mutate.RPolarsDataFrame <- function(
   to_drop <- list()
 
   polars_exprs <- translate_dots(.data = .data, ..., env = rlang::current_env())
-
-  print(polars_exprs)
   used <- c()
   orig_names <- names(.data)
 

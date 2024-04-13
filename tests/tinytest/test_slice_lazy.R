@@ -12,14 +12,12 @@ expect_is_tidypolars(slice_tail(pl_iris, n = 1))
 
 expect_equal_lazy(
   slice_head(pl_iris, n = 5),
-  head(iris, n = 5),
-  check.attributes = FALSE
+  head(iris, n = 5)
 )
 
 expect_equal_lazy(
   slice_tail(pl_iris, n = 5),
-  tail(iris, n = 5),
-  check.attributes = FALSE
+  tail(iris, n = 5)
 )
 
 # grouped head ----------------------------

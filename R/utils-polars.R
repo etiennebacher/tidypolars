@@ -25,6 +25,12 @@ add_tidypolars_expr_class <- function(x) {
   x
 }
 
+remove_tidypolars_expr_class <- function(x) {
+  if (inherits(x, "tidypolars_expr")) {
+    class(x) <- setdiff(class(x), "tidypolars_expr")
+  }
+  x
+}
 
 check_same_class <- function(x, y, env = caller_env()) {
   if (class(x) != class(y)) {
@@ -36,6 +42,10 @@ check_same_class <- function(x, y, env = caller_env()) {
       call = env
     )
   }
+}
+
+my_wrap_e <- function(x) {
+  add_tidypolars_expr_class(polars:::wrap_e(x))
 }
 
 
@@ -61,18 +71,19 @@ modify_this_polars_function <- function(env, env_name, fun_name, data, caller_en
     fc[[1]] <- NULL
     inner_expr <- NULL
 
-    # print(fun_name)
-    if (fun_name == "with_columns") browser()
-
     fc <- lapply(fc, \(x) {
       if (is.call(x)) {
         foo <- eval_bare(x, env = caller_env)
-        attrs <- attributes(foo)$polars_expression |>
-          unlist() |>
-          paste(collapse = "")
-
-        if (!is.null(attrs) && attrs != "") {
-          inner_expr <<- parse_expr(attrs)
+        attrs <- attributes(foo)$polars_expression
+        if (!is.null(attrs)) {
+          inner_expr <- lapply(seq_along(attrs), function(d) {
+            if (d == 1) return(attrs[[d]])
+            gsub("^[^\\$]+\\$", "$", attrs[[d]])
+          }) |>
+            unlist() |>
+            paste(collapse = "") |>
+            parse_expr()
+          inner_expr <<- inner_expr
         }
       } else if (deparse(x) == "...") {
         if (length(fc) > 1) {
@@ -116,8 +127,7 @@ modify_this_polars_function <- function(env, env_name, fun_name, data, caller_en
               }) |>
                 unlist() |>
                 paste(collapse = "") |>
-                parse_expr() |>
-                list()
+                parse_expr()
             }
           }
 
@@ -132,7 +142,10 @@ modify_this_polars_function <- function(env, env_name, fun_name, data, caller_en
     # Prepare the call that will be stored in the attributes of the output so
     # that show_query() can access it.
     if (!is.null(inner_expr)) {
-      full_call <- call2(fc1, !!!list(inner_expr))
+      if (is.language(inner_expr) && !is.list(inner_expr)) {
+        inner_expr <- list(inner_expr)
+      }
+      full_call <- call2(fc1, !!!inner_expr)
     } else {
       full_call <- call2(fc1, !!!fc)
     }
@@ -147,27 +160,33 @@ modify_this_polars_function <- function(env, env_name, fun_name, data, caller_en
     # If the attribute to store the "pure" polars expressions already exists,
     # we append the next expressions to it.
     attr_pl <- attr(data, "polars_expression")
-    if (is.null(attr_pl)) {
-      attr(out, "polars_expression") <- list(full_call)
-    } else {
-      attr(out, "polars_expression") <- attr_pl
 
-      # What happens when there are several calls chained together?
-      # For example, if the call is `dat$group_by(xxx)$agg(xxx)`, then the
-      # groupby() call is returned twice: once because its on the RHS of `$`,
-      # and once because it's on its LHS.
+    # "out" can be NULL when it is the output of sink/write functions (for now)
+    # https://github.com/pola-rs/r-polars/issues/1031
+    if (!is.null(out)) {
+      if (is.null(attr_pl)) {
+        attr(out, "polars_expression") <- list(full_call)
+      } else {
+        attr(out, "polars_expression") <- attr_pl
 
-      # Therefore, I count the number of `$` in the chain. If there are several,
-      # I remove everything before the last occurrence of `$agg()` because
-      # we only want to increment the list of calls with this last occurrence.
+        # What happens when there are several calls chained together?
+        # For example, if the call is `dat$group_by(xxx)$agg(xxx)`, then the
+        # groupby() call is returned twice: once because its on the RHS of `$`,
+        # and once because it's on its LHS.
 
-      n_dollars <- sum(gregexpr("\\$", full_call)[[1]] > 0)
-      if (n_dollars > 1) {
-        full_call <- gsub(paste0(".*(\\$", fun_name, ")"), "\\1", full_call)
+        # Therefore, I count the number of `$` in the chain. If there are several,
+        # I remove everything before the last occurrence of `$agg()` because
+        # we only want to increment the list of calls with this last occurrence.
+
+        n_dollars <- sum(gregexpr("\\$", full_call)[[1]] > 0)
+        if (n_dollars > 1) {
+          full_call <- gsub(paste0(".*(\\$", fun_name, ")"), "\\1", full_call)
+        }
+        attr(out, "polars_expression")[[length(attr_pl) + 1]] <- full_call
       }
-      attr(out, "polars_expression")[[length(attr_pl) + 1]] <- full_call
+
+      add_tidypolars_class(out)
     }
-    add_tidypolars_class(out)
   }
 }
 
@@ -243,8 +262,7 @@ modify_this_polars_expr <- function(env, env_name, fun_name, data, out, caller_e
             }) |>
               unlist() |>
               paste(collapse = "") |>
-              parse_expr() |>
-              list()
+              parse_expr()
           }
           names(inner_expr) <- names(foo)
         }
@@ -256,6 +274,9 @@ modify_this_polars_expr <- function(env, env_name, fun_name, data, out, caller_e
     # Prepare the call that will be stored in the attributes of the output so
     # that show_query() can access it.
     if (!is.null(inner_expr)) {
+      if (is.language(inner_expr) && !is.list(inner_expr)) {
+        inner_expr <- list(inner_expr)
+      }
       full_call <- call2(fc1, !!!inner_expr)
     } else {
       full_call <- call2(fc1, !!!fc)
@@ -306,6 +327,8 @@ modify_this_polars_expr <- function(env, env_name, fun_name, data, out, caller_e
       add_tidypolars_class(out)
     } else if (inherits(out, c("RPolarsExpr", "RPolarsWhen", "RPolarsThen", "RPolarsGroupBy", "RPolarsLazyGroupBy"))) {
       add_tidypolars_expr_class(out)
+    } else {
+      out
     }
   }
 }

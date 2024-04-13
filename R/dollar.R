@@ -63,57 +63,113 @@
 }
 
 ">.tidypolars_expr" <- function(x, name) {
-  x$gt(name)
+  if (inherits(x, "RPolarsExpr")) {
+    x$gt(name)
+  } else {
+    my_wrap_e(x)$gt(name)
+  }
 }
 
 ">=.tidypolars_expr" <- function(x, name) {
-  x$gt_eq(name)
+  if (inherits(x, "RPolarsExpr")) {
+    x$gt_eq(name)
+  } else {
+    my_wrap_e(x)$gt_eq(name)
+  }
 }
 
 "<.tidypolars_expr" <- function(x, name) {
-  x$lt(name)
+  if (inherits(x, "RPolarsExpr")) {
+    x$lt(name)
+  } else {
+    my_wrap_e(x)$lt(name)
+  }
 }
 
 "<=.tidypolars_expr" <- function(x, name) {
-  x$lt_eq(name)
+  if (inherits(x, "RPolarsExpr")) {
+    x$lt_eq(name)
+  } else {
+    my_wrap_e(x)$lt_eq(name)
+  }
 }
 
 "==.tidypolars_expr" <- function(x, name) {
-  x$eq(name)
+  if (inherits(x, "RPolarsExpr")) {
+    x$eq(name)
+  } else {
+    my_wrap_e(x)$eq(name)
+  }
 }
 
 "!=.tidypolars_expr" <- function(x, name) {
-  x$neq(name)
+  if (inherits(x, "RPolarsExpr")) {
+    x$neq(name)
+  } else {
+    my_wrap_e(x)$neq(name)
+  }
 }
 
 "+.tidypolars_expr" <- function(x, name) {
-  x$add(name)
+  if (inherits(x, "RPolarsExpr")) {
+    x$add(name)
+  } else {
+    my_wrap_e(x)$add(name)
+  }
 }
 
 "*.tidypolars_expr" <- function(x, name) {
-  x$mul(name)
+  if (inherits(x, "RPolarsExpr")) {
+    x$mul(name)
+  } else {
+    my_wrap_e(x)$mul(name)
+  }
 }
 
 "-.tidypolars_expr" <- function(x, name) {
-  x$sub(name)
+  if (inherits(x, "RPolarsExpr")) {
+    x$sub(name)
+  } else {
+    my_wrap_e(x)$sub(name)
+  }
 }
 
 "/.tidypolars_expr" <- function(x, name) {
-  x$div(name)
+  if (inherits(x, "RPolarsExpr")) {
+    x$div(name)
+  } else {
+    my_wrap_e(x)$div(name)
+  }
 }
 
 "^.tidypolars_expr" <- function(x, name) {
-  x$pow(name)
+  if (inherits(x, "RPolarsExpr")) {
+    x$pow(name)
+  } else {
+    my_wrap_e(x)$pow(name)
+  }
 }
 
 "|.tidypolars_expr" <- function(x, name) {
-  x$or(name)
+  if (inherits(x, "RPolarsExpr")) {
+    x$or(name)
+  } else {
+    my_wrap_e(x)$or(name)
+  }
 }
 
 "&.tidypolars_expr" <- function(x, name) {
-  x$and(name)
+  if (inherits(x, "RPolarsExpr")) {
+    x$and(name)
+  } else {
+    my_wrap_e(x)$and(name)
+  }
 }
 
 "!.tidypolars_expr" <- function(x) {
-  x$not()
+  if (inherits(x, "RPolarsExpr")) {
+    x$not()
+  } else {
+    NextMethod("!")
+  }
 }
