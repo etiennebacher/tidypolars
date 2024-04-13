@@ -17,7 +17,7 @@ expect_equal_lazy(
     mean_pl = mean(Petal.Length),
     foo = Sepal.Width + Petal.Width,
     env = rlang::current_env()
-  ),
+  ) |> rapply(remove_tidypolars_expr_class, how = "list"),
   list(
     pool_exprs_1 = list(
       x = pl$col("Sepal.Length") * 3,
@@ -30,7 +30,7 @@ expect_equal_lazy(
     pool_exprs_3 = list(
       mean_pl = pl$col("Petal.Length")$mean()
     )
-  )
+  ) |> rapply(remove_tidypolars_expr_class, how = "list")
 )
 
 expect_equal_lazy(
@@ -40,12 +40,12 @@ expect_equal_lazy(
     x = 2,
     x = NULL,
     env = rlang::current_env()
-  ),
+  ) |> rapply(remove_tidypolars_expr_class, how = "list"),
   list(
     pool_exprs_1 = list(x = pl$lit(1)),
     pool_exprs_2 = list(x = pl$lit(2)),
     pool_exprs_3 = list(x = NULL)
-  )
+  ) |> rapply(remove_tidypolars_expr_class, how = "list")
 )
 
 expect_equal_lazy(
@@ -55,12 +55,12 @@ expect_equal_lazy(
     x = "a",
     x = NULL,
     env = rlang::current_env()
-  ),
+  ) |> rapply(remove_tidypolars_expr_class, how = "list"),
   list(
     pool_exprs_1 = list(x = pl$lit(1)),
     pool_exprs_2 = list(x = pl$lit("a")),
     pool_exprs_3 = list(x = NULL)
-  )
+  ) |> rapply(remove_tidypolars_expr_class, how = "list")
 )
 
 expect_error_lazy(
