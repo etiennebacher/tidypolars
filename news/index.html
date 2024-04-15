@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,16 +55,16 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.7.0" id="tidypolars-070">tidypolars 0.7.0<a class="anchor" aria-label="anchor" href="#tidypolars-070"></a></h2>
 <p><code>tidypolars</code> requires <code>polars</code> &gt;= 0.16.0.</p>
 <div class="section level3">
-<h3 id="breaking-changes-and-deprecations-development-version">Breaking changes and deprecations<a class="anchor" aria-label="anchor" href="#breaking-changes-and-deprecations-development-version"></a></h3>
+<h3 id="breaking-changes-and-deprecations-0-7-0">Breaking changes and deprecations<a class="anchor" aria-label="anchor" href="#breaking-changes-and-deprecations-0-7-0"></a></h3>
 <ul><li><p><code>as_polars()</code> is now removed. It was deprecated in 0.6.0. Use <code><a href="https://rpolars.github.io/man/as_polars_df.html" class="external-link">as_polars_df()</a></code> or <code><a href="https://rpolars.github.io/man/as_polars_lf.html" class="external-link">as_polars_lf()</a></code> instead.</p></li>
 <li><p><code>to_r()</code> is now removed. It was deprecated in 0.6.0. Use <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> or <code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble()</a></code> instead.</p></li>
 <li><p>For consistency with <code>dplyr</code>, the behavior of <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code> will change in 0.8.0 as it will perform the lazy query <strong>and</strong> convert the result to a standard <code>data.frame</code>. For now, <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code> only throws a warning about this future change. It is recommended to use <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code> to only perform the query and get a Polars DataFrame as output (<a href="https://github.com/etiennebacher/tidypolars/issues/101" class="external-link">#101</a>).</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="new-features-0-7-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-7-0"></a></h3>
 <ul><li>
 <p>Several improvements and changes for <code><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/95" class="external-link">#95</a>):</p>
 <ul><li>
