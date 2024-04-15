@@ -28,6 +28,11 @@ expect_dim(
   c(28, 11)
 )
 
+expect_dim(
+  drop_na(pl_tmp),
+  c(28, 11)
+)
+
 expect_error(
   drop_na(pl_tmp, foo),
   "don't exist"
