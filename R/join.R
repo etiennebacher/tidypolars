@@ -28,7 +28,7 @@
 #' @param relationship Handling of the expected relationship between the keys of
 #' `x` and `y`. Must be one of the following:
 #' * `NULL`, the default, is equivalent to `"many-to-many"`. It doesn't expect
-#'   any relationship between x and y.
+#'   any relationship between `x` and `y`.
 #' * `"one-to-one"` expects each row in `x` to match at most 1 row in `y` and
 #'   each row in `y` to match at most 1 row in `x`.
 #' * `"one-to-many"` expects each row in `y` to match at most 1 row in `x`.

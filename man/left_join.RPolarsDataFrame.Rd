@@ -130,7 +130,7 @@ character vector of length 2.}
 \code{x} and \code{y}. Must be one of the following:
 \itemize{
 \item \code{NULL}, the default, is equivalent to \code{"many-to-many"}. It doesn't expect
-any relationship between x and y.
+any relationship between \code{x} and \code{y}.
 \item \code{"one-to-one"} expects each row in \code{x} to match at most 1 row in \code{y} and
 each row in \code{y} to match at most 1 row in \code{x}.
 \item \code{"one-to-many"} expects each row in \code{y} to match at most 1 row in \code{x}.
