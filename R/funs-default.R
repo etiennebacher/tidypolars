@@ -210,7 +210,8 @@ pl_ceiling <- function(x, ...) {
 }
 
 pl_coalesce <- function(..., default = NULL) {
-  pl$coalesce(clean_dots(...), default)
+  # pl$coalesce() doesn't accept a list
+  call2(pl$coalesce, !!!clean_dots(...), default) |> eval_bare()
 }
 
 # pl_consecutive_id <- function(...) {

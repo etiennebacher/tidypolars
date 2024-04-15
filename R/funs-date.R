@@ -222,12 +222,11 @@ pl_strftime <- function(x, ...) {
 pl_strptime <- function(string, format, tz = "", strict = TRUE, ...) {
   check_empty_dots(...)
   if (grepl("%(I|H|c|T|M|p|r|R|S|X|z)", format)) {
-    datatype = pl$Datetime("us", tz = tz)
+    dtype = pl$Datetime("us", tz = tz)
   } else {
-    datatype = pl$Date
+    dtype = pl$Date
   }
-  # TODO: polars 0.16.0: replace datatype by dtype
-  string$str$strptime(datatype = datatype, format = format, strict = strict)
+  string$str$strptime(dtype = dtype, format = format, strict = strict)
 }
 
 pl_timestamp <- function(x, ...) {

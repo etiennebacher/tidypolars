@@ -10,9 +10,8 @@ pl_paste0 <- function(..., collapse = NULL) {
 }
 
 pl_paste <- function(..., sep = " ", collapse = NULL) {
-  # pl$concat_str() doesn't support a list input, which is problematic since
-  # clean_dots() has to return a list
-  pl$concat_list(clean_dots(...))$list$join(separator = sep)
+  # pl$concat_str() doesn't support a list input
+  call2(pl$concat_str, !!!clean_dots(...), separator = sep) |> eval_bare()
 }
 
 pl_str_count <- function(string, pattern = "", ...) {
