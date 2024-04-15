@@ -12,7 +12,10 @@ test_df <- data.frame(
   YMD_HMS = ymd_hms(c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00", NA)),
   to_ymd_hms = c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00", NA),
   to_ymd_hm = c("2012-03-26 12:00", "2020-01-01 12:00", "2023-12-14 12:00", NA),
-  somedate = c("Jul 24 2014", "Dec 24 2015", "Jan 21 2016", NA)
+  somedate = c("Jul 24 2014", "Dec 24 2015", "Jan 21 2016", NA),
+  y = c(2020:2022, NA),
+  m = c(1, 2, 20, 3),
+  d = 1:4
 )
 
 test <- pl$DataFrame(test_df)
@@ -158,3 +161,23 @@ expect_equal(
 )
 
 # TODO: will be hard to check for accuracy for microseconds and nanoseconds
+
+# build date and datetimes
+
+expect_equal(
+  test |>
+    mutate(foo = make_date(year = y, m, d)) |>
+    pull(foo),
+  test_df |>
+    mutate(foo = make_date(year = y, m, d)) |>
+    pull(foo)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = make_date(year = y)) |>
+    pull(foo),
+  test_df |>
+    mutate(foo = make_date(year = y)) |>
+    pull(foo)
+)

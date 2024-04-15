@@ -122,6 +122,10 @@ pl_dnanoseconds <- function(x, ...) {
   pl$duration(nanoseconds = x)
 }
 
+pl_make_date <- function(year = 1970, month = 1, day = 1) {
+  pl$date(year = year, month = month, day = day)
+}
+
 # Periods --------------------------------------
 
 
