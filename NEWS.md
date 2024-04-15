@@ -1,5 +1,7 @@
 # tidypolars (development version)
 
+`tidypolars` requires `polars` >= 0.16.0.
+
 ## Breaking changes and deprecations
 
 * `as_polars()` is now removed. It was deprecated in 0.6.0. Use `as_polars_df()`
