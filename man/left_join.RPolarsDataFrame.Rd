@@ -18,7 +18,8 @@
   copy = NULL,
   suffix = c(".x", ".y"),
   ...,
-  keep = NULL
+  keep = NULL,
+  relationship = NULL
 )
 
 \method{right_join}{RPolarsDataFrame}(
@@ -28,7 +29,8 @@
   copy = NULL,
   suffix = c(".x", ".y"),
   ...,
-  keep = NULL
+  keep = NULL,
+  relationship = NULL
 )
 
 \method{full_join}{RPolarsDataFrame}(
@@ -38,7 +40,8 @@
   copy = NULL,
   suffix = c(".x", ".y"),
   ...,
-  keep = NULL
+  keep = NULL,
+  relationship = NULL
 )
 
 \method{inner_join}{RPolarsDataFrame}(
@@ -48,7 +51,8 @@
   copy = NULL,
   suffix = c(".x", ".y"),
   ...,
-  keep = NULL
+  keep = NULL,
+  relationship = NULL
 )
 
 \method{left_join}{RPolarsLazyFrame}(
@@ -58,7 +62,8 @@
   copy = NULL,
   suffix = c(".x", ".y"),
   ...,
-  keep = NULL
+  keep = NULL,
+  relationship = NULL
 )
 
 \method{right_join}{RPolarsLazyFrame}(
@@ -68,7 +73,8 @@
   copy = NULL,
   suffix = c(".x", ".y"),
   ...,
-  keep = NULL
+  keep = NULL,
+  relationship = NULL
 )
 
 \method{full_join}{RPolarsLazyFrame}(
@@ -78,7 +84,8 @@
   copy = NULL,
   suffix = c(".x", ".y"),
   ...,
-  keep = NULL
+  keep = NULL,
+  relationship = NULL
 )
 
 \method{inner_join}{RPolarsLazyFrame}(
@@ -88,7 +95,8 @@
   copy = NULL,
   suffix = c(".x", ".y"),
   ...,
-  keep = NULL
+  keep = NULL,
+  relationship = NULL
 )
 }
 \arguments{
@@ -117,6 +125,17 @@ these suffixes will be added to the output to disambiguate them. Should be a
 character vector of length 2.}
 
 \item{...}{Not used.}
+
+\item{relationship}{Handling of the expected relationship between the keys of
+\code{x} and \code{y}. Must be one of the following:
+\itemize{
+\item \code{NULL}, the default, is equivalent to \code{"many-to-many"}. It doesn't expect
+any relationship between \code{x} and \code{y}.
+\item \code{"one-to-one"} expects each row in \code{x} to match at most 1 row in \code{y} and
+each row in \code{y} to match at most 1 row in \code{x}.
+\item \code{"one-to-many"} expects each row in \code{y} to match at most 1 row in \code{x}.
+\item \code{"many-to-one"} expects each row in \code{x} matches at most 1 row in \code{y}.
+}}
 }
 \description{
 Mutating joins add columns from \code{y} to \code{x}, matching observations based on
@@ -157,5 +176,29 @@ test2 <- polars::pl$DataFrame(
 )
 
 left_join(test, test2, by = "x", suffix = c("_left", "_right"))
+
+# the argument "relationship" ensures the join matches the expectation
+country <- polars::pl$DataFrame(
+  iso = c("FRA", "DEU"),
+  value = 1:2
+)
+country
+
+country_year <- polars::pl$DataFrame(
+  iso = rep(c("FRA", "DEU"), each = 2),
+  year = rep(2019:2020, 2),
+  value2 = 3:6
+)
+country_year
+
+# We expect that each row in "x" matches only one row in "y" but, it's not
+# true as each row of "x" matches two rows of "y"
+tryCatch(
+  left_join(country, country_year, join_by(iso), relationship = "one-to-one"),
+  error = function(e) e
+)
+
+# A correct expectation would be "one-to-many":
+left_join(country, country_year, join_by(iso), relationship = "one-to-many")
 \dontshow{\}) # examplesIf}
 }
