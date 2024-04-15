@@ -51,15 +51,20 @@ test <- polars::pl$DataFrame(
   y = c(1, 2, 3),
   z = c(1, 2, 3)
 )
+
 test2 <- polars::pl$DataFrame(
   x = c(1, 2, 4),
   y = c(1, 2, 4),
   z2 = c(1, 2, 4)
 )
+
 test
+
 test2
+
 # only keep the rows of `test` that have matching keys in `test2`
 semi_join(test, test2, by = c("x", "y"))
+
 # only keep the rows of `test` that don't have matching keys in `test2`
 anti_join(test, test2, by = c("x", "y"))
 \dontshow{\}) # examplesIf}
