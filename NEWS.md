@@ -29,7 +29,7 @@
   is supported for now (#97).
   
 * Add support for several `lubridate` functions: `dweeks()`, `ddays()`, 
-  `dhours()`, `dminutes()`, `dseconds()`, `dmilliseconds()`.
+  `dhours()`, `dminutes()`, `dseconds()`, `dmilliseconds()`, `make_date()` (#107).
   
 * When a `polars` function called internally fails, the original error message
   is now displayed.

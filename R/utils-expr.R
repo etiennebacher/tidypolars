@@ -308,8 +308,11 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
            if (name %in% c(known_ops, user_defined)) {
              do.call(name, args)
            } else {
-             args[["__tidypolars__new_vars"]] <- as.list(new_vars)
-             args[["__tidypolars__env"]] <- env
+             accepted_args <- names(formals(name))
+             if ("..." %in% accepted_args) {
+               args[["__tidypolars__new_vars"]] <- as.list(new_vars)
+               args[["__tidypolars__env"]] <- env
+             }
              do.call(name, args)
            }
           },
