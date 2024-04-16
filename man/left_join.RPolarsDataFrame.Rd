@@ -19,6 +19,7 @@
   suffix = c(".x", ".y"),
   ...,
   keep = NULL,
+  na_matches = "na",
   relationship = NULL
 )
 
@@ -30,6 +31,7 @@
   suffix = c(".x", ".y"),
   ...,
   keep = NULL,
+  na_matches = "na",
   relationship = NULL
 )
 
@@ -41,6 +43,7 @@
   suffix = c(".x", ".y"),
   ...,
   keep = NULL,
+  na_matches = "na",
   relationship = NULL
 )
 
@@ -52,6 +55,7 @@
   suffix = c(".x", ".y"),
   ...,
   keep = NULL,
+  na_matches = "na",
   relationship = NULL
 )
 
@@ -63,6 +67,7 @@
   suffix = c(".x", ".y"),
   ...,
   keep = NULL,
+  na_matches = "na",
   relationship = NULL
 )
 
@@ -74,6 +79,7 @@
   suffix = c(".x", ".y"),
   ...,
   keep = NULL,
+  na_matches = "na",
   relationship = NULL
 )
 
@@ -85,6 +91,7 @@
   suffix = c(".x", ".y"),
   ...,
   keep = NULL,
+  na_matches = "na",
   relationship = NULL
 )
 
@@ -96,6 +103,7 @@
   suffix = c(".x", ".y"),
   ...,
   keep = NULL,
+  na_matches = "na",
   relationship = NULL
 )
 }
@@ -125,6 +133,17 @@ these suffixes will be added to the output to disambiguate them. Should be a
 character vector of length 2.}
 
 \item{...}{Not used.}
+
+\item{na_matches}{Should two \code{NA} values match?
+\itemize{
+\item \code{"na"}, the default, treats two \code{NA} values as equal.
+\item \code{"never"} treats two \code{NA} values as different and will never match them
+together or to any other values.
+}
+
+Note that when joining Polars Data/LazyFrames, \code{NaN} are always considered
+equal, no matter the value of \code{na_matches}. This differs from the original
+\code{dplyr} implementation.}
 
 \item{relationship}{Handling of the expected relationship between the keys of
 \code{x} and \code{y}. Must be one of the following:

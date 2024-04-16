@@ -99,3 +99,22 @@ expect_error(
   anti_join(test3, test4, by = join_by(x, y1 = y2)),
   "Can't name join expressions"
 )
+
+# argument "na_matches"
+
+pdf1 <- pl$DataFrame(a = c(1, NA, NA, NaN), val = 1:4)
+pdf2 <- pl$DataFrame(a = c(1, 2, NA, NaN), val2 = 5:8)
+
+expect_equal(
+  semi_join(pdf1, pdf2, "a") |>
+    pull(a),
+  c(1, NA, NA, NaN)
+)
+
+# TODO: uncomment when https://github.com/pola-rs/polars/issues/15685 is fixed
+# expect_equal(
+#   semi_join(pdf1, pdf2, "a", na_matches = "never") |>
+#     pull(a),
+#   c(1, NaN)
+# )
+

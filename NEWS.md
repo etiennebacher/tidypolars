@@ -1,5 +1,10 @@
 # tidypolars (development version)
 
+## New features
+
+* Add support for argument `na_matches` in all join functions (except 
+  `cross_join()` that doesn't need it) (#109).
+
 # tidypolars 0.7.0
 
 `tidypolars` requires `polars` >= 0.16.0.
