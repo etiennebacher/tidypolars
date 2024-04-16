@@ -279,7 +279,7 @@ out <- tribble(
 
 rows <- seq_len(nrow(out) %/% 3)
 kable(list(out[rows,], matrix(numeric(), nrow=0, ncol=1),
-           out[rows + rows, ], matrix(numeric(), nrow=0, ncol=1),
-           out[rows + rows + rows, ])) 
+           out[rows + length(rows), ], matrix(numeric(), nrow=0, ncol=1),
+           out[rows + length(rows) + length(rows), ])) 
 ```
 
