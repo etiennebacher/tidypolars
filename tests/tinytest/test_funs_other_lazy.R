@@ -39,5 +39,51 @@ expect_equal_lazy(
     )
 )
 
+# n_distinct
+
+test <- polars::pl$LazyFrame(x = c("a", "a", "b", "b"), y = c(1:3, NA))
+
+expect_error_lazy(
+  test |>
+    summarize(foo = n_distinct()),
+  "must be supplied"
+)
+
+expect_equal_lazy(
+  test |>
+    summarize(foo = n_distinct(y)) |>
+    pull(foo),
+  4
+)
+
+expect_equal_lazy(
+  test |>
+    summarize(foo = n_distinct(y, na.rm = TRUE)) |>
+    pull(foo),
+  3
+)
+
+expect_equal_lazy(
+  test |>
+    summarize(foo = n_distinct(y, x)) |>
+    pull(foo),
+  4
+)
+
+expect_equal_lazy(
+  test |>
+    summarize(foo = n_distinct(y), .by = x) |>
+    pull(foo),
+  c(2, 2)
+)
+
+expect_equal_lazy(
+  test |>
+    summarize(foo = n_distinct(y, na.rm = TRUE), .by = x) |>
+    pull(foo) |>
+    sort(),
+  c(1, 2)
+)
+
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

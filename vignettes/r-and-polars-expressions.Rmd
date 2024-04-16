@@ -241,6 +241,7 @@ out <- tribble(
   "`dplyr`", "`coalesce`",
   "`dplyr`", "`first`",
   "`dplyr`", "`if_else`",
+  "`dplyr`", "`n_distinct`",
   "`dplyr`", "`last`",
   "`stringr`", "`str_count`",
   "`stringr`", "`str_ends`",

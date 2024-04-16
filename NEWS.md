@@ -1,5 +1,10 @@
 # tidypolars (development version)
 
+## New features
+
+* Add support for `n_distinct()`.
+
+
 # tidypolars 0.7.0
 
 `tidypolars` requires `polars` >= 0.16.0.

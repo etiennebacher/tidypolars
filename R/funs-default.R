@@ -379,6 +379,23 @@ pl_drop_nulls <- function(x, ...) {
   x$drop_nulls()
 }
 
+pl_n_distinct <- function(..., na.rm = FALSE) {
+  dots <- clean_dots(...)
+  env <- env_from_dots(...)
+  if (length(dots) == 0) {
+    abort(
+      "`...` is absent, but must be supplied.",
+      call = env
+    )
+  }
+  dots <- pl$struct(dots)
+  if (isTRUE(na.rm)) {
+    dots$drop_nulls()$n_unique()
+  } else {
+    dots$n_unique()
+  }
+}
+
 pl_quantile <- function(x, ...) {
   check_empty_dots(...)
   x$quantile()
