@@ -433,55 +433,7 @@ return a Polars expression:</p>
 <tbody>
 <tr class="odd">
 <td align="left"><code>base</code></td>
-<td align="left"><code>acos</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>base</code></td>
-<td align="left"><code>asin</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>base</code></td>
-<td align="left"><code>atan</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>base</code></td>
-<td align="left"><code>ceiling</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>base</code></td>
-<td align="left"><code>cosh</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>base</code></td>
-<td align="left"><code>cumsum</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>base</code></td>
-<td align="left"><code>floor</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>base</code></td>
-<td align="left"><code>ifelse</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>base</code></td>
-<td align="left"><code>log10</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>base</code></td>
-<td align="left"><code>mean</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>base</code></td>
-<td align="left"><code>nchar</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>base</code></td>
-<td align="left"><code>paste</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>base</code></td>
-<td align="left"><code>round</code></td>
+<td align="left"><code>sin</code></td>
 </tr>
 <tr class="even">
 <td align="left"><code>base</code></td>
@@ -489,7 +441,15 @@ return a Polars expression:</p>
 </tr>
 <tr class="odd">
 <td align="left"><code>base</code></td>
+<td align="left"><code>sort</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>base</code></td>
 <td align="left"><code>sqrt</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>base</code></td>
+<td align="left"><code>strptime</code></td>
 </tr>
 <tr class="even">
 <td align="left"><code>base</code></td>
@@ -497,15 +457,31 @@ return a Polars expression:</p>
 </tr>
 <tr class="odd">
 <td align="left"><code>base</code></td>
+<td align="left"><code>tanh</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>base</code></td>
 <td align="left"><code>tolower</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>base</code></td>
+<td align="left"><code>toupper</code></td>
 </tr>
 <tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>which.min</code></td>
 </tr>
 <tr class="odd">
+<td align="left"><code>base</code></td>
+<td align="left"><code>which.max</code></td>
+</tr>
+<tr class="even">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>between</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>dplyr</code></td>
+<td align="left"><code>case_match</code></td>
 </tr>
 <tr class="even">
 <td align="left"><code>dplyr</code></td>
@@ -513,7 +489,15 @@ return a Polars expression:</p>
 </tr>
 <tr class="odd">
 <td align="left"><code>dplyr</code></td>
+<td align="left"><code>coalesce</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>dplyr</code></td>
 <td align="left"><code>first</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>dplyr</code></td>
+<td align="left"><code>group_keys</code></td>
 </tr>
 <tr class="even">
 <td align="left"><code>dplyr</code></td>
@@ -521,15 +505,33 @@ return a Polars expression:</p>
 </tr>
 <tr class="odd">
 <td align="left"><code>dplyr</code></td>
+<td align="left"><code>if_else</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>dplyr</code></td>
 <td align="left"><code>n</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>dplyr</code></td>
+<td align="left"><code>n_distinct</code></td>
 </tr>
 <tr class="even">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>last</code></td>
 </tr>
 <tr class="odd">
+<td align="left">
+<code>dplyr</code>/<code>stats</code>
+</td>
+<td align="left"><code>lag</code></td>
+</tr>
+<tr class="even">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>ddays</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>lubridate</code></td>
+<td align="left"><code>dhours</code></td>
 </tr>
 <tr class="even">
 <td align="left"><code>lubridate</code></td>
@@ -549,80 +551,32 @@ return a Polars expression:</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left"><code>base</code></td>
-<td align="left"><code>acosh</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>base</code></td>
-<td align="left"><code>atan</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>base</code></td>
-<td align="left"><code>cos</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>base</code></td>
-<td align="left"><code>cumsum</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>base</code></td>
-<td align="left"><code>grepl</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>base</code></td>
-<td align="left"><code>log10</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>base</code></td>
-<td align="left"><code>min</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>base</code></td>
-<td align="left"><code>paste</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>base</code></td>
-<td align="left"><code>sin</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>base</code></td>
-<td align="left"><code>sqrt</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>base</code></td>
-<td align="left"><code>tanh</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>base</code></td>
-<td align="left"><code>which.min</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>dplyr</code></td>
-<td align="left"><code>case_match</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>dplyr</code></td>
-<td align="left"><code>first</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>dplyr</code></td>
-<td align="left"><code>if_else</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>dplyr</code></td>
-<td align="left"><code>last</code></td>
-</tr>
-<tr class="odd">
 <td align="left"><code>lubridate</code></td>
-<td align="left"><code>dhours</code></td>
+<td align="left"><code>dminutes</code></td>
 </tr>
 <tr class="even">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>dseconds</code></td>
 </tr>
 <tr class="odd">
+<td align="left"><code>lubridate</code></td>
+<td align="left"><code>dweeks</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>lubridate</code></td>
+<td align="left"><code>make_date</code></td>
+</tr>
+<tr class="odd">
 <td align="left"><code>stats</code></td>
 <td align="left"><code>median</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>stats</code></td>
+<td align="left"><code>sd</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>stats</code></td>
+<td align="left"><code>var</code></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stringr</code></td>
@@ -630,7 +584,23 @@ return a Polars expression:</p>
 </tr>
 <tr class="odd">
 <td align="left"><code>stringr</code></td>
+<td align="left"><code>str_count</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>stringr</code></td>
+<td align="left"><code>str_ends</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>stringr</code></td>
 <td align="left"><code>str_extract</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>stringr</code></td>
+<td align="left"><code>str_extract_all</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>stringr</code></td>
+<td align="left"><code>str_length</code></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stringr</code></td>
@@ -638,7 +608,23 @@ return a Polars expression:</p>
 </tr>
 <tr class="odd">
 <td align="left"><code>stringr</code></td>
+<td align="left"><code>str_remove</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>stringr</code></td>
+<td align="left"><code>str_remove_all</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>stringr</code></td>
 <td align="left"><code>str_replace</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>stringr</code></td>
+<td align="left"><code>str_replace_all</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>stringr</code></td>
+<td align="left"><code>str_squish</code></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stringr</code></td>
@@ -646,7 +632,23 @@ return a Polars expression:</p>
 </tr>
 <tr class="odd">
 <td align="left"><code>stringr</code></td>
+<td align="left"><code>str_sub</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>stringr</code></td>
+<td align="left"><code>str_trim</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>stringr</code></td>
 <td align="left"><code>str_to_lower</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>stringr</code></td>
+<td align="left"><code>str_to_title</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>stringr</code></td>
+<td align="left"><code>str_to_upper</code></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stringr</code></td>
