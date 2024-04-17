@@ -87,7 +87,7 @@ expect_equal_lazy(
 
 # length
 
-test <- pl$LazyFrame(x = c("a", "a", "a", "b", "b"), y = c(1:4, NA))
+test <- polars::pl$LazyFrame(x = c("a", "a", "a", "b", "b"), y = c(1:4, NA))
 
 expect_equal_lazy(
   test |>
@@ -113,7 +113,7 @@ expect_equal_lazy(
 
 # unique
 
-test <- pl$LazyFrame(x = c("a", "a", "a", "b", "b"), y = c(2, 2, 3, 4, NA))
+test <- polars::pl$LazyFrame(x = c("a", "a", "a", "b", "b"), y = c(2, 2, 3, 4, NA))
 
 expect_error_lazy(
   test |>
@@ -145,7 +145,7 @@ expect_equal_lazy(
 
 # rev
 
-test <- pl$LazyFrame(x = c("a", "a", "a", "b", "b"), y = c(2, 2, 3, 4, NA))
+test <- polars::pl$LazyFrame(x = c("a", "a", "a", "b", "b"), y = c(2, 2, 3, 4, NA))
 
 expect_equal_lazy(
   test |>
@@ -180,6 +180,50 @@ expect_equal_lazy(
     mutate(foo = rev(y + 1), .by = x) |>
     pull(foo),
   c(4, 3, 3, NA, 5)
+)
+
+# all
+
+test <- polars::pl$LazyFrame(x = c(TRUE, FALSE, NA), y = c(TRUE, TRUE, NA))
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = all(x)) |>
+    pull(foo),
+  # we know it's FALSE because there's one FALSE in x, so the na.rm arg is irrelevant
+  c(FALSE, FALSE, FALSE)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = all(y)) |>
+    pull(foo),
+  c(NA, NA, NA)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = all(y, na.rm = TRUE)) |>
+    pull(foo),
+  c(TRUE, TRUE, TRUE)
+)
+
+# any
+
+test <- polars::pl$LazyFrame(x = c(FALSE, FALSE, NA), y = c(TRUE, TRUE, NA))
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = any(x)) |>
+    pull(foo),
+  c(NA, NA, NA)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = any(x, na.rm = TRUE)) |>
+    pull(foo),
+  c(FALSE, FALSE, FALSE)
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

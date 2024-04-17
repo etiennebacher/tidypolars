@@ -198,6 +198,8 @@ out <- tribble(
   "`base`",             "`abs`",
   "`base`",             "`acos`", 
   "`base`",             "`acosh`", 
+  "`base`",             "`all`",
+  "`base`",             "`any`",
   "`base`",             "`asin`",
   "`base`",             "`asinh`", 
   "`base`",             "`atan`", 

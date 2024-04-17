@@ -5,6 +5,52 @@ pl_abs <- function(x, ...) {
   x$abs()
 }
 
+pl_all <- function(..., na.rm = FALSE) {
+  dots <- clean_dots(...)
+  env <- env_from_dots(...)
+  x <- check_rowwise(...)
+  if (length(dots) == 0) {
+    abort(
+      "`...` is absent, but must be supplied.",
+      call = env
+    )
+  }
+  if (isTRUE(x$is_rowwise)) {
+    return(x$expr$list$eval(pl$element()$all())$explode())
+  }
+  if (length(dots) == 1) {
+    dots[[1]]$all(drop_nulls = na.rm)
+  } else {
+    abort(
+      "`all()` only works with one element in `...`",
+      call = env
+    )
+  }
+}
+
+pl_any <- function(..., na.rm = FALSE) {
+  dots <- clean_dots(...)
+  env <- env_from_dots(...)
+  x <- check_rowwise(...)
+  if (length(dots) == 0) {
+    abort(
+      "`...` is absent, but must be supplied.",
+      call = env
+    )
+  }
+  if (isTRUE(x$is_rowwise)) {
+    return(x$expr$list$eval(pl$element()$any())$explode())
+  }
+  if (length(dots) == 1) {
+    dots[[1]]$any(drop_nulls = na.rm)
+  } else {
+    abort(
+      "`any()` only works with one element in `...`",
+      call = env
+    )
+  }
+}
+
 pl_mean <- function(x, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x, ...)
@@ -70,30 +116,6 @@ pl_sd <- function(x, ddof = 1, ...) {
 pl_floor <- function(x, ...) {
   check_empty_dots(...)
   x$floor()
-}
-
-
-### NOTE: the behaviour of polars' all() and any() is equivalent to passing
-### na.rm = TRUE in R all() and any(). This is consistent with $sum() for example.
-
-pl_all <- function(x, ..., na.rm = FALSE) {
-  check_empty_dots(...)
-  x <- check_rowwise(x, ...)
-  if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$all())$explode()
-  } else {
-    x$expr$all()
-  }
-}
-
-pl_any <- function(x, ..., na.rm = FALSE) {
-  check_empty_dots(...)
-  x <- check_rowwise(x, ...)
-  if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$any())$explode()
-  } else {
-    x$expr$any()
-  }
 }
 
 pl_acos <- function(x, ...) {

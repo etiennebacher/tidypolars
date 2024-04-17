@@ -528,7 +528,7 @@ reorder_exprs <- function(exprs) {
 
 
 # Check rowwise when we have a named arg (e.g mean(c(x, y)))
-check_rowwise <- function(x, ...) {
+check_rowwise <- function(x = NULL, ...) {
   dots <- get_dots(...)
   is_rowwise <- dots[["__tidypolars__env"]]$is_rowwise
   if (is.list(x) && isTRUE(is_rowwise)) {
