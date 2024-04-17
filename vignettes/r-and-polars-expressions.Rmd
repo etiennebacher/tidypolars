@@ -221,6 +221,7 @@ out <- tribble(
   "`base`",             "`paste0`",
   "`base`",             "`paste`",
   "`base`",             "`rank`",
+  "`base`",             "`rev`",
   "`base`",             "`round`",
   "`base`",             "`sin`", 
   "`base`",             "`sinh`", 

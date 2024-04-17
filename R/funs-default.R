@@ -511,6 +511,10 @@ pl_pct_change <- function(x, ...) {
   x$pct_change()
 }
 
+pl_rev <- function(x) {
+  x$reverse()
+}
+
 pl_rolling_max <- function(x, ...) {
   check_empty_dots(...)
   x$rolling_max()

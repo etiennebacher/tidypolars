@@ -137,3 +137,43 @@ expect_equal(
     pull(foo),
   rep(1, 5)
 )
+
+
+# rev
+
+test <- pl$DataFrame(x = c("a", "a", "a", "b", "b"), y = c(2, 2, 3, 4, NA))
+
+expect_equal(
+  test |>
+    mutate(foo = rev(y)) |>
+    pull(foo),
+  c(NA, 4, 3, 2, 2)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = rev(x)) |>
+    pull(foo),
+  c("b", "b", "a", "a", "a")
+)
+
+expect_equal(
+  test |>
+    mutate(foo = rev(y), .by = x) |>
+    pull(foo),
+  c(3, 2, 2, NA, 4)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = rev(y), .by = c(x, y)) |>
+    pull(foo),
+  c(2, 2, 3, 4, NA)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = rev(y + 1), .by = x) |>
+    pull(foo),
+  c(4, 3, 3, NA, 5)
+)
