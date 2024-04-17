@@ -2,7 +2,7 @@
 
 ## New features
 
-* Add support for `n_distinct()`.
+* Add support for `dplyr::n_distinct()`, `length()` and `unique()`.
 
 
 # tidypolars 0.7.0

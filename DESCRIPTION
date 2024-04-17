@@ -23,7 +23,7 @@ Depends: R (>= 4.1.0)
 Imports: 
     dplyr,
     glue,
-    polars (>= 0.16.0),
+    polars (>= 0.16.1),
     rlang,
     tidyr,
     tidyselect,

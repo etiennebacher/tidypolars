@@ -85,5 +85,61 @@ expect_equal_lazy(
   c(1, 2)
 )
 
+# length
+
+test <- pl$LazyFrame(x = c("a", "a", "a", "b", "b"), y = c(1:4, NA))
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = length(y)) |>
+    pull(foo),
+  rep(5, 5)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = length(y), .by = x) |>
+    pull(foo),
+  c(3, 3, 3, 2, 2)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = length(y), .by = c(x, y)) |>
+    pull(foo),
+  rep(1, 5)
+)
+
+
+# unique
+
+test <- pl$LazyFrame(x = c("a", "a", "a", "b", "b"), y = c(2, 2, 3, 4, NA))
+
+expect_error_lazy(
+  test |>
+    mutate(foo = unique(y)),
+  "lengths don't match"
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = length(unique(y))) |>
+    pull(foo),
+  rep(4, 5)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = length(unique(y)), .by = x) |>
+    pull(foo),
+  rep(2, 5)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = length(unique(y)), .by = c(x, y)) |>
+    pull(foo),
+  rep(1, 5)
+)
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

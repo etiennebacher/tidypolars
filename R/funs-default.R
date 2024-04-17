@@ -344,6 +344,10 @@ pl_last <- function(x, ...) {
   x$last()
 }
 
+pl_length <- function(x) {
+  x$len()
+}
+
 pl_log <- function(x, ...) {
   check_empty_dots(...)
   x$log()
