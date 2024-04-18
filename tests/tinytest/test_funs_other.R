@@ -221,3 +221,28 @@ expect_equal(
     pull(foo),
   c(FALSE, FALSE, FALSE)
 )
+
+# round
+
+test <- polars::pl$DataFrame(x = c(0.33, 0.5212))
+
+expect_equal(
+  test |>
+    mutate(foo = round(x)) |>
+    pull(foo),
+  c(0, 1)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = round(x, 1)) |>
+    pull(foo),
+  c(0.3, 0.5)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = round(x, 3)) |>
+    pull(foo),
+  c(0.33, 0.521)
+)

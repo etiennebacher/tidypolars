@@ -29,13 +29,12 @@ for (i in c(
   "last", "log", "log10",
   "max", "mean", "median", "min",
   "rank",
-  "round",
   "sign",
   "sin", "sinh", "sort",  "sqrt", "sd", "tan", "tanh", "var"
 )) {
 
   if (i %in% c("acos", "asin", "atan", "atanh", "ceiling", "cos", "floor",
-               "round", "sin", "tan")) {
+               "sin", "tan")) {
 
     variable <- "value_trigo"
 

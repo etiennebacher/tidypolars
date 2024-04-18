@@ -207,12 +207,6 @@ pl_replace_time_zone <- function(x, ...) {
   x$dt$replace_time_zone()
 }
 
-pl_round <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$round()
-}
-
-
 pl_seconds <- function(x, ...) {
   check_empty_dots(...)
   x$dt$seconds()
