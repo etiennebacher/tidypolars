@@ -241,6 +241,7 @@ out <- tribble(
   "`dplyr`",            "`case_match`",
   "`dplyr`",            "`case_when`",
   "`dplyr`",            "`coalesce`",
+  "`dplyr`",            "`consecutive_id`",
   "`dplyr`",            "`first`",
   "`dplyr`",            "`group_keys`",
   "`dplyr`",            "`group_vars`",
