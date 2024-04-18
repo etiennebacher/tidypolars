@@ -236,9 +236,18 @@ pl_coalesce <- function(..., default = NULL) {
   call2(pl$coalesce, !!!clean_dots(...), default) |> eval_bare()
 }
 
-# pl_consecutive_id <- function(...) {
-#   check_empty_dots(...)
-# }
+pl_consecutive_id <- function(...) {
+  dots <- clean_dots(...)
+  env <- env_from_dots(...)
+  if (length(dots) == 0) {
+    abort(
+      "`...` is absent, but must be supplied.",
+      call = env
+    )
+  }
+  dots <- pl$struct(dots)
+  dots$rle_id() + 1
+}
 
 pl_cos <- function(x, ...) {
   check_empty_dots(...)

@@ -246,3 +246,32 @@ expect_equal(
     pull(foo),
   c(0.33, 0.521)
 )
+
+# consecutive_id
+
+test <- polars::pl$DataFrame(
+  x = c(3, 1, 2, 2, NA),
+  y = c(2, 2, 4, 4, 4),
+  grp = c("A", "A", "A", "B", "B")
+)
+
+expect_equal(
+  test |>
+    mutate(foo = consecutive_id(x)) |>
+    pull(foo),
+  c(1, 2, 3, 3, 4)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = consecutive_id(x, y)) |>
+    pull(foo),
+  c(1, 2, 3, 3, 4)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = consecutive_id(x), .by = grp) |>
+    pull(foo),
+  c(1, 2, 3, 1, 2)
+)
