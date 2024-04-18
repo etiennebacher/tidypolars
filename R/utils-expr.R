@@ -1,11 +1,17 @@
 #' @import rlang
 
-translate_dots <- function(.data, ..., env) {
+translate_dots <- function(.data, ..., env, caller) {
   dots <- enquos(...)
   dots <- lapply(dots, quo_squash)
   new_vars <- c()
   out <- lapply(seq_along(dots), \(x) {
-    tmp <- translate_expr(.data = .data, dots[[x]], new_vars = new_vars, env = env)
+    tmp <- translate_expr(
+      .data = .data,
+      dots[[x]],
+      new_vars = new_vars,
+      env = env,
+      caller = caller
+    )
     new_vars <<- c(new_vars, names(dots)[x])
     tmp
   })
@@ -30,7 +36,7 @@ translate_dots <- function(.data, ..., env) {
   out
 }
 
-translate_expr <- function(.data, quo, new_vars = NULL, env) {
+translate_expr <- function(.data, quo, new_vars = NULL, env, caller) {
 
   names_data <- names(.data)
 
@@ -88,7 +94,7 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
         if (expr_char %in% names_data || expr_char %in% unlist(new_vars)) {
           polars_col(expr_char)
         } else {
-          val <- eval_tidy(expr, env = env)
+          val <- eval_tidy(expr, env = caller)
           polars_constant(val)
         }
       },

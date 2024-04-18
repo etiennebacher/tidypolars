@@ -98,7 +98,12 @@ mutate.RPolarsDataFrame <- function(
   is_rowwise <- attributes(.data)$grp_type == "rowwise"
   to_drop <- list()
 
-  polars_exprs <- translate_dots(.data = .data, ..., env = rlang::current_env())
+  polars_exprs <- translate_dots(
+    .data = .data,
+    ...,
+    env = rlang::current_env(),
+    caller = rlang::caller_env()
+  )
 
   used <- c()
   orig_names <- names(.data)

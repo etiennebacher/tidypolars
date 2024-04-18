@@ -77,4 +77,18 @@ expect_equal_lazy(
 
 expect_is_tidypolars(summarize(pl_iris, x = mean(Sepal.Length), .by = Species))
 
+# works with a local variable defined in a function
+
+foobar <- function(x) {
+  local_var <- "a"
+  x |> summarize(foo = local_var)
+}
+
+test <- polars::pl$LazyFrame(chars = letters[1:3])
+
+expect_equal_lazy(
+  foobar(test),
+  data.frame(foo = "a")
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
