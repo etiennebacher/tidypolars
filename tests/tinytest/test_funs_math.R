@@ -5,13 +5,11 @@ test_df <- data.frame(
   x1 = c("a", "a", "b", "a", "c"),
   x2 = c(2, 1, 5, 3, 1),
   value = sample(1:5),
-  value_trigo = seq(0, 0.4, 0.1)
+  value_trigo = seq(0, 0.4, 0.1),
+  value_mix = -2:2
 )
 
 test <- pl$DataFrame(test_df)
-
-# auto <- r_polars_funs[!is.na(r_polars_funs$category), ]
-# auto$r_funs |> constructive::construct()
 
 for (i in c(
   "abs",
@@ -34,6 +32,8 @@ for (i in c(
 
     variable <- "value_trigo"
 
+  } else if (i %in% "abs") {
+    variable <- "value_mix"
   } else {
     variable <- "value"
   }
