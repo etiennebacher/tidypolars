@@ -160,7 +160,7 @@ pivot_wider.RPolarsDataFrame <- function(
 
   out <- if (!is.null(values_fill)) {
     new_data$with_columns(
-      pl$col(new_cols)$fill_null(values_fill)
+      pl$col(unlist(new_cols))$fill_null(values_fill)
     )
   } else {
     new_data

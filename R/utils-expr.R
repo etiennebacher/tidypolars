@@ -1,11 +1,17 @@
 #' @import rlang
 
-translate_dots <- function(.data, ..., env) {
+translate_dots <- function(.data, ..., env, caller) {
   dots <- enquos(...)
   dots <- lapply(dots, quo_squash)
   new_vars <- c()
   out <- lapply(seq_along(dots), \(x) {
-    tmp <- translate_expr(.data = .data, dots[[x]], new_vars = new_vars, env = env)
+    tmp <- translate_expr(
+      .data = .data,
+      dots[[x]],
+      new_vars = new_vars,
+      env = env,
+      caller = caller
+    )
     new_vars <<- c(new_vars, names(dots)[x])
     tmp
   })
@@ -30,7 +36,7 @@ translate_dots <- function(.data, ..., env) {
   out
 }
 
-translate_expr <- function(.data, quo, new_vars = NULL, env) {
+translate_expr <- function(.data, quo, new_vars = NULL, env, caller) {
 
   names_data <- names(.data)
 
@@ -88,7 +94,7 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
         if (expr_char %in% names_data || expr_char %in% unlist(new_vars)) {
           polars_col(expr_char)
         } else {
-          val <- eval_tidy(expr, env = env)
+          val <- eval_tidy(expr, env = caller)
           polars_constant(val)
         }
       },
@@ -308,8 +314,11 @@ translate_expr <- function(.data, quo, new_vars = NULL, env) {
            if (name %in% c(known_ops, user_defined)) {
              do.call(name, args)
            } else {
-             args[["__tidypolars__new_vars"]] <- as.list(new_vars)
-             args[["__tidypolars__env"]] <- env
+             accepted_args <- names(formals(name))
+             if ("..." %in% accepted_args) {
+               args[["__tidypolars__new_vars"]] <- as.list(new_vars)
+               args[["__tidypolars__env"]] <- env
+             }
              do.call(name, args)
            }
           },
@@ -525,7 +534,7 @@ reorder_exprs <- function(exprs) {
 
 
 # Check rowwise when we have a named arg (e.g mean(c(x, y)))
-check_rowwise <- function(x, ...) {
+check_rowwise <- function(x = NULL, ...) {
   dots <- get_dots(...)
   is_rowwise <- dots[["__tidypolars__env"]]$is_rowwise
   if (is.list(x) && isTRUE(is_rowwise)) {

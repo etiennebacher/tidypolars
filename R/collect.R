@@ -113,7 +113,7 @@ collect.RPolarsLazyFrame <- function(
 ) {
   if (isTRUE(verbose)) {
     rlang::warn(
-      "As of `tidypolars` 0.8.0, `collect()` will automatically convert the Polars DataFrame to a standard R data.frame. Use `compute()` instead (with the same arguments) to have a Polars DataFrame as output.\nUse `verbose = FALSE` to remove this warning."
+      "As of `tidypolars` 0.8.0, `collect()` will automatically convert the Polars DataFrame to a standard R data.frame. \nUse `compute()` instead (with the same arguments) to have a Polars DataFrame as output.\nUse `verbose = FALSE` to remove this warning."
     )
   }
   x |>

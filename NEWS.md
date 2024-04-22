@@ -1,5 +1,20 @@
 # tidypolars (development version)
 
+## New features
+
+* Add support for `all()`, `any()`, `diff()` `dplyr::consecutive_id()`,   
+  `dplyr::n_distinct()`, `length()`, `rev()`, `unique()`.
+
+## Bug fixes
+
+* Local variables in custom functions could not be used in tidypolars functions
+  (reported in a blog post of Art Steinmetz). This is now fixed.
+
+
+# tidypolars 0.7.0
+
+`tidypolars` requires `polars` >= 0.16.0.
+
 ## Breaking changes and deprecations
 
 * `as_polars()` is now removed. It was deprecated in 0.6.0. Use `as_polars_df()`
@@ -27,12 +42,16 @@
   is supported for now (#97).
   
 * Add support for several `lubridate` functions: `dweeks()`, `ddays()`, 
-  `dhours()`, `dminutes()`, `dseconds()`, `dmilliseconds()`.
+  `dhours()`, `dminutes()`, `dseconds()`, `dmilliseconds()`, `make_date()` (#107).
   
 * When a `polars` function called internally fails, the original error message
   is now displayed.
   
 * Add support for `group_split()` (for `DataFrame` only).
+
+* Add support for argument `relationship` in `left_join()`, `right_join()`, 
+  `full_join()` and `inner_join()` (#106).
+
 
 # tidypolars 0.6.0
 

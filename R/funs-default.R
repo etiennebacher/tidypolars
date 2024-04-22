@@ -5,6 +5,52 @@ pl_abs <- function(x, ...) {
   x$abs()
 }
 
+pl_all <- function(..., na.rm = FALSE) {
+  dots <- clean_dots(...)
+  env <- env_from_dots(...)
+  x <- check_rowwise(...)
+  if (length(dots) == 0) {
+    abort(
+      "`...` is absent, but must be supplied.",
+      call = env
+    )
+  }
+  if (isTRUE(x$is_rowwise)) {
+    return(x$expr$list$eval(pl$element()$all())$explode())
+  }
+  if (length(dots) == 1) {
+    dots[[1]]$all(drop_nulls = na.rm)
+  } else {
+    abort(
+      "`all()` only works with one element in `...`",
+      call = env
+    )
+  }
+}
+
+pl_any <- function(..., na.rm = FALSE) {
+  dots <- clean_dots(...)
+  env <- env_from_dots(...)
+  x <- check_rowwise(...)
+  if (length(dots) == 0) {
+    abort(
+      "`...` is absent, but must be supplied.",
+      call = env
+    )
+  }
+  if (isTRUE(x$is_rowwise)) {
+    return(x$expr$list$eval(pl$element()$any())$explode())
+  }
+  if (length(dots) == 1) {
+    dots[[1]]$any(drop_nulls = na.rm)
+  } else {
+    abort(
+      "`any()` only works with one element in `...`",
+      call = env
+    )
+  }
+}
+
 pl_mean <- function(x, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x, ...)
@@ -70,30 +116,6 @@ pl_sd <- function(x, ddof = 1, ...) {
 pl_floor <- function(x, ...) {
   check_empty_dots(...)
   x$floor()
-}
-
-
-### NOTE: the behaviour of polars' all() and any() is equivalent to passing
-### na.rm = TRUE in R all() and any(). This is consistent with $sum() for example.
-
-pl_all <- function(x, ..., na.rm = FALSE) {
-  check_empty_dots(...)
-  x <- check_rowwise(x, ...)
-  if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$all())$explode()
-  } else {
-    x$expr$all()
-  }
-}
-
-pl_any <- function(x, ..., na.rm = FALSE) {
-  check_empty_dots(...)
-  x <- check_rowwise(x, ...)
-  if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$any())$explode()
-  } else {
-    x$expr$any()
-  }
 }
 
 pl_acos <- function(x, ...) {
@@ -210,12 +232,22 @@ pl_ceiling <- function(x, ...) {
 }
 
 pl_coalesce <- function(..., default = NULL) {
-  pl$coalesce(clean_dots(...), default)
+  # pl$coalesce() doesn't accept a list
+  call2(pl$coalesce, !!!clean_dots(...), default) |> eval_bare()
 }
 
-# pl_consecutive_id <- function(...) {
-#   check_empty_dots(...)
-# }
+pl_consecutive_id <- function(...) {
+  dots <- clean_dots(...)
+  env <- env_from_dots(...)
+  if (length(dots) == 0) {
+    abort(
+      "`...` is absent, but must be supplied.",
+      call = env
+    )
+  }
+  dots <- pl$struct(dots)
+  dots$rle_id() + 1
+}
 
 pl_cos <- function(x, ...) {
   check_empty_dots(...)
@@ -252,9 +284,15 @@ pl_cumulative_eval <- function(x, ...) {
   x$cumulative_eval()
 }
 
-pl_diff <- function(x, ...) {
+pl_diff <- function(x, lag = 1, differences = 1, ...) {
   check_empty_dots(...)
-  x$diff()
+  if (!is.null(differences) && length(differences) == 1 && differences != 1) {
+    rlang::abort(
+      "polars doesn't support `diff()` if argument `differences` is not equal to 1.",
+      call = env_from_dots(...)
+    )
+  }
+  x$diff(n = lag, null_behavior = "drop")
 }
 
 pl_duplicated <- function(x, ...) {
@@ -343,6 +381,10 @@ pl_last <- function(x, ...) {
   x$last()
 }
 
+pl_length <- function(x) {
+  x$len()
+}
+
 pl_log <- function(x, ...) {
   check_empty_dots(...)
   x$log()
@@ -376,6 +418,23 @@ pl_fill_null <- function(x, ...) {
 pl_drop_nulls <- function(x, ...) {
   check_empty_dots(...)
   x$drop_nulls()
+}
+
+pl_n_distinct <- function(..., na.rm = FALSE) {
+  dots <- clean_dots(...)
+  env <- env_from_dots(...)
+  if (length(dots) == 0) {
+    abort(
+      "`...` is absent, but must be supplied.",
+      call = env
+    )
+  }
+  dots <- pl$struct(dots)
+  if (isTRUE(na.rm)) {
+    dots$drop_nulls()$n_unique()
+  } else {
+    dots$n_unique()
+  }
 }
 
 pl_quantile <- function(x, ...) {
@@ -487,6 +546,10 @@ pl_null_count <- function(x, ...) {
 pl_pct_change <- function(x, ...) {
   check_empty_dots(...)
   x$pct_change()
+}
+
+pl_rev <- function(x) {
+  x$reverse()
 }
 
 pl_rolling_max <- function(x, ...) {

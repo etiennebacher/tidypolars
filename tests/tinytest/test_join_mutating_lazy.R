@@ -139,6 +139,65 @@ expect_error_lazy(
   "must be of length 2"
 )
 
+# argument "relationship"
+
+expect_error_lazy(
+  left_join(test, test2, by = join_by(x, y), relationship = "foo"),
+  "must be one of"
+)
+
+country <- polars::pl$LazyFrame(
+  iso = c("FRA", "DEU"),
+  value = 1:2
+)
+
+country_year <- polars::pl$LazyFrame(
+  iso = rep(c("FRA", "DEU"), each = 2),
+  year = rep(2019:2020, 2),
+  value2 = 3:6
+)
+
+for (i in c(left_join, full_join, inner_join)) {
+  expect_error_lazy(
+    do.call(i, list(country, country_year, join_by(iso), relationship = "one-to-one")),
+    "did not fulfil 1:1 validation"
+  )
+
+  expect_error_lazy(
+    do.call(i, list(country, country_year, join_by(iso), relationship = "many-to-one")),
+    "did not fulfil m:1 validation"
+  )
+}
+
+expect_error_lazy(
+  right_join(country, country_year, join_by(iso), relationship = "one-to-one"),
+  "did not fulfil 1:1 validation"
+)
+
+expect_error_lazy(
+  right_join(country, country_year, join_by(iso), relationship = "one-to-many"),
+  "did not fulfil 1:m validation"
+)
+
+expect_equal_lazy(
+  left_join(country, country_year, join_by(iso), relationship = "one-to-many"),
+  data.frame(
+    iso = rep(c("FRA", "DEU"), each = 2),
+    value = c(1, 1, 2, 2),
+    year = rep(2019:2020, 2),
+    value2 = 3:6
+  )
+)
+
+expect_equal_lazy(
+  left_join(country, country_year, join_by(iso), relationship = "many-to-many"),
+  data.frame(
+    iso = rep(c("FRA", "DEU"), each = 2),
+    value = c(1, 1, 2, 2),
+    year = rep(2019:2020, 2),
+    value2 = 3:6
+  )
+)
 
 # input class
 
