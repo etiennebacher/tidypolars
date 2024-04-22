@@ -1,4 +1,31 @@
+#' Translate all expressions in `...`
+#'
+#' This is the first out of 3 steps. Here, we convert each expression passed in
+#' `...` to a quosure. Then we convert each of those expressions to the polars
+#' syntax using `translate_expr()`.
+#'
+#' Importantly, we keep the name of newly created variables so that they can
+#' be used in subsequent expressions in the same call of `mutate()` (or `filter()`,
+#' etc.).
+#'
+#' Finally, we reorder the expressions and create "pools of expressions". Polars
+#' cannot create a new variable `foo` and use it in another expression in the
+#' same `$with_columns()`. In `reorder_exprs()`, we split expressions to different
+#' sublists if they depend on newly created variables, so that we know how many
+#' `$with_columns()` calls we need to make in `mutate()`.
+#'
+#' @param .data The dataset
+#' @param ... The `...` containing all expressions by the user.
+#' @param env Environment of the function from which this expression is called
+#' (`filter()`, `mutate()` or `summarize()`).
+#' @param caller User environment in which the function is called.
+#'
 #' @import rlang
+#' @noRd
+#'
+#' @return A list of polars expressions. If some expressions depend on newly
+#' created variables, then the list will contains sublists, one per `$with_columns()`
+#' call to make.
 
 translate_dots <- function(.data, ..., env, caller) {
   dots <- enquos(...)
@@ -36,9 +63,30 @@ translate_dots <- function(.data, ..., env, caller) {
   out
 }
 
-translate_expr <- function(.data, quo, new_vars = NULL, env, caller) {
+#' Translate an expression
+#'
+#' This is the second step. It:
+#' - transforms expressions to an `rlang::expr`,
+#' - detects whether the call is a function or a scalar that can be translated
+#'   to a polars literal
+#' - unpacks the `across()` call to several separate expressions
+#'
+#' Then it calls `translate()` to translate each component to the polars syntax.
+#'
+#' @param .data The data from which it comes from. Useful to get the variable
+#' names for instance.
+#' @param quo Single quosure.
+#' @param new_vars Variables created in previous expressions. Required because
+#' if variable "foo" is created in previous expressions, then it becomes available
+#' for the current expression.
+#' @param env Environment of the function from which this expression is called
+#' (`filter()`, `mutate()` or `summarize()`).
+#' @param caller User environment in which the function is called.
+#'
+#' @return A full polars expression
+#' @noRd
 
-  names_data <- names(.data)
+translate_expr <- function(.data, quo, new_vars = NULL, env, caller) {
 
   if (!is_quosure(quo)) {
     quo <- enquo(quo)
@@ -60,299 +108,408 @@ translate_expr <- function(.data, quo, new_vars = NULL, env, caller) {
     expr <- unpack_across(.data, expr, env)
   }
 
-  translate <- function(expr, new_vars, env) {
+  # happens because across() calls get split earlier
+  if ((is.vector(expr) && length(expr) > 1) || is.list(expr)) {
+    lapply(
+      expr,
+      translate,
+      .data = .data,
+      new_vars = new_vars,
+      env = env,
+      caller = caller,
+      call_is_function = call_is_function
+    )
+  } else {
+    translate(
+      expr,
+      .data = .data,
+      new_vars = new_vars,
+      env = env,
+      caller = caller,
+      call_is_function = call_is_function
+    )
+  }
+}
 
-    # prepare function and arg if the user provided an anonymous function in
-    # across()
-    if (length(expr) == 1 && is.character(expr) &&
-        startsWith(expr, ".__tidypolars__across_fn")) {
-      col_name <- gsub(".__tidypolars__across_fn.*---", "", expr)
-      expr <- gsub("---.*", "", expr)
-      foo <- sym(expr)
-      expr <- enquo(foo)
-    }
 
-    switch(
-      typeof(expr),
+#' Recursively translate components of an expression
+#'
+#' This is the third step. This function takes an expression (or part of an
+#' expression) and decomposes it until there's nothing left to translate. For
+#' example `a %in% 1:3` would first call the translation for `%in%`, which itself
+#' calls the translation for `a` and `1:3` separately, so that we end up with
+#' `pl$col("a")$is_in(pl$lit(1:3))`.
+#'
+#' @param expr The expression to decompose
+#' @param .data The data from which it comes from. Useful to get the variable
+#' names for instance.
+#' @param new_vars Variables created in previous expressions. Required because
+#' if variable "foo" is created in previous expressions, then it becomes
+#' available for the current expression.
+#' @param env Environment of the function from which this expression is called
+#' (`filter()`, `mutate()` or `summarize()`).
+#' @param caller User environment in which the function is called.
+#' @param call_is_function Is the call a function? Needed to handle separately
+#' literals and argument values.
+#'
+#' @return A single component translated to polars syntax
+#' @noRd
 
-      "NULL" = return(list(NULL)),
+translate <- function(
+    expr,
+    .data,
+    new_vars,
+    env,
+    caller = NULL,
+    call_is_function = NULL
+) {
 
-      character = ,
-      logical = ,
-      integer = ,
-      double = {
-        # if call is a function, then the single value is a param, not a literal
-        if (call_is_function) {
-          return(expr)
-        } else {
-          polars_constant(expr)
-        }
-      },
+  names_data <- names(.data)
 
-      symbol = {
-        expr_char <- as.character(expr)
-        if (expr_char %in% names_data || expr_char %in% unlist(new_vars)) {
-          polars_col(expr_char)
-        } else {
-          val <- eval_tidy(expr, env = caller)
-          polars_constant(val)
-        }
-      },
+  # prepare function and arg if the user provided an anonymous function in
+  # across()
+  if (length(expr) == 1 && is.character(expr) &&
+      startsWith(expr, ".__tidypolars__across_fn")) {
+    col_name <- gsub(".__tidypolars__across_fn.*---", "", expr)
+    expr <- gsub("---.*", "", expr)
+    foo <- sym(expr)
+    expr <- enquo(foo)
+  }
 
-      language = {
-        name <- as.character(expr[[1]])
-        if (length(name) == 3 && name[[1]] == "::") {
-          # TODO
-          abort(
-            c(
-              "tidypolars doesn't work when expressions contain `<pkg>::`.",
-              "Use `library(<pkg>)` in your script instead."
-            ),
-            call = env
-          )
-        }
+  switch(
+    typeof(expr),
 
-        switch(
-          name,
-          # .data$ -> consider the RHS of $ as a classic column name
-          # .env$ -> eval the RHS of $ in the caller env
-          #
-          # Same thing with [[ but I pass the expressions in sym()
-          "[[" = {
-            first_term <- expr[[2]]
-            if (first_term == ".data") {
-              return(polars_col(expr[[3]]))
-            } else if (first_term == ".env") {
-              # TODO: "env" is the environment inside the mutate()/... call
-              # unsure why I can't just eval this with env_parent(env) to get the
-              # environment in which mutate() /... was called
-              out <- tryCatch(
-                eval_tidy(sym(expr[[3]]), env = caller_env(n = 8)),
-                error = function(e) {
-                  rlang::abort(e$message, call = env)
-                }
-              )
-              return(out)
-            }
-          } ,
-          "$" = {
-            first_term <- expr[[2]]
-            if (first_term == ".data") {
-              dep <- rlang::as_string(expr[[3]])
-              return(polars_col(dep))
-            } else if (first_term == ".env") {
-              # TODO: "env" is the environment inside the mutate()/... call
-              # unsure why I can't just eval this with env_parent(env) to get the
-              # environment in which mutate() /... was called
-              out <- tryCatch(
-                eval_tidy(expr[[3]], env = caller_env(n = 8)),
-                error = function(e) {
-                  rlang::abort(e$message, call = env)
-                }
-              )
-              return(out)
-            }
-          },
-          "(" = {
-            return(translate(expr[[2]]))
-          },
-          # these two case_ functions are handled separately from other funs
-          # because we don't want to evaluate the conditions inside too soon
-          "case_match" =  {
-            args <- call_args(expr)
-            args$.data <- .data
-            args[["__tidypolars__new_vars"]] <- as.list(new_vars)
-            args[["__tidypolars__env"]] <- env
-            return(do.call(pl_case_match, args))
-          },
-          "case_when" = {
-            args <- call_args(expr)
-            args$.data <- .data
-            args[["__tidypolars__new_vars"]] <- as.list(new_vars)
-            args[["__tidypolars__env"]] <- env
-            return(do.call(pl_case_when, args))
-          },
-          "c" = {
-            expr[[1]] <- NULL
-            if (
-              # we may pass a named vector in str_replace_all() for instance
-              !is.null(names(expr)) |
-              # we may pass a vector of column names
-              any(vapply(expr, is.symbol, FUN.VALUE = logical(1L)))
-            ) {
-              return(lapply(expr, translate))
-            }
-            return(polars_constant(unlist(expr)))
-          },
-          ":" = {
-            out <- tryCatch(eval_tidy(expr, env = caller_env()), error = identity)
-            return(out)
-          },
-          "%in%" = {
+    "NULL" = return(list(NULL)),
+
+    character = ,
+    logical = ,
+    integer = ,
+    double = {
+      # if call is a function, then the single value is a param, not a literal
+      if (call_is_function) {
+        return(expr)
+      } else {
+        polars_constant(expr)
+      }
+    },
+
+    symbol = {
+      expr_char <- as.character(expr)
+      if (expr_char %in% names_data || expr_char %in% unlist(new_vars)) {
+        polars_col(expr_char)
+      } else {
+        val <- eval_tidy(expr, env = caller)
+        polars_constant(val)
+      }
+    },
+
+    language = {
+      name <- as.character(expr[[1]])
+      if (length(name) == 3 && name[[1]] == "::") {
+        # TODO
+        abort(
+          c(
+            "tidypolars doesn't work when expressions contain `<pkg>::`.",
+            "Use `library(<pkg>)` in your script instead."
+          ),
+          call = env
+        )
+      }
+
+      switch(
+        name,
+        # .data$ -> consider the RHS of $ as a classic column name
+        # .env$ -> eval the RHS of $ in the caller env
+        #
+        # Same thing with [[ but I pass the expressions in sym()
+        "[[" = {
+          first_term <- expr[[2]]
+          if (first_term == ".data") {
+            return(polars_col(expr[[3]]))
+          } else if (first_term == ".env") {
+            # TODO: "env" is the environment inside the mutate()/... call
+            # unsure why I can't just eval this with env_parent(env) to get the
+            # environment in which mutate() /... was called
             out <- tryCatch(
-              {
-                lhs <- translate(expr[[2]], new_vars = new_vars, env = env)
-                rhs <- translate(expr[[3]], new_vars = new_vars, env = env)
-                if (is.list(rhs)) {
-                  rhs <- unlist(rhs)
-                }
-                lhs$is_in(rhs)
-              },
-              error = identity
+              eval_tidy(sym(expr[[3]]), env = caller_env(n = 8)),
+              error = function(e) {
+                rlang::abort(e$message, call = env)
+              }
             )
-            return(out)
-          },
-          "ifelse" = ,
-          "if_else" =  {
-            args <- call_args(expr)
-            args$.data <- .data
-            args[["__tidypolars__new_vars"]] <- as.list(new_vars)
-            args[["__tidypolars__env"]] <- env
-            return(do.call(pl_ifelse, args))
-          },
-          "is.na" = {
-            out <- tryCatch(
-              {
-                inside <- translate(expr[[2]], env = env)
-                inside$is_null()
-              },
-              error = identity
-            )
-            return(out)
-          },
-          "is.nan" = {
-            out <- tryCatch(
-              {
-                inside <- translate(expr[[2]], env = env)
-                inside$is_nan()
-              },
-              error = identity
-            )
-            return(out)
-          },
-
-          ### stringr functions
-          "fixed" = {
-            out <- expr[[2]]
-            attr(out, "stringr_attr") <- "fixed"
-            return(out)
-          },
-          "regex" = {
-            out <- select_by_name_or_position(expr, "pattern", 1, env = env)
-            case_insensitive <- select_by_name_or_position(
-              expr, "ignore_case", 2, default = FALSE, env = env
-            )
-            names_expr <- names(expr)
-            unexpected_names <- setdiff(names_expr[names_expr != ""], c("pattern", "ignore_case"))
-            if (length(unexpected_names) > 0) {
-              rlang::warn(
-                c(
-                  "tidypolars only supports the argument `ignore_case` in `regex()`.",
-                  "i" = paste("Unexpected argument(s):", toString(unexpected_names))
-                ),
-                call = env
-              )
-            }
-            attr(out, "case_insensitive") <- case_insensitive
             return(out)
           }
-        )
+        } ,
+        "$" = {
+          first_term <- expr[[2]]
+          if (first_term == ".data") {
+            dep <- rlang::as_string(expr[[3]])
+            return(polars_col(dep))
+          } else if (first_term == ".env") {
+            # TODO: "env" is the environment inside the mutate()/... call
+            # unsure why I can't just eval this with env_parent(env) to get the
+            # environment in which mutate() /... was called
+            out <- tryCatch(
+              eval_tidy(expr[[3]], env = caller_env(n = 8)),
+              error = function(e) {
+                rlang::abort(e$message, call = env)
+              }
+            )
+            return(out)
+          }
+        },
+        "(" = {
+          return(translate(
+            expr[[2]],
+            .data = .data,
+            new_vars = new_vars,
+            env = env,
+            caller = caller,
+            call_is_function = call_is_function
+          ))
+        },
+        # these two case_ functions are handled separately from other funs
+        # because we don't want to evaluate the conditions inside too soon
+        "case_match" =  {
+          args <- call_args(expr)
+          args$.data <- .data
+          args[["__tidypolars__new_vars"]] <- as.list(new_vars)
+          args[["__tidypolars__env"]] <- env
+          return(do.call(pl_case_match, args))
+        },
+        "case_when" = {
+          args <- call_args(expr)
+          args$.data <- .data
+          args[["__tidypolars__new_vars"]] <- as.list(new_vars)
+          args[["__tidypolars__env"]] <- env
+          return(do.call(pl_case_when, args))
+        },
+        "c" = {
+          expr[[1]] <- NULL
+          if (
+            # we may pass a named vector in str_replace_all() for instance
+            !is.null(names(expr)) |
+            # we may pass a vector of column names
+            any(vapply(expr, is.symbol, FUN.VALUE = logical(1L)))
+          ) {
+            return(lapply(
+              expr,
+              translate,
+              .data = .data,
+              new_vars = new_vars,
+              env = env,
+              caller = caller,
+              call_is_function = call_is_function
+            ))
+          }
+          return(polars_constant(unlist(expr)))
+        },
+        ":" = {
+          out <- tryCatch(eval_tidy(expr, env = caller_env()), error = identity)
+          return(out)
+        },
+        "%in%" = {
+          out <- tryCatch(
+            {
+              lhs <- translate(
+                expr[[2]],
+                .data = .data,
+                new_vars = new_vars,
+                env = env,
+                caller = caller,
+                call_is_function = call_is_function
+              )
+              rhs <- translate(
+                expr[[3]],
+                .data = .data,
+                new_vars = new_vars,
+                env = env,
+                caller = caller,
+                call_is_function = call_is_function
+              )
+              if (is.list(rhs)) {
+                rhs <- unlist(rhs)
+              }
+              lhs$is_in(rhs)
+            },
+            error = identity
+          )
+          return(out)
+        },
+        "ifelse" = ,
+        "if_else" =  {
+          args <- call_args(expr)
+          args$.data <- .data
+          args[["__tidypolars__new_vars"]] <- as.list(new_vars)
+          args[["__tidypolars__env"]] <- env
+          return(do.call(pl_ifelse, args))
+        },
+        "is.na" = {
+          out <- tryCatch(
+            {
 
-        is_known <- is_function_known(name)
-        known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
-                       "&", "|", "!")
-        user_defined <- get_globenv_functions()
+              inside <- translate(
+                expr[[2]],
+                .data = .data,
+                new_vars = new_vars,
+                env = env,
+                caller = caller,
+                call_is_function = call_is_function
+              )
+              inside$is_null()
+            },
+            error = identity
+          )
+          return(out)
+        },
+        "is.nan" = {
+          out <- tryCatch(
+            {
+              inside <- translate(
+                expr[[2]],
+                .data = .data,
+                new_vars = new_vars,
+                env = env,
+                caller = caller,
+                call_is_function = call_is_function
+              )
+              inside$is_nan()
+            },
+            error = identity
+          )
+          return(out)
+        },
 
-        if (!missing(env) && isTRUE(env$is_rowwise)) {
-          shortlist <- c("mean", "median", "min", "max", "sum", "all", "any")
-          if (!name %in% shortlist) {
-            rlang::abort(
+        ### stringr functions
+        "fixed" = {
+          out <- expr[[2]]
+          attr(out, "stringr_attr") <- "fixed"
+          return(out)
+        },
+        "regex" = {
+          out <- select_by_name_or_position(expr, "pattern", 1, env = env)
+          case_insensitive <- select_by_name_or_position(
+            expr, "ignore_case", 2, default = FALSE, env = env
+          )
+          names_expr <- names(expr)
+          unexpected_names <- setdiff(names_expr[names_expr != ""], c("pattern", "ignore_case"))
+          if (length(unexpected_names) > 0) {
+            rlang::warn(
               c(
-                "x" = paste0("Can't use function `", name, "()` in rowwise mode."),
-                "i" = "For now, `rowwise()` only works on the following functions:",
-                "i" = "`mean()`, `median()`, `min()`, `max()`, `sum()`, `all()`, `any()`"
+                "tidypolars only supports the argument `ignore_case` in `regex()`.",
+                "i" = paste("Unexpected argument(s):", toString(unexpected_names))
               ),
               call = env
             )
           }
+          attr(out, "case_insensitive") <- case_insensitive
+          return(out)
         }
-
-        # If unknown function:
-        # - either anonymous function called in across()
-        # - or undefined function (typo, not run in the global env, etc.)
-
-        if (!is_known && !(name %in% c(known_ops, user_defined))) {
-          obj_name <- quo_name(expr)
-          if (startsWith(obj_name, ".__tidypolars__across_fn")) {
-            fn <- eval_bare(global_env()[[obj_name]])
-            col_name <- sym(col_name)
-            args <- translate(col_name, env = env)
-            suppressWarnings({
-              tr <- try(do.call(fn, list(args)), silent = TRUE)
-            })
-            if (inherits(tr, "RPolarsExpr")) {
-              return(tr)
-            } else {
-              abort(
-                c("Could not evaluate an anonymous function in `across()`.",
-                  "i" = "Are you sure the anonymous function returns a Polars expression?"),
-                call = env
-              )
-            }
-          } else {
-            abort(paste("Unknown function:", name), call = env)
-          }
-        }
-
-        args <- lapply(as.list(expr[-1]), translate, new_vars = new_vars, env = env)
-        if (is_known) {
-          name <- paste0("pl_", name)
-        }
-
-        tryCatch(
-          {
-           if (name %in% c(known_ops, user_defined)) {
-             do.call(name, args)
-           } else {
-             accepted_args <- names(formals(name))
-             if ("..." %in% accepted_args) {
-               args[["__tidypolars__new_vars"]] <- as.list(new_vars)
-               args[["__tidypolars__env"]] <- env
-             }
-             do.call(name, args)
-           }
-          },
-          error = function(e) {
-            if (!inherits(e, "tidypolars_error")) {
-              orig_name <- gsub("^pl_", "", name)
-              abort(
-                c(
-                  paste0("Couldn't evaluate function `", orig_name, "()` in Polars."),
-                  "x" = toupper_first(conditionMessage(e))
-                ),
-                call = env
-              )
-            } else {
-              abort(e$message, call = env)
-            }
-          }
-        )
-      },
-
-      abort(
-        paste("Internal: Unknown type", typeof(expr)),
-        call = env
       )
-    )
-  }
 
-  # happens because across() calls get split earlier
-  if ((is.vector(expr) && length(expr) > 1) || is.list(expr)) {
-    lapply(expr, translate, new_vars = new_vars, env = env)
-  } else {
-    translate(expr, new_vars = new_vars, env = env)
-  }
+      is_known <- is_function_known(name)
+      known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
+                     "&", "|", "!")
+      user_defined <- get_globenv_functions()
+
+      if (!missing(env) && isTRUE(env$is_rowwise)) {
+        shortlist <- c("mean", "median", "min", "max", "sum", "all", "any", "!")
+        if (!name %in% shortlist) {
+          rlang::abort(
+            c(
+              "x" = paste0("Can't use function `", name, "()` in rowwise mode."),
+              "i" = "For now, `rowwise()` only works on the following functions:",
+              "i" = "`mean()`, `median()`, `min()`, `max()`, `sum()`, `all()`, `any()`"
+            ),
+            call = env
+          )
+        }
+      }
+
+      # If unknown function:
+      # - either anonymous function called in across()
+      # - or undefined function (typo, not run in the global env, etc.)
+
+      if (!is_known && !(name %in% c(known_ops, user_defined))) {
+        obj_name <- quo_name(expr)
+        if (startsWith(obj_name, ".__tidypolars__across_fn")) {
+          fn <- eval_bare(global_env()[[obj_name]])
+          col_name <- sym(col_name)
+          args <- translate(
+            col_name,
+            .data = .data,
+            env = env,
+            new_vars = new_vars,
+            caller = caller,
+            call_is_function = call_is_function
+          )
+
+          suppressWarnings({
+            tr <- try(do.call(fn, list(args)), silent = TRUE)
+          })
+          if (inherits(tr, "RPolarsExpr")) {
+            return(tr)
+          } else {
+            abort(
+              c("Could not evaluate an anonymous function in `across()`.",
+                "i" = "Are you sure the anonymous function returns a Polars expression?"),
+              call = env
+            )
+          }
+        } else {
+          abort(paste("Unknown function:", name), call = env)
+        }
+      }
+
+      args <- lapply(
+        as.list(expr[-1]),
+        translate,
+        .data = .data,
+        new_vars = new_vars,
+        env = env,
+        caller = caller,
+        call_is_function = call_is_function
+      )
+      if (is_known) {
+        name <- paste0("pl_", name)
+      }
+
+      tryCatch(
+        {
+          if (name %in% c(known_ops, user_defined)) {
+            do.call(name, args)
+          } else {
+            accepted_args <- names(formals(name))
+            if ("..." %in% accepted_args) {
+              args[["__tidypolars__new_vars"]] <- as.list(new_vars)
+              args[["__tidypolars__env"]] <- env
+            }
+            do.call(name, args)
+          }
+        },
+        error = function(e) {
+          if (!inherits(e, "tidypolars_error")) {
+            orig_name <- gsub("^pl_", "", name)
+            abort(
+              c(
+                paste0("Couldn't evaluate function `", orig_name, "()` in Polars."),
+                "x" = toupper_first(conditionMessage(e))
+              ),
+              call = env
+            )
+          } else {
+            abort(e$message, call = env)
+          }
+        }
+      )
+    },
+
+    abort(
+      paste("Internal: Unknown type", typeof(expr)),
+      call = env
+    )
+  )
 }
+
 
 polars_constant <- function(x) {
   polars::pl$lit(x)
