@@ -227,11 +227,8 @@ translate <- function(
           if (first_term == ".data") {
             return(polars_col(expr[[3]]))
           } else if (first_term == ".env") {
-            # TODO: "env" is the environment inside the mutate()/... call
-            # unsure why I can't just eval this with env_parent(env) to get the
-            # environment in which mutate() /... was called
             out <- tryCatch(
-              eval_tidy(sym(expr[[3]]), env = caller_env(n = 8)),
+              eval_tidy(sym(expr[[3]]), env = caller),
               error = function(e) {
                 rlang::abort(e$message, call = env)
               }
@@ -245,11 +242,8 @@ translate <- function(
             dep <- rlang::as_string(expr[[3]])
             return(polars_col(dep))
           } else if (first_term == ".env") {
-            # TODO: "env" is the environment inside the mutate()/... call
-            # unsure why I can't just eval this with env_parent(env) to get the
-            # environment in which mutate() /... was called
             out <- tryCatch(
-              eval_tidy(expr[[3]], env = caller_env(n = 8)),
+              eval_tidy(expr[[3]], env = caller),
               error = function(e) {
                 rlang::abort(e$message, call = env)
               }
