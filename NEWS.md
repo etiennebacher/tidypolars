@@ -2,7 +2,7 @@
 
 ## New features
 
-* Add support for `all()`, `any()`, `dplyr::consecutive_id()`,   
+* Add support for `all()`, `any()`, `diff()` `dplyr::consecutive_id()`,   
   `dplyr::n_distinct()`, `length()`, `rev()`, `unique()`.
 
 ## Bug fixes

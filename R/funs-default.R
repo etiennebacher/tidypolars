@@ -284,9 +284,15 @@ pl_cumulative_eval <- function(x, ...) {
   x$cumulative_eval()
 }
 
-pl_diff <- function(x, ...) {
+pl_diff <- function(x, lag = 1, differences = 1, ...) {
   check_empty_dots(...)
-  x$diff()
+  if (!is.null(differences) && length(differences) == 1 && differences != 1) {
+    rlang::abort(
+      "polars doesn't support `diff()` if argument `differences` is not equal to 1.",
+      call = env_from_dots(...)
+    )
+  }
+  x$diff(n = lag, null_behavior = "drop")
 }
 
 pl_duplicated <- function(x, ...) {

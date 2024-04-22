@@ -60,3 +60,30 @@ expect_warning(
   test |> mutate(x = sample(x2, prob = 0.5)),
   "will not be used: `prob`"
 )
+
+# diff
+
+expect_equal(
+  test |>
+    summarize(foo = diff(value)) |>
+    pull(foo),
+  test_df |>
+    summarize(foo = diff(value)) |>
+    pull(foo) |>
+    suppressWarnings()
+)
+
+expect_equal(
+  test |>
+    summarize(foo = diff(value, lag = 2)) |>
+    pull(foo),
+  test_df |>
+    summarize(foo = diff(value, lag = 2)) |>
+    pull(foo) |>
+    suppressWarnings()
+)
+
+expect_error(
+  test |> summarize(foo = diff(value, differences = 2)),
+  "doesn't support"
+)

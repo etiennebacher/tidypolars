@@ -65,4 +65,31 @@ expect_warning(
   "will not be used: `prob`"
 )
 
+# diff
+
+expect_equal_lazy(
+  test |>
+    summarize(foo = diff(value)) |>
+    pull(foo),
+  test_df |>
+    summarize(foo = diff(value)) |>
+    pull(foo) |>
+    suppressWarnings()
+)
+
+expect_equal_lazy(
+  test |>
+    summarize(foo = diff(value, lag = 2)) |>
+    pull(foo),
+  test_df |>
+    summarize(foo = diff(value, lag = 2)) |>
+    pull(foo) |>
+    suppressWarnings()
+)
+
+expect_error_lazy(
+  test |> summarize(foo = diff(value, differences = 2)),
+  "doesn't support"
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
