@@ -31,6 +31,17 @@ pl_str_detect <- function(string, pattern, negate = FALSE, ...) {
   }
 }
 
+pl_str_dup <- function(string, times) {
+  if (inherits(times, "RPolarsExpr")) {
+    return(string$repeat_by(times)$list$join(""))
+  } else if (is.na(times) || times < 0) {
+    return(NA_character_)
+  } else if (times == 0) {
+    return(pl$lit(""))
+  }
+  call2(pl$concat_str, !!!rep(list(string), times)) |> eval_bare()
+}
+
 pl_str_ends <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
   pattern <- check_pattern(pattern)

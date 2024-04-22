@@ -14,7 +14,8 @@ test_df <- data.frame(
   x7 = c("Jane saw a cat", "Jane sat down"),
   x8 = c("Jane-saw-a-cat", "Jane-sat-down"),
   x9 = c(" Some text    with ws   ", "and more     white   space  "),
-  x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons")
+  x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
+  n = 1:2
 )
 
 test <- pl$DataFrame(test_df)
@@ -628,4 +629,55 @@ expect_warning(
   mutate(test, foo = str_detect(x1, regex("hello", ignore_case = TRUE, multiline = TRUE))),
   "tidypolars only supports the argument `ignore_case` in `regex()`.",
   fixed = TRUE
+)
+
+# dup ---------------------------------------------------------
+
+expect_equal(
+  mutate(test, foo = str_dup(x1, 5)) |>
+    pull(foo),
+  mutate(test_df, foo = str_dup(x1, 5)) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = str_dup(x1, 0)) |>
+    pull(foo),
+  mutate(test_df, foo = str_dup(x1, 0)) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = str_dup(x1, -1)) |>
+    pull(foo),
+  mutate(test_df, foo = str_dup(x1, -1)) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = str_dup(x1, NA)) |>
+    pull(foo),
+  mutate(test_df, foo = str_dup(x1, NA)) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = str_dup(x1, c(1, 2))) |>
+    pull(foo),
+  mutate(test_df, foo = str_dup(x1, c(1, 2))) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = str_dup(x1, c(1, NA))) |>
+    pull(foo),
+  mutate(test_df, foo = str_dup(x1, c(1, NA))) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = str_dup(x1, n)) |>
+    pull(foo),
+  mutate(test_df, foo = str_dup(x1, n)) |>
+    pull(foo)
 )
