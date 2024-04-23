@@ -388,4 +388,46 @@ expect_error_lazy(
   "must be an integer"
 )
 
+# na_if
+
+test <- polars::pl$LazyFrame(
+  x = c(3, 1, 2, 2, 3),
+  grp = c("A", "A", "A", "B", "")
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = na_if(x, 3)) |>
+    pull(foo),
+  c(NA, 1, 2, 2, NA)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = na_if(x, 3), .by = grp) |>
+    pull(foo),
+  c(NA, 1, 2, 2, NA)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = na_if(grp, "")) |>
+    pull(foo),
+  c("A", "A", "A", "B", NA)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = na_if(x, c(3, 1, 1, 1, 1))) |>
+    pull(foo),
+  c(NA, NA, 2, 2, 3)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = na_if(x, NA)) |>
+    pull(foo),
+  c(3, 1, 2, 2, 3)
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

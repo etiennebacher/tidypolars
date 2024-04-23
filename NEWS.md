@@ -2,9 +2,14 @@
 
 ## New features
 
-* Add support for `all()`, `any()`, `diff()` `dplyr::consecutive_id()`,   
-  `dplyr::n_distinct()`, `length()`, `dplyr::nth()`, `rev()`, `stringr::str_dup()`,
-  `unique()`.
+* Add support for several functions:
+
+  - from package `base`: `all()`, `any()`, `diff()`, `length()`, , `rev()`, 
+    `unique()`.
+  
+  - from package `dplyr`: `consecutive_id()`, `na_if()`, `n_distinct()`, `nth()`
+  
+  - from package `stringr`: `str_dup()`
 
 ## Bug fixes
 

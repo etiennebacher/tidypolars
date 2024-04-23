@@ -420,6 +420,10 @@ pl_drop_nulls <- function(x, ...) {
   x$drop_nulls()
 }
 
+pl_na_if <- function(x, y) {
+  pl$when(x$is_in(y))$then(pl$lit(NA))$otherwise(x)
+}
+
 pl_n_distinct <- function(..., na.rm = FALSE) {
   dots <- clean_dots(...)
   if (length(dots) == 0) {
