@@ -443,4 +443,22 @@ expect_equal_lazy(
   c(3, NA, 2, 2, 3)
 )
 
+# min_rank
+
+test <- polars::pl$LazyFrame(x = c(5, 1, 3, 2, 2, NA), y = c(rep(NA, 5), 1))
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = min_rank(x)) |>
+    pull(foo),
+  c(5, 1, 4, 2, 2, NA)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = min_rank(y)) |>
+    pull(foo),
+  c(rep(NA, 5), 1)
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

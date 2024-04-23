@@ -248,6 +248,7 @@ out <- tribble(
   "`dplyr`",            "`group_vars`",
   "`dplyr`",            "`if_else`",
   "`dplyr`/`stats`",    "`lag`",
+  "`dplyr`",            "`min_rank`",
   "`dplyr`",            "`n`",
   "`dplyr`",            "`nth`",
   "`dplyr`",            "`n_distinct`",

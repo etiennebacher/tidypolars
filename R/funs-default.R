@@ -420,6 +420,10 @@ pl_drop_nulls <- function(x, ...) {
   x$drop_nulls()
 }
 
+pl_min_rank <- function(x) {
+  x$rank(method = "min")
+}
+
 pl_na_if <- function(x, y) {
   if (length(y) == 1 && !inherits(y, "RPolarsExpr") && is.na(y)) {
     pl$when(x$is_null())$then(pl$lit(NA))$otherwise(x)

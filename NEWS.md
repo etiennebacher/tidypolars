@@ -4,10 +4,11 @@
 
 * Add support for several functions:
 
-  - from package `base`: `all()`, `any()`, `diff()`, `length()`, , `rev()`, 
+  - from package `base`: `all()`, `any()`, `diff()`, `length()`, `rev()`, 
     `unique()`.
   
-  - from package `dplyr`: `consecutive_id()`, `na_if()`, `n_distinct()`, `nth()`
+  - from package `dplyr`: `consecutive_id()`, `min_rank()`, `na_if()`, 
+    `n_distinct()`, `nth()`
   
   - from package `stringr`: `str_dup()`
 
