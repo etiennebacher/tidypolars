@@ -85,7 +85,9 @@ delete columns (by setting their value to NULL).</p>
 the output. The value can be:</p><ul><li><p>A vector the same length as the current group (or the whole data
 frame if ungrouped).</p></li>
 <li><p>NULL, to remove the column.</p></li>
-</ul></dd>
+</ul><p><code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code> is mostly supported, except in a few cases. In particular, if the
+<code>.cols</code> argument is <code>where(...)</code>, it will <em>not</em> select variables that were
+created before <code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code>. Other select helpers are supported. See the examples.</p></dd>
 
 
 <dt>.by</dt>
@@ -284,6 +286,22 @@ functions.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.2       ┆ 3.4       ┆ 5.4       ┆ 2.3       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.9       ┆ 3.0       ┆ 5.1       ┆ 1.8       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └───────────┴───────────┴───────────┴───────────┴───┴───────────┴───────────┴───────────┴──────────┘</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Be careful when using across(.cols = where(...), ...) as it will not include</span></span></span>
+<span class="r-in"><span><span class="co"># variables created in the same `...` (this is only the case for `where()`):</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">pl_iris</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    foo <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      .cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.numeric</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">-</span> <span class="fl">1000</span>   <span class="co"># &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; this will not be applied on variable "foo"</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="co"># Warning message:</span></span></span>
+<span class="r-in"><span><span class="co"># In `across()`, the argument `.cols = where(is.numeric)` will not take into account</span></span></span>
+<span class="r-in"><span><span class="co"># variables created in the same `mutate()`/`summarize` call.</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Embracing an external variable works</span></span></span>
 <span class="r-in"><span><span class="va">some_value</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>

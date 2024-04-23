@@ -94,7 +94,9 @@ and one column for each of the summary statistics that you have specified.</p>
 the output. The value can be:</p><ul><li><p>A vector the same length as the current group (or the whole data
 frame if ungrouped).</p></li>
 <li><p>NULL, to remove the column.</p></li>
-</ul></dd>
+</ul><p><code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code> is mostly supported, except in a few cases. In particular, if the
+<code>.cols</code> argument is <code>where(...)</code>, it will <em>not</em> select variables that were
+created before <code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code>. Other select helpers are supported. See the examples.</p></dd>
 
 
 <dt>.by</dt>
@@ -116,9 +118,9 @@ is not maintained, use <code><a href="https://dplyr.tidyverse.org/reference/grou
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ ---      ┆ ---      │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64      ┆ f64      │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪══════════╪══════════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 3.857143 ┆ 0.690066 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 3.285714 ┆ 0.726273 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 4.090909 ┆ 0.53936  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 3.857143 ┆ 0.690066 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴──────────┴──────────┘</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Groups [3]: cyl</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Maintain order: FALSE</span>
@@ -133,8 +135,8 @@ is not maintained, use <code><a href="https://dplyr.tidyverse.org/reference/grou
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ ---      ┆ ---      │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64      ┆ f64      │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪══════════╪══════════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 3.857143 ┆ 0.690066 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 4.090909 ┆ 0.53936  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 3.857143 ┆ 0.690066 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 3.285714 ┆ 0.726273 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴──────────┴──────────┘</span>
 </code></pre></div>
