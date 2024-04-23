@@ -15,6 +15,44 @@
 
 * Local variables in custom functions could not be used in tidypolars functions
   (reported in a blog post of Art Steinmetz). This is now fixed.
+  
+* `across()` now works when `.cols` contains only one variable and `.fns` contains
+  only one function.
+  
+* In `across()`, the `.cols` argument now takes into account variables created
+  in the same `mutate()` or `summarize()` call before `across()`. 
+  
+  ```r
+  as_polars_df(mtcars) |> 
+    head(n = 3) |> 
+    mutate(
+      foo = 1, 
+      across(.cols = contains("oo"), \(x) x - 1)
+    )
+  
+  shape: (3, 12)
+  ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬─────┐
+  │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ foo │
+  │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ --- │
+  │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ f64 │
+  ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═════╡
+  │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 0.0 │
+  │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 0.0 │
+  │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 0.0 │
+  └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴─────┘
+  ```
+  
+  Note that the `where()` function is not supported here. For example:
+  
+  ```r
+  as_polars_df(mtcars) |> 
+    mutate(
+      foo = 1, 
+      across(.cols = where(is.numeric), \(x) x - 1)
+    )
+  ```
+  will *not* return 0 for the variable `foo`. A warning is emitted about this 
+  behavior. 
 
 
 # tidypolars 0.7.0

@@ -1,9 +1,16 @@
 # inspired from dplyr/across.R
 # [MIT license]
 
-unpack_across <- function(.data, expr, env) {
+unpack_across <- function(.data, expr, env, new_vars) {
   .cols <- get_arg(".cols", 1, expr, env)
-  .cols <- tidyselect_named_arg(.data, enquo(.cols))
+
+  # Need this trick to correctly evaluate .cols = where(is.numeric)
+  .cols_with_env <- enquo(.cols)
+  attr(.cols_with_env, ".Environment") <- env
+  .cols_already_there <- tidyselect_named_arg(.data, .cols_with_env)
+
+  .cols_new_vars <- tidyselect_new_vars(.cols, new_vars)
+  .cols <- union(.cols_already_there, .cols_new_vars)
   .fns <- get_arg(".fns", 2, expr, env)
   .names <- get_arg(".names", 3, expr, env)
 
@@ -33,7 +40,11 @@ unpack_across <- function(.data, expr, env) {
     }
   }
 
-  build_separate_calls(.cols, .new_fns, .names, .data)
+  out <- build_separate_calls(.cols, .new_fns, .names, .data)
+  if (!is.list(out) && length(out) == 1) {
+    out <- as.list(out)
+  }
+  out
 }
 
 

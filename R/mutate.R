@@ -11,6 +11,10 @@
 #'   * A vector the same length as the current group (or the whole data
 #'    frame if ungrouped).
 #'   * NULL, to remove the column.
+#'
+#' `across()` is mostly supported, except in a few cases. In particular, if the
+#' `.cols` argument is `where(...)`, it will *not* select variables that were
+#' created before `across()`. Other select helpers are supported. See the examples.
 #' @param .by Optionally, a selection of columns to group by for just this
 #'   operation, functioning as an alternative to `group_by()`. The group order
 #'   is not maintained, use `group_by()` if you want more control over it.
@@ -77,6 +81,22 @@
 #'       .names = "{.fn}_of_{.col}"
 #'     )
 #'   )
+#'
+#' # Be careful when using across(.cols = where(...), ...) as it will not include
+#' # variables created in the same `...` (this is only the case for `where()`):
+#' \dontrun{
+#' pl_iris |>
+#'   mutate(
+#'     foo = 1,
+#'     across(
+#'       .cols = where(is.numeric),
+#'       \(x) x - 1000   # <<<<<<<<< this will not be applied on variable "foo"
+#'     )
+#'   )
+#' }
+#' # Warning message:
+#' # In `across()`, the argument `.cols = where(is.numeric)` will not take into account
+#' # variables created in the same `mutate()`/`summarize` call.
 #'
 #' # Embracing an external variable works
 #' some_value <- 1

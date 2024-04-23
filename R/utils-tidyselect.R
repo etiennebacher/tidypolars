@@ -16,6 +16,36 @@ tidyselect_named_arg <- function(.data, cols) {
   out
 }
 
+# This is used only in across() when we need to determine whether variables
+# created in previous calls should be included in the .cols argument. Since we
+# don't have sequential evaluation, we can't use where().
+tidyselect_new_vars <- function(.cols, new_vars) {
+  if (is.null(new_vars)) {
+    return(NULL)
+  }
+  if (typeof(.cols) == "language") {
+    out <- switch(
+      as.character(.cols[[1]]),
+      "contains" = grep(.cols[[2]], new_vars, value = TRUE, fixed = TRUE),
+      "matches" = grep(.cols[[2]], new_vars, value = TRUE),
+      "starts_with" = grep(paste0("^", .cols[[2]]), new_vars, value = TRUE),
+      "ends_with" = grep(paste0(.cols[[2]], "$"), new_vars, value = TRUE),
+      "everything" = new_vars,
+      {
+        warn(
+          paste0(
+            "In `across()`, the argument `.cols = ", safe_deparse(.cols),
+            "` will not take into account \nvariables created in the same `mutate()`/`summarize` call."
+          )
+        )
+        NULL
+      }
+    )
+    return(out)
+  }
+  NULL
+}
+
 # Rather than collecting a 1-row slice, it is faster to use the schema of the
 # data to recreate an empty DataFrame and convert it to R
 build_data_context <- function(.data) {
