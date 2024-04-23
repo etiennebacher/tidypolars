@@ -423,11 +423,24 @@ expect_equal_lazy(
   c(NA, NA, 2, 2, 3)
 )
 
+expect_error_lazy(
+  test |>
+    mutate(foo = na_if(x, 1:2)),
+  "different lengths"
+)
+
 expect_equal_lazy(
   test |>
     mutate(foo = na_if(x, NA)) |>
     pull(foo),
   c(3, 1, 2, 2, 3)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = na_if(x, c(NA, 1, 1, 1, 1))) |>
+    pull(foo),
+  c(3, NA, 2, 2, 3)
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

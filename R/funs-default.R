@@ -421,7 +421,11 @@ pl_drop_nulls <- function(x, ...) {
 }
 
 pl_na_if <- function(x, y) {
-  pl$when(x$is_in(y))$then(pl$lit(NA))$otherwise(x)
+  if (length(y) == 1 && !inherits(y, "RPolarsExpr") && is.na(y)) {
+    pl$when(x$is_null())$then(pl$lit(NA))$otherwise(x)
+  } else {
+    pl$when(x == y)$then(pl$lit(NA))$otherwise(x)
+  }
 }
 
 pl_n_distinct <- function(..., na.rm = FALSE) {
