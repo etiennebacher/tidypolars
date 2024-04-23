@@ -280,4 +280,112 @@ expect_equal_lazy(
   c(1, 2, 3, 1, 2)
 )
 
+# first
+
+test <- polars::pl$LazyFrame(
+  x = c(3, 1, 2, 2, NA),
+  grp = c("A", "A", "A", "B", "B")
+)
+
+expect_equal_lazy(
+  test |>
+    summarize(foo = first(x)) |>
+    pull(foo),
+  3
+)
+
+expect_equal_lazy(
+  test |>
+    summarize(foo = first(x), .by = grp) |>
+    pull(foo) |>
+    sort(),
+  c(2, 3)
+)
+
+expect_warning(
+  test |>
+    summarize(foo = first(x, order_by = "bar")),
+  "will not be used"
+)
+
+# last
+
+test <- polars::pl$LazyFrame(
+  x = c(3, 1, 2, 2, NA),
+  grp = c("A", "A", "A", "B", "B")
+)
+
+expect_equal_lazy(
+  test |>
+    summarize(foo = last(x)) |>
+    pull(foo),
+  NA_real_
+)
+
+expect_equal_lazy(
+  test |>
+    summarize(foo = last(x), .by = grp) |>
+    pull(foo) |>
+    sort(na.last = TRUE),
+  c(2, NA)
+)
+
+expect_warning(
+  test |>
+    summarize(foo = last(x, order_by = "bar")),
+  "will not be used"
+)
+
+# nth
+
+test <- polars::pl$LazyFrame(
+  x = c(3, 1, 2, 2, NA),
+  idx = 1:5,
+  grp = c("A", "A", "A", "B", "B")
+)
+
+expect_equal_lazy(
+  test |>
+    summarize(foo = nth(x, 2)) |>
+    pull(foo),
+  1
+)
+
+expect_equal_lazy(
+  test |>
+    summarize(foo = nth(x, -1)) |>
+    pull(foo),
+  NA_real_
+)
+
+# TODO: Requires null_on_oob argument in gather/get
+# https://github.com/pola-rs/polars/issues/15240
+# expect_equal_lazy(
+#   test |>
+#     summarize(foo = nth(x, 1000)) |>
+#     pull(foo),
+#   NA_real_
+# )
+
+expect_error_lazy(
+  test |>
+    summarize(foo = nth(x, 2:3)) |>
+    pull(foo),
+  "must have size 1"
+)
+
+expect_error_lazy(
+  test |>
+    summarize(foo = nth(x, NA)) |>
+    pull(foo),
+  "can't be `NA`"
+)
+
+expect_error_lazy(
+  test |>
+    summarize(foo = nth(x, 1.5)) |>
+    pull(foo),
+  "must be an integer"
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

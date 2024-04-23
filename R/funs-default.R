@@ -422,11 +422,10 @@ pl_drop_nulls <- function(x, ...) {
 
 pl_n_distinct <- function(..., na.rm = FALSE) {
   dots <- clean_dots(...)
-  env <- env_from_dots(...)
   if (length(dots) == 0) {
     abort(
       "`...` is absent, but must be supplied.",
-      call = env
+      call = env_from_dots(...)
     )
   }
   dots <- pl$struct(dots)
@@ -435,6 +434,32 @@ pl_n_distinct <- function(..., na.rm = FALSE) {
   } else {
     dots$n_unique()
   }
+}
+
+pl_nth <- function(x, n, ...) {
+  if (length(n) > 1) {
+    abort(
+      paste0("`n` must have size 1, not size ", length(n), "."),
+      call = env_from_dots(...)
+    )
+  }
+  if (is.na(n)) {
+    abort(
+      "`n` can't be `NA`.",
+      call = env_from_dots(...)
+    )
+  }
+  if (as.integer(n) != n) {
+    abort(
+      "`n` must be an integer.",
+      call = env_from_dots(...)
+    )
+  }
+  # 0-indexed
+  if (n > 0) {
+    n <- n - 1
+  }
+  x$gather(n)
 }
 
 pl_quantile <- function(x, ...) {

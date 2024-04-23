@@ -249,6 +249,7 @@ out <- tribble(
   "`dplyr`",            "`if_else`",
   "`dplyr`/`stats`",    "`lag`",
   "`dplyr`",            "`n`",
+  "`dplyr`",            "`nth`",
   "`dplyr`",            "`n_distinct`",
   "`dplyr`",            "`last`",
   "`lubridate`",        "`ddays`",
