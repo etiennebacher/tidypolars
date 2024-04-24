@@ -681,3 +681,52 @@ expect_equal(
   mutate(test_df, foo = str_dup(x1, n)) |>
     pull(foo)
 )
+
+# split ---------------------------------------------------------
+
+expect_equal(
+  mutate(test, foo = str_split(x8, "-")) |>
+    pull(foo),
+  mutate(test_df, foo = str_split(x8, "-")) |>
+    pull(foo)
+)
+
+expect_warning(
+  mutate(test, foo = str_split(x8, "-", n = 2)) |>
+    pull(foo),
+  "will not be used"
+)
+
+expect_warning(
+  mutate(test, foo = str_split(x8, "-", simplify = TRUE)) |>
+    pull(foo),
+  "will not be used"
+)
+
+# split_i ---------------------------------------------------------
+
+expect_equal(
+  mutate(test, foo = str_split_i(x8, "-", i = 3)) |>
+    pull(foo),
+  mutate(test_df, foo = str_split_i(x8, "-", i = 3)) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = str_split_i(x8, "-", i = 100)) |>
+    pull(foo),
+  mutate(test_df, foo = str_split_i(x8, "-", i = 100)) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = str_split_i(x8, "-", i = -1)) |>
+    pull(foo),
+  mutate(test_df, foo = str_split_i(x8, "-", i = -1)) |>
+    pull(foo)
+)
+
+expect_error(
+  mutate(test, foo = str_split_i(x8, "-", i = 0)),
+  "must not be 0"
+)

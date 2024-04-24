@@ -179,21 +179,26 @@ pl_str_sub <- function(string, start, end = NULL, ...) {
   string$str$slice(start, end)
 }
 
-# TODO: check how to associate this with stringr::str_split() + tidyr nesting
-# pl_str_split <- function(string, ...) {
-#   check_empty_dots(...)
-#   string$str$split()
-# }
+# I would need `$splitn()` for cases where n is not Inf, but it returns a struct
+# that I'd like to unnest directly and this is apparently not possible:
+# https://github.com/pola-rs/polars/issues/13481
 #
-# pl_str_split_exact <- function(string, ...) {
-#   check_empty_dots(...)
-#   string$str$split_exact()
-# }
-#
-# pl_str_splitn <- function(string, ...) {
-#   check_empty_dots(...)
-#   string$str$splitn()
-# }
+# Expresses the same objective as me:
+# https://github.com/pola-rs/polars/issues/13649
+pl_str_split <- function(string, pattern, ...) {
+  check_empty_dots(...)
+  string$str$split(by = pattern, inclusive = FALSE)
+}
+
+pl_str_split_i <- function(string, pattern, i, ...) {
+  check_empty_dots(...)
+  if (i == 0) {
+    abort("`i` must not be 0.", call = env_from_dots(...))
+  } else if (i >= 1) {
+    i <- i - 1
+  }
+  string$str$split(by = pattern, inclusive = FALSE)$list$get(i, null_on_oob = TRUE)
+}
 
 pl_str_to_lower <- function(string, ...) {
   check_empty_dots(...)
