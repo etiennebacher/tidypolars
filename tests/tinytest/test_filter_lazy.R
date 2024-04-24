@@ -247,4 +247,11 @@ expect_equal_lazy(
   data.frame(chars = "a")
 )
 
+# error message
+
+expect_error_lazy(
+  test |> filter(chars = "a"),
+  "This usually means that"
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
