@@ -32,8 +32,7 @@ pl_str_detect <- function(string, pattern, negate = FALSE, ...) {
 }
 
 pl_str_dup <- function(string, times) {
-  if (inherits(times, "RPolarsExpr") ||
-      (is.numeric(times) && length(times) > 1)) {
+  if (inherits(times, "RPolarsExpr")) {
     return(string$repeat_by(times)$list$join(""))
   } else if (is.na(times) || times < 0) {
     return(NA_character_)
