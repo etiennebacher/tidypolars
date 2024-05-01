@@ -54,6 +54,9 @@
   ```
   will *not* return 0 for the variable `foo`. A warning is emitted about this 
   behavior. 
+  
+* Better handling of negative values in `c()` when called in `mutate()` and
+  `summarize()`.
 
 
 # tidypolars 0.7.0

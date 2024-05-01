@@ -669,9 +669,9 @@ expect_equal(
 )
 
 expect_equal(
-  mutate(test, foo = str_dup(x1, c(1, NA))) |>
+  mutate(test, foo = str_dup(x1, c(-1, NA))) |>
     pull(foo),
-  mutate(test_df, foo = str_dup(x1, c(1, NA))) |>
+  mutate(test_df, foo = str_dup(x1, c(-1, NA))) |>
     pull(foo)
 )
 

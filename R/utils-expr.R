@@ -295,6 +295,20 @@ translate <- function(
               call_is_function = call_is_function
             ))
           }
+
+          # When we pass e.g mean(c(-1, 0, 1)), the "-1" is of type "language"
+          # and therefore we can unlist() the whole thing. Need to evaluate it
+          # before that.
+          if (any(vapply(expr, is.language, FUN.VALUE = logical(1L)))) {
+            expr <- lapply(expr, \(x) {
+              if (deparse(x[[1]]) == "-") {
+                eval(x)
+              } else {
+                x
+              }
+            })
+          }
+
           return(polars_constant(unlist(expr)))
         },
         ":" = {
