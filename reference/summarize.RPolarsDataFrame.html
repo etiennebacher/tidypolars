@@ -109,7 +109,7 @@ is not maintained, use <code><a href="https://dplyr.tidyverse.org/reference/grou
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rpolars.github.io/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>m_gear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">gear</span><span class="op">)</span>, sd_gear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">gear</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 3)</span>
@@ -119,15 +119,15 @@ is not maintained, use <code><a href="https://dplyr.tidyverse.org/reference/grou
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64      ┆ f64      │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪══════════╪══════════╡</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 4.090909 ┆ 0.53936  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 3.285714 ┆ 0.726273 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 3.857143 ┆ 0.690066 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 3.285714 ┆ 0.726273 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴──────────┴──────────┘</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Groups [3]: cyl</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Maintain order: FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># an alternative syntax is to use `.by`</span></span></span>
 <span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rpolars.github.io/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>m_gear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">gear</span><span class="op">)</span>, sd_gear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">gear</span><span class="op">)</span>, .by <span class="op">=</span> <span class="va">cyl</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 3)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬──────────┬──────────┐</span>
@@ -136,8 +136,8 @@ is not maintained, use <code><a href="https://dplyr.tidyverse.org/reference/grou
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64      ┆ f64      │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪══════════╪══════════╡</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 3.285714 ┆ 0.726273 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 3.857143 ┆ 0.690066 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 4.090909 ┆ 0.53936  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 3.857143 ┆ 0.690066 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴──────────┴──────────┘</span>
 </code></pre></div>
     </div>

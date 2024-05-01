@@ -92,7 +92,7 @@ import them as <code>DataFrame</code>s) or with
 <code>LazyFrame</code>s). <code>polars</code> can read various file
 formats, such as CSV, Parquet, or JSON.</p>
 <p>You could also read data with other packages and then convert it with
-<code><a href="https://rpolars.github.io/man/as_polars_df.html" class="external-link">as_polars_df()</a></code> (of <code><a href="https://rpolars.github.io/man/as_polars_lf.html" class="external-link">as_polars_lf()</a></code> if you want
+<code><a href="https://rdrr.io/pkg/polars/man/as_polars_df.html" class="external-link">as_polars_df()</a></code> (of <code><a href="https://rdrr.io/pkg/polars/man/as_polars_lf.html" class="external-link">as_polars_lf()</a></code> if you want
 to make it a <code>LazyFrame</code>).</p>
 <p>Here, we’re going to use the <code>who</code> dataset that is
 available in the <code>tidyr</code> package. I import it both as a
@@ -106,7 +106,7 @@ so that we can easily compare <code>dplyr</code> and
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">who_df</span> <span class="op">&lt;-</span> <span class="fu">tidyr</span><span class="fu">::</span><span class="va"><a href="https://tidyr.tidyverse.org/reference/who.html" class="external-link">who</a></span></span>
-<span><span class="va">who_pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rpolars.github.io/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="fu">tidyr</span><span class="fu">::</span><span class="va"><a href="https://tidyr.tidyverse.org/reference/who.html" class="external-link">who</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">who_pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="fu">tidyr</span><span class="fu">::</span><span class="va"><a href="https://tidyr.tidyverse.org/reference/who.html" class="external-link">who</a></span><span class="op">)</span></span></code></pre></div>
 <p><code>tidypolars</code> provides methods for <code>dplyr</code> and
 <code>tidyr</code> S3 generics. In simpler words, it means that you can
 use the same functions on a Polars <code>DataFrame</code> or
@@ -160,7 +160,7 @@ code on the classic R <code>data.frame</code>:</p>
 <p>If you use Polars lazy API, you need to call <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code>
 at the end of the chained expression to evaluate the query:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">who_pl_lazy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rpolars.github.io/man/as_polars_lf.html" class="external-link">as_polars_lf</a></span><span class="op">(</span><span class="fu">tidyr</span><span class="fu">::</span><span class="va"><a href="https://tidyr.tidyverse.org/reference/who.html" class="external-link">who</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">who_pl_lazy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_lf.html" class="external-link">as_polars_lf</a></span><span class="op">(</span><span class="fu">tidyr</span><span class="fu">::</span><span class="va"><a href="https://tidyr.tidyverse.org/reference/who.html" class="external-link">who</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">who_pl_lazy</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span><span class="op">)</span> <span class="op">|&gt;</span> </span>

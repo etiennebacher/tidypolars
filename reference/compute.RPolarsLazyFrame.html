@@ -71,7 +71,7 @@ data.frame. Use compute() to have a Polars DataFrame as output."><!-- mathjax --
 
     <div class="ref-description section level2">
     <p><code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code> checks the query, optimizes it in the background, and runs it.
-The output is a <a href="https://rpolars.github.io/man/DataFrame_class.html" class="external-link">Polars DataFrame</a>. <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code> is
+The output is a <a href="https://rdrr.io/pkg/polars/man/DataFrame_class.html" class="external-link">Polars DataFrame</a>. <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code> is
 similar to <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code> but converts the output to an R <a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a>, which
 consumes more memory.</p>
 <p>Until <code>tidypolars</code> 0.7.0, there was only <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code> and it was used to
@@ -192,7 +192,7 @@ usage of <code><a href="https://dplyr.tidyverse.org/reference/compute.html" clas
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dat_lazy</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rpolars.github.io/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">$</span><span class="fu">lazy</span><span class="op">(</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dat_lazy</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">$</span><span class="fu">lazy</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="va">dat_lazy</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (150, 5)</span>
