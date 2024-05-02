@@ -130,8 +130,8 @@ benchmark to compare the performance of <code>polars</code> and
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 6</span></span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars        268ms    317ms      3.08  396.56KB    0.220</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars    290ms    351ms      2.96    2.42MB    1.97</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars        301ms    334ms      2.95  394.46KB    0.211</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars    311ms    358ms      2.76    2.42MB    1.84</span></span>
 <span></span>
 <span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
 <span>  polars <span class="op">=</span> <span class="va">pl_test</span><span class="op">$</span></span>
@@ -144,8 +144,8 @@ benchmark to compare the performance of <code>polars</code> and
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 6</span></span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars       43.1ms   55.6ms      17.9    42.1KB     1.28</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars   46.9ms   50.2ms      19.9    80.9KB     3.06</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars       43.5ms     54ms      18.2    42.1KB     1.30</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars   46.2ms   49.2ms      20.0    80.9KB     3.08</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="am-i-stuck-with-tidypolars">Am I stuck with <code>tidypolars</code>?<a class="anchor" aria-label="anchor" href="#am-i-stuck-with-tidypolars"></a>

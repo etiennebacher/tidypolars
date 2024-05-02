@@ -306,406 +306,490 @@ return a Polars expression:</p>
 <h3 id="list-of-base-r-and-tidyverse-functions-supported-by-tidypolars">List of base R and <code>tidyverse</code> functions supported by
 <code>tidypolars</code><a class="anchor" aria-label="anchor" href="#list-of-base-r-and-tidyverse-functions-supported-by-tidypolars"></a>
 </h3>
-<table class="table kable_wrapper"><tbody><tr>
-<td>
 <table class="table">
+<colgroup>
+<col width="6%">
+<col width="7%">
+<col width="85%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">Package</th>
 <th align="left">Function</th>
+<th align="left">Notes</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>abs</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>acos</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>acosh</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>all</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>any</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>asin</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>asinh</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>atan</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>atanh</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>ceiling</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>cos</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>cosh</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>cummin</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>cumsum</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>diff</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>exp</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>floor</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>grepl</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>ifelse</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"><code>base</code></td>
+<td align="left"><code>ISOdatetime</code></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>length</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>log</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>log10</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>max</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>mean</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>min</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>nchar</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>paste0</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>paste</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>rank</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>rev</code></td>
+<td align="left"></td>
 </tr>
-</tbody>
-</table>
-</td>
-<td>
-<table class="table"><tbody></tbody></table>
-</td>
-<td>
-<table class="table">
-<thead><tr class="header">
-<th align="left">Package</th>
-<th align="left">Function</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>round</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>sin</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>sinh</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>sort</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>sqrt</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>strptime</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>tan</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>tanh</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>tolower</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>toupper</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>unique</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>base</code></td>
 <td align="left"><code>which.min</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>which.max</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>between</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>case_match</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>case_when</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>coalesce</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>consecutive_id</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>first</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>group_keys</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>group_vars</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>if_else</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>min_rank</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>n</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>nth</code></td>
-</tr>
-<tr class="even">
-<td align="left"><code>dplyr</code></td>
-<td align="left"><code>n_distinct</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>dplyr</code></td>
-<td align="left"><code>last</code></td>
+<td align="left"><code>n_distinct</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"><code>dplyr</code></td>
+<td align="left"><code>last</code></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
 <td align="left">
 <code>dplyr</code>/<code>stats</code>
 </td>
 <td align="left"><code>lag</code></td>
+<td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>ddays</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>dhours</code></td>
+<td align="left"></td>
 </tr>
-</tbody>
-</table>
-</td>
-<td>
-<table class="table"><tbody></tbody></table>
-</td>
-<td>
-<table class="table">
-<thead><tr class="header">
-<th align="left">Package</th>
-<th align="left">Function</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>dmilliseconds</code></td>
+<td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>dminutes</code></td>
-</tr>
-<tr class="odd">
-<td align="left"><code>lubridate</code></td>
-<td align="left"><code>dseconds</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>lubridate</code></td>
-<td align="left"><code>dweeks</code></td>
+<td align="left"><code>dseconds</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>lubridate</code></td>
+<td align="left"><code>dweeks</code></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><code>lubridate</code></td>
 <td align="left"><code>make_date</code></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>lubridate</code></td>
+<td align="left"><code>make_datetime</code></td>
+<td align="left">In <code><a href="https://lubridate.tidyverse.org/reference/make_datetime.html" class="external-link">lubridate::make_datetime()</a></code>, when there
+is an overflow (for example <code>hours = 25</code>), then it is
+automatically converted to the higher unit (for example 1 day and 1h).
+In Polars, this returns <code>NA</code>.</td>
 </tr>
 <tr class="even">
 <td align="left"><code>stats</code></td>
 <td align="left"><code>median</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>stats</code></td>
 <td align="left"><code>sd</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stats</code></td>
 <td align="left"><code>var</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>regex</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_count</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_dup</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_ends</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_extract</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_extract_all</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_length</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_pad</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_remove</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_remove_all</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_replace</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_replace_all</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_split</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_split_i</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_squish</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_starts</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_sub</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_trim</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_to_lower</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_to_title</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_to_upper</code></td>
+<td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>word</code></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>tools</code></td>
+<td align="left"><code>toTitleCase</code></td>
+<td align="left"></td>
 </tr>
 </tbody>
 </table>
-</td>
-</tr></tbody></table>
 </div>
 </div>
 
