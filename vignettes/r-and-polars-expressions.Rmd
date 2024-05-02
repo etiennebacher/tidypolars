@@ -289,9 +289,6 @@ out <- tribble(
 ) |>
   arrange(Package)
 
-rows <- seq_len(nrow(out) %/% 3)
-kable(list(out[rows,], matrix(numeric(), nrow=0, ncol=1),
-           out[rows + length(rows), ], matrix(numeric(), nrow=0, ncol=1),
-           out[rows + length(rows) + length(rows), ])) 
+kable(out) 
 ```
 
