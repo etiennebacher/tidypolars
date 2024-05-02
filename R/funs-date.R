@@ -126,6 +126,50 @@ pl_make_date <- function(year = 1970, month = 1, day = 1) {
   pl$date(year = year, month = month, day = day)
 }
 
+pl_make_datetime <- function(
+    year = 1970,
+    month = 1,
+    day = 1,
+    hour = 0,
+    min = 0,
+    sec = 0,
+    tz = "UTC"
+) {
+  pl$datetime(
+    year = year,
+    month = month,
+    day = day,
+    hour = hour,
+    minute = min,
+    second = sec,
+    time_zone = tz
+  )
+}
+
+pl_ISOdatetime <- function(
+    year = 1970,
+    month = 1,
+    day = 1,
+    hour = 0,
+    min = 0,
+    sec = 0,
+    tz = ""
+) {
+  if (tz == "") {
+    tz <- Sys.timezone()
+  }
+  pl$datetime(
+    year = year,
+    month = month,
+    day = day,
+    hour = hour,
+    minute = min,
+    second = sec,
+    time_zone = tz
+  )
+}
+
+
 # Periods --------------------------------------
 
 

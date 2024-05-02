@@ -214,6 +214,7 @@ out <- tribble(
   "`base`",             "`floor`",
   "`base`",             "`grepl`",
   "`base`",             "`ifelse`",
+  "`base`",             "`ISOdatetime`",
   "`base`",             "`length`",
   "`base`",             "`log`", 
   "`base`",             "`log10`",
@@ -260,6 +261,7 @@ out <- tribble(
   "`lubridate`",        "`dseconds`",
   "`lubridate`",        "`dweeks`",
   "`lubridate`",        "`make_date`",
+  "`lubridate`",        "`make_datetime`",
   "`stats`",            "`median`", 
   "`stats`",            "`sd`", 
   "`stats`",            "`var`",
@@ -287,6 +289,10 @@ out <- tribble(
   "`stringr`",          "`word`",
   "`tools`",            "`toTitleCase`"
 ) |>
+  mutate(Notes = case_when(
+    Package == "`lubridate`" & Function == "`make_datetime`" ~ "In `lubridate::make_datetime()`, when there is an overflow (for example `hours = 25`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this returns `NA`.",
+    .default = ""
+  )) |> 
   arrange(Package)
 
 kable(out) 

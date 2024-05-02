@@ -4,13 +4,15 @@
 
 * Add support for several functions:
 
-  - from package `base`: `all()`, `any()`, `diff()`, `length()`, `rev()`, 
-    `unique()`.
+  - from package `base`: `all()`, `any()`, `diff()`, `ISOdatetime()`, 
+    `length()`, `rev()`, `unique()`.
   
   - from package `dplyr`: `consecutive_id()`, `min_rank()`, `na_if()`, 
-    `n_distinct()`, `nth()`
+    `n_distinct()`, `nth()`.
   
-  - from package `stringr`: `str_dup()`, `str_split()`, `str_split_i()`
+  - from package `lubridate`: `make_datetime()`.
+  
+  - from package `stringr`: `str_dup()`, `str_split()`, `str_split_i()`.
 
 ## Bug fixes
 

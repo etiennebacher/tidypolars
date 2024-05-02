@@ -19,7 +19,10 @@ test_df <- data.frame(
   somedate = c("Jul 24 2014", "Dec 24 2015", "Jan 21 2016", NA),
   y = c(2020:2022, NA),
   m = c(1, 2, 20, 3),
-  d = 1:4
+  d = 1:4,
+  h = 0:3,
+  min = 24:27,
+  s = 55:58
 )
 
 test <- pl$LazyFrame(test_df)
@@ -166,7 +169,7 @@ expect_equal_lazy(
 
 # TODO: will be hard to check for accuracy for microseconds and nanoseconds
 
-# build date and datetimes
+# make_date ------------------------------------------
 
 expect_equal_lazy(
   test |>
@@ -183,6 +186,73 @@ expect_equal_lazy(
     pull(foo),
   test_df |>
     mutate(foo = make_date(year = y)) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = make_date(year = y, m, d)) |>
+    pull(foo),
+  test_df |>
+    mutate(foo = make_date(year = y, m, d)) |>
+    pull(foo)
+)
+
+# make_datetime ------------------------------------------
+# setting hour = 25 adds 1 day + 1 hour, which is not the behavior of
+# ISOdatetime() or pl$datetime()
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = make_datetime(hour = h, min = min, sec = s)) |>
+    pull(foo),
+  test_df |>
+    mutate(foo = make_datetime(hour = h, min = min, sec = s)) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = make_datetime(hour = 6, min = min, sec = s, tz = "Australia/Sydney")) |>
+    pull(foo),
+  test_df |>
+    mutate(foo = make_datetime(hour = 6, min = min, sec = s, tz = "Australia/Sydney")) |>
+    pull(foo)
+)
+
+# ISOdatetime ------------------------------------------
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = ISOdatetime(year = 0, month = 1, day = 1, hour = h,
+                             min = min, sec = s)) |>
+    pull(foo),
+  test_df |>
+    mutate(foo = ISOdatetime(year = 0, month = 1, day = 1, hour = h,
+                             min = min, sec = s)) |>
+    pull(foo),
+  check.tzone = FALSE
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = ISOdatetime(year = 0, month = 1, day = 1, hour = 6,
+                             min = min, sec = s, tz = "Australia/Sydney")) |>
+    pull(foo),
+  test_df |>
+    mutate(foo = ISOdatetime(year = 0, month = 1, day = 1, hour = 6,
+                             min = min, sec = s, tz = "Australia/Sydney")) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = ISOdatetime(year = 0, month = 1, day = 1, hour = 25,
+                             min = min, sec = s, tz = "Australia/Sydney")) |>
+    pull(foo),
+  test_df |>
+    mutate(foo = ISOdatetime(year = 0, month = 1, day = 1, hour = 25,
+                             min = min, sec = s, tz = "Australia/Sydney")) |>
     pull(foo)
 )
 
