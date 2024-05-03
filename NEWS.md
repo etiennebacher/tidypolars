@@ -1,5 +1,12 @@
 # tidypolars (development version)
 
+## Breaking changes
+
+* As announced in `tidypolars` 0.7.0, the behavior of `collect()` has changed.
+  It now returns a standard R `data.frame` and not a Polars `DataFrame` anymore.
+  Replace `collect()` by `compute()` (with the same arguments) to keep the old
+  behavior.
+
 ## New features
 
 * Add support for several functions:
