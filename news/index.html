@@ -57,6 +57,10 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
 <div class="section level3">
+<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<ul><li>As announced in <code>tidypolars</code> 0.7.0, the behavior of <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code> has changed. It now returns a standard R <code>data.frame</code> and not a Polars <code>DataFrame</code> anymore. Replace <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code> by <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code> (with the same arguments) to keep the old behavior.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
 <ul><li>
 <p>Add support for several functions:</p>
