@@ -400,6 +400,15 @@ pl_mode <- function(x, ...) {
   x$mode()
 }
 
+pl_ntile <- function(x, n) {
+  # when n = NULL, `n` is a list here
+  n <- unlist(n)
+  if (is.null(n) || length(n) != 1 || is.na(n)) {
+    abort("`n` must be an integer of length 1.")
+  }
+  x$qcut(quantiles = n, labels = as.character(seq_len(n)), left_closed = TRUE)$cast(pl$Int64)
+}
+
 pl_fill_nan <- function(x, ...) {
   check_empty_dots(...)
   x$fill_nan()

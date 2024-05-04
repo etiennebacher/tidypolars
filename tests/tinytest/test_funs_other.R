@@ -456,3 +456,43 @@ expect_equal(
     pull(foo),
   c(rep(NA, 5), 1)
 )
+
+# ntile
+
+test <- polars::pl$DataFrame(x = c(5, 1, 3, 2, 2, NA), y = 1:6)
+
+expect_equal(
+  test |>
+    mutate(foo = ntile(x, 2)) |>
+    pull(foo),
+  c(2, 1, 2, 1, 1, NA)
+)
+
+# TODO: different from dplyr
+# https://github.com/pola-rs/polars/issues/9761
+# expect_equal(
+#   test |>
+#     mutate(foo = ntile(y, 4)) |>
+#     pull(foo),
+#   c(2, 1, 2, 1, 1, NA)
+# )
+
+expect_error(
+  test |> mutate(foo = ntile(x, NA)),
+  "must be an integer of length 1"
+)
+
+expect_error(
+  test |> mutate(foo = ntile(x, c(1, 2))),
+  "must be an integer of length 1"
+)
+
+expect_error(
+  test |> mutate(foo = ntile(x, c(1, NA))),
+  "must be an integer of length 1"
+)
+
+expect_error(
+  test |> mutate(foo = ntile(x, NULL)),
+  "must be an integer of length 1"
+)
