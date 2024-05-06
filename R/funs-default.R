@@ -483,6 +483,11 @@ pl_rank <- function(x, ...) {
   x$rank()
 }
 
+pl_replace_na <- function(data, replace, ...) {
+  check_empty_dots(...)
+  data$fill_null(replace)
+}
+
 pl_round <- function(x, digits = 0, ...) {
   check_empty_dots(...)
   x$round(decimals = digits)
