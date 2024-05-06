@@ -13,7 +13,7 @@ test_df <- data.frame(
   value_mix = -2:2
 )
 
-test <- pl$LazyFrame(test_df)
+test <- polars::pl$LazyFrame(test_df)
 
 for (i in c(
   "abs",

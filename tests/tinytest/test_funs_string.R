@@ -18,7 +18,7 @@ test_df <- data.frame(
   n = 1:2
 )
 
-test <- pl$DataFrame(test_df)
+test <- polars::pl$DataFrame(test_df)
 
 for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper", "nchar")) {
 

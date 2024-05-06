@@ -5,7 +5,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-test <- pl$LazyFrame(x = c(1, 1, 1), y = 4:6, z = c("a", "a", "b"))
+test <- polars::pl$LazyFrame(x = c(1, 1, 1), y = 4:6, z = c("a", "a", "b"))
 
 x <- 10
 

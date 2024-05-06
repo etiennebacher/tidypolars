@@ -25,11 +25,11 @@ expect_equal(
   rep(1:2, each = 20)
 )
 
-p1 <- pl$DataFrame(
+p1 <- polars::pl$DataFrame(
   x = sample(letters, 20),
   y = sample(1:100, 20)
 )
-p2 <- pl$DataFrame(
+p2 <- polars::pl$DataFrame(
   x = sample(letters, 20),
   y = sample(1:100, 20)
 )

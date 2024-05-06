@@ -24,7 +24,7 @@
 #'  rowwise() |>
 #'  mutate(min = min(c(x, y)), max = max(c(x, y)))
 rowwise.RPolarsDataFrame <- function(data, ...) {
-  check_polars_data(data)
+  data <- check_polars_data(data)
 
   if (!is.null(attributes(data)$pl_grps)) {
     rlang::abort("Cannot use `rowwise()` on grouped data.")
@@ -37,7 +37,7 @@ rowwise.RPolarsDataFrame <- function(data, ...) {
     attr(data2, "pl_grps") <- vars
   }
   attr(data2, "grp_type") <- "rowwise"
-  add_tidypolars_class(data2)
+  data2
 }
 
 #' @rdname rowwise.RPolarsDataFrame

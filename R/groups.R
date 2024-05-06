@@ -27,7 +27,7 @@
 #'
 
 group_by.RPolarsDataFrame <- function(.data, ..., maintain_order = FALSE) {
-  check_polars_data(.data)
+  .data <- check_polars_data(.data)
   if (isTRUE(attributes(.data)$grp_type == "rowwise")) {
     rlang::abort(
       c(
@@ -43,9 +43,11 @@ group_by.RPolarsDataFrame <- function(.data, ..., maintain_order = FALSE) {
   }
   # need to clone, otherwise the data gets attributes, even if unassigned
   .data2 <- .data$clone()
+  # Cloning loses the tidypolars class
+  .data2 <- add_tidypolars_class(.data2)
   attr(.data2, "pl_grps") <- vars
   attr(.data2, "maintain_grp_order") <- maintain_order
-  add_tidypolars_class(.data2)
+  .data2
 }
 
 #' @param x A Polars Data/LazyFrame
@@ -85,7 +87,7 @@ ungroup.RPolarsLazyFrame <- ungroup.RPolarsDataFrame
 #'
 #' group_keys(pl_g)
 group_vars.RPolarsDataFrame <- function(x) {
-  check_polars_data(x)
+  x <- check_polars_data(x)
   grps <- attributes(x)$pl_grps
   if (length(grps) > 0) {
     grps
@@ -101,7 +103,7 @@ group_vars.RPolarsLazyFrame <- group_vars.RPolarsDataFrame
 #' @rdname group_vars.RPolarsDataFrame
 #' @export
 group_keys.RPolarsDataFrame <- function(.tbl, ...) {
-  check_polars_data(.tbl)
+  .tbl <- check_polars_data(.tbl)
   grps <- attributes(.tbl)$pl_grps
   if (length(grps) > 0) {
     out = .tbl$group_by(grps)$
@@ -140,7 +142,7 @@ group_keys.RPolarsLazyFrame <- group_keys.RPolarsDataFrame
 #'
 #' group_split(pl_g)
 group_split.RPolarsDataFrame <- function(.tbl, ..., .keep = TRUE) {
-  check_polars_data(.tbl)
+  .tbl <- check_polars_data(.tbl)
   grps <- attributes(.tbl)$pl_grps
   dots <- tidyselect_dots(.tbl, ...)
 

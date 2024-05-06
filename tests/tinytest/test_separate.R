@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-test <- pl$DataFrame(
+test <- polars::pl$DataFrame(
   x = c(NA, "x.y", "x.z", "y.z")
 )
 
@@ -20,7 +20,7 @@ expect_equal(
 )
 
 
-test2 <- pl$DataFrame(
+test2 <- polars::pl$DataFrame(
   x = c(NA, "x y", "x z", "y z")
 )
 

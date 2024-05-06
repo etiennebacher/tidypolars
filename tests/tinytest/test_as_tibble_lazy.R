@@ -5,7 +5,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-test <- pl$LazyFrame(
+test <- polars::pl$LazyFrame(
   x1 = c("a", "a", "b"),
   x2 = 1:3,
   schema = list(x2 = polars::pl$Int64)

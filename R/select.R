@@ -16,10 +16,10 @@
 #' select(pl_iris, -ends_with("Length"))
 
 select.RPolarsDataFrame <- function(.data, ...) {
-  check_polars_data(.data)
+  .data <- check_polars_data(.data)
   vars <- tidyselect_dots(.data, ...)
   out <- .data$select(vars)
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname select.RPolarsDataFrame

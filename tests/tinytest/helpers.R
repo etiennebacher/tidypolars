@@ -1,4 +1,5 @@
 library(tinytest)
+library(tinysnapshot)
 library(polars)
 
 register_tinytest_extension(

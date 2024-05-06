@@ -33,7 +33,7 @@
 
 unite.RPolarsDataFrame <- function(data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE) {
 
-  check_polars_data(data)
+  data <- check_polars_data(data)
   vars <- tidyselect_dots(data, ...)
   # can be a character or symbol
   col <- rlang::as_string(rlang::ensym(col))
@@ -54,7 +54,7 @@ unite.RPolarsDataFrame <- function(data, col, ..., sep = "_", remove = TRUE, na.
     out
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname unite.RPolarsDataFrame

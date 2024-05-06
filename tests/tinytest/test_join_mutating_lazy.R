@@ -35,7 +35,7 @@ expect_is_tidypolars(inner_join(test, test2))
 
 expect_equal_lazy(
   left_join(test, test2),
-  pl$LazyFrame(
+  polars::pl$LazyFrame(
     x = 1:3, y = 1:3,
     z = 1:3, z2 = c(4, 5, NA)
   )
@@ -43,7 +43,7 @@ expect_equal_lazy(
 
 expect_equal_lazy(
   right_join(test, test2),
-  pl$LazyFrame(
+  polars::pl$LazyFrame(
     x = c(1, 2, 4), y = c(1, 2, 4),
     z2 = c(4, 5, 7), z = c(1, 2, NA)
   )
@@ -51,7 +51,7 @@ expect_equal_lazy(
 
 expect_equal_lazy(
   full_join(test, test2),
-  pl$LazyFrame(
+  polars::pl$LazyFrame(
     x = c(1, 2, 4, 3), y = c(1, 2, 4, 3),
     z = c(1, 2, NA, 3), z2 = c(4, 5, 7, NA)
   )
@@ -59,7 +59,7 @@ expect_equal_lazy(
 
 expect_equal_lazy(
   inner_join(test, test2),
-  pl$LazyFrame(
+  polars::pl$LazyFrame(
     x = c(1, 2), y = c(1, 2),
     z = c(1, 2), z2 = c(4, 5)
   )
@@ -85,7 +85,7 @@ test3 <- polars::pl$LazyFrame(
 
 expect_equal_lazy(
   left_join(test, test3, join_by(x == x2, y == y2)),
-  pl$LazyFrame(
+  polars::pl$LazyFrame(
     x = 1:3, y = 1:3,
     z = 1:3, z3 = c(4, 5, NA)
   )
@@ -93,7 +93,7 @@ expect_equal_lazy(
 
 expect_equal_lazy(
   left_join(test, test3, c("x" = "x2", "y" = "y2")),
-  pl$LazyFrame(
+  polars::pl$LazyFrame(
     x = 1:3, y = 1:3,
     z = 1:3, z3 = c(4, 5, NA)
   )

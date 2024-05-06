@@ -24,11 +24,11 @@ expect_dim(
 )
 
 
-p1 <- pl$LazyFrame(
+p1 <- polars::pl$LazyFrame(
   x = sample(letters, 20),
   y = sample(1:100, 20)
 )
-p2 <- pl$LazyFrame(
+p2 <- polars::pl$LazyFrame(
   z = sample(letters, 20),
   w = sample(1:100, 20)
 )
@@ -83,8 +83,8 @@ if (Sys.getenv("TIDYPOLARS_TEST") == "TRUE") {
 # arg ".name_repair"
 
 l5 <- list(
-  pl$LazyFrame(a = 1, x = 2, y = 3),
-  pl$LazyFrame(z = 1, x = 2, y = 3)
+  polars::pl$LazyFrame(a = 1, x = 2, y = 3),
+  polars::pl$LazyFrame(z = 1, x = 2, y = 3)
 )
 
 options(rlib_message_verbosity = "quiet")
@@ -115,8 +115,8 @@ expect_error_lazy(
 )
 
 l6 <- list(
-  pl$LazyFrame(x = 1)$rename(list(" " = "x")),
-  pl$LazyFrame(x = 1)$rename(list(" " = "x"))
+  polars::pl$LazyFrame(x = 1)$rename(list(" " = "x")),
+  polars::pl$LazyFrame(x = 1)$rename(list(" " = "x"))
 )
 
 expect_equal_lazy(

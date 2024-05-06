@@ -315,7 +315,7 @@ join_ <- function(x, y, by = NULL, how, suffix, relationship) {
   } else {
     out
   }
-  add_tidypolars_class(out)
+  out
 }
 
 

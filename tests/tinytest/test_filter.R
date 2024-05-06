@@ -34,7 +34,7 @@ expect_dim(
 
 iris2 <- iris
 iris2[c(3, 8, 58, 133), "Species"] <- NA
-pl_iris_2 <- pl$DataFrame(iris2)
+pl_iris_2 <- polars::pl$DataFrame(iris2)
 
 expect_dim(
   filter(pl_iris_2, is.na(Species)),
@@ -55,7 +55,7 @@ expect_dim(
 
 iris2 <- iris
 iris2[c(3, 8, 58, 133), "Sepal.Length"] <- NaN
-pl_iris_2 <- pl$DataFrame(iris2)
+pl_iris_2 <- polars::pl$DataFrame(iris2)
 
 expect_dim(
   filter(pl_iris_2, is.nan(Sepal.Length)),
@@ -76,7 +76,7 @@ expect_dim(
 
 # %in% operator
 
-pl_mtcars <- pl$DataFrame(mtcars)
+pl_mtcars <- polars::pl$DataFrame(mtcars)
 
 expect_dim(
   filter(pl_mtcars, cyl %in% 4:5),
@@ -184,7 +184,7 @@ expect_equal(
   TRUE
 )
 
-foo <- pl$DataFrame(
+foo <- polars::pl$DataFrame(
   grp = c("a", "a", "b", "b"),
   x = c(TRUE, TRUE, TRUE, FALSE)
 )

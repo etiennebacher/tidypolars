@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-test <- pl$DataFrame(
+test <- polars::pl$DataFrame(
   x1 = c("a", "a", "b"),
   x2 = 1:3,
   schema = list(x2 = polars::pl$Int64)

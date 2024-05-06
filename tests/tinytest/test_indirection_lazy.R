@@ -5,7 +5,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-test <- pl$LazyFrame(x = c(1, 1, 1), y = 4:6, z = c("a", "a", "b"))
+test <- polars::pl$LazyFrame(x = c(1, 1, 1), y = 4:6, z = c("a", "a", "b"))
 
 # Some examples from README of tidytable or "Programming with dplyr" -----
 
@@ -40,7 +40,7 @@ expect_equal_lazy(
   rep(3, 3)
 )
 
-pl_mtcars <- pl$LazyFrame(mtcars)
+pl_mtcars <- polars::pl$LazyFrame(mtcars)
 
 out <- pl_mtcars |>
   group_by(cyl) |>

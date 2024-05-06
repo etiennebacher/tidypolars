@@ -39,7 +39,7 @@
 #'   filter(Sepal.Length == max(Sepal.Length), .by = Species)
 
 filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
-  check_polars_data(.data)
+  .data <- check_polars_data(.data)
 
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
@@ -56,10 +56,6 @@ filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
     polars_exprs <- lapply(polars_exprs, \(x) x$over(grps))
   }
 
-  # this is only applied between expressions that were separated by a comma
-  # in the filter() call. So it won't replace the "|" call.
-  polars_exprs <- Reduce(`&`, polars_exprs)
-
   tryCatch(
     {
       out <- .data$filter(polars_exprs)
@@ -74,7 +70,7 @@ filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
     out
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname filter.RPolarsDataFrame

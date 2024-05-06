@@ -5,7 +5,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-test <- pl$LazyFrame(mtcars)
+test <- polars::pl$LazyFrame(mtcars)
 
 expect_is_tidypolars(make_unique_id(test, am, gear))
 
@@ -38,7 +38,7 @@ expect_equal_lazy(
 
 mtcars2 <- mtcars
 mtcars2$hash <- 1
-test2 <- pl$LazyFrame(mtcars2)
+test2 <- polars::pl$LazyFrame(mtcars2)
 
 expect_error_lazy(
   make_unique_id(test2, am, gear),

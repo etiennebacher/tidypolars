@@ -21,6 +21,6 @@ describe <- function(.data, percentiles = c(0.25, 0.75)) {
     )
   }
   out <- .data$describe(percentiles)
-  add_tidypolars_class(out)
+  out
 }
 

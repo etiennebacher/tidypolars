@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-pl_iris <- pl$DataFrame(iris)
+pl_iris <- polars::pl$DataFrame(iris)
 pl_iris_lazy <- pl$LazyFrame(iris)
 
 expect_is_tidypolars(compute(pl_iris_lazy))

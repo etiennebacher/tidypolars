@@ -25,7 +25,7 @@ test_df <- data.frame(
   s = 55:58
 )
 
-test <- pl$LazyFrame(test_df)
+test <- polars::pl$LazyFrame(test_df)
 
 
 for (i in c("year", "month", "day", "quarter", "week", "mday", "yday"

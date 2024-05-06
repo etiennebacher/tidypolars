@@ -17,7 +17,7 @@
 #' slice_sample(pl_test, prop = 0.1)
 
 slice_tail.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
-  check_polars_data(.data)
+  .data <- check_polars_data(.data)
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
@@ -37,7 +37,7 @@ slice_tail.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
     out
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname slice_tail.RPolarsDataFrame
@@ -48,7 +48,7 @@ slice_tail.RPolarsLazyFrame <- slice_tail.RPolarsDataFrame
 #' @export
 
 slice_head.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
-  check_polars_data(.data)
+  .data <- check_polars_data(.data)
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
@@ -68,7 +68,7 @@ slice_head.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
     out
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname slice_tail.RPolarsDataFrame
@@ -84,7 +84,7 @@ slice_head.RPolarsLazyFrame <- slice_head.RPolarsDataFrame
 #' @export
 
 slice_sample.RPolarsDataFrame <- function(.data, ..., n = NULL, prop = NULL, replace = FALSE, by = NULL) {
-  check_polars_data(.data)
+  .data <- check_polars_data(.data)
 
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
@@ -118,5 +118,5 @@ slice_sample.RPolarsDataFrame <- function(.data, ..., n = NULL, prop = NULL, rep
     out
   }
 
-  add_tidypolars_class(out)
+  out
 }

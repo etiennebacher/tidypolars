@@ -38,7 +38,7 @@ expect_dim(
 
 iris2 <- iris
 iris2[c(3, 8, 58, 133), "Species"] <- NA
-pl_iris_2 <- pl$LazyFrame(iris2)
+pl_iris_2 <- polars::pl$LazyFrame(iris2)
 
 expect_dim(
   filter(pl_iris_2, is.na(Species)),
@@ -59,7 +59,7 @@ expect_dim(
 
 iris2 <- iris
 iris2[c(3, 8, 58, 133), "Sepal.Length"] <- NaN
-pl_iris_2 <- pl$LazyFrame(iris2)
+pl_iris_2 <- polars::pl$LazyFrame(iris2)
 
 expect_dim(
   filter(pl_iris_2, is.nan(Sepal.Length)),
@@ -80,7 +80,7 @@ expect_dim(
 
 # %in% operator
 
-pl_mtcars <- pl$LazyFrame(mtcars)
+pl_mtcars <- polars::pl$LazyFrame(mtcars)
 
 expect_dim(
   filter(pl_mtcars, cyl %in% 4:5),
@@ -188,7 +188,7 @@ expect_equal_lazy(
   TRUE
 )
 
-foo <- pl$LazyFrame(
+foo <- polars::pl$LazyFrame(
   grp = c("a", "a", "b", "b"),
   x = c(TRUE, TRUE, TRUE, FALSE)
 )

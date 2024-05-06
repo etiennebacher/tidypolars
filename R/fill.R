@@ -32,7 +32,7 @@
 
 fill.RPolarsDataFrame <- function(data, ..., .direction = c("down", "up", "downup", "updown")) {
 
-  check_polars_data(data)
+  data <- check_polars_data(data)
   vars <- tidyselect_dots(data, ...)
   .direction <- match.arg(.direction)
 
@@ -60,7 +60,7 @@ fill.RPolarsDataFrame <- function(data, ..., .direction = c("down", "up", "downu
     data$with_columns(expr)
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @export

@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-test <- pl$DataFrame(mtcars)
+test <- polars::pl$DataFrame(mtcars)
 
 expect_is_tidypolars(make_unique_id(test, am, gear))
 
@@ -34,7 +34,7 @@ expect_equal(
 
 mtcars2 <- mtcars
 mtcars2$hash <- 1
-test2 <- pl$DataFrame(mtcars2)
+test2 <- polars::pl$DataFrame(mtcars2)
 
 expect_error(
   make_unique_id(test2, am, gear),

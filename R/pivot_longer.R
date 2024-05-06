@@ -34,7 +34,7 @@ pivot_longer.RPolarsDataFrame <- function(data, cols, ..., names_to = "name",
                                    names_prefix = NULL,
                                    values_to = "value") {
 
-  check_polars_data(data)
+  data <- check_polars_data(data)
 
   data_names <- names(data)
   value_vars <- tidyselect_named_arg(data, rlang::enquo(cols))
@@ -56,7 +56,7 @@ pivot_longer.RPolarsDataFrame <- function(data, cols, ..., names_to = "name",
       )
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname pivot_longer.RPolarsDataFrame

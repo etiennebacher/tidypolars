@@ -20,11 +20,11 @@ expect_dim(
 )
 
 
-p1 <- pl$DataFrame(
+p1 <- polars::pl$DataFrame(
   x = sample(letters, 20),
   y = sample(1:100, 20)
 )
-p2 <- pl$DataFrame(
+p2 <- polars::pl$DataFrame(
   z = sample(letters, 20),
   w = sample(1:100, 20)
 )
@@ -79,8 +79,8 @@ if (Sys.getenv("TIDYPOLARS_TEST") == "TRUE") {
 # arg ".name_repair"
 
 l5 <- list(
-  pl$DataFrame(a = 1, x = 2, y = 3),
-  pl$DataFrame(z = 1, x = 2, y = 3)
+  polars::pl$DataFrame(a = 1, x = 2, y = 3),
+  polars::pl$DataFrame(z = 1, x = 2, y = 3)
 )
 
 options(rlib_message_verbosity = "quiet")
@@ -111,8 +111,8 @@ expect_error(
 )
 
 l6 <- list(
-  pl$DataFrame(x = 1)$rename(list(" " = "x")),
-  pl$DataFrame(x = 1)$rename(list(" " = "x"))
+  polars::pl$DataFrame(x = 1)$rename(list(" " = "x")),
+  polars::pl$DataFrame(x = 1)$rename(list(" " = "x"))
 )
 
 expect_equal(

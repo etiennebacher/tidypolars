@@ -10,7 +10,7 @@
 #'   make_unique_id(am, gear)
 
 make_unique_id <- function(.data, ..., new_col = "hash") {
-  check_polars_data(.data)
+  .data <- check_polars_data(.data)
   if (new_col %in% names(.data)) {
     rlang::abort(
       paste0('Column "', new_col, '" already exists. Use a new name with the argument `new_col`.')
@@ -21,6 +21,6 @@ make_unique_id <- function(.data, ..., new_col = "hash") {
   out <- .data$with_columns(
     pl$struct(vars)$hash()$alias(new_col)
   )
-  add_tidypolars_class(out)
+  out
 }
 

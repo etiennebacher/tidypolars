@@ -23,7 +23,7 @@
 
 arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
 
-  check_polars_data(.data)
+  .data <- check_polars_data(.data)
 
   dots <- get_dots(...)
   out_length <- length(dots)
@@ -63,7 +63,7 @@ arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
     .data$sort(vars, descending = direction)
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @export

@@ -5,7 +5,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 source("helpers.R")
 using("tidypolars")
 
-pl_test <- pl$LazyFrame(
+pl_test <- polars::pl$LazyFrame(
   iso_o = rep(c("AA", "AB", "AC"), each = 2),
   iso_d = rep(c("BA", "BB", "BC"), each = 2),
   value = 1:6
@@ -40,7 +40,7 @@ expect_dim(
   c(0, 3)
 )
 
-pl_test <- pl$LazyFrame(
+pl_test <- polars::pl$LazyFrame(
   iso_o = c(rep(c("AA", "AB"), each = 2), "AC", "DC"),
   iso_d = rep(c("BA", "BB", "BC"), each = 2),
   value = c(2, 2, 3, 4, 5, 6)

@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tidypolars")
 
-test <- pl$DataFrame(x = c(1, 1, 1), y = 4:6, z = c("a", "a", "b"))
+test <- polars::pl$DataFrame(x = c(1, 1, 1), y = 4:6, z = c("a", "a", "b"))
 
 # Some examples from README of tidytable or "Programming with dplyr" -----
 
@@ -36,7 +36,7 @@ expect_equal(
   rep(3, 3)
 )
 
-pl_mtcars <- pl$DataFrame(mtcars)
+pl_mtcars <- polars::pl$DataFrame(mtcars)
 
 out <- pl_mtcars |>
   group_by(cyl) |>

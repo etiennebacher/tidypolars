@@ -109,7 +109,7 @@ mutate.RPolarsDataFrame <- function(
     .keep = c("all", "used", "unused", "none")
   ) {
 
-  check_polars_data(.data)
+  .data <- check_polars_data(.data)
   .keep <- rlang::arg_match0(.keep, values = c("all", "used", "unused", "none"))
 
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
@@ -124,7 +124,6 @@ mutate.RPolarsDataFrame <- function(
     env = rlang::current_env(),
     caller = rlang::caller_env()
   )
-
   used <- c()
   orig_names <- names(.data)
 
@@ -173,7 +172,7 @@ mutate.RPolarsDataFrame <- function(
     .data
   }
 
-  add_tidypolars_class(out)
+  out
 }
 
 #' @rdname mutate.RPolarsDataFrame
