@@ -234,6 +234,25 @@ pl_trimws <- function(string, which = "both", ...) {
   pl_str_trim(string, side = which)
 }
 
+# TODO: use $str$head() and $str$tail() when they are in polars (0.17.0)
+# pl_str_trunc <- function(string, width, side = "right", ellipsis = "...") {
+#   offset <- switch(
+#     side,
+#     "right" = 0,
+#     "left" = -1,
+#     "center" = abort("`side = \"center\" is not supported.`"),
+#     abort("`side` must be either \"left\" or \"right\".")
+#   )
+#
+#   out <- string$str$slice(offset = offset, length = width - 3)
+#
+#   if (side == "left") {
+#     pl$concat_str(pl$lit(ellipsis), out)
+#   } else if (side == "right") {
+#     pl$concat_str(out, pl$lit(ellipsis))
+#   }
+# }
+
 pl_word <- function(string, start = 1L, end = start, sep = " ", ...) {
   check_empty_dots(...)
   string$str$split(sep)$list$gather((start:end) - 1L)$list$join(sep)
