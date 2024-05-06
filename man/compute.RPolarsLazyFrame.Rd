@@ -32,7 +32,6 @@
   no_optimization = FALSE,
   streaming = FALSE,
   collect_in_background = FALSE,
-  verbose = TRUE,
   ...
 )
 }
@@ -74,9 +73,6 @@ resulting DataFrame. Useful in interactive mode to not lock R session (default
 is \code{FALSE}).}
 
 \item{...}{Not used.}
-
-\item{verbose}{If \code{TRUE} (default), show the deprecation warning on the
-usage of \code{collect()}.}
 }
 \description{
 \code{compute()} checks the query, optimizes it in the background, and runs it.
@@ -100,6 +96,13 @@ dat_lazy |>
   select(starts_with("Sepal")) |>
   filter(between(Sepal.Length, 5, 6)) |>
   compute()
+
+# call collect() instead to return a data.frame (note that this is more
+# expensive than compute())
+dat_lazy |>
+  select(starts_with("Sepal")) |>
+  filter(between(Sepal.Length, 5, 6)) |>
+  collect()
 \dontshow{\}) # examplesIf}
 }
 \seealso{

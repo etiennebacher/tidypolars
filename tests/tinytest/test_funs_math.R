@@ -32,7 +32,7 @@ for (i in c(
 
     variable <- "value_trigo"
 
-  } else if (i %in% "abs") {
+  } else if (i %in% c("abs", "mean")) {
     variable <- "value_mix"
   } else {
     variable <- "value"

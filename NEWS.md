@@ -1,14 +1,71 @@
 # tidypolars (development version)
 
+## Breaking changes
+
+* As announced in `tidypolars` 0.7.0, the behavior of `collect()` has changed.
+  It now returns a standard R `data.frame` and not a Polars `DataFrame` anymore.
+  Replace `collect()` by `compute()` (with the same arguments) to keep the old
+  behavior.
+
 ## New features
 
-* Add support for `all()`, `any()`, `diff()` `dplyr::consecutive_id()`,   
-  `dplyr::n_distinct()`, `length()`, `rev()`, `unique()`.
+* Add support for several functions:
+
+  - from package `base`: `all()`, `any()`, `diff()`, `ISOdatetime()`, 
+    `length()`, `rev()`, `unique()`.
+  
+  - from package `dplyr`: `consecutive_id()`, `min_rank()`, `na_if()`, 
+    `n_distinct()`, `nth()`.
+  
+  - from package `lubridate`: `make_datetime()`.
+  
+  - from package `stringr`: `str_dup()`, `str_split()`, `str_split_i()`.
 
 ## Bug fixes
 
 * Local variables in custom functions could not be used in tidypolars functions
   (reported in a blog post of Art Steinmetz). This is now fixed.
+  
+* `across()` now works when `.cols` contains only one variable and `.fns` contains
+  only one function.
+  
+* In `across()`, the `.cols` argument now takes into account variables created
+  in the same `mutate()` or `summarize()` call before `across()`. 
+  
+  ```r
+  as_polars_df(mtcars) |> 
+    head(n = 3) |> 
+    mutate(
+      foo = 1, 
+      across(.cols = contains("oo"), \(x) x - 1)
+    )
+  
+  shape: (3, 12)
+  ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬─────┐
+  │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ foo │
+  │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ --- │
+  │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ f64 │
+  ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═════╡
+  │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 0.0 │
+  │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 0.0 │
+  │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 0.0 │
+  └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴─────┘
+  ```
+  
+  Note that the `where()` function is not supported here. For example:
+  
+  ```r
+  as_polars_df(mtcars) |> 
+    mutate(
+      foo = 1, 
+      across(.cols = where(is.numeric), \(x) x - 1)
+    )
+  ```
+  will *not* return 0 for the variable `foo`. A warning is emitted about this 
+  behavior. 
+  
+* Better handling of negative values in `c()` when called in `mutate()` and
+  `summarize()`.
 
 
 # tidypolars 0.7.0

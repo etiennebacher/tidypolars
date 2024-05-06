@@ -24,7 +24,11 @@ the output. The value can be:
 \item A vector the same length as the current group (or the whole data
 frame if ungrouped).
 \item NULL, to remove the column.
-}}
+}
+
+\code{across()} is mostly supported, except in a few cases. In particular, if the
+\code{.cols} argument is \code{where(...)}, it will \emph{not} select variables that were
+created before \code{across()}. Other select helpers are supported. See the examples.}
 
 \item{.by}{Optionally, a selection of columns to group by for just this
 operation, functioning as an alternative to \code{group_by()}. The group order

@@ -243,6 +243,16 @@ expect_equal(
   mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
 )
 
+# single variable in .cols, single function
+
+expect_equal(
+  mutate(
+    test,
+    across(.cols = mpg, mean)
+  ),
+  mutate(test, mpg = mean(mpg))
+)
+
 # just one check for summarize()
 
 test_grp <- group_by(test, cyl, maintain_order = TRUE)
@@ -259,7 +269,6 @@ expect_equal(
     as.data.frame()
 )
 
-
 # sequence of expressions modifying the same vars works
 
 test2 <- mutate(
@@ -275,6 +284,77 @@ expect_equal(
 expect_colnames(
   test2,
   setdiff(colnames(mtcars), "gear")
+)
+
+# newly created variable is captured in across
+
+expect_equal(
+  test |>
+    mutate(
+      bar = 1,
+      across(.cols = contains("a"), \(x) x - 1)
+    ) |>
+    pull(bar),
+  rep(0, 6)
+)
+
+expect_equal(
+  test |>
+    mutate(
+      bar = 1,
+      across(.cols = starts_with("b"), \(x) x - 1)
+    ) |>
+    pull(bar),
+  rep(0, 6)
+)
+
+expect_equal(
+  test |>
+    mutate(
+      bar = 1,
+      across(.cols = ends_with("r"), \(x) x - 1)
+    ) |>
+    pull(bar),
+  rep(0, 6)
+)
+
+expect_equal(
+  test |>
+    mutate(
+      bar = 1,
+      across(.cols = matches("^b"), \(x) x - 1)
+    ) |>
+    pull(bar),
+  rep(0, 6)
+)
+
+expect_equal(
+  test |>
+    mutate(
+      bar = 1,
+      across(.cols = everything(), \(x) x - 1)
+    ) |>
+    pull(bar),
+  rep(0, 6)
+)
+
+expect_equal(
+  test |>
+    mutate(
+      foo = 1,
+      across(.cols = contains("oo"), \(x) x - 1)
+    ) |>
+    pull(foo),
+  rep(0, 6)
+)
+
+expect_warning(
+  test |>
+    mutate(
+      foo = 1,
+      across(.cols = where(is.numeric), \(x) x - 1)
+    ),
+  "will not take into account"
 )
 
 

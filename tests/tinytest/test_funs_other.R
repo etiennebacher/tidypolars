@@ -275,3 +275,184 @@ expect_equal(
     pull(foo),
   c(1, 2, 3, 1, 2)
 )
+
+# first
+
+test <- polars::pl$DataFrame(
+  x = c(3, 1, 2, 2, NA),
+  grp = c("A", "A", "A", "B", "B")
+)
+
+expect_equal(
+  test |>
+    summarize(foo = first(x)) |>
+    pull(foo),
+  3
+)
+
+expect_equal(
+  test |>
+    summarize(foo = first(x), .by = grp) |>
+    pull(foo) |>
+    sort(),
+  c(2, 3)
+)
+
+expect_warning(
+  test |>
+    summarize(foo = first(x, order_by = "bar")),
+  "will not be used"
+)
+
+# last
+
+test <- polars::pl$DataFrame(
+  x = c(3, 1, 2, 2, NA),
+  grp = c("A", "A", "A", "B", "B")
+)
+
+expect_equal(
+  test |>
+    summarize(foo = last(x)) |>
+    pull(foo),
+  NA_real_
+)
+
+expect_equal(
+  test |>
+    summarize(foo = last(x), .by = grp) |>
+    pull(foo) |>
+    sort(na.last = TRUE),
+  c(2, NA)
+)
+
+expect_warning(
+  test |>
+    summarize(foo = last(x, order_by = "bar")),
+  "will not be used"
+)
+
+# nth
+
+test <- polars::pl$DataFrame(
+  x = c(3, 1, 2, 2, NA),
+  idx = 1:5,
+  grp = c("A", "A", "A", "B", "B")
+)
+
+expect_equal(
+  test |>
+    summarize(foo = nth(x, 2)) |>
+    pull(foo),
+  1
+)
+
+expect_equal(
+  test |>
+    summarize(foo = nth(x, -1)) |>
+    pull(foo),
+  NA_real_
+)
+
+# TODO: Requires null_on_oob argument in gather/get
+# https://github.com/pola-rs/polars/issues/15240
+# expect_equal(
+#   test |>
+#     summarize(foo = nth(x, 1000)) |>
+#     pull(foo),
+#   NA_real_
+# )
+
+expect_error(
+  test |>
+    summarize(foo = nth(x, 2:3)) |>
+    pull(foo),
+  "must have size 1"
+)
+
+expect_error(
+  test |>
+    summarize(foo = nth(x, NA)) |>
+    pull(foo),
+  "can't be `NA`"
+)
+
+expect_error(
+  test |>
+    summarize(foo = nth(x, 1.5)) |>
+    pull(foo),
+  "must be an integer"
+)
+
+# na_if
+
+test <- polars::pl$DataFrame(
+  x = c(3, 1, 2, 2, 3),
+  grp = c("A", "A", "A", "B", "")
+)
+
+expect_equal(
+  test |>
+    mutate(foo = na_if(x, 3)) |>
+    pull(foo),
+  c(NA, 1, 2, 2, NA)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = na_if(x, 3), .by = grp) |>
+    pull(foo),
+  c(NA, 1, 2, 2, NA)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = na_if(grp, "")) |>
+    pull(foo),
+  c("A", "A", "A", "B", NA)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = na_if(x, c(3, 1, 1, 1, 1))) |>
+    pull(foo),
+  c(NA, NA, 2, 2, 3)
+)
+
+expect_error(
+  test |>
+    mutate(foo = na_if(x, 1:2)),
+  "different lengths"
+)
+
+expect_equal(
+  test |>
+    mutate(foo = na_if(x, NA)) |>
+    pull(foo),
+  c(3, 1, 2, 2, 3)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = na_if(x, c(NA, 1, 1, 1, 1))) |>
+    pull(foo),
+  c(3, NA, 2, 2, 3)
+)
+
+# min_rank
+
+test <- polars::pl$DataFrame(x = c(5, 1, 3, 2, 2, NA), y = c(rep(NA, 5), 1))
+
+expect_equal(
+  test |>
+    mutate(foo = min_rank(x)) |>
+    pull(foo),
+  c(5, 1, 4, 2, 2, NA)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = min_rank(y)) |>
+    pull(foo),
+  c(rep(NA, 5), 1)
+)
