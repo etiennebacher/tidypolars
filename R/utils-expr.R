@@ -209,7 +209,7 @@ translate <- function(
         if (name[[2]] %in% c("base", "stats")) {
           new_fn_name <- name[[3]]
         } else {
-          new_fn_name <- paste0(name[[3]], "_", name[[2]])
+          new_fn_name <- paste0(name[[2]], "::", name[[3]])
         }
         expr[[1]] <- new_fn_name
         out <- translate(
@@ -421,7 +421,8 @@ translate <- function(
         }
       )
 
-      name <- add_pkg_suffix(name)
+      fn_names <- add_pkg_suffix(name)
+      name <- fn_names$name_to_eval
       is_known <- is_function_known(name)
       known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
                      "&", "|", "!")
@@ -472,12 +473,10 @@ translate <- function(
             )
           }
         } else {
-          pkg_name <- sub(".*_", "", name)
-          fn_name <- gsub(paste0("pl_(.*)_", pkg_name), "\\1", name)
           abort(
             paste0(
               "`tidypolars` doesn't know how to translate this function: `",
-              fn_name, "()` (from package `", pkg_name, "`)"
+              fn_names$orig_name, "()`"
             ),
             call = env
           )
@@ -605,12 +604,22 @@ env_from_dots <- function(...) {
 }
 
 add_pkg_suffix <- function(name) {
-  pkg <- ns_env_name(as_function(name))
-  if (pkg %in% c("base", "stats")) {
-    paste0("pl_", name)
+  pkg <- tryCatch(
+    ns_env_name(as_function(name)),
+    error = function(e) {
+      if (grepl("::", name)) {
+        return(gsub(".*::", "", name))
+      } else {
+        return(NULL)
+      }
+    }
+  )
+  if (is.null(pkg) || pkg %in% c("base", "stats")) {
+    name_to_eval <- paste0("pl_", name)
   } else {
-    paste0("pl_", name, "_", pkg)
+    name_to_eval <- paste0("pl_", name, "_", pkg)
   }
+  list(orig_name = name, name_to_eval = name_to_eval)
 }
 
 is_function_known <- function(name) {
