@@ -616,7 +616,7 @@ add_pkg_suffix <- function(name, known_ops, user_defined) {
     gsub("::.*", "", name)
   } else {
     tryCatch(
-      ns_env_name(as_function(name)),
+      getNamespaceName(environment(eval(parse(text = name)))),
       error = function(e) return(NULL)
     )
   }
