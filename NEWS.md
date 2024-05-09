@@ -19,7 +19,8 @@
   
   - from package `lubridate`: `make_datetime()`.
   
-  - from package `stringr`: `str_dup()`, `str_split()`, `str_split_i()`.
+  - from package `stringr`: `str_dup()`, `str_split()`, `str_split_i()`, 
+    `str_trunc()`.
   
   - from package `tidyr`: `replace_na()` (the data.frame method was already
     translated but not the vector one that can be used in `mutate()` for example).
