@@ -7,14 +7,26 @@ using("tidypolars")
 
 test <- polars::pl$LazyFrame(x = 1:3)
 
+# with base
+expect_equal_lazy(
+  test |> mutate(y = sum(x)),
+  test |> mutate(y = base::sum(x))
+)
+
+# with other pkgs
 expect_equal_lazy(
   test |> mutate(y = lag(x)),
   test |> mutate(y = dplyr::lag(x))
 )
 
 expect_equal_lazy(
-  test |> mutate(y = sum(x)),
-  test |> mutate(y = base::sum(x))
+  test |> summarize(y = lag(x)),
+  test |> summarize(y = dplyr::lag(x))
+)
+
+expect_equal_lazy(
+  test |> filter(x == first(x)),
+  test |> filter(x == dplyr::first(x))
 )
 
 # function exists but has no translation
