@@ -610,20 +610,21 @@ add_pkg_suffix <- function(name, known_ops, user_defined) {
   if (name %in% c(known_ops, user_defined)) {
     return(list(orig_name = name, name_to_eval = name))
   }
-  fn <- name
-  pkg <- if (grepl("::", name)) {
-    fn <- gsub(".*::", "", name)
-    gsub("::.*", "", name)
+
+  if (grepl("::", name)) {
+    pkg <- gsub("::.*", "", name)
+    name <- gsub(".*::", "", name)
   } else {
-    tryCatch(
+    pkg <- tryCatch(
       getNamespaceName(environment(eval(parse(text = name)))),
       error = function(e) return(NULL)
     )
   }
+
   if (is.null(pkg) || pkg %in% c("base", "stats", "utils", "tools")) {
-    name_to_eval <- paste0("pl_", fn)
+    name_to_eval <- paste0("pl_", name)
   } else {
-    name_to_eval <- paste0("pl_", fn, "_", pkg)
+    name_to_eval <- paste0("pl_", name, "_", pkg)
   }
   list(orig_name = name, name_to_eval = name_to_eval)
 }
