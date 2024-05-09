@@ -511,7 +511,7 @@ translate <- function(
             orig_name <- gsub("^pl_", "", name)
             abort(
               c(
-                paste0("Couldn't evaluate function `", orig_name, "()` in Polars."),
+                paste0("Error while running function `", orig_name, "()` in Polars."),
                 "x" = toupper_first(conditionMessage(e))
               ),
               call = env
