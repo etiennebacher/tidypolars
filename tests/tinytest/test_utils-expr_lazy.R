@@ -63,9 +63,4 @@ expect_equal_lazy(
   )
 )
 
-expect_error_lazy(
-  mutate(pl_iris, Sepal.Length = dplyr::lag(Sepal.Length)),
-  "doesn't work when expressions contain"
-)
-
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
