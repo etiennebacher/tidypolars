@@ -27,7 +27,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - {os: macOS-latest,   r: 'release'}
+          - {os: macOS-12,   r: 'release'}
           - {os: ubuntu-latest,  r: 'release'}
 
     runs-on: ${{ matrix.os }}
