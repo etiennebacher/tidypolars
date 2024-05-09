@@ -735,4 +735,49 @@ expect_error_lazy(
   "must not be 0"
 )
 
+# trunc ---------------------------------------------------------
+
+expect_equal_lazy(
+  mutate(test, foo = str_trunc(x1, 5)) |>
+    pull(foo),
+  mutate(test_df, foo = str_trunc(x1, 5)) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  mutate(test, foo = str_trunc(x1, 5, side = "left")) |>
+    pull(foo),
+  mutate(test_df, foo = str_trunc(x1, 5, side = "left")) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  mutate(test, foo = str_trunc(x1, 3)) |>
+    pull(foo),
+  mutate(test_df, foo = str_trunc(x1, 3)) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  mutate(test, foo = str_trunc(x1, 5, ellipsis = "<>")) |>
+    pull(foo),
+  mutate(test_df, foo = str_trunc(x1, 5, ellipsis = "<>")) |>
+    pull(foo)
+)
+
+expect_error_lazy(
+  mutate(test, foo = str_trunc(x1, 1)),
+  "is shorter than `ellipsis`"
+)
+
+expect_error_lazy(
+  mutate(test, foo = str_trunc(x1, 5, side = "center")),
+  "is not supported"
+)
+
+expect_error_lazy(
+  mutate(test, foo = str_trunc(x1, 5, side = "foobar")),
+  "must be either"
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

@@ -148,22 +148,7 @@ pl_atanh <- function(x, ...) {
   x$arctanh()
 }
 
-pl_which.max <- function(x, ...) {
-  check_empty_dots(...)
-  x$arg_max() + 1
-}
-
-pl_which.min <- function(x, ...) {
-  check_empty_dots(...)
-  x$arg_min() + 1
-}
-
-pl_arg_sort <- function(x, ...) {
-  check_empty_dots(...)
-  x$arg_sort()
-}
-
-pl_between <- function(x, left, right, ...) {
+pl_between_dplyr <- function(x, left, right, ...) {
   check_empty_dots(...)
   x$is_between(lower_bound = left, upper_bound = right, closed = "both")
 }
@@ -231,12 +216,12 @@ pl_ceiling <- function(x, ...) {
   x$ceil()
 }
 
-pl_coalesce <- function(..., default = NULL) {
+pl_coalesce_dplyr <- function(..., default = NULL) {
   # pl$coalesce() doesn't accept a list
   call2(pl$coalesce, !!!clean_dots(...), default) |> eval_bare()
 }
 
-pl_consecutive_id <- function(...) {
+pl_consecutive_id_dplyr <- function(...) {
   dots <- clean_dots(...)
   env <- env_from_dots(...)
   if (length(dots) == 0) {
@@ -279,11 +264,6 @@ pl_cumsum <- function(x, ...) {
   x$cum_sum()
 }
 
-pl_cumulative_eval <- function(x, ...) {
-  check_empty_dots(...)
-  x$cumulative_eval()
-}
-
 pl_diff <- function(x, lag = 1, differences = 1, ...) {
   check_empty_dots(...)
   if (!is.null(differences) && length(differences) == 1 && differences != 1) {
@@ -305,7 +285,7 @@ pl_exp <- function(x, ...) {
   x$exp()
 }
 
-pl_first <- function(x, ...) {
+pl_first_dplyr <- function(x, ...) {
   check_empty_dots(...)
   x$first()
 }
@@ -329,11 +309,6 @@ pl_infinite <- function(x, ...) {
 pl_interpolate <- function(x, ...) {
   check_empty_dots(...)
   x$interpolate()
-}
-
-pl_is_duplicated <- function(x, ...) {
-  check_empty_dots(...)
-  x$is_duplicated()
 }
 
 pl_is.finite <- function(x, ...) {
@@ -361,22 +336,22 @@ pl_is.null <- function(x, ...) {
   x$is_null()
 }
 
-pl_is_unique <- function(x, ...) {
-  check_empty_dots(...)
-  x$is_unique()
-}
-
-pl_bottom_k <- function(x, ...) {
-  check_empty_dots(...)
-  x$bottom_k()
-}
-
 pl_kurtosis <- function(x, ...) {
   check_empty_dots(...)
   x$kurtosis()
 }
 
-pl_last <- function(x, ...) {
+pl_lag <- function(x, k = 1, ...) {
+  check_empty_dots(...)
+  x$shift(k)
+}
+
+pl_lag_dplyr <- function(x, n = 1, ...) {
+  check_empty_dots(...)
+  x$shift(n)
+}
+
+pl_last_dplyr <- function(x, ...) {
   check_empty_dots(...)
   x$last()
 }
@@ -400,31 +375,16 @@ pl_mode <- function(x, ...) {
   x$mode()
 }
 
-pl_fill_nan <- function(x, ...) {
-  check_empty_dots(...)
-  x$fill_nan()
-}
-
-pl_drop_nans <- function(x, ...) {
-  check_empty_dots(...)
-  x$drop_nans()
-}
-
-pl_fill_null <- function(x, ...) {
-  check_empty_dots(...)
-  x$fill_null()
-}
-
-pl_drop_nulls <- function(x, ...) {
-  check_empty_dots(...)
-  x$drop_nulls()
-}
-
-pl_min_rank <- function(x) {
+pl_min_rank_dplyr <- function(x) {
   x$rank(method = "min")
 }
 
-pl_na_if <- function(x, y) {
+pl_n_dplyr <- function(...) {
+  check_empty_dots()
+  pl$len()
+}
+
+pl_na_if_dplyr <- function(x, y) {
   if (length(y) == 1 && !inherits(y, "RPolarsExpr") && is.na(y)) {
     pl$when(x$is_null())$then(pl$lit(NA))$otherwise(x)
   } else {
@@ -432,7 +392,7 @@ pl_na_if <- function(x, y) {
   }
 }
 
-pl_n_distinct <- function(..., na.rm = FALSE) {
+pl_n_distinct_dplyr <- function(..., na.rm = FALSE) {
   dots <- clean_dots(...)
   if (length(dots) == 0) {
     abort(
@@ -448,7 +408,7 @@ pl_n_distinct <- function(..., na.rm = FALSE) {
   }
 }
 
-pl_nth <- function(x, n, ...) {
+pl_nth_dplyr <- function(x, n, ...) {
   if (length(n) > 1) {
     abort(
       paste0("`n` must have size 1, not size ", length(n), "."),
@@ -474,13 +434,14 @@ pl_nth <- function(x, n, ...) {
   x$gather(n)
 }
 
-pl_quantile <- function(x, ...) {
-  check_empty_dots(...)
-  x$quantile()
-}
 pl_rank <- function(x, ...) {
   check_empty_dots(...)
   x$rank()
+}
+
+pl_replace_na_tidyr <- function(data, replace, ...) {
+  check_empty_dots(...)
+  data$fill_null(replace)
 }
 
 pl_round <- function(x, digits = 0, ...) {
@@ -488,16 +449,14 @@ pl_round <- function(x, digits = 0, ...) {
   x$round(decimals = digits)
 }
 
+pl_rev <- function(x) {
+  x$reverse()
+}
+
 pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
   check_empty_dots(...)
   # TODO: how should I handle seed, given that R sample() doesn't have this arg
   x$sample(n = size, with_replacement = replace, shuffle = TRUE)
-}
-
-pl_lag <- function(x, n = 1, k = NULL, ...) {
-  check_empty_dots(...)
-  if (!is.null(k)) n <- k
-  x$shift(n)
 }
 
 pl_sign <- function(x, ...) {
@@ -518,11 +477,6 @@ pl_sinh <- function(x, ...) {
 pl_skew <- function(x, ...) {
   check_empty_dots(...)
   x$skew()
-}
-
-pl_slice <- function(x, ...) {
-  check_empty_dots(...)
-  x$slice()
 }
 
 pl_sort <- function(x, ...) {
@@ -560,106 +514,12 @@ pl_var <- function(x, ddof = 1, ...) {
   x$var(ddof = ddof)
 }
 
-pl_n_unique <- function(x, ...) {
+pl_which.max <- function(x, ...) {
   check_empty_dots(...)
-  x$n_unique()
+  x$arg_max() + 1
 }
 
-pl_nan_max <- function(x, ...) {
+pl_which.min <- function(x, ...) {
   check_empty_dots(...)
-  x$nan_max()
-}
-
-pl_nan_min <- function(x, ...) {
-  check_empty_dots(...)
-  x$nan_min()
-}
-
-pl_null_count <- function(x, ...) {
-  check_empty_dots(...)
-  x$null_count()
-}
-
-pl_pct_change <- function(x, ...) {
-  check_empty_dots(...)
-  x$pct_change()
-}
-
-pl_rev <- function(x) {
-  x$reverse()
-}
-
-pl_rolling_max <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_max()
-}
-
-pl_rolling_mean <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_mean()
-}
-
-pl_rolling_median <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_median()
-}
-
-pl_rolling_min <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_min()
-}
-
-pl_rolling_quantile <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_quantile()
-}
-
-pl_rolling_skew <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_skew()
-}
-
-pl_rolling_std <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_std()
-}
-
-pl_rolling_sum <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_sum()
-}
-
-pl_rolling_var <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_var()
-}
-
-pl_shift_and_fill <- function(x, ...) {
-  check_empty_dots(...)
-  x$shift_and_fill()
-}
-
-pl_top_k <- function(x, ...) {
-  check_empty_dots(...)
-  x$top_k()
-}
-
-pl_unique_counts <- function(x, ...) {
-  check_empty_dots(...)
-  x$unique_counts()
-}
-
-pl_upper_lower_bound <- function(x, ...) {
-  check_empty_dots(...)
-  x$upper_lower_bound()
-}
-
-pl_value_counts <- function(x, ...) {
-  check_empty_dots(...)
-  x$value_counts()
-}
-
-pl_n <- function(...) {
-  check_empty_dots()
-  pl$len()
+  x$arg_min() + 1
 }

@@ -287,6 +287,7 @@ out <- tribble(
   "`stringr`",          "`str_to_title`",
   "`stringr`",          "`str_to_upper`",
   "`stringr`",          "`word`",
+  "`tidyr`",            "`replace_na`",
   "`tools`",            "`toTitleCase`"
 ) |>
   mutate(Notes = case_when(

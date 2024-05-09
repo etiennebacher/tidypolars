@@ -206,14 +206,21 @@ translate <- function(
     language = {
       name <- as.character(expr[[1]])
       if (length(name) == 3 && name[[1]] == "::") {
-        # TODO
-        abort(
-          c(
-            "tidypolars doesn't work when expressions contain `<pkg>::`.",
-            "Use `library(<pkg>)` in your script instead."
-          ),
-          call = env
+        if (name[[2]] %in% c("base", "stats", "utils", "tools")) {
+          new_fn_name <- name[[3]]
+        } else {
+          new_fn_name <- paste0(name[[2]], "::", name[[3]])
+        }
+        expr[[1]] <- new_fn_name
+        out <- translate(
+          expr,
+          .data = .data,
+          new_vars = new_vars,
+          env = env,
+          caller = caller,
+          call_is_function = call_is_function
         )
+        return(out)
       }
 
       switch(
@@ -414,13 +421,18 @@ translate <- function(
         }
       )
 
-      is_known <- is_function_known(name)
+      user_defined <- get_globenv_functions()
       known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
                      "&", "|", "!")
-      user_defined <- get_globenv_functions()
+      fn_names <- add_pkg_suffix(name, known_ops, user_defined)
+      name <- fn_names$name_to_eval
+      is_known <- is_function_known(name)
 
       if (!missing(env) && isTRUE(env$is_rowwise)) {
-        shortlist <- c("mean", "median", "min", "max", "sum", "all", "any", "!")
+        shortlist <- c(
+          paste0("pl_", c("mean", "median", "min", "max", "sum", "all", "any")),
+          "!"
+        )
         if (!name %in% shortlist) {
           rlang::abort(
             c(
@@ -464,7 +476,13 @@ translate <- function(
             )
           }
         } else {
-          abort(paste("Unknown function:", name), call = env)
+          abort(
+            paste0(
+              "`tidypolars` doesn't know how to translate this function: `",
+              fn_names$orig_name, "()`"
+            ),
+            call = env
+          )
         }
       }
 
@@ -477,9 +495,6 @@ translate <- function(
         caller = caller,
         call_is_function = call_is_function
       )
-      if (is_known) {
-        name <- paste0("pl_", name)
-      }
 
       tryCatch(
         {
@@ -499,7 +514,7 @@ translate <- function(
             orig_name <- gsub("^pl_", "", name)
             abort(
               c(
-                paste0("Couldn't evaluate function `", orig_name, "()` in Polars."),
+                paste0("Error while running function `", orig_name, "()` in Polars."),
                 "x" = toupper_first(conditionMessage(e))
               ),
               call = env
@@ -591,15 +606,39 @@ env_from_dots <- function(...) {
   dots[["__tidypolars__env"]]
 }
 
+add_pkg_suffix <- function(name, known_ops, user_defined) {
+  if (name %in% c(known_ops, user_defined)) {
+    return(list(orig_name = name, name_to_eval = name))
+  }
+
+  fn <- name
+
+  if (grepl("::", fn)) {
+    pkg <- gsub("::.*", "", fn)
+    fn <- gsub(".*::", "", fn)
+  } else {
+    pkg <- tryCatch(
+      ns_env_name(as_function(name)),
+      error = function(e) return(NULL)
+    )
+  }
+
+  if (is.null(pkg) || pkg %in% c("base", "stats", "utils", "tools")) {
+    name_to_eval <- paste0("pl_", fn)
+  } else {
+    name_to_eval <- paste0("pl_", fn, "_", pkg)
+  }
+  list(orig_name = name, name_to_eval = name_to_eval)
+}
+
 is_function_known <- function(name) {
-  with_prefix <- paste0("pl_", name)
-  ev <- try(environment(eval(parse(text = with_prefix))), silent = TRUE)
+  ev <- try(environment(eval(parse(text = name))), silent = TRUE)
   if (inherits(ev, "try-error")) {
     env_tidypolars <- NULL
   } else {
     env_tidypolars <- ev
   }
-  !is.null(env_tidypolars[[with_prefix]])
+  !is.null(env_tidypolars[[name]])
 }
 
 
