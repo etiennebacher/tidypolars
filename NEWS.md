@@ -23,6 +23,9 @@
   
   - from package `tidyr`: `replace_na()` (the data.frame method was already
     translated but not the vector one that can be used in `mutate()` for example).
+    
+* It is now possible to use explicit namespaces (such as `dplyr::first()` instead
+  of `first()`) in `mutate()`, `summarize()` and `filter()` (#114).
 
 ## Bug fixes
 

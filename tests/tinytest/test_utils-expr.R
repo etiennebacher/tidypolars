@@ -58,8 +58,3 @@ expect_equal(
     pool_exprs_3 = list(x = NULL)
   )
 )
-
-expect_error(
-  mutate(pl_iris, Sepal.Length = dplyr::lag(Sepal.Length)),
-  "doesn't work when expressions contain"
-)
