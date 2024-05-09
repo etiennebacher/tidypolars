@@ -429,7 +429,10 @@ translate <- function(
       is_known <- is_function_known(name)
 
       if (!missing(env) && isTRUE(env$is_rowwise)) {
-        shortlist <- c("mean", "median", "min", "max", "sum", "all", "any", "!")
+        shortlist <- c(
+          paste0("pl_", c("mean", "median", "min", "max", "sum", "all", "any")),
+          "!"
+        )
         if (!name %in% shortlist) {
           rlang::abort(
             c(
