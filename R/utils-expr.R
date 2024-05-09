@@ -206,14 +206,21 @@ translate <- function(
     language = {
       name <- as.character(expr[[1]])
       if (length(name) == 3 && name[[1]] == "::") {
-        # TODO
-        abort(
-          c(
-            "tidypolars doesn't work when expressions contain `<pkg>::`.",
-            "Use `library(<pkg>)` in your script instead."
-          ),
-          call = env
+        if (name[[2]] %in% c("base", "stats")) {
+          new_fn_name <- name[[3]]
+        } else {
+          new_fn_name <- paste0(name[[3]], "_", name[[2]])
+        }
+        expr[[1]] <- new_fn_name
+        out <- translate(
+          expr,
+          .data = .data,
+          new_vars = new_vars,
+          env = env,
+          caller = caller,
+          call_is_function = call_is_function
         )
+        return(out)
       }
 
       switch(
@@ -414,6 +421,7 @@ translate <- function(
         }
       )
 
+      name <- add_pkg_suffix(name)
       is_known <- is_function_known(name)
       known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
                      "&", "|", "!")
@@ -464,7 +472,15 @@ translate <- function(
             )
           }
         } else {
-          abort(paste("Unknown function:", name), call = env)
+          pkg_name <- sub(".*_", "", name)
+          fn_name <- gsub(paste0("pl_(.*)_", pkg_name), "\\1", name)
+          abort(
+            paste0(
+              "`tidypolars` doesn't know how to translate this function: `",
+              fn_name, "()` (from package `", pkg_name, "`)"
+            ),
+            call = env
+          )
         }
       }
 
@@ -477,9 +493,6 @@ translate <- function(
         caller = caller,
         call_is_function = call_is_function
       )
-      if (is_known) {
-        name <- paste0("pl_", name)
-      }
 
       tryCatch(
         {
@@ -591,15 +604,23 @@ env_from_dots <- function(...) {
   dots[["__tidypolars__env"]]
 }
 
+add_pkg_suffix <- function(name) {
+  pkg <- ns_env_name(as_function(name))
+  if (pkg %in% c("base", "stats")) {
+    paste0("pl_", name)
+  } else {
+    paste0("pl_", name, "_", pkg)
+  }
+}
+
 is_function_known <- function(name) {
-  with_prefix <- paste0("pl_", name)
-  ev <- try(environment(eval(parse(text = with_prefix))), silent = TRUE)
+  ev <- try(environment(eval(parse(text = name))), silent = TRUE)
   if (inherits(ev, "try-error")) {
     env_tidypolars <- NULL
   } else {
     env_tidypolars <- ev
   }
-  !is.null(env_tidypolars[[with_prefix]])
+  !is.null(env_tidypolars[[name]])
 }
 
 
