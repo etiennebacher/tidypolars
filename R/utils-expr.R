@@ -206,7 +206,7 @@ translate <- function(
     language = {
       name <- as.character(expr[[1]])
       if (length(name) == 3 && name[[1]] == "::") {
-        if (name[[2]] %in% c("base", "stats")) {
+        if (name[[2]] %in% c("base", "stats", "utils", "tools")) {
           new_fn_name <- name[[3]]
         } else {
           new_fn_name <- paste0(name[[2]], "::", name[[3]])
@@ -421,12 +421,12 @@ translate <- function(
         }
       )
 
-      fn_names <- add_pkg_suffix(name)
-      name <- fn_names$name_to_eval
-      is_known <- is_function_known(name)
+      user_defined <- get_globenv_functions()
       known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
                      "&", "|", "!")
-      user_defined <- get_globenv_functions()
+      fn_names <- add_pkg_suffix(name, known_ops, user_defined)
+      name <- fn_names$name_to_eval
+      is_known <- is_function_known(name)
 
       if (!missing(env) && isTRUE(env$is_rowwise)) {
         shortlist <- c("mean", "median", "min", "max", "sum", "all", "any", "!")
@@ -603,7 +603,10 @@ env_from_dots <- function(...) {
   dots[["__tidypolars__env"]]
 }
 
-add_pkg_suffix <- function(name) {
+add_pkg_suffix <- function(name, known_ops, user_defined) {
+  if (name %in% c(known_ops, user_defined)) {
+    return(list(orig_name = name, name_to_eval = name))
+  }
   pkg <- tryCatch(
     ns_env_name(as_function(name)),
     error = function(e) {
@@ -614,7 +617,7 @@ add_pkg_suffix <- function(name) {
       }
     }
   )
-  if (is.null(pkg) || pkg %in% c("base", "stats")) {
+  if (is.null(pkg) || pkg %in% c("base", "stats", "utils", "tools")) {
     name_to_eval <- paste0("pl_", name)
   } else {
     name_to_eval <- paste0("pl_", name, "_", pkg)
