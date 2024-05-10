@@ -174,10 +174,10 @@ automatically drops the missing values). Internally,
 and throws a message if this is not the case:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.tidypolars.etiennebacher.com/" class="external-link">tidypolars</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rpolars.github.io/" class="external-link">polars</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pola-rs.github.io/r-polars/" class="external-link">polars</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">mpg</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: </span></span>
 <span><span class="co">#&gt; Not all arguments of sd() are used by Polars.</span></span>
@@ -225,7 +225,7 @@ call:</p>
 use it like any other function:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu">pl_standardize</span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; shape: (32, 12)</span></span>
 <span><span class="co">#&gt; ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────────┐</span></span>
@@ -255,7 +255,7 @@ functions) to a selection of columns. It accepts built-in functions,
 UDFs, and anonymous functions.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span></span>
 <span>      .cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"a"</span><span class="op">)</span>,</span>
@@ -284,7 +284,7 @@ UDFs, and anonymous functions.</p>
 return a Polars expression:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span></span>
 <span>      .cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"a"</span><span class="op">)</span>,</span>
@@ -308,9 +308,9 @@ return a Polars expression:</p>
 </h3>
 <table class="table">
 <colgroup>
-<col width="6%">
+<col width="5%">
 <col width="7%">
-<col width="85%">
+<col width="86%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">Package</th>
@@ -585,34 +585,32 @@ return a Polars expression:</p>
 </tr>
 <tr class="even">
 <td align="left"><code>dplyr</code></td>
-<td align="left"><code>min_rank</code></td>
+<td align="left"><code>lag</code></td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"><code>dplyr</code></td>
+<td align="left"><code>min_rank</code></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>n</code></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>nth</code></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>n_distinct</code></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>dplyr</code></td>
 <td align="left"><code>last</code></td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">
-<code>dplyr</code>/<code>stats</code>
-</td>
-<td align="left"><code>lag</code></td>
 <td align="left"></td>
 </tr>
 <tr class="even">
@@ -665,117 +663,127 @@ In Polars, this returns <code>NA</code>.</td>
 </tr>
 <tr class="odd">
 <td align="left"><code>stats</code></td>
-<td align="left"><code>sd</code></td>
+<td align="left"><code>lag</code></td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left"><code>stats</code></td>
-<td align="left"><code>var</code></td>
+<td align="left"><code>sd</code></td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"><code>stats</code></td>
+<td align="left"><code>var</code></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>regex</code></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_count</code></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_dup</code></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_ends</code></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_extract</code></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_extract_all</code></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_length</code></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_pad</code></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_remove</code></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_remove_all</code></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_replace</code></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_replace_all</code></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_split</code></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_split_i</code></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_squish</code></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_starts</code></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_sub</code></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_trim</code></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_to_lower</code></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_to_title</code></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>stringr</code></td>
 <td align="left"><code>str_to_upper</code></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>stringr</code></td>
+<td align="left"><code>str_trunc</code></td>
 <td align="left"></td>
 </tr>
 <tr class="even">

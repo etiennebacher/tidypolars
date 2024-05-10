@@ -60,15 +60,15 @@ workflow."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/m
     </div>
 
     <div class="ref-description section level2">
-    <p>This makes it easier to convert a polars <a href="https://rdrr.io/pkg/polars/man/DataFrame_class.html" class="external-link">DataFrame</a> or
-<a href="https://rdrr.io/pkg/polars/man/LazyFrame_class.html" class="external-link">LazyFrame</a> to a <code><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></code> in a pipe
+    <p>This makes it easier to convert a polars <a href="https://pola-rs.github.io/r-polars/man/DataFrame_class.html" class="external-link">DataFrame</a> or
+<a href="https://pola-rs.github.io/r-polars/man/LazyFrame_class.html" class="external-link">LazyFrame</a> to a <code><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></code> in a pipe
 workflow.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for tidypolars</span></span>
-<span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">x</span>, int64_conversion <span class="op">=</span> <span class="fu">polars</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/polars/man/polars_options.html" class="external-link">polars_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">int64_conversion</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">x</span>, int64_conversion <span class="op">=</span> <span class="fu">polars</span><span class="fu">::</span><span class="fu"><a href="https://pola-rs.github.io/r-polars/man/polars_options.html" class="external-link">polars_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">int64_conversion</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -80,11 +80,11 @@ workflow.</p>
 <dt>int64_conversion</dt>
 <dd><p>How should Int64 values be handled when converting a
 polars object to R? See the documentation in
-<code><a href="https://rdrr.io/pkg/polars/man/S3_as.data.frame.html" class="external-link">polars::as.data.frame.RPolarsDataFrame</a></code>.</p></dd>
+<code><a href="https://pola-rs.github.io/r-polars/man/S3_as.data.frame.html" class="external-link">polars::as.data.frame.RPolarsDataFrame</a></code>.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>Options passed to <code><a href="https://rdrr.io/pkg/polars/man/S3_as.data.frame.html" class="external-link">polars::as.data.frame.RPolarsDataFrame</a></code>.</p></dd>
+<dd><p>Options passed to <code><a href="https://pola-rs.github.io/r-polars/man/S3_as.data.frame.html" class="external-link">polars::as.data.frame.RPolarsDataFrame</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -101,7 +101,7 @@ the possible options.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">iris</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">&gt;</span> <span class="fl">6</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 61 × 5</span></span>
