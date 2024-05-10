@@ -45,7 +45,7 @@ jobs:
 
       - name: Install r-polars on Ubuntu
         if: matrix.os == 'ubuntu-latest'
-        run: install.packages("polars", repos = "https://rpolars.r-universe.dev/bin/linux/jammy/4.4")
+        run: install.packages("polars", repos = "https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
         shell: Rscript {0}
 
       - name: Install r-polars on Windows or macOS
