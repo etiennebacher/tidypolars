@@ -234,6 +234,19 @@ pl_trimws <- function(string, which = "both", ...) {
   pl_str_trim_stringr(string, side = which)
 }
 
+pl_str_trunc_stringr <- function(string, width, side = "right", ellipsis = "...") {
+  if (width < nchar(ellipsis)) {
+    abort(paste0("`width` (", width, ") is shorter than `ellipsis` (", nchar(ellipsis), ")."))
+  }
+  switch(
+    side,
+    "left" = pl$concat_str(pl$lit(ellipsis), string$str$tail(width - nchar(ellipsis))),
+    "right" = pl$concat_str(string$str$head(width - nchar(ellipsis)), pl$lit(ellipsis)),
+    "center" = abort("`side = \"center\" is not supported.`"),
+    abort("`side` must be either \"left\" or \"right\".")
+  )
+}
+
 pl_word_stringr <- function(string, start = 1L, end = start, sep = " ", ...) {
   check_empty_dots(...)
   string$str$split(sep)$list$gather((start:end) - 1L)$list$join(sep)
