@@ -26,11 +26,21 @@ jobs:
     container:
       image: rocker/r2u:latest
     steps:
-      - uses: actions/checkout@v3
-      - name: SessionInfo
-        run: R -q -e 'sessionInfo()'
-      - name: Package Dependencies
-        run: R -q -e 'remotes::install_deps(".", repos = c("https://rpolars.r-universe.dev/bin/linux/jammy/4.3", getOption("repos")), dependencies=TRUE, method = "libcurl")'
+      - uses: actions/checkout@v4
+      - name: Bootstrap
+        run: |
+          curl -OLs https://eddelbuettel.github.io/r-ci/run.sh
+          chmod 0755 run.sh
+          ./run.sh bootstrap
+
+      - name: Install r-polars on Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: install.packages("polars", repos = "https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
+        shell: Rscript {0}
+
+      - name: Dependencies
+        run: ./run.sh install_all
+
       - name: Test coverage
         run: |
           install.packages('covr')
