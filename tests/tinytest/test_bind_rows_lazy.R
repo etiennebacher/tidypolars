@@ -77,7 +77,7 @@ p2 <- pl$LazyFrame(
 expect_equal_lazy(
   bind_rows_polars(p1, p2, .id = "foo") |>
     pull(foo),
-  rep(1:2, each = 20)
+  as.character(rep(1:2, each = 20))
 )
 
 expect_equal_lazy(
@@ -95,7 +95,7 @@ expect_equal_lazy(
 expect_equal_lazy(
   bind_rows_polars(p1 = p1, p2, .id = "foo") |>
     pull(foo),
-  rep(1:2, each = 20)
+  as.character(rep(1:2, each = 20))
 )
 
 

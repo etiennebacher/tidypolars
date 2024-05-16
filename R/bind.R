@@ -102,7 +102,7 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
       val <- if (all_named) {
         names(dots)[x]
       } else {
-        x
+        as.character(x)
       }
       dots[[x]]$
         with_columns(pl$lit(val)$alias(.id))$

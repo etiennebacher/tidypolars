@@ -73,7 +73,7 @@ p2 <- pl$DataFrame(
 expect_equal(
   bind_rows_polars(p1, p2, .id = "foo") |>
     pull(foo),
-  rep(1:2, each = 20)
+  as.character(rep(1:2, each = 20))
 )
 
 expect_equal(
@@ -91,6 +91,6 @@ expect_equal(
 expect_equal(
   bind_rows_polars(p1 = p1, p2, .id = "foo") |>
     pull(foo),
-  rep(1:2, each = 20)
+  as.character(rep(1:2, each = 20))
 )
 

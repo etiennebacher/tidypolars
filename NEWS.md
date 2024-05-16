@@ -6,6 +6,9 @@
   It now returns a standard R `data.frame` and not a Polars `DataFrame` anymore.
   Replace `collect()` by `compute()` (with the same arguments) to keep the old
   behavior.
+  
+* In `bind_rows_polars()`, if `.id` is passed, the resulting column now is of 
+  type character instead of integer.
 
 ## New features
 
