@@ -27,6 +27,9 @@
     
 * It is now possible to use explicit namespaces (such as `dplyr::first()` instead
   of `first()`) in `mutate()`, `summarize()` and `filter()` (#114).
+  
+* In `bind_rows_polars()`, if all elements are named and `.id` is specified, the
+  `.id` column will use the names of the elements (#116).
 
 ## Bug fixes
 

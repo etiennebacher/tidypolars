@@ -12,6 +12,8 @@ l <- list(
   )
 )
 
+# basic ---------------------------
+
 expect_is_tidypolars(bind_rows_polars(l))
 
 expect_dim(
@@ -19,11 +21,7 @@ expect_dim(
   c(40, 2)
 )
 
-expect_equal(
-  bind_rows_polars(l, .id = "foo") |>
-    pull(foo),
-  rep(1:2, each = 20)
-)
+# dots and list are equivalent -------------------------------
 
 p1 <- pl$DataFrame(
   x = sample(letters, 20),
@@ -38,6 +36,8 @@ expect_equal(
   bind_rows_polars(p1, p2),
   bind_rows_polars(list(p1, p2))
 )
+
+# different dtypes ---------------------------------------
 
 l2 <- list(
   polars::pl$DataFrame(
@@ -57,5 +57,40 @@ expect_equal(
     y = 1:4,
     z = c(NA, NA, "c", "d")
   )
+)
+
+# arg ".id" works ------------------------------------------
+
+p1 <- pl$DataFrame(
+  x = sample(letters, 20),
+  y = sample(1:100, 20)
+)
+p2 <- pl$DataFrame(
+  x = sample(letters, 20),
+  y = sample(1:100, 20)
+)
+
+expect_equal(
+  bind_rows_polars(p1, p2, .id = "foo") |>
+    pull(foo),
+  rep(1:2, each = 20)
+)
+
+expect_equal(
+  bind_rows_polars(p1 = p1, p2 = p2, .id = "foo") |>
+    pull(foo),
+  rep(c("p1", "p2"), each = 20)
+)
+
+expect_equal(
+  bind_rows_polars(list(p1 = p1, p2 = p2), .id = "foo") |>
+    pull(foo),
+  rep(c("p1", "p2"), each = 20)
+)
+
+expect_equal(
+  bind_rows_polars(p1 = p1, p2, .id = "foo") |>
+    pull(foo),
+  rep(1:2, each = 20)
 )
 
