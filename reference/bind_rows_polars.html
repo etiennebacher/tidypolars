@@ -74,7 +74,9 @@ by name, and any missing columns will be filled with <code>NA</code>.</p></dd>
 
 <dt>.id</dt>
 <dd><p>The name of an optional identifier column. Provide a string to
-create an output column that identifies each input.</p></dd>
+create an output column that identifies each input. If all elements in
+<code>...</code> are named, the identifier will use their names. Otherwise, it will be
+a simple count.</p></dd>
 
 </dl></div>
 
@@ -129,6 +131,20 @@ create an output column that identifies each input.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 1   ┆ b    ┆ 2   ┆ null │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 2   ┆ null ┆ 3   ┆ c    │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 2   ┆ null ┆ 4   ┆ d    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴──────┴─────┴──────┘</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># create an id colum with named elements</span></span></span>
+<span class="r-in"><span><span class="fu">bind_rows_polars</span><span class="op">(</span>p1 <span class="op">=</span> <span class="va">p1</span>, p2 <span class="op">=</span> <span class="va">p2</span>, .id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (4, 4)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬──────┬─────┬──────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ id  ┆ x    ┆ y   ┆ z    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ ---  ┆ --- ┆ ---  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ str ┆ str  ┆ i32 ┆ str  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪══════╪═════╪══════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ p1  ┆ a    ┆ 1   ┆ null │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ p1  ┆ b    ┆ 2   ┆ null │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ p2  ┆ null ┆ 3   ┆ c    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ p2  ┆ null ┆ 4   ┆ d    │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴──────┴─────┴──────┘</span>
 </code></pre></div>
     </div>
