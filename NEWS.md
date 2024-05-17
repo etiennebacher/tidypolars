@@ -33,6 +33,8 @@
   
 * In `bind_rows_polars()`, if all elements are named and `.id` is specified, the
   `.id` column will use the names of the elements (#116).
+  
+* It is now possible to rename variables in `select()` (#117).
 
 ## Bug fixes
 

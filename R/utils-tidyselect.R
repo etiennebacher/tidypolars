@@ -1,12 +1,14 @@
-tidyselect_dots <- function(.data, ...) {
+tidyselect_dots <- function(.data, ..., with_renaming = FALSE) {
   data <- build_data_context(.data)
   check_where_arg(...)
-  out <- names(tidyselect::eval_select(rlang::expr(c(...)), data, error_call = caller_env()))
+  out <- tidyselect::eval_select(rlang::expr(c(...)), data, error_call = caller_env())
   if (length(out) == 0) {
-    NULL
-  } else {
-    out
+    return(NULL)
   }
+  if (isTRUE(with_renaming)) {
+    return(out)
+  }
+  names(out)
 }
 
 tidyselect_named_arg <- function(.data, cols) {
