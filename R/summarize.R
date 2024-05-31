@@ -36,7 +36,8 @@ summarize.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
   polars_exprs <- translate_dots(
     .data = .data_for_translation,
     ...,
-    env = rlang::current_env()
+    env = rlang::current_env(),
+    caller = rlang::caller_env()
   )
 
   for (i in seq_along(polars_exprs)) {

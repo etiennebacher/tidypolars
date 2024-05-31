@@ -4,7 +4,9 @@
 #'  either be a Data/LazyFrame, or a list of Data/LazyFrames. Columns are matched
 #'  by name, and any missing columns will be filled with `NA`.
 #' @param .id The name of an optional identifier column. Provide a string to
-#' create an output column that identifies each input.
+#' create an output column that identifies each input. If all elements in
+#' `...` are named, the identifier will use their names. Otherwise, it will be
+#' a simple count.
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -25,6 +27,9 @@
 #'
 #' # create an id colum
 #' bind_rows_polars(p1, p2, .id = "id")
+#'
+#' # create an id colum with named elements
+#' bind_rows_polars(p1 = p1, p2 = p2, .id = "id")
 
 bind_rows_polars <- function(..., .id = NULL) {
   concat_(..., how = "diagonal_relaxed", .id = .id)
@@ -92,11 +97,15 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
   }
 
   if (!is.null(.id)) {
+    all_named <- !is.null(names(dots)) && all(names(dots) != "")
     dots <- lapply(seq_along(dots), \(x) {
+      val <- if (all_named) {
+        names(dots)[x]
+      } else {
+        as.character(x)
+      }
       dots[[x]]$
-        with_columns(
-          pl$lit(x)$alias(.id)
-        )$
+        with_columns(pl$lit(val)$alias(.id))$
         select(pl$col(.id), pl$col("*")$exclude(.id))
     })
   }

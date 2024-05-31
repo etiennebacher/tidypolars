@@ -3,7 +3,7 @@
 
 # Date/time parsing --------------------------------------
 
-pl_ymd <- function(x, ...) {
+pl_ymd_lubridate <- function(x, ...) {
   check_empty_dots(...)
   # I can't specify a particular format: lubridate::ymd() can detect "2009/01/01"
   # and "2009-01-01" for example. I have to rely on polars' guessing, even if
@@ -11,9 +11,9 @@ pl_ymd <- function(x, ...) {
   x$str$strptime(pl$Date, format = NULL, strict = FALSE)
 }
 
-pl_ydm <- pl_mdy<- pl_myd <- pl_dmy<- pl_dym <- pl_ym <- pl_my <- pl_ymd
+pl_ydm_lubridate <- pl_mdy_lubridate <- pl_myd_lubridate <- pl_dmy_lubridate <- pl_dym_lubridate <- pl_ym_lubridate <- pl_my_lubridate <- pl_ymd_lubridate
 
-pl_ymd_hms <- function(x, ...) {
+pl_ymd_hms_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$str$strptime(pl$Datetime("ms"), format = NULL, strict = FALSE)
 }
@@ -21,59 +21,59 @@ pl_ymd_hms <- function(x, ...) {
 
 # Setting/getting/rounding --------------------------------------
 
-pl_year <- function(x, ...) {
+pl_year_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$year()
 }
 
-pl_isoyear <- function(x, ...) {
+pl_isoyear_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$iso_year()
 }
 
-pl_quarter <- function(x, ...) {
+pl_quarter_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$quarter()
 }
 
-pl_month <- function(x, ...) {
+pl_month_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$month()
 }
 
-pl_week <- function(x, ...) {
+pl_week_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$week()
 }
 
-pl_day <- function(x, ...) {
+pl_day_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$day()
 }
 
 # TODO: doesn't work because lubridate's default is start counting from Sundays
 # (and has an option to change that)
-pl_wday <- function(x, ...) {
+pl_wday_lubridate <- function(x, ...) {
   x$dt$weekday()
 }
 
-pl_mday <- pl_day
+pl_mday_lubridate <- pl_day_lubridate
 
-pl_yday <- function(x, ...) {
+pl_yday_lubridate <- function(x, ...) {
   x$dt$ordinal_day()
 }
 
-pl_hour <- function(x, ...) {
+pl_hour_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$hour()
 }
 
-pl_minute <- function(x, ...) {
+pl_minute_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$minute()
 }
 
-pl_second <- function(x, ...) {
+pl_second_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$second()
 }
@@ -90,41 +90,85 @@ pl_second <- function(x, ...) {
 #   pl$duration(weeks = x)
 # }
 
-pl_dweeks <- function(x, ...) {
+pl_dweeks_lubridate <- function(x, ...) {
   pl$duration(weeks = x)
 }
 
-pl_ddays <- function(x, ...) {
+pl_ddays_lubridate <- function(x, ...) {
   pl$duration(days = x)
 }
 
-pl_dhours <- function(x, ...) {
+pl_dhours_lubridate <- function(x, ...) {
   pl$duration(hours = x)
 }
 
-pl_dminutes <- function(x, ...) {
+pl_dminutes_lubridate <- function(x, ...) {
   pl$duration(minutes = x)
 }
 
-pl_dseconds <- function(x, ...) {
+pl_dseconds_lubridate <- function(x, ...) {
   pl$duration(seconds = x)
 }
 
-pl_dmilliseconds <- function(x, ...) {
+pl_dmilliseconds_lubridate <- function(x, ...) {
   pl$duration(milliseconds = x)
 }
 
-pl_dmicroseconds <- function(x, ...) {
+pl_dmicroseconds_lubridate <- function(x, ...) {
   pl$duration(microseconds = x)
 }
 
-pl_dnanoseconds <- function(x, ...) {
+pl_dnanoseconds_lubridate <- function(x, ...) {
   pl$duration(nanoseconds = x)
 }
 
-pl_make_date <- function(year = 1970, month = 1, day = 1) {
+pl_make_date_lubridate <- function(year = 1970, month = 1, day = 1) {
   pl$date(year = year, month = month, day = day)
 }
+
+pl_make_datetime_lubridate <- function(
+    year = 1970,
+    month = 1,
+    day = 1,
+    hour = 0,
+    min = 0,
+    sec = 0,
+    tz = "UTC"
+) {
+  pl$datetime(
+    year = year,
+    month = month,
+    day = day,
+    hour = hour,
+    minute = min,
+    second = sec,
+    time_zone = tz
+  )
+}
+
+pl_ISOdatetime <- function(
+    year = 1970,
+    month = 1,
+    day = 1,
+    hour = 0,
+    min = 0,
+    sec = 0,
+    tz = ""
+) {
+  if (tz == "") {
+    tz <- Sys.timezone()
+  }
+  pl$datetime(
+    year = year,
+    month = month,
+    day = day,
+    hour = hour,
+    minute = min,
+    second = sec,
+    time_zone = tz
+  )
+}
+
 
 # Periods --------------------------------------
 
@@ -136,84 +180,48 @@ pl_make_date <- function(year = 1970, month = 1, day = 1) {
 
 # OLD IMPLEMENTATIONS
 
-
-
-
-pl_default_round <- function(x, ...) {
-  check_empty_dots(...)
-  x$default$round()
-}
-
-pl_epoch <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$epoch()
-}
-
-
-pl_hours <- function(x, ...) {
+pl_hours_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$hours()
 }
 
-pl_microsecond <- function(x, ...) {
+pl_microsecond_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$microsecond()
 }
 
-pl_microseconds <- function(x, ...) {
+pl_microseconds_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$microseconds()
 }
 
-pl_millisecond <- function(x, ...) {
+pl_millisecond_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$millisecond()
 }
 
-pl_milliseconds <- function(x, ...) {
+pl_milliseconds_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$milliseconds()
 }
 
-pl_minutes <- function(x, ...) {
+pl_minutes_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$minutes()
 }
 
 
-pl_nanosecond <- function(x, ...) {
+pl_nanosecond_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$nanosecond()
 }
 
-pl_nanoseconds <- function(x, ...) {
+pl_nanoseconds_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$nanoseconds()
 }
 
-pl_offset_by <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$offset_by()
-}
-
-pl_ordinal_day <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$ordinal_day()
-}
-
-
-pl_replace_time_zone <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$replace_time_zone()
-}
-
-pl_round <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$round()
-}
-
-
-pl_seconds <- function(x, ...) {
+pl_seconds_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$seconds()
 }
@@ -251,14 +259,7 @@ pl_tz_localize <- function(x, ...) {
 
 # TODO: check the day of weekstart (lubridate starts the
 # week on sunday, polars on monday)
-pl_weekday <- function(x, ...) {
+pl_weekday_lubridate <- function(x, ...) {
   check_empty_dots(...)
   x$dt$weekday()
 }
-
-pl_with_time_unit <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$with_time_unit()
-}
-
-

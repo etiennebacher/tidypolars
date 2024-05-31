@@ -12,7 +12,9 @@ either be a Data/LazyFrame, or a list of Data/LazyFrames. Columns are matched
 by name, and any missing columns will be filled with \code{NA}.}
 
 \item{.id}{The name of an optional identifier column. Provide a string to
-create an output column that identifies each input.}
+create an output column that identifies each input. If all elements in
+\code{...} are named, the identifier will use their names. Otherwise, it will be
+a simple count.}
 }
 \description{
 Stack multiple Data/LazyFrames on top of each other
@@ -36,5 +38,8 @@ bind_rows_polars(list(p1, p2))
 
 # create an id colum
 bind_rows_polars(p1, p2, .id = "id")
+
+# create an id colum with named elements
+bind_rows_polars(p1 = p1, p2 = p2, .id = "id")
 \dontshow{\}) # examplesIf}
 }

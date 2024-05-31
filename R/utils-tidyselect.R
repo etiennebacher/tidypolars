@@ -1,12 +1,14 @@
-tidyselect_dots <- function(.data, ...) {
+tidyselect_dots <- function(.data, ..., with_renaming = FALSE) {
   data <- build_data_context(.data)
   check_where_arg(...)
-  out <- names(tidyselect::eval_select(rlang::expr(c(...)), data, error_call = caller_env()))
+  out <- tidyselect::eval_select(rlang::expr(c(...)), data, error_call = caller_env())
   if (length(out) == 0) {
-    NULL
-  } else {
-    out
+    return(NULL)
   }
+  if (isTRUE(with_renaming)) {
+    return(out)
+  }
+  names(out)
 }
 
 tidyselect_named_arg <- function(.data, cols) {
@@ -14,6 +16,36 @@ tidyselect_named_arg <- function(.data, cols) {
   out <- names(tidyselect::eval_select(cols, data = data, error_call = caller_env()))
   if (length(out) == 0) return(NULL)
   out
+}
+
+# This is used only in across() when we need to determine whether variables
+# created in previous calls should be included in the .cols argument. Since we
+# don't have sequential evaluation, we can't use where().
+tidyselect_new_vars <- function(.cols, new_vars) {
+  if (is.null(new_vars)) {
+    return(NULL)
+  }
+  if (typeof(.cols) == "language") {
+    out <- switch(
+      as.character(.cols[[1]]),
+      "contains" = grep(.cols[[2]], new_vars, value = TRUE, fixed = TRUE),
+      "matches" = grep(.cols[[2]], new_vars, value = TRUE),
+      "starts_with" = grep(paste0("^", .cols[[2]]), new_vars, value = TRUE),
+      "ends_with" = grep(paste0(.cols[[2]], "$"), new_vars, value = TRUE),
+      "everything" = new_vars,
+      {
+        warn(
+          paste0(
+            "In `across()`, the argument `.cols = ", safe_deparse(.cols),
+            "` will not take into account \nvariables created in the same `mutate()`/`summarize` call."
+          )
+        )
+        NULL
+      }
+    )
+    return(out)
+  }
+  NULL
 }
 
 # Rather than collecting a 1-row slice, it is faster to use the schema of the

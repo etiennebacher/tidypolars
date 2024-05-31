@@ -9,6 +9,8 @@ pl_iris <- polars::pl$LazyFrame(iris)
 
 expect_is_tidypolars(select(pl_iris, c("Sepal.Length", "Sepal.Width")))
 
+# standard ----------------------------
+
 expect_colnames(
   select(pl_iris, c("Sepal.Length", "Sepal.Width")),
   c("Sepal.Length", "Sepal.Width")
@@ -18,6 +20,18 @@ expect_colnames(
   select(pl_iris, Sepal.Length, Sepal.Width),
   c("Sepal.Length", "Sepal.Width")
 )
+
+expect_colnames(
+  select(pl_iris, 1:4),
+  c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
+)
+
+expect_colnames(
+  select(pl_iris, -5),
+  c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
+)
+
+# select helpers -----------------------------
 
 expect_colnames(
   select(pl_iris, starts_with("Sepal")),
@@ -31,16 +45,6 @@ expect_colnames(
 
 expect_colnames(
   select(pl_iris, contains(".")),
-  c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
-)
-
-expect_colnames(
-  select(pl_iris, 1:4),
-  c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
-)
-
-expect_colnames(
-  select(pl_iris, -5),
   c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
 )
 
@@ -106,6 +110,28 @@ expect_colnames(
 expect_colnames(
   select(test, num_range("x", 2:3, width = 2)),
   c("x02", "x03")
+)
+
+# rename in select -------------------------------------
+
+test <- polars::pl$LazyFrame(iris)
+
+expect_equal_lazy(
+  select(test, foo = Sepal.Length, foo2 = Species),
+  select(test, Sepal.Length, Species) |>
+    rename(foo = Sepal.Length, foo2 = Species)
+)
+
+expect_equal_lazy(
+  select(test, foo = Sepal.Length, everything(), foo2 = Species),
+  select(test, Sepal.Length, everything(), Species) |>
+    rename(foo = Sepal.Length, foo2 = Species)
+)
+
+expect_equal_lazy(
+  select(test, foo = contains("tal")),
+  select(test, Petal.Length, Petal.Width) |>
+    rename(foo1 = Petal.Length, foo2 = Petal.Width)
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

@@ -229,3 +229,23 @@ expect_equal(
   NULL
 )
 
+# works with a local variable defined in a function
+
+foobar <- function(x) {
+  local_var <- "a"
+  x |> filter(chars == local_var)
+}
+
+test <- polars::pl$DataFrame(chars = letters[1:3])
+
+expect_equal(
+  foobar(test),
+  data.frame(chars = "a")
+)
+
+# error message
+
+expect_error(
+  test |> filter(chars = "a"),
+  "This usually means that"
+)

@@ -45,7 +45,12 @@ filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
-  polars_exprs <- translate_dots(.data, ..., env = rlang::current_env())
+  polars_exprs <- translate_dots(
+    .data,
+    ...,
+    env = rlang::current_env(),
+    caller = rlang::caller_env()
+  )
 
   if (is_grouped) {
     polars_exprs <- lapply(polars_exprs, \(x) x$over(grps))
@@ -60,22 +65,7 @@ filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
       out <- .data$filter(polars_exprs)
     },
     error = function(e) {
-      if (inherits(e, "RPolarsErr_error") &&
-          grepl("string caches don't match", e$message)) {
-        rlang::abort(
-          c(
-            "Comparing factor variables to strings is only possible when the string cache is enabled.",
-            "i" = "One solution is to convert the factor variable to a character variable.",
-            "i" = "Another solution is to enable the string cache, either with `pl$enable_string_cache()`."
-          ),
-          call = caller_env(4)
-        )
-      } else {
-        rlang::abort(
-          e$message,
-          call = caller_env(4)
-        )
-      }
+      rlang::abort(e$message, call = caller_env(4))
     }
   )
   out <- if (is_grouped && missing(.by)) {

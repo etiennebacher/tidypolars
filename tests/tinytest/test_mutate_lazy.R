@@ -254,7 +254,7 @@ foo2 <<- function(x, y) {
 
 expect_error_lazy(
   mutate(pl_iris, x = foo2(Sepal.Length, Petal.Length)),
-  "Couldn't evaluate function `foo2\\(\\)`"
+  "Error while running function `foo2\\(\\)`"
 )
 
 # embracing works
@@ -359,6 +359,20 @@ expect_colnames(
 expect_colnames(
   mutate(pl_grp, x = Sepal.Length, .keep = "none"),
   c("Species", "x")
+)
+
+# works with a local variable defined in a function
+
+foobar <- function(x) {
+  local_var <- "a"
+  x |> mutate(foo = local_var)
+}
+
+test <- polars::pl$LazyFrame(chars = letters[1:3])
+
+expect_equal_lazy(
+  foobar(test),
+  data.frame(chars = letters[1:3], foo = "a")
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

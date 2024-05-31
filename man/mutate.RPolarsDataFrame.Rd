@@ -18,7 +18,11 @@ the output. The value can be:
 \item A vector the same length as the current group (or the whole data
 frame if ungrouped).
 \item NULL, to remove the column.
-}}
+}
+
+\code{across()} is mostly supported, except in a few cases. In particular, if the
+\code{.cols} argument is \code{where(...)}, it will \emph{not} select variables that were
+created before \code{across()}. Other select helpers are supported. See the examples.}
 
 \item{.by}{Optionally, a selection of columns to group by for just this
 operation, functioning as an alternative to \code{group_by()}. The group order
@@ -86,6 +90,22 @@ pl_iris |>
       .names = "{.fn}_of_{.col}"
     )
   )
+
+# Be careful when using across(.cols = where(...), ...) as it will not include
+# variables created in the same `...` (this is only the case for `where()`):
+\dontrun{
+pl_iris |>
+  mutate(
+    foo = 1,
+    across(
+      .cols = where(is.numeric),
+      \(x) x - 1000   # <<<<<<<<< this will not be applied on variable "foo"
+    )
+  )
+}
+# Warning message:
+# In `across()`, the argument `.cols = where(is.numeric)` will not take into account
+# variables created in the same `mutate()`/`summarize` call.
 
 # Embracing an external variable works
 some_value <- 1

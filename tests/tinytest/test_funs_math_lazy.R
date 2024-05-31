@@ -9,13 +9,11 @@ test_df <- data.frame(
   x1 = c("a", "a", "b", "a", "c"),
   x2 = c(2, 1, 5, 3, 1),
   value = sample(1:5),
-  value_trigo = seq(0, 0.4, 0.1)
+  value_trigo = seq(0, 0.4, 0.1),
+  value_mix = -2:2
 )
 
 test <- pl$LazyFrame(test_df)
-
-# auto <- r_polars_funs[!is.na(r_polars_funs$category), ]
-# auto$r_funs |> constructive::construct()
 
 for (i in c(
   "abs",
@@ -29,16 +27,17 @@ for (i in c(
   "last", "log", "log10",
   "max", "mean", "median", "min",
   "rank",
-  "round",
   "sign",
   "sin", "sinh", "sort",  "sqrt", "sd", "tan", "tanh", "var"
 )) {
 
   if (i %in% c("acos", "asin", "atan", "atanh", "ceiling", "cos", "floor",
-               "round", "sin", "tan")) {
+               "sin", "tan")) {
 
     variable <- "value_trigo"
 
+  } else if (i %in% c("abs", "mean")) {
+    variable <- "value_mix"
   } else {
     variable <- "value"
   }
@@ -64,6 +63,33 @@ expect_true(all(foo %in% c(1, 2, 3, 5)))
 expect_warning(
   test |> mutate(x = sample(x2, prob = 0.5)),
   "will not be used: `prob`"
+)
+
+# diff
+
+expect_equal_lazy(
+  test |>
+    summarize(foo = diff(value)) |>
+    pull(foo),
+  test_df |>
+    summarize(foo = diff(value)) |>
+    pull(foo) |>
+    suppressWarnings()
+)
+
+expect_equal_lazy(
+  test |>
+    summarize(foo = diff(value, lag = 2)) |>
+    pull(foo),
+  test_df |>
+    summarize(foo = diff(value, lag = 2)) |>
+    pull(foo) |>
+    suppressWarnings()
+)
+
+expect_error_lazy(
+  test |> summarize(foo = diff(value, differences = 2)),
+  "doesn't support"
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

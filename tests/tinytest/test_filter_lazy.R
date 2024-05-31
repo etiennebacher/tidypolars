@@ -233,5 +233,25 @@ expect_equal_lazy(
   NULL
 )
 
+# works with a local variable defined in a function
+
+foobar <- function(x) {
+  local_var <- "a"
+  x |> filter(chars == local_var)
+}
+
+test <- polars::pl$LazyFrame(chars = letters[1:3])
+
+expect_equal_lazy(
+  foobar(test),
+  data.frame(chars = "a")
+)
+
+# error message
+
+expect_error_lazy(
+  test |> filter(chars = "a"),
+  "This usually means that"
+)
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

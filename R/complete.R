@@ -4,7 +4,8 @@
 #' for completing missing combinations of data.
 #'
 #' @param data A Polars Data/LazyFrame
-#' @inheritParams select.RPolarsDataFrame
+#' @param ... Any expression accepted by `dplyr::select()`: variable names,
+#'  column numbers, select helpers, etc.
 #' @param fill A named list that for each variable supplies a single value to
 #' use instead of `NA` for missing combinations.
 #'
