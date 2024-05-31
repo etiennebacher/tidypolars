@@ -111,10 +111,9 @@ expect_equal(
   c(1, NA, NA, NaN)
 )
 
-# TODO: uncomment when https://github.com/pola-rs/polars/issues/15685 is fixed
-# expect_equal(
-#   semi_join(pdf1, pdf2, "a", na_matches = "never") |>
-#     pull(a),
-#   c(1, NaN)
-# )
+expect_equal(
+  semi_join(pdf1, pdf2, "a", na_matches = "never") |>
+    pull(a),
+  c(1, NaN)
+)
 

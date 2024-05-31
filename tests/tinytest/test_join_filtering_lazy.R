@@ -115,12 +115,11 @@ expect_equal_lazy(
   c(1, NA, NA, NaN)
 )
 
-# TODO: uncomment when https://github.com/pola-rs/polars/issues/15685 is fixed
-# expect_equal_lazy(
-#   semi_join(pdf1, pdf2, "a", na_matches = "never") |>
-#     pull(a),
-#   c(1, NaN)
-# )
+expect_equal_lazy(
+  semi_join(pdf1, pdf2, "a", na_matches = "never") |>
+    pull(a),
+  c(1, NaN)
+)
 
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

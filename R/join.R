@@ -143,7 +143,7 @@ full_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
     x = x,
     y = y,
     by = by,
-    how = "outer_coalesce",
+    how = "full",
     suffix = suffix,
     na_matches = na_matches,
     relationship = relationship
@@ -394,7 +394,8 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
       right_on = right_on,
       how = how,
       join_nulls = join_nulls,
-      validate = validate
+      validate = validate,
+      coalesce = TRUE
     )
   }
 
