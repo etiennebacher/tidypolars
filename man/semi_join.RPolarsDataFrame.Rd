@@ -7,13 +7,13 @@
 \alias{anti_join.RPolarsLazyFrame}
 \title{Filtering joins}
 \usage{
-\method{semi_join}{RPolarsDataFrame}(x, y, by = NULL, ...)
+\method{semi_join}{RPolarsDataFrame}(x, y, by = NULL, ..., na_matches = "na")
 
-\method{anti_join}{RPolarsDataFrame}(x, y, by = NULL, ...)
+\method{anti_join}{RPolarsDataFrame}(x, y, by = NULL, ..., na_matches = "na")
 
-\method{semi_join}{RPolarsLazyFrame}(x, y, by = NULL, ...)
+\method{semi_join}{RPolarsLazyFrame}(x, y, by = NULL, ..., na_matches = "na")
 
-\method{anti_join}{RPolarsLazyFrame}(x, y, by = NULL, ...)
+\method{anti_join}{RPolarsLazyFrame}(x, y, by = NULL, ..., na_matches = "na")
 }
 \arguments{
 \item{x, y}{Two Polars Data/LazyFrames}
@@ -35,6 +35,17 @@ operators \code{==}, \code{>} and similar. \strong{For now, only equality operat
 supported}.}
 
 \item{...}{Not used.}
+
+\item{na_matches}{Should two \code{NA} values match?
+\itemize{
+\item \code{"na"}, the default, treats two \code{NA} values as equal.
+\item \code{"never"} treats two \code{NA} values as different and will never match them
+together or to any other values.
+}
+
+Note that when joining Polars Data/LazyFrames, \code{NaN} are always considered
+equal, no matter the value of \code{na_matches}. This differs from the original
+\code{dplyr} implementation.}
 }
 \description{
 Filtering joins filter rows from \code{x} based on the presence or absence of

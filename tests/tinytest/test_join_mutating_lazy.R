@@ -199,6 +199,45 @@ expect_equal_lazy(
   )
 )
 
+
+# argument "na_matches"
+
+pdf1 <- pl$LazyFrame(a = c(1, NA, NA, NaN), val = 1:4)
+pdf2 <- pl$LazyFrame(a = c(1, 2, NA, NaN), val2 = 5:8)
+
+expect_error_lazy(
+  left_join(pdf1, pdf2, na_matches = "foo"),
+  "must be one of"
+)
+
+expect_equal_lazy(
+  left_join(pdf1, pdf2, "a") |>
+    pull(val2),
+  c(5, 7, 7, 8)
+)
+
+expect_equal_lazy(
+  left_join(pdf1, pdf2, "a", na_matches = "never") |>
+    pull(val2),
+  c(5, NA, NA, 8)
+)
+
+# when doing full join, the result differs from dplyr because 1) row order is
+# not the same (NA go at the end) and 2) NaN are matched anyway
+
+expect_equal_lazy(
+  full_join(pdf1, pdf2, "a") |>
+    pull(a),
+  c(1, 2, NA, NA, NaN)
+)
+
+expect_equal_lazy(
+  full_join(pdf1, pdf2, "a", na_matches = "never") |>
+    pull(a),
+  c(1, 2, NA, NaN, NA, NA)
+)
+
+
 # input class
 
 if (Sys.getenv("TIDYPOLARS_TEST") == "TRUE") {

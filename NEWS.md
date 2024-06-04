@@ -38,6 +38,9 @@
   
 * It is now possible to rename variables in `select()` (#117).
 
+* Add support for argument `na_matches` in all join functions (except 
+  `cross_join()` that doesn't need it) (#109).
+
 ## Bug fixes
 
 * Local variables in custom functions could not be used in tidypolars functions

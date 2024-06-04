@@ -25,6 +25,14 @@
 #' character vector of length 2.
 #' @inheritParams slice_tail.RPolarsDataFrame
 #' @param copy,keep Not used.
+#' @param na_matches Should two `NA` values match?
+#' * `"na"`, the default, treats two `NA` values as equal.
+#' * `"never"` treats two `NA` values as different and will never match them
+#'   together or to any other values.
+#'
+#' Note that when joining Polars Data/LazyFrames, `NaN` are always considered
+#' equal, no matter the value of `na_matches`. This differs from the original
+#' `dplyr` implementation.
 #' @param relationship Handling of the expected relationship between the keys of
 #' `x` and `y`. Must be one of the following:
 #' * `NULL`, the default, is equivalent to `"many-to-many"`. It doesn't expect
@@ -93,39 +101,70 @@
 #'
 #' # A correct expectation would be "one-to-many":
 #' left_join(country, country_year, join_by(iso), relationship = "one-to-many")
-
 left_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
                                        suffix = c(".x", ".y"), ..., keep = NULL,
-                                       relationship = NULL) {
+                                       na_matches = "na", relationship = NULL) {
   unused_args(copy, keep)
-  join_(x = x, y = y, by = by, how = "left", suffix = suffix, relationship = relationship)
+  join_(
+    x = x,
+    y = y,
+    by = by,
+    how = "left",
+    suffix = suffix,
+    na_matches = na_matches,
+    relationship = relationship
+  )
 }
 
 #' @rdname left_join.RPolarsDataFrame
 #' @export
 right_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
                                         suffix = c(".x", ".y"), ..., keep = NULL,
-                                        relationship = NULL) {
+                                        na_matches = "na", relationship = NULL) {
   unused_args(copy, keep)
-  join_(x = x, y = y, by = by, how = "right", suffix = suffix, relationship = relationship)
+  join_(
+    x = x,
+    y = y,
+    by = by,
+    how = "right",
+    suffix = suffix,
+    na_matches = na_matches,
+    relationship = relationship
+  )
 }
 
 #' @rdname left_join.RPolarsDataFrame
 #' @export
 full_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
                                        suffix = c(".x", ".y"), ..., keep = NULL,
-                                       relationship = NULL) {
+                                       na_matches = "na", relationship = NULL) {
   unused_args(copy, keep)
-  join_(x = x, y = y, by = by, how = "full", suffix = suffix, relationship = relationship)
+  join_(
+    x = x,
+    y = y,
+    by = by,
+    how = "full",
+    suffix = suffix,
+    na_matches = na_matches,
+    relationship = relationship
+  )
 }
 
 #' @rdname left_join.RPolarsDataFrame
 #' @export
 inner_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
                                         suffix = c(".x", ".y"), ..., keep = NULL,
-                                        relationship = NULL) {
+                                        na_matches = "na", relationship = NULL) {
   unused_args(copy, keep)
-  join_(x = x, y = y, by = by, how = "inner", suffix = suffix, relationship = relationship)
+  join_(
+    x = x,
+    y = y,
+    by = by,
+    how = "inner",
+    suffix = suffix,
+    na_matches = na_matches,
+    relationship = relationship
+  )
 }
 
 #' @rdname left_join.RPolarsDataFrame
@@ -177,15 +216,31 @@ inner_join.RPolarsLazyFrame <- inner_join.RPolarsDataFrame
 #'
 #' # only keep the rows of `test` that don't have matching keys in `test2`
 #' anti_join(test, test2, by = c("x", "y"))
-semi_join.RPolarsDataFrame <- function(x, y, by = NULL, ...) {
-  join_(x = x, y = y, by = by, how = "semi", suffix = NULL, relationship = NULL)
+semi_join.RPolarsDataFrame <- function(x, y, by = NULL, ..., na_matches = "na") {
+  join_(
+    x = x,
+    y = y,
+    by = by,
+    how = "semi",
+    suffix = NULL,
+    na_matches = na_matches,
+    relationship = NULL
+  )
 }
 
 #' @rdname semi_join.RPolarsDataFrame
 #' @export
 
-anti_join.RPolarsDataFrame <- function(x, y, by = NULL, ...) {
-  join_(x = x, y = y, by = by, how = "anti", suffix = NULL, relationship = NULL)
+anti_join.RPolarsDataFrame <- function(x, y, by = NULL, ..., na_matches = "na") {
+  join_(
+    x = x,
+    y = y,
+    by = by,
+    how = "anti",
+    suffix = NULL,
+    na_matches = na_matches,
+    relationship = NULL
+  )
 }
 
 #' @rdname semi_join.RPolarsDataFrame
@@ -221,7 +276,15 @@ anti_join.RPolarsLazyFrame <- anti_join.RPolarsDataFrame
 #'
 #' cross_join(test, test2)
 cross_join.RPolarsDataFrame <- function(x, y, suffix = c(".x", ".y"), ...) {
-  join_(x = x, y = y, by = NULL, how = "cross", suffix = suffix, relationship = NULL)
+  join_(
+    x = x,
+    y = y,
+    by = NULL,
+    how = "cross",
+    suffix = suffix,
+    na_matches = NULL,
+    relationship = NULL
+  )
 }
 
 #' @rdname cross_join.RPolarsDataFrame
@@ -229,7 +292,7 @@ cross_join.RPolarsDataFrame <- function(x, y, suffix = c(".x", ".y"), ...) {
 cross_join.RPolarsLazyFrame <- cross_join.RPolarsDataFrame
 
 
-join_ <- function(x, y, by = NULL, how, suffix, relationship) {
+join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
   all_df_or_lf <-
     all(vapply(list(x, y), inherits, what = "RPolarsDataFrame", FUN.VALUE = logical(1L))) ||
       all(vapply(list(x, y), inherits, what = "RPolarsLazyFrame", FUN.VALUE = logical(1L)))
@@ -249,8 +312,7 @@ join_ <- function(x, y, by = NULL, how, suffix, relationship) {
   }
 
   if (!is.null(relationship)) {
-    validate <- switch(
-      relationship,
+    validate <- switch(relationship,
       "many-to-many" = "m:m",
       "one-to-one" = "1:1",
       "many-to-one" = "m:1",
@@ -262,6 +324,20 @@ join_ <- function(x, y, by = NULL, how, suffix, relationship) {
     )
   } else {
     validate <- "m:m"
+  }
+
+  if (is.null(na_matches)) {
+    join_nulls <- FALSE
+  } else {
+    join_nulls <- switch(
+      na_matches,
+      "na" = TRUE,
+      "never" = FALSE,
+      abort(
+        paste0("`relationship` must be one of \"na\" or \"never\", not \"", na_matches, "\"."),
+        call = caller_env()
+      )
+    )
   }
 
   if (is.null(by) && how != "cross") {
@@ -308,6 +384,7 @@ join_ <- function(x, y, by = NULL, how, suffix, relationship) {
       left_on = left_on,
       right_on = right_on,
       how = "left",
+      join_nulls = join_nulls,
       validate = validate
     )
   } else {
@@ -316,6 +393,7 @@ join_ <- function(x, y, by = NULL, how, suffix, relationship) {
       left_on = left_on,
       right_on = right_on,
       how = how,
+      join_nulls = join_nulls,
       validate = validate,
       coalesce = TRUE
     )
