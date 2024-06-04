@@ -8,7 +8,7 @@ using("tidypolars")
 test_df <- data.frame(
   x1 = c("a", "a", "b", "a", "c"),
   x2 = c(2, 1, 5, 3, 1),
-  value = sample(1:5),
+  value = sample(11:15),
   value_trigo = seq(0, 0.4, 0.1),
   value_mix = -2:2
 )
@@ -90,6 +90,26 @@ expect_equal_lazy(
 expect_error_lazy(
   test |> summarize(foo = diff(value, differences = 2)),
   "doesn't support"
+)
+
+# %% and %/%
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = value %% 10) |>
+    pull(foo),
+  test_df |>
+    mutate(foo = value %% 10) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  test |>
+    mutate(foo = value %/% 10) |>
+    pull(foo),
+  test_df |>
+    mutate(foo = value %/% 10) |>
+    pull(foo)
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

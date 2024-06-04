@@ -1,3 +1,9 @@
+# tidypolars (development version)
+
+## New features
+
+* Add support for `%%` and `%/%`.
+
 # tidypolars 0.8.0
 
 `tidypolars` requires `polars` >= 0.17.0.
