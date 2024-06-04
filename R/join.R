@@ -400,8 +400,8 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
   }
 
   out <- if (length(dupes) > 0) {
-    mapping <- as.list(c(dupes, paste0(dupes, "_right")))
-    names(mapping) <- c(paste0(dupes, suffix[1]), paste0(dupes, suffix[2]))
+    mapping <- as.list(c(paste0(dupes, suffix[1]), paste0(dupes, suffix[2])))
+    names(mapping) <- c(dupes, paste0(dupes, "_right"))
     out$rename(mapping)
   } else {
     out

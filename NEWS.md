@@ -1,5 +1,7 @@
 # tidypolars (development version)
 
+`tidypolars` requires `polars` >= 0.17.0.
+
 ## Breaking changes
 
 * As announced in `tidypolars` 0.7.0, the behavior of `collect()` has changed.

@@ -111,8 +111,8 @@ expect_error(
 )
 
 l6 <- list(
-  pl$DataFrame(x = 1)$rename(list(" " = "x")),
-  pl$DataFrame(x = 1)$rename(list(" " = "x"))
+  pl$DataFrame(x = 1)$rename(list(x = " ")),
+  pl$DataFrame(x = 1)$rename(list(x = " "))
 )
 
 expect_equal(
