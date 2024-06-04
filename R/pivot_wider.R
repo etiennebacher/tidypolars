@@ -139,7 +139,11 @@ pivot_wider.RPolarsDataFrame <- function(
     names(new_cols) <- paste0(names_prefix, final_cols)
   }
 
-  new_data <- new_data$rename(new_cols)
+  # TODO: refactor this, it's just a patch for the breaking change in $rename()
+  # in polars 0.17.0
+  mapping <- as.list(names(new_cols))
+  names(mapping) <- unlist(new_cols)
+  new_data <- new_data$rename(mapping)
 
   if (length(value_vars) > 1) {
     tmp <- paste(value_vars, collapse = "|")

@@ -116,7 +116,7 @@ full_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
                                        suffix = c(".x", ".y"), ..., keep = NULL,
                                        relationship = NULL) {
   unused_args(copy, keep)
-  join_(x = x, y = y, by = by, how = "outer_coalesce", suffix = suffix, relationship = relationship)
+  join_(x = x, y = y, by = by, how = "full", suffix = suffix, relationship = relationship)
 }
 
 #' @rdname left_join.RPolarsDataFrame
@@ -303,14 +303,27 @@ join_ <- function(x, y, by = NULL, how, suffix, relationship) {
   )
 
   if (how == "right") {
-    out <- y$join(other = x, left_on = left_on, right_on = right_on, how = "left", validate = validate)
+    out <- y$join(
+      other = x,
+      left_on = left_on,
+      right_on = right_on,
+      how = "left",
+      validate = validate
+    )
   } else {
-    out <- x$join(other = y, left_on = left_on, right_on = right_on, how = how, validate = validate)
+    out <- x$join(
+      other = y,
+      left_on = left_on,
+      right_on = right_on,
+      how = how,
+      validate = validate,
+      coalesce = TRUE
+    )
   }
 
   out <- if (length(dupes) > 0) {
-    mapping <- as.list(c(dupes, paste0(dupes, "_right")))
-    names(mapping) <- c(paste0(dupes, suffix[1]), paste0(dupes, suffix[2]))
+    mapping <- as.list(c(paste0(dupes, suffix[1]), paste0(dupes, suffix[2])))
+    names(mapping) <- c(dupes, paste0(dupes, "_right"))
     out$rename(mapping)
   } else {
     out
