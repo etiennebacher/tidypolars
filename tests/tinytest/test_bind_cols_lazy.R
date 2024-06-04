@@ -115,8 +115,8 @@ expect_error_lazy(
 )
 
 l6 <- list(
-  pl$LazyFrame(x = 1)$rename(list(" " = "x")),
-  pl$LazyFrame(x = 1)$rename(list(" " = "x"))
+  pl$LazyFrame(x = 1)$rename(list(x = " ")),
+  pl$LazyFrame(x = 1)$rename(list(x = " "))
 )
 
 expect_equal_lazy(

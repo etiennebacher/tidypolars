@@ -139,8 +139,8 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
           # default with quiet = FALSE is *incredibly* slow (more than 60ms)
           # so I print the message myself
           new_names <- vctrs::vec_as_names(all_names, repair = .name_repair, quiet = TRUE)
-          mapping <- as.list(all_names)
-          names(mapping) <- new_names
+          mapping <- as.list(new_names)
+          names(mapping) <- all_names
 
           # make the message myself
           tmp <- mapping[!names(mapping) %in% all_names]

@@ -19,7 +19,7 @@ pl_all <- function(..., na.rm = FALSE) {
     return(x$expr$list$eval(pl$element()$all())$explode())
   }
   if (length(dots) == 1) {
-    dots[[1]]$all(drop_nulls = na.rm)
+    dots[[1]]$all(ignore_nulls = na.rm)
   } else {
     abort(
       "`all()` only works with one element in `...`",
@@ -42,7 +42,7 @@ pl_any <- function(..., na.rm = FALSE) {
     return(x$expr$list$eval(pl$element()$any())$explode())
   }
   if (length(dots) == 1) {
-    dots[[1]]$any(drop_nulls = na.rm)
+    dots[[1]]$any(ignore_nulls = na.rm)
   } else {
     abort(
       "`any()` only works with one element in `...`",
