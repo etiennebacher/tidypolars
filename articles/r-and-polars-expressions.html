@@ -148,58 +148,48 @@ functions (UDF) that are written by the user (you).</p>
 <h4 id="built-in-functions">Built-in functions<a class="anchor" aria-label="anchor" href="#built-in-functions"></a>
 </h4>
 <p>In the first case, <code>tidypolars</code> checks the function name
-and whether there’s an equivalent function in Polars. For example, the R
-function <code>sd(x, na.rm = TRUE)</code> is converted to
-<code>std(x, na.rm = TRUE)</code>. Since R and Polars functions often
-don’t share the same name, this check relies on a custom list containing
-all equivalencies between R and Polars functions. You can see the list
-of supported R functions at the bottom of this vignette. Note that
-<strong>most of essential base R functions are supported, but also some
-functions from <code>dplyr</code> or from <code>stringr</code> for
-example</strong>.</p>
-<p>Here, replacing R’s <code><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd()</a></code> function with
-<code>std()</code> is not enough because the argument <code>x</code>
-(which usually is a variable in the dataset) is not in the right format
-to be used by Polars. Therefore, <code>tidypolars</code> calls
-<code>translate()</code> a second time on the inside of the
-function.</p>
-<p>We now have <code>std(pl$col("x"))</code><a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Not exactly because &lt;code&gt;tidypolars&lt;/code&gt; actually
-calls an internal function &lt;code&gt;pl_std()&lt;/code&gt; that contains the right
-Polars syntax, but this is the main idea.&lt;/p&gt;"><sup>1</sup></a>. To end this example,
-we need to see what happens to additional arguments. You can see that we
-didn’t modify the <code>na.rm = TRUE</code> for now. This is because
-Polars doesn’t have this argument in <code>std()</code> (it
-automatically drops the missing values). Internally,
-<code>tidypolars</code> checks whether additional arguments are accepted
-and throws a message if this is not the case:</p>
+and whether it has already been translated internally. For example, if
+we call the R function <code>mean(x, trim = 2)</code>, then it looks for
+a translation of <code><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean()</a></code>. You can see the list of supported
+R functions at the bottom of this vignette. Note that most of essential
+base R functions are supported, as well as many functions from
+<code>dplyr</code> or from <code>stringr</code> for example.</p>
+<p>Now that <code>tidypolars</code> knows that a translation of
+<code><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean()</a></code> exists, it parses the arguments in the call to
+translate them to the Polars syntax: internally, <code>x</code> is
+converted to <code>pl$col("x")</code> if there is a column
+<code>"x"</code> in the data. Sometimes, additional arguments do not
+have their equivalent in Polars. This is the case for the argument
+<code>trim</code> here. In this case, <code>tidypolars</code> ignores
+this argument and warns the user:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.tidypolars.etiennebacher.com/" class="external-link">tidypolars</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pola-rs.github.io/r-polars/" class="external-link">polars</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mtcars</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">mpg</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">mpg</span>, trim <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: </span></span>
-<span><span class="co">#&gt; Not all arguments of sd() are used by Polars.</span></span>
-<span><span class="co">#&gt; The following argument(s) will not be used: `na.rm`.</span></span>
+<span><span class="co">#&gt; Not all arguments of mean() are used by Polars.</span></span>
+<span><span class="co">#&gt; The following argument(s) will not be used: `trim`.</span></span>
 <span><span class="co">#&gt; shape: (32, 12)</span></span>
-<span><span class="co">#&gt; ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬──────────┐</span></span>
-<span><span class="co">#&gt; │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ x        │</span></span>
-<span><span class="co">#&gt; │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---      │</span></span>
-<span><span class="co">#&gt; │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ f64      │</span></span>
-<span><span class="co">#&gt; ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪══════════╡</span></span>
-<span><span class="co">#&gt; │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 6.026948 │</span></span>
-<span><span class="co">#&gt; │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 6.026948 │</span></span>
-<span><span class="co">#&gt; │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 6.026948 │</span></span>
-<span><span class="co">#&gt; │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ 6.026948 │</span></span>
-<span><span class="co">#&gt; │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ 6.026948 │</span></span>
-<span><span class="co">#&gt; │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …        │</span></span>
-<span><span class="co">#&gt; │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ 6.026948 │</span></span>
-<span><span class="co">#&gt; │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ 6.026948 │</span></span>
-<span><span class="co">#&gt; │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ 6.026948 │</span></span>
-<span><span class="co">#&gt; │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ 6.026948 │</span></span>
-<span><span class="co">#&gt; │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ 6.026948 │</span></span>
-<span><span class="co">#&gt; └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴──────────┘</span></span></code></pre></div>
+<span><span class="co">#&gt; ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────────┐</span></span>
+<span><span class="co">#&gt; │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ x         │</span></span>
+<span><span class="co">#&gt; │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---       │</span></span>
+<span><span class="co">#&gt; │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ f64       │</span></span>
+<span><span class="co">#&gt; ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═══════════╡</span></span>
+<span><span class="co">#&gt; │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 20.090625 │</span></span>
+<span><span class="co">#&gt; │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 20.090625 │</span></span>
+<span><span class="co">#&gt; │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 20.090625 │</span></span>
+<span><span class="co">#&gt; │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ 20.090625 │</span></span>
+<span><span class="co">#&gt; │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ 20.090625 │</span></span>
+<span><span class="co">#&gt; │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …         │</span></span>
+<span><span class="co">#&gt; │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ 20.090625 │</span></span>
+<span><span class="co">#&gt; │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ 20.090625 │</span></span>
+<span><span class="co">#&gt; │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ 20.090625 │</span></span>
+<span><span class="co">#&gt; │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ 20.090625 │</span></span>
+<span><span class="co">#&gt; │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ 20.090625 │</span></span>
+<span><span class="co">#&gt; └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────────┘</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="user-defined-functions">User-defined functions<a class="anchor" aria-label="anchor" href="#user-defined-functions"></a>
@@ -805,7 +795,6 @@ In Polars, this returns <code>NA</code>.</td>
 </table>
 </div>
 </div>
-
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
 </div>
