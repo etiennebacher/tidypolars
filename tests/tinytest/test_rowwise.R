@@ -1,7 +1,9 @@
 source("helpers.R")
 using("tidypolars")
 
-test <- polars::pl$DataFrame(x = c(2, 2), y = c(2, 3), z = c(5, NA)) |>
+test_df <- data.frame(x = c(2, 2), y = c(2, 3), z = c(5, NA)) |>
+  rowwise()
+test <- polars::pl$DataFrame(test_df) |>
   rowwise()
 
 expect_is_tidypolars(test)
@@ -9,39 +11,33 @@ expect_is_tidypolars(test)
 expect_equal(
   test |>
     mutate(
-      m = mean(c(x, y, z)),
-      s = sum(c(x, y, z))
-    ) |>
-    pull(m),
-  c(3, 2.5)
-)
+      mean = mean(c(x, y, z)),
+      sum = sum(c(x, y, z)),
+      median = median(c(x, y, z)),
+      min = min(c(x, y, z)),
+      max = max(c(x, y, z)),
 
-expect_equal(
-  test |>
-    mutate(m = sum(c(x, y, z))) |>
-    pull(m),
-  c(9, 5)
-)
+      mean2 = mean(c(x, y, z), na.rm = TRUE),
+      sum2 = sum(c(x, y, z), na.rm = TRUE),
+      median2 = median(c(x, y, z), na.rm = TRUE),
+      min2 = min(c(x, y, z), na.rm = TRUE),
+      max2 = max(c(x, y, z), na.rm = TRUE)
+    ),
+  test_df |>
+    mutate(
+      mean = mean(c(x, y, z)),
+      sum = sum(c(x, y, z)),
+      median = median(c(x, y, z)),
+      min = min(c(x, y, z)),
+      max = max(c(x, y, z)),
 
-expect_equal(
-  test |>
-    mutate(m = median(c(x, y, z))) |>
-    pull(m),
-  c(2, 2.5)
-)
-
-expect_equal(
-  test |>
-    mutate(m = min(c(x, y, z))) |>
-    pull(m),
-  c(2, 2)
-)
-
-expect_equal(
-  test |>
-    mutate(m = max(c(x, y, z))) |>
-    pull(m),
-  c(5, 3)
+      mean2 = mean(c(x, y, z), na.rm = TRUE),
+      sum2 = sum(c(x, y, z), na.rm = TRUE),
+      median2 = median(c(x, y, z), na.rm = TRUE),
+      min2 = min(c(x, y, z), na.rm = TRUE),
+      max2 = max(c(x, y, z), na.rm = TRUE)
+    ),
+  check.attributes = FALSE
 )
 
 # Note: the default behavior with only NA is different between R (and therefore

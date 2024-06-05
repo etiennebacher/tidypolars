@@ -86,26 +86,19 @@ are written by the user (you).
 
 ### Built-in functions
 
-In the first case, `tidypolars` checks the function name and whether there's an
-equivalent function in Polars. For example, the R function `sd(x, na.rm = TRUE)`
-is converted to `std(x, na.rm = TRUE)`. Since R and Polars functions often don't 
-share the same name, this check relies on a custom list containing all equivalencies 
-between R and Polars functions. You can see the list of supported R functions at
-the bottom of this vignette. Note that **most of essential base R functions are
-supported, but also some functions from `dplyr` or from `stringr` for example**.
+In the first case, `tidypolars` checks the function name and whether it has 
+already been translated internally. For example, if we call the R function 
+`mean(x, trim = 2)`, then it looks for a translation of `mean()`. You can see the
+list of supported R functions at the bottom of this vignette. Note that most of
+essential base R functions are supported, as well as many functions from `dplyr` 
+or from `stringr` for example.
 
-Here, replacing R's `sd()` function with `std()` is not enough because the 
-argument `x` (which usually is a variable in the dataset) is not in the right 
-format to be used by Polars. Therefore, `tidypolars` calls `translate()` a 
-second time on the inside of the function.  
-
-We now have `std(pl$col("x"))`^[Not exactly because `tidypolars` actually calls
-an internal function `pl_std()` that contains the right Polars syntax, but this
-is the main idea.]. To end this example, we need to see what happens to additional
-arguments. You can see that we didn't modify the `na.rm = TRUE` for now. This is 
-because Polars doesn't have this argument in `std()` (it automatically drops the
-missing values). Internally, `tidypolars` checks whether additional arguments 
-are accepted and throws a message if this is not the case:
+Now that `tidypolars` knows that a translation of `mean()` exists, it parses
+the arguments in the call to translate them to the Polars syntax: internally,
+`x` is converted to `pl$col("x")` if there is a column `"x"` in the data. 
+Sometimes, additional arguments do not have their equivalent in Polars. This is
+the case for the argument `trim` here. In this case, `tidypolars` ignores
+this argument and warns the user:
 
 ```{r}
 library(tidypolars)
@@ -113,7 +106,7 @@ library(polars)
 
 mtcars |> 
   as_polars_df() |> 
-  mutate(x = sd(mpg, na.rm = TRUE))
+  mutate(x = mean(mpg, trim = 2))
 ```
 
 
