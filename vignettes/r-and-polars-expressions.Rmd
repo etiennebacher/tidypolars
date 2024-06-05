@@ -90,7 +90,7 @@ In the first case, `tidypolars` checks the function name and whether it has
 already been translated internally. For example, if we call the R function 
 `mean(x, trim = 2)`, then it looks for a translation of `mean()`. You can see the
 list of supported R functions at the bottom of this vignette. Note that most of
-essential base R functions are supported, but also some functions from `dplyr` 
+essential base R functions are supported, as well as many functions from `dplyr` 
 or from `stringr` for example.
 
 Now that `tidypolars` knows that a translation of `mean()` exists, it parses
