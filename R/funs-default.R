@@ -59,6 +59,7 @@ pl_mean <- function(x, na.rm = FALSE, ...) {
       x$expr$list$eval(pl$element()$mean())$explode()
     } else {
       x$expr$list$eval(
+        # TODO: replace with $has_nulls() when available
         pl$when(pl$element()$null_count() > 0)$
           then(NA)$
           otherwise(pl$element()$mean())
