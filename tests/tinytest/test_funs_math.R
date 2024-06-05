@@ -6,7 +6,8 @@ test_df <- data.frame(
   x2 = c(2, 1, 5, 3, 1),
   value = sample(11:15),
   value_trigo = seq(0, 0.4, 0.1),
-  value_mix = -2:2
+  value_mix = -2:2,
+  value_with_NA = c(-2, -1, NA, 1, 2)
 )
 
 test <- pl$DataFrame(test_df)
@@ -21,10 +22,9 @@ for (i in c(
   "cumsum", "exp", "first",
   "floor", "lag",
   "last", "log", "log10",
-  "max", "mean", "median", "min",
   "rank",
   "sign",
-  "sin", "sinh", "sort",  "sqrt", "sd", "tan", "tanh", "var"
+  "sin", "sinh", "sort",  "sqrt", "tan", "tanh"
 )) {
 
   if (i %in% c("acos", "asin", "atan", "atanh", "ceiling", "cos", "floor",
@@ -107,3 +107,25 @@ expect_equal(
     mutate(foo = value %/% 10) |>
     pull(foo)
 )
+
+# ensure na.rm works fine
+
+for (i in c("max", "mean", "median", "min", "sd", "sum", "var")) {
+  for (remove_na in c(TRUE, FALSE)) {
+    pol <- paste0(
+      "mutate(test, foo =", i, "(value_with_NA, na.rm = ", remove_na, "))"
+    ) |>
+      str2lang() |>
+      eval() |>
+      pull(foo)
+
+    res <- paste0(
+      "mutate(test_df, foo =", i, "(value_with_NA, na.rm = ", remove_na, "))"
+    ) |>
+      str2lang() |>
+      eval() |>
+      pull(foo)
+
+    expect_equal(pol, res, info = i)
+  }
+}

@@ -51,65 +51,139 @@ pl_any <- function(..., na.rm = FALSE) {
   }
 }
 
-pl_mean <- function(x, ...) {
+pl_mean <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$mean())$explode()
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$mean())$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$null_count() > 0)$
+          then(NA)$
+          otherwise(pl$element()$mean())
+        )$
+        explode()
+    }
   } else {
-    x$expr$mean()
+    if (isTRUE(na.rm)) {
+      x$expr$mean()
+    } else {
+      pl$when(x$expr$null_count() > 0)$then(NA)$otherwise(x$expr$mean())
+    }
   }
 }
 
-pl_median <- function(x, ...) {
+pl_median <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$median())$explode()
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$median())$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$null_count() > 0)$
+          then(NA)$
+          otherwise(pl$element()$median())
+      )$
+        explode()
+    }
   } else {
-    x$expr$median()
+    if (isTRUE(na.rm)) {
+      x$expr$median()
+    } else {
+      pl$when(x$expr$null_count() > 0)$then(NA)$otherwise(x$expr$median())
+    }
   }
 }
 
-pl_min <- function(x, ...) {
+pl_min <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$min())$explode()
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$min())$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$null_count() > 0)$
+          then(NA)$
+          otherwise(pl$element()$min())
+      )$
+        explode()
+    }
   } else {
-    x$expr$min()
+    if (isTRUE(na.rm)) {
+      x$expr$min()
+    } else {
+      pl$when(x$expr$null_count() > 0)$then(NA)$otherwise(x$expr$min())
+    }
   }
 }
 
-pl_max <- function(x, ...) {
+pl_max <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$max())$explode()
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$max())$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$null_count() > 0)$
+          then(NA)$
+          otherwise(pl$element()$max())
+      )$
+        explode()
+    }
   } else {
-    x$expr$max()
+    if (isTRUE(na.rm)) {
+      x$expr$max()
+    } else {
+      pl$when(x$expr$null_count() > 0)$then(NA)$otherwise(x$expr$max())
+    }
   }
 }
 
 pl_sum <- function(..., na.rm = FALSE) {
-  if (isTRUE(na.rm)) {
-    rlang::inform("Argument `na.rm` in `sum()` is ignored.")
-  }
   x <- check_rowwise_dots(...)
   if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$sum())$explode()
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$sum())$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$null_count() > 0)$
+          then(NA)$
+          otherwise(pl$element()$sum())
+      )$
+        explode()
+    }
   } else {
-    x$expr$sum()
+    if (isTRUE(na.rm)) {
+      x$expr$sum()
+    } else {
+      pl$when(x$expr$null_count() > 0)$then(NA)$otherwise(x$expr$sum())
+    }
   }
 }
 
-pl_sd <- function(x, ddof = 1, ...) {
-  check_empty_dots(...)
-  x <- check_rowwise(x, ...)
+pl_sd <- function(x, na.rm = FALSE) {
+  x <- check_rowwise(x)
   if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$std(ddof = ddof))$explode()
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$std(ddof = 1))$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$null_count() > 0)$
+          then(NA)$
+          otherwise(pl$element()$std(ddof = 1))
+      )$
+        explode()
+    }
   } else {
-    x$expr$std(ddof = ddof)
+    if (isTRUE(na.rm)) {
+      x$expr$std(ddof = 1)
+    } else {
+      pl$when(x$expr$null_count() > 0)$then(NA)$otherwise(x$expr$std(ddof = 1))
+    }
   }
 }
 
@@ -509,9 +583,13 @@ pl_unique_counts <- function(x, ...) {
   x$unique_counts()
 }
 
-pl_var <- function(x, ddof = 1, ...) {
+pl_var <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
-  x$var(ddof = ddof)
+  if (isTRUE(na.rm)) {
+    x$var(ddof = 1)
+  } else {
+    pl$when(x$null_count() > 0)$then(NA)$otherwise(x$var(ddof = 1))
+  }
 }
 
 pl_which.max <- function(x, ...) {

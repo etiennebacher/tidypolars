@@ -223,8 +223,8 @@ expect_equal(
 # warning
 
 expect_warning(
-  mutate(pl_iris, foo = mean(Sepal.Length, na.rm = TRUE)),
-  pattern = "will not be used: `na.rm`"
+  mutate(pl_iris, foo = mean(Sepal.Length, trim = 1)),
+  pattern = "will not be used: `trim`"
 )
 
 
