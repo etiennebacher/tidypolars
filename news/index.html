@@ -60,6 +60,7 @@
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
 <ul><li><p>Add support for <code>%%</code> and <code>%/%</code>.</p></li>
 <li><p>Better handling of missing values to match <code>R</code> behavior. In the following functions, if there is at least one missing value and <code>na.rm = FALSE</code> (the default), then the output will be <code>NA</code>: <code>"max()"</code>, <code>"mean()"</code>, <code>"median()"</code>, <code>"min()"</code>, <code>"sd()"</code>, <code>"sum()"</code>, <code>"var()"</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/120" class="external-link">#120</a>).</p></li>
+<li><p>New argument <code>cluster_with_columns</code> in <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code>, and <code><a href="../reference/fetch.html">fetch()</a></code>.</p></li>
 </ul></div>
 </div>
     <div class="section level2">

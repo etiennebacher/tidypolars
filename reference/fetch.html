@@ -83,6 +83,7 @@ doesn't mean that the output will actually contain <code>n</code> rows, see the 
 <span>  slice_pushdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  comm_subplan_elim <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  comm_subexpr_elim <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  cluster_with_columns <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  no_optimization <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  streaming <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -132,6 +133,11 @@ unions (default is <code>TRUE</code>).</p></dd>
 
 <dt>comm_subexpr_elim</dt>
 <dd><p>Cache common subexpressions (default is <code>TRUE</code>).</p></dd>
+
+
+<dt>cluster_with_columns</dt>
+<dd><p>Combine sequential independent calls to
+<code>$with_columns()</code>.</p></dd>
 
 
 <dt>no_optimization</dt>

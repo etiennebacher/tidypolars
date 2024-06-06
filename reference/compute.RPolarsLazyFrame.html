@@ -85,6 +85,7 @@ now but will change in 0.8.0 to automatically convert a DataFrame to a
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for RPolarsLazyFrame</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  type_coercion <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  predicate_pushdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  projection_pushdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -92,15 +93,16 @@ now but will change in 0.8.0 to automatically convert a DataFrame to a
 <span>  slice_pushdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  comm_subplan_elim <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  comm_subexpr_elim <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  cluster_with_columns <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  no_optimization <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  streaming <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  collect_in_background <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  collect_in_background <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for RPolarsLazyFrame</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  type_coercion <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  predicate_pushdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  projection_pushdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -108,10 +110,10 @@ now but will change in 0.8.0 to automatically convert a DataFrame to a
 <span>  slice_pushdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  comm_subplan_elim <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  comm_subexpr_elim <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  cluster_with_columns <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  no_optimization <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  streaming <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  collect_in_background <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  collect_in_background <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -119,6 +121,10 @@ now but will change in 0.8.0 to automatically convert a DataFrame to a
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
 <dd><p>A Polars LazyFrame</p></dd>
+
+
+<dt>...</dt>
+<dd><p>Not used.</p></dd>
 
 
 <dt>type_coercion</dt>
@@ -157,6 +163,11 @@ unions (default is <code>TRUE</code>).</p></dd>
 <dd><p>Cache common subexpressions (default is <code>TRUE</code>).</p></dd>
 
 
+<dt>cluster_with_columns</dt>
+<dd><p>Combine sequential independent calls to
+<code>$with_columns()</code>.</p></dd>
+
+
 <dt>no_optimization</dt>
 <dd><p>Sets the following optimizations to <code>FALSE</code>:
 <code>predicate_pushdown</code>, <code>projection_pushdown</code>,  <code>slice_pushdown</code>,
@@ -173,10 +184,6 @@ an alpha state). Default is <code>FALSE</code>.</p></dd>
 will start in background. Get a handle which later can be converted into the
 resulting DataFrame. Useful in interactive mode to not lock R session (default
 is <code>FALSE</code>).</p></dd>
-
-
-<dt>...</dt>
-<dd><p>Not used.</p></dd>
 
 </dl></div>
     <div class="section level2">
