@@ -7,6 +7,7 @@
 \usage{
 \method{compute}{RPolarsLazyFrame}(
   x,
+  ...,
   type_coercion = TRUE,
   predicate_pushdown = TRUE,
   projection_pushdown = TRUE,
@@ -14,14 +15,15 @@
   slice_pushdown = TRUE,
   comm_subplan_elim = TRUE,
   comm_subexpr_elim = TRUE,
+  cluster_with_columns = TRUE,
   no_optimization = FALSE,
   streaming = FALSE,
-  collect_in_background = FALSE,
-  ...
+  collect_in_background = FALSE
 )
 
 \method{collect}{RPolarsLazyFrame}(
   x,
+  ...,
   type_coercion = TRUE,
   predicate_pushdown = TRUE,
   projection_pushdown = TRUE,
@@ -29,14 +31,16 @@
   slice_pushdown = TRUE,
   comm_subplan_elim = TRUE,
   comm_subexpr_elim = TRUE,
+  cluster_with_columns = TRUE,
   no_optimization = FALSE,
   streaming = FALSE,
-  collect_in_background = FALSE,
-  ...
+  collect_in_background = FALSE
 )
 }
 \arguments{
 \item{x}{A Polars LazyFrame}
+
+\item{...}{Not used.}
 
 \item{type_coercion}{Coerce types such that operations succeed and run on
 minimal required memory (default is \code{TRUE}).}
@@ -60,6 +64,9 @@ unions (default is \code{TRUE}).}
 
 \item{comm_subexpr_elim}{Cache common subexpressions (default is \code{TRUE}).}
 
+\item{cluster_with_columns}{Combine sequential independent calls to
+\verb{$with_columns()}.}
+
 \item{no_optimization}{Sets the following optimizations to \code{FALSE}:
 \code{predicate_pushdown}, \code{projection_pushdown},  \code{slice_pushdown},
 \code{simplify_expression}. Default is \code{FALSE}.}
@@ -71,8 +78,6 @@ an alpha state). Default is \code{FALSE}.}
 will start in background. Get a handle which later can be converted into the
 resulting DataFrame. Useful in interactive mode to not lock R session (default
 is \code{FALSE}).}
-
-\item{...}{Not used.}
 }
 \description{
 \code{compute()} checks the query, optimizes it in the background, and runs it.

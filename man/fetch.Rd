@@ -14,6 +14,7 @@ fetch(
   slice_pushdown = TRUE,
   comm_subplan_elim = TRUE,
   comm_subexpr_elim = TRUE,
+  cluster_with_columns = TRUE,
   no_optimization = FALSE,
   streaming = FALSE
 )
@@ -44,6 +45,9 @@ is \code{TRUE}).}
 unions (default is \code{TRUE}).}
 
 \item{comm_subexpr_elim}{Cache common subexpressions (default is \code{TRUE}).}
+
+\item{cluster_with_columns}{Combine sequential independent calls to
+\verb{$with_columns()}.}
 
 \item{no_optimization}{Sets the following optimizations to \code{FALSE}:
 \code{predicate_pushdown}, \code{projection_pushdown},  \code{slice_pushdown},

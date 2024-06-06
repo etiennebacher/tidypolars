@@ -27,6 +27,8 @@
 #' @param comm_subplan_elim Cache branching subplans that occur on self-joins or
 #' unions (default is `TRUE`).
 #' @param comm_subexpr_elim Cache common subexpressions (default is `TRUE`).
+#' @param cluster_with_columns Combine sequential independent calls to
+#' `$with_columns()`.
 #' @param no_optimization Sets the following optimizations to `FALSE`:
 #' `predicate_pushdown`, `projection_pushdown`,  `slice_pushdown`,
 #' `simplify_expression`. Default is `FALSE`.
@@ -59,6 +61,7 @@
 #'   collect()
 compute.RPolarsLazyFrame <- function(
     x,
+    ...,
     type_coercion = TRUE,
     predicate_pushdown = TRUE,
     projection_pushdown = TRUE,
@@ -66,10 +69,10 @@ compute.RPolarsLazyFrame <- function(
     slice_pushdown = TRUE,
     comm_subplan_elim = TRUE,
     comm_subexpr_elim = TRUE,
+    cluster_with_columns = TRUE,
     no_optimization = FALSE,
     streaming = FALSE,
-    collect_in_background = FALSE,
-    ...
+    collect_in_background = FALSE
   ) {
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order
@@ -83,6 +86,7 @@ compute.RPolarsLazyFrame <- function(
     slice_pushdown = slice_pushdown,
     comm_subplan_elim = comm_subplan_elim,
     comm_subexpr_elim = comm_subexpr_elim,
+    cluster_with_columns = cluster_with_columns,
     no_optimization = no_optimization,
     streaming = streaming,
     collect_in_background = collect_in_background
@@ -103,6 +107,7 @@ compute.RPolarsLazyFrame <- function(
 #' @export
 collect.RPolarsLazyFrame <- function(
     x,
+    ...,
     type_coercion = TRUE,
     predicate_pushdown = TRUE,
     projection_pushdown = TRUE,
@@ -110,10 +115,10 @@ collect.RPolarsLazyFrame <- function(
     slice_pushdown = TRUE,
     comm_subplan_elim = TRUE,
     comm_subexpr_elim = TRUE,
+    cluster_with_columns = TRUE,
     no_optimization = FALSE,
     streaming = FALSE,
-    collect_in_background = FALSE,
-    ...
+    collect_in_background = FALSE
 ) {
   x |>
     as.data.frame(
@@ -124,6 +129,7 @@ collect.RPolarsLazyFrame <- function(
       slice_pushdown = slice_pushdown,
       comm_subplan_elim = comm_subplan_elim,
       comm_subexpr_elim = comm_subexpr_elim,
+      cluster_with_columns = cluster_with_columns,
       no_optimization = no_optimization,
       streaming = streaming,
       collect_in_background = collect_in_background
