@@ -22,8 +22,8 @@ knitr::opts_chunk$set(
   margin-bottom: 10px;
   border-radius: 3px;
 }
-.custom_note > p {
-  color: white
+.custom_note > p, .custom_note > p > code {
+  color: white;
 }
 ```
 
