@@ -73,9 +73,9 @@ pl_str_extract_stringr <- function(string, pattern, group = 0, ...) {
   string$str$extract(pattern$pattern, group_index = group)
 }
 
-# TODO: argument "simplify" should be allowed. It requires the method "unnest"
-# for "struct". When it is implement in r-polars, use this:
-# $list$to_struct()$struct$unnest()
+# I don't support the argument "simplify" because the names of new columns
+# differ depending on whether the input is a data.frame or a tibble so I don't
+# know what equivalence I should target here.
 pl_str_extract_all_stringr <- function(string, pattern, ...) {
   check_empty_dots(...)
   pattern <- check_pattern(pattern)

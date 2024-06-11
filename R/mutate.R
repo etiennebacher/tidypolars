@@ -38,11 +38,10 @@
 #' syntax under the hood so that you can continue using the classic R syntax and
 #' functions.
 #'
-# TODO: not true for now
-# If a Polars built-in replacement doesn't exist (for example for custom
-# functions), the R function will be passed to `map()` in the Polars workflow.
-# Note that this is slower than using functions that can be translated to
-# Polars syntax.
+#' If a Polars built-in replacement doesn't exist (for example for custom
+#' functions), then `tidypolars` will throw an error. See the vignette on Polars
+#' expressions to know how to write custom functions that are accepted by
+#' `tidypolars`.
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
