@@ -14,6 +14,16 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{css, echo=FALSE}
+.custom_note {
+  border: solid 3px hsl(120, 50%, 30%);
+  background-color: hsl(120, 50%, 95%);
+  padding: 5px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+}
+```
+
 The first thing to do before using `tidypolars` is to get some data as a Polars
 `DataFrame` or `LazyFrame`. You can read files with `polars::pl$read_*()`
 functions (to import them as `DataFrame`s) or with `polars::pl$scan_*()` 
@@ -23,6 +33,14 @@ formats, such as CSV, Parquet, or JSON.
 You could also read data with other packages and then convert it with
 `as_polars_df()` (of `as_polars_lf()` if you want to make it a 
 `LazyFrame`). 
+
+<div class="custom_note">
+  <p><b>Note: </b><code>as_polars_df()</code> and <code>as_polars_lf()</code> are merely
+  convenience functions to quickly convert data to a polars object, which is
+  useful for showcase purposes. However, converting data from R to polars has
+  some cost. In real-life usecases, be sure to load the data with the 
+  <code>pl\$scan_\*()</code> or the <code>pl\$read_\*()</code> functions.</p>
+</div>
 
 Here, we're going to use the `who` dataset that is available in the `tidyr` 
 package. I import it both as a classic R `data.frame` and as a Polars `DataFrame`
