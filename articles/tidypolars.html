@@ -84,6 +84,15 @@
 
     
     
+<style type="text/css">
+.custom_note {
+  border: solid 3px hsl(120, 50%, 30%);
+  background-color: hsl(120, 50%, 95%);
+  padding: 5px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+}
+</style>
 <p>The first thing to do before using <code>tidypolars</code> is to get
 some data as a Polars <code>DataFrame</code> or <code>LazyFrame</code>.
 You can read files with <code>polars::pl$read_*()</code> functions (to
@@ -94,6 +103,16 @@ formats, such as CSV, Parquet, or JSON.</p>
 <p>You could also read data with other packages and then convert it with
 <code><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df()</a></code> (of <code><a href="https://pola-rs.github.io/r-polars/man/as_polars_lf.html" class="external-link">as_polars_lf()</a></code> if you want
 to make it a <code>LazyFrame</code>).</p>
+<div class="custom_note">
+<p>
+<b>Note: </b><code><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df()</a></code> and <code><a href="https://pola-rs.github.io/r-polars/man/as_polars_lf.html" class="external-link">as_polars_lf()</a></code>
+are merely convenience functions to quickly convert data to a polars
+object, which is useful for showcase purposes. However, converting data
+from R to polars has some cost. In real-life usecases, be sure to load
+the data with the <code>pl$scan_*()</code> or the
+<code>pl$read_*()</code> functions.
+</p>
+</div>
 <p>Here, we’re going to use the <code>who</code> dataset that is
 available in the <code>tidyr</code> package. I import it both as a
 classic R <code>data.frame</code> and as a Polars <code>DataFrame</code>
