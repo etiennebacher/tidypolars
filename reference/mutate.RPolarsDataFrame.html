@@ -117,6 +117,10 @@ in other packages (dplyr::lag(), etc.) are implemented in an efficient
 way in Polars. These functions are automatically translated to Polars
 syntax under the hood so that you can continue using the classic R syntax and
 functions.</p>
+<p>If a Polars built-in replacement doesn't exist (for example for custom
+functions), then <code>tidypolars</code> will throw an error. See the vignette on Polars
+expressions to know how to write custom functions that are accepted by
+<code>tidypolars</code>.</p>
     </div>
 
     <div class="section level2">
