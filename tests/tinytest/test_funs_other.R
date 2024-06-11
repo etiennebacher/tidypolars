@@ -456,3 +456,65 @@ expect_equal(
     pull(foo),
   c(rep(NA, 5), 1)
 )
+
+# dense_rank
+
+test <- polars::pl$DataFrame(x = c(5, 1, 3, 2, 2, NA), y = c(rep(NA, 5), 1))
+
+expect_equal(
+  test |>
+    mutate(foo = dense_rank(x)) |>
+    pull(foo),
+  c(4, 1, 3, 2, 2, NA)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = dense_rank(y)) |>
+    pull(foo),
+  c(rep(NA, 5), 1)
+)
+
+# row_number
+
+test <- polars::pl$DataFrame(x = c(5, 1, 3, 2, 2, NA), y = c(rep(NA, 5), 1))
+
+expect_equal(
+  test |>
+    mutate(foo = row_number(x)) |>
+    pull(foo),
+  c(5, 1, 4, 2, 3, NA)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = row_number(y)) |>
+    pull(foo),
+  c(rep(NA, 5), 1)
+)
+
+expect_error(
+  test |> mutate(foo = row_number()),
+  "No translation"
+)
+
+test2 <- polars::pl$DataFrame(
+  grp = c(1, 1, 1, 2, 2, 2, 3, 3, 3),
+  x = c(3, 2, 1, 1, 2, 2, 1, 1, 1)
+)
+
+expect_equal(
+  test2 |>
+    group_by(grp) |>
+    filter(row_number(x) == 1) |>
+    pull(x),
+  rep(1, 3)
+)
+
+expect_equal(
+  test2 |>
+    group_by(grp) |>
+    filter(min_rank(x) == 1) |>
+    pull(x),
+  rep(1, 5)
+)

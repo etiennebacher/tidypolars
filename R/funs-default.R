@@ -339,6 +339,10 @@ pl_cumsum <- function(x, ...) {
   x$cum_sum()
 }
 
+pl_dense_rank_dplyr <- function(x) {
+  x$rank(method = "dense")
+}
+
 pl_diff <- function(x, lag = 1, differences = 1, ...) {
   check_empty_dots(...)
   if (!is.null(differences) && length(differences) == 1 && differences != 1) {
@@ -519,13 +523,20 @@ pl_replace_na_tidyr <- function(data, replace, ...) {
   data$fill_null(replace)
 }
 
+pl_rev <- function(x) {
+  x$reverse()
+}
+
 pl_round <- function(x, digits = 0, ...) {
   check_empty_dots(...)
   x$round(decimals = digits)
 }
 
-pl_rev <- function(x) {
-  x$reverse()
+pl_row_number_dplyr <- function(x) {
+  if (missing(x)) {
+    abort("No translation (yet) for `row_number()` when `x` is missing")
+  }
+  x$rank(method = "ordinal")
 }
 
 pl_sample <- function(x, size = NULL, replace = FALSE, ...) {

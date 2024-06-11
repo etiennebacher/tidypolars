@@ -2,7 +2,11 @@
 
 ## New features
 
-* Add support for `%%` and `%/%`.
+* Add support for several functions:
+
+  - from package `base`: `%%` and `%/%`.
+  
+  - from package `dplyr`: `dense_rank()`, `row_number()`.
 
 * Better handling of missing values to match `R` behavior. In the following
   functions, if there is at least one missing value and `na.rm = FALSE` (the 
