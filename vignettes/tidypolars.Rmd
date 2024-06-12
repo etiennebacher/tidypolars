@@ -34,7 +34,7 @@ functions (to import them as `LazyFrame`s). `polars` can read various file
 formats, such as CSV, Parquet, or JSON.
 
 You could also read data with other packages and then convert it with
-`as_polars_df()` (of `as_polars_lf()` if you want to make it a 
+`as_polars_df()` (or `as_polars_lf()` if you want to make it a 
 `LazyFrame`). 
 
 <div class="custom_note">
