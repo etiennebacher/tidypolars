@@ -58,3 +58,17 @@ expect_equal(
     pool_exprs_3 = list(x = NULL)
   )
 )
+
+# test error messages
+
+expect_error(
+  pl_iris |> mutate(foo = min_rank()),
+  "Error while running function `min_rank()` in Polars.",
+  fixed = TRUE
+)
+
+expect_error(
+  pl_iris |> mutate(foo = dplyr::min_rank()),
+  "Error while running function `dplyr::min_rank()` in Polars.",
+  fixed = TRUE
+)

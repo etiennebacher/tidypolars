@@ -63,4 +63,18 @@ expect_equal_lazy(
   )
 )
 
+# test error messages
+
+expect_error_lazy(
+  pl_iris |> mutate(foo = min_rank()),
+  "Error while running function `min_rank()` in Polars.",
+  fixed = TRUE
+)
+
+expect_error_lazy(
+  pl_iris |> mutate(foo = dplyr::min_rank()),
+  "Error while running function `dplyr::min_rank()` in Polars.",
+  fixed = TRUE
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
