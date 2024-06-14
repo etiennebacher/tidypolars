@@ -82,3 +82,4 @@ reference:
       Other functions or S3 methods.
     contents:
       - as_tibble.tidypolars
+      - tidypolars-options

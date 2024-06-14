@@ -17,6 +17,11 @@
   
 * New argument `cluster_with_columns` in `collect()`, `compute()`, and `fetch()`.
 
+* Add a global option `tidypolars_unknown_args` to control what happens when 
+  `tidypolars` doesn't know how to handle an argument in a function. The default
+  is to warn and the only other accepted value is `"error"`.
+
+
 # tidypolars 0.8.0
 
 `tidypolars` requires `polars` >= 0.17.0.
