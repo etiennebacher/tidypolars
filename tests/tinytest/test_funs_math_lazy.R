@@ -62,7 +62,7 @@ expect_true(all(foo %in% c(1, 2, 3, 5)))
 
 expect_warning(
   test |> mutate(x = sample(x2, prob = 0.5)),
-  "will not be used: `prob`"
+  "doesn't know how to use some arguments"
 )
 
 # diff

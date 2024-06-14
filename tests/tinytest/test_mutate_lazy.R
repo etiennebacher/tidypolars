@@ -228,7 +228,7 @@ expect_equal_lazy(
 
 expect_warning(
   mutate(pl_iris, foo = mean(Sepal.Length, trim = 1)),
-  pattern = "will not be used: `trim`"
+  "doesn't know how to use some arguments"
 )
 
 

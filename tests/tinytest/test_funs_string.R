@@ -208,7 +208,7 @@ expect_equal(
 
 expect_warning(
   mutate(test, foo = str_extract_all(x2, "[a-z]+", simplify = TRUE)),
-  "will not be used"
+  "doesn't know how to use some arguments"
 )
 
 
@@ -474,7 +474,7 @@ expect_equal(
 
 expect_warning(
   mutate(test, foo = trimws(x6, which = "right", whitespace = " ")),
-  "will not be used"
+  "doesn't know how to use some arguments"
 )
 
 
@@ -613,7 +613,7 @@ expect_equal(
 
 expect_warning(
   mutate(test, foo = grepl("e", x1, ignore.case = TRUE)),
-  "will not be used"
+  "doesn't know how to use some arguments"
 )
 
 
@@ -694,13 +694,13 @@ expect_equal(
 expect_warning(
   mutate(test, foo = str_split(x8, "-", n = 2)) |>
     pull(foo),
-  "will not be used"
+  "doesn't know how to use some arguments"
 )
 
 expect_warning(
   mutate(test, foo = str_split(x8, "-", simplify = TRUE)) |>
     pull(foo),
-  "will not be used"
+  "doesn't know how to use some arguments"
 )
 
 # split_i ---------------------------------------------------------

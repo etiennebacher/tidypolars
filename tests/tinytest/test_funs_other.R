@@ -301,7 +301,7 @@ expect_equal(
 expect_warning(
   test |>
     summarize(foo = first(x, order_by = "bar")),
-  "will not be used"
+  "doesn't know how to use some arguments"
 )
 
 # last
@@ -329,7 +329,7 @@ expect_equal(
 expect_warning(
   test |>
     summarize(foo = last(x, order_by = "bar")),
-  "will not be used"
+  "doesn't know how to use some arguments"
 )
 
 # nth

@@ -1,0 +1,20 @@
+source("helpers.R")
+using("tidypolars")
+
+test <- polars::pl$DataFrame(x = c(2, 1, 5, 3, 1))
+
+expect_warning(
+  test |> mutate(x2 = sample(x, prob = 0.5)),
+  "tidypolars doesn't know how to use some arguments of `sample()`.",
+  fixed = TRUE
+)
+
+options(tidypolars_unknown_args = "error")
+
+expect_error(
+  test |> mutate(x2 = sample(x, prob = 0.5)),
+  "tidypolars doesn't know how to use some arguments of `sample()`: `prob`.",
+  fixed = TRUE
+)
+
+options(tidypolars_unknown_args = "warn")

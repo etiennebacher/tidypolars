@@ -559,19 +559,40 @@ get_globenv_functions <- function() {
 # exists in the R function but will not be used in the polars function.
 check_empty_dots <- function(...) {
   dots <- get_dots(...)
+  env <- dots[["__tidypolars__env"]]
   dots[["__tidypolars__new_vars"]] <- NULL
   dots[["__tidypolars__env"]] <- NULL
-  if (length(dots) > 0) {
-    fn <- deparse(match.call(call = sys.call(sys.parent()))[1])
-    fn <- gsub("^pl\\_", "", fn)
+
+  if (length(dots) == 0) {
+    return(invisible())
+  }
+
+  fn <- deparse(match.call(call = sys.call(sys.parent()))[1])
+  fn <- gsub("^pl\\_", "", fn)
+
+  rlang_action <- getOption("tidypolars_unknown_args", "warn")
+  if (rlang_action == "warn") {
     rlang::warn(
       paste0(
-        "\nNot all arguments of ", fn, " are used by Polars.\n",
-        "The following argument(s) will not be used: ",
+        "\nPackage tidypolars doesn't know how to use some arguments of `", fn, "`.\n",
+        "The following argument(s) will be ignored: ",
         toString(paste0("`", names(dots), "`")),
         "."
       )
     )
+  } else if (rlang_action == "error") {
+    rlang::abort(
+      c(
+        paste0(
+          "Package tidypolars doesn't know how to use some arguments of `", fn, "`: ",
+          toString(paste0("`", names(dots), "`")), "."
+        ),
+        "i" = "Use `options(tidypolars_unknown_args = \"warn\")` to warn when this happens instead of throwing an error."
+      ),
+      call = env
+    )
+  } else {
+    abort("The global option `tidypolars_unknown_args` only accepts \"warn\" and \"error\".")
   }
 }
 
