@@ -259,7 +259,26 @@ pl_tz_localize <- function(x, ...) {
 
 # TODO: check the day of weekstart (lubridate starts the
 # week on sunday, polars on monday)
-pl_weekday_lubridate <- function(x, ...) {
+pl_wday_lubridate <- function(
+    x,
+    label = FALSE,
+    abbr = TRUE,
+    week_start = getOption("lubridate.week.start", 7),
+    ...
+) {
   check_empty_dots(...)
-  x$dt$weekday()
+  env <- env_from_dots(...)
+  if (week_start != 7) {
+    abort("Currently, tidypolars only works if `week_start` is 7.", call = env)
+  }
+  if (isTRUE(label)) {
+    if (isTRUE(abbr)) {
+      out <- x$dt$strftime("%a")
+    } else {
+      out <- x$dt$strftime("%A")
+    }
+  } else {
+    out <- x$dt$weekday() + 1L
+  }
+  out
 }

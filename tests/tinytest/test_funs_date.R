@@ -24,9 +24,7 @@ test_df <- data.frame(
 test <- pl$DataFrame(test_df)
 
 
-for (i in c("year", "month", "day", "quarter", "week", "mday", "yday"
-            # TODO: "wday" (see pl_dt_weekday())
-            )) {
+for (i in c("year", "month", "day", "quarter", "week", "mday", "yday")) {
   pol <- paste0("mutate(test, foo = ", i, "(YMD))") |>
     str2lang() |>
     eval() |>
@@ -67,6 +65,34 @@ for (i in c("hour", "minute", "second")) {
 #
 #   expect_equal(pol, res, info = i)
 # }
+
+# wday
+
+expect_equal(
+  test |>
+    mutate(foo = wday(YMD)),
+  test_df |>
+    mutate(foo = wday(YMD))
+)
+
+expect_error(
+  test |> mutate(foo = wday(YMD, week_start = 1)),
+  "Currently, tidypolars only works if `week_start` is 7."
+)
+
+expect_equal(
+  test |>
+    mutate(foo = wday(YMD, label = TRUE)) |>
+    pull(foo),
+  c("Mon", "Wed", "Thu", NA)
+)
+
+expect_equal(
+  test |>
+    mutate(foo = wday(YMD, label = TRUE, abbr = FALSE)) |>
+    pull(foo),
+  c("Monday", "Wednesday", "Thursday", NA)
+)
 
 
 # strptime

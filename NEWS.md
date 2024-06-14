@@ -8,6 +8,8 @@
   
   - from package `dplyr`: `dense_rank()`, `row_number()`.
 
+  - from package `lubridate`: `wday()`.
+
 * Better handling of missing values to match `R` behavior. In the following
   functions, if there is at least one missing value and `na.rm = FALSE` (the 
   default), then the output will be `NA`: `max()`, `mean()`, `median()`, `min()`,
