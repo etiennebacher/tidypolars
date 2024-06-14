@@ -170,8 +170,8 @@ this argument and warns the user:</p>
 <span>  <span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">mpg</span>, trim <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: </span></span>
-<span><span class="co">#&gt; Not all arguments of mean() are used by Polars.</span></span>
-<span><span class="co">#&gt; The following argument(s) will not be used: `trim`.</span></span>
+<span><span class="co">#&gt; Package tidypolars doesn't know how to use some arguments of `mean()`.</span></span>
+<span><span class="co">#&gt; The following argument(s) will be ignored: `trim`.</span></span>
 <span><span class="co">#&gt; shape: (32, 12)</span></span>
 <span><span class="co">#&gt; ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────────┐</span></span>
 <span><span class="co">#&gt; │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ x         │</span></span>
