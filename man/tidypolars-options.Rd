@@ -5,8 +5,6 @@
 \title{\code{tidypolars} global options}
 \description{
 There is currently one global option:
-}
-\details{
 \itemize{
 \item \code{tidypolars_unknown_args} controls what happens when some arguments passed
 in an expression are unknown, e.g the argument \code{prob} in \code{sample()}. The
@@ -25,7 +23,7 @@ mutate(test, x2 = sample(x, prob = 0.5))
 
 # But one can make this stricter and throw an error when this happens
 options(tidypolars_unknown_args = "error")
-try(mutate(test, x2 = sample(x, prob = 0.5))
+try(mutate(test, x2 = sample(x, prob = 0.5)))
 
 options(tidypolars_unknown_args = "warn")
 \dontshow{\}) # examplesIf}
