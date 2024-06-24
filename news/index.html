@@ -68,6 +68,11 @@
 <li><p>New argument <code>cluster_with_columns</code> in <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code>, and <code><a href="../reference/fetch.html">fetch()</a></code>.</p></li>
 <li><p>Add a global option <code>tidypolars_unknown_args</code> to control what happens when <code>tidypolars</code> doesn’t know how to handle an argument in a function. The default is to warn and the only other accepted value is <code>"error"</code>.</p></li>
 </ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
+<ul><li>
+<code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">add_count()</a></code> no longer overwrite a variable named <code>n</code> if the argument <code>name</code> is unspecified.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.0" id="tidypolars-080">tidypolars 0.8.0<a class="anchor" aria-label="anchor" href="#tidypolars-080"></a></h2>
