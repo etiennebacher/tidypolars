@@ -74,3 +74,35 @@ expect_equal(
   attr(add_count(test_grp), "maintain_grp_order"),
   TRUE
 )
+
+# message if overwriting variable
+
+test2 <- test |>
+  mutate(n = 1)
+
+test3 <- test2 |>
+  mutate(nn = 1)
+
+expect_message(
+  test2 |> count(n),
+  "Storing counts in `nn`, as `n` already present in input."
+)
+
+expect_message(
+  test2 |> add_count(cyl),
+  "Storing counts in `nn`, as `n` already present in input."
+)
+
+expect_message(
+  test3 |> add_count(cyl),
+  "Storing counts in `nnn`, as `n` already present in input."
+)
+
+expect_equal(
+  test2 |>
+    add_count(cyl, name = "n") |>
+    pull(n),
+  test |>
+    add_count(cyl, name = "n") |>
+    pull(n)
+)

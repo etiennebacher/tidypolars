@@ -52,7 +52,7 @@ add_count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
 
   vars <- tidyselect_dots(x, ...)
   vars <- c(grps, vars)
-  out <- count_(x, vars, sort = sort, name = name, new_col = TRUE)
+  out <- count_(x, vars, sort = sort, name = name, new_col = TRUE, missing_name = missing(name))
 
   out <- if (is_grouped) {
     group_by(out, grps, maintain_order = mo)
@@ -67,8 +67,10 @@ add_count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
 #' @export
 add_count.RPolarsLazyFrame <- add_count.RPolarsDataFrame
 
-count_ <- function(x, vars, sort, name, new_col = FALSE) {
 
+count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
+
+  name <- check_name(x, vars, name, missing_name)
   if (isTRUE(new_col)) {
     if (length(vars) == 0) {
       out <- x$with_columns(
@@ -98,4 +100,35 @@ count_ <- function(x, vars, sort, name, new_col = FALSE) {
   } else {
     out
   }
+}
+
+check_name <- function(x, vars, name, missing_name) {
+  new_name <- name
+  if (isTRUE(missing_name)) {
+    while (new_name %in% names(x)) {
+      new_name <- paste0(new_name, "n")
+    }
+    if (new_name != name) {
+      rlang::inform(
+        c(
+          paste0("Storing counts in `", new_name, "`, as `n` already present in input."),
+          "i" = "Use `name = \"new_name\"` to pick a new name."
+        )
+      )
+    }
+  } else {
+    while (new_name %in% vars) {
+      new_name <- paste0(new_name, "n")
+    }
+    if (new_name != name) {
+      rlang::inform(
+        c(
+          paste0("Storing counts in `", new_name, "`, as `n` already present in input."),
+          "i" = "Use `name = \"new_name\"` to pick a new name."
+        )
+      )
+    }
+  }
+
+  new_name
 }

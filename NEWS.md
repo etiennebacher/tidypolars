@@ -20,6 +20,11 @@
 * Add a global option `tidypolars_unknown_args` to control what happens when 
   `tidypolars` doesn't know how to handle an argument in a function. The default
   is to warn and the only other accepted value is `"error"`.
+  
+## Bug fixes
+
+* `count()` and `add_count()` no longer overwrite a variable named `n` if the 
+  argument `name` is unspecified.
 
 
 # tidypolars 0.8.0
