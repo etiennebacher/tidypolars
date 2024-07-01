@@ -39,7 +39,6 @@
 #'   filter(Sepal.Length == max(Sepal.Length), .by = Species)
 
 filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
-  check_polars_data(.data)
 
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order

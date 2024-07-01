@@ -32,7 +32,6 @@
 #'   relocate(hp, vs, .after = last_col())
 
 relocate.RPolarsDataFrame <- function(.data, ..., .before = NULL, .after = NULL) {
-  check_polars_data(.data)
 
   if (!missing(.before) && !missing(.after)) {
     rlang::abort("You can specify either `.before` or `.after` but not both.")

@@ -19,7 +19,6 @@
 #' select(pl_iris, foo1 = Sepal.Length, Sepal.Width)
 
 select.RPolarsDataFrame <- function(.data, ...) {
-  check_polars_data(.data)
   dots <- get_dots(...)
   with_renaming <- !is.null(names(dots))
   vars <- tidyselect_dots(.data, ..., with_renaming = with_renaming)

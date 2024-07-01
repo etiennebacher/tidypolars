@@ -41,3 +41,7 @@ expect_error(
   'Column "hash" already exists'
 )
 
+expect_error(
+  make_unique_id(mtcars),
+  "The data must be a Polars DataFrame or LazyFrame"
+)

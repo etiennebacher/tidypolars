@@ -32,7 +32,6 @@
 
 fill.RPolarsDataFrame <- function(data, ..., .direction = c("down", "up", "downup", "updown")) {
 
-  check_polars_data(data)
   vars <- tidyselect_dots(data, ...)
   .direction <- match.arg(.direction)
 

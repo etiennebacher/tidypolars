@@ -45,5 +45,9 @@ expect_error_lazy(
   'Column "hash" already exists'
 )
 
+expect_error_lazy(
+  make_unique_id(mtcars),
+  "The data must be a Polars DataFrame or LazyFrame"
+)
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

@@ -24,7 +24,6 @@
 #'  rowwise() |>
 #'  mutate(min = min(c(x, y)), max = max(c(x, y)))
 rowwise.RPolarsDataFrame <- function(data, ...) {
-  check_polars_data(data)
 
   if (!is.null(attributes(data)$pl_grps)) {
     rlang::abort("Cannot use `rowwise()` on grouped data.")

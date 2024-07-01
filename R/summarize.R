@@ -22,8 +22,6 @@
 
 summarize.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
 
-  check_polars_data(.data)
-
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   if (is.null(mo)) mo <- FALSE

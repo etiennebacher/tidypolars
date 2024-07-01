@@ -74,8 +74,6 @@ pivot_wider.RPolarsDataFrame <- function(
     values_fill = NULL
   ) {
 
-  check_polars_data(data)
-
   data_names <- names(data)
   value_vars <- tidyselect_named_arg(data, rlang::enquo(values_from))
   names_vars <- tidyselect_named_arg(data, rlang::enquo(names_from))

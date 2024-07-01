@@ -34,8 +34,6 @@ pivot_longer.RPolarsDataFrame <- function(data, cols, ..., names_to = "name",
                                    names_prefix = NULL,
                                    values_to = "value") {
 
-  check_polars_data(data)
-
   data_names <- names(data)
   value_vars <- tidyselect_named_arg(data, rlang::enquo(cols))
   id_vars <- data_names[!data_names %in% value_vars]
