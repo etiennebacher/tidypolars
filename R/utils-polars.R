@@ -13,15 +13,3 @@ add_tidypolars_class <- function(x) {
   }
   x
 }
-
-check_same_class <- function(x, y, env = caller_env()) {
-  if (class(x) != class(y)) {
-    rlang::abort(
-      c(
-        "Both objects must be of the same class.",
-        "i" = paste0("Currently, `x` is a ", class(x)[1], " and `y` is a ", class(y)[1], ".")
-      ),
-      call = env
-    )
-  }
-}
