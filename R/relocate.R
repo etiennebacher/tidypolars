@@ -58,9 +58,6 @@ relocate.RPolarsDataFrame <- function(.data, ..., .before = NULL, .after = NULL)
 
   if (where == "BEFORE") {
     limit <- which(names_data == .before) - 1
-    if (length(limit) == 0) {
-      rlang::abort("The column specified in `.before` doesn't exist in the dataset.")
-    }
     lhs <- names_data[seq_len(limit)]
     lhs <- lhs[which(lhs %in% not_moving)]
     rhs <- names_data[seq(limit + 1, ncol(.data))]
@@ -68,9 +65,6 @@ relocate.RPolarsDataFrame <- function(.data, ..., .before = NULL, .after = NULL)
     new_order <- c(lhs, vars, rhs)
   } else if (where == "AFTER") {
     limit <- which(names_data == .after)
-    if (length(limit) == 0) {
-      rlang::abort("The column specified in `.after` doesn't exist in the dataset.")
-    }
     lhs <- names_data[seq_len(limit)]
     lhs <- lhs[which(lhs %in% not_moving)]
     # we don't have RHS if we relocate columns to be in the last position
