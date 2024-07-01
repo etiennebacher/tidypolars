@@ -249,3 +249,17 @@ expect_error(
   test |> filter(chars = "a"),
   "This usually means that"
 )
+
+# non-latin or weird chars
+
+test <- polars::pl$DataFrame(x = c(letters, "<other>$", "生脉胶囊"))
+
+expect_dim(
+  test |> filter(x %in% c("<other>$", "生脉胶囊")),
+  2
+)
+
+expect_dim(
+  test |> filter(x == "生脉胶囊"),
+  1
+)

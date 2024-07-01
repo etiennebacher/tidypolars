@@ -254,4 +254,18 @@ expect_error_lazy(
   "This usually means that"
 )
 
+# non-latin or weird chars
+
+test <- polars::pl$LazyFrame(x = c(letters, "<other>$", "生脉胶囊"))
+
+expect_dim(
+  test |> filter(x %in% c("<other>$", "生脉胶囊")),
+  2
+)
+
+expect_dim(
+  test |> filter(x == "生脉胶囊"),
+  1
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
