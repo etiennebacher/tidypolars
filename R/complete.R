@@ -47,7 +47,7 @@ complete.RPolarsDataFrame <- function(data, ..., fill = list()) {
     chain <- data$select(pl$col(vars)$unique()$sort()$implode())
   }
 
-  for (i in 1:length(vars)) {
+  for (i in seq_along(vars)) {
     chain <- chain$explode(vars[i])
   }
 

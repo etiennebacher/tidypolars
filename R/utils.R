@@ -8,8 +8,10 @@ safe_deparse <- function (x, ...) {
   if (is.null(x)) {
     return(NULL)
   }
-  paste0(sapply(deparse(x, width.cutoff = 500), trimws, simplify = TRUE),
-         collapse = " ")
+  paste0(
+    vapply(deparse(x, width.cutoff = 500), trimws, FUN.VALUE = character(1)),
+    collapse = " "
+  )
 }
 
 toupper_first <- function(x) {

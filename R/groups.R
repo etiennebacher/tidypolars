@@ -101,13 +101,13 @@ group_vars.RPolarsLazyFrame <- group_vars.RPolarsDataFrame
 group_keys.RPolarsDataFrame <- function(.tbl, ...) {
   grps <- attributes(.tbl)$pl_grps
   if (length(grps) > 0) {
-    out = .tbl$group_by(grps)$
+    out <- .tbl$group_by(grps)$
       agg(pl$lit(1))$
       drop("literal")$
       sort(grps)
 
     if (inherits(out, "RPolarsLazyFrame")) {
-      out = out$collect()
+      out <- out$collect()
     }
     out$to_data_frame()
   } else {

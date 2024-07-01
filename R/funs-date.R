@@ -234,9 +234,9 @@ pl_strftime <- function(x, ...) {
 pl_strptime <- function(string, format, tz = "", strict = TRUE, ...) {
   check_empty_dots(...)
   if (grepl("%(I|H|c|T|M|p|r|R|S|X|z)", format)) {
-    dtype = pl$Datetime("us", tz = tz)
+    dtype <- pl$Datetime("us", tz = tz)
   } else {
-    dtype = pl$Date
+    dtype <- pl$Date
   }
   string$str$strptime(dtype = dtype, format = format, strict = strict)
 }
