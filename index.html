@@ -76,7 +76,7 @@
 <!-- badges: start -->
 
 <hr>
-<p><span class="emoji" data-emoji="warning">⚠️</span> This is the R package “tidypolars”. The Python one is here: <a href="https://github.com/markfairbanks/tidypolars" class="external-link">markfairbanks/tidypolars</a> <span class="emoji" data-emoji="warning">⚠️</span></p>
+<p><span class="emoji" data-emoji="information_source">ℹ️</span> This is the R package “tidypolars”. The Python one is here: <a href="https://github.com/markfairbanks/tidypolars" class="external-link">markfairbanks/tidypolars</a></p>
 <hr>
 <!-- * [Motivation](#motivation) --><!-- * [Installation](#installation) --><!-- * [Example](#example) --><!-- * [Contributing](#contributing) --><div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
@@ -188,16 +188,18 @@ Click to see a small benchmark
 </summary><p>For more serious benchmarks about <code>polars</code>, take a look at <a href="https://duckdblabs.github.io/db-benchmark/" class="external-link">DuckDB benchmarks</a>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sebkrantz.github.io/collapse/" class="external-link">collapse</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; collapse 2.0.11, see ?`collapse-package` or ?`collapse-documentation`</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dtplyr.tidyverse.org" class="external-link">dtplyr</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; collapse 2.0.15, see ?`collapse-package` or ?`collapse-documentation`</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dtplyr.tidyverse.org" class="external-link">dtplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">large_iris</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">rbindlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="fl">100000</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">large_iris_pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_lf.html" class="external-link">as_polars_lf</a></span><span class="op">(</span><span class="va">large_iris</span><span class="op">)</span></span>
 <span><span class="va">large_iris_dt</span> <span class="op">&lt;-</span> <span class="fu">lazy_dt</span><span class="op">(</span><span class="va">large_iris</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">large_iris</span><span class="op">)</span>, big.mark <span class="op">=</span> <span class="st">","</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "15,000,000"</span></span>
-<span></span>
+<span><span class="co">#&gt; [1] "15,000,000"</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
 <span>  polars <span class="op">=</span> <span class="op">{</span></span>
 <span>    <span class="va">large_iris_pl</span><span class="op">$</span></span>
@@ -254,12 +256,13 @@ Click to see a small benchmark
 <span><span class="co">#&gt; # A tibble: 5 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars      126.4ms 288.63ms     2.89     19.6KB   0.0722</span></span>
-<span><span class="co">#&gt; 2 tidypolars 152.53ms 202.25ms     4.37   332.28KB   1.09  </span></span>
-<span><span class="co">#&gt; 3 dplyr         5.62s    6.06s     0.164    1.79GB   0.476 </span></span>
-<span><span class="co">#&gt; 4 dtplyr     835.67ms    1.03s     0.957    1.72GB   2.34  </span></span>
-<span><span class="co">#&gt; 5 collapse   487.95ms 653.16ms     1.50   745.96MB   1.09</span></span>
-<span></span>
+<span><span class="co">#&gt; 1 polars     117.94ms 181.26ms     3.65    20.38KB    0.182</span></span>
+<span><span class="co">#&gt; 2 tidypolars 145.51ms 197.46ms     4.78   359.85KB    1.43 </span></span>
+<span><span class="co">#&gt; 3 dplyr         4.52s    5.56s     0.178    1.79GB    0.396</span></span>
+<span><span class="co">#&gt; 4 dtplyr        1.11s    1.23s     0.813    1.72GB    1.65 </span></span>
+<span><span class="co">#&gt; 5 collapse   422.84ms 665.13ms     1.52   745.96MB    1.52</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># NOTE: do NOT take the "mem_alloc" results into account.</span></span>
 <span><span class="co"># `bench::mark()` doesn't report the accurate memory usage for packages calling</span></span>
 <span><span class="co"># Rust code.</span></span></code></pre></div>
