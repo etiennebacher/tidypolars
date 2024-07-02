@@ -12,9 +12,9 @@ coverage](https://codecov.io/gh/etiennebacher/tidypolars/branch/main/graph/badge
 
 ------------------------------------------------------------------------
 
-:warning: This is the R package “tidypolars”. The Python one is here:
+:information_source: This is the R package “tidypolars”. The Python one
+is here:
 [markfairbanks/tidypolars](https://github.com/markfairbanks/tidypolars)
-:warning:
 
 ------------------------------------------------------------------------
 
@@ -156,7 +156,10 @@ benchmarks](https://duckdblabs.github.io/db-benchmark/).
 
 ``` r
 library(collapse, warn.conflicts = FALSE)
-#> collapse 2.0.11, see ?`collapse-package` or ?`collapse-documentation`
+#> collapse 2.0.15, see ?`collapse-package` or ?`collapse-documentation`
+```
+
+``` r
 library(dtplyr)
 
 large_iris <- data.table::rbindlist(rep(list(iris), 100000))
@@ -165,6 +168,9 @@ large_iris_dt <- lazy_dt(large_iris)
 
 format(nrow(large_iris), big.mark = ",")
 #> [1] "15,000,000"
+```
+
+``` r
 
 bench::mark(
   polars = {
@@ -222,11 +228,14 @@ bench::mark(
 #> # A tibble: 5 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars      126.4ms 288.63ms     2.89     19.6KB   0.0722
-#> 2 tidypolars 152.53ms 202.25ms     4.37   332.28KB   1.09  
-#> 3 dplyr         5.62s    6.06s     0.164    1.79GB   0.476 
-#> 4 dtplyr     835.67ms    1.03s     0.957    1.72GB   2.34  
-#> 5 collapse   487.95ms 653.16ms     1.50   745.96MB   1.09
+#> 1 polars     117.94ms 181.26ms     3.65    20.38KB    0.182
+#> 2 tidypolars 145.51ms 197.46ms     4.78   359.85KB    1.43 
+#> 3 dplyr         4.52s    5.56s     0.178    1.79GB    0.396
+#> 4 dtplyr        1.11s    1.23s     0.813    1.72GB    1.65 
+#> 5 collapse   422.84ms 665.13ms     1.52   745.96MB    1.52
+```
+
+``` r
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling

@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 ---
 
-:warning: This is the R package "tidypolars". The Python one is here: [markfairbanks/tidypolars](https://github.com/markfairbanks/tidypolars) :warning:
+:information_source: This is the R package "tidypolars". The Python one is here: [markfairbanks/tidypolars](https://github.com/markfairbanks/tidypolars) 
 
 ---
 
