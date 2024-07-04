@@ -129,7 +129,7 @@ df <- read.table(textConnection(
      Sat 2 Jan 2010 	2010-01-02 	2009-W53-6
      Sun 3 Jan 2010 	2010-01-03 	2009-W53-7"
 ),
-sep = "\t", fill = T, stringsAsFactors = F, header = F
+sep = "\t", fill = TRUE, stringsAsFactors = FALSE, header = FALSE
 )
 
 names(df) <- c("Gregorian", "ymd", "iso", "note")
