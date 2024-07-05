@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -130,8 +130,8 @@ benchmark to compare the performance of <code>polars</code> and
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 6</span></span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars        225ms    247ms      4.02  412.19KB    0.287</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars    351ms    361ms      2.70    3.66MB    3.08</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars        235ms    263ms      3.50  415.71KB    0.250</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars    367ms    396ms      2.32    3.67MB    2.65</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
@@ -145,8 +145,8 @@ benchmark to compare the performance of <code>polars</code> and
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 6</span></span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars         43ms   43.1ms      23.2    21.5KB     1.66</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars   46.2ms   46.5ms      21.5    81.9KB     5.37</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars       42.8ms   43.1ms      23.2    21.6KB     1.66</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars   46.3ms   46.6ms      21.4    82.2KB     5.35</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="am-i-stuck-with-tidypolars">Am I stuck with <code>tidypolars</code>?<a class="anchor" aria-label="anchor" href="#am-i-stuck-with-tidypolars"></a>
