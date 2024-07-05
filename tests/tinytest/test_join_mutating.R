@@ -156,23 +156,23 @@ country_year <- polars::pl$DataFrame(
 for (i in c(left_join, full_join, inner_join)) {
   expect_error(
     do.call(i, list(country, country_year, join_by(iso), relationship = "one-to-one")),
-    "did not fulfil 1:1 validation"
+    "did not fulfill 1:1 validation"
   )
 
   expect_error(
     do.call(i, list(country, country_year, join_by(iso), relationship = "many-to-one")),
-    "did not fulfil m:1 validation"
+    "did not fulfill m:1 validation"
   )
 }
 
 expect_error(
   right_join(country, country_year, join_by(iso), relationship = "one-to-one"),
-  "did not fulfil 1:1 validation"
+  "did not fulfill 1:1 validation"
 )
 
 expect_error(
   right_join(country, country_year, join_by(iso), relationship = "one-to-many"),
-  "did not fulfil 1:m validation"
+  "did not fulfill 1:m validation"
 )
 
 expect_equal(

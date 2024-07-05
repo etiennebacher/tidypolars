@@ -35,12 +35,12 @@ pivot_longer.RPolarsDataFrame <- function(data, cols, ..., names_to = "name",
                                    values_to = "value") {
 
   data_names <- names(data)
-  value_vars <- tidyselect_named_arg(data, rlang::enquo(cols))
-  id_vars <- data_names[!data_names %in% value_vars]
-  out <- data$melt(
-    id_vars = id_vars, value_vars = value_vars,
+  on <- tidyselect_named_arg(data, rlang::enquo(cols))
+  index <- data_names[!data_names %in% on]
+  out <- data$unpivot(
+    index = index, on = on,
     variable_name = names_to, value_name = values_to
-  )$sort(id_vars)
+  )$sort(index)
 
   if (!is.null(names_prefix)) {
     if (length(names_prefix) > 1) {
