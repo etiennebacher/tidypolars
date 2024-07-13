@@ -18,8 +18,8 @@ test2 <- polars::pl$LazyFrame(
   z2 = c(1, 2, 4)
 )
 
-expect_is_tidypolars(semi_join(test, test2))
-expect_is_tidypolars(anti_join(test, test2))
+expect_is_tidypolars(semi_join(test, test2, join_by(x, y)))
+expect_is_tidypolars(anti_join(test, test2, join_by(x, y)))
 
 expect_equal_lazy(
   semi_join(test, test2, by = c("x", "y")),
