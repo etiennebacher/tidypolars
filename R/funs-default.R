@@ -59,8 +59,7 @@ pl_mean <- function(x, na.rm = FALSE, ...) {
       x$expr$list$eval(pl$element()$mean())$explode()
     } else {
       x$expr$list$eval(
-        # TODO: replace with $has_nulls() when available
-        pl$when(pl$element()$null_count() > 0)$
+        pl$when(pl$element()$has_nulls())$
           then(NA)$
           otherwise(pl$element()$mean())
         )$
@@ -70,7 +69,7 @@ pl_mean <- function(x, na.rm = FALSE, ...) {
     if (isTRUE(na.rm)) {
       x$expr$mean()
     } else {
-      pl$when(x$expr$null_count() > 0)$then(NA)$otherwise(x$expr$mean())
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$mean())
     }
   }
 }
@@ -83,7 +82,7 @@ pl_median <- function(x, na.rm = FALSE, ...) {
       x$expr$list$eval(pl$element()$median())$explode()
     } else {
       x$expr$list$eval(
-        pl$when(pl$element()$null_count() > 0)$
+        pl$when(pl$element()$has_nulls())$
           then(NA)$
           otherwise(pl$element()$median())
       )$
@@ -93,7 +92,7 @@ pl_median <- function(x, na.rm = FALSE, ...) {
     if (isTRUE(na.rm)) {
       x$expr$median()
     } else {
-      pl$when(x$expr$null_count() > 0)$then(NA)$otherwise(x$expr$median())
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$median())
     }
   }
 }
@@ -106,7 +105,7 @@ pl_min <- function(x, na.rm = FALSE, ...) {
       x$expr$list$eval(pl$element()$min())$explode()
     } else {
       x$expr$list$eval(
-        pl$when(pl$element()$null_count() > 0)$
+        pl$when(pl$element()$has_nulls())$
           then(NA)$
           otherwise(pl$element()$min())
       )$
@@ -116,7 +115,7 @@ pl_min <- function(x, na.rm = FALSE, ...) {
     if (isTRUE(na.rm)) {
       x$expr$min()
     } else {
-      pl$when(x$expr$null_count() > 0)$then(NA)$otherwise(x$expr$min())
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$min())
     }
   }
 }
@@ -129,7 +128,7 @@ pl_max <- function(x, na.rm = FALSE, ...) {
       x$expr$list$eval(pl$element()$max())$explode()
     } else {
       x$expr$list$eval(
-        pl$when(pl$element()$null_count() > 0)$
+        pl$when(pl$element()$has_nulls())$
           then(NA)$
           otherwise(pl$element()$max())
       )$
@@ -139,7 +138,7 @@ pl_max <- function(x, na.rm = FALSE, ...) {
     if (isTRUE(na.rm)) {
       x$expr$max()
     } else {
-      pl$when(x$expr$null_count() > 0)$then(NA)$otherwise(x$expr$max())
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$max())
     }
   }
 }
@@ -151,7 +150,7 @@ pl_sum <- function(..., na.rm = FALSE) {
       x$expr$list$eval(pl$element()$sum())$explode()
     } else {
       x$expr$list$eval(
-        pl$when(pl$element()$null_count() > 0)$
+        pl$when(pl$element()$has_nulls())$
           then(NA)$
           otherwise(pl$element()$sum())
       )$
@@ -161,7 +160,7 @@ pl_sum <- function(..., na.rm = FALSE) {
     if (isTRUE(na.rm)) {
       x$expr$sum()
     } else {
-      pl$when(x$expr$null_count() > 0)$then(NA)$otherwise(x$expr$sum())
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$sum())
     }
   }
 }
@@ -173,7 +172,7 @@ pl_sd <- function(x, na.rm = FALSE) {
       x$expr$list$eval(pl$element()$std(ddof = 1))$explode()
     } else {
       x$expr$list$eval(
-        pl$when(pl$element()$null_count() > 0)$
+        pl$when(pl$element()$has_nulls())$
           then(NA)$
           otherwise(pl$element()$std(ddof = 1))
       )$
@@ -183,7 +182,7 @@ pl_sd <- function(x, na.rm = FALSE) {
     if (isTRUE(na.rm)) {
       x$expr$std(ddof = 1)
     } else {
-      pl$when(x$expr$null_count() > 0)$then(NA)$otherwise(x$expr$std(ddof = 1))
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$std(ddof = 1))
     }
   }
 }
@@ -427,7 +426,14 @@ pl_lag <- function(x, k = 1, ...) {
 
 pl_lag_dplyr <- function(x, n = 1, ...) {
   check_empty_dots(...)
-  x$shift(n)
+  # if (is.null(order_by)) {
+    x$shift(n)
+  # } else {
+  #   # Need to have at least one group so use 1 to use all data
+  #   # Requires: https://github.com/pola-rs/polars/issues/12051
+  #   x$shift(n)$over(1, order_by = order_by)
+  # }
+
 }
 
 pl_last_dplyr <- function(x, ...) {
@@ -600,7 +606,7 @@ pl_var <- function(x, na.rm = FALSE, ...) {
   if (isTRUE(na.rm)) {
     x$var(ddof = 1)
   } else {
-    pl$when(x$null_count() > 0)$then(NA)$otherwise(x$var(ddof = 1))
+    pl$when(x$has_nulls())$then(NA)$otherwise(x$var(ddof = 1))
   }
 }
 
