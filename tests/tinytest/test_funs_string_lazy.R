@@ -390,13 +390,12 @@ expect_equal_lazy(
     pull(foo)
 )
 
-# TODO:
-# expect_equal_lazy(
-#   mutate(test, foo = str_sub(x1, -10, -2)) |>
-#     pull(foo),
-#   mutate(test_df, foo = str_sub(x1, -10, -2)) |>
-#     pull(foo)
-# )
+expect_equal_lazy(
+  mutate(test, foo = str_sub(x1, -10, -2)) |>
+    pull(foo),
+  mutate(test_df, foo = str_sub(x1, -10, -2)) |>
+    pull(foo)
+)
 
 
 

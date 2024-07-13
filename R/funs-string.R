@@ -175,7 +175,12 @@ pl_str_starts_stringr <- function(string, pattern, negate = FALSE, ...) {
 pl_str_sub_stringr <- function(string, start, end = NULL, ...) {
   check_empty_dots(...)
   # polars is 0-indexed
-  if (start > 0) start <- start - 1
+  if (start > 0) {
+    start <- start - 1
+  }
+  if (!is.null(end) && end < 0) {
+    end <- abs(start) - abs(end) + 1
+  }
   string$str$slice(start, end)
 }
 

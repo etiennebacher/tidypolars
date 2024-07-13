@@ -386,13 +386,12 @@ expect_equal(
     pull(foo)
 )
 
-# TODO:
-# expect_equal(
-#   mutate(test, foo = str_sub(x1, -10, -2)) |>
-#     pull(foo),
-#   mutate(test_df, foo = str_sub(x1, -10, -2)) |>
-#     pull(foo)
-# )
+expect_equal(
+  mutate(test, foo = str_sub(x1, -10, -2)) |>
+    pull(foo),
+  mutate(test_df, foo = str_sub(x1, -10, -2)) |>
+    pull(foo)
+)
 
 
 
