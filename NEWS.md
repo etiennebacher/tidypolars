@@ -4,6 +4,8 @@
 
 * `stringr::str_sub()` now works when both `start` and `end` are negative.
 
+* `stringr::str_starts()` and `stringr::str_ends()` now work with a regex.
+
 # tidypolars 0.9.0
 
 `tidypolars` requires `polars` >= 0.18.0.

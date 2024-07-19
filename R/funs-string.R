@@ -46,13 +46,9 @@ pl_str_ends_stringr <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
   pattern <- check_pattern(pattern)
 
-  # it seems that ends_with doesn't accept a regex
+  # ends_with doesn't accept a regex
   # https://github.com/pola-rs/polars/issues/6778#issuecomment-1425774894
-  if (isTRUE(pattern$is_case_insensitive)) {
-    out <- string$str$contains(paste0(pattern$pattern, "$"))
-  } else {
-    out <- string$str$ends_with(pattern$pattern)
-  }
+  out <- string$str$contains(paste0("(", pattern$pattern, ")$"))
 
   if (isTRUE(negate)) {
     out <- out$not()
@@ -158,13 +154,9 @@ pl_str_starts_stringr <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
   pattern <- check_pattern(pattern)
 
-  # it seems that starts_with doesn't accept a regex
+  # starts_with doesn't accept a regex
   # https://github.com/pola-rs/polars/issues/6778#issuecomment-1425774894
-  if (isTRUE(pattern$is_case_insensitive)) {
-    out <- string$str$contains(paste0("^", pattern$pattern))
-  } else {
-    out <- string$str$starts_with(pattern$pattern)
-  }
+  out <- string$str$contains(paste0("^(", pattern$pattern, ")"))
 
   if (isTRUE(negate)) {
     out <- out$not()

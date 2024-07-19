@@ -124,14 +124,35 @@ expect_equal(
     pull(foo)
 )
 
-
-
 expect_equal(
   mutate(test, foo = str_ends(x1, regex("me", ignore_case = TRUE))) |>
     pull(foo),
   mutate(test_df, foo = str_ends(x1, regex("me", ignore_case = TRUE))) |>
     pull(foo)
 )
+
+expect_equal(
+  mutate(test, foo = str_starts(x1, "he|it")) |>
+    pull(foo),
+  mutate(test_df, foo = str_starts(x1, "he|it")) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = str_ends(x1, "re|mE")) |>
+    pull(foo),
+  mutate(test_df, foo = str_ends(x1, "re|mE")) |>
+    pull(foo)
+)
+
+
+# TODO: both should work
+# filterlist <- c("he", "it")
+# filtervar <- paste(filterlist, collapse = "|")
+# mutate(test, foo = str_starts(x1, paste(filterlist, collapse = "|")))
+# mutate(test, foo = str_starts(x1, filtervar))
+
+
 
 
 # extract / extract _all -------------------------------------------------------
