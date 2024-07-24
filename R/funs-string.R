@@ -42,6 +42,11 @@ pl_str_dup_stringr <- function(string, times) {
   call2(pl$concat_str, !!!rep(list(string), times)) |> eval_bare()
 }
 
+# TODO: this requires https://github.com/pola-rs/polars/issues/11455
+# pl_str_equal_string <- function(x, y, ...) {
+#
+# }
+
 pl_str_ends_stringr <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
   pattern <- check_pattern(pattern)
