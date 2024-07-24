@@ -264,6 +264,7 @@ out <- tribble(
   "`stats`",            "`var`",
   "`stringr`",          "`regex`",
   "`stringr`",          "`str_count`",
+  "`stringr`",          "`str_detect`",
   "`stringr`",          "`str_dup`",
   "`stringr`",          "`str_ends`",
   "`stringr`",          "`str_extract`",
