@@ -1,5 +1,5 @@
 
-# tidypolars
+# tidypolars <a href="https://tidypolars.etiennebacher.com/"><img src="man/figures/logo.png" align="right" height="138" /></a>
 
 <!-- badges: start -->
 
@@ -157,9 +157,6 @@ benchmarks](https://duckdblabs.github.io/db-benchmark/).
 ``` r
 library(collapse, warn.conflicts = FALSE)
 #> collapse 2.0.15, see ?`collapse-package` or ?`collapse-documentation`
-```
-
-``` r
 library(dtplyr)
 
 large_iris <- data.table::rbindlist(rep(list(iris), 100000))
@@ -168,9 +165,6 @@ large_iris_dt <- lazy_dt(large_iris)
 
 format(nrow(large_iris), big.mark = ",")
 #> [1] "15,000,000"
-```
-
-``` r
 
 bench::mark(
   polars = {
@@ -228,14 +222,11 @@ bench::mark(
 #> # A tibble: 5 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     117.94ms 181.26ms     3.65    20.38KB    0.182
-#> 2 tidypolars 145.51ms 197.46ms     4.78   359.85KB    1.43 
-#> 3 dplyr         4.52s    5.56s     0.178    1.79GB    0.396
-#> 4 dtplyr        1.11s    1.23s     0.813    1.72GB    1.65 
-#> 5 collapse   422.84ms 665.13ms     1.52   745.96MB    1.52
-```
-
-``` r
+#> 1 polars     116.46ms 153.74ms     3.67    20.54KB    0.183
+#> 2 tidypolars 139.62ms 177.37ms     5.21   353.94KB    1.56 
+#> 3 dplyr         4.36s    4.67s     0.211    1.79GB    0.470
+#> 4 dtplyr         1.1s    1.15s     0.860    1.72GB    1.74 
+#> 5 collapse   505.73ms 624.05ms     1.58   745.96MB    1.58
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
@@ -257,3 +248,6 @@ instructions on bug report and pull requests.
 
 The website theme was heavily inspired by Matthew Kay’s `ggblend`
 package: <https://mjskay.github.io/ggblend/>.
+
+The package hex logo was created by Hubert Hałun as part of the Appsilon
+Hex Contest.

@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# tidypolars
+# tidypolars <a href="https://tidypolars.etiennebacher.com/"><img src="man/figures/logo.png" align="right" height="138" /></a>
 
 <!-- badges: start -->
 [![check](https://github.com/etiennebacher/tidypolars/actions/workflows/check.yml/badge.svg)](https://github.com/etiennebacher/tidypolars/actions/workflows/check.yml)
@@ -210,3 +210,6 @@ on bug report and pull requests.
 ## Acknowledgements
 
 The website theme was heavily inspired by Matthew Kay's `ggblend` package: https://mjskay.github.io/ggblend/.
+
+The package hex logo was created by Hubert Hałun as part of the Appsilon Hex 
+Contest.
