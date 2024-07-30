@@ -7,18 +7,10 @@
 describe(.data, percentiles = c(0.25, 0.75))
 }
 \arguments{
-\item{.data}{A Polars Data/LazyFrame}
-
 \item{percentiles}{One or more percentiles to include in the summary
 statistics. All values must be between 0 and 1 (\code{NULL} are ignored).}
 }
 \description{
-Summary statistics for a Polars DataFrame
-}
-\examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-mtcars |>
-  as_polars_df() |>
-  describe(percentiles = c(0.2, 0.4, 0.6, 0.8))
-\dontshow{\}) # examplesIf}
+This function is deprecated as of tidypolars 0.10.0, it will be removed in
+future update. Use \code{summary()} with the same arguments instead.
 }
