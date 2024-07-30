@@ -1,5 +1,10 @@
 # tidypolars (development version)
 
+## Deprecations
+
+* `describe()` is deprecated as of tidypolars 0.10.0 and will be removed in 
+  future update. Use `summary()` with the same arguments instead.
+
 ## Bug fixes
 
 * `stringr::str_sub()` now works when both `start` and `end` are negative.
