@@ -15,6 +15,9 @@
 
 * `stringr::str_starts()` and `stringr::str_ends()` now work with a regex.
 
+* `fill()` doesn't error anymore when `...` is empty. Instead, it returns the 
+  input data.
+
 # tidypolars 0.9.0
 
 `tidypolars` requires `polars` >= 0.18.0.

@@ -32,6 +32,13 @@ expect_equal(
   c(1, 1, 1, 1, 2, 2)
 )
 
+# nothing to fill
+
+expect_equal(
+  pl_test |> fill(.direction = "updown"),
+  pl_test
+)
+
 # grouped data
 
 pl_grouped <- polars::pl$DataFrame(

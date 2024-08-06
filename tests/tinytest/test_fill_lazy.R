@@ -36,6 +36,13 @@ expect_equal_lazy(
   c(1, 1, 1, 1, 2, 2)
 )
 
+# nothing to fill
+
+expect_equal_lazy(
+  pl_test |> fill(.direction = "updown"),
+  pl_test
+)
+
 # grouped data
 
 pl_grouped <- polars::pl$LazyFrame(

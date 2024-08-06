@@ -33,6 +33,9 @@
 fill.RPolarsDataFrame <- function(data, ..., .direction = c("down", "up", "downup", "updown")) {
 
   vars <- tidyselect_dots(data, ...)
+  if (length(vars) == 0) {
+    return(data)
+  }
   .direction <- match.arg(.direction)
 
   grps <- attributes(data)$pl_grps
