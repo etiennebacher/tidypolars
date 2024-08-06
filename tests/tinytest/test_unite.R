@@ -35,3 +35,14 @@ expect_equal(
   pull(out3, full_name),
   c("John T. Smith", "Jack  Thompson", "Thomas F. Jones")
 )
+
+expect_error(
+  unite(test),
+  "`col` is absent but must be supplied.",
+  fixed = TRUE
+)
+
+expect_equal(
+  test |> unite(col = "foo") |> pull(foo),
+  c("2009_10_11_Monday", "2010_11_22_Thursday", "2011_12_28_Wednesday")
+)

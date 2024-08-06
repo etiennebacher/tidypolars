@@ -33,7 +33,13 @@
 
 unite.RPolarsDataFrame <- function(data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE) {
 
+  if (missing(col)) {
+    rlang::abort("`col` is absent but must be supplied.")
+  }
   vars <- tidyselect_dots(data, ...)
+  if (length(vars) == 0) {
+    vars <- names(data)
+  }
   # can be a character or symbol
   col <- rlang::as_string(rlang::ensym(col))
 

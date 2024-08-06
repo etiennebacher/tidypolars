@@ -40,4 +40,15 @@ expect_equal_lazy(
   c("John T. Smith", "Jack  Thompson", "Thomas F. Jones")
 )
 
+expect_error_lazy(
+  unite(test),
+  "`col` is absent but must be supplied.",
+  fixed = TRUE
+)
+
+expect_equal_lazy(
+  test |> unite(col = "foo") |> pull(foo),
+  c("2009_10_11_Monday", "2010_11_22_Thursday", "2011_12_28_Wednesday")
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

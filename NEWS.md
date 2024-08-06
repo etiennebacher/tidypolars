@@ -17,6 +17,12 @@
 
 * `fill()` doesn't error anymore when `...` is empty. Instead, it returns the 
   input data.
+  
+* `unite()` now provides a proper error message when `col` is missing.
+
+* `unite()` doesn't error anymore when `...` is empty. Instead, it uses all 
+  variables in the dataset.
+  
 
 # tidypolars 0.9.0
 
