@@ -1,30 +1,20 @@
-#' Show the optimized and non-optimized query plans
+#' @inherit explain.RPolarsLazyFrame title
 #'
-#' These functions are available for `LazyFrame`s only. `describe_plan()` shows
-#' the query plan as-is, without any optimization done by Polars. This is not
-#' the query performed. Before running the query, Polars applies a list of
-#' optimizations (such as filtering data before sorting it). The actual query
-#' plan ran by Polars is shown by `describe_optimized_plan()`. Note that the
-#' queries are read from bottom to top.
+#' @description
+#' Those functions are deprecated as of tidypolars 0.10.0, they will be removed
+#' in a future update. Use `explain()` with `optimized = FALSE` to recover the
+#' output of `describe_plan()`, and with `optimized = TRUE` (the default) to
+#' get the output of `describe_optimized_plan()`.
 #'
 #' @param .data A Polars LazyFrame
 #' @export
-#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' query <- mtcars |>
-#'   as_polars_lf() |>
-#'   arrange(drat) |>
-#'   filter(cyl == 3) |>
-#'   select(mpg)
-#'
-#' describe_plan(query)
-#'
-#' describe_optimized_plan(query)
 
 # nocov start
 describe_plan <- function(.data) {
   if (!inherits(.data, "RPolarsLazyFrame")) {
     rlang::abort("`describe_plan()` only works on a LazyFrame.")
   }
+  rlang::warn("`describe_plan()` is deprecated as of tidypolars 0.10.0 and will be removed in a future update.\nUse `explain()` with `optimized = FALSE` instead.")
   .data$describe_plan()
 }
 
@@ -35,6 +25,7 @@ describe_optimized_plan <- function(.data) {
   if (!inherits(.data, "RPolarsLazyFrame")) {
     rlang::abort("`describe_optimized_plan()` only works on a LazyFrame.")
   }
+  rlang::warn("`describe_optimized_plan()` is deprecated as of tidypolars 0.10.0 and will be removed in a future update.\nUse `explain()` with `optimized = TRUE` instead.")
   .data$describe_optimized_plan()
 }
 # nocov end
