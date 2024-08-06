@@ -11,6 +11,7 @@
 #' @param x A Polars LazyFrame.
 #' @param optimized Logical. If `TRUE` (default), show the query optimized by
 #' Polars. Otherwise, show the initial query.
+#' @inheritParams summary.RPolarsDataFrame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)

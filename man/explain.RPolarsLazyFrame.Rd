@@ -11,6 +11,8 @@
 
 \item{optimized}{Logical. If \code{TRUE} (default), show the query optimized by
 Polars. Otherwise, show the initial query.}
+
+\item{...}{Ignored.}
 }
 \description{
 This function is available for \code{LazyFrame}s only.
