@@ -2,9 +2,13 @@
 
 ## Deprecations
 
-* `describe()` is deprecated as of tidypolars 0.10.0 and will be removed in 
-  future update. Use `summary()` with the same arguments instead.
+* `describe()` is deprecated as of tidypolars 0.10.0 and will be removed in a 
+  future update. Use `summary()` with the same arguments instead (#127).
 
+* `describe_plan()` and `describe_optimized_plan()` are deprecated as of 
+  tidypolars 0.10.0 and will be removed in a future update. Use `explain()` with
+  `optimized = TRUE/FALSE` instead (#128).
+  
 ## Bug fixes
 
 * `stringr::str_sub()` now works when both `start` and `end` are negative.
