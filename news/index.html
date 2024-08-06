@@ -45,6 +45,10 @@
 <li><p><code><a href="../reference/describe_plan.html">describe_plan()</a></code> and <code><a href="../reference/describe_plan.html">describe_optimized_plan()</a></code> are deprecated as of tidypolars 0.10.0 and will be removed in a future update. Use <code><a href="https://dplyr.tidyverse.org/reference/explain.html" class="external-link">explain()</a></code> with <code>optimized = TRUE/FALSE</code> instead (<a href="https://github.com/etiennebacher/tidypolars/issues/128" class="external-link">#128</a>).</p></li>
 </ul></div>
 <div class="section level3">
+<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<ul><li>Better error message when a function can come from several packages but only one version is translated (<a href="https://github.com/etiennebacher/tidypolars/issues/130" class="external-link">#130</a>).</li>
+</ul></div>
+<div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
 <ul><li><p><code><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">stringr::str_sub()</a></code> now works when both <code>start</code> and <code>end</code> are negative.</p></li>
 <li><p><code><a href="https://stringr.tidyverse.org/reference/str_starts.html" class="external-link">stringr::str_starts()</a></code> and <code><a href="https://stringr.tidyverse.org/reference/str_starts.html" class="external-link">stringr::str_ends()</a></code> now work with a regex.</p></li>
