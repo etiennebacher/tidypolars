@@ -32,7 +32,22 @@ expect_equal_lazy(
 # function exists but has no translation
 expect_error_lazy(
   test |> mutate(y = data.table::shift(x)),
-  "doesn't know how to translate this function: `data.table::shift\\(\\)"
+  "doesn't know how to translate this function: `data.table::shift()",
+  fixed = TRUE
+)
+
+suppressPackageStartupMessages(library("data.table"))
+expect_error_lazy(
+  test |> mutate(y = year(x)),
+  "doesn't know how to translate this function: `year()` (from package `data.table`)",
+  fixed = TRUE
+)
+detach("package:data.table", unload = TRUE)
+
+expect_error_lazy(
+  test |> mutate(y = foobar(x)),
+  "doesn't know how to translate this function: `foobar()`.",
+  fixed = TRUE
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

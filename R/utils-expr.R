@@ -476,13 +476,18 @@ translate <- function(
             )
           }
         } else {
-          abort(
-            paste0(
+          if (!is.null(fn_names$pkg)) {
+            msg <- paste0(
               "`tidypolars` doesn't know how to translate this function: `",
-              fn_names$orig_name, "()`"
-            ),
-            call = env
-          )
+              fn_names$orig_name, "()` (from package `", fn_names$pkg, "`)."
+            )
+          } else {
+            msg <- paste0(
+              "`tidypolars` doesn't know how to translate this function: `",
+              fn_names$orig_name, "()`."
+            )
+          }
+          abort(msg, call = env)
         }
       }
 
@@ -646,10 +651,11 @@ add_pkg_suffix <- function(name, known_ops, user_defined) {
 
   if (is.null(pkg) || pkg %in% c("base", "stats", "utils", "tools")) {
     name_to_eval <- paste0("pl_", fn)
+    pkg <- NULL
   } else {
     name_to_eval <- paste0("pl_", fn, "_", pkg)
   }
-  list(orig_name = name, name_to_eval = name_to_eval)
+  list(orig_name = name, name_to_eval = name_to_eval, pkg = pkg)
 }
 
 is_function_known <- function(name) {

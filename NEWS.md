@@ -9,6 +9,11 @@
   tidypolars 0.10.0 and will be removed in a future update. Use `explain()` with
   `optimized = TRUE/FALSE` instead (#128).
   
+## New features
+
+* Better error message when a function can come from several packages but only
+  one version is translated (#130).
+  
 ## Bug fixes
 
 * `stringr::str_sub()` now works when both `start` and `end` are negative.
