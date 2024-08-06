@@ -1,5 +1,7 @@
 #' @inherit summary.RPolarsDataFrame title params
 #'
+#' @param .data A Polars DataFrame.
+#'
 #' @description
 #' This function is deprecated as of tidypolars 0.10.0, it will be removed in
 #' a future update. Use `summary()` with the same arguments instead.

@@ -7,6 +7,8 @@
 describe(.data, percentiles = c(0.25, 0.75))
 }
 \arguments{
+\item{.data}{A Polars DataFrame.}
+
 \item{percentiles}{One or more percentiles to include in the summary
 statistics. All values must be between 0 and 1 (\code{NULL} are ignored).}
 }
