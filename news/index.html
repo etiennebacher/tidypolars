@@ -48,6 +48,9 @@
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
 <ul><li><p><code><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">stringr::str_sub()</a></code> now works when both <code>start</code> and <code>end</code> are negative.</p></li>
 <li><p><code><a href="https://stringr.tidyverse.org/reference/str_starts.html" class="external-link">stringr::str_starts()</a></code> and <code><a href="https://stringr.tidyverse.org/reference/str_starts.html" class="external-link">stringr::str_ends()</a></code> now work with a regex.</p></li>
+<li><p><code><a href="https://tidyr.tidyverse.org/reference/fill.html" class="external-link">fill()</a></code> doesn’t error anymore when <code>...</code> is empty. Instead, it returns the input data.</p></li>
+<li><p><code><a href="https://tidyr.tidyverse.org/reference/unite.html" class="external-link">unite()</a></code> now provides a proper error message when <code>col</code> is missing.</p></li>
+<li><p><code><a href="https://tidyr.tidyverse.org/reference/unite.html" class="external-link">unite()</a></code> doesn’t error anymore when <code>...</code> is empty. Instead, it uses all variables in the dataset.</p></li>
 </ul></div>
 </div>
     <div class="section level2">
