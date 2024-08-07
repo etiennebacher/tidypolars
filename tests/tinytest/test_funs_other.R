@@ -493,9 +493,11 @@ expect_equal(
   c(rep(NA, 5), 1)
 )
 
-expect_error(
-  test |> mutate(foo = row_number()),
-  "No translation"
+expect_equal(
+  test |>
+    mutate(foo = row_number()) |>
+    pull(foo),
+  1:6
 )
 
 test2 <- polars::pl$DataFrame(
@@ -517,4 +519,12 @@ expect_equal(
     filter(min_rank(x) == 1) |>
     pull(x),
   rep(1, 5)
+)
+
+expect_equal(
+  test2 |>
+    group_by(grp) |>
+    mutate(foo = row_number()) |>
+    pull(foo),
+  rep(1:3, 3)
 )

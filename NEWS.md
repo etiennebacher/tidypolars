@@ -14,6 +14,8 @@
 * Better error message when a function can come from several packages but only
   one version is translated (#130).
   
+* `row_number()` now works without argument (#131).
+  
 ## Bug fixes
 
 * `stringr::str_sub()` now works when both `start` and `end` are negative.

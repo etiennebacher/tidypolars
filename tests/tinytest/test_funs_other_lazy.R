@@ -497,9 +497,11 @@ expect_equal_lazy(
   c(rep(NA, 5), 1)
 )
 
-expect_error_lazy(
-  test |> mutate(foo = row_number()),
-  "No translation"
+expect_equal_lazy(
+  test |>
+    mutate(foo = row_number()) |>
+    pull(foo),
+  1:6
 )
 
 test2 <- polars::pl$LazyFrame(
@@ -521,6 +523,14 @@ expect_equal_lazy(
     filter(min_rank(x) == 1) |>
     pull(x),
   rep(1, 5)
+)
+
+expect_equal_lazy(
+  test2 |>
+    group_by(grp) |>
+    mutate(foo = row_number()) |>
+    pull(foo),
+  rep(1:3, 3)
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
