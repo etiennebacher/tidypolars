@@ -25,6 +25,7 @@ unpack_across <- function(.data, expr, env, new_vars) {
       call_modify(out, quote(.x))
     } else if (is_function(x)) {
       x
+
     } else {
       # if the user gives an anonymous function, we assign it in the global env
       # with a specific prefix to find it in translate()
