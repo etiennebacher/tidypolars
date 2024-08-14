@@ -23,9 +23,6 @@ unpack_across <- function(.data, expr, env, new_vars) {
     } else if (is_symbol(x)) { # e.g mean -> mean(.x)
       out <- call2(x)
       call_modify(out, quote(.x))
-    } else if (is_function(x)) {
-      x
-
     } else {
       # if the user gives an anonymous function, we assign it in the global env
       # with a specific prefix to find it in translate()
@@ -45,8 +42,6 @@ unpack_across <- function(.data, expr, env, new_vars) {
       names(.new_fns) <- safe_deparse(.fns)
     }
   }
-
-  print(.new_fns)
 
   out <- build_separate_calls(.cols, .new_fns, .names, .data)
   if (!is.list(out) && length(out) == 1) {
@@ -131,9 +126,12 @@ unpack_fns <- function(fns, env) {
     FUN.VALUE = logical(1L)
   ))
 
-  if (!all_fun_or_formula) {
+  if (all_fun_or_formula) {
     abort(
-      "`.fns` must be a function, a formula, or a list of functions/formulas.",
+      c(
+       "When using `across()` in tidypolars, `.fns` doesn't accept an \nobject that is a list of functions or formulas.",
+        "i" = "Instead of `across(.fns = <external_list>)`, do \n`across(.fns = list(fun1 = ..., fun2 = ...))`"
+      ),
       call = env
     )
   }
