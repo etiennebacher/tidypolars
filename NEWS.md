@@ -28,6 +28,13 @@
 * `unite()` doesn't error anymore when `...` is empty. Instead, it uses all 
   variables in the dataset.
   
+* `filter()`, `mutate()` and `summarize()` now work when using a column from 
+  another data.frame, e.g. 
+  ```r
+  my_polars_df |> 
+    filter(x %in% some_data_frame$y)
+  ```
+  
 
 # tidypolars 0.9.0
 
