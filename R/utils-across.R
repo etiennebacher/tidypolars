@@ -12,6 +12,9 @@ unpack_across <- function(.data, expr, env, new_vars) {
   .cols_new_vars <- tidyselect_new_vars(.cols, new_vars)
   .cols <- union(.cols_already_there, .cols_new_vars)
   .fns <- get_arg(".fns", 2, expr, env)
+  if (is.name(.fns)) {
+    .fns <- unpack_fns(.fns, env)
+  }
   .names <- get_arg(".names", 3, expr, env)
 
   harmonize <- function(x) {
@@ -20,6 +23,8 @@ unpack_across <- function(.data, expr, env, new_vars) {
     } else if (is_symbol(x)) { # e.g mean -> mean(.x)
       out <- call2(x)
       call_modify(out, quote(.x))
+    } else if (is_function(x)) {
+      x
     } else {
       # if the user gives an anonymous function, we assign it in the global env
       # with a specific prefix to find it in translate()
@@ -39,6 +44,8 @@ unpack_across <- function(.data, expr, env, new_vars) {
       names(.new_fns) <- safe_deparse(.fns)
     }
   }
+
+  print(.new_fns)
 
   out <- build_separate_calls(.cols, .new_fns, .names, .data)
   if (!is.list(out) && length(out) == 1) {
@@ -106,6 +113,31 @@ get_arg <- function(name, position, expr, env) {
     out[[1]] <- NULL
   }
   out
+}
+
+unpack_fns <- function(fns, env) {
+  tr <- tryCatch(
+    rlang::eval_tidy(fns, env = env),
+    error = function(e) return(fns)
+  )
+  if (!is.list(tr)) {
+    return(fns)
+  }
+
+  all_fun_or_formula <- all(vapply(
+    tr,
+    function(x) length(x) > 0 && (is_formula(x) || is_function(x)),
+    FUN.VALUE = logical(1L)
+  ))
+
+  if (!all_fun_or_formula) {
+    abort(
+      "`.fns` must be a function, a formula, or a list of functions/formulas.",
+      call = env
+    )
+  }
+
+  tr
 }
 
 
