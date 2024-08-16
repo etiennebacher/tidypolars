@@ -34,6 +34,8 @@
   my_polars_df |> 
     filter(x %in% some_data_frame$y)
   ```
+* `replace_na()` no longer converts the column to the datatype of the replacement,
+  e.g. `data |> replace_na("a")` will error if the input data is numeric.
   
 
 # tidypolars 0.9.0
