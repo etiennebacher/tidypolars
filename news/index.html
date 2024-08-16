@@ -61,6 +61,7 @@
 <code class="sourceCode R"><span><span class="va">my_polars_df</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">some_data_frame</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span></code></pre></div>
 </li>
+<li><p><code><a href="https://tidyr.tidyverse.org/reference/replace_na.html" class="external-link">replace_na()</a></code> no longer converts the column to the datatype of the replacement, e.g. <code>data |&gt; replace_na("a")</code> will error if the input data is numeric.</p></li>
 </ul></div>
 </div>
     <div class="section level2">
