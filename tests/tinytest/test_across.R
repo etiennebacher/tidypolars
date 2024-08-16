@@ -384,3 +384,13 @@ expect_equal(
   c(93, 110, 175)
 )
 
+# cannot use external list of functions in across()
+
+my_fns <- list(my_mean = mean, my_median = median)
+
+expect_error(
+  mutate(
+    test,
+    across(.cols = mpg, .fns = my_fns)
+  )
+)

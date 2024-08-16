@@ -126,11 +126,13 @@ unpack_fns <- function(fns, env) {
     FUN.VALUE = logical(1L)
   ))
 
+  browser()
+
   if (all_fun_or_formula) {
     abort(
       c(
-       "When using `across()` in tidypolars, `.fns` doesn't accept an \nobject that is a list of functions or formulas.",
-        "i" = "Instead of `across(.fns = <external_list>)`, do \n`across(.fns = list(fun1 = ..., fun2 = ...))`"
+       "When using `across()` in tidypolars, `.fns` doesn't accept an object that is a list of functions or formulas.",
+        "i" = "Instead of `across(.fns = <external_list>)`, do `across(.fns = list(fun1 = ..., fun2 = ...))`"
       ),
       call = env
     )
