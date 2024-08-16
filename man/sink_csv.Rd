@@ -98,7 +98,7 @@ is \code{TRUE}).}
 the settings specified in this function call. Default is \code{FALSE}.}
 }
 \value{
-Writes a \code{.csv} file with the content of the LazyFrame.
+The input LazyFrame.
 }
 \description{
 This function allows to stream a LazyFrame that is larger than RAM directly

@@ -54,7 +54,7 @@
 #' @param inherit_optimization Use existing optimization settings regardless of
 #' the settings specified in this function call. Default is `FALSE`.
 #'
-#' @return Writes a `.parquet` file with the content of the LazyFrame.
+#' @return The input LazyFrame.
 #' @export
 #'
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -158,7 +158,7 @@ sink_parquet <- function(
 #'
 #' @inheritParams sink_parquet
 #'
-#' @return Writes a `.csv` file with the content of the LazyFrame.
+#' @inherit sink_parquet return
 #' @export
 #'
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -243,3 +243,54 @@ sink_csv <- function(
 
 }
 
+#' Stream output to an IPC file
+#'
+#' This function allows to stream a LazyFrame that is larger than RAM directly
+#' to an IPC file without collecting it in the R session, thus preventing
+#' crashes because of too small memory.
+#'
+#' @param path Output file.
+#' @param compression `NULL` or a character of the compression method,
+#' `"uncompressed"` or "lz4" or "zstd". `NULL` is equivalent to `"uncompressed"`.
+#' Choose "zstd" for good compression performance. Choose "lz4"
+#' for fast compression/decompression.
+#'
+#' @inheritParams sink_parquet
+#'
+#' @inherit sink_parquet return
+#' @export
+
+sink_ipc <- function(
+    .data,
+    path,
+    ...,
+    compression = "zstd",
+    maintain_order = TRUE,
+    type_coercion = TRUE,
+    predicate_pushdown = TRUE,
+    projection_pushdown = TRUE,
+    simplify_expression = TRUE,
+    slice_pushdown = TRUE,
+    no_optimization = FALSE,
+    inherit_optimization = FALSE) {
+
+  if (!inherits(.data, "RPolarsLazyFrame")) {
+    rlang::abort("`sink_csv()` can only be used on a LazyFrame.")
+  }
+
+  rlang::arg_match0(compression, values = c("zstd", "lz4", "uncompressed"))
+
+  .data$sink_ipc(
+    path = path,
+    compression = "zstd",
+    maintain_order = maintain_order,
+    type_coercion = type_coercion,
+    predicate_pushdown = predicate_pushdown,
+    projection_pushdown = projection_pushdown,
+    simplify_expression = simplify_expression,
+    slice_pushdown = slice_pushdown,
+    no_optimization = no_optimization,
+    inherit_optimization = inherit_optimization
+  )
+
+}
