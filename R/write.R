@@ -1,185 +1,199 @@
-#' Export data to parquet file(s)
+#' Export data to CSV file(s)
 #'
+#' @param .data A Polars DataFrame.
+#' @param file File path to which the result should be written.
+#' @param ... Ignored.
+#' @param include_bom Whether to include UTF-8 BOM (byte order mark) in the CSV
+#' output.
+#' @param include_header Whether to include header in the CSV output.
+#' @param separator Separate CSV fields with this symbol.
+#' @param line_terminator String used to end each row.
+#' @param quote Byte to use as quoting character.
+#' @param batch_size Number of rows that will be processed per thread.
+#' @param datetime_format A format string, with the specifiers defined by the
+#' chrono Rust crate. If no format specified, the default fractional-second
+#' precision is inferred from the maximum timeunit found in the frame’s Datetime
+#'  cols (if any).
+#' @param date_format A format string, with the specifiers defined by the chrono
+#' Rust crate.
+#' @param time_format A format string, with the specifiers defined by the chrono
+#' Rust crate.
+#' @param float_precision Number of decimal places to write, applied to both
+#' Float32 and Float64 datatypes.
+#' @param null_values A string representing null values (defaulting to the empty
+#' string).
+#' @param quote_style Determines the quoting strategy used.
+#' * `"necessary"` (default): This puts quotes around fields only when necessary.
+#'   They are necessary when fields contain a quote, delimiter or record
+#'   terminator. Quotes are also necessary when writing an empty record (which
+#'   is indistinguishable from a record with one empty field). This is the
+#'   default.
+#' * `"always"`: This puts quotes around every field.
+#' * `"non_numeric"`: This puts quotes around all fields that are non-numeric.
+#'   Namely, when writing a field that does not parse as a valid float or integer,
+#'   then quotes will be used even if they aren`t strictly necessary.
+#' * `"never"`: This never puts quotes around fields, even if that results in
+#'   invalid CSV data (e.g. by not quoting strings containing the separator).
+#'
+#' @return The input DataFrame.
 #' @export
-write_parquet_polars <- function(
-    source,
+write_csv_polars <- function(
+    .data,
+    file,
     ...,
-    n_rows = NULL,
-    row_index_name = NULL,
-    row_index_offset = 0L,
-    parallel = "auto",
-    hive_partitioning = TRUE,
-    glob = TRUE,
-    rechunk = TRUE,
-    low_memory = FALSE,
-    storage_options = NULL,
-    use_statistics = TRUE,
-    cache = TRUE
+    include_bom = FALSE,
+    include_header = TRUE,
+    separator = ",",
+    line_terminator = "\n",
+    quote = "\"",
+    batch_size = 1024,
+    datetime_format = NULL,
+    date_format = NULL,
+    time_format = NULL,
+    float_precision = NULL,
+    null_values = "",
+    quote_style = "necessary"
 ) {
 
-  rlang::arg_match0(parallel, values = c("auto", "columns", "row_groups", "none"))
+  if (!inherits(.data, "RPolarsDataFrame")) {
+    rlang::abort("`write_csv_polars()` can only be used on a DataFrame.")
+  }
+
+  rlang::arg_match0(quote_style, values = c("necessary", "always", "non_numeric", "never"))
   rlang::check_dots_empty()
 
-  scan_parquet_polars(
-    source = source,
-    n_rows = n_rows,
-    row_index_name = row_index_name,
-    row_index_offset = row_index_offset,
-    parallel = parallel,
-    hive_partitioning = hive_partitioning,
-    glob = glob,
-    rechunk = rechunk,
-    low_memory = low_memory,
-    storage_options = storage_options,
-    use_statistics = use_statistics,
-    cache = cache
-  ) |>
-    collect()
+  .data$write_csv(
+    file,
+    include_bom = include_bom,
+    include_header = include_header,
+    separator = separator,
+    line_terminator = line_terminator,
+    quote = quote,
+    batch_size = batch_size,
+    datetime_format = datetime_format,
+    date_format = date_format,
+    time_format = time_format,
+    float_precision = float_precision,
+    null_values = null_values,
+    quote_style = quote_style
+  )
 }
 
 
-#' Export data to CSV file(s)
+#' Export data to Parquet file(s)
 #'
-#' @description
-#' `write_csv_polars()` imports the data as a Polars DataFrame.
+#' @inheritParams write_csv_polars
+#' @inheritParams sink_parquet
 #'
-#' `scan_csv_polars()` imports the data as a Polars LazyFrame.
-#'
-#' @inherit polars::pl_scan_csv params details
-#'
+#' @inherit write_csv_polars return
 #' @export
-write_csv_polars <- function(
-    source,
+write_parquet_polars <- function(
+    .data,
+    file,
     ...,
-    has_header = TRUE,
-    separator = ",",
-    comment_prefix = NULL,
-    quote_char = "\"",
-    skip_rows = 0,
-    dtypes = NULL,
-    null_values = NULL,
-    ignore_errors = FALSE,
-    cache = FALSE,
-    infer_schema_length = 100,
-    n_rows = NULL,
-    encoding = "utf8",
-    low_memory = FALSE,
-    rechunk = TRUE,
-    skip_rows_after_header = 0,
-    row_index_name = NULL,
-    row_index_offset = 0,
-    try_parse_dates = FALSE,
-    eol_char = "\n",
-    raise_if_empty = TRUE,
-    truncate_ragged_lines = FALSE,
-    reuse_downloaded = TRUE
+    compression = "zstd",
+    compression_level = 3,
+    statistics = TRUE,
+    row_group_size = NULL,
+    data_pagesize_limit = NULL
 ) {
 
-  rlang::arg_match0(encoding, values = c("utf8", "utf8-lossy"))
+  if (!inherits(.data, "RPolarsDataFrame")) {
+    rlang::abort("`write_parquet_polars()` can only be used on a DataFrame.")
+  }
+
+  rlang::arg_match0(
+    compression,
+    values = c("lz4", "uncompressed", "snappy", "gzip", "lzo", "brotli", "zstd")
+  )
   rlang::check_dots_empty()
 
-  scan_csv_polars(
-    source = source,
-    has_header = has_header,
-    separator = separator,
-    comment_prefix = comment_prefix,
-    quote_char = quote_char,
-    skip_rows = skip_rows,
-    dtypes = dtypes,
-    null_values = null_values,
-    ignore_errors = ignore_errors,
-    cache = cache,
-    infer_schema_length = infer_schema_length,
-    n_rows = n_rows,
-    encoding = encoding,
-    low_memory = low_memory,
-    rechunk = rechunk,
-    skip_rows_after_header = skip_rows_after_header,
-    row_index_name = row_index_name,
-    row_index_offset = row_index_offset,
-    try_parse_dates = try_parse_dates,
-    eol_char = eol_char,
-    raise_if_empty = raise_if_empty,
-    truncate_ragged_lines = truncate_ragged_lines,
-    reuse_downloaded = reuse_downloaded
-  ) |>
-    collect()
+  .data$write_parquet(
+    file,
+    compression = compression,
+    compression_level = compression_level,
+    statistics = statistics,
+    row_group_size = row_group_size,
+    data_pagesize_limit = data_pagesize_limit
+  )
 }
 
 
 #' Export data to NDJSON file(s)
 #'
-#' @description
-#' `write_ndjson_polars()` imports the data as a Polars DataFrame.
+#' @inheritParams write_csv_polars
 #'
-#' `scan_ndjson_polars()` imports the data as a Polars LazyFrame.
-#'
-#' @inherit polars::pl_scan_ndjson params details
-#'
+#' @inherit write_csv_polars return
 #' @export
-write_ndjson_polars <- function(
-    source,
+write_ndjson_polars <- function(.data, file) {
+  if (!inherits(.data, "RPolarsDataFrame")) {
+    rlang::abort("`write_ndjson_polars()` can only be used on a DataFrame.")
+  }
+  .data$write_ndjson(file = file)
+}
+
+
+#' Export data to JSON file(s)
+#'
+#' @inheritParams write_csv_polars
+#' @param pretty Pretty serialize JSON.
+#' @param row_oriented Write to row-oriented JSON. This is slower, but more
+#' common.
+#'
+#' @inherit write_csv_polars return
+#' @export
+write_json_polars <- function(
+    .data,
+    file,
     ...,
-    infer_schema_length = 100,
-    batch_size = NULL,
-    n_rows = NULL,
-    low_memory = FALSE,
-    rechunk = FALSE,
-    row_index_name = NULL,
-    row_index_offset = 0,
-    reuse_downloaded = TRUE,
-    ignore_errors = FALSE
+    pretty = FALSE,
+    row_oriented = FALSE
 ) {
+
+  if (!inherits(.data, "RPolarsDataFrame")) {
+    rlang::abort("`write_json_polars()` can only be used on a DataFrame.")
+  }
 
   rlang::check_dots_empty()
 
-  scan_ndjson_polars(
-    source = source,
-    infer_schema_length = infer_schema_length,
-    batch_size = batch_size,
-    n_rows = n_rows,
-    low_memory = low_memory,
-    rechunk = rechunk,
-    row_index_name = row_index_name,
-    row_index_offset = row_index_offset,
-    reuse_downloaded = reuse_downloaded,
-    ignore_errors = ignore_errors
-  ) |>
-    collect()
+  .data$write_json(
+    file = file,
+    pretty = pretty,
+    row_oriented = row_oriented
+  )
 }
 
 
 #' Export data to IPC file(s)
 #'
-#' @description
-#' `write_ipc_polars()` imports the data as a Polars DataFrame.
+#' @inheritParams write_csv_polars
+#' @param compression `NULL` or a character of the compression method,
+#' `"uncompressed"` or "lz4" or "zstd". `NULL` is equivalent to `"uncompressed"`.
+#' Choose "zstd" for good compression performance. Choose "lz4"
+#' for fast compression/decompression.
+#' @param future Setting this to `TRUE` will write Polars' internal data
+#' structures that might not be available by other Arrow implementations.
 #'
-#' `scan_ipc_polars()` imports the data as a Polars LazyFrame.
-#'
-#' @inherit polars::pl_scan_ipc params details
-#'
+#' @inherit write_csv_polars return
 #' @export
 write_ipc_polars <- function(
-    source,
+    .data,
+    file,
+    compression = "uncompressed",
     ...,
-    n_rows = NULL,
-    memory_map = TRUE,
-    row_index_name = NULL,
-    row_index_offset = 0L,
-    rechunk = FALSE,
-    cache = TRUE
+    future = FALSE
 ) {
 
+  if (!inherits(.data, "RPolarsDataFrame")) {
+    rlang::abort("`write_ipc_polars()` can only be used on a DataFrame.")
+  }
+
+  rlang::arg_match0(compression, values = c("uncompressed", "zstd", "lz4"))
   rlang::check_dots_empty()
 
-  scan_ipc_polars(
-    source = source,
-    n_rows = n_rows,
-    memory_map = memory_map,
-    row_index_name = row_index_name,
-    row_index_offset = row_index_offset,
-    rechunk = rechunk,
-    cache = cache
-  ) |>
-    collect()
+  .data$write_parquet(
+    file,
+    compression = compression,
+    future = future
+  )
 }

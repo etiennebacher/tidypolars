@@ -5,44 +5,31 @@
 \title{Export data to IPC file(s)}
 \usage{
 write_ipc_polars(
-  source,
+  .data,
+  file,
+  compression = "uncompressed",
   ...,
-  n_rows = NULL,
-  memory_map = TRUE,
-  row_index_name = NULL,
-  row_index_offset = 0L,
-  rechunk = FALSE,
-  cache = TRUE
+  future = FALSE
 )
 }
 \arguments{
-\item{source}{Path to a file. You can use globbing with \code{*} to scan/read multiple
-files in the same directory (see examples).}
+\item{.data}{A Polars DataFrame.}
+
+\item{file}{File path to which the result should be written.}
+
+\item{compression}{\code{NULL} or a character of the compression method,
+\code{"uncompressed"} or "lz4" or "zstd". \code{NULL} is equivalent to \code{"uncompressed"}.
+Choose "zstd" for good compression performance. Choose "lz4"
+for fast compression/decompression.}
 
 \item{...}{Ignored.}
 
-\item{n_rows}{Maximum number of rows to read.}
-
-\item{memory_map}{A logical. If \code{TRUE}, try to memory map the file.
-This can greatly improve performance on repeated queries as the OS may cache pages.
-Only uncompressed Arrow IPC files can be memory mapped.}
-
-\item{row_index_name}{If not \code{NULL}, this will insert a row index column with
-the given name into the DataFrame.}
-
-\item{row_index_offset}{Offset to start the row index column (only used if
-the name is set).}
-
-\item{rechunk}{In case of reading multiple files via a glob pattern, rechunk
-the final DataFrame into contiguous memory chunks.}
-
-\item{cache}{Cache the result after reading.}
+\item{future}{Setting this to \code{TRUE} will write Polars' internal data
+structures that might not be available by other Arrow implementations.}
+}
+\value{
+The input DataFrame.
 }
 \description{
-\code{write_ipc_polars()} imports the data as a Polars DataFrame.
-
-\code{scan_ipc_polars()} imports the data as a Polars LazyFrame.
-}
-\details{
-Hive-style partitioning is not supported yet.
+Export data to IPC file(s)
 }

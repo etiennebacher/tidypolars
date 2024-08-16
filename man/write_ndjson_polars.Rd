@@ -4,55 +4,16 @@
 \alias{write_ndjson_polars}
 \title{Export data to NDJSON file(s)}
 \usage{
-write_ndjson_polars(
-  source,
-  ...,
-  infer_schema_length = 100,
-  batch_size = NULL,
-  n_rows = NULL,
-  low_memory = FALSE,
-  rechunk = FALSE,
-  row_index_name = NULL,
-  row_index_offset = 0,
-  reuse_downloaded = TRUE,
-  ignore_errors = FALSE
-)
+write_ndjson_polars(.data, file)
 }
 \arguments{
-\item{source}{Path to a file or URL. It is possible to provide multiple paths
-provided that all NDJSON files have the same schema. It is not possible to
-provide several URLs.}
+\item{.data}{A Polars DataFrame.}
 
-\item{...}{Ignored.}
-
-\item{infer_schema_length}{Maximum number of rows to read to infer the column
-types. If set to 0, all columns will be read as UTF-8. If \code{NULL}, a full
-table scan will be done (slow).}
-
-\item{batch_size}{Number of rows that will be processed per thread.}
-
-\item{n_rows}{Maximum number of rows to read.}
-
-\item{low_memory}{Reduce memory usage (will yield a lower performance).}
-
-\item{rechunk}{Reallocate to contiguous memory when all chunks / files are
-parsed.}
-
-\item{row_index_name}{If not \code{NULL}, this will insert a row index column with
-the given name into the DataFrame.}
-
-\item{row_index_offset}{Offset to start the row index column (only used if
-the name is set).}
-
-\item{reuse_downloaded}{If \code{TRUE}(default) and a URL was provided, cache the
-downloaded files in session for an easy reuse.}
-
-\item{ignore_errors}{Keep reading the file even if some lines yield errors.
-You can also use \code{infer_schema_length = 0} to read all columns as UTF8 to
-check which values might cause an issue.}
+\item{file}{File path to which the result should be written.}
+}
+\value{
+The input DataFrame.
 }
 \description{
-\code{write_ndjson_polars()} imports the data as a Polars DataFrame.
-
-\code{scan_ndjson_polars()} imports the data as a Polars LazyFrame.
+Export data to NDJSON file(s)
 }

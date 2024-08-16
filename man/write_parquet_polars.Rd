@@ -2,24 +2,57 @@
 % Please edit documentation in R/write.R
 \name{write_parquet_polars}
 \alias{write_parquet_polars}
-\title{Export data to parquet file(s)}
+\title{Export data to Parquet file(s)}
 \usage{
 write_parquet_polars(
-  source,
+  .data,
+  file,
   ...,
-  n_rows = NULL,
-  row_index_name = NULL,
-  row_index_offset = 0L,
-  parallel = "auto",
-  hive_partitioning = TRUE,
-  glob = TRUE,
-  rechunk = TRUE,
-  low_memory = FALSE,
-  storage_options = NULL,
-  use_statistics = TRUE,
-  cache = TRUE
+  compression = "zstd",
+  compression_level = 3,
+  statistics = TRUE,
+  row_group_size = NULL,
+  data_pagesize_limit = NULL
 )
 }
+\arguments{
+\item{.data}{A Polars DataFrame.}
+
+\item{file}{File path to which the result should be written.}
+
+\item{...}{Ignored.}
+
+\item{compression}{The compression method. One of :
+\itemize{
+\item "uncompressed"
+\item "zstd" (default): good compression performance
+\item "lz4": fast compression / decompression
+\item "snappy": more backwards compatibility guarantees when you deal with older
+parquet readers.
+\item "gzip", "lzo", "brotli"
+}}
+
+\item{compression_level}{The level of compression to use (default is 3). Only
+used if \code{compression} is one of "gzip", "brotli", or "zstd". Higher
+compression means smaller files on disk.
+\itemize{
+\item "gzip" : min-level = 0, max-level = 10
+\item "brotli" : min-level = 0, max-level = 11
+\item "zstd" : min-level = 1, max-level = 22.
+}}
+
+\item{statistics}{Whether to compute and write column statistics (default is
+\code{FALSE}). This requires more computations.}
+
+\item{row_group_size}{Size of the row groups in number of rows. If \code{NULL}
+(default), the chunks of the DataFrame are used. Writing in smaller chunks
+may reduce memory pressure and improve writing speeds.}
+
+\item{data_pagesize_limit}{If \code{NULL} (default), the limit will be around 1MB.}
+}
+\value{
+The input DataFrame.
+}
 \description{
-Export data to parquet file(s)
+Export data to Parquet file(s)
 }
