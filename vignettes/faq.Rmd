@@ -22,48 +22,7 @@ is still in charge of doing all the data manipulations under the hood.
 
 Therefore, there might be minor overhead because we still need to parse the 
 expressions and rewrite them in `polars` syntax (see the [Parsing expressions](https://tidypolars.etiennebacher.com/articles/parsing-expressions.html)
-vignette) but this should be marginal. Here's a small benchmark to compare the
-performance of `polars` and `tidypolars`:
-
-```r
-library(polars)
-library(tidypolars)
-library(dplyr, warn.conflicts = FALSE)
-
-pl_test <- pl$DataFrame(
-  grp = sample(letters, 2*1e7, TRUE),
-  val1 = sample(1:1000, 2*1e7, TRUE),
-  val2 = sample(1:1000, 2*1e7, TRUE)
-)
-
-bench::mark(
-  polars = pl_test$
-    group_by("grp")$
-    agg(
-      pl$col("val1")$mean()$alias("x"), 
-      pl$col("val2")$sum()$alias("y"),
-      pl$col("val1")$median()$alias("z")
-    ),
-  tidypolars = pl_test |> 
-    group_by(grp) |> 
-    summarize(
-      x = mean(val1),
-      y = sum(val2),
-      z = median(val1)
-    ),
-  check = FALSE,
-  iterations = 15
-)
-
-bench::mark(
-  polars = pl_test$
-    filter(pl$col("grp") == "a" | pl$col("grp") == "b"),
-  tidypolars = pl_test |> 
-    filter(grp == "a" | grp == "b"),
-  check = FALSE,
-  iterations = 15
-)
-```
+vignette) but this should be marginal. 
 
 # Am I stuck with `tidypolars`?
 
@@ -78,8 +37,8 @@ Yes, because `tidypolars` doesn't provide any functions to create `polars`
 `DataFrame` or `LazyFrame` or to read data. You'll still need to use `polars`
 for this.
 
-
 # Can I see some benchmarks with other tools?
 
 Making accurate benchmarks of data wrangling tools is difficult and I won't try
-to do it here. You should refer to [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/).
+to do it here (I just put one of the homepage to give an idea of the performance, 
+but it is by no means comprehensive). You should refer to [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/).
