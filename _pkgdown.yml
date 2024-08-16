@@ -15,21 +15,21 @@ navbar:
     right: [search, github]
 
 reference:
-  - title: Polars-specific functions
-    desc: |
-      Functionalities from Polars.
+  - title: Import data
+    desc: Functions to import data as Polars DataFrame or LazyFrame.
     contents:
-      - describe
-      - describe_plan
-      - describe_optimized_plan
-      - fetch
-      - make_unique_id
-      - sink_csv
-      - sink_parquet
+      - from_csv
+      - from_ipc
+      - from_ndjson
+      - from_parquet
 
-  - title: From `dplyr`
-    desc: |
-      Functions coming from `dplyr`.
+  - title: Export data
+    desc: Functions to export Polars DataFrames and LazyFrames.
+    contents:
+      - starts_with("sink")
+      - starts_with("write")
+
+  - title: Functions from `dplyr`
     contents:
       - add_count.RPolarsDataFrame
       - anti_join.RPolarsDataFrame
@@ -64,9 +64,7 @@ reference:
       - summarize.RPolarsDataFrame
       - ungroup.RPolarsDataFrame
 
-  - title: From `tidyr`
-    desc: |
-      Functions coming from `tidyr`.
+  - title: Functions from `tidyr`
     contents:
       - complete.RPolarsDataFrame
       - drop_na.RPolarsDataFrame
@@ -78,10 +76,19 @@ reference:
       - uncount.RPolarsDataFrame
       - unite.RPolarsDataFrame
 
-  - title: Other
+  - title: Other methods
     desc: |
       Other functions or S3 methods.
     contents:
       - as_tibble.tidypolars
       - summary.RPolarsDataFrame
       - tidypolars-options
+
+  - title: Other Polars functions
+    desc: Other Polars-specific functions (most are deprecated).
+    contents:
+      - describe
+      - describe_plan
+      - describe_optimized_plan
+      - fetch
+      - make_unique_id

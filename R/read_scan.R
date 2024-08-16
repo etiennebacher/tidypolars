@@ -1,4 +1,4 @@
-#' Import data from parquet file(s)
+#' Import data from Parquet file(s)
 #'
 #' @description
 #' `read_parquet_polars()` imports the data as a Polars DataFrame.
@@ -8,6 +8,7 @@
 #' @inherit polars::pl_scan_parquet params details
 #'
 #' @rdname from_parquet
+#' @name from_parquet
 #' @export
 read_parquet_polars <- function(
     source,
@@ -46,6 +47,7 @@ read_parquet_polars <- function(
 }
 
 #' @rdname from_parquet
+#' @name from_parquet
 #' @export
 scan_parquet_polars <- function(
     source,
@@ -93,6 +95,7 @@ scan_parquet_polars <- function(
 #' @inherit polars::pl_scan_csv params details
 #'
 #' @rdname from_csv
+#' @name from_csv
 #' @export
 read_csv_polars <- function(
     source,
@@ -153,6 +156,7 @@ read_csv_polars <- function(
 }
 
 #' @rdname from_csv
+#' @name from_csv
 #' @export
 scan_csv_polars <- function(
     source,
@@ -222,6 +226,7 @@ scan_csv_polars <- function(
 #' @inherit polars::pl_scan_ndjson params details
 #'
 #' @rdname from_ndjson
+#' @name from_ndjson
 #' @export
 read_ndjson_polars <- function(
     source,
@@ -255,6 +260,7 @@ read_ndjson_polars <- function(
 }
 
 #' @rdname from_ndjson
+#' @name from_ndjson
 #' @export
 scan_ndjson_polars <- function(
     source,
@@ -297,6 +303,7 @@ scan_ndjson_polars <- function(
 #' @inherit polars::pl_scan_ipc params details
 #'
 #' @rdname from_ipc
+#' @name from_ipc
 #' @export
 read_ipc_polars <- function(
     source,
@@ -324,6 +331,7 @@ read_ipc_polars <- function(
 }
 
 #' @rdname from_ipc
+#' @name from_ipc
 #' @export
 scan_ipc_polars <- function(
     source,
