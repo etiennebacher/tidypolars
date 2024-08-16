@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
 }
 ```
 
-The first thing to do before using `tidypolars` is to get some data as a Polars
+The first thing to do when using `tidypolars` is to get some data as a Polars
 `DataFrame` or `LazyFrame`. You can read files with the various `read_*_polars()`
 functions (such as `read_parquet_polars()`) to import them as `DataFrame`s, or 
 with `scan_*_polars()` functions (such as `scan_parquet_polars()`) to import them 
