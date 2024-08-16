@@ -25,7 +25,7 @@ expressions and rewrite them in `polars` syntax (see the [Parsing expressions](h
 vignette) but this should be marginal. Here's a small benchmark to compare the
 performance of `polars` and `tidypolars`:
 
-```{r}
+```r
 library(polars)
 library(tidypolars)
 library(dplyr, warn.conflicts = FALSE)
