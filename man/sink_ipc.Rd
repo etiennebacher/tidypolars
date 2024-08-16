@@ -24,6 +24,8 @@ sink_ipc(
 
 \item{path}{Output file.}
 
+\item{...}{Ignored.}
+
 \item{compression}{\code{NULL} or a character of the compression method,
 \code{"uncompressed"} or "lz4" or "zstd". \code{NULL} is equivalent to \code{"uncompressed"}.
 Choose "zstd" for good compression performance. Choose "lz4"

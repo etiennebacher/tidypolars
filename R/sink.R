@@ -6,6 +6,7 @@
 #'
 #' @param .data A Polars LazyFrame.
 #' @param path Output file (must be a `.parquet` file).
+#' @param ... Ignored.
 #' @param compression The compression method. One of :
 #'
 #' * "uncompressed"
@@ -85,6 +86,7 @@
 sink_parquet <- function(
     .data,
     path,
+    ...,
     compression = "zstd",
     compression_level = 3,
     statistics = FALSE,
@@ -189,6 +191,7 @@ sink_parquet <- function(
 sink_csv <- function(
     .data,
     path,
+    ...,
     include_bom = FALSE,
     include_header = TRUE,
     separator = ",",

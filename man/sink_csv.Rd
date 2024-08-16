@@ -7,6 +7,7 @@
 sink_csv(
   .data,
   path,
+  ...,
   include_bom = FALSE,
   include_header = TRUE,
   separator = ",",
@@ -33,6 +34,8 @@ sink_csv(
 \item{.data}{A Polars LazyFrame.}
 
 \item{path}{Output file (must be a \code{.csv} file).}
+
+\item{...}{Ignored.}
 
 \item{include_bom}{Whether to include UTF-8 BOM (byte order mark) in the CSV
 output.}

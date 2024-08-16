@@ -7,6 +7,7 @@
 sink_parquet(
   .data,
   path,
+  ...,
   compression = "zstd",
   compression_level = 3,
   statistics = FALSE,
@@ -26,6 +27,8 @@ sink_parquet(
 \item{.data}{A Polars LazyFrame.}
 
 \item{path}{Output file (must be a \code{.parquet} file).}
+
+\item{...}{Ignored.}
 
 \item{compression}{The compression method. One of :
 \itemize{
