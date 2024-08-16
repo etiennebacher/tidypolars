@@ -32,6 +32,10 @@
 <url><loc>https://tidypolars.etiennebacher.com/reference/fetch.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/fill.RPolarsDataFrame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/filter.RPolarsDataFrame.html</loc></url>
+<url><loc>https://tidypolars.etiennebacher.com/reference/from_csv.html</loc></url>
+<url><loc>https://tidypolars.etiennebacher.com/reference/from_ipc.html</loc></url>
+<url><loc>https://tidypolars.etiennebacher.com/reference/from_ndjson.html</loc></url>
+<url><loc>https://tidypolars.etiennebacher.com/reference/from_parquet.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/group_by.RPolarsDataFrame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/group_split.RPolarsDataFrame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/group_vars.RPolarsDataFrame.html</loc></url>
@@ -51,6 +55,7 @@
 <url><loc>https://tidypolars.etiennebacher.com/reference/semi_join.RPolarsDataFrame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/separate.RPolarsDataFrame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/sink_csv.html</loc></url>
+<url><loc>https://tidypolars.etiennebacher.com/reference/sink_ipc.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/sink_parquet.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/slice_tail.RPolarsDataFrame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/summarize.RPolarsDataFrame.html</loc></url>
@@ -58,5 +63,10 @@
 <url><loc>https://tidypolars.etiennebacher.com/reference/tidypolars-options.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/uncount.RPolarsDataFrame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/unite.RPolarsDataFrame.html</loc></url>
+<url><loc>https://tidypolars.etiennebacher.com/reference/write_csv_polars.html</loc></url>
+<url><loc>https://tidypolars.etiennebacher.com/reference/write_ipc_polars.html</loc></url>
+<url><loc>https://tidypolars.etiennebacher.com/reference/write_json_polars.html</loc></url>
+<url><loc>https://tidypolars.etiennebacher.com/reference/write_ndjson_polars.html</loc></url>
+<url><loc>https://tidypolars.etiennebacher.com/reference/write_parquet_polars.html</loc></url>
 </urlset>
 

@@ -38,7 +38,7 @@ crashes because of too small memory."><meta property="og:image" content="https:/
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Stream output to a parquet file</h1>
-      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/tidypolars/blob/main/R/sink_parquet.R" class="external-link"><code>R/sink_parquet.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/tidypolars/blob/main/R/sink.R" class="external-link"><code>R/sink.R</code></a></small>
       <div class="d-none name"><code>sink_parquet.Rd</code></div>
     </div>
 
@@ -53,6 +53,7 @@ crashes because of too small memory.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sink_parquet</span><span class="op">(</span></span>
 <span>  <span class="va">.data</span>,</span>
 <span>  <span class="va">path</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  compression <span class="op">=</span> <span class="st">"zstd"</span>,</span>
 <span>  compression_level <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  statistics <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -79,6 +80,10 @@ crashes because of too small memory.</p>
 
 <dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
 <dd><p>Output file (must be a <code>.parquet</code> file).</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Ignored.</p></dd>
 
 
 <dt id="arg-compression">compression<a class="anchor" aria-label="anchor" href="#arg-compression"></a></dt>
@@ -160,7 +165,7 @@ the settings specified in this function call. Default is <code>FALSE</code>.</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Writes a <code>.parquet</code> file with the content of the LazyFrame.</p>
+    <p>The input LazyFrame.</p>
     </div>
 
     <div class="section level2">

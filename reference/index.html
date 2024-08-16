@@ -37,9 +37,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="polars-specific-functions">Polars-specific functions<a class="anchor" aria-label="anchor" href="#polars-specific-functions"></a></h2>
+      <h2 id="import-data">Import data<a class="anchor" aria-label="anchor" href="#import-data"></a></h2>
 
-      <div class="section-desc"><p>Functionalities from Polars.</p></div>
+      <div class="section-desc"><p>Functions to import data as Polars DataFrames (<code>read_</code> functions) and LazyFrames (<code>scan_</code> functions).</p></div>
 
 
     </div><div class="section level2">
@@ -49,29 +49,40 @@
 
       <dl><dt>
 
-          <code><a href="describe.html">describe()</a></code>
+          <code><a href="from_csv.html">read_csv_polars()</a></code> <code><a href="from_csv.html">scan_csv_polars()</a></code>
 
         </dt>
-        <dd>Summary statistics for a Polars DataFrame</dd>
+        <dd>Import data from CSV file(s)</dd>
       </dl><dl><dt>
 
-          <code><a href="describe_plan.html">describe_plan()</a></code> <code><a href="describe_plan.html">describe_optimized_plan()</a></code>
+          <code><a href="from_ipc.html">read_ipc_polars()</a></code> <code><a href="from_ipc.html">scan_ipc_polars()</a></code>
 
         </dt>
-        <dd>Show the optimized and non-optimized query plans</dd>
+        <dd>Import data from IPC file(s)</dd>
       </dl><dl><dt>
 
-          <code><a href="fetch.html">fetch()</a></code>
+          <code><a href="from_ndjson.html">read_ndjson_polars()</a></code> <code><a href="from_ndjson.html">scan_ndjson_polars()</a></code>
 
         </dt>
-        <dd>Fetch <code>n</code> rows of a LazyFrame</dd>
+        <dd>Import data from NDJSON file(s)</dd>
       </dl><dl><dt>
 
-          <code><a href="make_unique_id.html">make_unique_id()</a></code>
+          <code><a href="from_parquet.html">read_parquet_polars()</a></code> <code><a href="from_parquet.html">scan_parquet_polars()</a></code>
 
         </dt>
-        <dd>Create a column with unique id per row values</dd>
-      </dl><dl><dt>
+        <dd>Import data from Parquet file(s)</dd>
+      </dl></div><div class="section level2">
+      <h2 id="export-data">Export data<a class="anchor" aria-label="anchor" href="#export-data"></a></h2>
+
+      <div class="section-desc"><p>Functions to export Polars DataFrames (<code>write_</code> functions) and LazyFrames (<code>sink_</code> functions).</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="sink_csv.html">sink_csv()</a></code>
 
@@ -79,14 +90,50 @@
         <dd>Stream output to a CSV file</dd>
       </dl><dl><dt>
 
+          <code><a href="sink_ipc.html">sink_ipc()</a></code>
+
+        </dt>
+        <dd>Stream output to an IPC file</dd>
+      </dl><dl><dt>
+
           <code><a href="sink_parquet.html">sink_parquet()</a></code>
 
         </dt>
         <dd>Stream output to a parquet file</dd>
-      </dl></div><div class="section level2">
-      <h2 id="from-dplyr-">From <code>dplyr</code><a class="anchor" aria-label="anchor" href="#from-dplyr-"></a></h2>
+      </dl><dl><dt>
 
-      <div class="section-desc"><p>Functions coming from <code>dplyr</code>.</p></div>
+          <code><a href="write_csv_polars.html">write_csv_polars()</a></code>
+
+        </dt>
+        <dd>Export data to CSV file(s)</dd>
+      </dl><dl><dt>
+
+          <code><a href="write_ipc_polars.html">write_ipc_polars()</a></code>
+
+        </dt>
+        <dd>Export data to IPC file(s)</dd>
+      </dl><dl><dt>
+
+          <code><a href="write_json_polars.html">write_json_polars()</a></code>
+
+        </dt>
+        <dd>Export data to JSON file(s)</dd>
+      </dl><dl><dt>
+
+          <code><a href="write_ndjson_polars.html">write_ndjson_polars()</a></code>
+
+        </dt>
+        <dd>Export data to NDJSON file(s)</dd>
+      </dl><dl><dt>
+
+          <code><a href="write_parquet_polars.html">write_parquet_polars()</a></code>
+
+        </dt>
+        <dd>Export data to Parquet file(s)</dd>
+      </dl></div><div class="section level2">
+      <h2 id="functions-from-dplyr-">Functions from <code>dplyr</code><a class="anchor" aria-label="anchor" href="#functions-from-dplyr-"></a></h2>
+
+
 
 
     </div><div class="section level2">
@@ -233,9 +280,9 @@
         </dt>
         <dd>Summarize each group down to one row</dd>
       </dl></div><div class="section level2">
-      <h2 id="from-tidyr-">From <code>tidyr</code><a class="anchor" aria-label="anchor" href="#from-tidyr-"></a></h2>
+      <h2 id="functions-from-tidyr-">Functions from <code>tidyr</code><a class="anchor" aria-label="anchor" href="#functions-from-tidyr-"></a></h2>
 
-      <div class="section-desc"><p>Functions coming from <code>tidyr</code>.</p></div>
+
 
 
     </div><div class="section level2">
@@ -298,7 +345,7 @@
         </dt>
         <dd>Unite multiple columns into one by pasting strings together</dd>
       </dl></div><div class="section level2">
-      <h2 id="other">Other<a class="anchor" aria-label="anchor" href="#other"></a></h2>
+      <h2 id="other-methods">Other methods<a class="anchor" aria-label="anchor" href="#other-methods"></a></h2>
 
       <div class="section-desc"><p>Other functions or S3 methods.</p></div>
 
@@ -326,6 +373,41 @@
 
         </dt>
         <dd><code>tidypolars</code> global options</dd>
+      </dl></div><div class="section level2">
+      <h2 id="other-polars-functions">Other Polars functions<a class="anchor" aria-label="anchor" href="#other-polars-functions"></a></h2>
+
+      <div class="section-desc"><p>Other Polars-specific functions (most are deprecated).</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="describe.html">describe()</a></code>
+
+        </dt>
+        <dd>Summary statistics for a Polars DataFrame</dd>
+      </dl><dl><dt>
+
+          <code><a href="describe_plan.html">describe_plan()</a></code> <code><a href="describe_plan.html">describe_optimized_plan()</a></code>
+
+        </dt>
+        <dd>Show the optimized and non-optimized query plans</dd>
+      </dl><dl><dt>
+
+          <code><a href="fetch.html">fetch()</a></code>
+
+        </dt>
+        <dd>Fetch <code>n</code> rows of a LazyFrame</dd>
+      </dl><dl><dt>
+
+          <code><a href="make_unique_id.html">make_unique_id()</a></code>
+
+        </dt>
+        <dd>Create a column with unique id per row values</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

@@ -86,22 +86,23 @@
 </style>
 <p>The first thing to do before using <code>tidypolars</code> is to get
 some data as a Polars <code>DataFrame</code> or <code>LazyFrame</code>.
-You can read files with <code>polars::pl$read_*()</code> functions (to
-import them as <code>DataFrame</code>s) or with
-<code>polars::pl$scan_*()</code> functions (to import them as
-<code>LazyFrame</code>s). <code>polars</code> can read various file
-formats, such as CSV, Parquet, or JSON.</p>
+You can read files with the various <code>read_*_polars()</code>
+functions (such as <code><a href="../reference/from_parquet.html">read_parquet_polars()</a></code>) to import them as
+<code>DataFrame</code>s, or with <code>scan_*_polars()</code> functions
+(such as <code><a href="../reference/from_parquet.html">scan_parquet_polars()</a></code>) to import them as
+<code>LazyFrame</code>s. There are several functions to import various
+file formats, such as CSV, Parquet, or JSON.</p>
 <p>You could also read data with other packages and then convert it with
 <code><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df()</a></code> (or <code><a href="https://pola-rs.github.io/r-polars/man/as_polars_lf.html" class="external-link">as_polars_lf()</a></code> if you want
 to make it a <code>LazyFrame</code>).</p>
 <div class="custom_note">
 <p>
 <b>Note: </b><code><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df()</a></code> and <code><a href="https://pola-rs.github.io/r-polars/man/as_polars_lf.html" class="external-link">as_polars_lf()</a></code>
-are merely convenience functions to quickly convert data to a polars
-object, which is useful for showcase purposes. However, converting data
-from R to polars has some cost. In real-life usecases, be sure to load
-the data with the <code>pl$scan_*()</code> or the
-<code>pl$read_*()</code> functions.
+are merely convenience functions to quickly convert data to Polars,
+which is useful for showcase purposes. However, this conversion from R
+to Polars has some cost and it hurts the performance. In real-life
+usecases, be sure to load the data with the <code>read_*()</code> or the
+<code>scan_*()</code> functions mentioned above.
 </p>
 </div>
 <p>Here, we’re going to use the <code>who</code> dataset that is
@@ -111,7 +112,7 @@ so that we can easily compare <code>dplyr</code> and
 <code>tidypolars</code> functions.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pola-rs.github.io/r-polars/" class="external-link">polars</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.tidypolars.etiennebacher.com/" class="external-link">tidypolars</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidypolars.etiennebacher.com">tidypolars</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>

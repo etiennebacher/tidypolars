@@ -40,13 +40,26 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
 <div class="section level3">
-<h3 id="deprecations-development-version">Deprecations<a class="anchor" aria-label="anchor" href="#deprecations-development-version"></a></h3>
+<h3 id="breaking-changes-and-deprecations-development-version">Breaking changes and deprecations<a class="anchor" aria-label="anchor" href="#breaking-changes-and-deprecations-development-version"></a></h3>
 <ul><li><p><code><a href="../reference/describe.html">describe()</a></code> is deprecated as of tidypolars 0.10.0 and will be removed in a future update. Use <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> with the same arguments instead (<a href="https://github.com/etiennebacher/tidypolars/issues/127" class="external-link">#127</a>).</p></li>
 <li><p><code><a href="../reference/describe_plan.html">describe_plan()</a></code> and <code><a href="../reference/describe_plan.html">describe_optimized_plan()</a></code> are deprecated as of tidypolars 0.10.0 and will be removed in a future update. Use <code><a href="https://dplyr.tidyverse.org/reference/explain.html" class="external-link">explain()</a></code> with <code>optimized = TRUE/FALSE</code> instead (<a href="https://github.com/etiennebacher/tidypolars/issues/128" class="external-link">#128</a>).</p></li>
+<li><p>In <code><a href="../reference/sink_parquet.html">sink_parquet()</a></code> and <code><a href="../reference/sink_csv.html">sink_csv()</a></code>, all arguments except for <code>.data</code> and <code>path</code> must be named (<a href="https://github.com/etiennebacher/tidypolars/issues/136" class="external-link">#136</a>).</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
-<ul><li>Better error message when a function can come from several packages but only one version is translated (<a href="https://github.com/etiennebacher/tidypolars/issues/130" class="external-link">#130</a>).</li>
+<ul><li><p>Better error message when a function can come from several packages but only one version is translated (<a href="https://github.com/etiennebacher/tidypolars/issues/130" class="external-link">#130</a>).</p></li>
+<li>
+<p>New functions to import data as Polars DataFrames and LazyFrames (<a href="https://github.com/etiennebacher/tidypolars/issues/136" class="external-link">#136</a>):</p>
+<ul><li>
+<code>read_&lt;format&gt;_polars()</code> to import data as a Polars DataFrame;</li>
+<li>
+<code>scan_&lt;format&gt;_polars()</code> to import data as a Polars LazyFrame;</li>
+<li>
+<code>&lt;format&gt;</code> can be “csv”, “ipc”, “json”, “parquet”.</li>
+</ul><p>Those can replace functions from <code>polars</code>. For example, <code>polars::pl$read_parquet(...)</code> can be replaced by <code>read_parquet_polars(...)</code>.</p>
+</li>
+<li><p>New functions to write Polars DataFrames to external files: <code>write_&lt;format&gt;_polars()</code> where <code>&lt;format&gt;</code> can be “csv”, “ipc”, “json”, “ndjson”, “parquet” (<a href="https://github.com/etiennebacher/tidypolars/issues/136" class="external-link">#136</a>).</p></li>
+<li><p>New function <code><a href="../reference/sink_ipc.html">sink_ipc()</a></code> that is similar to <code><a href="../reference/sink_parquet.html">sink_parquet()</a></code> and <code><a href="../reference/sink_csv.html">sink_csv()</a></code> but for IPC files (<a href="https://github.com/etiennebacher/tidypolars/issues/136" class="external-link">#136</a>).</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>

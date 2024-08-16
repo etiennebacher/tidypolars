@@ -83,57 +83,7 @@ manipulations under the hood.</p>
 <p>Therefore, there might be minor overhead because we still need to
 parse the expressions and rewrite them in <code>polars</code> syntax
 (see the <a href="https://tidypolars.etiennebacher.com/articles/parsing-expressions.html">Parsing
-expressions</a> vignette) but this should be marginal. Here’s a small
-benchmark to compare the performance of <code>polars</code> and
-<code>tidypolars</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pola-rs.github.io/r-polars/" class="external-link">polars</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.tidypolars.etiennebacher.com/" class="external-link">tidypolars</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">pl_test</span> <span class="op">&lt;-</span> <span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span></span>
-<span>  grp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="fl">2</span><span class="op">*</span><span class="fl">1e7</span>, <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>  val1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="fl">2</span><span class="op">*</span><span class="fl">1e7</span>, <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>  val2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="fl">2</span><span class="op">*</span><span class="fl">1e7</span>, <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
-<span>  polars <span class="op">=</span> <span class="va">pl_test</span><span class="op">$</span></span>
-<span>    <span class="fu">group_by</span><span class="op">(</span><span class="st">"grp"</span><span class="op">)</span><span class="op">$</span></span>
-<span>    <span class="fu">agg</span><span class="op">(</span></span>
-<span>      <span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"val1"</span><span class="op">)</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">alias</span><span class="op">(</span><span class="st">"x"</span><span class="op">)</span>, </span>
-<span>      <span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"val2"</span><span class="op">)</span><span class="op">$</span><span class="fu">sum</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">alias</span><span class="op">(</span><span class="st">"y"</span><span class="op">)</span>,</span>
-<span>      <span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"val1"</span><span class="op">)</span><span class="op">$</span><span class="fu">median</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">alias</span><span class="op">(</span><span class="st">"z"</span><span class="op">)</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>  tidypolars <span class="op">=</span> <span class="va">pl_test</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">grp</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
-<span>      x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">val1</span><span class="op">)</span>,</span>
-<span>      y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">val2</span><span class="op">)</span>,</span>
-<span>      z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">val1</span><span class="op">)</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>  check <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  iterations <span class="op">=</span> <span class="fl">15</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 6</span></span></span>
-<span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars        238ms    330ms      3.00   415.7KB    0.215</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars    352ms    449ms      2.24    3.68MB    1.12</span></span>
-<span></span>
-<span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
-<span>  polars <span class="op">=</span> <span class="va">pl_test</span><span class="op">$</span></span>
-<span>    <span class="fu">filter</span><span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"grp"</span><span class="op">)</span> <span class="op">==</span> <span class="st">"a"</span> <span class="op">|</span> <span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"grp"</span><span class="op">)</span> <span class="op">==</span> <span class="st">"b"</span><span class="op">)</span>,</span>
-<span>  tidypolars <span class="op">=</span> <span class="va">pl_test</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">grp</span> <span class="op">==</span> <span class="st">"a"</span> <span class="op">|</span> <span class="va">grp</span> <span class="op">==</span> <span class="st">"b"</span><span class="op">)</span>,</span>
-<span>  check <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  iterations <span class="op">=</span> <span class="fl">15</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 6</span></span></span>
-<span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> polars         45ms   46.5ms      19.7    21.6KB     0   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> tidypolars   48.8ms   53.9ms      17.4    82.2KB     2.67</span></span></code></pre></div>
+expressions</a> vignette) but this should be marginal.</p>
 </div>
 <div class="section level2">
 <h2 id="am-i-stuck-with-tidypolars">Am I stuck with <code>tidypolars</code>?<a class="anchor" aria-label="anchor" href="#am-i-stuck-with-tidypolars"></a>
@@ -156,7 +106,9 @@ create <code>polars</code> <code>DataFrame</code> or
 <h2 id="can-i-see-some-benchmarks-with-other-tools">Can I see some benchmarks with other tools?<a class="anchor" aria-label="anchor" href="#can-i-see-some-benchmarks-with-other-tools"></a>
 </h2>
 <p>Making accurate benchmarks of data wrangling tools is difficult and I
-won’t try to do it here. You should refer to <a href="https://duckdblabs.github.io/db-benchmark/" class="external-link">DuckDB
+won’t try to do it here (I just put one of the homepage to give an idea
+of the performance, but it is by no means comprehensive). You should
+refer to <a href="https://duckdblabs.github.io/db-benchmark/" class="external-link">DuckDB
 benchmarks</a>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
