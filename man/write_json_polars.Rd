@@ -24,3 +24,13 @@ The input DataFrame.
 \description{
 Export data to JSON file(s)
 }
+\examples{
+\dontshow{if (requireNamespace("jsonlite")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+dest <- tempfile(fileext = ".json")
+mtcars |>
+  as_polars_df() |>
+  write_json_polars(dest)
+
+jsonlite::fromJSON(dest)
+\dontshow{\}) # examplesIf}
+}

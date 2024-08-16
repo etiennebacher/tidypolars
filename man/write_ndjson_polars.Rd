@@ -17,3 +17,13 @@ The input DataFrame.
 \description{
 Export data to NDJSON file(s)
 }
+\examples{
+\dontshow{if (requireNamespace("jsonlite")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+dest <- tempfile(fileext = ".ndjson")
+mtcars |>
+  as_polars_df() |>
+  write_ndjson_polars(dest)
+
+jsonlite::stream_in(file(dest), verbose = FALSE)
+\dontshow{\}) # examplesIf}
+}

@@ -37,6 +37,14 @@
 #'
 #' @return The input DataFrame.
 #' @export
+#'
+#' @examples
+#' dest <- tempfile(fileext = ".csv")
+#' mtcars |>
+#'   as_polars_df() |>
+#'   write_csv_polars(dest)
+#'
+#' read.csv(dest)
 write_csv_polars <- function(
     .data,
     file,
@@ -87,6 +95,14 @@ write_csv_polars <- function(
 #'
 #' @inherit write_csv_polars return
 #' @export
+#'
+#' @examplesIf requireNamespace("nanoparquet")
+#' dest <- tempfile(fileext = ".parquet")
+#' mtcars |>
+#'   as_polars_df() |>
+#'   write_parquet_polars(dest)
+#'
+#' nanoparquet::read_parquet(dest)
 write_parquet_polars <- function(
     .data,
     file,
@@ -125,6 +141,14 @@ write_parquet_polars <- function(
 #'
 #' @inherit write_csv_polars return
 #' @export
+#'
+#' @examplesIf requireNamespace("jsonlite")
+#' dest <- tempfile(fileext = ".ndjson")
+#' mtcars |>
+#'   as_polars_df() |>
+#'   write_ndjson_polars(dest)
+#'
+#' jsonlite::stream_in(file(dest), verbose = FALSE)
 write_ndjson_polars <- function(.data, file) {
   if (!inherits(.data, "RPolarsDataFrame")) {
     rlang::abort("`write_ndjson_polars()` can only be used on a DataFrame.")
@@ -142,6 +166,14 @@ write_ndjson_polars <- function(.data, file) {
 #'
 #' @inherit write_csv_polars return
 #' @export
+#'
+#' @examplesIf requireNamespace("jsonlite")
+#' dest <- tempfile(fileext = ".json")
+#' mtcars |>
+#'   as_polars_df() |>
+#'   write_json_polars(dest)
+#'
+#' jsonlite::fromJSON(dest)
 write_json_polars <- function(
     .data,
     file,

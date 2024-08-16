@@ -80,3 +80,11 @@ The input DataFrame.
 \description{
 Export data to CSV file(s)
 }
+\examples{
+dest <- tempfile(fileext = ".csv")
+mtcars |>
+  as_polars_df() |>
+  write_csv_polars(dest)
+
+read.csv(dest)
+}

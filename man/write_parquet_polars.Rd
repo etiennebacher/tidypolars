@@ -56,3 +56,13 @@ The input DataFrame.
 \description{
 Export data to Parquet file(s)
 }
+\examples{
+\dontshow{if (requireNamespace("nanoparquet")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+dest <- tempfile(fileext = ".parquet")
+mtcars |>
+  as_polars_df() |>
+  write_parquet_polars(dest)
+
+nanoparquet::read_parquet(dest)
+\dontshow{\}) # examplesIf}
+}
