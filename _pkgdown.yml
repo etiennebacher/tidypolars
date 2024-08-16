@@ -16,7 +16,9 @@ navbar:
 
 reference:
   - title: Import data
-    desc: Functions to import data as Polars DataFrame or LazyFrame.
+    desc: |
+      Functions to import data as Polars DataFrames (`read_` functions) and
+      LazyFrames (`scan_` functions).
     contents:
       - from_csv
       - from_ipc
@@ -24,7 +26,9 @@ reference:
       - from_parquet
 
   - title: Export data
-    desc: Functions to export Polars DataFrames and LazyFrames.
+    desc: |
+      Functions to export Polars DataFrames (`write_` functions) and LazyFrames
+      (`sink_` functions).
     contents:
       - starts_with("sink")
       - starts_with("write")
