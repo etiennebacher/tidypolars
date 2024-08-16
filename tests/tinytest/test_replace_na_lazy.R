@@ -29,12 +29,12 @@ expect_equal_lazy(
 
 expect_error_lazy(
   replace_na(pl_test, "a"),
-  "conversion from `str` to `i32` failed in column 'literal' for 1 out of 1 values:"
+  "conversion from `str` to `(i32|f64)` failed in column 'literal' for 1 out of 1 values:"
 )
 
 expect_error_lazy(
   replace_na(pl_test, list(x = 1, y = "unknown")),
-  "conversion from `str` to `i32` failed in column 'literal' for 1 out of 1 values:"
+  "conversion from `str` to `(i32|f64)` failed in column 'literal' for 1 out of 1 values:"
 )
 
 # ... except in some cases
