@@ -34,6 +34,10 @@
 * New function `sink_ipc()` that is similar to `sink_parquet()` and `sink_csv()`
   but for IPC files (#136).
   
+* `across()` now throws a better error message when the user passes an external
+  list to `.fns`. This works with `dplyr` but cannot work with `tidypolars`
+  (#135).
+  
 ## Bug fixes
 
 * `stringr::str_sub()` now works when both `start` and `end` are negative.
