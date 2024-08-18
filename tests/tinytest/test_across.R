@@ -392,5 +392,6 @@ expect_error(
   mutate(
     test,
     across(.cols = mpg, .fns = my_fns)
-  )
+  ),
+  "`.fns` doesn't accept an external list of functions or formulas"
 )
