@@ -13,7 +13,7 @@ unpack_across <- function(.data, expr, env, new_vars) {
   .cols <- union(.cols_already_there, .cols_new_vars)
   .fns <- get_arg(".fns", 2, expr, env)
   if (is.name(.fns)) {
-    .fns <- unpack_fns(.fns, env)
+    .fns <- check_fns_is_list(.fns, env)
   }
   .names <- get_arg(".names", 3, expr, env)
 
@@ -111,7 +111,7 @@ get_arg <- function(name, position, expr, env) {
   out
 }
 
-unpack_fns <- function(fns, env) {
+check_fns_is_list <- function(fns, env) {
   tr <- tryCatch(
     rlang::eval_tidy(fns, env = env),
     error = function(e) return(fns)
@@ -119,7 +119,6 @@ unpack_fns <- function(fns, env) {
   if (!is.list(tr)) {
     return(fns)
   }
-
   abort(
     c(
       "When using `across()` in tidypolars, `.fns` doesn't accept an external list of functions or formulas.",
@@ -127,8 +126,6 @@ unpack_fns <- function(fns, env) {
     ),
     call = env
   )
-
-  tr
 }
 
 
