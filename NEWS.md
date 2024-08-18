@@ -1,6 +1,6 @@
 # tidypolars (development version)
 
-## Deprecations
+## Breaking changes and deprecations
 
 * `describe()` is deprecated as of tidypolars 0.10.0 and will be removed in a 
   future update. Use `summary()` with the same arguments instead (#127).
@@ -9,10 +9,30 @@
   tidypolars 0.10.0 and will be removed in a future update. Use `explain()` with
   `optimized = TRUE/FALSE` instead (#128).
   
+* In `sink_parquet()` and `sink_csv()`, all arguments except for `.data` and 
+  `path` must be named (#136).
+  
 ## New features
 
 * Better error message when a function can come from several packages but only
   one version is translated (#130).
+  
+* New functions to import data as Polars DataFrames and LazyFrames (#136):
+
+  * `read_<format>_polars()` to import data as a Polars DataFrame;
+  * `scan_<format>_polars()` to import data as a Polars LazyFrame;
+  * `<format>` can be "csv", "ipc", "json", "parquet".
+  
+  Those can replace functions from `polars`. For example, 
+  `polars::pl$read_parquet(...)` can be replaced by 
+  `read_parquet_polars(...)`.
+  
+* New functions to write Polars DataFrames to external files: 
+  `write_<format>_polars()` where `<format>` can be "csv", "ipc", "json", 
+  "ndjson", "parquet" (#136).
+  
+* New function `sink_ipc()` that is similar to `sink_parquet()` and `sink_csv()`
+  but for IPC files (#136).
   
 ## Bug fixes
 
@@ -34,6 +54,8 @@
   my_polars_df |> 
     filter(x %in% some_data_frame$y)
   ```
+* `replace_na()` no longer converts the column to the datatype of the replacement,
+  e.g. `data |> replace_na("a")` will error if the input data is numeric.
   
 
 # tidypolars 0.9.0
