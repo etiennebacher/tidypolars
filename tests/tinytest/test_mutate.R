@@ -370,3 +370,22 @@ expect_equal(
   foobar(test),
   data.frame(chars = letters[1:3], foo = "a")
 )
+
+# with external data.frame/list elements
+
+test <- polars::pl$DataFrame(x = 1:3)
+test_df <- data.frame(x = 1:2)
+
+expect_dim(
+  test |>
+    mutate(foo = x %in% test_df$x) |>
+    pull(foo),
+  c(TRUE, TRUE, FALSE)
+)
+
+expect_dim(
+  test |>
+    mutate(foo = x %in% test_df[["x"]]) |>
+    pull(foo),
+  c(TRUE, TRUE, FALSE)
+)

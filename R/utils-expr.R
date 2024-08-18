@@ -227,12 +227,15 @@ translate <- function(
         name,
         # .data$ -> consider the RHS of $ as a classic column name
         # .env$ -> eval the RHS of $ in the caller env
+        # <other>$ -> same as .env$ but we don't refer to a lonely object in the
+        #             environment but to a data.frame/list subset so we evaluate
+        #             the LHS + RHS
         #
         # Same thing with [[ but I pass the expressions in sym()
         "[[" = {
           first_term <- expr[[2]]
           if (first_term == ".data") {
-            return(polars_col(expr[[3]]))
+            out <- polars_col(expr[[3]])
           } else if (first_term == ".env") {
             out <- tryCatch(
               eval_tidy(sym(expr[[3]]), env = caller),
@@ -240,14 +243,34 @@ translate <- function(
                 rlang::abort(e$message, call = env)
               }
             )
-            return(out)
+          } else {
+            out <- tryCatch(
+              eval_tidy(expr, env = caller),
+              error = function(e) {
+                rlang::abort(e$message, call = env)
+              }
+            )
+            out <- translate(
+              out,
+              .data = .data,
+              new_vars = new_vars,
+              env = env,
+              caller = caller,
+              call_is_function = call_is_function
+            )
           }
+          return(out)
         } ,
         "$" = {
           first_term <- expr[[2]]
+
+          if (is.name(first_term)) {
+            first_term <- safe_deparse(first_term)
+          }
+
           if (first_term == ".data") {
             dep <- rlang::as_string(expr[[3]])
-            return(polars_col(dep))
+            out <- polars_col(dep)
           } else if (first_term == ".env") {
             out <- tryCatch(
               eval_tidy(expr[[3]], env = caller),
@@ -255,8 +278,23 @@ translate <- function(
                 rlang::abort(e$message, call = env)
               }
             )
-            return(out)
+          } else {
+            out <- tryCatch(
+              eval_tidy(expr, env = caller),
+              error = function(e) {
+                rlang::abort(e$message, call = env)
+              }
+            )
+            out <- translate(
+              out,
+              .data = .data,
+              new_vars = new_vars,
+              env = env,
+              caller = caller,
+              call_is_function = call_is_function
+            )
           }
+          return(out)
         },
         "(" = {
           return(translate(

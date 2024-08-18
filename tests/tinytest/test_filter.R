@@ -263,3 +263,20 @@ expect_dim(
   test |> filter(x == "生脉胶囊"),
   1
 )
+
+# with external data.frame/list elements
+
+test <- polars::pl$DataFrame(x = 1:3)
+test_df <- data.frame(x = 1:2)
+
+expect_dim(
+  test |>
+    filter(x %in% test_df$x),
+  c(2, 1)
+)
+
+expect_dim(
+  test |>
+    filter(x %in% test_df[["x"]]),
+  c(2, 1)
+)
