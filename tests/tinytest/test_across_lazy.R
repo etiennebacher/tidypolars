@@ -390,7 +390,7 @@ expect_equal_lazy(
 
 # cannot use external list of functions in across()
 
-my_fns <- list(my_mean = mean, my_median = median)
+my_fns <<- list(my_mean = mean, my_median = median)
 
 expect_error_lazy(
   mutate(
