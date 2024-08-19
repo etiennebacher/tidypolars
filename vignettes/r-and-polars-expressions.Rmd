@@ -293,6 +293,8 @@ out <- tribble(
     Package == "`lubridate`" & Function == "`make_datetime`" ~ "In `lubridate::make_datetime()`, when there is an overflow (for example `hours = 25`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this returns `NA`.",
     Package == "`lubridate`" & Function == "`wday`" ~ "Requires `week_start == 7`. If `label = TRUE`, it returns a string variable and not a factor as in `lubridate`.",
     Package == "`dplyr`" & Function == "`row_number`" ~ "Doesn't work when `x` is missing.",
+    Package == "`stringr`" & Function == "`str_to_title`" ~ "Letters following apostrophe will be capitalized as well, which differs from the `stringr` implementation.",
+    Package == "`tools`" & Function == "`toTitleCase`" ~ "Letters following apostrophe will be capitalized as well, which differs from the `tools` implementation.",
     .default = ""
   )) |> 
   arrange(Package)
