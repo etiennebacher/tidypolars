@@ -61,6 +61,8 @@
 * `replace_na()` no longer converts the column to the datatype of the replacement,
   e.g. `data |> replace_na("a")` will error if the input data is numeric.
   
+* `n_distinct()` now correctly applies the `na.rm` argument when several columns
+  are passed as input (#137).
 
 # tidypolars 0.9.0
 
