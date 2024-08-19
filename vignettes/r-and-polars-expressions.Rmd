@@ -301,4 +301,3 @@ out <- tribble(
 
 kable(out) 
 ```
-
