@@ -15,8 +15,8 @@ expect_error(
 
 # -----------------------------------------------
 
-exit_if_not(requireNamespace("jsonlite"))
-exit_if_not(requireNamespace("nanoparquet"))
+exit_if_not(requireNamespace("jsonlite", quietly = TRUE))
+exit_if_not(requireNamespace("nanoparquet", quietly = TRUE))
 
 # CSV
 
