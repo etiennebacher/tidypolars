@@ -387,9 +387,16 @@ expect_equal(
 # sub ---------------------------------------------------------------------
 
 expect_equal(
-  mutate(test, foo = str_sub(x1, 1, 5)) |>
+  mutate(test, foo = str_sub(x1, 1, 1)) |>
     pull(foo),
-  mutate(test_df, foo = str_sub(x1, 1, 5)) |>
+  mutate(test_df, foo = str_sub(x1, 1, 1)) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = str_sub(x1, 3, 5)) |>
+    pull(foo),
+  mutate(test_df, foo = str_sub(x1, 3, 5)) |>
     pull(foo)
 )
 
@@ -414,8 +421,70 @@ expect_equal(
     pull(foo)
 )
 
+expect_equal(
+  mutate(test, foo = str_sub(x1, NA, 2)) |>
+    pull(foo),
+  mutate(test_df, foo = str_sub(x1, NA, 2)) |>
+    pull(foo)
+)
 
+expect_equal(
+  mutate(test, foo = str_sub(x1, 2, NA)) |>
+    pull(foo),
+  mutate(test_df, foo = str_sub(x1, 2, NA)) |>
+    pull(foo)
+)
 
+# Same with substr(), which is stricter about negative indices
+
+expect_equal(
+  mutate(test, foo = substr(x1, 1, 1)) |>
+    pull(foo),
+  mutate(test_df, foo = substr(x1, 1, 1)) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = substr(x1, 3, 5)) |>
+    pull(foo),
+  mutate(test_df, foo = substr(x1, 3, 5)) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = substr(x1, 1, 100)) |>
+    pull(foo),
+  mutate(test_df, foo = substr(x1, 1, 100)) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = substr(x1, 100, 101)) |>
+    pull(foo),
+  mutate(test_df, foo = substr(x1, 100, 101)) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = substr(x1, -10, -2)) |>
+    pull(foo),
+  mutate(test_df, foo = substr(x1, -10, -2)) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = substr(x1, NA, 2)) |>
+    pull(foo),
+  mutate(test_df, foo = substr(x1, NA, 2)) |>
+    pull(foo)
+)
+
+expect_equal(
+  mutate(test, foo = substr(x1, 2, NA)) |>
+    pull(foo),
+  mutate(test_df, foo = substr(x1, 2, NA)) |>
+    pull(foo)
+)
 
 # count ---------------------------------------------------------------------
 
