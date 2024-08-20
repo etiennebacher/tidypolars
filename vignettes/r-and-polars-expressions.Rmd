@@ -53,7 +53,7 @@ translated to Polars syntax.
 However, there are some situations where this might not work, so this vignette
 explains the process and the limitations.
 
-# How does `tidypolars` translate R expressions into Polars expressions?
+## How does `tidypolars` translate R expressions into Polars expressions?
 
 When `tidypolars` receives an expression, it runs a function `translate()` 
 several times until all components are translated to their Polars equivalent. 
@@ -61,7 +61,7 @@ There are four possible components: single values, column names, external object
 and functions.
 
 
-## Single values, column names, and external objects
+### Single values, column names, and external objects
 
 If you pass a single value, like `x = 1` or `x = "a"`, it is wrapped into 
 `pl$lit()`. This is also the case for external objects with the difference that
@@ -76,7 +76,7 @@ x = {{ some_value }}  ->  x = pl$lit(*value*)
 x = mpg               ->  x = pl$col("mpg")
 ```
 
-## Functions
+### Functions
 
 
 Functions are split into two categories: built-in functions (i.e functions 
@@ -84,7 +84,7 @@ provided by base R or by other packages), and user-defined functions (UDF) that
 are written by the user (you). 
 
 
-### Built-in functions
+#### Built-in functions
 
 In the first case, `tidypolars` checks the function name and whether it has 
 already been translated internally. For example, if we call the R function 
@@ -109,8 +109,11 @@ mtcars |>
   mutate(x = mean(mpg, trim = 2))
 ```
 
+This behavior [can be changed](https://tidypolars.etiennebacher.com/reference/tidypolars-options.html) 
+to throw an error instead. 
 
-### User-defined functions
+
+#### User-defined functions
 
 User-defined functions (UDF) are more challenging. Indeed, it is technically 
 possible to inspect the code inside a UDF, but rewriting it to match Polars syntax
@@ -142,7 +145,7 @@ mtcars |>
 ```
 
 
-### Special case: `across()`
+#### Special case: `across()`
 
 [`across()`](https://dplyr.tidyverse.org/reference/across.html) is a very useful
 function that applies a function (or a list of functions) to a selection of 
@@ -180,7 +183,7 @@ mtcars |>
 ```
 
 
-## List of base R and `tidyverse` functions supported by `tidypolars` 
+### List of base R and `tidyverse` functions supported by `tidypolars` 
 
 
 ```{r echo=FALSE, message=FALSE}
