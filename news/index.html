@@ -47,7 +47,11 @@
 </ul></div>
 <div class="section level3">
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
-<ul><li><p>Better error message when a function can come from several packages but only one version is translated (<a href="https://github.com/etiennebacher/tidypolars/issues/130" class="external-link">#130</a>).</p></li>
+<ul><li>
+<p>Add support for more functions:</p>
+<ul><li>from package <code>base</code>: <code><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr()</a></code>.</li>
+</ul></li>
+<li><p>Better error message when a function can come from several packages but only one version is translated (<a href="https://github.com/etiennebacher/tidypolars/issues/130" class="external-link">#130</a>).</p></li>
 <li>
 <p>New functions to import data as Polars DataFrames and LazyFrames (<a href="https://github.com/etiennebacher/tidypolars/issues/136" class="external-link">#136</a>):</p>
 <ul><li>
@@ -65,6 +69,7 @@
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
 <ul><li><p><code><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">stringr::str_sub()</a></code> now works when both <code>start</code> and <code>end</code> are negative.</p></li>
+<li><p>Fixed a bug in <code><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub()</a></code> when <code>start</code> was greater than 1.</p></li>
 <li><p><code><a href="https://stringr.tidyverse.org/reference/str_starts.html" class="external-link">stringr::str_starts()</a></code> and <code><a href="https://stringr.tidyverse.org/reference/str_starts.html" class="external-link">stringr::str_ends()</a></code> now work with a regex.</p></li>
 <li><p><code><a href="https://tidyr.tidyverse.org/reference/fill.html" class="external-link">fill()</a></code> doesn’t error anymore when <code>...</code> is empty. Instead, it returns the input data.</p></li>
 <li><p><code><a href="https://tidyr.tidyverse.org/reference/unite.html" class="external-link">unite()</a></code> now provides a proper error message when <code>col</code> is missing.</p></li>
