@@ -27,7 +27,7 @@ library(dplyr, warn.conflicts = FALSE)
 library(dplyr, warn.conflicts = FALSE)
 
 filter(mtcars, am + gear > carb)
-mutate(mtcars, x = (qsec - mean(qsec) / sd(qsec)))
+mutate(mtcars, x = (qsec - mean(qsec)) / sd(qsec))
 mtcars |> 
   group_by(cyl) |> 
   summarize(x = mean(qsec) / sd(qsec))
