@@ -96,7 +96,7 @@ or from `stringr` for example.
 Now that `tidypolars` knows that a translation of `mean()` exists, it parses
 the arguments in the call to translate them to the Polars syntax: internally,
 `x` is converted to `pl$col("x")` if there is a column `"x"` in the data. 
-Sometimes, additional arguments do not have their equivalent in Polars. This is
+Sometimes, additional arguments do not have an equivalent in Polars. This is
 the case for the argument `trim` here. In this case, `tidypolars` ignores
 this argument and warns the user:
 
