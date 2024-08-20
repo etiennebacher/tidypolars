@@ -171,14 +171,38 @@ pl_str_starts_stringr <- function(string, pattern, negate = FALSE, ...) {
 
 pl_str_sub_stringr <- function(string, start, end = NULL, ...) {
   check_empty_dots(...)
+  if (is.na(start) || (!is.null(end) && is.na(end))) {
+    return(pl$lit(NA_character_))
+  }
+
   # polars is 0-indexed
   if (start > 0) {
     start <- start - 1
   }
-  if (!is.null(end) && end < 0) {
-    end <- abs(start) - abs(end) + 1
+  if (is.null(end)) {
+    length <- NULL
+  } else {
+    length <- end - start
+    if (end < 0) {
+      length <- length + 1
+    }
   }
-  string$str$slice(start, end)
+  string$str$slice(start, length)
+}
+
+pl_substr <- function(x, start, stop) {
+  if (is.na(start) | is.na(stop)) {
+    return(pl$lit(NA_character_))
+  }
+  if (start < 0 | stop < 0) {
+    return(pl$lit(""))
+  }
+  # polars is 0-indexed
+  if (start > 0) {
+    start <- start - 1
+  }
+  length <- stop - start
+  x$str$slice(start, length)
 }
 
 # I would need `$splitn()` for cases where n is not Inf, but it returns a struct

@@ -225,6 +225,7 @@ out <- tribble(
   "`base`",             "`sort`", 
   "`base`",             "`sqrt`", 
   "`base`",             "`strptime`",
+  "`base`",             "`substr`",
   "`base`",             "`tan`", 
   "`base`",             "`tanh`",
   "`base`",             "`tolower`",
