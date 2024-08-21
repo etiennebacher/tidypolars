@@ -31,6 +31,10 @@ their existing `tidyverse` code while using `polars` in the background
 to benefit from large performance gains. The only thing that needs to
 change is the way data is imported in the R session.
 
+See the[“Getting started”
+vignette](https://tidypolars.etiennebacher.com/articles/tidypolars) for
+a gentle introduction to `tidypolars`.
+
 Since most of the work is rewriting `tidyverse` code into `polars`
 syntax, `tidypolars` and `polars` have very similar performance.
 
@@ -127,10 +131,6 @@ bench::mark(
 ```
 
 </details>
-
-See the[“Getting started”
-vignette](https://tidypolars.etiennebacher.com/articles/tidypolars) for
-a gentle introduction to `tidypolars`.
 
 ## Installation
 
