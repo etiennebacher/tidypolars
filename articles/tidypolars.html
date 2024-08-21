@@ -74,14 +74,18 @@
     
 <style type="text/css">
 .custom_note {
-  border: solid 3px #08505e;
-  background-color: #0b788e;
+  border: solid 3px #0b788e;
+  background-color: #08505e;
   padding: 5px;
   margin-bottom: 10px;
   border-radius: 3px;
 }
 .custom_note > p, .custom_note > p > code {
   color: white;
+}
+
+.custom_note > p > code > a:any-link {
+    text-decoration-color: white;
 }
 </style>
 <p>Using <code>tidypolars</code> requires importing data as Polars
@@ -93,9 +97,6 @@ with the <a href="https://tidypolars.etiennebacher.com/reference/#import-data">v
 (such as <code><a href="../reference/from_parquet.html">scan_parquet_polars()</a></code>) to import them as
 <code>LazyFrame</code>s. There are several functions to import various
 file formats, such as CSV, Parquet, or JSON.</p>
-<p>You could also read data with other packages and then convert it with
-<code><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df()</a></code> (or <code><a href="https://pola-rs.github.io/r-polars/man/as_polars_lf.html" class="external-link">as_polars_lf()</a></code> if you want
-to make it a <code>LazyFrame</code>).</p>
 <div class="custom_note">
 <p>
 <b>Note:</b> in examples or some tutorials, the functions
