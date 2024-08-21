@@ -28,120 +28,8 @@ is here:
 `tidypolars` provides a [`polars`](https://rpolars.github.io/) backend
 for the `tidyverse`. The aim of `tidypolars` is to enable users to keep
 their existing `tidyverse` code while using `polars` in the background
-to benefit from large performance gains.
-
-See the example below and the [“Getting started”
-vignette](https://tidypolars.etiennebacher.com/articles/tidypolars) for
-a gentle introduction to `tidypolars`.
-
-## Installation
-
-`tidypolars` is built on `polars`, which is not available on CRAN. This
-means that `tidypolars` also can’t be on CRAN. However, you can install
-it from R-universe.
-
-### Windows or macOS
-
-``` r
-install.packages(
-  'tidypolars', 
-  repos = c('https://etiennebacher.r-universe.dev', getOption("repos"))
-)
-```
-
-### Linux
-
-``` r
-install.packages(
-  'tidypolars', 
-  repos = c('https://etiennebacher.r-universe.dev/bin/linux/jammy/4.3', getOption("repos"))
-)
-```
-
-## Example
-
-Suppose that you already have some code that uses `dplyr`:
-
-``` r
-library(dplyr, warn.conflicts = FALSE)
-
-iris |> 
-  select(starts_with(c("Sep", "Pet"))) |> 
-  mutate(
-    petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-  ) |> 
-  filter(between(Sepal.Length, 4.5, 5.5)) |> 
-  head()
-#>   Sepal.Length Sepal.Width Petal.Length Petal.Width petal_type
-#> 1          5.1         3.5          1.4         0.2       long
-#> 2          4.9         3.0          1.4         0.2       long
-#> 3          4.7         3.2          1.3         0.2       long
-#> 4          4.6         3.1          1.5         0.2       long
-#> 5          5.0         3.6          1.4         0.2       long
-#> 6          5.4         3.9          1.7         0.4       long
-```
-
-With `tidypolars`, you can provide a Polars `DataFrame` or `LazyFrame`
-and keep the exact same code:
-
-``` r
-library(tidypolars)
-
-iris |> 
-  as_polars_df() |> 
-  select(starts_with(c("Sep", "Pet"))) |> 
-  mutate(
-    petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-  ) |> 
-  filter(between(Sepal.Length, 4.5, 5.5)) |> 
-  head()
-#> shape: (6, 5)
-#> ┌──────────────┬─────────────┬──────────────┬─────────────┬────────────┐
-#> │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ petal_type │
-#> │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---        │
-#> │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ str        │
-#> ╞══════════════╪═════════════╪══════════════╪═════════════╪════════════╡
-#> │ 5.1          ┆ 3.5         ┆ 1.4          ┆ 0.2         ┆ long       │
-#> │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ long       │
-#> │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ long       │
-#> │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ long       │
-#> │ 5.0          ┆ 3.6         ┆ 1.4          ┆ 0.2         ┆ long       │
-#> │ 5.4          ┆ 3.9         ┆ 1.7          ┆ 0.4         ┆ long       │
-#> └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘
-```
-
-If you’re used to the `tidyverse` functions and syntax, this will feel
-much easier to read than the pure `polars` syntax:
-
-``` r
-library(polars)
-
-# polars syntax
-pl$DataFrame(iris)$
-  select(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))$
-  with_columns(
-    pl$when(
-      (pl$col("Petal.Length") / pl$col("Petal.Width") > 3)
-    )$then(pl$lit("long"))$
-      otherwise(pl$lit("large"))$
-      alias("petal_type")
-  )$
-  filter(pl$col("Sepal.Length")$is_between(4.5, 5.5))$
-  head(6)
-#> shape: (6, 5)
-#> ┌──────────────┬─────────────┬──────────────┬─────────────┬────────────┐
-#> │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ petal_type │
-#> │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---        │
-#> │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ str        │
-#> ╞══════════════╪═════════════╪══════════════╪═════════════╪════════════╡
-#> │ 5.1          ┆ 3.5         ┆ 1.4          ┆ 0.2         ┆ long       │
-#> │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ long       │
-#> │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ long       │
-#> │ 4.6          ┆ 3.1         ┆ 1.5          ┆ 0.2         ┆ long       │
-#> │ 5.0          ┆ 3.6         ┆ 1.4          ┆ 0.2         ┆ long       │
-#> │ 5.4          ┆ 3.9         ┆ 1.7          ┆ 0.4         ┆ long       │
-#> └──────────────┴─────────────┴──────────────┴─────────────┴────────────┘
-```
+to benefit from large performance gains. The only thing that needs to
+change is the way data is imported in the R session.
 
 Since most of the work is rewriting `tidyverse` code into `polars`
 syntax, `tidypolars` and `polars` have very similar performance.
@@ -151,13 +39,18 @@ syntax, `tidypolars` and `polars` have very similar performance.
 Click to see a small benchmark
 </summary>
 
-For more serious benchmarks about `polars`, take a look at [DuckDB
-benchmarks](https://duckdblabs.github.io/db-benchmark/).
+The main purpose of this benchmark is to show that `polars` and
+`tidypolars` are close and to give an idea of the performance. For more
+thorough, representative benchmarks about `polars`, take a look at
+[DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/) instead.
 
 ``` r
 library(collapse, warn.conflicts = FALSE)
 #> collapse 2.0.15, see ?`collapse-package` or ?`collapse-documentation`
+library(dplyr, warn.conflicts = FALSE)
 library(dtplyr)
+library(polars)
+library(tidypolars)
 
 large_iris <- data.table::rbindlist(rep(list(iris), 100000))
 large_iris_pl <- as_polars_lf(large_iris)
@@ -222,11 +115,11 @@ bench::mark(
 #> # A tibble: 5 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     116.67ms 158.61ms     5.20    20.54KB    0.260
-#> 2 tidypolars 144.51ms 184.05ms     5.12   353.94KB    1.53 
-#> 3 dplyr         4.45s    4.79s     0.202    1.79GB    0.450
-#> 4 dtplyr        1.07s    1.18s     0.821    1.72GB    1.66 
-#> 5 collapse   585.85ms 803.39ms     1.26   745.96MB    1.26
+#> 1 polars      142.5ms 173.96ms     4.43     4.51MB    0.222
+#> 2 tidypolars  161.9ms 206.56ms     4.70     1.78MB    2.00 
+#> 3 dplyr          3.8s    4.07s     0.231    1.79GB    0.554
+#> 4 dtplyr      810.6ms       1s     0.999    1.72GB    2.82 
+#> 5 collapse    400.8ms  493.3ms     1.97   745.96MB    1.33
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
@@ -234,6 +127,34 @@ bench::mark(
 ```
 
 </details>
+
+See the[“Getting started”
+vignette](https://tidypolars.etiennebacher.com/articles/tidypolars) for
+a gentle introduction to `tidypolars`.
+
+## Installation
+
+`tidypolars` is built on `polars`, which is not available on CRAN. This
+means that `tidypolars` also can’t be on CRAN. However, you can install
+it from R-universe.
+
+### Windows or macOS
+
+``` r
+install.packages(
+  'tidypolars', 
+  repos = c('https://etiennebacher.r-universe.dev', getOption("repos"))
+)
+```
+
+### Linux
+
+``` r
+install.packages(
+  'tidypolars', 
+  repos = c('https://etiennebacher.r-universe.dev/bin/linux/jammy/4.3', getOption("repos"))
+)
+```
 
 ## Contributing
 

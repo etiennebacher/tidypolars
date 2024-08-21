@@ -27,20 +27,22 @@ knitr::opts_chunk$set(
 }
 ```
 
-The first thing to do when using `tidypolars` is to get some data as a Polars
-`DataFrame` or `LazyFrame`. You can read files with the various `read_*_polars()`
-functions (such as `read_parquet_polars()`) to import them as `DataFrame`s, or 
-with `scan_*_polars()` functions (such as `scan_parquet_polars()`) to import them 
-as `LazyFrame`s. There are several functions to import various file formats, 
-such as CSV, Parquet, or JSON.
+Using `tidypolars` requires importing data as Polars `DataFrame`s or
+`LazyFrame`s. You can read files with the [various `read_*_polars()` functions](https://tidypolars.etiennebacher.com/reference/#import-data)
+(such as `read_parquet_polars()`) to import them as `DataFrame`s, or with
+`scan_*_polars()` functions (such as `scan_parquet_polars()`) to import them as
+`LazyFrame`s. There are several functions to import various file formats, such
+as CSV, Parquet, or JSON.
 
 You could also read data with other packages and then convert it with
 `as_polars_df()` (or `as_polars_lf()` if you want to make it a 
 `LazyFrame`). 
 
 <div class="custom_note">
-  <p><b>Note: </b><code>as_polars_df()</code> and <code>as_polars_lf()</code> are 
-  merely convenience functions to quickly convert data to Polars, which is
+  <p><b>Note:</b> in examples or some tutorials, the functions <code>as_polars_df()</code>
+  and <code>as_polars_lf()</code> are sometimes used to convert an existing R 
+  data.frame to a Polars DataFrame or LazyFrame. Those are merely convenience 
+  functions to quickly convert an existing dataset to Polars, which is
   useful for showcase purposes. However, this conversion from R to Polars has
   some cost and it hurts the performance. In real-life usecases, be sure to load 
   the data with the <code>read_\*()</code> or the <code>scan_\*()</code> functions 
