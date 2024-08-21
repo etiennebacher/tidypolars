@@ -16,14 +16,18 @@ knitr::opts_chunk$set(
 
 ```{css, echo=FALSE}
 .custom_note {
-  border: solid 3px #08505e;
-  background-color: #0b788e;
+  border: solid 3px #0b788e;
+  background-color: #08505e;
   padding: 5px;
   margin-bottom: 10px;
   border-radius: 3px;
 }
 .custom_note > p, .custom_note > p > code {
   color: white;
+}
+
+.custom_note > p > code > a:any-link {
+	text-decoration-color: white;
 }
 ```
 
@@ -33,10 +37,6 @@ Using `tidypolars` requires importing data as Polars `DataFrame`s or
 `scan_*_polars()` functions (such as `scan_parquet_polars()`) to import them as
 `LazyFrame`s. There are several functions to import various file formats, such
 as CSV, Parquet, or JSON.
-
-You could also read data with other packages and then convert it with
-`as_polars_df()` (or `as_polars_lf()` if you want to make it a 
-`LazyFrame`). 
 
 <div class="custom_note">
   <p><b>Note:</b> in examples or some tutorials, the functions <code>as_polars_df()</code>
