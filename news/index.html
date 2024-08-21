@@ -65,6 +65,7 @@
 <li><p>New functions to write Polars DataFrames to external files: <code>write_&lt;format&gt;_polars()</code> where <code>&lt;format&gt;</code> can be “csv”, “ipc”, “json”, “ndjson”, “parquet” (<a href="https://github.com/etiennebacher/tidypolars/issues/136" class="external-link">#136</a>).</p></li>
 <li><p>New function <code><a href="../reference/sink_ipc.html">sink_ipc()</a></code> that is similar to <code><a href="../reference/sink_parquet.html">sink_parquet()</a></code> and <code><a href="../reference/sink_csv.html">sink_csv()</a></code> but for IPC files (<a href="https://github.com/etiennebacher/tidypolars/issues/136" class="external-link">#136</a>).</p></li>
 <li><p><code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code> now throws a better error message when the user passes an external list to <code>.fns</code>. This works with <code>dplyr</code> but cannot work with <code>tidypolars</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/135" class="external-link">#135</a>).</p></li>
+<li><p>Added support for argument <code>.add</code> in <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code>.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
