@@ -84,10 +84,11 @@
   color: white;
 }
 </style>
-<p>The first thing to do when using <code>tidypolars</code> is to get
-some data as a Polars <code>DataFrame</code> or <code>LazyFrame</code>.
-You can read files with the various <code>read_*_polars()</code>
-functions (such as <code><a href="../reference/from_parquet.html">read_parquet_polars()</a></code>) to import them as
+<p>Using <code>tidypolars</code> requires importing data as Polars
+<code>DataFrame</code>s or <code>LazyFrame</code>s. You can read files
+with the <a href="https://tidypolars.etiennebacher.com/reference/#import-data">various
+<code>read_*_polars()</code> functions</a> (such as
+<code><a href="../reference/from_parquet.html">read_parquet_polars()</a></code>) to import them as
 <code>DataFrame</code>s, or with <code>scan_*_polars()</code> functions
 (such as <code><a href="../reference/from_parquet.html">scan_parquet_polars()</a></code>) to import them as
 <code>LazyFrame</code>s. There are several functions to import various
@@ -97,12 +98,15 @@ file formats, such as CSV, Parquet, or JSON.</p>
 to make it a <code>LazyFrame</code>).</p>
 <div class="custom_note">
 <p>
-<b>Note: </b><code><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df()</a></code> and <code><a href="https://pola-rs.github.io/r-polars/man/as_polars_lf.html" class="external-link">as_polars_lf()</a></code>
-are merely convenience functions to quickly convert data to Polars,
-which is useful for showcase purposes. However, this conversion from R
-to Polars has some cost and it hurts the performance. In real-life
-usecases, be sure to load the data with the <code>read_*()</code> or the
-<code>scan_*()</code> functions mentioned above.
+<b>Note:</b> in examples or some tutorials, the functions
+<code><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df()</a></code> and <code><a href="https://pola-rs.github.io/r-polars/man/as_polars_lf.html" class="external-link">as_polars_lf()</a></code> are
+sometimes used to convert an existing R data.frame to a Polars DataFrame
+or LazyFrame. Those are merely convenience functions to quickly convert
+an existing dataset to Polars, which is useful for showcase purposes.
+However, this conversion from R to Polars has some cost and it hurts the
+performance. In real-life usecases, be sure to load the data with the
+<code>read_*()</code> or the <code>scan_*()</code> functions mentioned
+above.
 </p>
 </div>
 <p>Here, we’re going to use the <code>who</code> dataset that is
