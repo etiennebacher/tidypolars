@@ -31,7 +31,7 @@ their existing `tidyverse` code while using `polars` in the background
 to benefit from large performance gains. The only thing that needs to
 change is the way data is imported in the R session.
 
-See the[“Getting started”
+See the [“Getting started”
 vignette](https://tidypolars.etiennebacher.com/articles/tidypolars) for
 a gentle introduction to `tidypolars`.
 
