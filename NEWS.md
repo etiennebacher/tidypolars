@@ -42,6 +42,8 @@
   list to `.fns`. This works with `dplyr` but cannot work with `tidypolars`
   (#135).
   
+* Added support for argument `.add` in `group_by()`.
+  
 ## Bug fixes
 
 * `stringr::str_sub()` now works when both `start` and `end` are negative.

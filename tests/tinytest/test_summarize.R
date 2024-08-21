@@ -86,3 +86,17 @@ expect_equal(
   foobar(test),
   data.frame(foo = "a")
 )
+
+# check .add argument of group_by works
+
+test <- polars::pl$DataFrame(mtcars)
+
+expect_equal(
+  test |>
+    group_by(cyl, am, maintain_order = TRUE) |>
+    summarize(foo = sum(drat)),
+  test |>
+    group_by(cyl, maintain_order = TRUE) |>
+    group_by(am, maintain_order = TRUE, .add = TRUE) |>
+    summarize(foo = sum(drat))
+)
