@@ -13,6 +13,8 @@ describe_optimized_plan(.data)
 \item{.data}{A Polars LazyFrame}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
 Those functions are deprecated as of tidypolars 0.10.0, they will be removed
 in a future update. Use \code{explain()} with \code{optimized = FALSE} to recover the
 output of \code{describe_plan()}, and with \code{optimized = TRUE} (the default) to
