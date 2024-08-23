@@ -9,6 +9,6 @@ expect_warning(
       pull(statistic),
     c("count", "null_count", "mean", "std", "min", "25%", "50%", "75%", "max")
   ),
-  "Use `summary()` with the same arguments instead.",
+  "Please use `summary()` with the same arguments instead.",
   fixed = TRUE
 )
