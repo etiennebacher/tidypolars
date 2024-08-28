@@ -13,6 +13,8 @@ describe(.data, percentiles = c(0.25, 0.75))
 statistics. All values must be between 0 and 1 (\code{NULL} are ignored).}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
 This function is deprecated as of tidypolars 0.10.0, it will be removed in
 a future update. Use \code{summary()} with the same arguments instead.
 }

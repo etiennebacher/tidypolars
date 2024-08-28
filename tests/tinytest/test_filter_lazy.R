@@ -268,4 +268,21 @@ expect_dim(
   1
 )
 
+# with external data.frame/list elements
+
+test <- polars::pl$LazyFrame(x = 1:3)
+test_df <- data.frame(x = 1:2)
+
+expect_dim(
+  test |>
+    filter(x %in% test_df$x),
+  c(2, 1)
+)
+
+expect_dim(
+  test |>
+    filter(x %in% test_df[["x"]]),
+  c(2, 1)
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

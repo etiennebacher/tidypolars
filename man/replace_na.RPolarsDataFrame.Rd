@@ -14,8 +14,7 @@
 
 \item{replace}{Either a scalar that will be used to replace \code{NA} in all
 columns, or a named list with the column name and the value that will be
-used to replace \code{NA} in it. \strong{The column type will be automatically
-converted to the type of the replacement value.}}
+used to replace \code{NA} in it.}
 
 \item{...}{Not used.}
 }
@@ -31,8 +30,5 @@ replace_na(pl_test, 0)
 
 # custom replacement per column
 replace_na(pl_test, list(x = 0, y = 999))
-
-# be careful to use the same type for the replacement and for the column!
-replace_na(pl_test, list(x = "a", y = "unknown"))
 \dontshow{\}) # examplesIf}
 }

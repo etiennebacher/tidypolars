@@ -27,7 +27,7 @@ library(dplyr, warn.conflicts = FALSE)
 library(dplyr, warn.conflicts = FALSE)
 
 filter(mtcars, am + gear > carb)
-mutate(mtcars, x = (qsec - mean(qsec) / sd(qsec)))
+mutate(mtcars, x = (qsec - mean(qsec)) / sd(qsec))
 mtcars |> 
   group_by(cyl) |> 
   summarize(x = mean(qsec) / sd(qsec))
@@ -53,7 +53,7 @@ translated to Polars syntax.
 However, there are some situations where this might not work, so this vignette
 explains the process and the limitations.
 
-# How does `tidypolars` translate R expressions into Polars expressions?
+## How does `tidypolars` translate R expressions into Polars expressions?
 
 When `tidypolars` receives an expression, it runs a function `translate()` 
 several times until all components are translated to their Polars equivalent. 
@@ -61,7 +61,7 @@ There are four possible components: single values, column names, external object
 and functions.
 
 
-## Single values, column names, and external objects
+### Single values, column names, and external objects
 
 If you pass a single value, like `x = 1` or `x = "a"`, it is wrapped into 
 `pl$lit()`. This is also the case for external objects with the difference that
@@ -76,7 +76,7 @@ x = {{ some_value }}  ->  x = pl$lit(*value*)
 x = mpg               ->  x = pl$col("mpg")
 ```
 
-## Functions
+### Functions
 
 
 Functions are split into two categories: built-in functions (i.e functions 
@@ -84,7 +84,7 @@ provided by base R or by other packages), and user-defined functions (UDF) that
 are written by the user (you). 
 
 
-### Built-in functions
+#### Built-in functions
 
 In the first case, `tidypolars` checks the function name and whether it has 
 already been translated internally. For example, if we call the R function 
@@ -96,7 +96,7 @@ or from `stringr` for example.
 Now that `tidypolars` knows that a translation of `mean()` exists, it parses
 the arguments in the call to translate them to the Polars syntax: internally,
 `x` is converted to `pl$col("x")` if there is a column `"x"` in the data. 
-Sometimes, additional arguments do not have their equivalent in Polars. This is
+Sometimes, additional arguments do not have an equivalent in Polars. This is
 the case for the argument `trim` here. In this case, `tidypolars` ignores
 this argument and warns the user:
 
@@ -109,8 +109,11 @@ mtcars |>
   mutate(x = mean(mpg, trim = 2))
 ```
 
+This behavior [can be changed](https://tidypolars.etiennebacher.com/reference/tidypolars-options.html) 
+to throw an error instead. 
 
-### User-defined functions
+
+#### User-defined functions
 
 User-defined functions (UDF) are more challenging. Indeed, it is technically 
 possible to inspect the code inside a UDF, but rewriting it to match Polars syntax
@@ -142,7 +145,7 @@ mtcars |>
 ```
 
 
-### Special case: `across()`
+#### Special case: `across()`
 
 [`across()`](https://dplyr.tidyverse.org/reference/across.html) is a very useful
 function that applies a function (or a list of functions) to a selection of 
@@ -180,7 +183,7 @@ mtcars |>
 ```
 
 
-## List of base R and `tidyverse` functions supported by `tidypolars` 
+### List of base R and `tidyverse` functions supported by `tidypolars` 
 
 
 ```{r echo=FALSE, message=FALSE}
@@ -225,6 +228,7 @@ out <- tribble(
   "`base`",             "`sort`", 
   "`base`",             "`sqrt`", 
   "`base`",             "`strptime`",
+  "`base`",             "`substr`",
   "`base`",             "`tan`", 
   "`base`",             "`tanh`",
   "`base`",             "`tolower`",
