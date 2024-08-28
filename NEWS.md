@@ -45,7 +45,6 @@
   (#135).
   
 * Added support for argument `.add` in `group_by()`.
->>>>>>> main
   
 ## Bug fixes
 
