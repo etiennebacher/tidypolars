@@ -92,6 +92,12 @@ write_csv_polars <- function(
 #'
 #' @inheritParams write_csv_polars
 #' @inheritParams sink_parquet
+#' @param partition_by Column(s) to partition by. A partitioned dataset will be
+#' written if this is specified.
+#' @param partition_chunk_size_bytes Approximate size to split DataFrames within
+#' a single partition when writing. Note this is calculated using the size of
+#' the DataFrame in memory - the size of the output file may differ depending
+#' on the file format / compression.
 #'
 #' @inherit write_csv_polars return
 #' @export
@@ -111,7 +117,9 @@ write_parquet_polars <- function(
     compression_level = 3,
     statistics = TRUE,
     row_group_size = NULL,
-    data_pagesize_limit = NULL
+    data_page_size = NULL,
+    partition_by = NULL,
+    partition_chunk_size_bytes = 4294967296
 ) {
 
   if (!inherits(.data, "RPolarsDataFrame")) {
@@ -130,7 +138,9 @@ write_parquet_polars <- function(
     compression_level = compression_level,
     statistics = statistics,
     row_group_size = row_group_size,
-    data_pagesize_limit = data_pagesize_limit
+    data_page_size = data_page_size,
+    partition_by = partition_by,
+    partition_chunk_size_bytes = partition_chunk_size_bytes
   )
 }
 
@@ -223,7 +233,7 @@ write_ipc_polars <- function(
   rlang::arg_match0(compression, values = c("uncompressed", "zstd", "lz4"))
   rlang::check_dots_empty()
 
-  .data$write_parquet(
+  .data$write_ipc(
     file,
     compression = compression,
     future = future

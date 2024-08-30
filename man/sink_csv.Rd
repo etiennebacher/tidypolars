@@ -82,8 +82,8 @@ minimal required memory (default is \code{TRUE}).}
 \item{predicate_pushdown}{Applies filters as early as possible at scan level
 (default is \code{TRUE}).}
 
-\item{projection_pushdown}{Select only the columns that are needed at the scan
-level (default is \code{TRUE}).}
+\item{projection_pushdown}{Select only the columns that are needed at the
+scan level (default is \code{TRUE}).}
 
 \item{simplify_expression}{Various optimizations, such as constant folding
 and replacing expensive operations with faster alternatives (default is
@@ -125,7 +125,7 @@ write.csv(fake_data, file = file_csv)
 
 # In a new R session, we could read this file as a LazyFrame, do some operations,
 # and write it to another CSV file without ever collecting it in the R session:
-polars::pl$scan_csv(file_csv) |>
+scan_csv_polars(file_csv) |>
   filter(cyl \%in\% c(4, 6), mpg > 22) |>
   mutate(
     hp_gear_ratio = hp / gear

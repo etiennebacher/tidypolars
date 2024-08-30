@@ -12,7 +12,7 @@ sink_parquet(
   compression_level = 3,
   statistics = FALSE,
   row_group_size = NULL,
-  data_pagesize_limit = NULL,
+  data_page_size = NULL,
   maintain_order = TRUE,
   type_coercion = TRUE,
   predicate_pushdown = TRUE,
@@ -56,7 +56,7 @@ compression means smaller files on disk.
 (default), the chunks of the DataFrame are used. Writing in smaller chunks
 may reduce memory pressure and improve writing speeds.}
 
-\item{data_pagesize_limit}{If \code{NULL} (default), the limit will be around 1MB.}
+\item{data_page_size}{If \code{NULL} (default), the limit will be around 1MB.}
 
 \item{maintain_order}{Whether maintain the order the data was processed
 (default is \code{TRUE}). Setting this to \code{FALSE} will be slightly faster.}
@@ -67,8 +67,8 @@ minimal required memory (default is \code{TRUE}).}
 \item{predicate_pushdown}{Applies filters as early as possible at scan level
 (default is \code{TRUE}).}
 
-\item{projection_pushdown}{Select only the columns that are needed at the scan
-level (default is \code{TRUE}).}
+\item{projection_pushdown}{Select only the columns that are needed at the
+scan level (default is \code{TRUE}).}
 
 \item{simplify_expression}{Various optimizations, such as constant folding
 and replacing expensive operations with faster alternatives (default is
@@ -110,7 +110,7 @@ write.csv(fake_data, file = file_csv)
 
 # In a new R session, we could read this file as a LazyFrame, do some operations,
 # and write it to a parquet file without ever collecting it in the R session:
-polars::pl$scan_csv(file_csv) |>
+scan_csv_polars(file_csv) |>
   filter(cyl \%in\% c(4, 6), mpg > 22) |>
   mutate(
     hp_gear_ratio = hp / gear
