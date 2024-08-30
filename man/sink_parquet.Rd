@@ -106,7 +106,7 @@ file_parquet <- tempfile(fileext = ".parquet")
 
 # Write some data in a CSV file
 fake_data <- do.call("rbind", rep(list(mtcars), 1000))
-write.csv(fake_data, file = file_csv)
+write.csv(fake_data, file = file_csv, row.names = FALSE)
 
 # In a new R session, we could read this file as a LazyFrame, do some operations,
 # and write it to a parquet file without ever collecting it in the R session:
