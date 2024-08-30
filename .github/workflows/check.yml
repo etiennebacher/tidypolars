@@ -37,11 +37,11 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
+      - name: Setup
+        uses: eddelbuettel/github-actions/r-ci-setup@master
+
       - name: Bootstrap
-        run: |
-          curl -OLs https://eddelbuettel.github.io/r-ci/run.sh
-          chmod 0755 run.sh
-          ./run.sh bootstrap
+        run: ./run.sh bootstrap
 
       - name: Install r-polars on Ubuntu
         if: matrix.os == 'ubuntu-latest'
