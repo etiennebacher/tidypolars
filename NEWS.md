@@ -1,5 +1,7 @@
 # tidypolars (development version)
 
+`tidypolars` requires `polars` >= 0.19.0.
+
 ## Breaking changes and deprecations
 
 * `describe()` is deprecated as of tidypolars 0.10.0 and will be removed in a 
