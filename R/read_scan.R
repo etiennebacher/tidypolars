@@ -17,16 +17,22 @@ read_parquet_polars <- function(
     row_index_name = NULL,
     row_index_offset = 0L,
     parallel = "auto",
-    hive_partitioning = TRUE,
+    hive_partitioning = NULL,
+    hive_schema = NULL,
+    try_parse_hive_dates = TRUE,
     glob = TRUE,
     rechunk = TRUE,
     low_memory = FALSE,
     storage_options = NULL,
     use_statistics = TRUE,
-    cache = TRUE
+    cache = TRUE,
+    include_file_paths = NULL
 ) {
 
-  rlang::arg_match0(parallel, values = c("auto", "columns", "row_groups", "none"))
+  rlang::arg_match0(
+    parallel,
+    values = c("auto", "columns", "row_groups", "prefiltered", "none")
+  )
   rlang::check_dots_empty()
 
   scan_parquet_polars(
@@ -36,12 +42,15 @@ read_parquet_polars <- function(
     row_index_offset = row_index_offset,
     parallel = parallel,
     hive_partitioning = hive_partitioning,
+    hive_schema = hive_schema,
+    try_parse_hive_dates = try_parse_hive_dates,
     glob = glob,
     rechunk = rechunk,
     low_memory = low_memory,
     storage_options = storage_options,
     use_statistics = use_statistics,
-    cache = cache
+    cache = cache,
+    include_file_paths = include_file_paths
   ) |>
     collect()
 }
@@ -56,13 +65,16 @@ scan_parquet_polars <- function(
     row_index_name = NULL,
     row_index_offset = 0L,
     parallel = "auto",
-    hive_partitioning = TRUE,
+    hive_partitioning = NULL,
+    hive_schema = NULL,
+    try_parse_hive_dates = TRUE,
     glob = TRUE,
     rechunk = FALSE,
     low_memory = FALSE,
     storage_options = NULL,
     use_statistics = TRUE,
-    cache = TRUE
+    cache = TRUE,
+    include_file_paths = NULL
 ) {
 
   rlang::arg_match0(parallel, values = c("auto", "columns", "row_groups", "none"))
@@ -75,12 +87,15 @@ scan_parquet_polars <- function(
     row_index_offset = row_index_offset,
     parallel = parallel,
     hive_partitioning = hive_partitioning,
+    hive_schema = hive_schema,
+    try_parse_hive_dates = try_parse_hive_dates,
     glob = glob,
     rechunk = rechunk,
     low_memory = low_memory,
     storage_options = storage_options,
     use_statistics = use_statistics,
-    cache = cache
+    cache = cache,
+    include_file_paths = include_file_paths
   )
 }
 
@@ -313,7 +328,8 @@ read_ipc_polars <- function(
     row_index_name = NULL,
     row_index_offset = 0L,
     rechunk = FALSE,
-    cache = TRUE
+    cache = TRUE,
+    include_file_paths = NULL
 ) {
 
   rlang::check_dots_empty()
@@ -325,7 +341,8 @@ read_ipc_polars <- function(
     row_index_name = row_index_name,
     row_index_offset = row_index_offset,
     rechunk = rechunk,
-    cache = cache
+    cache = cache,
+    include_file_paths = include_file_paths
   ) |>
     collect()
 }
@@ -341,7 +358,8 @@ scan_ipc_polars <- function(
     row_index_name = NULL,
     row_index_offset = 0L,
     rechunk = FALSE,
-    cache = TRUE
+    cache = TRUE,
+    include_file_paths = NULL
 ) {
 
   rlang::check_dots_empty()
@@ -353,6 +371,7 @@ scan_ipc_polars <- function(
     row_index_name = row_index_name,
     row_index_offset = row_index_offset,
     rechunk = rechunk,
-    cache = cache
+    cache = cache,
+    include_file_paths = include_file_paths
   )
 }
