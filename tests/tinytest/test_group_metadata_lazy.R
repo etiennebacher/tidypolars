@@ -32,4 +32,30 @@ expect_equal_lazy(
   data.frame(cyl = rep(c(4, 6, 8), each = 2L), am = rep(c(0, 1), 3))
 )
 
+# arg .add works
+
+expect_equal_lazy(
+  pl$LazyFrame(mtcars) |>
+    group_by(cyl, am) |>
+    group_by(vs) |>
+    group_vars(),
+  "vs"
+)
+
+expect_equal_lazy(
+  pl$LazyFrame(mtcars) |>
+    group_by(cyl, am) |>
+    group_by(vs, .add = TRUE) |>
+    group_vars(),
+  c("cyl", "am", "vs")
+)
+
+expect_equal_lazy(
+  pl$LazyFrame(mtcars) |>
+    group_by(cyl, am) |>
+    group_by(cyl, .add = TRUE) |>
+    group_vars(),
+  c("cyl", "am")
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

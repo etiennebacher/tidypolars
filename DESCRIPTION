@@ -23,6 +23,7 @@ Depends: R (>= 4.1.0)
 Imports: 
     dplyr,
     glue,
+    lifecycle,
     polars (>= 0.18.0),
     rlang,
     tidyr,

@@ -37,75 +37,11 @@ knitr::opts_chunk$set(
 `tidypolars` provides a [`polars`](https://rpolars.github.io/) backend for the
 `tidyverse`. The aim of `tidypolars` is to enable users to keep their existing
 `tidyverse` code while using `polars` in the background to benefit from large
-performance gains.
+performance gains. The only thing that needs to change is the way data is
+imported in the R session.
 
-See the example below and the ["Getting started" vignette](https://tidypolars.etiennebacher.com/articles/tidypolars) for a gentle 
-introduction to `tidypolars`.
-
-
-## Installation
-
-`tidypolars` is built on `polars`, which is not available on CRAN. This means 
-that `tidypolars` also can't be on CRAN. However, you can install it from 
-R-universe.
-
-```{r eval=FALSE}
-Sys.setenv(NOT_CRAN = "true")
-install.packages("tidypolars", repos = "https://community.r-multiverse.org")
-```
-
-
-## Example
-
-Suppose that you already have some code that uses `dplyr`:
-
-```{r}
-library(dplyr, warn.conflicts = FALSE)
-
-iris |> 
-  select(starts_with(c("Sep", "Pet"))) |> 
-  mutate(
-    petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-  ) |> 
-  filter(between(Sepal.Length, 4.5, 5.5)) |> 
-  head()
-```
-
-With `tidypolars`, you can provide a Polars `DataFrame` or `LazyFrame` and keep 
-the exact same code:
-
-```{r}
-library(tidypolars)
-
-iris |> 
-  as_polars_df() |> 
-  select(starts_with(c("Sep", "Pet"))) |> 
-  mutate(
-    petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-  ) |> 
-  filter(between(Sepal.Length, 4.5, 5.5)) |> 
-  head()
-```
-
-If you're used to the `tidyverse` functions and syntax, this will feel much 
-easier to read than the pure `polars` syntax:
-
-```{r}
-library(polars)
-
-# polars syntax
-pl$DataFrame(iris)$
-  select(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))$
-  with_columns(
-    pl$when(
-      (pl$col("Petal.Length") / pl$col("Petal.Width") > 3)
-    )$then(pl$lit("long"))$
-      otherwise(pl$lit("large"))$
-      alias("petal_type")
-  )$
-  filter(pl$col("Sepal.Length")$is_between(4.5, 5.5))$
-  head(6)
-```
+See the ["Getting started" vignette](https://tidypolars.etiennebacher.com/articles/tidypolars) 
+for a gentle introduction to `tidypolars`.
 
 Since most of the work is rewriting `tidyverse` code into `polars` syntax, 
 `tidypolars` and `polars` have very similar performance.
@@ -113,12 +49,16 @@ Since most of the work is rewriting `tidyverse` code into `polars` syntax,
 <details>
 <summary>Click to see a small benchmark</summary>
 
-For more serious benchmarks about `polars`, take a look at [DuckDB
-benchmarks](https://duckdblabs.github.io/db-benchmark/).
+The main purpose of this benchmark is to show that `polars` and `tidypolars` are
+close and to give an idea of the performance. For more thorough, representative 
+benchmarks about `polars`, take a look at [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/) instead.
 
 ```{r}
 library(collapse, warn.conflicts = FALSE)
+library(dplyr, warn.conflicts = FALSE)
 library(dtplyr)
+library(polars)
+library(tidypolars)
 
 large_iris <- data.table::rbindlist(rep(list(iris), 100000))
 large_iris_pl <- as_polars_lf(large_iris)
@@ -183,6 +123,18 @@ bench::mark(
 # Rust code.
 ```
 </details>
+
+
+## Installation
+
+`tidypolars` is built on `polars`, which is not available on CRAN. This means 
+that `tidypolars` also can't be on CRAN. However, you can install it from 
+R-universe.
+
+```{r eval=FALSE}
+Sys.setenv(NOT_CRAN = "true")
+install.packages("tidypolars", repos = "https://community.r-multiverse.org")
+```
 
 
 ## Contributing
