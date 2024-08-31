@@ -167,7 +167,9 @@ Click to see a small benchmark
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p><code>tidypolars</code> is built on <code>polars</code>, which is not available on CRAN. This means that <code>tidypolars</code> also can’t be on CRAN. However, you can install it from R-universe.</p>
-<p><code>{r eval=FALSE} Sys.setenv(NOT_CRAN = "true") install.packages("tidypolars", repos = "https://community.r-multiverse.org")</code></p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>NOT_CRAN <span class="op">=</span> <span class="st">"true"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"tidypolars"</span>, repos <span class="op">=</span> <span class="st">"https://community.r-multiverse.org"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
