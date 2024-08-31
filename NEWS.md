@@ -14,6 +14,7 @@
 * In `sink_parquet()` and `sink_csv()`, all arguments except for `.data` and 
   `path` must be named (#136).
   
+  
 ## New features
 
 * Add support for more functions:
