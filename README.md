@@ -138,7 +138,7 @@ bench::mark(
 that `tidypolars` also can't be on CRAN. However, you can install it from 
 R-universe.
 
-```{r eval=FALSE}
+``` r
 Sys.setenv(NOT_CRAN = "true")
 install.packages("tidypolars", repos = "https://community.r-multiverse.org")
 ```
