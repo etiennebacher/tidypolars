@@ -23,6 +23,8 @@
 * Better error message when a function can come from several packages but only
   one version is translated (#130).
   
+* `row_number()` now works without argument (#131).
+
 * New functions to import data as Polars DataFrames and LazyFrames (#136):
 
   * `read_<format>_polars()` to import data as a Polars DataFrame;

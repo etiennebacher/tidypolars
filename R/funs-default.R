@@ -540,11 +540,12 @@ pl_round <- function(x, digits = 0, ...) {
   x$round(decimals = digits)
 }
 
-pl_row_number_dplyr <- function(x) {
-  if (missing(x)) {
-    abort("No translation (yet) for `row_number()` when `x` is missing")
+pl_row_number_dplyr <- function(x = NULL) {
+  if (is.null(x)) {
+    pl$int_range(start = 1, pl$len() + 1)
+  } else {
+    x$rank(method = "ordinal")
   }
-  x$rank(method = "ordinal")
 }
 
 pl_sample <- function(x, size = NULL, replace = FALSE, ...) {

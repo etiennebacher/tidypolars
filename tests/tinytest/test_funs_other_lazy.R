@@ -486,6 +486,13 @@ expect_equal_lazy(
   c(rep(NA, 5), 1)
 )
 
+test2 <- polars::pl$LazyFrame(x = numeric(0), y = numeric(0))
+
+expect_dim(
+  test2 |> mutate(foo = dense_rank(x)),
+  c(0, 3)
+)
+
 # row_number
 
 test <- polars::pl$LazyFrame(x = c(5, 1, 3, 2, 2, NA), y = c(rep(NA, 5), 1))
@@ -504,9 +511,11 @@ expect_equal_lazy(
   c(rep(NA, 5), 1)
 )
 
-expect_error_lazy(
-  test |> mutate(foo = row_number()),
-  "No translation"
+expect_equal_lazy(
+  test |>
+    mutate(foo = row_number()) |>
+    pull(foo),
+  1:6
 )
 
 test2 <- polars::pl$LazyFrame(
@@ -528,6 +537,54 @@ expect_equal_lazy(
     filter(min_rank(x) == 1) |>
     pull(x),
   rep(1, 5)
+)
+
+expect_equal_lazy(
+  test2 |>
+    group_by(grp) |>
+    mutate(foo = row_number()) |>
+    pull(foo),
+  rep(1:3, 3)
+)
+
+test3 <- polars::pl$LazyFrame(x = numeric(0), y = numeric(0))
+
+expect_dim(
+  test3 |> mutate(foo = row_number()),
+  c(0, 3)
+)
+
+# row_number with random values and aggregation based on row index just to be sure
+
+set.seed(123)
+test4 <- polars::pl$LazyFrame(
+  grp = sample(1:5, 10, replace = TRUE),
+  val = 1:10
+)
+
+expect_equal_lazy(
+  test4 |>
+    mutate(
+      rn = row_number(),
+      .by = grp
+    ) |>
+    summarize(
+      foo = sum(val),
+      .by = rn
+    ) |>
+    arrange(rn) |>
+    as_tibble(),
+  test4 |>
+    as_tibble() |>
+    mutate(
+      rn = row_number(),
+      .by = grp
+    ) |>
+    summarize(
+      foo = sum(val),
+      .by = rn
+    ),
+  check.attributes = FALSE
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
