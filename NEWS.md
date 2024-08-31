@@ -1,3 +1,11 @@
+# tidypolars 0.10.1
+
+## Bug fixes
+
+* Do not error when handling columns with datatype `Null`. Note that converting
+  those columns to R with `as.data.frame()`, `as_tibble()`, or `collect()` is 
+  still an issue as of `polars` 0.19.1.
+
 # tidypolars 0.10.0
 
 `tidypolars` requires `polars` >= 0.19.1.

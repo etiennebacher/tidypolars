@@ -52,9 +52,19 @@ tidyselect_new_vars <- function(.cols, new_vars) {
 # data to recreate an empty DataFrame and convert it to R
 build_data_context <- function(.data) {
   schema <- .data$schema
-  dat <- rep(list(NULL), length(schema))
+  dat <- rep(list(NA), length(schema))
   names(dat) <- names(schema)
-  pl$DataFrame(dat, schema = schema)$to_data_frame()
+  # TODO: use $to_data_frame() and remove the call to tibble when
+  # https://github.com/pola-rs/r-polars/issues/1216 is resolved
+  out <- pl$DataFrame(dat, schema = schema)$to_list()
+  out <- lapply(out, function(x) {
+    if (is.null(x)) {
+      NA
+    } else {
+      x
+    }
+  })
+  dplyr::tibble(!!!out)
 }
 
 
