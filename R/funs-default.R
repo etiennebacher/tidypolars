@@ -485,11 +485,13 @@ pl_n_distinct_dplyr <- function(..., na.rm = FALSE) {
       call = env_from_dots(...)
     )
   }
-  dots <- pl$struct(dots)
   if (isTRUE(na.rm)) {
-    dots$drop_nulls()$n_unique()
+    # https://stackoverflow.com/a/78888889/11598948
+    check_is_null <- lapply(dots, function(x) x$is_null())
+    check_any_is_null <- call2(pl$any_horizontal, !!!check_is_null) |> eval_bare()
+    pl$struct(dots)$filter(check_any_is_null$not())$n_unique()
   } else {
-    dots$n_unique()
+    pl$struct(dots)$n_unique()
   }
 }
 

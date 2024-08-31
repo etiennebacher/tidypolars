@@ -40,8 +40,8 @@ minimal required memory (default is \code{TRUE}).}
 \item{predicate_pushdown}{Applies filters as early as possible at scan level
 (default is \code{TRUE}).}
 
-\item{projection_pushdown}{Select only the columns that are needed at the scan
-level (default is \code{TRUE}).}
+\item{projection_pushdown}{Select only the columns that are needed at the
+scan level (default is \code{TRUE}).}
 
 \item{simplify_expression}{Various optimizations, such as constant folding
 and replacing expensive operations with faster alternatives (default is

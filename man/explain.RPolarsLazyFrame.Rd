@@ -30,8 +30,14 @@ query <- mtcars |>
   filter(cyl == 3) |>
   select(mpg)
 
-explain(query, optimized = FALSE)
+# unoptimized query plan:
+no_opt <- explain(query, optimized = FALSE)
+no_opt
 
-explain(query)
+# better printing with cat():
+cat(no_opt)
+
+# optimized query run by polars
+cat(explain(query))
 \dontshow{\}) # examplesIf}
 }

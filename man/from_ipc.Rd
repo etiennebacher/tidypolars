@@ -14,7 +14,8 @@ read_ipc_polars(
   row_index_name = NULL,
   row_index_offset = 0L,
   rechunk = FALSE,
-  cache = TRUE
+  cache = TRUE,
+  include_file_paths = NULL
 )
 
 scan_ipc_polars(
@@ -25,7 +26,8 @@ scan_ipc_polars(
   row_index_name = NULL,
   row_index_offset = 0L,
   rechunk = FALSE,
-  cache = TRUE
+  cache = TRUE,
+  include_file_paths = NULL
 )
 }
 \arguments{
@@ -50,6 +52,9 @@ the name is set).}
 the final DataFrame into contiguous memory chunks.}
 
 \item{cache}{Cache the result after reading.}
+
+\item{include_file_paths}{Character value indicating the column name that will
+include the path of the source file(s).}
 }
 \description{
 \code{read_ipc_polars()} imports the data as a Polars DataFrame.

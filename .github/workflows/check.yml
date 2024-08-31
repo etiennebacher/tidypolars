@@ -37,20 +37,16 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
+      - name: Setup
+        uses: eddelbuettel/github-actions/r-ci-setup@master
+
       - name: Bootstrap
+        run: ./run.sh bootstrap
+
+      - name: Install r-polars
         run: |
-          curl -OLs https://eddelbuettel.github.io/r-ci/run.sh
-          chmod 0755 run.sh
-          ./run.sh bootstrap
-
-      - name: Install r-polars on Ubuntu
-        if: matrix.os == 'ubuntu-latest'
-        run: install.packages("polars", repos = "https://rpolars.r-universe.dev/bin/linux/noble/4.4")
-        shell: Rscript {0}
-
-      - name: Install r-polars on Windows or macOS
-        if: matrix.os != 'ubuntu-latest'
-        run: install.packages("polars", repos = "https://rpolars.r-universe.dev")
+          Sys.setenv(NOT_CRAN = "true") # Enable installation with pre-built Rust library binary, or enable Rust caching
+          install.packages("polars", repos = "https://community.r-multiverse.org")
         shell: Rscript {0}
 
       - name: Dependencies
