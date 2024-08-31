@@ -10,6 +10,8 @@
 #' @param maintain_order Maintain row order. For performance reasons, this is
 #' `FALSE` by default). Setting it to `TRUE` can slow down the process with
 #' large datasets and prevents the use of streaming.
+#' @param .add When `FALSE` (default), `group_by()` will override existing
+#' groups. To add to the existing groups, use `.add = TRUE`.
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -26,7 +28,7 @@
 #' by_cyl |> filter(disp == max(disp))
 #'
 
-group_by.RPolarsDataFrame <- function(.data, ..., maintain_order = FALSE) {
+group_by.RPolarsDataFrame <- function(.data, ..., maintain_order = FALSE, .add = FALSE) {
   if (isTRUE(attributes(.data)$grp_type == "rowwise")) {
     rlang::abort(
       c(
@@ -37,6 +39,12 @@ group_by.RPolarsDataFrame <- function(.data, ..., maintain_order = FALSE) {
   }
 
   vars <- tidyselect_dots(.data, ...)
+
+  if (isTRUE(.add)) {
+    existing_groups <- attributes(.data)$pl_grps
+    vars <- unique(c(existing_groups, vars))
+  }
+
   if (length(vars) == 0) {
     return(.data)
   }

@@ -91,4 +91,18 @@ expect_equal_lazy(
   data.frame(foo = "a")
 )
 
+# check .add argument of group_by works
+
+test <- polars::pl$LazyFrame(mtcars)
+
+expect_equal_lazy(
+  test |>
+    group_by(cyl, am, maintain_order = TRUE) |>
+    summarize(foo = sum(drat)),
+  test |>
+    group_by(cyl, maintain_order = TRUE) |>
+    group_by(am, maintain_order = TRUE, .add = TRUE) |>
+    summarize(foo = sum(drat))
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
