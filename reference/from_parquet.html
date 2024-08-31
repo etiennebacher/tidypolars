@@ -9,7 +9,7 @@ scan_parquet_polars() imports the data as a Polars LazyFrame."><meta property="o
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,13 +54,16 @@ scan_parquet_polars() imports the data as a Polars LazyFrame."><meta property="o
 <span>  row_index_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_index_offset <span class="op">=</span> <span class="fl">0L</span>,</span>
 <span>  parallel <span class="op">=</span> <span class="st">"auto"</span>,</span>
-<span>  hive_partitioning <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  hive_partitioning <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  hive_schema <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  try_parse_hive_dates <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  glob <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  rechunk <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  low_memory <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  storage_options <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  use_statistics <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  cache <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  include_file_paths <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">scan_parquet_polars</span><span class="op">(</span></span>
@@ -70,13 +73,16 @@ scan_parquet_polars() imports the data as a Polars LazyFrame."><meta property="o
 <span>  row_index_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_index_offset <span class="op">=</span> <span class="fl">0L</span>,</span>
 <span>  parallel <span class="op">=</span> <span class="st">"auto"</span>,</span>
-<span>  hive_partitioning <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  hive_partitioning <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  hive_schema <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  try_parse_hive_dates <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  glob <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  rechunk <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  low_memory <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  storage_options <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  use_statistics <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  cache <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  include_file_paths <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -110,12 +116,25 @@ the name is set).</p></dd>
 <dt id="arg-parallel">parallel<a class="anchor" aria-label="anchor" href="#arg-parallel"></a></dt>
 <dd><p>This determines the direction of parallelism. <code>"auto"</code> will
 try to determine the optimal direction. Can be <code>"auto"</code>, <code>"columns"</code>,
-<code>"row_groups"</code>, or <code>"none"</code>.</p></dd>
+<code>"row_groups"</code>, <code>"prefiltered"</code>, or <code>"none"</code>. See 'Details'.</p></dd>
 
 
 <dt id="arg-hive-partitioning">hive_partitioning<a class="anchor" aria-label="anchor" href="#arg-hive-partitioning"></a></dt>
-<dd><p>Infer statistics and schema from hive partitioned URL
-and use them to prune reads.</p></dd>
+<dd><p>Infer statistics and schema from Hive partitioned URL
+and use them to prune reads. If <code>NULL</code> (default), it is automatically
+enabled when a single directory is passed, and otherwise disabled.</p></dd>
+
+
+<dt id="arg-hive-schema">hive_schema<a class="anchor" aria-label="anchor" href="#arg-hive-schema"></a></dt>
+<dd><p>A list containing the column names and data types of the
+columns by which the data is partitioned, e.g.
+<code>list(a = pl$String, b = pl$Float32)</code>. If <code>NULL</code> (default), the schema of
+the Hive partitions is inferred.</p></dd>
+
+
+<dt id="arg-try-parse-hive-dates">try_parse_hive_dates<a class="anchor" aria-label="anchor" href="#arg-try-parse-hive-dates"></a></dt>
+<dd><p>Whether to try parsing hive values as date/datetime
+types.</p></dd>
 
 
 <dt id="arg-glob">glob<a class="anchor" aria-label="anchor" href="#arg-glob"></a></dt>
@@ -145,9 +164,28 @@ can be skipped from reading.</p></dd>
 <dt id="arg-cache">cache<a class="anchor" aria-label="anchor" href="#arg-cache"></a></dt>
 <dd><p>Cache the result after reading.</p></dd>
 
+
+<dt id="arg-include-file-paths">include_file_paths<a class="anchor" aria-label="anchor" href="#arg-include-file-paths"></a></dt>
+<dd><p>Character value indicating the column name that will
+include the path of the source file(s).</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+
+<div class="section">
+<h3 id="on-parallel-strategies">On parallel strategies<a class="anchor" aria-label="anchor" href="#on-parallel-strategies"></a></h3>
+
+
+<p>The prefiltered strategy first evaluates the pushed-down predicates in
+parallel and determines a mask of which rows to read. Then, it parallelizes
+over both the columns and the row groups while filtering out rows that do not
+need to be read. This can provide significant speedups for large files (i.e.
+many row-groups) with a predicate that filters clustered rows or filters
+heavily. In other cases, prefiltered may slow down the scan compared other
+strategies.</p>
+<p>The prefiltered settings falls back to auto if no predicate is given.</p>
+</div>
 
 <div class="section">
 <h3 id="connecting-to-cloud-providers">Connecting to cloud providers<a class="anchor" aria-label="anchor" href="#connecting-to-cloud-providers"></a></h3>

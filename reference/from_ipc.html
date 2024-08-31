@@ -9,7 +9,7 @@ scan_ipc_polars() imports the data as a Polars LazyFrame."><meta property="og:im
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,7 +55,8 @@ scan_ipc_polars() imports the data as a Polars LazyFrame."><meta property="og:im
 <span>  row_index_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_index_offset <span class="op">=</span> <span class="fl">0L</span>,</span>
 <span>  rechunk <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  cache <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  include_file_paths <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">scan_ipc_polars</span><span class="op">(</span></span>
@@ -66,7 +67,8 @@ scan_ipc_polars() imports the data as a Polars LazyFrame."><meta property="og:im
 <span>  row_index_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_index_offset <span class="op">=</span> <span class="fl">0L</span>,</span>
 <span>  rechunk <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  cache <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  include_file_paths <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -110,6 +112,11 @@ the final DataFrame into contiguous memory chunks.</p></dd>
 
 <dt id="arg-cache">cache<a class="anchor" aria-label="anchor" href="#arg-cache"></a></dt>
 <dd><p>Cache the result after reading.</p></dd>
+
+
+<dt id="arg-include-file-paths">include_file_paths<a class="anchor" aria-label="anchor" href="#arg-include-file-paths"></a></dt>
+<dd><p>Character value indicating the column name that will
+include the path of the source file(s).</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,9 @@
 <span>  compression_level <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  statistics <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  row_group_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  data_pagesize_limit <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  data_page_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  partition_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  partition_chunk_size_bytes <span class="op">=</span> <span class="fl">4294967296</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -102,8 +104,20 @@ compression means smaller files on disk.</p><ul><li><p>"gzip" : min-level = 0, m
 may reduce memory pressure and improve writing speeds.</p></dd>
 
 
-<dt id="arg-data-pagesize-limit">data_pagesize_limit<a class="anchor" aria-label="anchor" href="#arg-data-pagesize-limit"></a></dt>
+<dt id="arg-data-page-size">data_page_size<a class="anchor" aria-label="anchor" href="#arg-data-page-size"></a></dt>
 <dd><p>If <code>NULL</code> (default), the limit will be around 1MB.</p></dd>
+
+
+<dt id="arg-partition-by">partition_by<a class="anchor" aria-label="anchor" href="#arg-partition-by"></a></dt>
+<dd><p>Column(s) to partition by. A partitioned dataset will be
+written if this is specified.</p></dd>
+
+
+<dt id="arg-partition-chunk-size-bytes">partition_chunk_size_bytes<a class="anchor" aria-label="anchor" href="#arg-partition-chunk-size-bytes"></a></dt>
+<dd><p>Approximate size to split DataFrames within
+a single partition when writing. Note this is calculated using the size of
+the DataFrame in memory - the size of the output file may differ depending
+on the file format / compression.</p></dd>
 
 </dl></div>
     <div class="section level2">

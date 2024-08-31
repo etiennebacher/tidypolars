@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,20 +38,22 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.10.0" id="tidypolars-0100">tidypolars 0.10.0<a class="anchor" aria-label="anchor" href="#tidypolars-0100"></a></h2>
+<p><code>tidypolars</code> requires <code>polars</code> &gt;= 0.19.1.</p>
 <div class="section level3">
-<h3 id="breaking-changes-and-deprecations-development-version">Breaking changes and deprecations<a class="anchor" aria-label="anchor" href="#breaking-changes-and-deprecations-development-version"></a></h3>
+<h3 id="breaking-changes-and-deprecations-0-10-0">Breaking changes and deprecations<a class="anchor" aria-label="anchor" href="#breaking-changes-and-deprecations-0-10-0"></a></h3>
 <ul><li><p><code><a href="../reference/describe.html">describe()</a></code> is deprecated as of tidypolars 0.10.0 and will be removed in a future update. Use <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> with the same arguments instead (<a href="https://github.com/etiennebacher/tidypolars/issues/127" class="external-link">#127</a>).</p></li>
 <li><p><code><a href="../reference/describe_plan.html">describe_plan()</a></code> and <code><a href="../reference/describe_plan.html">describe_optimized_plan()</a></code> are deprecated as of tidypolars 0.10.0 and will be removed in a future update. Use <code><a href="https://dplyr.tidyverse.org/reference/explain.html" class="external-link">explain()</a></code> with <code>optimized = TRUE/FALSE</code> instead (<a href="https://github.com/etiennebacher/tidypolars/issues/128" class="external-link">#128</a>).</p></li>
 <li><p>In <code><a href="../reference/sink_parquet.html">sink_parquet()</a></code> and <code><a href="../reference/sink_csv.html">sink_csv()</a></code>, all arguments except for <code>.data</code> and <code>path</code> must be named (<a href="https://github.com/etiennebacher/tidypolars/issues/136" class="external-link">#136</a>).</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="new-features-0-10-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-10-0"></a></h3>
 <ul><li>
 <p>Add support for more functions:</p>
 <ul><li>from package <code>base</code>: <code><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr()</a></code>.</li>
 </ul></li>
 <li><p>Better error message when a function can come from several packages but only one version is translated (<a href="https://github.com/etiennebacher/tidypolars/issues/130" class="external-link">#130</a>).</p></li>
+<li><p><code><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number()</a></code> now works without argument (<a href="https://github.com/etiennebacher/tidypolars/issues/131" class="external-link">#131</a>).</p></li>
 <li>
 <p>New functions to import data as Polars DataFrames and LazyFrames (<a href="https://github.com/etiennebacher/tidypolars/issues/136" class="external-link">#136</a>):</p>
 <ul><li>
@@ -68,7 +70,7 @@
 <li><p>Added support for argument <code>.add</code> in <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code>.</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
+<h3 id="bug-fixes-0-10-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-10-0"></a></h3>
 <ul><li><p><code><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">stringr::str_sub()</a></code> now works when both <code>start</code> and <code>end</code> are negative.</p></li>
 <li><p>Fixed a bug in <code><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub()</a></code> when <code>start</code> was greater than 1.</p></li>
 <li><p><code><a href="https://stringr.tidyverse.org/reference/str_starts.html" class="external-link">stringr::str_starts()</a></code> and <code><a href="https://stringr.tidyverse.org/reference/str_starts.html" class="external-link">stringr::str_ends()</a></code> now work with a regex.</p></li>
@@ -82,6 +84,7 @@
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">some_data_frame</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span></code></pre></div>
 </li>
 <li><p><code><a href="https://tidyr.tidyverse.org/reference/replace_na.html" class="external-link">replace_na()</a></code> no longer converts the column to the datatype of the replacement, e.g. <code>data |&gt; replace_na("a")</code> will error if the input data is numeric.</p></li>
+<li><p><code><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct()</a></code> now correctly applies the <code>na.rm</code> argument when several columns are passed as input (<a href="https://github.com/etiennebacher/tidypolars/issues/137" class="external-link">#137</a>).</p></li>
 </ul></div>
 </div>
     <div class="section level2">
