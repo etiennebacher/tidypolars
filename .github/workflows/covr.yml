@@ -21,7 +21,7 @@ env:
 
 jobs:
   ci:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     container:
       image: rocker/r2u:latest
