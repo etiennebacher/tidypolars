@@ -540,4 +540,35 @@ expect_equal_lazy(
   rep(1:3, 3)
 )
 
+# row_number with random values and aggregation based on row index just to be sure
+
+set.seed(123)
+test3 <- polars::pl$LazyFrame(
+  grp = sample(1:5, 10, replace = TRUE),
+  x = 1:10
+)
+
+expect_equal_lazy(
+  dat |>
+    mutate(
+      rn = row_number(),
+      .by = grp
+    ) |>
+    summarize(
+      foo = sum(val),
+      .by = rn
+    ),
+  dat |>
+    as_tibble() |>
+    mutate(
+      rn = row_number(),
+      .by = grp
+    ) |>
+    summarize(
+      foo = sum(val),
+      .by = rn
+    ),
+  check.attributes = FALSE
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
