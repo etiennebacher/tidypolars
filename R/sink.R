@@ -17,43 +17,41 @@
 #' * "gzip", "lzo", "brotli"
 #'
 #' @param compression_level The level of compression to use (default is 3). Only
-#' used if `compression` is one of "gzip", "brotli", or "zstd". Higher
-#' compression means smaller files on disk.
+#'   used if `compression` is one of "gzip", "brotli", or "zstd". Higher
+#'   compression means smaller files on disk.
 #'
 #' * "gzip" : min-level = 0, max-level = 10
 #' * "brotli" : min-level = 0, max-level = 11
 #' * "zstd" : min-level = 1, max-level = 22.
 #'
 #' @param statistics Whether to compute and write column statistics (default is
-#' `FALSE`). This requires more computations.
-
+#'   `FALSE`). This requires more computations.
 # TODO: need to clarify these 2 params. What do we mean by "chunks of the DataFrame".
 # Having a "Details" section where we explain how sinking/streaming works might
 # be useful.
 #' @param row_group_size Size of the row groups in number of rows. If `NULL`
-#' (default), the chunks of the DataFrame are used. Writing in smaller chunks
-#' may reduce memory pressure and improve writing speeds.
-#' @param data_pagesize_limit If `NULL` (default), the limit will be around 1MB.
-
+#'   (default), the chunks of the DataFrame are used. Writing in smaller chunks
+#'   may reduce memory pressure and improve writing speeds.
+#' @param data_page_size If `NULL` (default), the limit will be around 1MB.
 #' @param maintain_order Whether maintain the order the data was processed
-#' (default is `TRUE`). Setting this to `FALSE` will be slightly faster.
+#'   (default is `TRUE`). Setting this to `FALSE` will be slightly faster.
 #' @param type_coercion Coerce types such that operations succeed and run on
-#' minimal required memory (default is `TRUE`).
+#'   minimal required memory (default is `TRUE`).
 #' @param predicate_pushdown Applies filters as early as possible at scan level
-#' (default is `TRUE`).
-#' @param projection_pushdown Select only the columns that are needed at the scan
-#' level (default is `TRUE`).
+#'   (default is `TRUE`).
+#' @param projection_pushdown Select only the columns that are needed at the
+#'   scan level (default is `TRUE`).
 #' @param simplify_expression Various optimizations, such as constant folding
-#' and replacing expensive operations with faster alternatives (default is
-#' `TRUE`).
+#'   and replacing expensive operations with faster alternatives (default is
+#'   `TRUE`).
 #' @param slice_pushdown Only load the required slice from the scan. Don't
-#' materialize sliced outputs level. Don't materialize sliced outputs (default
-#' is `TRUE`).
+#'   materialize sliced outputs level. Don't materialize sliced outputs (default
+#'   is `TRUE`).
 #' @param no_optimization Sets the following optimizations to `FALSE`:
-#' `predicate_pushdown`, `projection_pushdown`,  `slice_pushdown`,
-#' `simplify_expression`. Default is `FALSE`.
+#'   `predicate_pushdown`, `projection_pushdown`,  `slice_pushdown`,
+#'   `simplify_expression`. Default is `FALSE`.
 #' @param inherit_optimization Use existing optimization settings regardless of
-#' the settings specified in this function call. Default is `FALSE`.
+#'   the settings specified in this function call. Default is `FALSE`.
 #'
 #' @return The input LazyFrame.
 #' @export
@@ -70,11 +68,11 @@
 #'
 #' # Write some data in a CSV file
 #' fake_data <- do.call("rbind", rep(list(mtcars), 1000))
-#' write.csv(fake_data, file = file_csv)
+#' write.csv(fake_data, file = file_csv, row.names = FALSE)
 #'
 #' # In a new R session, we could read this file as a LazyFrame, do some operations,
 #' # and write it to a parquet file without ever collecting it in the R session:
-#' polars::pl$scan_csv(file_csv) |>
+#' scan_csv_polars(file_csv) |>
 #'   filter(cyl %in% c(4, 6), mpg > 22) |>
 #'   mutate(
 #'     hp_gear_ratio = hp / gear
@@ -91,7 +89,7 @@ sink_parquet <- function(
     compression_level = 3,
     statistics = FALSE,
     row_group_size = NULL,
-    data_pagesize_limit = NULL,
+    data_page_size = NULL,
     maintain_order = TRUE,
     type_coercion = TRUE,
     predicate_pushdown = TRUE,
@@ -112,7 +110,7 @@ sink_parquet <- function(
     compression_level = compression_level,
     statistics = statistics,
     row_group_size = row_group_size,
-    data_pagesize_limit = data_pagesize_limit,
+    data_page_size = data_page_size,
     maintain_order = maintain_order,
     type_coercion = type_coercion,
     predicate_pushdown = predicate_pushdown,
@@ -175,11 +173,11 @@ sink_parquet <- function(
 #'
 #' # Write some data in a CSV file
 #' fake_data <- do.call("rbind", rep(list(mtcars), 1000))
-#' write.csv(fake_data, file = file_csv)
+#' write.csv(fake_data, file = file_csv, row.names = FALSE)
 #'
 #' # In a new R session, we could read this file as a LazyFrame, do some operations,
 #' # and write it to another CSV file without ever collecting it in the R session:
-#' polars::pl$scan_csv(file_csv) |>
+#' scan_csv_polars(file_csv) |>
 #'   filter(cyl %in% c(4, 6), mpg > 22) |>
 #'   mutate(
 #'     hp_gear_ratio = hp / gear

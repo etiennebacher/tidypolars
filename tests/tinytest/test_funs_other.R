@@ -68,6 +68,13 @@ expect_equal(
 
 expect_equal(
   test |>
+    summarize(foo = n_distinct(y, x, na.rm = TRUE)) |>
+    pull(foo),
+  3
+)
+
+expect_equal(
+  test |>
     summarize(foo = n_distinct(y), .by = x) |>
     pull(foo),
   c(2, 2)

@@ -21,16 +21,18 @@
 #'   filter(cyl == 3) |>
 #'   select(mpg)
 #'
-#' explain(query, optimized = FALSE)
+#' # unoptimized query plan:
+#' no_opt <- explain(query, optimized = FALSE)
+#' no_opt
 #'
-#' explain(query)
+#' # better printing with cat():
+#' cat(no_opt)
+#'
+#' # optimized query run by polars
+#' cat(explain(query))
 
 # nocov start
 explain.RPolarsLazyFrame <- function(x, optimized = TRUE, ...) {
-  if (isTRUE(optimized)) {
-    x$describe_optimized_plan()
-  } else {
-    invisible(x$describe_plan())
-  }
+  x$explain(optimized = optimized)
 }
 # nocov end

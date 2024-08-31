@@ -134,26 +134,13 @@ bench::mark(
 
 ## Installation
 
-`tidypolars` is built on `polars`, which is not available on CRAN. This
-means that `tidypolars` also can’t be on CRAN. However, you can install
-it from R-universe.
+`tidypolars` is built on `polars`, which is not available on CRAN. This means 
+that `tidypolars` also can't be on CRAN. However, you can install it from 
+R-universe.
 
-### Windows or macOS
-
-``` r
-install.packages(
-  'tidypolars', 
-  repos = c('https://etiennebacher.r-universe.dev', getOption("repos"))
-)
-```
-
-### Linux
-
-``` r
-install.packages(
-  'tidypolars', 
-  repos = c('https://etiennebacher.r-universe.dev/bin/linux/jammy/4.3', getOption("repos"))
-)
+```{r eval=FALSE}
+Sys.setenv(NOT_CRAN = "true")
+install.packages("tidypolars", repos = "https://community.r-multiverse.org")
 ```
 
 ## Contributing

@@ -12,7 +12,9 @@ write_parquet_polars(
   compression_level = 3,
   statistics = TRUE,
   row_group_size = NULL,
-  data_pagesize_limit = NULL
+  data_page_size = NULL,
+  partition_by = NULL,
+  partition_chunk_size_bytes = 4294967296
 )
 }
 \arguments{
@@ -48,7 +50,15 @@ compression means smaller files on disk.
 (default), the chunks of the DataFrame are used. Writing in smaller chunks
 may reduce memory pressure and improve writing speeds.}
 
-\item{data_pagesize_limit}{If \code{NULL} (default), the limit will be around 1MB.}
+\item{data_page_size}{If \code{NULL} (default), the limit will be around 1MB.}
+
+\item{partition_by}{Column(s) to partition by. A partitioned dataset will be
+written if this is specified.}
+
+\item{partition_chunk_size_bytes}{Approximate size to split DataFrames within
+a single partition when writing. Note this is calculated using the size of
+the DataFrame in memory - the size of the output file may differ depending
+on the file format / compression.}
 }
 \value{
 The input DataFrame.
