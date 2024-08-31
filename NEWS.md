@@ -1,6 +1,6 @@
 # tidypolars (development version)
 
-`tidypolars` requires `polars` >= 0.19.0.
+`tidypolars` requires `polars` >= 0.19.1.
 
 ## Breaking changes and deprecations
 
@@ -13,7 +13,6 @@
   
 * In `sink_parquet()` and `sink_csv()`, all arguments except for `.data` and 
   `path` must be named (#136).
-  
   
 ## New features
 

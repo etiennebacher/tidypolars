@@ -30,7 +30,7 @@ jobs:
       - name: SessionInfo
         run: R -q -e 'sessionInfo()'
       - name: Package Dependencies
-        run: R -q -e 'remotes::install_deps(".", repos = c("https://rpolars.r-universe.dev/bin/linux/noble/4.4", getOption("repos")), dependencies=TRUE, method = "libcurl")'
+        run: R -q -e 'remotes::install_deps(".", repos = c("https://community.r-multiverse.org", getOption("repos")), dependencies=TRUE, method = "libcurl")'
 
       - name: Test coverage
         run: |
