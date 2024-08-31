@@ -482,6 +482,13 @@ expect_equal(
   c(rep(NA, 5), 1)
 )
 
+test2 <- polars::pl$DataFrame(x = numeric(0), y = numeric(0))
+
+expect_dim(
+  test2 |> mutate(foo = dense_rank(x)),
+  c(0, 3)
+)
+
 # row_number
 
 test <- polars::pl$DataFrame(x = c(5, 1, 3, 2, 2, NA), y = c(rep(NA, 5), 1))
@@ -536,16 +543,23 @@ expect_equal(
   rep(1:3, 3)
 )
 
+test3 <- polars::pl$DataFrame(x = numeric(0), y = numeric(0))
+
+expect_dim(
+  test3 |> mutate(foo = row_number()),
+  c(0, 3)
+)
+
 # row_number with random values and aggregation based on row index just to be sure
 
 set.seed(123)
-test3 <- polars::pl$DataFrame(
+test4 <- polars::pl$DataFrame(
   grp = sample(1:5, 10, replace = TRUE),
-  x = 1:10
+  val = 1:10
 )
 
 expect_equal(
-  dat |>
+  test4 |>
     mutate(
       rn = row_number(),
       .by = grp
@@ -553,8 +567,10 @@ expect_equal(
     summarize(
       foo = sum(val),
       .by = rn
-    ),
-  dat |>
+    ) |>
+    arrange(rn) |>
+    as_tibble(),
+  test4 |>
     as_tibble() |>
     mutate(
       rn = row_number(),
