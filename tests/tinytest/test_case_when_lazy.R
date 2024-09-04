@@ -64,4 +64,16 @@ expect_equal_lazy(
   c("foo", "foo", NA, "foo", NA)
 )
 
+# evaluation of external objects works
+
+foo <<- "a"
+foo2 <<- "b"
+
+expect_equal_lazy(
+  test |>
+    mutate(y = case_when(x1 %in% foo ~ "foo", x1 %in% foo2 ~ "foo2", .default = x1)) |>
+    pull(y),
+  c("foo", "foo", "foo2", "foo", "c")
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

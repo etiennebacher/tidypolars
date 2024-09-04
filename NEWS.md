@@ -1,3 +1,10 @@
+# tidypolars (development version)
+
+## Bug fixes
+
+* Using an external object in `case_when()`, `ifelse()` and `ifelse()` now works.
+
+
 # tidypolars 0.10.1
 
 ## Bug fixes

@@ -86,7 +86,13 @@ translate_dots <- function(.data, ..., env, caller) {
 #' @return A full polars expression
 #' @noRd
 
-translate_expr <- function(.data, quo, new_vars = NULL, env, caller) {
+translate_expr <- function(
+    .data,
+    quo,
+    new_vars = NULL,
+    env,
+    caller = rlang::caller_env(2)
+) {
 
   if (!is_quosure(quo)) {
     quo <- enquo(quo)
