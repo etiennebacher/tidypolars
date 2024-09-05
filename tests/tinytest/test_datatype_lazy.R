@@ -1,4 +1,4 @@
-### [GENERATED AUTOMATICALLY] Update test-datatype.R instead.
+### [GENERATED AUTOMATICALLY] Update test_datatype.R instead.
 
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 

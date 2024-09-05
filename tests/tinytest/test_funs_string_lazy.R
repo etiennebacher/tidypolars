@@ -420,9 +420,31 @@ expect_equal_lazy(
 )
 
 expect_equal_lazy(
-  mutate(test, foo = str_sub(x1, -10, -2)) |>
+  mutate(test, foo = str_sub(x1, -1)) |>
     pull(foo),
-  mutate(test_df, foo = str_sub(x1, -10, -2)) |>
+  mutate(test_df, foo = str_sub(x1, -1)) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  mutate(test, foo = str_sub(x1, 1, -2)) |>
+    pull(foo),
+  mutate(test_df, foo = str_sub(x1, 1, -2)) |>
+    pull(foo)
+)
+
+expect_equal_lazy(
+  mutate(test, foo = str_sub(x1, -3, -2)) |>
+    pull(foo),
+  mutate(test_df, foo = str_sub(x1, -3, -2)) |>
+    pull(foo)
+)
+
+# end = -1 is a special value
+expect_equal_lazy(
+  mutate(test, foo = str_sub(x1, -3, -1)) |>
+    pull(foo),
+  mutate(test_df, foo = str_sub(x1, -3, -1)) |>
     pull(foo)
 )
 

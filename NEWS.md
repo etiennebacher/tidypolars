@@ -4,6 +4,7 @@
 
 * Using an external object in `case_when()`, `ifelse()` and `ifelse()` now works.
 
+* `str_sub()` doesn't error anymore when `start` is positive and `end` is negative.
 
 # tidypolars 0.10.1
 

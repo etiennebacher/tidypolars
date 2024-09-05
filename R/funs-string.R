@@ -181,11 +181,14 @@ pl_str_sub_stringr <- function(string, start, end = NULL, ...) {
   }
   if (is.null(end)) {
     length <- NULL
-  } else {
+  } else if (end >= 0) {
     length <- end - start
-    if (end < 0) {
-      length <- length + 1
-    }
+  } else if (end == -1) {
+    length <- end - start + 1
+  } else if (end < -1) {
+    end <- end + 1
+    # Do not make this the default because I guess it's more expensive
+    return(string$str$slice(start)$str$head(end))
   }
   string$str$slice(start, length)
 }
