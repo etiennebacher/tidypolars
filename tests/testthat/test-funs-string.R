@@ -1,7 +1,7 @@
 test_that("str_to_lower() works", {
-  quickcheck::for_all(
+  for_all(
     tests = 20,
-    string = quickcheck::character_(),
+    string = character_(),
     property = function(string, fun) {
       test_df <- data.frame(x1 = string)
       test <- pl$DataFrame(x1 = string)
@@ -17,9 +17,9 @@ test_that("str_to_lower() works", {
 })
 
 test_that("str_to_upper() works", {
-  quickcheck::for_all(
+  for_all(
     tests = 20,
-    string = quickcheck::character_(),
+    string = character_(),
     property = function(string, fun) {
       test_df <- data.frame(x1 = string)
       test <- pl$DataFrame(x1 = string)
@@ -35,9 +35,9 @@ test_that("str_to_upper() works", {
 })
 
 test_that("paste() and paste0() work", {
-  quickcheck::for_all(
+  for_all(
     tests = 20,
-    string = quickcheck::character_(),
+    string = character_(),
     property = function(string, fun) {
       test_df <- data.frame(x1 = string)
       test <- pl$DataFrame(x1 = string)
