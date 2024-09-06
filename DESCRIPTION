@@ -37,10 +37,13 @@ Suggests:
     jsonlite,
     lubridate,
     nanoparquet,
+    quickcheck,
     rmarkdown,
     rstudioapi,
     tibble,
-    tinytest
+    tinytest,
+    testthat (>= 3.0.0)
 Remotes:
     markvanderloo/tinytest/pkg
 VignetteBuilder: knitr
+Config/testthat/edition: 3
