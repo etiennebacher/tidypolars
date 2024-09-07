@@ -32,14 +32,12 @@ pl_str_detect_stringr <- function(string, pattern, negate = FALSE, ...) {
 }
 
 pl_str_dup_stringr <- function(string, times) {
-  if (inherits(times, "RPolarsExpr")) {
-    return(string$repeat_by(times)$list$join(""))
-  } else if (is.na(times) || times < 0) {
-    return(NA_character_)
-  } else if (times == 0) {
-    return(pl$lit(""))
-  }
-  call2(pl$concat_str, !!!rep(list(string), times)) |> eval_bare()
+  times <- polars_expr_to_r(times)
+  times[times < 0 | is.na(times)] <- NA
+  pl$
+    when(pl$lit(times)$is_null())$
+    then(pl$lit(NA))$
+    otherwise(string$repeat_by(pl$lit(times))$list$join(""))
 }
 
 # TODO: this requires https://github.com/pola-rs/polars/issues/11455
@@ -181,6 +179,9 @@ pl_str_starts_stringr <- function(string, pattern, negate = FALSE, ...) {
 
 pl_str_sub_stringr <- function(string, start, end = NULL, ...) {
   check_empty_dots(...)
+  start <- polars_expr_to_r(start)
+  end <- polars_expr_to_r(end)
+
   if (is.na(start) || (!is.null(end) && is.na(end))) {
     return(pl$lit(NA_character_))
   }

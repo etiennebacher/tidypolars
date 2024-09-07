@@ -3,8 +3,8 @@ library(stringr)
 
 test_that("paste() and paste0() work", {
   for_all(
-    tests = 20,
-    string = character_(),
+    tests = 40,
+    string = character_(any_na = TRUE),
     property = function(string, fun) {
       test_df <- data.frame(x1 = string)
       test <- pl$DataFrame(x1 = string)
@@ -42,8 +42,8 @@ test_that("paste() and paste0() work", {
 
 patrick::with_parameters_test_that("several non-regex functions work", {
   for_all(
-    tests = 20,
-    string = character_(),
+    tests = 40,
+    string = character_(any_na = TRUE),
     property = function(string) {
       test_df <- data.frame(x1 = string)
       test <- pl$DataFrame(x1 = string)
@@ -57,13 +57,13 @@ patrick::with_parameters_test_that("several non-regex functions work", {
       )
     }
   )
-}, fun = c("str_to_upper", "str_to_lower", "str_length"))
+}, fun = c("str_to_upper", "str_to_lower", "str_length", "str_squish"))
 
 
 test_that("str_trim() works", {
   for_all(
-    tests = 20,
-    string = character_(),
+    tests = 40,
+    string = character_(any_na = TRUE),
     side = quickcheck::one_of(constant("both"), constant("left"), constant("right")),
     property = function(string, side) {
       test_df <- data.frame(x1 = string)
@@ -88,10 +88,10 @@ test_that("str_trim() works", {
 
 test_that("str_pad() works", {
   for_all(
-    tests = 20,
-    string = character_(),
-    pad = character_(),
-    width = numeric_(),
+    tests = 40,
+    string = character_(any_na = TRUE),
+    pad = character_(any_na = TRUE),
+    width = numeric_(any_na = TRUE),
     # can't use "both" in polars
     side = quickcheck::one_of(constant("left"), constant("right")),
     property = function(string, side, pad, width) {
@@ -107,3 +107,43 @@ test_that("str_pad() works", {
     }
   )
 })
+
+test_that("str_dup() works", {
+  for_all(
+    tests = 20,
+    string = character_(any_na = TRUE),
+    # Very high numbers crash the session, I guess because of stringr
+    times = numeric_bounded(-10000, 10000, any_na = TRUE),
+    property = function(string, times) {
+      test_df <- data.frame(x1 = string)
+      test <- pl$DataFrame(x1 = string)
+
+      expect_equal_or_both_error(
+        mutate(test, foo = str_dup(x1, times = times)) |>
+          pull(foo),
+        mutate(test_df, foo = str_dup(x1, times = times)) |>
+          pull(foo)
+      )
+    }
+  )
+})
+
+# test_that("str_sub() works", {
+#   for_all(
+#     tests = 40,
+#     string = character_(any_na = TRUE),
+#     start = numeric_(any_na = TRUE),
+#     end = numeric_(any_na = TRUE),
+#     property = function(string, start, end) {
+#       test_df <- data.frame(x1 = string)
+#       test <- pl$DataFrame(x1 = string)
+#
+#       expect_equal_or_both_error(
+#         mutate(test, foo = str_sub(x1, start, end)) |>
+#           pull(foo),
+#         mutate(test_df, foo = str_sub(x1, start, end)) |>
+#           pull(foo)
+#       )
+#     }
+#   )
+# })

@@ -1,3 +1,5 @@
+library(lubridate)
+
 patrick::with_parameters_test_that("extracting date components works", {
   for_all(
     tests = 20,
