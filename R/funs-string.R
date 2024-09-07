@@ -92,12 +92,22 @@ pl_nchar <- pl_str_length_stringr
 
 pl_str_pad_stringr <- function(string, width, side = "left", pad = " ", use_width = TRUE, ...) {
   check_empty_dots(...)
+  side <- polars_expr_to_r(side)
+  width <- polars_expr_to_r(width)
+  pad <- polars_expr_to_r(pad)
+
   if (isFALSE(use_width)) {
     abort(
       '`str_pad()` doesn\'t work in a Polars DataFrame when `use_width = FALSE`',
       class = "tidypolars_error"
     )
   }
+
+  # follow stringr::str_pad()
+  if (width <= 0) {
+    return(string)
+  }
+
   switch(
     side,
     "both" = abort(
@@ -250,6 +260,8 @@ pl_toTitleCase <- pl_str_to_title_stringr
 
 pl_str_trim_stringr <- function(string, side = "both", ...) {
   check_empty_dots(...)
+  side <- polars_expr_to_r(side)
+
   switch(
     side,
     "both" = string$str$strip_chars(),

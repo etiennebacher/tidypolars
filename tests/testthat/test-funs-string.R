@@ -1,38 +1,5 @@
-test_that("str_to_lower() works", {
-  for_all(
-    tests = 20,
-    string = character_(),
-    property = function(string, fun) {
-      test_df <- data.frame(x1 = string)
-      test <- pl$DataFrame(x1 = string)
-
-      testthat::expect_equal(
-        mutate(test, foo = str_to_lower(x1)) |>
-          pull(foo),
-        mutate(test_df, foo = str_to_lower(x1)) |>
-          pull(foo)
-      )
-    }
-  )
-})
-
-test_that("str_to_upper() works", {
-  for_all(
-    tests = 20,
-    string = character_(),
-    property = function(string, fun) {
-      test_df <- data.frame(x1 = string)
-      test <- pl$DataFrame(x1 = string)
-
-      testthat::expect_equal(
-        mutate(test, foo = str_to_upper(x1)) |>
-          pull(foo),
-        mutate(test_df, foo = str_to_upper(x1)) |>
-          pull(foo)
-      )
-    }
-  )
-})
+library(quickcheck)
+library(stringr)
 
 test_that("paste() and paste0() work", {
   for_all(
@@ -73,3 +40,70 @@ test_that("paste() and paste0() work", {
   )
 })
 
+patrick::with_parameters_test_that("several non-regex functions work", {
+  for_all(
+    tests = 20,
+    string = character_(),
+    property = function(string) {
+      test_df <- data.frame(x1 = string)
+      test <- pl$DataFrame(x1 = string)
+
+      pl_code <- paste0("mutate(test, foo = ", fun, "(string)) |> pull(foo)")
+      tv_code <- paste0("mutate(test_df, foo = ", fun, "(string)) |> pull(foo)")
+
+      testthat::expect_equal(
+        eval(parse(text = pl_code)),
+        eval(parse(text = tv_code)),
+      )
+    }
+  )
+}, fun = c("str_to_upper", "str_to_lower", "str_length"))
+
+
+test_that("str_trim() works", {
+  for_all(
+    tests = 20,
+    string = character_(),
+    side = quickcheck::one_of(constant("both"), constant("left"), constant("right")),
+    property = function(string, side) {
+      test_df <- data.frame(x1 = string)
+      test <- pl$DataFrame(x1 = string)
+
+      testthat::expect_equal(
+        mutate(test, foo = str_trim(x1)) |>
+          pull(foo),
+        mutate(test_df, foo = str_trim(x1)) |>
+          pull(foo)
+      )
+
+      testthat::expect_equal(
+        mutate(test, foo = str_trim(x1, side = side)) |>
+          pull(foo),
+        mutate(test_df, foo = str_trim(x1, side = side)) |>
+          pull(foo)
+      )
+    }
+  )
+})
+
+test_that("str_pad() works", {
+  for_all(
+    tests = 20,
+    string = character_(),
+    pad = character_(),
+    width = numeric_(),
+    # can't use "both" in polars
+    side = quickcheck::one_of(constant("left"), constant("right")),
+    property = function(string, side, pad, width) {
+      test_df <- data.frame(x1 = string)
+      test <- pl$DataFrame(x1 = string)
+
+      expect_equal_or_both_error(
+        mutate(test, foo = str_pad(x1, side = side, pad = pad, width = width)) |>
+          pull(foo),
+        mutate(test_df, foo = str_pad(x1, side = side, pad = pad, width = width)) |>
+          pull(foo)
+      )
+    }
+  )
+})

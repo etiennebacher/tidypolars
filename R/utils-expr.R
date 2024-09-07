@@ -849,3 +849,11 @@ check_pattern <- function(x) {
   }
   list(pattern = x, is_fixed = is_fixed, is_case_insensitive = is_case_insensitive)
 }
+
+polars_expr_to_r <- function(x) {
+  if (inherits(x, "RPolarsExpr")) {
+    x <- x$to_r()
+  } else {
+    x
+  }
+}
