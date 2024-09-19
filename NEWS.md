@@ -6,6 +6,10 @@
 
 * `str_sub()` doesn't error anymore when `start` is positive and `end` is negative.
 
+* `read_*_polars()` functions used to return a standard `data.frame` by mistake.
+  They now return a Polars DataFrame.
+
+
 # tidypolars 0.10.1
 
 ## Bug fixes
