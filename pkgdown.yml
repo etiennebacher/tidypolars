@@ -1,11 +1,11 @@
 pandoc: 3.1.11
-pkgdown: 2.1.0
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   faq: faq.html
   r-and-polars-expressions: r-and-polars-expressions.html
   tidypolars: tidypolars.html
-last_built: 2024-09-05T08:07Z
+last_built: 2024-09-19T15:12Z
 urls:
   reference: https://tidypolars.etiennebacher.com/reference
   article: https://tidypolars.etiennebacher.com/articles

@@ -43,6 +43,7 @@
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
 <ul><li><p>Using an external object in <code><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when()</a></code>, <code><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse()</a></code> and <code><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse()</a></code> now works.</p></li>
 <li><p><code><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub()</a></code> doesn’t error anymore when <code>start</code> is positive and <code>end</code> is negative.</p></li>
+<li><p><code>read_*_polars()</code> functions used to return a standard <code>data.frame</code> by mistake. They now return a Polars DataFrame.</p></li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -377,7 +378,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>
