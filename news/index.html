@@ -44,6 +44,7 @@
 <ul><li><p>Using an external object in <code><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when()</a></code>, <code><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse()</a></code> and <code><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse()</a></code> now works.</p></li>
 <li><p><code><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub()</a></code> doesn’t error anymore when <code>start</code> is positive and <code>end</code> is negative.</p></li>
 <li><p><code>read_*_polars()</code> functions used to return a standard <code>data.frame</code> by mistake. They now return a Polars DataFrame.</p></li>
+<li><p>Using <code>[</code> for subsetting in expressions now works. Thanks <a href="https://github.com/ginolhac" class="external-link">@ginolhac</a> for the report (<a href="https://github.com/etiennebacher/tidypolars/issues/141" class="external-link">#141</a>).</p></li>
 </ul></div>
 </div>
     <div class="section level2">
