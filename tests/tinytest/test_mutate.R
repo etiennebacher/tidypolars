@@ -376,14 +376,14 @@ expect_equal(
 test <- polars::pl$DataFrame(x = 1:3)
 test_df <- data.frame(x = 1:2)
 
-expect_dim(
+expect_equal(
   test |>
     mutate(foo = x %in% test_df$x) |>
     pull(foo),
   c(TRUE, TRUE, FALSE)
 )
 
-expect_dim(
+expect_equal(
   test |>
     mutate(foo = x %in% test_df[["x"]]) |>
     pull(foo),
