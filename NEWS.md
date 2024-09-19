@@ -8,6 +8,9 @@
 
 * `read_*_polars()` functions used to return a standard `data.frame` by mistake.
   They now return a Polars DataFrame.
+  
+* Using `[` for subsetting in expressions now works. Thanks @ginolhac for the 
+  report (#141).
 
 
 # tidypolars 0.10.1
