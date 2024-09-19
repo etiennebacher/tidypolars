@@ -231,6 +231,23 @@ translate <- function(
 
       switch(
         name,
+        "[" = {
+          out <- tryCatch(
+            eval_tidy(expr, env = caller),
+            error = function(e) {
+              rlang::abort(e$message, call = env)
+            }
+          )
+          out <- translate(
+            out,
+            .data = .data,
+            new_vars = new_vars,
+            env = env,
+            caller = caller,
+            call_is_function = call_is_function
+          )
+          return(out)
+        },
         # .data$ -> consider the RHS of $ as a classic column name
         # .env$ -> eval the RHS of $ in the caller env
         # <other>$ -> same as .env$ but we don't refer to a lonely object in the
