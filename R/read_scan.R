@@ -52,7 +52,7 @@ read_parquet_polars <- function(
     cache = cache,
     include_file_paths = include_file_paths
   ) |>
-    collect()
+    compute()
 }
 
 #' @rdname from_parquet
@@ -167,7 +167,7 @@ read_csv_polars <- function(
     truncate_ragged_lines = truncate_ragged_lines,
     reuse_downloaded = reuse_downloaded
   ) |>
-    collect()
+    compute()
 }
 
 #' @rdname from_csv
@@ -271,7 +271,7 @@ read_ndjson_polars <- function(
     reuse_downloaded = reuse_downloaded,
     ignore_errors = ignore_errors
   ) |>
-    collect()
+    compute()
 }
 
 #' @rdname from_ndjson
@@ -344,7 +344,7 @@ read_ipc_polars <- function(
     cache = cache,
     include_file_paths = include_file_paths
   ) |>
-    collect()
+    compute()
 }
 
 #' @rdname from_ipc

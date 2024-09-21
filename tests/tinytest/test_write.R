@@ -41,6 +41,7 @@ mtcars |>
   write_csv_polars(dest)
 
 expect_equal(read.csv(dest), mtcars, check.attributes = FALSE)
+expect_inherits(read_csv_polars(dest), "RPolarsDataFrame")
 
 # IPC
 
@@ -73,6 +74,7 @@ expect_equal(
   mtcars,
   check.attributes = FALSE
 )
+expect_inherits(read_ndjson_polars(dest), "RPolarsDataFrame")
 
 # Parquet
 
@@ -82,3 +84,4 @@ mtcars |>
   write_parquet_polars(dest)
 
 expect_equal(nanoparquet::read_parquet(dest), mtcars, check.attributes = FALSE)
+expect_inherits(read_parquet_polars(dest), "RPolarsDataFrame")

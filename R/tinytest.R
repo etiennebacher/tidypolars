@@ -6,9 +6,8 @@ expect_colnames <- function(x, y) {
   if (inherits(x, "RPolarsLazyFrame")) {
     x <- x$collect()
   }
-  res <- identical(x$columns, y)
-  tinytest::tinytest(
-    result = res,
+  tinytest::expect_equal(
+    x$columns, y,
     call = sys.call(sys.parent(1))
   )
 }
@@ -21,9 +20,8 @@ expect_dim <- function(x, y) {
   if (inherits(x, "RPolarsLazyFrame")) {
     x <- x$collect()
   }
-  res <- all.equal(dim(x), y)
-  tinytest::tinytest(
-    result = res,
+  tinytest::expect_equal(
+    dim(x), y,
     call = sys.call(sys.parent(1))
   )
 }

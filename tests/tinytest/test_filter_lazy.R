@@ -260,12 +260,12 @@ test <- polars::pl$LazyFrame(x = c(letters, "<other>$", "生脉胶囊"))
 
 expect_dim(
   test |> filter(x %in% c("<other>$", "生脉胶囊")),
-  2
+  c(2, 1)
 )
 
 expect_dim(
   test |> filter(x == "生脉胶囊"),
-  1
+  c(1, 1)
 )
 
 # with external data.frame/list elements
@@ -282,6 +282,17 @@ expect_dim(
 expect_dim(
   test |>
     filter(x %in% test_df[["x"]]),
+  c(2, 1)
+)
+
+# using [] on external objects
+
+test <- polars::pl$LazyFrame(x = 1:3)
+obj <- 1:3
+
+expect_dim(
+  test |>
+    filter(x %in% obj[1:2]),
   c(2, 1)
 )
 
