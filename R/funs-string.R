@@ -33,11 +33,17 @@ pl_str_detect_stringr <- function(string, pattern, negate = FALSE, ...) {
 
 pl_str_dup_stringr <- function(string, times) {
   times <- polars_expr_to_r(times)
-  times[times < 0 | is.na(times)] <- NA
+  if (!inherits(times, "RPolarsExpr")) {
+    times[times < 0 | is.na(times)] <- NA
+    if (length(times) == 1 && is.na(times)) {
+      return(pl$lit(NA_character_))
+    }
+    times <- pl$lit(times)
+  }
   pl$
-    when(pl$lit(times)$is_null())$
+    when(times$is_null())$
     then(pl$lit(NA))$
-    otherwise(string$repeat_by(pl$lit(times))$list$join(""))
+    otherwise(string$repeat_by(times)$list$join(""))
 }
 
 # TODO: this requires https://github.com/pola-rs/polars/issues/11455
@@ -101,7 +107,17 @@ pl_str_pad_stringr <- function(string, width, side = "left", pad = " ", use_widt
     )
   }
 
+  if (length(width) > 1) {
+    abort(
+      '`str_pad()` doesn\'t work in a Polars DataFrame when `width` has a length greater than 1.',
+      class = "tidypolars_error"
+    )
+  }
+
   # follow stringr::str_pad()
+  if (is.na(width) || is.na(pad)) {
+    return(pl$lit(NA_character_))
+  }
   if (width <= 0) {
     return(string)
   }

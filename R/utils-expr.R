@@ -869,8 +869,10 @@ check_pattern <- function(x) {
 
 polars_expr_to_r <- function(x) {
   if (inherits(x, "RPolarsExpr")) {
-    x <- x$to_r()
-  } else {
-    x
+    is_col <- length(x$meta$root_names()) > 0
+    if (!is_col) {
+      x <- x$to_r()
+    }
   }
+  x
 }
