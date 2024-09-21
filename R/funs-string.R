@@ -32,14 +32,18 @@ pl_str_detect_stringr <- function(string, pattern, negate = FALSE, ...) {
 }
 
 pl_str_dup_stringr <- function(string, times) {
-  if (inherits(times, "RPolarsExpr")) {
-    return(string$repeat_by(times)$list$join(""))
-  } else if (is.na(times) || times < 0) {
-    return(NA_character_)
-  } else if (times == 0) {
-    return(pl$lit(""))
+  times <- polars_expr_to_r(times)
+  if (!inherits(times, "RPolarsExpr")) {
+    times[times < 0 | is.na(times)] <- NA
+    if (length(times) == 1 && is.na(times)) {
+      return(pl$lit(NA_character_))
+    }
+    times <- pl$lit(times)
   }
-  call2(pl$concat_str, !!!rep(list(string), times)) |> eval_bare()
+  pl$
+    when(times$is_null())$
+    then(pl$lit(NA))$
+    otherwise(string$repeat_by(times)$list$join(""))
 }
 
 # TODO: this requires https://github.com/pola-rs/polars/issues/11455
@@ -92,12 +96,32 @@ pl_nchar <- pl_str_length_stringr
 
 pl_str_pad_stringr <- function(string, width, side = "left", pad = " ", use_width = TRUE, ...) {
   check_empty_dots(...)
+  side <- polars_expr_to_r(side)
+  width <- polars_expr_to_r(width)
+  pad <- polars_expr_to_r(pad)
+
   if (isFALSE(use_width)) {
     abort(
       '`str_pad()` doesn\'t work in a Polars DataFrame when `use_width = FALSE`',
       class = "tidypolars_error"
     )
   }
+
+  if (length(width) > 1) {
+    abort(
+      '`str_pad()` doesn\'t work in a Polars DataFrame when `width` has a length greater than 1.',
+      class = "tidypolars_error"
+    )
+  }
+
+  # follow stringr::str_pad()
+  if (is.na(width) || is.na(pad)) {
+    return(pl$lit(NA_character_))
+  }
+  if (width <= 0) {
+    return(string)
+  }
+
   switch(
     side,
     "both" = abort(
@@ -171,6 +195,9 @@ pl_str_starts_stringr <- function(string, pattern, negate = FALSE, ...) {
 
 pl_str_sub_stringr <- function(string, start, end = NULL, ...) {
   check_empty_dots(...)
+  start <- polars_expr_to_r(start)
+  end <- polars_expr_to_r(end)
+
   if (is.na(start) || (!is.null(end) && is.na(end))) {
     return(pl$lit(NA_character_))
   }
@@ -250,6 +277,8 @@ pl_toTitleCase <- pl_str_to_title_stringr
 
 pl_str_trim_stringr <- function(string, side = "both", ...) {
   check_empty_dots(...)
+  side <- polars_expr_to_r(side)
+
   switch(
     side,
     "both" = string$str$strip_chars(),

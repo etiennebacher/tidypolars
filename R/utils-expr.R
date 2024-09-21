@@ -866,3 +866,13 @@ check_pattern <- function(x) {
   }
   list(pattern = x, is_fixed = is_fixed, is_case_insensitive = is_case_insensitive)
 }
+
+polars_expr_to_r <- function(x) {
+  if (inherits(x, "RPolarsExpr")) {
+    is_col <- length(x$meta$root_names()) > 0
+    if (!is_col) {
+      x <- x$to_r()
+    }
+  }
+  x
+}
