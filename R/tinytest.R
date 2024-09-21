@@ -6,10 +6,7 @@ expect_colnames <- function(x, y) {
   if (inherits(x, "RPolarsLazyFrame")) {
     x <- x$collect()
   }
-  tinytest::expect_equal(
-    x$columns, y,
-    call = sys.call(sys.parent(1))
-  )
+  testthat::expect_equal(x$columns, y)
 }
 
 #' `tinytest` helper
@@ -20,10 +17,7 @@ expect_dim <- function(x, y) {
   if (inherits(x, "RPolarsLazyFrame")) {
     x <- x$collect()
   }
-  tinytest::expect_equal(
-    dim(x), y,
-    call = sys.call(sys.parent(1))
-  )
+  testthat::expect_equal(dim(x), y)
 }
 
 #' `tinytest` helper
@@ -37,11 +31,7 @@ expect_equal <- function(x, y, ...) {
   if (inherits(y, "RPolarsDataFrame")) {
     y <- y$to_data_frame()
   }
-  tinytest::expect_equal(
-    x, y,
-    call = sys.call(sys.parent(2)),
-    ...
-  )
+  testthat::expect_equal(x, y, ...)
 }
 
 #' `tinytest` helper
@@ -60,11 +50,7 @@ expect_equal_lazy <- function(x, y, ...) {
     message("Test skipped for LazyFrame")
     return(invisible())
   }
-  tinytest::expect_equal(
-    x, y,
-    call = sys.call(sys.parent(2)),
-    ...
-  )
+  testthat::expect_equal(x, y, ...)
 }
 
 #' `tinytest` helper
@@ -72,12 +58,12 @@ expect_equal_lazy <- function(x, y, ...) {
 #' @export
 #' @keywords internal
 expect_error_lazy <- function(current, pattern = ".*", ...) {
-  tinytest::expect_error(current$collect(), pattern, ...)
+  testthat::expect_error(current$collect(), pattern, ...)
 }
 
 test_all_tidypolars <- function() {
   source("tests/tinytest/setup.R")
-  tinytest::test_all(testdir = "tests/tinytest")
+  testthat::test_all(testdir = "tests/tinytest")
 }
 
 test_this_file <- function() {
@@ -86,7 +72,7 @@ test_this_file <- function() {
     message("Must run this when the active window is a test file.")
     return(invisible())
   }
-  tinytest::run_test_file(file)
+  testthat::run_test_file(file)
 }
 
 #' `tinytest` helper
@@ -94,5 +80,5 @@ test_this_file <- function() {
 #' @export
 #' @keywords internal
 expect_is_tidypolars <- function(x) {
-  tinytest::expect_true(inherits(x, "tidypolars"))
+  testthat::expect_true(inherits(x, "tidypolars"))
 }
