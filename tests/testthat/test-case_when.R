@@ -72,8 +72,8 @@ test_that("evaluation of external objects works", {
     x2 = c(2, 1, 5, 3, 1),
     value = sample(1:5)
   )
-  foo <<- "a"
-  foo2 <<- "b"
+  foo <- "a"
+  foo2 <- "b"
 
   expect_equal(
     test |>

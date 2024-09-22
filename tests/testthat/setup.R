@@ -7,8 +7,8 @@ eager <- lf[grep("lazy", lf, invert = TRUE)]
 
 exceptions <- c("test-benchmark.R", "test-compute.R", "test-collect.R",
                 "test-describe.R", "test-fetch.R",
-                "test-group-split.R",
-                "test-pivot-wider.R", "test-sink-csv.R",
+                "test-group_split.R",
+                "test-pivot_wider.R", "test-sink_csv.R",
                 "test-sink.R", "test-summary.R", "test-utils.R",
                 "test-write.R")
 

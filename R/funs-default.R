@@ -230,6 +230,7 @@ pl_between_dplyr <- function(x, left, right, ...) {
 pl_case_match <- function(x, ..., .data) {
   env <- env_from_dots(...)
   new_vars <- new_vars_from_dots(...)
+  caller <- caller_from_dots(...)
   dots <- clean_dots(...)
 
   x <- polars::pl$col(deparse(substitute(x)))
@@ -241,12 +242,30 @@ pl_case_match <- function(x, ..., .data) {
   out <- NULL
   for (y in seq_along(dots)) {
     if (y == length(dots)) {
-      otw <- translate_expr(.data, dots[[y]], new_vars = new_vars, env = env)
+      otw <- translate_expr(
+        .data,
+        dots[[y]],
+        new_vars = new_vars,
+        env = env,
+        caller = caller
+      )
       out <- out$otherwise(otw)
       next
     }
-    lhs <- translate_expr(.data, dots[[y]][[2]], new_vars = new_vars, env = env)
-    rhs <- translate_expr(.data, dots[[y]][[3]], new_vars = new_vars, env = env)
+    lhs <- translate_expr(
+      .data,
+      dots[[y]][[2]],
+      new_vars = new_vars,
+      env = env,
+      caller = caller
+    )
+    rhs <- translate_expr(
+      .data,
+      dots[[y]][[3]],
+      new_vars = new_vars,
+      env = env,
+      caller = caller
+    )
     if (is.null(out)) {
       out <- polars::pl$when(x$is_in(lhs))$then(rhs)
     } else {
@@ -260,6 +279,7 @@ pl_case_match <- function(x, ..., .data) {
 pl_case_when <- function(..., .data) {
   env <- env_from_dots(...)
   new_vars <- new_vars_from_dots(...)
+  caller <- caller_from_dots(...)
   dots <- clean_dots(...)
 
   if (!".default" %in% names(dots)) {
@@ -269,12 +289,30 @@ pl_case_when <- function(..., .data) {
   out <- NULL
   for (y in seq_along(dots)) {
     if (y == length(dots)) {
-      otw <- translate_expr(.data, dots[[y]], new_vars = new_vars, env = env)
+      otw <- translate_expr(
+        .data,
+        dots[[y]],
+        new_vars = new_vars,
+        env = env,
+        caller = caller
+      )
       out <- out$otherwise(otw)
       next
     }
-    lhs <- translate_expr(.data, dots[[y]][[2]], new_vars = new_vars, env = env)
-    rhs <- translate_expr(.data, dots[[y]][[3]], new_vars = new_vars, env = env)
+    lhs <- translate_expr(
+      .data,
+      dots[[y]][[2]],
+      new_vars = new_vars,
+      env = env,
+      caller = caller
+    )
+    rhs <- translate_expr(
+      .data,
+      dots[[y]][[3]],
+      new_vars = new_vars,
+      env = env,
+      caller = caller
+    )
 
     if (is.null(out)) {
       out <- polars::pl$when(lhs)$then(rhs)
@@ -372,10 +410,29 @@ pl_ifelse <- function(cond, yes, no, .data, ...) {
   check_empty_dots(...)
   env <- env_from_dots(...)
   new_vars <- new_vars_from_dots(...)
+  caller <- caller_from_dots(...)
 
-  cond <- translate_expr(.data, enexpr(cond), new_vars = new_vars, env = env)
-  yes <- translate_expr(.data, enexpr(yes), new_vars = new_vars, env = env)
-  no <- translate_expr(.data, enexpr(no), new_vars = new_vars, env = env)
+  cond <- translate_expr(
+    .data,
+    enexpr(cond),
+    new_vars = new_vars,
+    env = env,
+    caller = caller
+  )
+  yes <- translate_expr(
+    .data,
+    enexpr(yes),
+    new_vars = new_vars,
+    env = env,
+    caller = caller
+  )
+  no <- translate_expr(
+    .data,
+    enexpr(no),
+    new_vars = new_vars,
+    env = env,
+    caller = caller
+  )
   pl$when(cond)$then(yes)$otherwise(no)
 }
 

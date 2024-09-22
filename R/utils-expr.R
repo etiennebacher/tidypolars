@@ -111,7 +111,7 @@ translate_expr <- function(
 
   # split across() call early
   if (length(expr) > 1 && safe_deparse(expr[[1]]) == "across") {
-    expr <- unpack_across(.data, expr, env, new_vars = new_vars)
+    expr <- unpack_across(.data, expr, env = env, caller = caller, new_vars = new_vars)
   }
 
   # happens because across() calls get split earlier
@@ -341,6 +341,7 @@ translate <- function(
           args$.data <- .data
           args[["__tidypolars__new_vars"]] <- as.list(new_vars)
           args[["__tidypolars__env"]] <- env
+          args[["__tidypolars__caller"]] <- caller
           return(do.call(pl_case_match, args))
         },
         "case_when" = {
@@ -348,6 +349,7 @@ translate <- function(
           args$.data <- .data
           args[["__tidypolars__new_vars"]] <- as.list(new_vars)
           args[["__tidypolars__env"]] <- env
+          args[["__tidypolars__caller"]] <- caller
           return(do.call(pl_case_when, args))
         },
         "c" = {
@@ -422,6 +424,7 @@ translate <- function(
           args$.data <- .data
           args[["__tidypolars__new_vars"]] <- as.list(new_vars)
           args[["__tidypolars__env"]] <- env
+          args[["__tidypolars__caller"]] <- caller
           return(do.call(pl_ifelse, args))
         },
         "is.na" = {
@@ -487,7 +490,7 @@ translate <- function(
         }
       )
 
-      user_defined <- get_globenv_functions()
+      user_defined <- get_globenv_functions(caller = caller)
       known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
                      "&", "|", "!", "%%", "%/%")
       fn_names <- add_pkg_suffix(name, known_ops, user_defined)
@@ -528,6 +531,7 @@ translate <- function(
             caller = caller,
             call_is_function = call_is_function
           )
+
 
           suppressWarnings({
             tr <- try(do.call(fn, list(args)), silent = TRUE)
@@ -570,7 +574,7 @@ translate <- function(
       tryCatch(
         {
           if (name %in% c(known_ops, user_defined)) {
-            do.call(name, args)
+            call2(name, !!!args) |> eval_bare(env = caller)
           } else {
             accepted_args <- names(formals(name))
             if ("..." %in% accepted_args) {
@@ -614,11 +618,11 @@ polars_col <- function(x) {
 }
 
 # Look for user-defined functions in the global environment
-get_globenv_functions <- function() {
-  x <- ls(global_env())
+get_globenv_functions <- function(caller) {
+  x <- ls(caller)
   list_fns <- list()
   for (i in x) {
-    foo <- get(i, envir = global_env())
+    foo <- get(i, envir = caller)
     if (is.function(foo)) {
       list_fns[[i]] <- i
     }
@@ -633,6 +637,7 @@ check_empty_dots <- function(...) {
   env <- dots[["__tidypolars__env"]]
   dots[["__tidypolars__new_vars"]] <- NULL
   dots[["__tidypolars__env"]] <- NULL
+  dots[["__tidypolars__caller"]] <- NULL
 
   if (length(dots) == 0) {
     return(invisible())
@@ -673,6 +678,7 @@ clean_dots <- function(...) {
   dots <- get_dots(...)
   dots[["__tidypolars__new_vars"]] <- NULL
   dots[["__tidypolars__env"]] <- NULL
+  dots[["__tidypolars__caller"]] <- NULL
   caller_call <- deparse(rlang::caller_call()[[1]])
   called_from_pl_paste <- length(caller_call) == 1 && caller_call %in% c("pl_paste", "pl_paste0")
   dots <- lapply(dots, function(x) {
@@ -696,6 +702,11 @@ new_vars_from_dots <- function(...) {
 env_from_dots <- function(...) {
   dots <- get_dots(...)
   dots[["__tidypolars__env"]]
+}
+
+caller_from_dots <- function(...) {
+  dots <- get_dots(...)
+  dots[["__tidypolars__caller"]]
 }
 
 add_pkg_suffix <- function(name, known_ops, user_defined) {
@@ -848,6 +859,7 @@ check_rowwise_dots <- function(...) {
   is_rowwise <- dots[["__tidypolars__env"]]$is_rowwise
   dots[["__tidypolars__new_vars"]] <- NULL
   dots[["__tidypolars__env"]] <- NULL
+  dots[["__tidypolars__caller"]] <- NULL
   dots <- unlist(dots)
   if (isTRUE(is_rowwise)) {
     out <- pl$concat_list(dots)

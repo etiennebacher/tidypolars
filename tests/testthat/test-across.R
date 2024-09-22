@@ -110,7 +110,7 @@ test_that("anonymous functions has to return a Polars expression", {
 test_that("custom function works", {
   test <- polars::pl$DataFrame(head(mtcars))
 
-  foo <<- function(x) {
+  foo <- function(x) {
     tmp <- x$cos()$mean()
     tmp
   }
@@ -400,7 +400,7 @@ test_that(".by works with across() and everything()", {
 
 test_that("cannot use external list of functions in across()", {
   test <- polars::pl$DataFrame(head(mtcars))
-  my_fns <<- list(my_mean = mean, my_median = median)
+  my_fns <- list(my_mean = mean, my_median = median)
 
   expect_error(
     mutate(
