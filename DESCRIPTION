@@ -44,7 +44,8 @@ Suggests:
     stringr,
     testthat (>= 3.0.0),
     tibble,
-    tinytest
+    tinytest,
+    withr
 Remotes:
     markvanderloo/tinytest/pkg
 VignetteBuilder: knitr

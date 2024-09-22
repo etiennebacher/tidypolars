@@ -64,8 +64,8 @@ complete.RPolarsDataFrame <- function(data, ..., fill = list()) {
 
   out <- if (is_grouped) {
     out |>
-      relocate(grps, .before = 1) |>
-      group_by(grps, maintain_order = mo)
+      relocate(all_of(grps), .before = 1) |>
+      group_by(all_of(grps), maintain_order = mo)
   } else {
     out
   }

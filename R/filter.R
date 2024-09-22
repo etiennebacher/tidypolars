@@ -68,7 +68,7 @@ filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
     }
   )
   out <- if (is_grouped && missing(.by)) {
-    group_by(out, grps, maintain_order = mo)
+    group_by(out, all_of(grps), maintain_order = mo)
   } else {
     out
   }
