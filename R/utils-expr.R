@@ -210,7 +210,12 @@ translate <- function(
     },
 
     language = {
-      name <- as.character(expr[[1]])
+      expr2 <- if (is_quosure(expr)) {
+        quo_get_expr(expr)
+      } else {
+        expr[[1]]
+      }
+      name <- as.character(expr2)
       if (length(name) == 3 && name[[1]] == "::") {
         if (name[[2]] %in% c("base", "stats", "utils", "tools")) {
           new_fn_name <- name[[3]]

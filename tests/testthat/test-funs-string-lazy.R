@@ -1,3 +1,7 @@
+### [GENERATED AUTOMATICALLY] Update test-funs-string.R instead.
+
+Sys.setenv('TIDYPOLARS_TEST' = TRUE)
+
 # TODO: Counter example:
 #  string = NA
 
@@ -7,30 +11,30 @@
 #     string = character_(any_na = TRUE),
 #     property = function(string, fun) {
 #       test_df <- data.frame(x1 = string)
-#       test <- pl$DataFrame(x1 = string)
+#       test <- pl$LazyFrame(x1 = string)
 #
-#       expect_equal(
+#       expect_equal_lazy(
 #         mutate(test, foo = paste(x1, "he")) |>
 #           pull(foo),
 #         mutate(test_df, foo = paste(x1, "he")) |>
 #           pull(foo)
 #       )
 #
-#       expect_equal(
+#       expect_equal_lazy(
 #         mutate(test, foo = paste(x1, "he", sep = "--")) |>
 #           pull(foo),
 #         mutate(test_df, foo = paste(x1, "he", sep = "--")) |>
 #           pull(foo)
 #       )
 #
-#       expect_equal(
+#       expect_equal_lazy(
 #         mutate(test, foo = paste0(x1, "he")) |>
 #           pull(foo),
 #         mutate(test_df, foo = paste0(x1, "he")) |>
 #           pull(foo)
 #       )
 #
-#       expect_equal(
+#       expect_equal_lazy(
 #         mutate(test, foo = paste0(x1, "he", x1)) |>
 #           pull(foo),
 #         mutate(test_df, foo = paste0(x1, "he", x1)) |>
@@ -46,12 +50,12 @@ patrick::with_parameters_test_that("several non-regex functions work", {
     string = character_(any_na = TRUE),
     property = function(string) {
       test_df <- data.frame(x1 = string)
-      test <- pl$DataFrame(x1 = string)
+      test <- pl$LazyFrame(x1 = string)
 
       pl_code <- paste0("mutate(test, foo = ", fun, "(string)) |> pull(foo)")
       tv_code <- paste0("mutate(test_df, foo = ", fun, "(string)) |> pull(foo)")
 
-      expect_equal(
+      expect_equal_lazy(
         eval(parse(text = pl_code)),
         eval(parse(text = tv_code)),
       )
@@ -67,16 +71,16 @@ test_that("str_trim() works", {
     side = quickcheck::one_of(constant("both"), constant("left"), constant("right")),
     property = function(string, side) {
       test_df <- data.frame(x1 = string)
-      test <- pl$DataFrame(x1 = string)
+      test <- pl$LazyFrame(x1 = string)
 
-      expect_equal(
+      expect_equal_lazy(
         mutate(test, foo = str_trim(x1)) |>
           pull(foo),
         mutate(test_df, foo = str_trim(x1)) |>
           pull(foo)
       )
 
-      expect_equal(
+      expect_equal_lazy(
         mutate(test, foo = str_trim(x1, side = side)) |>
           pull(foo),
         mutate(test_df, foo = str_trim(x1, side = side)) |>
@@ -101,16 +105,16 @@ test_that("str_trim() works", {
 #     side = quickcheck::one_of(constant("left"), constant("right")),
 #     property = function(string, side, pad, width) {
 #       test_df <- data.frame(x1 = string)
-#       test <- pl$DataFrame(x1 = string)
+#       test <- pl$LazyFrame(x1 = string)
 #
 #       # Might work in the future but for now width must have length 1
 #       if (length(width) > 1) {
-#         expect_error(
+#         expect_error_lazy(
 #           mutate(test, foo = str_pad(x1, side = side, pad = pad, width = width)),
 #           "doesn't work in a Polars DataFrame when `width` has a length greater than 1"
 #         )
 #       } else {
-#         expect_equal_or_both_error(
+#         expect_equal_lazy_or_both_error(
 #           mutate(test, foo = str_pad(x1, side = side, pad = pad, width = width)) |>
 #             pull(foo),
 #           mutate(test_df, foo = str_pad(x1, side = side, pad = pad, width = width)) |>
@@ -134,9 +138,9 @@ test_that("str_trim() works", {
 #     times = numeric_bounded(-10000, 10000, any_na = TRUE),
 #     property = function(string, times) {
 #       test_df <- data.frame(x1 = string)
-#       test <- pl$DataFrame(x1 = string)
+#       test <- pl$LazyFrame(x1 = string)
 #
-#       expect_equal_or_both_error(
+#       expect_equal_lazy_or_both_error(
 #         mutate(test, foo = str_dup(x1, times = times)) |>
 #           pull(foo),
 #         mutate(test_df, foo = str_dup(x1, times = times)) |>
@@ -154,9 +158,9 @@ test_that("str_trim() works", {
 #     end = numeric_(any_na = TRUE),
 #     property = function(string, start, end) {
 #       test_df <- data.frame(x1 = string)
-#       test <- pl$DataFrame(x1 = string)
+#       test <- pl$LazyFrame(x1 = string)
 #
-#       expect_equal_or_both_error(
+#       expect_equal_lazy_or_both_error(
 #         mutate(test, foo = str_sub(x1, start, end)) |>
 #           pull(foo),
 #         mutate(test_df, foo = str_sub(x1, start, end)) |>
@@ -165,3 +169,5 @@ test_that("str_trim() works", {
 #     }
 #   )
 # })
+
+Sys.setenv('TIDYPOLARS_TEST' = FALSE)

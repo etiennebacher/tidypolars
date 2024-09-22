@@ -1,3 +1,7 @@
+### [GENERATED AUTOMATICALLY] Update test-read-write.R instead.
+
+Sys.setenv('TIDYPOLARS_TEST' = TRUE)
+
 patrick::with_parameters_test_that("IPC and parquet can do a write-read roundtrip", {
   for_all(
     tests = 20,
@@ -16,7 +20,7 @@ patrick::with_parameters_test_that("IPC and parquet can do a write-read roundtri
         args = list(source = dest)
       )
 
-      expect_equal(
+      expect_equal_lazy(
         out |> as.data.frame(),
         dat_pl |> as.data.frame()
       )
@@ -37,7 +41,7 @@ test_that("CSV can do a write-read roundtrip", {
       write_csv_polars(dat_pl, dest)
       out <- read_csv_polars(source = dest, try_parse_dates = TRUE)
 
-      expect_equal(
+      expect_equal_lazy(
         out |> as.data.frame(),
         dat_pl |> as.data.frame()
       )
@@ -57,10 +61,12 @@ test_that("NDJSON can do a write-read roundtrip", {
       write_ndjson_polars(dat_pl, dest)
       out <- read_ndjson_polars(source = dest)
 
-      expect_equal(
+      expect_equal_lazy(
         out |> as.data.frame(),
         dat_pl |> as.data.frame()
       )
     }
   )
 })
+
+Sys.setenv('TIDYPOLARS_TEST' = FALSE)

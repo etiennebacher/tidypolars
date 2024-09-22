@@ -1,7 +1,11 @@
-test_that("single word functions work", {
-  test <- polars::pl$DataFrame(head(mtcars))
+### [GENERATED AUTOMATICALLY] Update test-across.R instead.
 
-  expect_equal(
+Sys.setenv('TIDYPOLARS_TEST' = TRUE)
+
+test_that("single word functions work", {
+  test <- polars::pl$LazyFrame(head(mtcars))
+
+  expect_equal_lazy(
     mutate(
       test,
       across(.cols = contains("a"), mean),
@@ -20,9 +24,9 @@ test_that("single word functions work", {
 
 
 test_that("purrr-style function work", {
-  test <- polars::pl$DataFrame(head(mtcars))
+  test <- polars::pl$LazyFrame(head(mtcars))
 
-  expect_equal(
+  expect_equal_lazy(
     mutate(
       test,
       across(.cols = contains("a"), ~ mean(.x)),
@@ -41,9 +45,9 @@ test_that("purrr-style function work", {
 
 
 test_that("anonymous functions has to return a Polars expression", {
-  test <- polars::pl$DataFrame(head(mtcars))
+  test <- polars::pl$LazyFrame(head(mtcars))
 
-  expect_equal(
+  expect_equal_lazy(
     mutate(
       test,
       across(.cols = contains("ar"), \(x) x$mean())
@@ -55,7 +59,7 @@ test_that("anonymous functions has to return a Polars expression", {
     )
   )
 
-  expect_equal(
+  expect_equal_lazy(
     mutate(
       test,
       across(
@@ -97,7 +101,7 @@ test_that("anonymous functions has to return a Polars expression", {
     c(names(mtcars), "gear_mean", "gear_2")
   )
 
-  expect_error(
+  expect_error_lazy(
     mutate(
       test,
       across(.cols = contains("a"), \(x) mean(x)),
@@ -108,14 +112,14 @@ test_that("anonymous functions has to return a Polars expression", {
 
 
 test_that("custom function works", {
-  test <- polars::pl$DataFrame(head(mtcars))
+  test <- polars::pl$LazyFrame(head(mtcars))
 
   foo <<- function(x) {
     tmp <- x$cos()$mean()
     tmp
   }
 
-  expect_equal(
+  expect_equal_lazy(
     mutate(
       test,
       across(
@@ -136,9 +140,9 @@ test_that("custom function works", {
 })
 
 test_that("works with grouped data", {
-  test <- polars::pl$DataFrame(head(mtcars))
+  test <- polars::pl$LazyFrame(head(mtcars))
 
-  expect_equal(
+  expect_equal_lazy(
     test |>
       group_by(am) |>
       mutate(
@@ -154,7 +158,7 @@ test_that("works with grouped data", {
 })
 
 test_that("argument .names works", {
-  test <- polars::pl$DataFrame(head(mtcars))
+  test <- polars::pl$LazyFrame(head(mtcars))
 
   expect_colnames(
     mutate(
@@ -206,9 +210,9 @@ test_that("argument .names works", {
 })
 
 test_that("passing a list of functions works", {
-  test <- polars::pl$DataFrame(head(mtcars))
+  test <- polars::pl$LazyFrame(head(mtcars))
 
-  expect_equal(
+  expect_equal_lazy(
     mutate(
       test,
       across(
@@ -219,7 +223,7 @@ test_that("passing a list of functions works", {
     mutate(test, mpg_1 = mean(mpg), mpg_2 = median(mpg))
   )
 
-  expect_equal(
+  expect_equal_lazy(
     mutate(
       test,
       across(
@@ -230,7 +234,7 @@ test_that("passing a list of functions works", {
     mutate(test, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg))
   )
 
-  expect_equal(
+  expect_equal_lazy(
     mutate(
       test,
       across(
@@ -242,7 +246,7 @@ test_that("passing a list of functions works", {
     mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
   )
 
-  expect_equal(
+  expect_equal_lazy(
     mutate(
       test,
       across(
@@ -257,9 +261,9 @@ test_that("passing a list of functions works", {
 
 
 test_that("single variable in .cols, single function", {
-  test <- polars::pl$DataFrame(head(mtcars))
+  test <- polars::pl$LazyFrame(head(mtcars))
 
-  expect_equal(
+  expect_equal_lazy(
     mutate(
       test,
       across(.cols = mpg, mean)
@@ -269,10 +273,10 @@ test_that("single variable in .cols, single function", {
 })
 
 test_that("also works with summarize()", {
-  test_grp <- polars::pl$DataFrame(head(mtcars)) |>
+  test_grp <- polars::pl$LazyFrame(head(mtcars)) |>
     group_by(cyl, maintain_order = TRUE)
 
-  expect_equal(
+  expect_equal_lazy(
     summarize(
       test_grp,
       across(
@@ -286,22 +290,22 @@ test_that("also works with summarize()", {
 })
 
 test_that("sequence of expressions modifying the same vars works", {
-  test <- polars::pl$DataFrame(head(mtcars)) |>
+  test <- polars::pl$LazyFrame(head(mtcars)) |>
     mutate(
       across(contains("a"), mean),
       am = 1, gear = NULL
     )
 
-  expect_equal(pull(test, am) |> unique(), 1)
+  expect_equal_lazy(pull(test, am) |> unique(), 1)
   expect_colnames(test, setdiff(colnames(mtcars), "gear"))
 })
 
 #
 
 test_that("newly created variable is captured in across", {
-  test <- polars::pl$DataFrame(head(mtcars))
+  test <- polars::pl$LazyFrame(head(mtcars))
 
-  expect_equal(
+  expect_equal_lazy(
     test |>
       mutate(
         bar = 1,
@@ -311,7 +315,7 @@ test_that("newly created variable is captured in across", {
     rep(0, 6)
   )
 
-  expect_equal(
+  expect_equal_lazy(
     test |>
       mutate(
         bar = 1,
@@ -321,7 +325,7 @@ test_that("newly created variable is captured in across", {
     rep(0, 6)
   )
 
-  expect_equal(
+  expect_equal_lazy(
     test |>
       mutate(
         bar = 1,
@@ -331,7 +335,7 @@ test_that("newly created variable is captured in across", {
     rep(0, 6)
   )
 
-  expect_equal(
+  expect_equal_lazy(
     test |>
       mutate(
         bar = 1,
@@ -341,7 +345,7 @@ test_that("newly created variable is captured in across", {
     rep(0, 6)
   )
 
-  expect_equal(
+  expect_equal_lazy(
     test |>
       mutate(
         bar = 1,
@@ -351,7 +355,7 @@ test_that("newly created variable is captured in across", {
     rep(0, 6)
   )
 
-  expect_equal(
+  expect_equal_lazy(
     test |>
       mutate(
         foo = 1,
@@ -372,8 +376,8 @@ test_that("newly created variable is captured in across", {
 })
 
 test_that("need to specify .cols (either named or unnamed)", {
-  test <- polars::pl$DataFrame(head(mtcars))
-  expect_error(
+  test <- polars::pl$LazyFrame(head(mtcars))
+  expect_error_lazy(
     mutate(test, across(.fns = mean)),
     "You must supply the argument `.cols`"
   )
@@ -387,22 +391,22 @@ test_that(".by works with across() and everything()", {
     distinct() |>
     arrange(cyl)
 
-  expect_equal(
+  expect_equal_lazy(
     test |> pull(cyl),
     c(4, 6, 8)
   )
 
-  expect_equal(
+  expect_equal_lazy(
     test |> pull(hp),
     c(93, 110, 175)
   )
 })
 
 test_that("cannot use external list of functions in across()", {
-  test <- polars::pl$DataFrame(head(mtcars))
+  test <- polars::pl$LazyFrame(head(mtcars))
   my_fns <<- list(my_mean = mean, my_median = median)
 
-  expect_error(
+  expect_error_lazy(
     mutate(
       test,
       across(.cols = mpg, .fns = my_fns)
@@ -410,3 +414,5 @@ test_that("cannot use external list of functions in across()", {
     "`.fns` doesn't accept an external list of functions or formulas"
   )
 })
+
+Sys.setenv('TIDYPOLARS_TEST' = FALSE)
