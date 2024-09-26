@@ -1,6 +1,7 @@
 library(lubridate)
 library(quickcheck)
 library(stringr)
+library(tools)
 
 lf <- list.files(test_path(), pattern = "^test")
 eager <- lf[grep("lazy", lf, invert = TRUE)]
