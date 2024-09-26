@@ -67,7 +67,6 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("error messages when error in known function is good", {
   pl_iris <- pl$LazyFrame(iris)
-  translate_dots <- tidypolars:::translate_dots
 
   expect_error_lazy(
     pl_iris |> mutate(foo = min_rank()),

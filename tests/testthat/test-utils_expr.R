@@ -63,7 +63,6 @@
 
 test_that("error messages when error in known function is good", {
   pl_iris <- pl$DataFrame(iris)
-  translate_dots <- tidypolars:::translate_dots
 
   expect_error(
     pl_iris |> mutate(foo = min_rank()),
