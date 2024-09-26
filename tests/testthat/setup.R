@@ -1,6 +1,8 @@
+library(dplyr)
 library(lubridate)
 library(quickcheck)
 library(stringr)
+library(tidyr)
 library(tools)
 
 lf <- list.files(test_path(), pattern = "^test")

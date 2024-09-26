@@ -532,7 +532,6 @@ translate <- function(
             call_is_function = call_is_function
           )
 
-
           suppressWarnings({
             tr <- try(do.call(fn, list(args)), silent = TRUE)
           })
