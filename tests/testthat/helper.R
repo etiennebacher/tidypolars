@@ -65,14 +65,9 @@ expect_error_lazy <- function(current, pattern = ".*", ...) {
   testthat::expect_error(current$collect(), pattern, ...)
 }
 
-test_all_tidypolars <- function() {
-  source("tests/tinytest/setup.R")
-  testthat::test_all(testdir = "tests/tinytest")
-}
-
 test_this_file <- function() {
   file <- rstudioapi::getSourceEditorContext()$path
-  if (!grepl("tinytest/", file)) {
+  if (!grepl("testthat/", file)) {
     message("Must run this when the active window is a test file.")
     return(invisible())
   }
