@@ -57,7 +57,7 @@ fill.RPolarsDataFrame <- function(data, ..., .direction = c("down", "up", "downu
 
   out <- if (is_grouped) {
     data$with_columns(expr) |>
-      group_by(grps, maintain_order = mo)
+      group_by(all_of(grps), maintain_order = mo)
   } else {
     data$with_columns(expr)
   }

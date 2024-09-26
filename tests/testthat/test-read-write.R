@@ -16,7 +16,7 @@ patrick::with_parameters_test_that("IPC and parquet can do a write-read roundtri
         args = list(source = dest)
       )
 
-      testthat::expect_equal(
+      expect_equal(
         out |> as.data.frame(),
         dat_pl |> as.data.frame()
       )
@@ -37,7 +37,7 @@ test_that("CSV can do a write-read roundtrip", {
       write_csv_polars(dat_pl, dest)
       out <- read_csv_polars(source = dest, try_parse_dates = TRUE)
 
-      testthat::expect_equal(
+      expect_equal(
         out |> as.data.frame(),
         dat_pl |> as.data.frame()
       )
@@ -57,7 +57,7 @@ test_that("NDJSON can do a write-read roundtrip", {
       write_ndjson_polars(dat_pl, dest)
       out <- read_ndjson_polars(source = dest)
 
-      testthat::expect_equal(
+      expect_equal(
         out |> as.data.frame(),
         dat_pl |> as.data.frame()
       )

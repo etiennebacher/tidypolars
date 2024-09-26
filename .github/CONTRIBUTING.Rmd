@@ -104,15 +104,15 @@ test_pl |>
   mutate(ends_with_c = str_ends(x, "c"))
 ```
 
-Finally, the only thing left to do is to add some tests in the `tests/tinytest` 
+Finally, the only thing left to do is to add some tests in the `tests/testthat` 
 folder.
 
 ### Testing changes
 
-`tidypolars` uses [`tinytest`](https://cran.r-project.org/web/packages/tinytest/)
+`tidypolars` uses [`testthat`](https://cran.r-project.org/web/packages/testthat/)
 for checking that functions have the expected output. If changes affect the
 behavior of some functions (for example when adding an extra argument), add
-some tests in the related file in `tests/tinytest`. 
+some tests in the related file in `tests/testthat`. 
 
 Note that you only need to edit the file with `test_<function name>.R`. Files
 ending with `_lazy.R` are automatically generated. Use `devtools::load_all()`

@@ -94,7 +94,7 @@ compute.RPolarsLazyFrame <- function(
 
   out <- if (is_grouped) {
     out |>
-      group_by(grps, maintain_order = mo)
+      group_by(all_of(grps), maintain_order = mo)
   } else {
     out
   }

@@ -9,28 +9,28 @@
 #       test_df <- data.frame(x1 = string)
 #       test <- pl$DataFrame(x1 = string)
 #
-#       testthat::expect_equal(
+#       expect_equal(
 #         mutate(test, foo = paste(x1, "he")) |>
 #           pull(foo),
 #         mutate(test_df, foo = paste(x1, "he")) |>
 #           pull(foo)
 #       )
 #
-#       testthat::expect_equal(
+#       expect_equal(
 #         mutate(test, foo = paste(x1, "he", sep = "--")) |>
 #           pull(foo),
 #         mutate(test_df, foo = paste(x1, "he", sep = "--")) |>
 #           pull(foo)
 #       )
 #
-#       testthat::expect_equal(
+#       expect_equal(
 #         mutate(test, foo = paste0(x1, "he")) |>
 #           pull(foo),
 #         mutate(test_df, foo = paste0(x1, "he")) |>
 #           pull(foo)
 #       )
 #
-#       testthat::expect_equal(
+#       expect_equal(
 #         mutate(test, foo = paste0(x1, "he", x1)) |>
 #           pull(foo),
 #         mutate(test_df, foo = paste0(x1, "he", x1)) |>
@@ -51,7 +51,7 @@ patrick::with_parameters_test_that("several non-regex functions work", {
       pl_code <- paste0("mutate(test, foo = ", fun, "(string)) |> pull(foo)")
       tv_code <- paste0("mutate(test_df, foo = ", fun, "(string)) |> pull(foo)")
 
-      testthat::expect_equal(
+      expect_equal(
         eval(parse(text = pl_code)),
         eval(parse(text = tv_code)),
       )
@@ -69,14 +69,14 @@ test_that("str_trim() works", {
       test_df <- data.frame(x1 = string)
       test <- pl$DataFrame(x1 = string)
 
-      testthat::expect_equal(
+      expect_equal(
         mutate(test, foo = str_trim(x1)) |>
           pull(foo),
         mutate(test_df, foo = str_trim(x1)) |>
           pull(foo)
       )
 
-      testthat::expect_equal(
+      expect_equal(
         mutate(test, foo = str_trim(x1, side = side)) |>
           pull(foo),
         mutate(test_df, foo = str_trim(x1, side = side)) |>

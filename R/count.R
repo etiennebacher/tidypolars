@@ -26,7 +26,7 @@ count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
   out <- count_(x, vars, sort = sort, name = name, new_col = FALSE)
 
   out <- if (is_grouped) {
-    group_by(out, grps, maintain_order = mo)
+    group_by(out, all_of(grps), maintain_order = mo)
   } else {
     out
   }
@@ -51,7 +51,7 @@ add_count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
   out <- count_(x, vars, sort = sort, name = name, new_col = TRUE, missing_name = missing(name))
 
   out <- if (is_grouped) {
-    group_by(out, grps, maintain_order = mo)
+    group_by(out, all_of(grps), maintain_order = mo)
   } else {
     out
   }

@@ -1,7 +1,7 @@
 # inspired from dplyr/across.R
 # [MIT license]
 
-unpack_across <- function(.data, expr, env, new_vars) {
+unpack_across <- function(.data, expr, env, caller, new_vars) {
   .cols <- get_arg(".cols", 1, expr, env)
 
   # Need this trick to correctly evaluate .cols = where(is.numeric)
@@ -13,7 +13,7 @@ unpack_across <- function(.data, expr, env, new_vars) {
   .cols <- union(.cols_already_there, .cols_new_vars)
   .fns <- get_arg(".fns", 2, expr, env)
   if (is.name(.fns)) {
-    .fns <- check_fns_is_list(.fns, env)
+    .fns <- check_fns_is_list(.fns, caller)
   }
   .names <- get_arg(".names", 3, expr, env)
 
@@ -111,9 +111,9 @@ get_arg <- function(name, position, expr, env) {
   out
 }
 
-check_fns_is_list <- function(fns, env) {
+check_fns_is_list <- function(fns, caller) {
   tr <- tryCatch(
-    rlang::eval_tidy(fns, env = env),
+    rlang::eval_tidy(fns, env = caller),
     error = function(e) return(fns)
   )
   if (!is.list(tr)) {
@@ -124,7 +124,7 @@ check_fns_is_list <- function(fns, env) {
       "When using `across()` in tidypolars, `.fns` doesn't accept an external list of functions or formulas.",
       "i" = "Instead of `across(.fns = <external_list>)`, do `across(.fns = list(fun1 = ..., fun2 = ...))`"
     ),
-    call = env
+    call = caller
   )
 }
 
