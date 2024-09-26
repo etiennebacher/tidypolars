@@ -23,42 +23,26 @@
 
 arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
 
-  dots <- get_dots(...)
-  out_length <- length(dots)
-  direction <- rep(FALSE, out_length)
-
   grps <- attributes(.data)$pl_grps
   mo <- attributes(data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
-  vars <- lapply(seq_along(dots), \(x) {
-      out <- as.character(dots[[x]])
-      if (length(out) == 2 && out[1] %in% c("-", "desc")) {
-        out <- as.character(dots[[x]][2])
-        direction[x] <<- TRUE
-      }
-      out
-    }) |>
-    unlist()
-
-  not_exist <- which(!vars %in% names(.data))
-  if (length(not_exist) > 0) {
-    vars <- vars[-not_exist]
-    direction <- direction[-not_exist]
-  }
-
-  if (length(vars) == 0) return(.data)
+  polars_exprs <- translate_dots(
+    .data,
+    ...,
+    env = rlang::current_env(),
+    caller = rlang::caller_env()
+  )
 
   if (is_grouped && isTRUE(.by_group)) {
-    vars <- c(grps, vars)
-    direction <- c(rep(FALSE, length(grps)), direction)
+    polars_exprs <- c(grps, polars_exprs)
   }
 
   out <- if (is_grouped) {
-    .data$sort(vars, descending = direction) |>
+    .data$sort(polars_exprs, descending = FALSE) |>
       group_by(all_of(grps), maintain_order = mo)
   } else {
-    .data$sort(vars, descending = direction)
+    .data$sort(polars_exprs, descending = FALSE)
   }
 
   add_tidypolars_class(out)

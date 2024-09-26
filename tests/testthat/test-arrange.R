@@ -60,22 +60,23 @@ test_that("sorting by multiple variables works", {
   )
 })
 
-
-# TODO: this should error
-test_that("ignores non-existing vars", {
+test_that("errors with unknown vars", {
   test <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample(1:5)
   )
-  expect_equal(
-    arrange(test, foo, x1),
-    arrange(test, x1)
-  )
-
-  expect_equal(
+  expect_error(
     arrange(test, foo),
-    test
+    "object 'foo' not found"
+  )
+  expect_error(
+    arrange(test, foo, x1),
+    "object 'foo' not found"
+  )
+  expect_error(
+    arrange(test, desc(foo)),
+    "object 'foo' not found"
   )
 })
 
@@ -115,5 +116,13 @@ test_that("returns grouped output if input was grouped", {
   expect_equal(
     arrange(test_grp, value) |> attr("pl_grps"),
     c("x1", "x2")
+  )
+})
+
+test_that("works with expressions", {
+  test <- pl$DataFrame(mtcars)
+  expect_equal(
+    test |> arrange(-mpg) |> pull(mpg),
+    test |> arrange(1/mpg) |> pull(mpg)
   )
 })

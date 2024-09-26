@@ -51,6 +51,10 @@ pl_any <- function(..., na.rm = FALSE) {
   }
 }
 
+pl_desc_dplyr <- function(x) {
+  -x
+}
+
 pl_mean <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x, ...)
