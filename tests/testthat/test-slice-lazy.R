@@ -98,8 +98,9 @@ test_that("slice_tail works on grouped data", {
 })
 
 test_that("slice_sample works", {
-  skip_if_not(inherits(pl_iris, "RPolarsDataFrame"))
   pl_iris <- polars::pl$LazyFrame(iris)
+  skip_if_not(inherits(pl_iris, "RPolarsDataFrame"))
+  
   expect_is_tidypolars(slice_sample(pl_iris, prop = 0.1))
 
   expect_equal_lazy(
