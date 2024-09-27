@@ -109,6 +109,14 @@ who_pl_lazy |>
   head()
 ```
 
+<div class="custom_note">
+  <p><b>Note:</b> Several functions trigger the evaluation of a lazy query: 
+  `compute()`, `collect()`, `as.data.frame()`, and `as_tibble()`. If you want
+  to return a Polars DataFrame, use `compute()`. If you want to return a
+  standard R data.frame, for example to use it in statistical analysis, use any
+  of the three other functions. Be warned that if the dataset is too big compared
+  to your available memory, this will crash the R session.</p>
+</div>
 
 `tidypolars` also supports many functions from `base`, `lubridate` or `stringr`.
 When these are used inside `filter()`, `mutate()` or `summarize()`, `tidypolars`
