@@ -200,6 +200,18 @@ at the end of the chained expression to evaluate the query:</p>
 <span><span class="co">#&gt; │ ARE  ┆ 2013.0 ┆ 5.0         ┆ 4.0        ┆ … ┆ 3.0        ┆ 3.0        ┆ 1.0        ┆ 6.0        │</span></span>
 <span><span class="co">#&gt; │ ARG  ┆ 2013.0 ┆ 431.0       ┆ 927.0      ┆ … ┆ 537.0      ┆ 395.0      ┆ 307.0      ┆ 374.0      │</span></span>
 <span><span class="co">#&gt; └──────┴────────┴─────────────┴────────────┴───┴────────────┴────────────┴────────────┴────────────┘</span></span></code></pre></div>
+<div class="custom_note">
+<p>
+<b>Note:</b> Several functions trigger the evaluation of a lazy query:
+<code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code>,
+<code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code>, and <code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble()</a></code>. If you want
+to return a Polars DataFrame, use <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code>. If you want to
+return a standard R data.frame, for example to use it in statistical
+analysis, use any of the three other functions. Be warned that if the
+dataset is too big compared to your available memory, this will crash
+the R session.
+</p>
+</div>
 <p><code>tidypolars</code> also supports many functions from
 <code>base</code>, <code>lubridate</code> or <code>stringr</code>. When
 these are used inside <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code> or
