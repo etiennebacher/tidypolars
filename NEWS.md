@@ -5,6 +5,10 @@
 * `arrange()` now errors with unknown variable names (like `dplyr::arrange()`).
   Previously, unknown variables were silently ignored. Using expressions (like
   `a + b`) is now accepted (#144).
+  
+## New features
+
+* The power operators `^` and `**` now work.
 
 ## Bug fixes
 

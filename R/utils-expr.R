@@ -502,7 +502,7 @@ translate <- function(
       )
 
       user_defined <- get_globenv_functions(caller = caller)
-      known_ops <- c("+", "-", "*", "/", ">", ">=", "<", "<=", "==", "!=",
+      known_ops <- c("+", "-", "*", "/", "^", "**", ">", ">=", "<", "<=", "==", "!=",
                      "&", "|", "!", "%%", "%/%")
       fn_names <- add_pkg_suffix(name, known_ops, user_defined)
       name <- fn_names$name_to_eval
