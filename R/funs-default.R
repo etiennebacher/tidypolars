@@ -52,7 +52,8 @@ pl_any <- function(..., na.rm = FALSE) {
 }
 
 pl_desc_dplyr <- function(x) {
-  -x
+  attr(x, "descending") <- TRUE
+  x
 }
 
 pl_mean <- function(x, na.rm = FALSE, ...) {

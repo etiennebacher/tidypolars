@@ -1,7 +1,8 @@
 #' Order rows using column values
 #'
 #' @param .data A Polars Data/LazyFrame
-#' @param ... Quoted or unquoted variable names. Select helpers cannot be used.
+#' @param ... Variables, or functions of variables. Use `desc()` to sort a
+#' variable in descending order.
 #' @param .by_group If `TRUE`, will sort data within groups.
 #'
 #' @export
@@ -27,6 +28,8 @@ arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
   mo <- attributes(data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
+  attr(.data, "called_from_arrange") <- TRUE
+
   polars_exprs <- translate_dots(
     .data,
     ...,
@@ -34,15 +37,20 @@ arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
     caller = rlang::caller_env()
   )
 
+  descending <- vapply(polars_exprs, function(x) {
+    attr(x, "descending") %||% FALSE
+  }, FUN.VALUE = logical(1L))
+
   if (is_grouped && isTRUE(.by_group)) {
     polars_exprs <- c(grps, polars_exprs)
+    descending <- c(rep(FALSE, length(grps)), descending)
   }
 
   out <- if (is_grouped) {
-    .data$sort(polars_exprs, descending = FALSE) |>
+    .data$sort(polars_exprs, descending = descending) |>
       group_by(all_of(grps), maintain_order = mo)
   } else {
-    .data$sort(polars_exprs, descending = FALSE)
+    .data$sort(polars_exprs, descending = descending)
   }
 
   add_tidypolars_class(out)

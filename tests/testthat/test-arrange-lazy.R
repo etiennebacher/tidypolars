@@ -12,7 +12,6 @@ test_that("output has custom class", {
   expect_is_tidypolars(arrange(test, x1))
 })
 
-
 test_that("basic behavior works", {
   test <- pl$LazyFrame(
     x1 = c("a", "a", "b", "a", "c"),
@@ -64,22 +63,23 @@ test_that("sorting by multiple variables works", {
   )
 })
 
-
-# TODO: this should error
-test_that("ignores non-existing vars", {
+test_that("errors with unknown vars", {
   test <- pl$LazyFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample(1:5)
   )
-  expect_equal_lazy(
-    arrange(test, foo, x1),
-    arrange(test, x1)
-  )
-
-  expect_equal_lazy(
+  expect_error_lazy(
     arrange(test, foo),
-    test
+    "object 'foo' not found"
+  )
+  expect_error_lazy(
+    arrange(test, foo, x1),
+    "object 'foo' not found"
+  )
+  expect_error_lazy(
+    arrange(test, desc(foo)),
+    "object 'foo' not found"
   )
 })
 
@@ -119,6 +119,14 @@ test_that("returns grouped output if input was grouped", {
   expect_equal_lazy(
     arrange(test_grp, value) |> attr("pl_grps"),
     c("x1", "x2")
+  )
+})
+
+test_that("works with expressions", {
+  test <- pl$LazyFrame(mtcars)
+  expect_equal_lazy(
+    test |> arrange(-mpg) |> pull(mpg),
+    test |> arrange(1/mpg) |> pull(mpg)
   )
 })
 

@@ -8,7 +8,6 @@ test_that("output has custom class", {
   expect_is_tidypolars(arrange(test, x1))
 })
 
-
 test_that("basic behavior works", {
   test <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c"),
