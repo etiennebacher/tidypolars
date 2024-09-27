@@ -69,17 +69,18 @@ test_that("errors with unknown vars", {
     x2 = c(2, 1, 5, 3, 1),
     value = sample(1:5)
   )
-  expect_error_lazy(
+
+  expect_snapshot_lazy(
     arrange(test, foo),
-    "object 'foo' not found"
+    error = TRUE
   )
-  expect_error_lazy(
+  expect_snapshot_lazy(
     arrange(test, foo, x1),
-    "object 'foo' not found"
+    error = TRUE
   )
-  expect_error_lazy(
+  expect_snapshot_lazy(
     arrange(test, desc(foo)),
-    "object 'foo' not found"
+    error = TRUE
   )
 })
 

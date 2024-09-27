@@ -65,6 +65,10 @@ expect_error_lazy <- function(current, pattern = ".*", ...) {
   testthat::expect_error(current$collect(), pattern, ...)
 }
 
+expect_snapshot_lazy <- function(current, ...) {
+  testthat::expect_snapshot(current$collect(), ...)
+}
+
 test_this_file <- function() {
   file <- rstudioapi::getSourceEditorContext()$path
   if (!grepl("testthat/", file)) {

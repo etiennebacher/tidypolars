@@ -101,12 +101,12 @@ test_that("anonymous functions has to return a Polars expression", {
     c(names(mtcars), "gear_mean", "gear_2")
   )
 
-  expect_error_lazy(
+  expect_snapshot_lazy(
     mutate(
       test,
       across(.cols = contains("a"), \(x) mean(x)),
     ),
-    "Are you sure the anonymous function"
+    error = TRUE
   )
 })
 
@@ -377,9 +377,10 @@ test_that("newly created variable is captured in across", {
 
 test_that("need to specify .cols (either named or unnamed)", {
   test <- polars::pl$LazyFrame(head(mtcars))
-  expect_error_lazy(
+
+  expect_snapshot_lazy(
     mutate(test, across(.fns = mean)),
-    "You must supply the argument `.cols`"
+    error = TRUE
   )
 })
 
@@ -406,12 +407,12 @@ test_that("cannot use external list of functions in across()", {
   test <- polars::pl$LazyFrame(head(mtcars))
   my_fns <- list(my_mean = mean, my_median = median)
 
-  expect_error_lazy(
+  expect_snapshot_lazy(
     mutate(
       test,
       across(.cols = mpg, .fns = my_fns)
     ),
-    "`.fns` doesn't accept an external list of functions or formulas"
+    error = TRUE
   )
 })
 
