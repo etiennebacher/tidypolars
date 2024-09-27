@@ -1,5 +1,11 @@
 # tidypolars (development version)
 
+## Breaking changes
+
+* `arrange()` now errors with unknown variable names (like `dplyr::arrange()`).
+  Previously, unknown variables were silently ignored. Using expressions (like
+  `a + b`) is now accepted (#144).
+
 ## Bug fixes
 
 * Using an external object in `case_when()`, `ifelse()` and `ifelse()` now works.
