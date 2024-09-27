@@ -10,4 +10,5 @@ library(quickcheck)
 library(testthat)
 library(tidypolars)
 
+options(polars.do_not_repeat_call = TRUE)
 test_check("tidypolars")

@@ -35,14 +35,13 @@ test_that("can't overwrite existing column", {
   mtcars2 <- mtcars
   mtcars2$hash <- 1
   test2 <- pl$DataFrame(mtcars2)
-  
-  expect_error(
+
+  expect_snapshot(
     make_unique_id(test2, am, gear),
-    'Column "hash" already exists'
+    error = TRUE
   )
-  
-  expect_error(
+  expect_snapshot(
     make_unique_id(mtcars),
-    "The data must be a Polars DataFrame or LazyFrame"
+    error = TRUE
   )
 })

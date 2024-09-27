@@ -34,8 +34,8 @@ test_that("basic behavior works", {
 
 test_that("error if variable doesn't exist", {
   pl_tmp <- polars::pl$DataFrame(mtcars)
-  expect_error(
+  expect_snapshot(
     drop_na(pl_tmp, foo),
-    "don't exist"
+    error = TRUE
   )
 })

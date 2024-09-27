@@ -65,8 +65,17 @@ expect_error_lazy <- function(current, pattern = ".*", ...) {
   testthat::expect_error(current$collect(), pattern, ...)
 }
 
+# expect_snapshot <- function(x, ...) {
+#   withr::with_options(
+#     list(polars.do_not_repeat_call = TRUE),
+#     testthat::expect_snapshot(x, ...)
+#   )
+# }
 expect_snapshot_lazy <- function(current, ...) {
-  testthat::expect_snapshot(current$collect(), ...)
+  withr::with_options(
+    list(polars.do_not_repeat_call = TRUE),
+    testthat::expect_snapshot(current$collect(), ...)
+  )
 }
 
 test_this_file <- function() {

@@ -53,15 +53,13 @@ test_that("error when different types", {
   # returns all FALSE)
   # I think it's better like this because it forces the user to
   # be clear about data types
-  expect_error(
-    test |>
-      mutate(y = ifelse(x1 == 1, "foo", "bar")),
-    "cannot compare"
+  expect_snapshot(
+    test |> mutate(y = ifelse(x1 == 1, "foo", "bar")),
+    error = TRUE
   )
-  expect_error(
-    test |>
-      mutate(y = if_else(x1 == 1, "foo", "bar")),
-    "cannot compare"
+  expect_snapshot(
+    test |> mutate(y = if_else(x1 == 1, "foo", "bar")),
+    error = TRUE
   )
 })
 

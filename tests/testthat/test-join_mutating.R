@@ -7,9 +7,9 @@ test_that("error if no common variables and and `by` no provided", {
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  expect_error(
+  expect_snapshot(
     left_join(test, polars::pl$DataFrame(iris)),
-    "`by` must be supplied when `x` and `y` have no common variables"
+    error = TRUE
   )
 })
 
@@ -26,12 +26,12 @@ test_that("basic behavior works", {
     y = c(1, 2, 4),
     z2 = c(4, 5, 7)
   )
-  
+
   expect_is_tidypolars(left_join(test, test2))
   expect_is_tidypolars(right_join(test, test2))
   expect_is_tidypolars(full_join(test, test2))
   expect_is_tidypolars(inner_join(test, test2))
-  
+
   expect_equal(
     left_join(test, test2),
     pl$DataFrame(
@@ -39,7 +39,7 @@ test_that("basic behavior works", {
       z = 1:3, z2 = c(4, 5, NA)
     )
   )
-  
+
   expect_equal(
     right_join(test, test2),
     pl$DataFrame(
@@ -47,7 +47,7 @@ test_that("basic behavior works", {
       z2 = c(4, 5, 7), z = c(1, 2, NA)
     )
   )
-  
+
   expect_equal(
     full_join(test, test2),
     pl$DataFrame(
@@ -55,7 +55,7 @@ test_that("basic behavior works", {
       z = c(1, 2, NA, 3), z2 = c(4, 5, 7, NA)
     )
   )
-  
+
   expect_equal(
     inner_join(test, test2),
     pl$DataFrame(
@@ -63,12 +63,12 @@ test_that("basic behavior works", {
       z = c(1, 2), z2 = c(4, 5)
     )
   )
-  
+
   expect_warning(
     left_join(test, test2, keep = TRUE),
     "Unused arguments: keep"
   )
-  
+
   expect_warning(
     left_join(test, test2, copy = TRUE),
     "Unused arguments: copy"
@@ -115,20 +115,20 @@ test_that("argument suffix works", {
     y = c(1, 2, 4),
     z = c(4, 5, 7)
   )
-  
+
   expect_colnames(
     left_join(test, test2, by = c("x", "y")),
     c("x", "y", "z.x", "z.y")
   )
-  
+
   expect_colnames(
     left_join(test, test2, by = c("x", "y"), suffix = c(".hi", ".hello")),
     c("x", "y", "z.hi", "z.hello")
   )
-  
-  expect_error(
+
+  expect_snapshot(
     left_join(test, test2, by = c("x", "y"), suffix = c(".hi")),
-    "must be of length 2"
+    error = TRUE
   )
 })
 
@@ -147,15 +147,15 @@ test_that("suffix + join_by works", {
     left_join(test, test2, by = join_by(x, y)),
     c("x", "y", "z.x", "z.y")
   )
-  
+
   expect_colnames(
     left_join(test, test2, by = join_by(x, y), suffix = c(".hi", ".hello")),
     c("x", "y", "z.hi", "z.hello")
   )
-  
-  expect_error(
+
+  expect_snapshot(
     left_join(test, test2, by = join_by(x, y), suffix = c(".hi")),
-    "must be of length 2"
+    error = TRUE
   )
 })
 
@@ -170,44 +170,44 @@ test_that("argument relationship works", {
     y = c(1, 2, 4),
     z = c(4, 5, 7)
   )
-  expect_error(
+
+  expect_snapshot(
     left_join(test, test2, by = join_by(x, y), relationship = "foo"),
-    "must be one of"
+    error = TRUE
   )
-  
+
   country <- polars::pl$DataFrame(
     iso = c("FRA", "DEU"),
     value = 1:2
   )
-  
+
   country_year <- polars::pl$DataFrame(
     iso = rep(c("FRA", "DEU"), each = 2),
     year = rep(2019:2020, 2),
     value2 = 3:6
   )
-  
+
   for (i in c(left_join, full_join, inner_join)) {
-    expect_error(
+    expect_snapshot(
       do.call(i, list(country, country_year, join_by(iso), relationship = "one-to-one")),
-      "did not fulfill 1:1 validation"
+      error = TRUE
     )
-  
-    expect_error(
+    expect_snapshot(
       do.call(i, list(country, country_year, join_by(iso), relationship = "many-to-one")),
-      "did not fulfill m:1 validation"
+      error = TRUE
     )
   }
-  
-  expect_error(
+
+  expect_snapshot(
     right_join(country, country_year, join_by(iso), relationship = "one-to-one"),
-    "did not fulfill 1:1 validation"
+    error = TRUE
   )
-  
-  expect_error(
+
+  expect_snapshot(
     right_join(country, country_year, join_by(iso), relationship = "one-to-many"),
-    "did not fulfill 1:m validation"
+    error = TRUE
   )
-  
+
   expect_equal(
     left_join(country, country_year, join_by(iso), relationship = "one-to-many"),
     data.frame(
@@ -217,7 +217,7 @@ test_that("argument relationship works", {
       value2 = 3:6
     )
   )
-  
+
   expect_equal(
     left_join(country, country_year, join_by(iso), relationship = "many-to-many"),
     data.frame(
@@ -233,9 +233,9 @@ test_that("argument na_matches works", {
   pdf1 <- pl$DataFrame(a = c(1, NA, NA, NaN), val = 1:4)
   pdf2 <- pl$DataFrame(a = c(1, 2, NA, NaN), val2 = 5:8)
 
-  expect_error(
+  expect_snapshot(
     left_join(pdf1, pdf2, na_matches = "foo"),
-    "must be one of"
+    error = TRUE
   )
 
   expect_equal(
@@ -257,7 +257,7 @@ test_that("argument na_matches works", {
       pull(a),
     c(1, 2, NA, NA, NaN)
   )
-  
+
   expect_equal(
     full_join(pdf1, pdf2, "a", na_matches = "never") |>
       pull(a),
@@ -278,12 +278,12 @@ test_that("error if two inputs don't have the same class", {
     y = c(1, 2, 4),
     z = c(4, 5, 7)
   )
-  
-  expect_error(
+
+  expect_snapshot(
     left_join(test, iris),
-    "must be either two DataFrames or two LazyFrames"
+    error = TRUE
   )
-  
+
   expect_equal(
     test2 |>
       mutate(foo = 1) |>  # adds class "tidypolars"

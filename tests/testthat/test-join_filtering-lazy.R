@@ -99,14 +99,13 @@ test_that("join_by() doesn't work with inequality", {
     z2 = c(1, 2, 4)
   )
 
-  expect_error_lazy(
+  expect_snapshot_lazy(
     semi_join(test, test2, by = join_by(x, y1 > y2)),
-    "doesn't support inequality conditions"
+    error = TRUE
   )
-
-  expect_error_lazy(
+  expect_snapshot_lazy(
     anti_join(test, test2, by = join_by(x, y1 > y2)),
-    "doesn't support inequality conditions"
+    error = TRUE
   )
 })
 
@@ -121,15 +120,13 @@ test_that("fallback on dplyr error if wrong join_by specification", {
     y2 = c(1, 2, 4),
     z2 = c(1, 2, 4)
   )
-
-  expect_error_lazy(
+  expect_snapshot_lazy(
     semi_join(test, test2, by = join_by(x, y1 = y2)),
-    "Can't name join expressions"
+    error = TRUE
   )
-
-  expect_error_lazy(
+  expect_snapshot_lazy(
     anti_join(test, test2, by = join_by(x, y1 = y2)),
-    "Can't name join expressions"
+    error = TRUE
   )
 })
 
