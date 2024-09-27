@@ -1,7 +1,8 @@
 #' Order rows using column values
 #'
 #' @param .data A Polars Data/LazyFrame
-#' @param ... Quoted or unquoted variable names. Select helpers cannot be used.
+#' @param ... Variables, or functions of variables. Use `desc()` to sort a
+#' variable in descending order.
 #' @param .by_group If `TRUE`, will sort data within groups.
 #'
 #' @export
@@ -23,42 +24,33 @@
 
 arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
 
-  dots <- get_dots(...)
-  out_length <- length(dots)
-  direction <- rep(FALSE, out_length)
-
   grps <- attributes(.data)$pl_grps
   mo <- attributes(data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
-  vars <- lapply(seq_along(dots), \(x) {
-      out <- as.character(dots[[x]])
-      if (length(out) == 2 && out[1] %in% c("-", "desc")) {
-        out <- as.character(dots[[x]][2])
-        direction[x] <<- TRUE
-      }
-      out
-    }) |>
-    unlist()
+  attr(.data, "called_from_arrange") <- TRUE
 
-  not_exist <- which(!vars %in% names(.data))
-  if (length(not_exist) > 0) {
-    vars <- vars[-not_exist]
-    direction <- direction[-not_exist]
-  }
+  polars_exprs <- translate_dots(
+    .data,
+    ...,
+    env = rlang::current_env(),
+    caller = rlang::caller_env()
+  )
 
-  if (length(vars) == 0) return(.data)
+  descending <- vapply(polars_exprs, function(x) {
+    attr(x, "descending") %||% FALSE
+  }, FUN.VALUE = logical(1L))
 
   if (is_grouped && isTRUE(.by_group)) {
-    vars <- c(grps, vars)
-    direction <- c(rep(FALSE, length(grps)), direction)
+    polars_exprs <- c(grps, polars_exprs)
+    descending <- c(rep(FALSE, length(grps)), descending)
   }
 
   out <- if (is_grouped) {
-    .data$sort(vars, descending = direction) |>
+    .data$sort(polars_exprs, descending = descending) |>
       group_by(all_of(grps), maintain_order = mo)
   } else {
-    .data$sort(vars, descending = direction)
+    .data$sort(polars_exprs, descending = descending)
   }
 
   add_tidypolars_class(out)

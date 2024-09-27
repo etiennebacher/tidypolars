@@ -31,10 +31,21 @@ translate_dots <- function(.data, ..., env, caller) {
   dots <- enquos(...)
   dots <- lapply(dots, quo_squash)
   new_vars <- c()
+  called_from_arrange <- attr(.data, "called_from_arrange") %||% FALSE
+
   out <- lapply(seq_along(dots), \(x) {
+    expr <- dots[[x]]
+
+    # arrange() is a special case since using "-" on a character column is
+    # accepted but invalid for Polars so we need to replace "-" by "desc()"
+    # before translating.
+    if (isTRUE(called_from_arrange) && length(expr) == 2 && expr[[1]] == "-") {
+      expr <- call2("desc", expr[[2]])
+    }
+
     tmp <- translate_expr(
       .data = .data,
-      dots[[x]],
+      expr,
       new_vars = new_vars,
       env = env,
       caller = caller

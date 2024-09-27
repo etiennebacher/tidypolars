@@ -9,7 +9,8 @@
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
 
-\item{...}{Quoted or unquoted variable names. Select helpers cannot be used.}
+\item{...}{Variables, or functions of variables. Use \code{desc()} to sort a
+variable in descending order.}
 
 \item{.by_group}{If \code{TRUE}, will sort data within groups.}
 }
