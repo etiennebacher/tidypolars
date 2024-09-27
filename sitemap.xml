@@ -22,12 +22,6 @@
 <url><loc>https://tidypolars.etiennebacher.com/reference/describe_plan.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/distinct.RPolarsDataFrame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/drop_na.RPolarsDataFrame.html</loc></url>
-<url><loc>https://tidypolars.etiennebacher.com/reference/expect_colnames.html</loc></url>
-<url><loc>https://tidypolars.etiennebacher.com/reference/expect_dim.html</loc></url>
-<url><loc>https://tidypolars.etiennebacher.com/reference/expect_equal.html</loc></url>
-<url><loc>https://tidypolars.etiennebacher.com/reference/expect_equal_lazy.html</loc></url>
-<url><loc>https://tidypolars.etiennebacher.com/reference/expect_error_lazy.html</loc></url>
-<url><loc>https://tidypolars.etiennebacher.com/reference/expect_is_tidypolars.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/explain.RPolarsLazyFrame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/fetch.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/fill.RPolarsDataFrame.html</loc></url>
