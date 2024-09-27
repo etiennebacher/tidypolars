@@ -1,34 +1,25 @@
-# n_distinct() works
+# error if original values and replacement have no supertype
 
     Code
-      summarize(test, foo = n_distinct())
+      replace_na(pl_test, "a")
     Condition
-      Error in `summarize()`:
-      ! Error while running function `n_distinct()` in Polars.
-      x `...` is absent, but must be supplied.
-
-# unique() works
-
-    Code
-      mutate(test, foo = unique(y))
-    Condition
-      Error:
+      Error in `replace_na()`:
       ! Execution halted with the following contexts
          0: In R: in $with_columns()
          0: During function call [base::tryCatch(base::withCallingHandlers({
                 {
                     {
-                        assign(".__stdout__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stdout_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stdout-98b87a813f8c"), 
+                        assign(".__stdout__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stdout_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stdout-98b8568d5a62"), 
                             envir = as.environment("tools:callr")$`__callr_data__`)
                     }
                     {
-                        assign(".__stderr__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stderr_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stderr-98b87742c1"), 
+                        assign(".__stderr__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stderr_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stderr-98b87e034ef0"), 
                             envir = as.environment("tools:callr")$`__callr_data__`)
                     }
                 }
-                base::saveRDS(base::do.call(base::do.call, base::c(base::readRDS("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-fun-98b868a0553a"), 
+                base::saveRDS(base::do.call(base::do.call, base::c(base::readRDS("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-fun-98b87a2f45ee"), 
                     base::list(envir = .GlobalEnv, quote = TRUE)), envir = .GlobalEnv, 
-                    quote = TRUE), file = "C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    quote = TRUE), file = "C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b843d140f6", 
                     compress = FALSE)
                 base::flush(base::stdout())
                 base::flush(base::stderr())
@@ -61,7 +52,7 @@
                     if (!base::is.na(cut)) {
                         e2$trace <- e2$trace[-(1:cut), ]
                     }
-                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b843d140f6", 
                         ".error"))
                 }
             }, interrupt = function(e) {
@@ -84,7 +75,7 @@
                     if (!base::is.na(cut)) {
                         e2$trace <- e2$trace[-(1:cut), ]
                     }
-                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b843d140f6", 
                         ".error"))
                 }
             }, callr_message = function(e) {
@@ -136,57 +127,30 @@
                 }
             })]
          1: Encountered the following error in Rust-Polars:
-            	lengths don't match: unable to add a column of length 4 to a DataFrame of height 5
-
-# nth() work
-
-    Code
-      summarize(test, foo = nth(x, 2:3))
-    Condition
-      Error in `summarize()`:
-      ! Error while running function `nth()` in Polars.
-      x `n` must have size 1, not size 2.
+            	conversion from `str` to `f64` failed in column 'literal' for 1 out of 1 values: ["a"]
 
 ---
 
     Code
-      summarize(test, foo = nth(x, NA))
+      replace_na(pl_test, list(x = 1, y = "unknown"))
     Condition
-      Error in `summarize()`:
-      ! Error while running function `nth()` in Polars.
-      x `n` can't be `NA`.
-
----
-
-    Code
-      summarize(test, foo = nth(x, 1.5))
-    Condition
-      Error in `summarize()`:
-      ! Error while running function `nth()` in Polars.
-      x `n` must be an integer.
-
-# na_if() works
-
-    Code
-      mutate(test, foo = na_if(x, 1:2))
-    Condition
-      Error:
+      Error in `replace_na()`:
       ! Execution halted with the following contexts
          0: In R: in $with_columns()
          0: During function call [base::tryCatch(base::withCallingHandlers({
                 {
                     {
-                        assign(".__stdout__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stdout_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stdout-98b87a813f8c"), 
+                        assign(".__stdout__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stdout_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stdout-98b8568d5a62"), 
                             envir = as.environment("tools:callr")$`__callr_data__`)
                     }
                     {
-                        assign(".__stderr__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stderr_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stderr-98b87742c1"), 
+                        assign(".__stderr__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stderr_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stderr-98b87e034ef0"), 
                             envir = as.environment("tools:callr")$`__callr_data__`)
                     }
                 }
-                base::saveRDS(base::do.call(base::do.call, base::c(base::readRDS("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-fun-98b868a0553a"), 
+                base::saveRDS(base::do.call(base::do.call, base::c(base::readRDS("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-fun-98b87a2f45ee"), 
                     base::list(envir = .GlobalEnv, quote = TRUE)), envir = .GlobalEnv, 
-                    quote = TRUE), file = "C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    quote = TRUE), file = "C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b843d140f6", 
                     compress = FALSE)
                 base::flush(base::stdout())
                 base::flush(base::stderr())
@@ -219,7 +183,7 @@
                     if (!base::is.na(cut)) {
                         e2$trace <- e2$trace[-(1:cut), ]
                     }
-                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b843d140f6", 
                         ".error"))
                 }
             }, interrupt = function(e) {
@@ -242,7 +206,7 @@
                     if (!base::is.na(cut)) {
                         e2$trace <- e2$trace[-(1:cut), ]
                     }
-                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b843d140f6", 
                         ".error"))
                 }
             }, callr_message = function(e) {
@@ -294,7 +258,5 @@
                 }
             })]
          1: Encountered the following error in Rust-Polars:
-            	cannot evaluate two Series of different lengths (5 and 2)
-      
-            Error originated in expression: '[(col("x")) == (Series)]'
+            	conversion from `str` to `i32` failed in column 'literal' for 1 out of 1 values: ["unknown"]
 

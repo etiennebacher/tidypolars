@@ -15,10 +15,9 @@ test_that("basic behavior works", {
 
   withr::with_options(
     list(tidypolars_unknown_args = "error"),
-    expect_error_lazy(
+    expect_snapshot_lazy(
       test |> mutate(x2 = sample(x, prob = 0.5)),
-      "tidypolars doesn't know how to use some arguments of `sample()`: `prob`.",
-      fixed = TRUE
+      error = TRUE
     )
   )
 })

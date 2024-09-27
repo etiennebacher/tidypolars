@@ -24,14 +24,12 @@ test_that("basic behavior works", {
 
 test_that("check percentiles", {
   test <- pl$DataFrame(mtcars)
-
-  expect_error(
+  expect_snapshot(
     summary(test, percentiles = c(0.2, 0.4, NA)),
-    'between 0 and 1'
+    error = TRUE
   )
-  
-  expect_error(
+  expect_snapshot(
     summary(test, percentiles = -1),
-    'between 0 and 1'
+    error = TRUE
   )
 })

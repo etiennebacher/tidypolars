@@ -19,12 +19,13 @@ test_that("multiplication works", {
 
 test_that("error cases work", {
   test <- polars::pl$DataFrame(mtcars)
-  expect_error(
-    pull(test, dplyr::all_of(c("mpg", "drat"))),
-    "can only extract one column"
-  )
 
-  expect_error(
-    pull(test, mpg, drat, hp)
+  expect_snapshot(
+    pull(test, dplyr::all_of(c("mpg", "drat"))),
+    error = TRUE
+  )
+  expect_snapshot(
+    pull(test, mpg, drat, hp),
+    error = TRUE
   )
 })

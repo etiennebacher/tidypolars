@@ -84,9 +84,9 @@ test_that("basic behavior with all() and any() works", {
 test_that("can only use rowwise() on a subset of functions", {
   test <- polars::pl$LazyFrame(x = c(TRUE, TRUE, NA), y = c(TRUE, FALSE, NA), z = c(TRUE, NA, NA)) |>
     rowwise()
-  expect_error_lazy(
+  expect_snapshot_lazy(
     test |> mutate(m = range(c(x, y, !z))),
-    "Can't use function"
+    error = TRUE
   )
 })
 
@@ -110,18 +110,17 @@ test_that("rowwise mode is kept after operations", {
 })
 
 test_that("can't apply rowwise on grouped data, and vice versa", {
-  expect_error_lazy(
+  expect_snapshot_lazy(
     polars::as_polars_df(mtcars) |>
       group_by(cyl) |>
       rowwise(),
-    "Cannot use "
+    error = TRUE
   )
-
-  expect_error_lazy(
+  expect_snapshot_lazy(
     polars::as_polars_df(mtcars) |>
       rowwise() |>
       group_by(cyl),
-    "Cannot use "
+    error = TRUE
   )
 })
 

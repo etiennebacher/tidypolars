@@ -55,9 +55,9 @@ test_that("select helpers work", {
 
   bad_selection <- c("Sepal.Length", "Sepal.Width", "foo")
 
-  expect_error(
+  expect_snapshot(
     select(pl_iris, all_of(bad_selection)),
-    "don't exist"
+    error = TRUE
   )
 
   expect_colnames(
@@ -75,9 +75,9 @@ test_that("select helpers work", {
     "Species"
   )
 
-  expect_error(
+  expect_snapshot(
     select(pl_iris, where(~ mean(.x) > 3.5)),
-    "can only take `is.*` functions"
+    error = TRUE
   )
 
   expect_colnames(

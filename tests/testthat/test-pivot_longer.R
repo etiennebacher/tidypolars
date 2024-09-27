@@ -60,13 +60,13 @@ test_that("argument names_prefix works", {
     c("1", "10", "11")
   )
 
-  expect_error(
+  expect_snapshot(
     pl_billboard |>
       pivot_longer(
         cols = starts_with("wk"),
         names_to = "week",
         names_prefix = c("wk", "foo"),
       ),
-    "must be of length 1"
+    error = TRUE
   )
 })

@@ -1,34 +1,34 @@
-# n_distinct() works
+# names_prefix works
 
     Code
-      summarize(test, foo = n_distinct())
+      pivot_wider(pl_fish_encounters, names_from = station, values_from = seen,
+        names_prefix = c("foo1", "foo2"))
     Condition
-      Error in `summarize()`:
-      ! Error while running function `n_distinct()` in Polars.
-      x `...` is absent, but must be supplied.
+      Error in `pivot_wider()`:
+      ! `names_prefix` must be of length 1.
 
-# unique() works
+# error when overwriting existing column
 
     Code
-      mutate(test, foo = unique(y))
+      pivot_wider(df, names_from = key, values_from = val)
     Condition
       Error:
       ! Execution halted with the following contexts
-         0: In R: in $with_columns()
+         0: In R: in $pivot():
          0: During function call [base::tryCatch(base::withCallingHandlers({
                 {
                     {
-                        assign(".__stdout__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stdout_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stdout-98b87a813f8c"), 
+                        assign(".__stdout__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stdout_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stdout-98b85b91377a"), 
                             envir = as.environment("tools:callr")$`__callr_data__`)
                     }
                     {
-                        assign(".__stderr__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stderr_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stderr-98b87742c1"), 
+                        assign(".__stderr__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stderr_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stderr-98b84c553531"), 
                             envir = as.environment("tools:callr")$`__callr_data__`)
                     }
                 }
-                base::saveRDS(base::do.call(base::do.call, base::c(base::readRDS("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-fun-98b868a0553a"), 
+                base::saveRDS(base::do.call(base::do.call, base::c(base::readRDS("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-fun-98b822007e55"), 
                     base::list(envir = .GlobalEnv, quote = TRUE)), envir = .GlobalEnv, 
-                    quote = TRUE), file = "C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    quote = TRUE), file = "C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b8150d3ff1", 
                     compress = FALSE)
                 base::flush(base::stdout())
                 base::flush(base::stderr())
@@ -61,7 +61,7 @@
                     if (!base::is.na(cut)) {
                         e2$trace <- e2$trace[-(1:cut), ]
                     }
-                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b8150d3ff1", 
                         ".error"))
                 }
             }, interrupt = function(e) {
@@ -84,7 +84,7 @@
                     if (!base::is.na(cut)) {
                         e2$trace <- e2$trace[-(1:cut), ]
                     }
-                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b8150d3ff1", 
                         ".error"))
                 }
             }, callr_message = function(e) {
@@ -136,57 +136,64 @@
                 }
             })]
          1: Encountered the following error in Rust-Polars:
-            	lengths don't match: unable to add a column of length 4 to a DataFrame of height 5
+            	duplicate: column with name 'a' has more than one occurrences
 
-# nth() work
+# `names_from` must be supplied if `name` isn't in data
 
     Code
-      summarize(test, foo = nth(x, 2:3))
+      pivot_wider(df, values_from = val)
     Condition
-      Error in `summarize()`:
-      ! Error while running function `nth()` in Polars.
-      x `n` must have size 1, not size 2.
+      Error in `pivot_wider()`:
+      ! Can't select columns that don't exist.
+      x Column `name` doesn't exist.
 
----
+# `values_from` must be supplied if `value` isn't in data
 
     Code
-      summarize(test, foo = nth(x, NA))
+      pivot_wider(df, names_from = key)
     Condition
-      Error in `summarize()`:
-      ! Error while running function `nth()` in Polars.
-      x `n` can't be `NA`.
+      Error in `pivot_wider()`:
+      ! Can't select columns that don't exist.
+      x Column `value` doesn't exist.
 
----
+# `names_from` must identify at least 1 column
 
     Code
-      summarize(test, foo = nth(x, 1.5))
+      pivot_wider(df, names_from = starts_with("foo"), values_from = val)
     Condition
-      Error in `summarize()`:
-      ! Error while running function `nth()` in Polars.
-      x `n` must be an integer.
+      Error in `pivot_wider()`:
+      ! Must select at least one variable in `names_from`.
 
-# na_if() works
+# `values_from` must identify at least 1 column
 
     Code
-      mutate(test, foo = na_if(x, 1:2))
+      pivot_wider(df, names_from = key, values_from = starts_with("foo"))
+    Condition
+      Error in `pivot_wider()`:
+      ! Must select at least one variable in `values_from`.
+
+# `id_cols` can't select columns from `names_from` or `values_from`
+
+    Code
+      pivot_wider(df, id_cols = name, names_from = name, values_from = value)
     Condition
       Error:
       ! Execution halted with the following contexts
-         0: In R: in $with_columns()
+         0: In R: in $pivot():
          0: During function call [base::tryCatch(base::withCallingHandlers({
                 {
                     {
-                        assign(".__stdout__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stdout_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stdout-98b87a813f8c"), 
+                        assign(".__stdout__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stdout_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stdout-98b85b91377a"), 
                             envir = as.environment("tools:callr")$`__callr_data__`)
                     }
                     {
-                        assign(".__stderr__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stderr_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stderr-98b87742c1"), 
+                        assign(".__stderr__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stderr_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stderr-98b84c553531"), 
                             envir = as.environment("tools:callr")$`__callr_data__`)
                     }
                 }
-                base::saveRDS(base::do.call(base::do.call, base::c(base::readRDS("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-fun-98b868a0553a"), 
+                base::saveRDS(base::do.call(base::do.call, base::c(base::readRDS("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-fun-98b822007e55"), 
                     base::list(envir = .GlobalEnv, quote = TRUE)), envir = .GlobalEnv, 
-                    quote = TRUE), file = "C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    quote = TRUE), file = "C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b8150d3ff1", 
                     compress = FALSE)
                 base::flush(base::stdout())
                 base::flush(base::stderr())
@@ -219,7 +226,7 @@
                     if (!base::is.na(cut)) {
                         e2$trace <- e2$trace[-(1:cut), ]
                     }
-                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b8150d3ff1", 
                         ".error"))
                 }
             }, interrupt = function(e) {
@@ -242,7 +249,7 @@
                     if (!base::is.na(cut)) {
                         e2$trace <- e2$trace[-(1:cut), ]
                     }
-                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b8150d3ff1", 
                         ".error"))
                 }
             }, callr_message = function(e) {
@@ -294,7 +301,136 @@
                 }
             })]
          1: Encountered the following error in Rust-Polars:
-            	cannot evaluate two Series of different lengths (5 and 2)
-      
-            Error originated in expression: '[(col("x")) == (Series)]'
+            	index cannot be zero length
+
+---
+
+    Code
+      pivot_wider(df, id_cols = value, names_from = name, values_from = value)
+    Condition
+      Error:
+      ! Execution halted with the following contexts
+         0: In R: in $pivot():
+         0: During function call [base::tryCatch(base::withCallingHandlers({
+                {
+                    {
+                        assign(".__stdout__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stdout_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stdout-98b85b91377a"), 
+                            envir = as.environment("tools:callr")$`__callr_data__`)
+                    }
+                    {
+                        assign(".__stderr__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stderr_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stderr-98b84c553531"), 
+                            envir = as.environment("tools:callr")$`__callr_data__`)
+                    }
+                }
+                base::saveRDS(base::do.call(base::do.call, base::c(base::readRDS("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-fun-98b822007e55"), 
+                    base::list(envir = .GlobalEnv, quote = TRUE)), envir = .GlobalEnv, 
+                    quote = TRUE), file = "C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b8150d3ff1", 
+                    compress = FALSE)
+                base::flush(base::stdout())
+                base::flush(base::stderr())
+                {
+                    {
+                        as.environment("tools:callr")$`__callr_data__`$pxlib$set_stdout(as.environment("tools:callr")$`__callr_data__`$.__stdout__)
+                    }
+                    {
+                        as.environment("tools:callr")$`__callr_data__`$pxlib$set_stderr(as.environment("tools:callr")$`__callr_data__`$.__stderr__)
+                    }
+                }
+                base::invisible()
+            }, error = function(e) {
+                {
+                    callr_data <- base::as.environment("tools:callr")$`__callr_data__`
+                    err <- callr_data$err
+                    if (FALSE) {
+                        base::assign(".Traceback", base::.traceback(4), envir = callr_data)
+                        utils::dump.frames("__callr_dump__")
+                        base::assign(".Last.dump", .GlobalEnv$`__callr_dump__`, 
+                            envir = callr_data)
+                        base::rm("__callr_dump__", envir = .GlobalEnv)
+                    }
+                    e <- err$process_call(e)
+                    e2 <- err$new_error("error in callr subprocess")
+                    class <- base::class
+                    class(e2) <- base::c("callr_remote_error", class(e2))
+                    e2 <- err$add_trace_back(e2)
+                    cut <- base::which(e2$trace$scope == "global")[1]
+                    if (!base::is.na(cut)) {
+                        e2$trace <- e2$trace[-(1:cut), ]
+                    }
+                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b8150d3ff1", 
+                        ".error"))
+                }
+            }, interrupt = function(e) {
+                {
+                    callr_data <- base::as.environment("tools:callr")$`__callr_data__`
+                    err <- callr_data$err
+                    if (FALSE) {
+                        base::assign(".Traceback", base::.traceback(4), envir = callr_data)
+                        utils::dump.frames("__callr_dump__")
+                        base::assign(".Last.dump", .GlobalEnv$`__callr_dump__`, 
+                            envir = callr_data)
+                        base::rm("__callr_dump__", envir = .GlobalEnv)
+                    }
+                    e <- err$process_call(e)
+                    e2 <- err$new_error("error in callr subprocess")
+                    class <- base::class
+                    class(e2) <- base::c("callr_remote_error", class(e2))
+                    e2 <- err$add_trace_back(e2)
+                    cut <- base::which(e2$trace$scope == "global")[1]
+                    if (!base::is.na(cut)) {
+                        e2$trace <- e2$trace[-(1:cut), ]
+                    }
+                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b8150d3ff1", 
+                        ".error"))
+                }
+            }, callr_message = function(e) {
+                base::try({
+                    pxlib <- base::as.environment("tools:callr")$`__callr_data__`$pxlib
+                    if (base::is.null(e$code)) 
+                        e$code <- "301"
+                    msg <- base::paste0("base64::", pxlib$base64_encode(base::serialize(e, 
+                        NULL)))
+                    data <- base::paste0(e$code, " ", base::nchar(msg), "\n", 
+                        msg)
+                    pxlib$write_fd(3L, data)
+                    if (base::inherits(e, "cli_message") && !base::is.null(base::findRestart("cli_message_handled"))) {
+                        base::invokeRestart("cli_message_handled")
+                    }
+                    else if (base::inherits(e, "message") && !base::is.null(base::findRestart("muffleMessage"))) {
+                        base::invokeRestart("muffleMessage")
+                    }
+                })
+            }), error = function(e) {
+                {
+                    {
+                        as.environment("tools:callr")$`__callr_data__`$pxlib$set_stdout(as.environment("tools:callr")$`__callr_data__`$.__stdout__)
+                    }
+                    {
+                        as.environment("tools:callr")$`__callr_data__`$pxlib$set_stderr(as.environment("tools:callr")$`__callr_data__`$.__stderr__)
+                    }
+                }
+                if (FALSE) {
+                    base::try(base::stop(e))
+                }
+                else {
+                    base::invisible()
+                }
+            }, interrupt = function(e) {
+                {
+                    {
+                        as.environment("tools:callr")$`__callr_data__`$pxlib$set_stdout(as.environment("tools:callr")$`__callr_data__`$.__stdout__)
+                    }
+                    {
+                        as.environment("tools:callr")$`__callr_data__`$pxlib$set_stderr(as.environment("tools:callr")$`__callr_data__`$.__stderr__)
+                    }
+                }
+                if (FALSE) {
+                    e
+                }
+                else {
+                    base::invisible()
+                }
+            })]
+         1: Encountered the following error in Rust-Polars:
+            	index cannot be zero length
 

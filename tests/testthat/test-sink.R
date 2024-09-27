@@ -1,12 +1,11 @@
 test_that("can only be used on a lazyframe", {
-  expect_error(
+  expect_snapshot(
     sink_csv(mtcars),
-    "can only be used on a LazyFrame"
+    error = TRUE
   )
-
-  expect_error(
+  expect_snapshot(
     sink_parquet(mtcars),
-    "can only be used on a LazyFrame"
+    error = TRUE
   )
 })
 
@@ -15,8 +14,8 @@ test_that("basic behavior with CSV", {
   mtcars |>
     as_polars_lf() |>
     sink_csv(dest)
-  
-  expect_equal(read.csv(dest), mtcars, ignore_attr = TRUE) 
+
+  expect_equal(read.csv(dest), mtcars, ignore_attr = TRUE)
 })
 
 test_that("basic behavior with parquet", {

@@ -26,14 +26,13 @@ test_that("basic behavior works", {
 
 test_that("error if original values and replacement have no supertype", {
   pl_test <- polars::pl$LazyFrame(x = c(NA, 1), y = c(2L, NA_integer_))
-  expect_error_lazy(
+  expect_snapshot_lazy(
     replace_na(pl_test, "a"),
-    "conversion from `str` to `(i32|f64)` failed in column 'literal' for 1 out of 1 values:"
+    error = TRUE
   )
-  
-  expect_error_lazy(
+  expect_snapshot_lazy(
     replace_na(pl_test, list(x = 1, y = "unknown")),
-    "conversion from `str` to `(i32|f64)` failed in column 'literal' for 1 out of 1 values:"
+    error = TRUE
   )
 })
 

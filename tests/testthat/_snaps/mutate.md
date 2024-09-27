@@ -1,16 +1,7 @@
-# n_distinct() works
+# scalar value works
 
     Code
-      summarize(test, foo = n_distinct())
-    Condition
-      Error in `summarize()`:
-      ! Error while running function `n_distinct()` in Polars.
-      x `...` is absent, but must be supplied.
-
-# unique() works
-
-    Code
-      mutate(test, foo = unique(y))
+      mutate(pl_iris, Sepal.Width = 1:2)
     Condition
       Error:
       ! Execution halted with the following contexts
@@ -18,17 +9,17 @@
          0: During function call [base::tryCatch(base::withCallingHandlers({
                 {
                     {
-                        assign(".__stdout__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stdout_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stdout-98b87a813f8c"), 
+                        assign(".__stdout__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stdout_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stdout-98b8195e6c32"), 
                             envir = as.environment("tools:callr")$`__callr_data__`)
                     }
                     {
-                        assign(".__stderr__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stderr_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stderr-98b87742c1"), 
+                        assign(".__stderr__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stderr_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stderr-98b81d4a4874"), 
                             envir = as.environment("tools:callr")$`__callr_data__`)
                     }
                 }
-                base::saveRDS(base::do.call(base::do.call, base::c(base::readRDS("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-fun-98b868a0553a"), 
+                base::saveRDS(base::do.call(base::do.call, base::c(base::readRDS("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-fun-98b8562d330"), 
                     base::list(envir = .GlobalEnv, quote = TRUE)), envir = .GlobalEnv, 
-                    quote = TRUE), file = "C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    quote = TRUE), file = "C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b863d5770d", 
                     compress = FALSE)
                 base::flush(base::stdout())
                 base::flush(base::stderr())
@@ -61,7 +52,7 @@
                     if (!base::is.na(cut)) {
                         e2$trace <- e2$trace[-(1:cut), ]
                     }
-                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b863d5770d", 
                         ".error"))
                 }
             }, interrupt = function(e) {
@@ -84,7 +75,7 @@
                     if (!base::is.na(cut)) {
                         e2$trace <- e2$trace[-(1:cut), ]
                     }
-                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b863d5770d", 
                         ".error"))
                 }
             }, callr_message = function(e) {
@@ -136,39 +127,12 @@
                 }
             })]
          1: Encountered the following error in Rust-Polars:
-            	lengths don't match: unable to add a column of length 4 to a DataFrame of height 5
-
-# nth() work
-
-    Code
-      summarize(test, foo = nth(x, 2:3))
-    Condition
-      Error in `summarize()`:
-      ! Error while running function `nth()` in Polars.
-      x `n` must have size 1, not size 2.
+            	lengths don't match: unable to add a column of length 2 to a DataFrame of height 150
 
 ---
 
     Code
-      summarize(test, foo = nth(x, NA))
-    Condition
-      Error in `summarize()`:
-      ! Error while running function `nth()` in Polars.
-      x `n` can't be `NA`.
-
----
-
-    Code
-      summarize(test, foo = nth(x, 1.5))
-    Condition
-      Error in `summarize()`:
-      ! Error while running function `nth()` in Polars.
-      x `n` must be an integer.
-
-# na_if() works
-
-    Code
-      mutate(test, foo = na_if(x, 1:2))
+      mutate(pl_iris, Sepal.Width = letters[1:2])
     Condition
       Error:
       ! Execution halted with the following contexts
@@ -176,17 +140,17 @@
          0: During function call [base::tryCatch(base::withCallingHandlers({
                 {
                     {
-                        assign(".__stdout__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stdout_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stdout-98b87a813f8c"), 
+                        assign(".__stdout__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stdout_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stdout-98b8195e6c32"), 
                             envir = as.environment("tools:callr")$`__callr_data__`)
                     }
                     {
-                        assign(".__stderr__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stderr_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stderr-98b87742c1"), 
+                        assign(".__stderr__", as.environment("tools:callr")$`__callr_data__`$pxlib$set_stderr_file("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-stderr-98b81d4a4874"), 
                             envir = as.environment("tools:callr")$`__callr_data__`)
                     }
                 }
-                base::saveRDS(base::do.call(base::do.call, base::c(base::readRDS("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-fun-98b868a0553a"), 
+                base::saveRDS(base::do.call(base::do.call, base::c(base::readRDS("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-fun-98b8562d330"), 
                     base::list(envir = .GlobalEnv, quote = TRUE)), envir = .GlobalEnv, 
-                    quote = TRUE), file = "C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    quote = TRUE), file = "C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b863d5770d", 
                     compress = FALSE)
                 base::flush(base::stdout())
                 base::flush(base::stderr())
@@ -219,7 +183,7 @@
                     if (!base::is.na(cut)) {
                         e2$trace <- e2$trace[-(1:cut), ]
                     }
-                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b863d5770d", 
                         ".error"))
                 }
             }, interrupt = function(e) {
@@ -242,7 +206,7 @@
                     if (!base::is.na(cut)) {
                         e2$trace <- e2$trace[-(1:cut), ]
                     }
-                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b81b096cf9", 
+                    base::saveRDS(base::list("error", e2, e), file = base::paste0("C:\\Users\\etienne\\AppData\\Local\\Temp\\RtmpaeY3d2\\callr-rs-result-98b863d5770d", 
                         ".error"))
                 }
             }, callr_message = function(e) {
@@ -294,7 +258,22 @@
                 }
             })]
          1: Encountered the following error in Rust-Polars:
-            	cannot evaluate two Series of different lengths (5 and 2)
-      
-            Error originated in expression: '[(col("x")) == (Series)]'
+            	lengths don't match: unable to add a column of length 2 to a DataFrame of height 150
+
+# custom function that doesn't return Polars expression
+
+    Code
+      mutate(pl_iris, x = foo(Sepal.Length, Petal.Length))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `foo()` in Polars.
+      x Non-numeric argument to mathematical function
+
+# argument .keep works
+
+    Code
+      mutate(pl_iris, x = 1, .keep = "foo")
+    Condition
+      Error in `mutate()`:
+      ! `.keep` must be one of "all", "used", "unused", or "none", not "foo".
 

@@ -22,14 +22,14 @@ test_that("slice_head works with grouped data", {
   pl_iris <- polars::pl$DataFrame(iris)
   pl_iris_g <- pl_iris |>
     group_by(Species, maintain_order = TRUE)
-  
+
   hd <- slice_head(pl_iris_g, n = 2)
-  
+
   expect_equal(
     pull(hd, Species),
     factor(rep(c("setosa", "versicolor", "virginica"), each = 2))
   )
-  
+
   expect_equal(
     pl_iris |>
       slice_head(pl_iris_g, n = 2, by = Species) |>
@@ -37,19 +37,19 @@ test_that("slice_head works with grouped data", {
       sort(),
     factor(rep(c("setosa", "versicolor", "virginica"), each = 2))
   )
-  
+
   expect_dim(hd, c(6, 5))
-  
+
   expect_equal(
     pull(hd, Sepal.Length)[3:4],
     c(7, 6.4)
   )
-  
+
   expect_equal(
     attr(hd, "pl_grps"),
     "Species"
   )
-  
+
   expect_equal(
     attr(hd, "maintain_grp_order"),
     TRUE
@@ -96,7 +96,7 @@ test_that("slice_tail works on grouped data", {
 test_that("slice_sample works", {
   pl_iris <- polars::pl$DataFrame(iris)
   skip_if_not(inherits(pl_iris, "RPolarsDataFrame"))
-  
+
   expect_is_tidypolars(slice_sample(pl_iris, prop = 0.1))
 
   expect_equal(
@@ -114,9 +114,9 @@ test_that("slice_sample works", {
     15
   )
 
-  expect_error(
+  expect_snapshot(
     slice_sample(pl_iris, n = 2, prop = 0.1),
-    "not both"
+    error = TRUE
   )
 
   expect_equal(
@@ -124,9 +124,9 @@ test_that("slice_sample works", {
     200
   )
 
-  expect_error(
+  expect_snapshot(
     slice_sample(pl_iris, n = 200),
-    "Cannot take more rows than"
+    error = TRUE
   )
 
   expect_equal(
@@ -134,9 +134,9 @@ test_that("slice_sample works", {
     300
   )
 
-  expect_error(
+  expect_snapshot(
     slice_sample(pl_iris, prop = 1.2),
-    "Cannot take more rows than"
+    error = TRUE
   )
 
   expect_equal(

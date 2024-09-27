@@ -34,14 +34,14 @@ test_that("names_prefix works", {
     c("foo_MAE", "foo_MAW")
   )
 
-  expect_error(
+  expect_snapshot(
     pl_fish_encounters |>
       pivot_wider(
         names_from = station,
         values_from = seen,
         names_prefix = c("foo1", "foo2")
       ),
-    "must be of length 1"
+    error = TRUE
   )
 })
 
@@ -111,7 +111,7 @@ test_that("names_glue works", {
     filter((product == "A" & country == "AI") | product == "B") |>
     mutate(production = 1:45) |>
     as_polars_df()
-  
+
   wide <- production |>
     pivot_wider(
       names_from = c(product, country),
@@ -149,39 +149,42 @@ test_that("error when overwriting existing column", {
     val = c(1, 2)
   )
 
-  expect_error(pivot_wider(df, names_from = key, values_from = val))
+  expect_snapshot(
+    pivot_wider(df, names_from = key, values_from = val),
+    error = TRUE
+  )
 })
 
 test_that("`names_from` must be supplied if `name` isn't in data", {
   df <- pl$DataFrame(key = "x", val = 1)
-  expect_error(
+  expect_snapshot(
     pivot_wider(df, values_from = val),
-    "Column `name` doesn't exist"
+    error = TRUE
   )
 })
 
 # `values_from` must be supplied if `value` isn't in `data`
 test_that("`values_from` must be supplied if `value` isn't in data", {
   df <- pl$DataFrame(key = "x", val = 1)
-  expect_error(
+  expect_snapshot(
     pivot_wider(df, names_from = key),
-    "Column `value` doesn't exist"
+    error = TRUE
   )
 })
 
 test_that("`names_from` must identify at least 1 column", {
   df <- pl$DataFrame(key = "x", val = 1)
-  expect_error(
+  expect_snapshot(
     pivot_wider(df, names_from = starts_with("foo"), values_from = val),
-    "at least one variable in `names_from`"
+    error = TRUE
   )
 })
 
 test_that("`values_from` must identify at least 1 column", {
   df <- pl$DataFrame(key = "x", val = 1)
-  expect_error(
+  expect_snapshot(
     pivot_wider(df, names_from = key, values_from = starts_with("foo")),
-    "at least one variable in `values_from`"
+    error = TRUE
   )
 })
 
@@ -195,6 +198,12 @@ test_that("`id_cols = everything()` excludes `names_from` and `values_from`", {
 
 test_that("`id_cols` can't select columns from `names_from` or `values_from`", {
   df <- pl$DataFrame(name = c("x", "y"), value = c(1, 2))
-  expect_error(pivot_wider(df, id_cols = name, names_from = name, values_from = value))
-  expect_error(pivot_wider(df, id_cols = value, names_from = name, values_from = value))
+  expect_snapshot(
+    pivot_wider(df, id_cols = name, names_from = name, values_from = value),
+    error = TRUE
+  )
+  expect_snapshot(
+    pivot_wider(df, id_cols = value, names_from = name, values_from = value),
+    error = TRUE
+  )
 })

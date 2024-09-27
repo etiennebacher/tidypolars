@@ -23,13 +23,14 @@ test_that("multiplication works", {
 
 test_that("error cases work", {
   test <- polars::pl$LazyFrame(mtcars)
-  expect_error_lazy(
-    pull(test, dplyr::all_of(c("mpg", "drat"))),
-    "can only extract one column"
-  )
 
-  expect_error_lazy(
-    pull(test, mpg, drat, hp)
+  expect_snapshot_lazy(
+    pull(test, dplyr::all_of(c("mpg", "drat"))),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    pull(test, mpg, drat, hp),
+    error = TRUE
   )
 })
 

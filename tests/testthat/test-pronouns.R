@@ -37,14 +37,14 @@ test_that("using dollar sign works", {
     rep(10, 3)
   )
 
-  expect_error(
+  expect_snapshot(
     test |> mutate(foo = x * .env$bar),
-    "'bar' not found"
+    error = TRUE
   )
 
-  expect_error(
+  expect_snapshot(
     test |> mutate(foo = x * .data$bar),
-    "not found: bar"
+    error = TRUE
   )
 })
 
@@ -96,14 +96,14 @@ test_that("using [[ sign works", {
     c(4, 5, 6)
   )
 
-  expect_error(
+  expect_snapshot(
     test |> mutate(foo = x * .env[["bar"]]),
-    "'bar' not found"
+    error = TRUE
   )
 
-  expect_error(
+  expect_snapshot(
     test |> mutate(foo = x * .data[["bar"]]),
-    "not found: bar"
+    error = TRUE
   )
 })
 
