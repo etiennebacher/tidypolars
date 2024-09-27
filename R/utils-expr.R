@@ -501,7 +501,7 @@ translate <- function(
         }
       )
 
-      user_defined <- get_globenv_functions(caller = caller)
+      user_defined <- get_user_defined_functions(caller = caller)
       known_ops <- c("+", "-", "*", "/", "^", "**", ">", ">=", "<", "<=", "==", "!=",
                      "&", "|", "!", "%%", "%/%")
       fn_names <- add_pkg_suffix(name, known_ops, user_defined)
@@ -627,13 +627,17 @@ polars_col <- function(x) {
   polars::pl$col(x)
 }
 
-# Look for user-defined functions in the global environment
-get_globenv_functions <- function(caller) {
+get_user_defined_functions <- function(caller) {
+  # browser()
   x <- ls(caller)
   list_fns <- list()
   for (i in x) {
-    foo <- get(i, envir = caller)
-    if (is.function(foo)) {
+    foo <- tryCatch(
+      env_get(nm = i, env = caller), 
+      warning = function(w) invisible(),
+      error = function(e) NULL
+    )
+    if (!is.null(foo) && is.function(foo)) {
       list_fns[[i]] <- i
     }
   }

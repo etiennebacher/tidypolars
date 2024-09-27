@@ -7,7 +7,7 @@
       ! Execution halted with the following contexts
          0: In R: in $collect():
          1: Encountered the following error in Rust-Polars:
-            	conversion from `str` to `i32` failed in column 'literal' for 1 out of 1 values: ["a"]
+            	conversion from `str` to `f64` failed in column 'literal' for 1 out of 1 values: ["a"]
 
 ---
 
@@ -18,5 +18,5 @@
       ! Execution halted with the following contexts
          0: In R: in $collect():
          1: Encountered the following error in Rust-Polars:
-            	conversion from `str` to `i32` failed in column 'literal' for 1 out of 1 values: ["unknown"]
+            	conversion from `str` to `f64` failed in column 'literal' for 1 out of 1 values: ["unknown"]
 

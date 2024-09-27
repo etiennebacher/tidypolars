@@ -21,7 +21,7 @@ test_that("basic behavior works", {
 })
 
 test_that("error if original values and replacement have no supertype", {
-  pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2L, NA_integer_))
+  pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
   expect_snapshot(
     replace_na(pl_test, "a"),
     error = TRUE
