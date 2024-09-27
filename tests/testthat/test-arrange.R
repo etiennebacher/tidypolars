@@ -65,17 +65,18 @@ test_that("errors with unknown vars", {
     x2 = c(2, 1, 5, 3, 1),
     value = sample(1:5)
   )
-  expect_error(
+
+  expect_snapshot(
     arrange(test, foo),
-    "object 'foo' not found"
+    error = TRUE
   )
-  expect_error(
+  expect_snapshot(
     arrange(test, foo, x1),
-    "object 'foo' not found"
+    error = TRUE
   )
-  expect_error(
+  expect_snapshot(
     arrange(test, desc(foo)),
-    "object 'foo' not found"
+    error = TRUE
   )
 })
 

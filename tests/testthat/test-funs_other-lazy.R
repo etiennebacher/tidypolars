@@ -39,10 +39,9 @@ test_that("which.min() and which.max() work", {
 test_that("n_distinct() works", {
   test <- polars::pl$LazyFrame(x = c("a", "a", "b", "b"), y = c(1:3, NA))
 
-  expect_error_lazy(
-    test |>
-      summarize(foo = n_distinct()),
-    "must be supplied"
+  expect_snapshot_lazy(
+    test |> summarize(foo = n_distinct()),
+    error = TRUE
   )
 
   expect_equal_lazy(
@@ -91,21 +90,21 @@ test_that("n_distinct() works", {
 
 test_that("length() works", {
   test <- polars::pl$LazyFrame(x = c("a", "a", "a", "b", "b"), y = c(1:4, NA))
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = length(y)) |>
       pull(foo),
     rep(5, 5)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = length(y), .by = x) |>
       pull(foo),
     c(3, 3, 3, 2, 2)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = length(y), .by = c(x, y)) |>
@@ -116,27 +115,26 @@ test_that("length() works", {
 
 test_that("unique() works", {
   test <- polars::pl$LazyFrame(x = c("a", "a", "a", "b", "b"), y = c(2, 2, 3, 4, NA))
-  
-  expect_error_lazy(
-    test |>
-      mutate(foo = unique(y)),
-    "lengths don't match"
+
+  expect_snapshot_lazy(
+    test |> mutate(foo = unique(y)),
+    error = TRUE
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = length(unique(y))) |>
       pull(foo),
     rep(4, 5)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = length(unique(y)), .by = x) |>
       pull(foo),
     rep(2, 5)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = length(unique(y)), .by = c(x, y)) |>
@@ -147,35 +145,35 @@ test_that("unique() works", {
 
 test_that("rev() works", {
   test <- polars::pl$LazyFrame(x = c("a", "a", "a", "b", "b"), y = c(2, 2, 3, 4, NA))
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = rev(y)) |>
       pull(foo),
     c(NA, 4, 3, 2, 2)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = rev(x)) |>
       pull(foo),
     c("b", "b", "a", "a", "a")
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = rev(y), .by = x) |>
       pull(foo),
     c(3, 2, 2, NA, 4)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = rev(y), .by = c(x, y)) |>
       pull(foo),
     c(2, 2, 3, 4, NA)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = rev(y + 1), .by = x) |>
@@ -194,14 +192,14 @@ test_that("all() works", {
     # we know it's FALSE because there's one FALSE in x, so the na.rm arg is irrelevant
     c(FALSE, FALSE, FALSE)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = all(y)) |>
       pull(foo),
     c(NA, NA, NA)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = all(y, na.rm = TRUE)) |>
@@ -219,7 +217,7 @@ test_that("any() works", {
       pull(foo),
     c(NA, NA, NA)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = any(x, na.rm = TRUE)) |>
@@ -259,21 +257,21 @@ test_that("consecutive_id() works", {
     y = c(2, 2, 4, 4, 4),
     grp = c("A", "A", "A", "B", "B")
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = consecutive_id(x)) |>
       pull(foo),
     c(1, 2, 3, 3, 4)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = consecutive_id(x, y)) |>
       pull(foo),
     c(1, 2, 3, 3, 4)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = consecutive_id(x), .by = grp) |>
@@ -287,14 +285,14 @@ test_that("first() works", {
     x = c(3, 1, 2, 2, NA),
     grp = c("A", "A", "A", "B", "B")
   )
-  
+
   expect_equal_lazy(
     test |>
       summarize(foo = first(x)) |>
       pull(foo),
     3
   )
-  
+
   expect_equal_lazy(
     test |>
       summarize(foo = first(x), .by = grp) |>
@@ -302,7 +300,7 @@ test_that("first() works", {
       sort(),
     c(2, 3)
   )
-  
+
   expect_warning(
     test |>
       summarize(foo = first(x, order_by = "bar")),
@@ -315,14 +313,14 @@ test_that("last() works", {
     x = c(3, 1, 2, 2, NA),
     grp = c("A", "A", "A", "B", "B")
   )
-  
+
   expect_equal_lazy(
     test |>
       summarize(foo = last(x)) |>
       pull(foo),
     NA_real_
   )
-  
+
   expect_equal_lazy(
     test |>
       summarize(foo = last(x), .by = grp) |>
@@ -330,7 +328,7 @@ test_that("last() works", {
       sort(na.last = TRUE),
     c(2, NA)
   )
-  
+
   expect_warning(
     test |>
       summarize(foo = last(x, order_by = "bar")),
@@ -344,21 +342,21 @@ test_that("nth() work", {
     idx = 1:5,
     grp = c("A", "A", "A", "B", "B")
   )
-  
+
   expect_equal_lazy(
     test |>
       summarize(foo = nth(x, 2)) |>
       pull(foo),
     1
   )
-  
+
   expect_equal_lazy(
     test |>
       summarize(foo = nth(x, -1)) |>
       pull(foo),
     NA_real_
   )
-  
+
   # TODO: Requires null_on_oob argument in gather/get
   # https://github.com/pola-rs/polars/issues/15240
   # expect_equal_lazy(
@@ -367,26 +365,18 @@ test_that("nth() work", {
   #     pull(foo),
   #   NA_real_
   # )
-  
-  expect_error_lazy(
-    test |>
-      summarize(foo = nth(x, 2:3)) |>
-      pull(foo),
-    "must have size 1"
+
+  expect_snapshot_lazy(
+    test |> summarize(foo = nth(x, 2:3)),
+    error = TRUE
   )
-  
-  expect_error_lazy(
-    test |>
-      summarize(foo = nth(x, NA)) |>
-      pull(foo),
-    "can't be `NA`"
+  expect_snapshot_lazy(
+    test |> summarize(foo = nth(x, NA)),
+    error = TRUE
   )
-  
-  expect_error_lazy(
-    test |>
-      summarize(foo = nth(x, 1.5)) |>
-      pull(foo),
-    "must be an integer"
+  expect_snapshot_lazy(
+    test |> summarize(foo = nth(x, 1.5)),
+    error = TRUE
   )
 })
 
@@ -395,48 +385,47 @@ test_that("na_if() works", {
     x = c(3, 1, 2, 2, 3),
     grp = c("A", "A", "A", "B", "")
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = na_if(x, 3)) |>
       pull(foo),
     c(NA, 1, 2, 2, NA)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = na_if(x, 3), .by = grp) |>
       pull(foo),
     c(NA, 1, 2, 2, NA)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = na_if(grp, "")) |>
       pull(foo),
     c("A", "A", "A", "B", NA)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = na_if(x, c(3, 1, 1, 1, 1))) |>
       pull(foo),
     c(NA, NA, 2, 2, 3)
   )
-  
-  expect_error_lazy(
-    test |>
-      mutate(foo = na_if(x, 1:2)),
-    "different lengths"
+
+  expect_snapshot_lazy(
+    test |> mutate(foo = na_if(x, 1:2)),
+    error = TRUE
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = na_if(x, NA)) |>
       pull(foo),
     c(3, 1, 2, 2, 3)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = na_if(x, c(NA, 1, 1, 1, 1))) |>
@@ -454,7 +443,7 @@ test_that("min_rank() works", {
       pull(foo),
     c(5, 1, 4, 2, 2, NA)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = min_rank(y)) |>
@@ -472,16 +461,16 @@ test_that("dense_rank() works", {
       pull(foo),
     c(4, 1, 3, 2, 2, NA)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = dense_rank(y)) |>
       pull(foo),
     c(rep(NA, 5), 1)
   )
-  
+
   test2 <- polars::pl$LazyFrame(x = numeric(0), y = numeric(0))
-  
+
   expect_dim(
     test2 |> mutate(foo = dense_rank(x)),
     c(0, 3)
@@ -497,26 +486,26 @@ test_that("row_number() works", {
       pull(foo),
     c(5, 1, 4, 2, 3, NA)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = row_number(y)) |>
       pull(foo),
     c(rep(NA, 5), 1)
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = row_number()) |>
       pull(foo),
     1:6
   )
-  
+
   test2 <- polars::pl$LazyFrame(
     grp = c(1, 1, 1, 2, 2, 2, 3, 3, 3),
     x = c(3, 2, 1, 1, 2, 2, 1, 1, 1)
   )
-  
+
   expect_equal_lazy(
     test2 |>
       group_by(grp) |>
@@ -524,7 +513,7 @@ test_that("row_number() works", {
       pull(x),
     rep(1, 3)
   )
-  
+
   expect_equal_lazy(
     test2 |>
       group_by(grp) |>
@@ -532,7 +521,7 @@ test_that("row_number() works", {
       pull(x),
     rep(1, 5)
   )
-  
+
   expect_equal_lazy(
     test2 |>
       group_by(grp) |>
@@ -540,22 +529,22 @@ test_that("row_number() works", {
       pull(foo),
     rep(1:3, 3)
   )
-  
+
   test3 <- polars::pl$LazyFrame(x = numeric(0), y = numeric(0))
-  
+
   expect_dim(
     test3 |> mutate(foo = row_number()),
     c(0, 3)
   )
-  
+
   # row_number with random values and aggregation based on row index just to be sure
-  
+
   set.seed(123)
   test4 <- polars::pl$LazyFrame(
     grp = sample(1:5, 10, replace = TRUE),
     val = 1:10
   )
-  
+
   expect_equal_lazy(
     test4 |>
       mutate(

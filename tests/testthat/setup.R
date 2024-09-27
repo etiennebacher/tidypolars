@@ -22,6 +22,7 @@ for (i in eager) {
   out <- gsub("pl\\$DataFrame", "pl\\$LazyFrame", tmp)
   out <- gsub("expect_equal", "expect_equal_lazy", out)
   out <- gsub("expect_error", "expect_error_lazy", out)
+  out <- gsub("expect_snapshot", "expect_snapshot_lazy", out)
   out <- paste0("### [GENERATED AUTOMATICALLY] Update ", i, " instead.\n\n",
                 "Sys.setenv('TIDYPOLARS_TEST' = TRUE)\n\n",
                 paste(out, collapse = "\n"),

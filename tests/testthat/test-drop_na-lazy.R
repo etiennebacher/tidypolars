@@ -38,9 +38,9 @@ test_that("basic behavior works", {
 
 test_that("error if variable doesn't exist", {
   pl_tmp <- polars::pl$LazyFrame(mtcars)
-  expect_error_lazy(
+  expect_snapshot_lazy(
     drop_na(pl_tmp, foo),
-    "don't exist"
+    error = TRUE
   )
 })
 

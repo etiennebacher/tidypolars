@@ -62,9 +62,9 @@ test_that("error if not all elements don't have the same class", {
     )
   )
 
-  expect_error_lazy(
+  expect_snapshot_lazy(
     bind_cols_polars(l),
-    "must be either"
+    error = TRUE
   )
 })
 
@@ -86,9 +86,9 @@ test_that("can only bind more than 2 elements if DataFrame", {
   )
 
   if (Sys.getenv("TIDYPOLARS_TEST") == "TRUE") {
-    expect_error_lazy(
+    expect_snapshot_lazy(
       bind_cols_polars(l),
-      "doesn't work with more than two"
+      error = TRUE
     )
   } else {
     expect_dim(bind_cols_polars(l), c(20, 6))
@@ -120,19 +120,17 @@ test_that("arg .name_repair works", {
     c("a", "x...2", "y...3", "z", "x...5", "y...6")
   )
 
-  expect_error_lazy(
+  expect_snapshot_lazy(
     bind_cols_polars(l, .name_repair = "check_unique"),
-    "Names must be unique"
+    error = TRUE
   )
-
-  expect_error_lazy(
+  expect_snapshot_lazy(
     bind_cols_polars(l, .name_repair = "minimal"),
-    "Either provide unique names or use"
+    error = TRUE
   )
-
-  expect_error_lazy(
+  expect_snapshot_lazy(
     bind_cols_polars(l, .name_repair = "blahblah"),
-    "must be one of"
+    error = TRUE
   )
 })
 

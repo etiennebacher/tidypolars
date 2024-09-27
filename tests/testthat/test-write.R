@@ -1,27 +1,23 @@
 test_that("only works on polars dataframe", {
-  expect_error(
+  expect_snapshot(
     write_csv_polars(mtcars),
-    "can only be used on a DataFrame"
+    error = TRUE
   )
-
-  expect_error(
+  expect_snapshot(
     write_ipc_polars(mtcars),
-    "can only be used on a DataFrame"
+    error = TRUE
   )
-
-  expect_error(
+  expect_snapshot(
     write_json_polars(mtcars),
-    "can only be used on a DataFrame"
+    error = TRUE
   )
-
-  expect_error(
+  expect_snapshot(
     write_ndjson_polars(mtcars),
-    "can only be used on a DataFrame"
+    error = TRUE
   )
-
-  expect_error(
+  expect_snapshot(
     write_parquet_polars(mtcars),
-    "can only be used on a DataFrame"
+    error = TRUE
   )
 })
 
@@ -51,8 +47,8 @@ test_that("basic behavior with JSON", {
   mtcars |>
     as_polars_df() |>
     write_json_polars(dest, row_oriented = TRUE)
-  
-  expect_equal(jsonlite::fromJSON(dest), mtcars, ignore_attr = TRUE) 
+
+  expect_equal(jsonlite::fromJSON(dest), mtcars, ignore_attr = TRUE)
 })
 
 test_that("basic behavior with NDJSON", {

@@ -78,10 +78,10 @@ test_that("logical ops +, -, *, / work", {
       pull(x) |>
       unique()
   )
-  })
+})
 
-  test_that("%in operator works", {
-    pl_iris <- polars::pl$DataFrame(iris)
+test_that("%in operator works", {
+  pl_iris <- polars::pl$DataFrame(iris)
 
   test <- pl$DataFrame(
     x1 = c("a", "a", "foo", "a", "c"),
@@ -103,19 +103,19 @@ test_that("logical ops +, -, *, / work", {
 })
 
 
-  test_that("can overwrite existin variables", {
-    pl_iris <- polars::pl$DataFrame(iris)
+test_that("can overwrite existin variables", {
+  pl_iris <- polars::pl$DataFrame(iris)
 
   expect_equal(
     mutate(pl_iris, Sepal.Width = Sepal.Width*2) |>
       pull(Sepal.Width),
     iris$Sepal.Width*2
   )
-  })
+})
 
 
-  test_that("scalar value works", {
-    pl_iris <- polars::pl$DataFrame(iris)
+test_that("scalar value works", {
+  pl_iris <- polars::pl$DataFrame(iris)
 
   expect_equal(
     mutate(pl_iris, Sepal.Width = 2) |>
@@ -131,17 +131,18 @@ test_that("logical ops +, -, *, / work", {
     "a"
   )
 
-  expect_error(
-    mutate(pl_iris, Sepal.Width = 1:2)
+  expect_snapshot(
+    mutate(pl_iris, Sepal.Width = 1:2),
+    error = TRUE
   )
-
-  expect_error(
-    mutate(pl_iris, Sepal.Width = letters[1:2])
+  expect_snapshot(
+    mutate(pl_iris, Sepal.Width = letters[1:2]),
+    error = TRUE
   )
-  })
+})
 
-  test_that("passing several expressions works", {
-    pl_iris <- polars::pl$DataFrame(iris)
+test_that("passing several expressions works", {
+  pl_iris <- polars::pl$DataFrame(iris)
   out <- mutate(
     pl_iris,
     Sepal.Width = Sepal.Width*2,
@@ -155,21 +156,21 @@ test_that("logical ops +, -, *, / work", {
     ),
     c(iris$Sepal.Width*2, iris$Petal.Width*3)
   )
-  })
+})
 
 
-  test_that("dropping columns works", {
-    pl_iris <- polars::pl$DataFrame(iris)
+test_that("dropping columns works", {
+  pl_iris <- polars::pl$DataFrame(iris)
 
   expect_colnames(
     mutate(pl_iris, Sepal.Length = 1, Species = NULL),
     names(iris)[1:4]
   )
-  })
+})
 
 
-  test_that("operations on grouped data work", {
-    pl_iris <- polars::pl$DataFrame(iris)
+test_that("operations on grouped data work", {
+  pl_iris <- polars::pl$DataFrame(iris)
 
   out <- pl_iris |>
     group_by(Species, maintain_order = TRUE) |>
@@ -240,21 +241,21 @@ test_that("logical ops +, -, *, / work", {
       mutate(disp2 = disp / mean(disp), .by = c(cyl, am)),
     out
   )
-  })
+})
 
 
-  test_that("warning if unknown argument", {
-    pl_iris <- polars::pl$DataFrame(iris)
+test_that("warning if unknown argument", {
+  pl_iris <- polars::pl$DataFrame(iris)
 
   expect_warning(
     mutate(pl_iris, foo = mean(Sepal.Length, trim = 1)),
     "doesn't know how to use some arguments"
   )
-  })
+})
 
 
-  test_that("custom function that returns Polars expression", {
-    pl_iris <- polars::pl$DataFrame(iris)
+test_that("custom function that returns Polars expression", {
+  pl_iris <- polars::pl$DataFrame(iris)
 
   foo <- function(x, y) {
     tmp <- x$mean()
@@ -271,165 +272,165 @@ test_that("logical ops +, -, *, / work", {
 })
 
 
-  test_that("custom function that doesn't return Polars expression", {
-    pl_iris <- polars::pl$DataFrame(iris)
+test_that("custom function that doesn't return Polars expression", {
+  pl_iris <- polars::pl$DataFrame(iris)
 
   foo <- function(x, y) {
     dplyr::near(x, y)
   }
 
-  expect_error(
+  expect_snapshot(
     mutate(pl_iris, x = foo(Sepal.Length, Petal.Length)),
-    "Error while running function `foo\\(\\)`"
+    error = TRUE
   )
-  })
+})
 
-  test_that("embracing work", {
-    pl_iris <- polars::pl$DataFrame(iris)
+test_that("embracing work", {
+  pl_iris <- polars::pl$DataFrame(iris)
 
-    some_value <- 1
+  some_value <- 1
 
-    expect_equal(
-      mutate(pl_iris, x = {{ some_value }}),
-      mutate(pl_iris, x = 1)
-    )
+  expect_equal(
+    mutate(pl_iris, x = {{ some_value }}),
+    mutate(pl_iris, x = 1)
+  )
 
-    expect_equal(
-      mutate(pl_iris, x = some_value + Sepal.Length),
-      mutate(pl_iris, x = 1 + Sepal.Length)
-    )
-  })
+  expect_equal(
+    mutate(pl_iris, x = some_value + Sepal.Length),
+    mutate(pl_iris, x = 1 + Sepal.Length)
+  )
+})
 
-  test_that("reordering expressions works", {
-    pl_iris <- polars::pl$DataFrame(iris)
+test_that("reordering expressions works", {
+  pl_iris <- polars::pl$DataFrame(iris)
 
-    expect_equal(
-      pl_iris |>
-        mutate(
-          x = Sepal.Length * 3,
-          Petal.Length = Petal.Length / x,
-          x = NULL,
-          mean_pl = mean(Petal.Length),
-          foo = Sepal.Width + Petal.Width
-        ),
-      pl_iris$with_columns(
-        x = pl$col("Sepal.Length") * 3,
-        foo = pl$col("Sepal.Width") + pl$col("Petal.Width")
-      )$with_columns(
-        Petal.Length = pl$col("Petal.Length") / pl$col("x")
-      )$with_columns(
-        mean_pl = pl$col("Petal.Length")$mean()
-      )$drop("x")
-    )
+  expect_equal(
+    pl_iris |>
+      mutate(
+        x = Sepal.Length * 3,
+        Petal.Length = Petal.Length / x,
+        x = NULL,
+        mean_pl = mean(Petal.Length),
+        foo = Sepal.Width + Petal.Width
+      ),
+    pl_iris$with_columns(
+      x = pl$col("Sepal.Length") * 3,
+      foo = pl$col("Sepal.Width") + pl$col("Petal.Width")
+    )$with_columns(
+      Petal.Length = pl$col("Petal.Length") / pl$col("x")
+    )$with_columns(
+      mean_pl = pl$col("Petal.Length")$mean()
+    )$drop("x")
+  )
 
-    expect_equal(
-      pl_iris |>
-        mutate(
-          x = 1,
-          x = NULL,
-          mean_pl = mean(Petal.Length),
-          x = 2
-        ),
-      pl_iris$with_columns(
-        mean_pl = pl$col("Petal.Length")$mean(),
+  expect_equal(
+    pl_iris |>
+      mutate(
+        x = 1,
+        x = NULL,
+        mean_pl = mean(Petal.Length),
         x = 2
-      )
+      ),
+    pl_iris$with_columns(
+      mean_pl = pl$col("Petal.Length")$mean(),
+      x = 2
     )
-  })
+  )
+})
 
 
-  test_that("correct sequential operations", {
-    pl_iris <- polars::pl$DataFrame(iris)
-    expect_equal(
-      iris[c(1, 2, 149, 150), ] |>
-        as_polars_df() |>
-        mutate(
-          x = Sepal.Length > 6,
-          y = x & Species == "virginica",
-          z = ifelse(y, Petal.Width, Petal.Length * Sepal.Width)
-        ) |>
-        pull(z),
-      c(4.9, 4.2, 2.3, 15.3)
-    )
-  })
+test_that("correct sequential operations", {
+  pl_iris <- polars::pl$DataFrame(iris)
+  expect_equal(
+    iris[c(1, 2, 149, 150), ] |>
+      as_polars_df() |>
+      mutate(
+        x = Sepal.Length > 6,
+        y = x & Species == "virginica",
+        z = ifelse(y, Petal.Width, Petal.Length * Sepal.Width)
+      ) |>
+      pull(z),
+    c(4.9, 4.2, 2.3, 15.3)
+  )
+})
 
 
-  test_that("argument .keep works", {
-    pl_iris <- polars::pl$DataFrame(iris)
+test_that("argument .keep works", {
+  pl_iris <- polars::pl$DataFrame(iris)
 
-    expect_error(
-      mutate(pl_iris, x = 1, .keep = "foo"),
-      "must be one of"
-    )
+  expect_snapshot(
+    mutate(pl_iris, x = 1, .keep = "foo"),
+    error = TRUE
+  )
 
-    expect_colnames(
-      mutate(pl_iris, x = Sepal.Length, y = Species, .keep = "used"),
-      c("Sepal.Length", "Species", "x", "y")
-    )
+  expect_colnames(
+    mutate(pl_iris, x = Sepal.Length, y = Species, .keep = "used"),
+    c("Sepal.Length", "Species", "x", "y")
+  )
 
-    expect_colnames(
-      mutate(pl_iris, x = Sepal.Length, y = Species, .keep = "unused"),
-      c("Sepal.Width", "Petal.Length", "Petal.Width", "x", "y")
-    )
+  expect_colnames(
+    mutate(pl_iris, x = Sepal.Length, y = Species, .keep = "unused"),
+    c("Sepal.Width", "Petal.Length", "Petal.Width", "x", "y")
+  )
 
-    expect_colnames(
-      mutate(pl_iris, x = Sepal.Length, y = Species, .keep = "none"),
-      c("x", "y")
-    )
+  expect_colnames(
+    mutate(pl_iris, x = Sepal.Length, y = Species, .keep = "none"),
+    c("x", "y")
+  )
 
-    pl_grp <- pl_iris |>
-      group_by(Species, maintain_order = TRUE)
+  pl_grp <- pl_iris |>
+    group_by(Species, maintain_order = TRUE)
 
-    expect_colnames(
-      mutate(pl_grp, x = Sepal.Length, .keep = "used"),
-      c("Sepal.Length", "Species", "x")
-    )
+  expect_colnames(
+    mutate(pl_grp, x = Sepal.Length, .keep = "used"),
+    c("Sepal.Length", "Species", "x")
+  )
 
-    expect_colnames(
-      mutate(pl_grp, x = Sepal.Length, .keep = "unused"),
-      c("Sepal.Width", "Petal.Length", "Petal.Width", "Species", "x")
-    )
+  expect_colnames(
+    mutate(pl_grp, x = Sepal.Length, .keep = "unused"),
+    c("Sepal.Width", "Petal.Length", "Petal.Width", "Species", "x")
+  )
 
-    expect_colnames(
-      mutate(pl_grp, x = Sepal.Length, .keep = "none"),
-      c("Species", "x")
-    )
-  })
-
-
-  test_that("works with a local variable defined in a function", {
-    pl_iris <- polars::pl$DataFrame(iris)
-    foobar <- function(x) {
-      local_var <- "a"
-      x |> mutate(foo = local_var)
-    }
-
-    test <- polars::pl$DataFrame(chars = letters[1:3])
-
-    expect_equal(
-      foobar(test),
-      data.frame(chars = letters[1:3], foo = "a")
-    )
-  })
+  expect_colnames(
+    mutate(pl_grp, x = Sepal.Length, .keep = "none"),
+    c("Species", "x")
+  )
+})
 
 
-  test_that("works with external data.frame/list elements", {
-    pl_iris <- polars::pl$DataFrame(iris)
-    test <- polars::pl$DataFrame(x = 1:3)
-    test_df <- data.frame(x = 1:2)
+test_that("works with a local variable defined in a function", {
+  pl_iris <- polars::pl$DataFrame(iris)
+  foobar <- function(x) {
+    local_var <- "a"
+    x |> mutate(foo = local_var)
+  }
 
-    expect_equal(
-      test |>
-        mutate(foo = x %in% test_df$x) |>
-        pull(foo),
-      c(TRUE, TRUE, FALSE)
-    )
+  test <- polars::pl$DataFrame(chars = letters[1:3])
 
-    expect_equal(
-      test |>
-        mutate(foo = x %in% test_df[["x"]]) |>
-        pull(foo),
-      c(TRUE, TRUE, FALSE)
-    )
-  })
+  expect_equal(
+    foobar(test),
+    data.frame(chars = letters[1:3], foo = "a")
+  )
+})
+
+
+test_that("works with external data.frame/list elements", {
+  pl_iris <- polars::pl$DataFrame(iris)
+  test <- polars::pl$DataFrame(x = 1:3)
+  test_df <- data.frame(x = 1:2)
+
+  expect_equal(
+    test |>
+      mutate(foo = x %in% test_df$x) |>
+      pull(foo),
+    c(TRUE, TRUE, FALSE)
+  )
+
+  expect_equal(
+    test |>
+      mutate(foo = x %in% test_df[["x"]]) |>
+      pull(foo),
+    c(TRUE, TRUE, FALSE)
+  )
+})
 

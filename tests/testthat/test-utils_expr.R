@@ -63,16 +63,12 @@
 
 test_that("error messages when error in known function is good", {
   pl_iris <- pl$DataFrame(iris)
-
-  expect_error(
+  expect_snapshot(
     pl_iris |> mutate(foo = min_rank()),
-    "Error while running function `min_rank()` in Polars.",
-    fixed = TRUE
+    error = TRUE
   )
-  
-  expect_error(
+  expect_snapshot(
     pl_iris |> mutate(foo = dplyr::min_rank()),
-    "Error while running function `dplyr::min_rank()` in Polars.",
-    fixed = TRUE
+    error = TRUE
   )
 })

@@ -34,6 +34,9 @@ test_that("basic behavior works", {
 
 test_that("can't collect non-LazyFrame object", {
   pl_iris <- pl$DataFrame(iris)
-  expect_error(compute(pl_iris))
+  expect_snapshot(
+    compute(pl_iris),
+    error = TRUE
+  )
 })
 

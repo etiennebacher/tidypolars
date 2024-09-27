@@ -23,8 +23,8 @@ test_that("basic behavior works", {
 })
 
 test_that("can only be used on LazyFrame", {
-  expect_error(
+  expect_snapshot(
     fetch(pl$DataFrame(iris)),
-    "can only be used on a LazyFrame"
+    error = TRUE
   )
 })

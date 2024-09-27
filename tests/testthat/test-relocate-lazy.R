@@ -60,17 +60,17 @@ test_that("select helpers are also available", {
 test_that("error cases work", {
   test <- polars::pl$LazyFrame(mtcars)
 
-  expect_error_lazy(
+  expect_snapshot_lazy(
     test |> relocate(mpg, .before = cyl, .after = drat),
-    "not both"
+    error = TRUE
   )
-  expect_error_lazy(
+  expect_snapshot_lazy(
     test |> relocate(mpg, .before = foo),
-    "don't exist"
+    error = TRUE
   )
-  expect_error_lazy(
+  expect_snapshot_lazy(
     test |> relocate(mpg, .after = foo),
-    "don't exist"
+    error = TRUE
   )
 })
 

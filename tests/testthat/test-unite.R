@@ -27,15 +27,15 @@ test_that("argument remove works", {
   )
   out <- unite(test, col = "full_date", year, month, day, sep = "-", remove = FALSE)
 
-  expect_dim(out, c(3, 5)) 
+  expect_dim(out, c(3, 5))
 })
 
-test_that("tidy selection works", {  
+test_that("tidy selection works", {
   test <- polars::pl$DataFrame(
     name = c("John", "Jack", "Thomas"),
     middlename = c("T.", NA, "F."),
     surname = c("Smith", "Thompson", "Jones")
-  ) 
+  )
   out <- unite(test, col = "full_name", everything(), sep = " ", na.rm = TRUE)
 
   expect_equal(
@@ -43,7 +43,7 @@ test_that("tidy selection works", {
     c("John T. Smith", "Jack  Thompson", "Thomas F. Jones")
   )
 })
-  
+
 test_that("name of output column must be provided", {
   test <- polars::pl$DataFrame(
     year = 2009:2011,
@@ -51,13 +51,12 @@ test_that("name of output column must be provided", {
     day = c(11L, 22L, 28L),
     name_day = c("Monday", "Thursday", "Wednesday")
   )
-  expect_error(
+  expect_snapshot(
     unite(test),
-    "`col` is absent but must be supplied.",
-    fixed = TRUE
+    error = TRUE
   )
 })
-  
+
 test_that("no selection selects all columns", {
   test <- polars::pl$DataFrame(
     year = 2009:2011,
