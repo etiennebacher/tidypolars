@@ -111,13 +111,13 @@ test_that("rowwise mode is kept after operations", {
 
 test_that("can't apply rowwise on grouped data, and vice versa", {
   expect_snapshot_lazy(
-    polars::as_polars_df(mtcars) |>
+    pl$LazyFrame(mtcars) |>
       group_by(cyl) |>
       rowwise(),
     error = TRUE
   )
   expect_snapshot_lazy(
-    polars::as_polars_df(mtcars) |>
+    pl$LazyFrame(mtcars) |>
       rowwise() |>
       group_by(cyl),
     error = TRUE

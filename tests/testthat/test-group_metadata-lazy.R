@@ -2,6 +2,13 @@
 
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
+test_that("group_by() works without any variable", {
+  expect_equal_lazy(
+    pl$LazyFrame(mtcars) |> group_by(),
+    pl$LazyFrame(mtcars)
+  )
+})
+
 test_that("works with ungrouped data", {
   test <- pl$LazyFrame(
     x1 = c("a", "a", "b", "a", "c")

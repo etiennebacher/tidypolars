@@ -1,3 +1,10 @@
+test_that("group_by() works without any variable", {
+  expect_equal(
+    pl$DataFrame(mtcars) |> group_by(),
+    pl$DataFrame(mtcars)
+  )
+})
+
 test_that("works with ungrouped data", {
   test <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c")
