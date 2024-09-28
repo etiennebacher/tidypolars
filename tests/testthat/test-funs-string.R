@@ -121,47 +121,42 @@ test_that("str_trim() works", {
 #   )
 # })
 
+test_that("str_dup() works", {
+  for_all(
+    tests = 40,
+    string = character_(any_na = TRUE),
+    # Very high numbers crash the session, I guess because of stringr
+    times = numeric_bounded(-10000, 10000, any_na = TRUE),
+    property = function(string, times) {
+      test_df <- data.frame(x1 = string)
+      test <- pl$DataFrame(x1 = string)
 
-# TODO: Counter example
-# string = c(NA, NA, NA, NA, "VsF7|'x", "VsF7|'x", NA, "VsF7|'x")
-# times = c(0, 0,  0,  0, NA, NA, NA,  0)
+      expect_equal_or_both_error(
+        mutate(test, foo = str_dup(x1, times = times)) |>
+          pull(foo),
+        mutate(test_df, foo = str_dup(x1, times = times)) |>
+          pull(foo)
+      )
+    }
+  )
+})
 
-# test_that("str_dup() works", {
-#   for_all(
-#     tests = 20,
-#     string = character_(any_na = TRUE),
-#     # Very high numbers crash the session, I guess because of stringr
-#     times = numeric_bounded(-10000, 10000, any_na = TRUE),
-#     property = function(string, times) {
-#       test_df <- data.frame(x1 = string)
-#       test <- pl$DataFrame(x1 = string)
-#
-#       expect_equal_or_both_error(
-#         mutate(test, foo = str_dup(x1, times = times)) |>
-#           pull(foo),
-#         mutate(test_df, foo = str_dup(x1, times = times)) |>
-#           pull(foo)
-#       )
-#     }
-#   )
-# })
+test_that("str_sub() works", {
+  for_all(
+    tests = 40,
+    string = character_(any_na = TRUE),
+    start = numeric_(any_na = TRUE),
+    end = numeric_(any_na = TRUE),
+    property = function(string, start, end) {
+      test_df <- data.frame(x1 = string)
+      test <- pl$DataFrame(x1 = string)
 
-# test_that("str_sub() works", {
-#   for_all(
-#     tests = 40,
-#     string = character_(any_na = TRUE),
-#     start = numeric_(any_na = TRUE),
-#     end = numeric_(any_na = TRUE),
-#     property = function(string, start, end) {
-#       test_df <- data.frame(x1 = string)
-#       test <- pl$DataFrame(x1 = string)
-#
-#       expect_equal_or_both_error(
-#         mutate(test, foo = str_sub(x1, start, end)) |>
-#           pull(foo),
-#         mutate(test_df, foo = str_sub(x1, start, end)) |>
-#           pull(foo)
-#       )
-#     }
-#   )
-# })
+      expect_equal_or_both_error(
+        mutate(test, foo = str_sub(x1, start, end)) |>
+          pull(foo),
+        mutate(test_df, foo = str_sub(x1, start, end)) |>
+          pull(foo)
+      )
+    }
+  )
+})

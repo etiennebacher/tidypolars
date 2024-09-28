@@ -80,9 +80,6 @@ is \code{TRUE}).}
 \item{no_optimization}{Sets the following optimizations to \code{FALSE}:
 \code{predicate_pushdown}, \code{projection_pushdown},  \code{slice_pushdown},
 \code{simplify_expression}. Default is \code{FALSE}.}
-
-\item{inherit_optimization}{Use existing optimization settings regardless of
-the settings specified in this function call. Default is \code{FALSE}.}
 }
 \value{
 The input LazyFrame.
