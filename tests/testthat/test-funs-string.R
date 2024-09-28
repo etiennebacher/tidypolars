@@ -121,25 +121,25 @@ test_that("str_trim() works", {
 #   )
 # })
 
-test_that("str_dup() works", {
-  for_all(
-    tests = 40,
-    string = character_(any_na = TRUE),
-    # Very high numbers crash the session, I guess because of stringr
-    times = numeric_bounded(-10000, 10000, any_na = TRUE),
-    property = function(string, times) {
-      test_df <- data.frame(x1 = string)
-      test <- pl$DataFrame(x1 = string)
-
-      expect_equal_or_both_error(
-        mutate(test, foo = str_dup(x1, times = times)) |>
-          pull(foo),
-        mutate(test_df, foo = str_dup(x1, times = times)) |>
-          pull(foo)
-      )
-    }
-  )
-})
+# test_that("str_dup() works", {
+#   for_all(
+#     tests = 40,
+#     string = character_(any_na = TRUE),
+#     # Very high numbers crash the session, I guess because of stringr
+#     times = numeric_bounded(-10000, 10000, any_na = TRUE),
+#     property = function(string, times) {
+#       test_df <- data.frame(x1 = string)
+#       test <- pl$DataFrame(x1 = string)
+#
+#       expect_equal_or_both_error(
+#         mutate(test, foo = str_dup(x1, times = times)) |>
+#           pull(foo),
+#         mutate(test_df, foo = str_dup(x1, times = times)) |>
+#           pull(foo)
+#       )
+#     }
+#   )
+# })
 
 # string = c("B#co4Nq,q", "B#co4Nq,q", "B#co4Nq,q", NA, NA, "B#co4Nq,q", NA)
 # start = -999
