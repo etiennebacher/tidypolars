@@ -50,6 +50,7 @@
 <url><loc>https://tidypolars.etiennebacher.com/reference/separate.RPolarsDataFrame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/sink_csv.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/sink_ipc.html</loc></url>
+<url><loc>https://tidypolars.etiennebacher.com/reference/sink_ndjson.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/sink_parquet.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/slice_tail.RPolarsDataFrame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/summarize.RPolarsDataFrame.html</loc></url>

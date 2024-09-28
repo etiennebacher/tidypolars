@@ -72,8 +72,7 @@ crashes because of too small memory.</p>
 <span>  projection_pushdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  simplify_expression <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  slice_pushdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  no_optimization <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  inherit_optimization <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  no_optimization <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -183,11 +182,6 @@ is <code>TRUE</code>).</p></dd>
 <dd><p>Sets the following optimizations to <code>FALSE</code>:
 <code>predicate_pushdown</code>, <code>projection_pushdown</code>,  <code>slice_pushdown</code>,
 <code>simplify_expression</code>. Default is <code>FALSE</code>.</p></dd>
-
-
-<dt id="arg-inherit-optimization">inherit_optimization<a class="anchor" aria-label="anchor" href="#arg-inherit-optimization"></a></dt>
-<dd><p>Use existing optimization settings regardless of
-the settings specified in this function call. Default is <code>FALSE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
