@@ -1,4 +1,4 @@
-# slice_sample works
+# basic slice_sample works
 
     Code
       slice_sample(pl_iris, n = 2, prop = 0.1)

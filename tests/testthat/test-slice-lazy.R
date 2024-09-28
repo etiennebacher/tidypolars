@@ -97,7 +97,7 @@ test_that("slice_tail works on grouped data", {
   )
 })
 
-test_that("slice_sample works", {
+test_that("basic slice_sample works", {
   pl_iris <- polars::pl$LazyFrame(iris)
   skip_if_not(inherits(pl_iris, "RPolarsDataFrame"))
 
@@ -142,6 +142,26 @@ test_that("slice_sample works", {
     slice_sample(pl_iris, prop = 1.2),
     error = TRUE
   )
+
+  # check that rows didn't mix column values
+  foo <- pl$LazyFrame(x = 1:3, y = letters[1:3], z = 4:6) |>
+    slice_sample(n = 1)
+
+  if (pull(foo, x) == 1) {
+    expect_equal_lazy(pull(foo, y), "a")
+    expect_equal_lazy(pull(foo, z), 4)
+  } else if (pull(foo, x) == 2) {
+    expect_equal_lazy(pull(foo, y), "b")
+    expect_equal_lazy(pull(foo, z), 5)
+  } else if (pull(foo, x) == 3) {
+    expect_equal_lazy(pull(foo, y), "5")
+    expect_equal_lazy(pull(foo, z), 6)
+  }
+})
+
+test_that("slice_sample works with grouped data", {
+  pl_iris <- polars::pl$LazyFrame(iris)
+  skip_if_not(inherits(pl_iris, "RPolarsDataFrame"))
 
   expect_equal_lazy(
     pl_iris |>
