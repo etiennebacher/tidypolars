@@ -30,6 +30,11 @@ test_that("arguments name and sort work", {
     count(test, cyl, am, sort = TRUE, name = "count") |> pull(count),
     c(12, 8, 4, 3, 3, 2)
   )
+
+  expect_equal_lazy(
+    count(test, name = "count") |> pull(count),
+    32
+  )
 })
 
 test_that("count works on grouped data", {
@@ -66,6 +71,11 @@ test_that("arguments name and sort work", {
 
   expect_dim(
     add_count(test, cyl, am, sort = TRUE, name = "count"),
+    c(32, 12)
+  )
+
+  expect_dim(
+    add_count(test, name = "count"),
     c(32, 12)
   )
 })
