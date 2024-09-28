@@ -55,6 +55,7 @@
 <li><p><code><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub()</a></code> doesn’t error anymore when <code>start</code> is positive and <code>end</code> is negative.</p></li>
 <li><p><code>read_*_polars()</code> functions used to return a standard <code>data.frame</code> by mistake. They now return a Polars DataFrame.</p></li>
 <li><p>Using <code>[</code> for subsetting in expressions now works. Thanks <a href="https://github.com/ginolhac" class="external-link">@ginolhac</a> for the report (<a href="https://github.com/etiennebacher/tidypolars/issues/141" class="external-link">#141</a>).</p></li>
+<li><p><code><a href="../reference/bind_cols_polars.html">bind_cols_polars()</a></code> and <code><a href="../reference/bind_rows_polars.html">bind_rows_polars()</a></code> now error (as expected before) if elements are a mix of Polars DataFrames and LazyFrames.</p></li>
 </ul></div>
 </div>
     <div class="section level2">
