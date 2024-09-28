@@ -31,18 +31,19 @@ test_that("basic behavior with CSV", {
   expect_s3_class(read_csv_polars(dest), "RPolarsDataFrame")
 })
 
-# IPC
+test_that("basic behavior with IPC", {
+  skip_if_not_installed("arrow")
+  dest <- tempfile(fileext = ".arrow")
+  mtcars |>
+    as_polars_df() |>
+    write_ipc_polars(dest)
 
-# TODO:
-# dest <- tempfile(fileext = ".arrow")
-# mtcars |>
-#   as_polars_df() |>
-#   write_ipc_polars(dest)
-#
-# arrow::read_ipc_file(dest)
-
+  expect_equal(arrow::read_ipc_file(dest), mtcars, ignore_attr = TRUE)
+  expect_s3_class(read_ipc_polars(dest), "RPolarsDataFrame")
+})
 
 test_that("basic behavior with JSON", {
+  skip_if_not_installed("jsonlite")
   dest <- tempfile(fileext = ".json")
   mtcars |>
     as_polars_df() |>
@@ -52,6 +53,7 @@ test_that("basic behavior with JSON", {
 })
 
 test_that("basic behavior with NDJSON", {
+  skip_if_not_installed("jsonlite")
   dest <- tempfile(fileext = ".ndjson")
   mtcars |>
     as_polars_df() |>
@@ -66,6 +68,7 @@ test_that("basic behavior with NDJSON", {
 })
 
 test_that("basic behavior with Parquet", {
+  skip_if_not_installed("nanoparquet")
   dest <- tempfile(fileext = ".parquet")
   mtcars |>
     as_polars_df() |>

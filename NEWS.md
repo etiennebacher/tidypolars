@@ -6,9 +6,14 @@
   Previously, unknown variables were silently ignored. Using expressions (like
   `a + b`) is now accepted (#144).
   
+* The parameter `inherit_optimization` is removed from all `sink_*()` functions.
+
 ## New features
 
 * The power operators `^` and `**` now work.
+
+* New function `sink_ndjson()` to write the results of a lazy query to a NDJSON
+  file without collecting it in memory.
 
 ## Bug fixes
 

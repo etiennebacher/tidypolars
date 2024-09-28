@@ -96,12 +96,11 @@ sink_parquet <- function(
     projection_pushdown = TRUE,
     simplify_expression = TRUE,
     slice_pushdown = TRUE,
-    no_optimization = FALSE,
-    inherit_optimization = FALSE
+    no_optimization = FALSE
   ) {
 
   if (!inherits(.data, "RPolarsLazyFrame")) {
-    rlang::abort("`sink_parquet()` can only be used on a LazyFrame.")
+    rlang::abort("`sink_parquet()` can only be used on a Polars LazyFrame.")
   }
 
   .data$sink_parquet(
@@ -117,8 +116,7 @@ sink_parquet <- function(
     projection_pushdown = projection_pushdown,
     simplify_expression = simplify_expression,
     slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization,
-    inherit_optimization = inherit_optimization
+    no_optimization = no_optimization
   )
 
 }
@@ -208,12 +206,11 @@ sink_csv <- function(
     projection_pushdown = TRUE,
     simplify_expression = TRUE,
     slice_pushdown = TRUE,
-    no_optimization = FALSE,
-    inherit_optimization = FALSE
+    no_optimization = FALSE
 ) {
 
   if (!inherits(.data, "RPolarsLazyFrame")) {
-    rlang::abort("`sink_csv()` can only be used on a LazyFrame.")
+    rlang::abort("`sink_csv()` can only be used on a Polars LazyFrame.")
   }
 
   rlang::arg_match0(quote_style, values = c("necessary", "always", "non_numeric"))
@@ -238,8 +235,7 @@ sink_csv <- function(
     projection_pushdown = projection_pushdown,
     simplify_expression = simplify_expression,
     slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization,
-    inherit_optimization = inherit_optimization
+    no_optimization = no_optimization
   )
 
 }
@@ -272,11 +268,10 @@ sink_ipc <- function(
     projection_pushdown = TRUE,
     simplify_expression = TRUE,
     slice_pushdown = TRUE,
-    no_optimization = FALSE,
-    inherit_optimization = FALSE) {
+    no_optimization = FALSE) {
 
   if (!inherits(.data, "RPolarsLazyFrame")) {
-    rlang::abort("`sink_csv()` can only be used on a LazyFrame.")
+    rlang::abort("`sink_ipc()` can only be used on a Polars LazyFrame.")
   }
 
   rlang::arg_match0(compression, values = c("zstd", "lz4", "uncompressed"))
@@ -290,8 +285,50 @@ sink_ipc <- function(
     projection_pushdown = projection_pushdown,
     simplify_expression = simplify_expression,
     slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization,
-    inherit_optimization = inherit_optimization
+    no_optimization = no_optimization
   )
 
 }
+
+#' Stream output to a NDJSON file
+#'
+#' This writes the output of a query directly to a NDJSON file without collecting
+#' it in the R session first. This is useful if the output of the query is still
+#' larger than RAM as it would crash the R session if it was collected into R.
+#'
+#' @param path Output file.
+#'
+#' @inheritParams sink_parquet
+#'
+#' @inherit sink_parquet return
+#' @export
+
+sink_ndjson <- function(
+    .data,
+    path,
+    ...,
+    maintain_order = TRUE,
+    type_coercion = TRUE,
+    predicate_pushdown = TRUE,
+    projection_pushdown = TRUE,
+    simplify_expression = TRUE,
+    slice_pushdown = TRUE,
+    no_optimization = FALSE) {
+
+  if (!inherits(.data, "RPolarsLazyFrame")) {
+    rlang::abort("`sink_ndjson()` can only be used on a Polars LazyFrame.")
+  }
+
+  .data$sink_ndjson(
+    path = path,
+    compression = "zstd",
+    maintain_order = maintain_order,
+    type_coercion = type_coercion,
+    predicate_pushdown = predicate_pushdown,
+    projection_pushdown = projection_pushdown,
+    simplify_expression = simplify_expression,
+    slice_pushdown = slice_pushdown,
+    no_optimization = no_optimization
+  )
+}
+
