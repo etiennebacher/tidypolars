@@ -4,7 +4,15 @@
       bind_cols_polars(l)
     Condition
       Error in `bind_cols_polars()`:
-      ! All elements in `...` must be either DataFrames or LazyFrames.
+      ! All elements in `...` must be of the same class (either all Polars DataFrames or all Polars LazyFrames).
+
+# elements must be either all DataFrames or all LazyFrames
+
+    Code
+      bind_cols_polars(l)
+    Condition
+      Error in `bind_cols_polars()`:
+      ! All elements in `...` must be of the same class (either all Polars DataFrames or all Polars LazyFrames).
 
 # arg .name_repair works
 

@@ -2,7 +2,7 @@
 
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
-test_that("returns a custom class", {
+test_that("returns custom class", {
   l <- list(
     polars::pl$LazyFrame(
       x = sample(letters, 20),
@@ -68,6 +68,24 @@ test_that("error if not all elements don't have the same class", {
   )
 })
 
+test_that("elements must be either all DataFrames or all LazyFrames", {
+  skip_if(Sys.getenv("TIDYPOLARS_TEST") == "TRUE")
+  l <- list(
+    polars::pl$LazyFrame(
+      x = sample(letters, 20),
+      y = sample(1:100, 20)
+    ),
+    polars::pl$LazyFrame(
+      y = sample(letters, 20),
+      z = sample(1:100, 20)
+    )
+  )
+
+  expect_snapshot_lazy(
+    bind_cols_polars(l),
+    error = TRUE
+  )
+})
 
 test_that("can only bind more than 2 elements if DataFrame", {
   l <- list(

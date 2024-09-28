@@ -74,24 +74,12 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
     dots <- dots[[1]]
   }
 
-  any_not_polars <- any(vapply(dots, \(y) {
-    !inherits(y, "RPolarsDataFrame") && !inherits(y, "RPolarsLazyFrame")
-  }, FUN.VALUE = logical(1L)))
+  all_df <- all(vapply(dots, inherits, "RPolarsDataFrame", FUN.VALUE = logical(1L)))
+  all_lf <- all(vapply(dots, inherits, "RPolarsLazyFrame", FUN.VALUE = logical(1L)))
 
-  if (any_not_polars) {
+  if (!(all_df || all_lf)) {
     rlang::abort(
-      "All elements in `...` must be either DataFrames or LazyFrames.",
-      call = caller_env()
-    )
-  }
-
-  all_df_or_lf <- all(vapply(dots, \(y) {
-    inherits(y, "RPolarsDataFrame") || inherits(y, "RPolarsLazyFrame")
-  }, FUN.VALUE = logical(1L)))
-
-  if (!all_df_or_lf) {
-    rlang::abort(
-      "All elements in `...` must be of the same class (either DataFrame or LazyFrame).",
+      "All elements in `...` must be of the same class (either all Polars DataFrames or all Polars LazyFrames).",
       call = caller_env()
     )
   }

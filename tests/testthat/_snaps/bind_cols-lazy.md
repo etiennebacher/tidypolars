@@ -4,7 +4,7 @@
       current$collect()
     Condition
       Error in `bind_cols_polars()`:
-      ! All elements in `...` must be either DataFrames or LazyFrames.
+      ! All elements in `...` must be of the same class (either all Polars DataFrames or all Polars LazyFrames).
 
 # can only bind more than 2 elements if DataFrame
 

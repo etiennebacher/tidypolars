@@ -26,6 +26,9 @@
   
 * Using `[` for subsetting in expressions now works. Thanks @ginolhac for the 
   report (#141).
+  
+* `bind_cols_polars()` and `bind_rows_polars()` now error (as expected before) if
+  elements are a mix of Polars DataFrames and LazyFrames.
 
 
 # tidypolars 0.10.1
