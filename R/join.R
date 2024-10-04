@@ -356,9 +356,12 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
     )
   }
 
-  if (inherits(by, "dplyr_join_by")) {
-    by <- unpack_join_by(by)
+  if (is_inequality_join(by)) {
+    out <- eval_inequality_join(x, y, how, by)
+    return(out)
   }
+
+  by <- unpack_join_by(by)
 
   if (!is.null(names(by))) {
     for (i in seq_along(by)) {
@@ -411,13 +414,46 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
 
 
 unpack_join_by <- function(by) {
-  if (!all(by$condition == "==")) {
-    rlang::abort(
-      "`tidypolars` doesn't support inequality conditions in `join_by()` yet.",
-      call = rlang::caller_env(2)
+  if (inherits(by, "dplyr_join_by")) {
+    out <- by$y
+    names(out) <- by$x
+    out
+  } else {
+    by
+  }
+}
+
+is_inequality_join <- function(by) {
+  inherits(by, "dplyr_join_by") && !all(by$condition == "==")
+}
+
+eval_inequality_join <- function(x, y, how, by) {
+  if (how != "inner") {
+    abort(
+      "Inequality joins only supported for `inner_join()` for now.",
+      call = caller_env()
     )
   }
-  out <- by$y
-  names(out) <- by$x
-  out
+  by2 <- by
+
+  by2$x <- lapply(by2$x, function(elem) {
+    translate_expr(.data = x, sym(elem))
+  })
+  by2$y <- lapply(by2$y, function(elem) {
+    translate_expr(.data = y, sym(elem))
+  })
+  by3 <- lapply(seq_along(by$condition), function(i) {
+    if (by$condition[i] == "==") {
+      by2$x[[i]]$eq(by2$y[[i]])
+    } else if (by$condition[i] == ">") {
+      by2$x[[i]]$gt(by2$y[[i]])
+    } else if (by$condition[i] == ">=") {
+      by2$x[[i]]$gt_eq(by2$y[[i]])
+    } else if (by$condition[i] == "<") {
+      by2$x[[i]]$lt(by2$y[[i]])
+    } else if (by$condition[i] == "<=") {
+      by2$x[[i]]$lt_eq(by2$y[[i]])
+    }
+  })
+  x$join_where(y, by3)
 }
