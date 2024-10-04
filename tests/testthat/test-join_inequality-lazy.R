@@ -3,24 +3,28 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic inequality join works", {
-  companies <- tibble(
+  companies <- pl$LazyFrame(
     id = c("A", "B", "B"),
     since = c(1973, 2009, 2022),
     name = c("Patagonia", "RStudio", "Posit")
   )
   
-  transactions <- tibble(
+  transactions <- pl$LazyFrame(
     company = c("A", "A", "B", "B"),
     year = c(2019, 2020, 2021, 2023),
     revenue = c(50, 4, 10, 12)
   )
   
-  transactions |>
-    inner_join(companies, join_by(company == id, year >= since))
-  
-  as_polars_df(transactions) |>
-    inner_join(as_polars_df(companies), join_by(company == id, year >= since))
-  
+  expect_equal_lazy(
+    inner_join(transactions, companies, join_by(company == id, year >= since)),
+    data.frame(
+      company = rep(c("A", "B"), 2:3),
+      year = c(2019, 2020, 2021, 2023, 2023),
+      revenue = c(50, 4, 10, 12, 12),
+      since = c(1973, 1973, 2009, 2009, 2022),
+      name = c("Patagonia", "Patagonia", "RStudio", "RStudio", "Posit")
+    )
+  )
 })
 
 test_that("inequality joins only work in inner joins for now", {
