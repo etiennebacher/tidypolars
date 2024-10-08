@@ -430,8 +430,8 @@ is_inequality_join <- function(by) {
 eval_inequality_join <- function(x, y, how, by) {
   if (how != "inner") {
     abort(
-      "Inequality joins only supported for `inner_join()` for now.",
-      call = caller_env()
+      "Inequality joins are only supported in `inner_join()` for now.",
+      call = caller_env(2)
     )
   }
   by2 <- by
