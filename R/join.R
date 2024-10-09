@@ -357,7 +357,7 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
   }
 
   if (is_inequality_join(by)) {
-    out <- eval_inequality_join(x, y, how, by)
+    out <- eval_inequality_join(x, y, how, by, suffix)
     return(out)
   }
 
@@ -427,7 +427,7 @@ is_inequality_join <- function(by) {
   inherits(by, "dplyr_join_by") && !all(by$condition == "==")
 }
 
-eval_inequality_join <- function(x, y, how, by) {
+eval_inequality_join <- function(x, y, how, by, suffix) {
   if (how != "inner") {
     abort(
       "Inequality joins are only supported in `inner_join()` for now.",
@@ -436,12 +436,20 @@ eval_inequality_join <- function(x, y, how, by) {
   }
   by2 <- by
 
+  common_cols <- intersect(names(x), names(y))
+
   by2$x <- lapply(by2$x, function(elem) {
-    translate_expr(.data = x, sym(elem))
+    pl$col(as.character(elem))
   })
+
   by2$y <- lapply(by2$y, function(elem) {
-    translate_expr(.data = y, sym(elem))
+    if (length(common_cols) > 0 && as.character(elem) %in% common_cols) {
+      pl$col(paste0(as.character(elem), suffix[2]))
+    } else {
+      pl$col(as.character(elem))
+    }
   })
+
   by3 <- lapply(seq_along(by$condition), function(i) {
     if (by$condition[i] == "==") {
       by2$x[[i]]$eq(by2$y[[i]])
@@ -455,5 +463,18 @@ eval_inequality_join <- function(x, y, how, by) {
       by2$x[[i]]$lt_eq(by2$y[[i]])
     }
   })
-  x$join_where(y, by3)
+
+  res <- x$join_where(y, by3, suffix = suffix[2])
+  if (length(common_cols) > 0) {
+    # Only keep common columns that were involved in inequality joins, otherwise
+    # they just don't have a duplicate in the output
+    common_cols <- Filter(
+      function(x) paste0(x, suffix[2]) %in% names(res), 
+      common_cols
+    )
+    new_cols <- as.list(paste0(common_cols, suffix[1]))
+    names(new_cols) <- common_cols
+    res <- res$rename(new_cols)
+  }
+  res
 }

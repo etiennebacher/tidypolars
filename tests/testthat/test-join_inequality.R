@@ -43,9 +43,9 @@ test_that("'between' helper works", {
   )    
   reference <- tibble(
     reference_id = 1:4,
-    chromosome2 = c("chr1", "chr1", "chr2", "chr2"),
-    start2 = c(100, 200, 300, 415),
-    end2 = c(150, 250, 399, 450)
+    chromosome = c("chr1", "chr1", "chr2", "chr2"),
+    start = c(100, 200, 300, 415),
+    end = c(150, 250, 399, 450)
   )
 
   segments_pl <- as_polars_df(segments)
@@ -53,8 +53,8 @@ test_that("'between' helper works", {
 
   for (bnds in c("[]", "[)", "(]", "()")) {
     by <- join_by(
-      chromosome == chromosome2, 
-      between(start, start2, end2, bounds = !!bnds)
+      chromosome, 
+      between(start, start, end, bounds = !!bnds)
     )
     
     expect_identical(
@@ -75,17 +75,17 @@ test_that("'within' helper works", {
   )    
   reference <- tibble(
     reference_id = 1:4,
-    chromosome2 = c("chr1", "chr1", "chr2", "chr2"),
-    start2 = c(100, 200, 300, 415),
-    end2 = c(150, 250, 399, 450)
+    chromosome = c("chr1", "chr1", "chr2", "chr2"),
+    start = c(100, 200, 300, 415),
+    end = c(150, 250, 399, 450)
   )
 
   segments_pl <- as_polars_df(segments)
   reference_pl <- as_polars_df(reference)
 
   by <- join_by(
-    chromosome == chromosome2, 
-    within(start, end, start2, end2)
+    chromosome, 
+    within(start, end, start, end)
   )
   
   expect_identical(
@@ -105,17 +105,17 @@ test_that("'overlaps' helper works", {
   )    
   reference <- tibble(
     reference_id = 1:4,
-    chromosome2 = c("chr1", "chr1", "chr2", "chr2"),
-    start2 = c(100, 200, 300, 415),
-    end2 = c(150, 250, 399, 450)
+    chromosome = c("chr1", "chr1", "chr2", "chr2"),
+    start = c(100, 200, 300, 415),
+    end = c(150, 250, 399, 450)
   )
 
   segments_pl <- as_polars_df(segments)
   reference_pl <- as_polars_df(reference)
 
   by <- join_by(
-    chromosome == chromosome2, 
-    overlaps(start, end, start2, end2)
+    chromosome, 
+    overlaps(start, end, start, end)
   )
   
   expect_identical(
