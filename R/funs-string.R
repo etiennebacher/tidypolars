@@ -41,9 +41,11 @@ pl_str_dup_stringr <- function(string, times) {
     times <- pl$lit(times)
   }
   pl$
-    when(times$is_null())$
+    when(times$is_null() | string$is_null())$
     then(pl$lit(NA))$
-    otherwise(string$repeat_by(times)$list$join(""))
+    when(times == pl$lit(0))$
+    then(pl$lit(""))$
+    otherwise(string$cast(pl$String)$repeat_by(times)$list$join(""))
 }
 
 # TODO: this requires https://github.com/pola-rs/polars/issues/11455
@@ -102,14 +104,14 @@ pl_str_pad_stringr <- function(string, width, side = "left", pad = " ", use_widt
 
   if (isFALSE(use_width)) {
     abort(
-      '`str_pad()` doesn\'t work in a Polars DataFrame when `use_width = FALSE`',
+      "`str_pad()` doesn't work in a Polars DataFrame when `use_width = FALSE`",
       class = "tidypolars_error"
     )
   }
 
   if (length(width) > 1) {
     abort(
-      '`str_pad()` doesn\'t work in a Polars DataFrame when `width` has a length greater than 1.',
+      "`str_pad()` doesn't work in a Polars DataFrame when `width` has a length greater than 1.",
       class = "tidypolars_error"
     )
   }
@@ -122,8 +124,7 @@ pl_str_pad_stringr <- function(string, width, side = "left", pad = " ", use_widt
     return(string)
   }
 
-  switch(
-    side,
+  switch(side,
     "both" = abort(
       '`str_pad()` doesn\'t work in a Polars DataFrame when `side = "both"`',
       class = "tidypolars_error"
@@ -279,8 +280,7 @@ pl_str_trim_stringr <- function(string, side = "both", ...) {
   check_empty_dots(...)
   side <- polars_expr_to_r(side)
 
-  switch(
-    side,
+  switch(side,
     "both" = string$str$strip_chars(),
     "left" = string$str$strip_chars_start(),
     "right" = string$str$strip_chars_end()
@@ -296,8 +296,7 @@ pl_str_trunc_stringr <- function(string, width, side = "right", ellipsis = "..."
   if (width < nchar(ellipsis)) {
     abort(paste0("`width` (", width, ") is shorter than `ellipsis` (", nchar(ellipsis), ")."))
   }
-  switch(
-    side,
+  switch(side,
     "left" = pl$concat_str(pl$lit(ellipsis), string$str$tail(width - nchar(ellipsis))),
     "right" = pl$concat_str(string$str$head(width - nchar(ellipsis)), pl$lit(ellipsis)),
     "center" = abort("`side = \"center\" is not supported.`"),
