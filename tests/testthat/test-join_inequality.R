@@ -62,6 +62,18 @@ test_that("'between' helper works", {
       inner_join(segments_pl, reference_pl, by) |> 
         arrange(segment_id) |> 
         as_tibble()
+    )
+
+    by2 <- join_by(
+      chromosome, 
+      between(x$start, y$start, y$end, bounds = !!bnds)
+    )
+    
+    expect_identical(
+      inner_join(segments, reference, by2),
+      inner_join(segments_pl, reference_pl, by2) |> 
+        arrange(segment_id) |> 
+        as_tibble()
     )   
   }
 })
@@ -94,6 +106,18 @@ test_that("'within' helper works", {
       arrange(segment_id) |> 
       as_tibble()
   )   
+
+  by2 <- join_by(
+    chromosome, 
+    within(x$start, x$end, y$start, y$end)
+  )
+  
+  expect_identical(
+    inner_join(segments, reference, by2),
+    inner_join(segments_pl, reference_pl, by2) |> 
+      arrange(segment_id) |> 
+      as_tibble()
+  )  
 })
 
 test_that("'overlaps' helper works", {
@@ -121,6 +145,18 @@ test_that("'overlaps' helper works", {
   expect_identical(
     inner_join(segments, reference, by),
     inner_join(segments_pl, reference_pl, by) |> 
+      arrange(segment_id) |> 
+      as_tibble()
+  )   
+
+  by2 <- join_by(
+    chromosome, 
+    overlaps(x$start, x$end, y$start, y$end)
+  )
+  
+  expect_identical(
+    inner_join(segments, reference, by2),
+    inner_join(segments_pl, reference_pl, by2) |> 
       arrange(segment_id) |> 
       as_tibble()
   )   
