@@ -16,16 +16,14 @@
 #'
 #' # Compute the mean of x, y, z in each row
 #' df |>
-#'  rowwise() |>
-#'  mutate(m = mean(c(x, y, z)))
+#'   rowwise() |>
+#'   mutate(m = mean(c(x, y, z)))
 #'
 #' # Compute the min and max of x and y in each row
 #' df |>
-#'  rowwise() |>
-#'  mutate(min = min(c(x, y)), max = max(c(x, y)))
+#'   rowwise() |>
+#'   mutate(min = min(c(x, y)), max = max(c(x, y)))
 rowwise.RPolarsDataFrame <- function(data, ...) {
-  data <- check_polars_data(data)
-
   if (!is.null(attributes(data)$pl_grps)) {
     rlang::abort("Cannot use `rowwise()` on grouped data.")
   }

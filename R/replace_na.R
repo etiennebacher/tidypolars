@@ -15,10 +15,7 @@
 #'
 #' # custom replacement per column
 #' replace_na(pl_test, list(x = 0, y = 999))
-
 replace_na.RPolarsDataFrame <- function(data, replace, ...) {
-
-  data <- check_polars_data(data)
   is_scalar <- length(replace) == 1 && !is.list(replace)
 
   # TODO: maybe re-use fill_null() once this is fixed

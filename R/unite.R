@@ -30,10 +30,7 @@
 #' # By default, NA values are kept in the character output
 #' unite(test2, col = "full_name", everything(), sep = " ")
 #' unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
-
 unite.RPolarsDataFrame <- function(data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE) {
-
-  data <- check_polars_data(data)
   vars <- tidyselect_dots(data, ...)
   if (length(vars) == 0) {
     vars <- names(data)

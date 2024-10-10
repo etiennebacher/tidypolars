@@ -22,10 +22,6 @@
 #'   group_by(x1) |>
 #'   arrange(-x2, .by_group = TRUE)
 arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
-  dots <- get_dots(...)
-  out_length <- length(dots)
-  direction <- rep(FALSE, out_length)
-
   grps <- attributes(.data)$pl_grps
   mo <- attributes(data)$maintain_grp_order
   is_grouped <- !is.null(grps)

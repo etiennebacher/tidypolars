@@ -18,11 +18,8 @@
 #'   x = c(NA, "x.y", "x.z", "y.z")
 #' )
 #' separate(test, x, into = c("foo", "foo2"), sep = ".")
-
 separate.RPolarsDataFrame <- function(data, col, into, sep = " ",
-                               remove = TRUE, ...) {
-
-  data <- check_polars_data(data)
+                                      remove = TRUE, ...) {
   col <- deparse(substitute(col))
 
   into_len <- length(into) - 1
@@ -31,12 +28,12 @@ separate.RPolarsDataFrame <- function(data, col, into, sep = " ",
 
   data <- data$
     with_columns(
-      pl$col(col)$cast(pl$Utf8)$
-        str$split_exact(sep, into_len)$
-        alias(temp_id)$
-        struct$
-        rename_fields(into)
-    )$unnest(temp_id)
+    pl$col(col)$cast(pl$Utf8)$
+      str$split_exact(sep, into_len)$
+      alias(temp_id)$
+      struct$
+      rename_fields(into)
+  )$unnest(temp_id)
 
   if (isTRUE(remove)) {
     data <- data$drop(col)

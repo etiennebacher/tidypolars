@@ -16,8 +16,6 @@
 #'
 #' add_count(test, cyl, am, sort = TRUE, name = "count")
 count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
-  x <- check_polars_data(x)
-
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order
   is_grouped <- !is.null(grps)
@@ -42,8 +40,6 @@ count.RPolarsLazyFrame <- count.RPolarsDataFrame
 #' @export
 
 add_count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
-  x <- check_polars_data(x)
-
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order
   is_grouped <- !is.null(grps)

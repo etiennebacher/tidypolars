@@ -29,10 +29,7 @@
 #'   group_by(grp)
 #'
 #' fill(pl_grouped, x, y, .direction = "down")
-
 fill.RPolarsDataFrame <- function(data, ..., .direction = c("down", "up", "downup", "updown")) {
-
-  data <- check_polars_data(data)
   vars <- tidyselect_dots(data, ...)
   if (length(vars) == 0) {
     return(data)
@@ -44,12 +41,11 @@ fill.RPolarsDataFrame <- function(data, ..., .direction = c("down", "up", "downu
   mo <- attributes(data)$maintain_grp_order
 
   expr <- polars::pl$col(vars)
-  expr <- switch(
-    .direction,
-    "down" = expr$fill_null(strategy = 'forward'),
-    "up" = expr$fill_null(strategy = 'backward'),
-    "downup" = expr$fill_null(strategy = 'forward')$fill_null(strategy = 'backward'),
-    "updown" = expr$fill_null(strategy = 'backward')$fill_null(strategy = 'forward')
+  expr <- switch(.direction,
+    "down" = expr$fill_null(strategy = "forward"),
+    "up" = expr$fill_null(strategy = "backward"),
+    "downup" = expr$fill_null(strategy = "forward")$fill_null(strategy = "backward"),
+    "updown" = expr$fill_null(strategy = "backward")$fill_null(strategy = "forward")
   )
 
   if (is_grouped) {

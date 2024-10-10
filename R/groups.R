@@ -93,7 +93,6 @@ ungroup.RPolarsLazyFrame <- ungroup.RPolarsDataFrame
 #'
 #' group_keys(pl_g)
 group_vars.RPolarsDataFrame <- function(x) {
-  x <- check_polars_data(x)
   grps <- attributes(x)$pl_grps
   if (length(grps) > 0) {
     grps
@@ -109,7 +108,6 @@ group_vars.RPolarsLazyFrame <- group_vars.RPolarsDataFrame
 #' @rdname group_vars.RPolarsDataFrame
 #' @export
 group_keys.RPolarsDataFrame <- function(.tbl, ...) {
-  .tbl <- check_polars_data(.tbl)
   grps <- attributes(.tbl)$pl_grps
   if (length(grps) > 0) {
     out <- .tbl$group_by(grps)$
@@ -148,7 +146,6 @@ group_keys.RPolarsLazyFrame <- group_keys.RPolarsDataFrame
 #'
 #' group_split(pl_g)
 group_split.RPolarsDataFrame <- function(.tbl, ..., .keep = TRUE) {
-  .tbl <- check_polars_data(.tbl)
   grps <- attributes(.tbl)$pl_grps
   dots <- tidyselect_dots(.tbl, ...)
 

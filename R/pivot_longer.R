@@ -29,13 +29,9 @@
 #'     names_prefix = "wk",
 #'     values_to = "rank",
 #'   )
-
 pivot_longer.RPolarsDataFrame <- function(data, cols, ..., names_to = "name",
-                                   names_prefix = NULL,
-                                   values_to = "value") {
-
-  data <- check_polars_data(data)
-
+                                          names_prefix = NULL,
+                                          values_to = "value") {
   data_names <- names(data)
   on <- tidyselect_named_arg(data, rlang::enquo(cols))
   index <- data_names[!data_names %in% on]
@@ -52,8 +48,8 @@ pivot_longer.RPolarsDataFrame <- function(data, cols, ..., names_to = "name",
     }
     out <- out$
       with_columns(
-        pl$col(names_to)$str$replace(paste0("^", names_prefix), "")
-      )
+      pl$col(names_to)$str$replace(paste0("^", names_prefix), "")
+    )
   }
 
   out

@@ -25,10 +25,7 @@
 #'
 #' # using expressions
 #' uncount(test, 2 / n)
-
 uncount.RPolarsDataFrame <- function(data, weights, ..., .remove = TRUE, .id = NULL) {
-
-  data <- check_polars_data(data)
   weights_quo <- enquo(weights)
   repeat_expr <- translate_expr(data, weights_quo, new_vars = NULL, env = rlang::current_env())
 
