@@ -199,21 +199,21 @@ test_that("operations on grouped data work", {
 
   expect_equal_lazy(
     pull(out, foo) |> unique(),
-    as_polars_df(iris) |>
+    as_polars_lf(iris) |>
       mutate(foo = mean(Sepal.Length), .by = Species) |>
       pull(foo) |>
       unique()
   )
 
   expect_equal_lazy(
-    as_polars_df(iris) |>
+    as_polars_lf(iris) |>
       mutate(foo = mean(Sepal.Length), .by = Species) |>
       attr("pl_grps"),
     NULL
   )
 
   expect_equal_lazy(
-    as_polars_df(iris) |>
+    as_polars_lf(iris) |>
       mutate(foo = mean(Sepal.Length), .by = Species) |>
       attr("maintain_grp_order"),
     NULL
@@ -347,7 +347,7 @@ test_that("correct sequential operations", {
   pl_iris <- polars::pl$LazyFrame(iris)
   expect_equal_lazy(
     iris[c(1, 2, 149, 150), ] |>
-      as_polars_df() |>
+      as_polars_lf() |>
       mutate(
         x = Sepal.Length > 6,
         y = x & Species == "virginica",

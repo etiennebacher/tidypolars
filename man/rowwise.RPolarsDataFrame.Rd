@@ -31,12 +31,12 @@ df <- polars::pl$DataFrame(x = c(1, 3, 4), y = c(2, 1, 5), z = c(2, 3, 1))
 
 # Compute the mean of x, y, z in each row
 df |>
- rowwise() |>
- mutate(m = mean(c(x, y, z)))
+  rowwise() |>
+  mutate(m = mean(c(x, y, z)))
 
 # Compute the min and max of x and y in each row
 df |>
- rowwise() |>
- mutate(min = min(c(x, y)), max = max(c(x, y)))
+  rowwise() |>
+  mutate(min = min(c(x, y)), max = max(c(x, y)))
 \dontshow{\}) # examplesIf}
 }

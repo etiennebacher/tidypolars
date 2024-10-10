@@ -7,11 +7,11 @@
 \alias{ungroup.RPolarsLazyFrame}
 \title{Group by one or more variables}
 \usage{
-\method{group_by}{RPolarsDataFrame}(.data, ..., maintain_order = FALSE, .add = FALSE)
+\method{group_by}{RPolarsDataFrame}(.data, ..., maintain_order = FALSE)
 
 \method{ungroup}{RPolarsDataFrame}(x, ...)
 
-\method{group_by}{RPolarsLazyFrame}(.data, ..., maintain_order = FALSE, .add = FALSE)
+\method{group_by}{RPolarsLazyFrame}(.data, ..., maintain_order = FALSE)
 
 \method{ungroup}{RPolarsLazyFrame}(x, ...)
 }
@@ -25,10 +25,10 @@
 \code{FALSE} by default). Setting it to \code{TRUE} can slow down the process with
 large datasets and prevents the use of streaming.}
 
+\item{x}{A Polars Data/LazyFrame}
+
 \item{.add}{When \code{FALSE} (default), \code{group_by()} will override existing
 groups. To add to the existing groups, use \code{.add = TRUE}.}
-
-\item{x}{A Polars Data/LazyFrame}
 }
 \description{
 Most data operations are done on groups defined by variables. \code{group_by()}

@@ -21,7 +21,6 @@
 #' query <- show_query(tidy)
 #'
 #' query
-
 show_query.tidypolars <- function(x, ...) {
   attrs <- attributes(x)$polars_expression
   out <- lapply(seq_along(attrs), function(x) {
@@ -33,7 +32,7 @@ show_query.tidypolars <- function(x, ...) {
     paste(collapse = "")
 
   class(out) <- c("tidypolars_query", class(out))
-  invisible(out)
+  out
 }
 
 #' @exportS3Method

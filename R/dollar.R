@@ -1,17 +1,17 @@
 #' @export
 "$.tidypolars" <- function(x, name) {
-
   # Do not overwrite those functions
-  whitelist <- c("shape", "schema", "height", "width", "columns",
-                 "set_optimization_toggle", "print", "clone", "to_list",
-                 "to_data_frame")
+  whitelist <- c(
+    "shape", "schema", "height", "width", "columns",
+    "set_optimization_toggle", "print", "clone", "to_list",
+    "to_data_frame"
+  )
   if (name %in% whitelist) {
     return(NextMethod("$"))
   }
 
   ce <- caller_env()
-  env_to_use <- switch(
-    class(x)[2],
+  env_to_use <- switch(class(x)[2],
     "RPolarsDataFrame" = ns_env("polars")[["RPolarsDataFrame"]],
     "RPolarsLazyFrame" = ns_env("polars")[["RPolarsLazyFrame"]],
     "RPolarsGroupBy" = ns_env("polars")[["RPolarsGroupBy"]],
@@ -185,5 +185,23 @@
     x$not()
   } else {
     NextMethod("!")
+  }
+}
+
+#' @export
+"%/%.tidypolars_expr" <- function(x, name) {
+  if (inherits(x, "RPolarsExpr")) {
+    x$lt(name)
+  } else {
+    my_wrap_e(x)$floor_div(name)
+  }
+}
+
+#' @export
+"%%.tidypolars_expr" <- function(x, name) {
+  if (inherits(x, "RPolarsExpr")) {
+    x$lt(name)
+  } else {
+    my_wrap_e(x)$mod(name)
   }
 }
