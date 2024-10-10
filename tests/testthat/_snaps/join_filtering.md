@@ -4,7 +4,7 @@
       semi_join(test, test2, by = join_by(x, y1 > y2))
     Condition
       Error in `semi_join()`:
-      ! `tidypolars` doesn't support inequality conditions in `join_by()` yet.
+      ! Inequality joins are only supported in `inner_join()` for now.
 
 ---
 
@@ -12,7 +12,7 @@
       anti_join(test, test2, by = join_by(x, y1 > y2))
     Condition
       Error in `anti_join()`:
-      ! `tidypolars` doesn't support inequality conditions in `join_by()` yet.
+      ! Inequality joins are only supported in `inner_join()` for now.
 
 # fallback on dplyr error if wrong join_by specification
 
