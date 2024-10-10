@@ -16,10 +16,10 @@
 #'
 #' drop_na(pl_tmp)
 #' drop_na(pl_tmp, hp, mpg)
-
 drop_na.RPolarsDataFrame <- function(data, ...) {
   vars <- tidyselect_dots(data, ...)
   out <- data$drop_nulls(vars)
+
   add_tidypolars_class(out)
 }
 

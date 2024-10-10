@@ -25,9 +25,7 @@
 #'
 #' # using expressions
 #' uncount(test, 2 / n)
-
 uncount.RPolarsDataFrame <- function(data, weights, ..., .remove = TRUE, .id = NULL) {
-
   weights_quo <- enquo(weights)
   repeat_expr <- translate_expr(data, weights_quo, new_vars = NULL, env = rlang::current_env())
 
@@ -40,6 +38,7 @@ uncount.RPolarsDataFrame <- function(data, weights, ..., .remove = TRUE, .id = N
   if (!is.null(.id)) {
     out <- out$with_columns((pl$col(names(out)[1])$cum_count()$over(names(out)))$alias(.id))
   }
+
 
   add_tidypolars_class(out)
 }

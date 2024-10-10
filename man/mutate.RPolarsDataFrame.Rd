@@ -70,7 +70,7 @@ mutate(pl_iris, x = Sepal.Width + Sepal.Length)
 mutate(pl_iris, x = Sepal.Width > Sepal.Length & Petal.Width > Petal.Length)
 
 # overwrite existing variable
-mutate(pl_iris, Sepal.Width = Sepal.Width*2)
+mutate(pl_iris, Sepal.Width = Sepal.Width * 2)
 
 # grouped computation
 pl_iris |>
@@ -86,6 +86,7 @@ pl_iris |>
   mutate(
     across(.cols = contains("Sepal"), .fns = mean, .names = "{.fn}_of_{.col}")
   )
+
 # It can receive several types of functions:
 pl_iris |>
   mutate(
@@ -104,7 +105,7 @@ pl_iris |>
     foo = 1,
     across(
       .cols = where(is.numeric),
-      \(x) x - 1000   # <<<<<<<<< this will not be applied on variable "foo"
+      \(x) x - 1000 # <<<<<<<<< this will not be applied on variable "foo"
     )
   )
 }

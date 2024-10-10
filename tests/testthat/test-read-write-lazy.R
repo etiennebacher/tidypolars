@@ -8,7 +8,7 @@ patrick::with_parameters_test_that("IPC and parquet can do a write-read roundtri
     dat = data_frame_of(any_atomic(any_na = TRUE)),
     property = function(dat) {
 
-      dat_pl <- as_polars_df(dat)
+      dat_pl <- as_polars_lf(dat)
       dest <- tempfile(fileext = paste0(".", file_format))
       fn_read <- paste0("read_", file_format, "_polars")
       fn_write <- paste0("write_", file_format, "_polars")
@@ -36,7 +36,7 @@ test_that("CSV can do a write-read roundtrip", {
     dat = data_frame_of(logical_(), date_(), character_()),
     property = function(dat) {
 
-      dat_pl <- as_polars_df(dat)
+      dat_pl <- as_polars_lf(dat)
       dest <- tempfile(fileext = ".csv")
       write_csv_polars(dat_pl, dest)
       out <- read_csv_polars(source = dest, try_parse_dates = TRUE)
@@ -56,7 +56,7 @@ test_that("NDJSON can do a write-read roundtrip", {
     dat = data_frame_of(logical_(), character_()),
     property = function(dat) {
 
-      dat_pl <- as_polars_df(dat)
+      dat_pl <- as_polars_lf(dat)
       dest <- tempfile(fileext = ".ndjson")
       write_ndjson_polars(dat_pl, dest)
       out <- read_ndjson_polars(source = dest)

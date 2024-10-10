@@ -1,7 +1,7 @@
 #' Count the observations in each group
 #'
 #' @param x A Polars Data/LazyFrame
-#' @inheritParams complete.RPolarsDataFrame
+#' @inheritParams select.RPolarsDataFrame
 #' @param sort If `TRUE`, will show the largest groups at the top.
 #' @param name Name of the new column.
 #'
@@ -15,7 +15,6 @@
 #' count(test, cyl, am, sort = TRUE, name = "count")
 #'
 #' add_count(test, cyl, am, sort = TRUE, name = "count")
-
 count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order
@@ -28,7 +27,7 @@ count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
   out <- if (is_grouped) {
     group_by(out, all_of(grps), maintain_order = mo)
   } else {
-    out
+    add_tidypolars_class(out)
   }
 
   add_tidypolars_class(out)
@@ -53,8 +52,9 @@ add_count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
   out <- if (is_grouped) {
     group_by(out, all_of(grps), maintain_order = mo)
   } else {
-    out
+    add_tidypolars_class(out)
   }
+
 
   add_tidypolars_class(out)
 }
@@ -63,9 +63,7 @@ add_count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
 #' @export
 add_count.RPolarsLazyFrame <- add_count.RPolarsDataFrame
 
-
 count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
-
   name <- check_name(x, vars, name, missing_name)
   if (isTRUE(new_col)) {
     if (length(vars) == 0) {
@@ -94,7 +92,7 @@ count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
   } else if (length(vars) > 0) {
     out$sort(vars)
   } else {
-    out
+    add_tidypolars_class(out)
   }
 }
 

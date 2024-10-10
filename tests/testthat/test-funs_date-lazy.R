@@ -169,7 +169,7 @@ test_that("isoyear (test taken from the lubridate test suite)", {
     isoweek = as.numeric(gsub(".*W([0-9]+).*", "\\1", iso)),
     isoyear = as.numeric(gsub("^([0-9]+).*", "\\1", iso))
   )
-  df_pl <- as_polars_df(df)
+  df_pl <- as_polars_lf(df)
 
   expect_equal_lazy(
     mutate(df_pl, ymd = isoyear(ymd)) |>

@@ -19,9 +19,7 @@
 #' mtcars |>
 #'   as_polars_df() |>
 #'   summarize(m_gear = mean(gear), sd_gear = sd(gear), .by = cyl)
-
 summarize.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
-
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   if (is.null(mo)) mo <- FALSE
@@ -63,6 +61,7 @@ summarize.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
   } else {
     .data
   }
+
 
   add_tidypolars_class(out)
 }

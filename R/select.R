@@ -17,7 +17,6 @@
 #'
 #' # Renaming while selecting is also possible
 #' select(pl_iris, foo1 = Sepal.Length, Sepal.Width)
-
 select.RPolarsDataFrame <- function(.data, ...) {
   dots <- get_dots(...)
   with_renaming <- !is.null(names(dots))
@@ -30,8 +29,10 @@ select.RPolarsDataFrame <- function(.data, ...) {
     names(ls) <- names(out)
     out <- out$rename(ls)
   } else {
+    vars <- tidyselect_dots(.data, ...)
     out <- .data$select(vars)
   }
+
   add_tidypolars_class(out)
 }
 

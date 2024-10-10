@@ -11,7 +11,6 @@
 #' pl_test <- as_polars_df(iris)
 #' pull(pl_test, Sepal.Length)
 #' pull(pl_test, "Sepal.Length")
-
 pull.RPolarsDataFrame <- function(.data, var, ...) {
   var <- tidyselect_named_arg(.data, rlang::enquo(var))
   if (length(var) > 1) {

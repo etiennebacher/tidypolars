@@ -21,9 +21,7 @@
 #' pl_test |>
 #'   group_by(x1) |>
 #'   arrange(-x2, .by_group = TRUE)
-
 arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
-
   grps <- attributes(.data)$pl_grps
   mo <- attributes(data)$maintain_grp_order
   is_grouped <- !is.null(grps)
@@ -52,6 +50,7 @@ arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
   } else {
     .data$sort(polars_exprs, descending = descending)
   }
+
 
   add_tidypolars_class(out)
 }

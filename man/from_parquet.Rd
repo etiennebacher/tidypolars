@@ -90,8 +90,8 @@ can be skipped from reading.}
 
 \item{cache}{Cache the result after reading.}
 
-\item{include_file_paths}{Character value indicating the column name that will
-include the path of the source file(s).}
+\item{include_file_paths}{Include the path of the source file(s) as a column
+with this name.}
 }
 \description{
 \code{read_parquet_polars()} imports the data as a Polars DataFrame.

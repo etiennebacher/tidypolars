@@ -37,9 +37,7 @@
 #' # an alternative syntax for grouping is to use `.by`
 #' pl_iris |>
 #'   filter(Sepal.Length == max(Sepal.Length), .by = Species)
-
 filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
-
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
@@ -70,10 +68,12 @@ filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
   out <- if (is_grouped && missing(.by)) {
     group_by(out, all_of(grps), maintain_order = mo)
   } else {
-    out
+   
+ add_tidypolars_class(out)
   }
 
-  add_tidypolars_class(out)
+ 
+ add_tidypolars_class(out)
 }
 
 #' @rdname filter.RPolarsDataFrame

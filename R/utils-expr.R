@@ -620,11 +620,11 @@ translate <- function(
 
 
 polars_constant <- function(x) {
-  polars::pl$lit(x)
+  pl$lit(x)
 }
 
 polars_col <- function(x) {
-  polars::pl$col(x)
+  pl$col(x)
 }
 
 get_user_defined_functions <- function(caller) {

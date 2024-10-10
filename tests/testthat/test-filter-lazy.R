@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  pl_iris <- as_polars_df(iris)
+  pl_iris <- as_polars_lf(iris)
 
   expect_is_tidypolars(filter(pl_iris, Species == "setosa"))
 
@@ -14,7 +14,7 @@ test_that("basic behavior works", {
 })
 
 test_that("combining combinations", {
-  pl_iris <- as_polars_df(iris)
+  pl_iris <- as_polars_lf(iris)
 
   expect_dim(
     filter(pl_iris, Sepal.Length < 5 & Species == "setosa"),
@@ -33,7 +33,7 @@ test_that("combining combinations", {
 })
 
 test_that("expressions work", {
-  pl_iris <- as_polars_df(iris)
+  pl_iris <- as_polars_lf(iris)
 
   expect_dim(
     filter(pl_iris, Sepal.Length < Sepal.Width + Petal.Length),
@@ -42,7 +42,7 @@ test_that("expressions work", {
 })
 
 test_that("is.na() works", {
-  pl_iris <- as_polars_df(iris)
+  pl_iris <- as_polars_lf(iris)
 
   iris2 <- iris
   iris2[c(3, 8, 58, 133), "Species"] <- NA
@@ -124,21 +124,21 @@ test_that("%in% works", {
 
   expect_dim(
     iris |>
-      as_polars_df() |>
+      as_polars_lf() |>
       filter(Species %in% c("setosa", "virginica")),
     c(100, 5)
   )
 
   expect_dim(
     iris |>
-      as_polars_df() |>
+      as_polars_lf() |>
       filter(Species %in% c("setosa", "virginica")),
     c(100, 5)
   )
 })
 
 test_that("between() works", {
-  pl_iris <- as_polars_df(iris)
+  pl_iris <- as_polars_lf(iris)
 
   expect_dim(
     filter(pl_iris, between(Sepal.Length, 5, 6)),
@@ -163,7 +163,7 @@ test_that("works with grouped data", {
   )
 
   expect_equal_lazy(
-    as_polars_df(mtcars) |>
+    as_polars_lf(mtcars) |>
       filter(disp == max(disp), .by = cyl) |>
       pull(mpg),
     by_cyl |>
@@ -172,14 +172,14 @@ test_that("works with grouped data", {
   )
 
   expect_dim(
-    as_polars_df(iris) |>
+    as_polars_lf(iris) |>
       group_by(Species) |>
       filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4),
     c(123, 5)
   )
 
   expect_dim(
-    as_polars_df(iris) |>
+    as_polars_lf(iris) |>
       filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4,
              .by = Species),
     c(123, 5)

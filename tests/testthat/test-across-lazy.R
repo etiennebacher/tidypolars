@@ -387,7 +387,7 @@ test_that("need to specify .cols (either named or unnamed)", {
 test_that(".by works with across() and everything()", {
   test <- mtcars |>
     head(n = 5) |>
-    as_polars_df() |>
+    as_polars_lf() |>
     summarize(across(everything(), .fns = mean), .by = "cyl") |>
     distinct() |>
     arrange(cyl)

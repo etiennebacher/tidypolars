@@ -15,9 +15,7 @@
 #'
 #' # custom replacement per column
 #' replace_na(pl_test, list(x = 0, y = 999))
-
 replace_na.RPolarsDataFrame <- function(data, replace, ...) {
-
   is_scalar <- length(replace) == 1 && !is.list(replace)
 
   # TODO: maybe re-use fill_null() once this is fixed
@@ -51,6 +49,7 @@ replace_na.RPolarsDataFrame <- function(data, replace, ...) {
       rlang::abort(e$message, call = caller_env(4))
     }
   )
+
 
   add_tidypolars_class(out)
 }

@@ -27,8 +27,7 @@
 #' )
 #' by_cyl |> filter(disp == max(disp))
 #'
-
-group_by.RPolarsDataFrame <- function(.data, ..., maintain_order = FALSE, .add = FALSE) {
+group_by.RPolarsDataFrame <- function(.data, ..., maintain_order = FALSE) {
   if (isTRUE(attributes(.data)$grp_type == "rowwise")) {
     rlang::abort(
       c(
@@ -50,9 +49,11 @@ group_by.RPolarsDataFrame <- function(.data, ..., maintain_order = FALSE, .add =
   }
   # need to clone, otherwise the data gets attributes, even if unassigned
   .data2 <- .data$clone()
+  # Cloning loses the tidypolars class
+  .data2 <- add_tidypolars_class(.data2)
   attr(.data2, "pl_grps") <- vars
   attr(.data2, "maintain_grp_order") <- maintain_order
-  add_tidypolars_class(.data2)
+  .data2
 }
 
 #' @param x A Polars Data/LazyFrame

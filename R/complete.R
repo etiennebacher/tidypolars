@@ -31,11 +31,11 @@
 #' df |>
 #'   group_by(group, maintain_order = TRUE) |>
 #'   complete(item_id, item_name)
-
 complete.RPolarsDataFrame <- function(data, ..., fill = list()) {
-
   vars <- tidyselect_dots(data, ...)
-  if (length(vars) < 2) return(data)
+  if (length(vars) < 2) {
+    return(data)
+  }
 
   grps <- attributes(data)$pl_grps
   mo <- attributes(data)$maintain_grp_order
@@ -52,9 +52,9 @@ complete.RPolarsDataFrame <- function(data, ..., fill = list()) {
   }
 
   if (isTRUE(is_grouped)) {
-    out <- chain$join(data, on = c(grps, vars), how = 'left')
+    out <- chain$join(data, on = c(grps, vars), how = "left")
   } else {
-    out <- chain$join(data, on = vars, how = 'left')
+    out <- chain$join(data, on = vars, how = "left")
   }
 
   # TODO: implement argument `explicit`
@@ -67,8 +67,9 @@ complete.RPolarsDataFrame <- function(data, ..., fill = list()) {
       relocate(all_of(grps), .before = 1) |>
       group_by(all_of(grps), maintain_order = mo)
   } else {
-    out
+    add_tidypolars_class(out)
   }
+
 
   add_tidypolars_class(out)
 }

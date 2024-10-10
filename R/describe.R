@@ -21,4 +21,3 @@ describe <- function(.data, percentiles = c(0.25, 0.75)) {
   )
   summary(object = .data, percentiles = percentiles)
 }
-

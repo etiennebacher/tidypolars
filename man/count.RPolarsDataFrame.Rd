@@ -19,7 +19,7 @@
 \item{x}{A Polars Data/LazyFrame}
 
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
-column numbers, select helpers, etc.}
+column numbers, select helpers, etc. Renaming is also possible.}
 
 \item{sort}{If \code{TRUE}, will show the largest groups at the top.}
 

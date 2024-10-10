@@ -30,9 +30,7 @@
 #' # By default, NA values are kept in the character output
 #' unite(test2, col = "full_name", everything(), sep = " ")
 #' unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
-
 unite.RPolarsDataFrame <- function(data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE) {
-
   if (missing(col)) {
     rlang::abort("`col` is absent but must be supplied.")
   }
@@ -56,8 +54,9 @@ unite.RPolarsDataFrame <- function(data, col, ..., sep = "_", remove = TRUE, na.
   out <- if (isTRUE(remove)) {
     out$drop(vars)
   } else {
-    out
+    add_tidypolars_class(out)
   }
+
 
   add_tidypolars_class(out)
 }
