@@ -50,7 +50,8 @@ replace_na.RPolarsDataFrame <- function(data, replace, ...) {
     }
   )
 
-  out
+
+  add_tidypolars_class(out)
 }
 
 #' @rdname replace_na.RPolarsDataFrame

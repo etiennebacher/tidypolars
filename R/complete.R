@@ -67,10 +67,11 @@ complete.RPolarsDataFrame <- function(data, ..., fill = list()) {
       relocate(all_of(grps), .before = 1) |>
       group_by(all_of(grps), maintain_order = mo)
   } else {
-    out
+    add_tidypolars_class(out)
   }
 
-  out
+
+  add_tidypolars_class(out)
 }
 
 #' @rdname complete.RPolarsDataFrame

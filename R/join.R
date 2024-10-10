@@ -329,8 +329,7 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
   if (is.null(na_matches)) {
     join_nulls <- FALSE
   } else {
-    join_nulls <- switch(
-      na_matches,
+    join_nulls <- switch(na_matches,
       "na" = TRUE,
       "never" = FALSE,
       abort(
@@ -404,9 +403,10 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
     names(mapping) <- c(dupes, paste0(dupes, "_right"))
     out$rename(mapping)
   } else {
-    out
+    add_tidypolars_class(out)
   }
-  out
+
+  add_tidypolars_class(out)
 }
 
 
@@ -419,5 +419,6 @@ unpack_join_by <- function(by) {
   }
   out <- by$y
   names(out) <- by$x
-  out
+
+  add_tidypolars_class(out)
 }

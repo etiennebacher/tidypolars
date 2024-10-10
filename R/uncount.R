@@ -39,7 +39,8 @@ uncount.RPolarsDataFrame <- function(data, weights, ..., .remove = TRUE, .id = N
     out <- out$with_columns((pl$col(names(out)[1])$cum_count()$over(names(out)))$alias(.id))
   }
 
-  out
+
+  add_tidypolars_class(out)
 }
 
 #' @rdname uncount.RPolarsDataFrame

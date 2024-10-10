@@ -32,7 +32,8 @@ select.RPolarsDataFrame <- function(.data, ...) {
     vars <- tidyselect_dots(.data, ...)
     out <- .data$select(vars)
   }
-  out
+
+  add_tidypolars_class(out)
 }
 
 #' @rdname select.RPolarsDataFrame

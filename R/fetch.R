@@ -31,7 +31,6 @@
 #' dat_lazy |>
 #'   filter(Sepal.Length > 7.0) |>
 #'   fetch(30)
-
 fetch <- function(
     .data,
     n_rows = 500,
@@ -44,8 +43,7 @@ fetch <- function(
     comm_subexpr_elim = TRUE,
     cluster_with_columns = TRUE,
     no_optimization = FALSE,
-    streaming = FALSE
-) {
+    streaming = FALSE) {
   if (!inherits(.data, "RPolarsLazyFrame")) {
     rlang::abort("`fetch()` can only be used on a LazyFrame.")
   }
@@ -63,5 +61,6 @@ fetch <- function(
     streaming = streaming
   )
 
-  out
+
+  add_tidypolars_class(out)
 }

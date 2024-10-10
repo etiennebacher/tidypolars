@@ -27,9 +27,10 @@ count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
   out <- if (is_grouped) {
     group_by(out, all_of(grps), maintain_order = mo)
   } else {
-    out
+    add_tidypolars_class(out)
   }
-  out
+
+  add_tidypolars_class(out)
 }
 
 #' @rdname count.RPolarsDataFrame
@@ -51,10 +52,11 @@ add_count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
   out <- if (is_grouped) {
     group_by(out, all_of(grps), maintain_order = mo)
   } else {
-    out
+    add_tidypolars_class(out)
   }
 
-  out
+
+  add_tidypolars_class(out)
 }
 
 #' @rdname count.RPolarsDataFrame
@@ -90,7 +92,7 @@ count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
   } else if (length(vars) > 0) {
     out$sort(vars)
   } else {
-    out
+    add_tidypolars_class(out)
   }
 }
 

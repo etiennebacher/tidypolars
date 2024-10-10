@@ -167,7 +167,8 @@ mutate.RPolarsDataFrame <- function(
     .data
   }
 
-  out
+
+  add_tidypolars_class(out)
 }
 
 #' @rdname mutate.RPolarsDataFrame

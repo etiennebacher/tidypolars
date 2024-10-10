@@ -54,10 +54,11 @@ unite.RPolarsDataFrame <- function(data, col, ..., sep = "_", remove = TRUE, na.
   out <- if (isTRUE(remove)) {
     out$drop(vars)
   } else {
-    out
+    add_tidypolars_class(out)
   }
 
-  out
+
+  add_tidypolars_class(out)
 }
 
 #' @rdname unite.RPolarsDataFrame

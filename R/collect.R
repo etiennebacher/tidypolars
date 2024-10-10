@@ -72,8 +72,7 @@ compute.RPolarsLazyFrame <- function(
     cluster_with_columns = TRUE,
     no_optimization = FALSE,
     streaming = FALSE,
-    collect_in_background = FALSE
-  ) {
+    collect_in_background = FALSE) {
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order
   is_grouped <- !is.null(grps)
@@ -96,10 +95,11 @@ compute.RPolarsLazyFrame <- function(
     out |>
       group_by(all_of(grps), maintain_order = mo)
   } else {
-    out
+    add_tidypolars_class(out)
   }
 
-  out
+
+  add_tidypolars_class(out)
 }
 
 
@@ -118,8 +118,7 @@ collect.RPolarsLazyFrame <- function(
     cluster_with_columns = TRUE,
     no_optimization = FALSE,
     streaming = FALSE,
-    collect_in_background = FALSE
-) {
+    collect_in_background = FALSE) {
   x |>
     as.data.frame(
       type_coercion = type_coercion,

@@ -8,7 +8,6 @@
 #' mtcars |>
 #'   as_polars_df() |>
 #'   make_unique_id(am, gear)
-
 make_unique_id <- function(.data, ..., new_col = "hash") {
   .data <- check_polars_data(.data)
   if (new_col %in% names(.data)) {
@@ -21,6 +20,6 @@ make_unique_id <- function(.data, ..., new_col = "hash") {
   out <- .data$with_columns(
     pl$struct(vars)$hash()$alias(new_col)
   )
-  out
-}
 
+  add_tidypolars_class(out)
+}

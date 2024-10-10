@@ -19,7 +19,7 @@ pull.RPolarsDataFrame <- function(.data, var, ...) {
     )
   }
 
-  out <- .data
+  out <- add_tidypolars_class(.data)
   if (inherits(.data, "RPolarsLazyFrame")) {
     out <- out$collect()
   }

@@ -19,7 +19,8 @@
 drop_na.RPolarsDataFrame <- function(data, ...) {
   vars <- tidyselect_dots(data, ...)
   out <- data$drop_nulls(vars)
-  out
+
+  add_tidypolars_class(out)
 }
 
 #' @rdname drop_na.RPolarsDataFrame

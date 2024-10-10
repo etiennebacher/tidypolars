@@ -30,7 +30,6 @@
 #'
 #' # create an id colum with named elements
 #' bind_rows_polars(p1 = p1, p2 = p2, .id = "id")
-
 bind_rows_polars <- function(..., .id = NULL) {
   concat_(..., how = "diagonal_relaxed", .id = .id)
 }
@@ -57,13 +56,10 @@ bind_rows_polars <- function(..., .id = NULL) {
 #'
 #' bind_cols_polars(p1, p2)
 #' bind_cols_polars(list(p1, p2))
-
 # bind_* functions are not generics: https://github.com/tidyverse/dplyr/issues/6905
-
 bind_cols_polars <- function(
     ...,
-    .name_repair = "unique"
-  ) {
+    .name_repair = "unique") {
   arg_match0(.name_repair, values = c("unique", "universal", "check_unique", "minimal"))
   concat_(..., how = "horizontal", .name_repair = .name_repair)
 }
@@ -100,8 +96,7 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
     })
   }
 
-  out <- switch(
-    how,
+  out <- switch(how,
     "horizontal" = {
       all_names <- unlist(lapply(dots, names), use.names = FALSE)
       if (anyDuplicated(all_names) > 0) {
@@ -161,5 +156,6 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
     # default
     pl$concat(dots, how = how)
   )
-  out
+
+  add_tidypolars_class(out)
 }
