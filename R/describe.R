@@ -14,13 +14,11 @@ describe <- function(.data, percentiles = c(0.25, 0.75)) {
   if (!inherits(.data, "RPolarsDataFrame")) {
     rlang::abort("`describe()` can only be used on a DataFrame.")
   }
-  between_zero_one <- percentiles >= 0 & percentiles <= 1
-  if (anyNA(between_zero_one) || any(!between_zero_one)) {
-    abort(
-      "All values of `percentiles` must be between 0 and 1."
-    )
-  }
+  lifecycle::deprecate_warn(
+    when = "0.10.0",
+    what = "describe()",
+    details = "Please use `summary()` with the same arguments instead."
+  )
   out <- .data$describe(percentiles)
   out
 }
-

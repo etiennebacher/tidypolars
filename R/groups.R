@@ -27,9 +27,7 @@
 #' )
 #' by_cyl |> filter(disp == max(disp))
 #'
-
 group_by.RPolarsDataFrame <- function(.data, ..., maintain_order = FALSE) {
-  .data <- check_polars_data(.data)
   if (isTRUE(attributes(.data)$grp_type == "rowwise")) {
     rlang::abort(
       c(

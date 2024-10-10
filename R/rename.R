@@ -25,9 +25,7 @@
 #' rename_with(pl_test_2, function(x) tolower(gsub(".", "_", x, fixed = TRUE)))
 #'
 #' rename_with(pl_test_2, \(x) tolower(gsub(".", "_", x, fixed = TRUE)))
-
 rename.RPolarsDataFrame <- function(.data, ...) {
-  .data <- check_polars_data(.data)
   dots <- get_dots(...)
   dots <- lapply(dots, rlang::as_name)
   out <- .data$rename(dots)
@@ -42,7 +40,6 @@ rename.RPolarsLazyFrame <- rename.RPolarsDataFrame
 #' @export
 
 rename_with.RPolarsDataFrame <- function(.data, .fn, .cols = tidyselect::everything(), ...) {
-  .data <- check_polars_data(.data)
   to_replace <- tidyselect_named_arg(.data, rlang::enquo(.cols))
   new <- do.call(.fn, list(to_replace, ...))
   # polars wants a list with old names as names and new names as values

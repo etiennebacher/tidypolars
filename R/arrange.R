@@ -21,11 +21,7 @@
 #' pl_test |>
 #'   group_by(x1) |>
 #'   arrange(-x2, .by_group = TRUE)
-
 arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
-
-  .data <- check_polars_data(.data)
-
   dots <- get_dots(...)
   out_length <- length(dots)
   direction <- rep(FALSE, out_length)

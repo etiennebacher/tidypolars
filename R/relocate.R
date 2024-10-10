@@ -30,10 +30,7 @@
 #'
 #' dat |>
 #'   relocate(hp, vs, .after = last_col())
-
 relocate.RPolarsDataFrame <- function(.data, ..., .before = NULL, .after = NULL) {
-  .data <- check_polars_data(.data)
-
   if (!missing(.before) && !missing(.after)) {
     rlang::abort("You can specify either `.before` or `.after` but not both.")
   }
@@ -52,7 +49,9 @@ relocate.RPolarsDataFrame <- function(.data, ..., .before = NULL, .after = NULL)
   }
 
   vars <- tidyselect_dots(.data, ...)
-  if (length(vars) == 0) return(.data)
+  if (length(vars) == 0) {
+    return(.data)
+  }
 
   not_moving <- setdiff(names_data, vars)
 

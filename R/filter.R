@@ -37,10 +37,7 @@
 #' # an alternative syntax for grouping is to use `.by`
 #' pl_iris |>
 #'   filter(Sepal.Length == max(Sepal.Length), .by = Species)
-
 filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
-  .data <- check_polars_data(.data)
-
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
