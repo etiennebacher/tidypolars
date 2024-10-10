@@ -4,7 +4,8 @@
 #' for completing missing combinations of data.
 #'
 #' @param data A Polars Data/LazyFrame
-#' @inheritParams select.RPolarsDataFrame
+#' @param ... Any expression accepted by `dplyr::select()`: variable names,
+#'  column numbers, select helpers, etc.
 #' @param fill A named list that for each variable supplies a single value to
 #' use instead of `NA` for missing combinations.
 #'
@@ -47,7 +48,7 @@ complete.RPolarsDataFrame <- function(data, ..., fill = list()) {
     chain <- data$select(pl$col(vars)$unique()$sort()$implode())
   }
 
-  for (i in 1:length(vars)) {
+  for (i in seq_along(vars)) {
     chain <- chain$explode(vars[i])
   }
 
@@ -64,8 +65,8 @@ complete.RPolarsDataFrame <- function(data, ..., fill = list()) {
 
   out <- if (is_grouped) {
     out |>
-      relocate(grps, .before = 1) |>
-      group_by(grps, maintain_order = mo)
+      relocate(all_of(grps), .before = 1) |>
+      group_by(all_of(grps), maintain_order = mo)
   } else {
     out
   }

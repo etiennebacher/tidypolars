@@ -1,4 +1,4 @@
-url: ~
+url: https://tidypolars.etiennebacher.com/
 template:
   bootstrap: 5
   bslib:
@@ -15,21 +15,25 @@ navbar:
     right: [search, github]
 
 reference:
-  - title: Polars-specific functions
+  - title: Import data
     desc: |
-      Functionalities from Polars.
+      Functions to import data as Polars DataFrames (`read_` functions) and
+      LazyFrames (`scan_` functions).
     contents:
-      - describe
-      - describe_plan
-      - describe_optimized_plan
-      - fetch
-      - make_unique_id
-      - sink_csv
-      - sink_parquet
+      - from_csv
+      - from_ipc
+      - from_ndjson
+      - from_parquet
 
-  - title: From `dplyr`
+  - title: Export data
     desc: |
-      Functions coming from `dplyr`.
+      Functions to export Polars DataFrames (`write_` functions) and LazyFrames
+      (`sink_` functions).
+    contents:
+      - starts_with("sink")
+      - starts_with("write")
+
+  - title: Functions from `dplyr`
     contents:
       - add_count.RPolarsDataFrame
       - anti_join.RPolarsDataFrame
@@ -40,6 +44,7 @@ reference:
       - count.RPolarsDataFrame
       - cross_join.RPolarsDataFrame
       - distinct.RPolarsDataFrame
+      - explain.RPolarsLazyFrame
       - filter.RPolarsDataFrame
       - full_join.RPolarsDataFrame
       - group_by.RPolarsDataFrame
@@ -64,9 +69,7 @@ reference:
       - summarize.RPolarsDataFrame
       - ungroup.RPolarsDataFrame
 
-  - title: From `tidyr`
-    desc: |
-      Functions coming from `tidyr`.
+  - title: Functions from `tidyr`
     contents:
       - complete.RPolarsDataFrame
       - drop_na.RPolarsDataFrame
@@ -78,8 +81,19 @@ reference:
       - uncount.RPolarsDataFrame
       - unite.RPolarsDataFrame
 
-  - title: Other
+  - title: Other methods
     desc: |
       Other functions or S3 methods.
     contents:
       - as_tibble.tidypolars
+      - summary.RPolarsDataFrame
+      - tidypolars-options
+
+  - title: Other Polars functions
+    desc: Other Polars-specific functions (most are deprecated).
+    contents:
+      - describe
+      - describe_plan
+      - describe_optimized_plan
+      - fetch
+      - make_unique_id

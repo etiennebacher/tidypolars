@@ -8,7 +8,7 @@
 #' meaning that it won't fill across group boundaries.
 #'
 #' @param data A Polars Data/LazyFrame
-#' @inheritParams select.RPolarsDataFrame
+#' @inheritParams complete.RPolarsDataFrame
 #' @param .direction Direction in which to fill missing values. Either "down"
 #'    (the default), "up", "downup" (i.e. first down and then up) or "updown"
 #'    (first up and then down).
@@ -34,6 +34,9 @@ fill.RPolarsDataFrame <- function(data, ..., .direction = c("down", "up", "downu
 
   data <- check_polars_data(data)
   vars <- tidyselect_dots(data, ...)
+  if (length(vars) == 0) {
+    return(data)
+  }
   .direction <- match.arg(.direction)
 
   grps <- attributes(data)$pl_grps
@@ -55,7 +58,7 @@ fill.RPolarsDataFrame <- function(data, ..., .direction = c("down", "up", "downu
 
   out <- if (is_grouped) {
     data$with_columns(expr) |>
-      group_by(grps, maintain_order = mo)
+      group_by(all_of(grps), maintain_order = mo)
   } else {
     data$with_columns(expr)
   }

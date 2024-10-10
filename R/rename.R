@@ -45,8 +45,9 @@ rename_with.RPolarsDataFrame <- function(.data, .fn, .cols = tidyselect::everyth
   .data <- check_polars_data(.data)
   to_replace <- tidyselect_named_arg(.data, rlang::enquo(.cols))
   new <- do.call(.fn, list(to_replace, ...))
-  mapping <- as.list(to_replace)
-  names(mapping) <- new
+  # polars wants a list with old names as names and new names as values
+  mapping <- as.list(new)
+  names(mapping) <- to_replace
   out <- .data$rename(mapping)
   out
 }

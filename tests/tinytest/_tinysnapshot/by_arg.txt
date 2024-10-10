@@ -1,4 +1,0 @@
-Pure polars expression:
-
-<data>$
-  with_columns(drat = pl$col("drat")$mean()$over(c("am", "cyl")), am = pl$col("am")$mean()$over(c("am", "cyl")), gear = pl$col("gear")$mean()$over(c("am", "cyl")), carb = pl$col("carb")$mean()$over(c("am", "cyl")))

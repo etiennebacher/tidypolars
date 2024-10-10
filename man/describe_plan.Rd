@@ -13,23 +13,10 @@ describe_optimized_plan(.data)
 \item{.data}{A Polars LazyFrame}
 }
 \description{
-These functions are available for \code{LazyFrame}s only. \code{describe_plan()} shows
-the query plan as-is, without any optimization done by Polars. This is not
-the query performed. Before running the query, Polars applies a list of
-optimizations (such as filtering data before sorting it). The actual query
-plan ran by Polars is shown by \code{describe_optimized_plan()}. Note that the
-queries are read from bottom to top.
-}
-\examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-query <- mtcars |>
-  as_polars_lf() |>
-  arrange(drat) |>
-  filter(cyl == 3) |>
-  select(mpg)
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
-describe_plan(query)
-
-describe_optimized_plan(query)
-\dontshow{\}) # examplesIf}
+Those functions are deprecated as of tidypolars 0.10.0, they will be removed
+in a future update. Use \code{explain()} with \code{optimized = FALSE} to recover the
+output of \code{describe_plan()}, and with \code{optimized = TRUE} (the default) to
+get the output of \code{describe_optimized_plan()}.
 }

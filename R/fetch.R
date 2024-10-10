@@ -42,6 +42,7 @@ fetch <- function(
     slice_pushdown = TRUE,
     comm_subplan_elim = TRUE,
     comm_subexpr_elim = TRUE,
+    cluster_with_columns = TRUE,
     no_optimization = FALSE,
     streaming = FALSE
 ) {
@@ -57,6 +58,7 @@ fetch <- function(
     slice_pushdown = slice_pushdown,
     comm_subplan_elim = comm_subplan_elim,
     comm_subexpr_elim = comm_subexpr_elim,
+    cluster_with_columns = cluster_with_columns,
     no_optimization = no_optimization,
     streaming = streaming
   )

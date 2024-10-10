@@ -1,4 +1,0 @@
-Pure polars expression:
-
-<data>$
-  sort(c("Sepal.Length", "Sepal.Width", "Species"), descending = c(FALSE, TRUE, TRUE))

@@ -32,7 +32,7 @@ slice_tail.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
   }
 
   out <- if (is_grouped && missing(by)) {
-    group_by(out, grps, maintain_order = mo)
+    group_by(out, all_of(grps), maintain_order = mo)
   } else {
     out
   }
@@ -63,7 +63,7 @@ slice_head.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
   }
 
   out <- if (is_grouped && missing(by)) {
-    group_by(out, grps, maintain_order = mo)
+    group_by(out, all_of(grps), maintain_order = mo)
   } else {
     out
   }
@@ -106,14 +106,14 @@ slice_sample.RPolarsDataFrame <- function(.data, ..., n = NULL, prop = NULL, rep
   if (is_grouped) {
     non_grps <- setdiff(names(.data), grps)
     out <- .data$group_by(grps, maintain_order = mo)$agg(
-      pl$all()$sample(n = n, frac = prop, with_replacement = replace)
+      pl$all()$sample(n = n, fraction = prop, with_replacement = replace)
     )$explode(non_grps)
   } else {
-    out <- .data$sample(n = n, frac = prop, with_replacement = replace)
+    out <- .data$sample(n = n, fraction = prop, with_replacement = replace)
   }
 
   out <- if (is_grouped && missing(by)) {
-    group_by(out, grps, maintain_order = mo)
+    group_by(out, all_of(grps), maintain_order = mo)
   } else {
     out
   }

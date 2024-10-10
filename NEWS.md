@@ -1,14 +1,241 @@
 # tidypolars (development version)
 
+## Breaking changes
+
+* `arrange()` now errors with unknown variable names (like `dplyr::arrange()`).
+  Previously, unknown variables were silently ignored. Using expressions (like
+  `a + b`) is now accepted (#144).
+  
+* The parameter `inherit_optimization` is removed from all `sink_*()` functions.
+
 ## New features
 
-* Add support for `all()`, `any()`, `diff()` `dplyr::consecutive_id()`,   
-  `dplyr::n_distinct()`, `length()`, `rev()`, `unique()`.
+* The power operators `^` and `**` now work.
+
+* New function `sink_ndjson()` to write the results of a lazy query to a NDJSON
+  file without collecting it in memory.
+
+## Bug fixes
+
+* Using an external object in `case_when()`, `ifelse()` and `ifelse()` now works.
+
+* `str_sub()` doesn't error anymore when `start` is positive and `end` is negative.
+
+* `read_*_polars()` functions used to return a standard `data.frame` by mistake.
+  They now return a Polars DataFrame.
+  
+* Using `[` for subsetting in expressions now works. Thanks @ginolhac for the 
+  report (#141).
+  
+* `bind_cols_polars()` and `bind_rows_polars()` now error (as expected before) if
+  elements are a mix of Polars DataFrames and LazyFrames.
+
+
+# tidypolars 0.10.1
+
+## Bug fixes
+
+* Do not error when handling columns with datatype `Null`. Note that converting
+  those columns to R with `as.data.frame()`, `as_tibble()`, or `collect()` is 
+  still an issue as of `polars` 0.19.1.
+
+# tidypolars 0.10.0
+
+`tidypolars` requires `polars` >= 0.19.1.
+
+## Breaking changes and deprecations
+
+* `describe()` is deprecated as of tidypolars 0.10.0 and will be removed in a 
+  future update. Use `summary()` with the same arguments instead (#127).
+
+* `describe_plan()` and `describe_optimized_plan()` are deprecated as of 
+  tidypolars 0.10.0 and will be removed in a future update. Use `explain()` with
+  `optimized = TRUE/FALSE` instead (#128).
+  
+* In `sink_parquet()` and `sink_csv()`, all arguments except for `.data` and 
+  `path` must be named (#136).
+  
+## New features
+
+* Add support for more functions:
+
+  - from package `base`: `substr()`.
+
+* Better error message when a function can come from several packages but only
+  one version is translated (#130).
+  
+* `row_number()` now works without argument (#131).
+
+* New functions to import data as Polars DataFrames and LazyFrames (#136):
+
+  * `read_<format>_polars()` to import data as a Polars DataFrame;
+  * `scan_<format>_polars()` to import data as a Polars LazyFrame;
+  * `<format>` can be "csv", "ipc", "json", "parquet".
+  
+  Those can replace functions from `polars`. For example, 
+  `polars::pl$read_parquet(...)` can be replaced by 
+  `read_parquet_polars(...)`.
+  
+* New functions to write Polars DataFrames to external files: 
+  `write_<format>_polars()` where `<format>` can be "csv", "ipc", "json", 
+  "ndjson", "parquet" (#136).
+  
+* New function `sink_ipc()` that is similar to `sink_parquet()` and `sink_csv()`
+  but for IPC files (#136).
+  
+* `across()` now throws a better error message when the user passes an external
+  list to `.fns`. This works with `dplyr` but cannot work with `tidypolars`
+  (#135).
+  
+* Added support for argument `.add` in `group_by()`.
+  
+## Bug fixes
+
+* `stringr::str_sub()` now works when both `start` and `end` are negative.
+
+* Fixed a bug in `str_sub()` when `start` was greater than 1.
+
+* `stringr::str_starts()` and `stringr::str_ends()` now work with a regex.
+
+* `fill()` doesn't error anymore when `...` is empty. Instead, it returns the 
+  input data.
+  
+* `unite()` now provides a proper error message when `col` is missing.
+
+* `unite()` doesn't error anymore when `...` is empty. Instead, it uses all 
+  variables in the dataset.
+  
+* `filter()`, `mutate()` and `summarize()` now work when using a column from 
+  another data.frame, e.g. 
+  ```r
+  my_polars_df |> 
+    filter(x %in% some_data_frame$y)
+  ```
+* `replace_na()` no longer converts the column to the datatype of the replacement,
+  e.g. `data |> replace_na("a")` will error if the input data is numeric.
+  
+* `n_distinct()` now correctly applies the `na.rm` argument when several columns
+  are passed as input (#137).
+
+# tidypolars 0.9.0
+
+`tidypolars` requires `polars` >= 0.18.0.
+
+## New features
+
+* Add support for several functions:
+
+  - from package `base`: `%%` and `%/%`.
+  
+  - from package `dplyr`: `dense_rank()`, `row_number()`.
+
+  - from package `lubridate`: `wday()`.
+
+* Better handling of missing values to match `R` behavior. In the following
+  functions, if there is at least one missing value and `na.rm = FALSE` (the 
+  default), then the output will be `NA`: `max()`, `mean()`, `median()`, `min()`,
+  `sd()`, `sum()`, `var()` (#120).
+  
+* New argument `cluster_with_columns` in `collect()`, `compute()`, and `fetch()`.
+
+* Add a global option `tidypolars_unknown_args` to control what happens when 
+  `tidypolars` doesn't know how to handle an argument in a function. The default
+  is to warn and the only other accepted value is `"error"`.
+  
+## Bug fixes
+
+* `count()` and `add_count()` no longer overwrite a variable named `n` if the 
+  argument `name` is unspecified.
+
+
+# tidypolars 0.8.0
+
+`tidypolars` requires `polars` >= 0.17.0.
+
+## Breaking changes
+
+* As announced in `tidypolars` 0.7.0, the behavior of `collect()` has changed.
+  It now returns a standard R `data.frame` and not a Polars `DataFrame` anymore.
+  Replace `collect()` by `compute()` (with the same arguments) to keep the old
+  behavior.
+  
+* In `bind_rows_polars()`, if `.id` is passed, the resulting column now is of 
+  type character instead of integer.
+
+## New features
+
+* Add support for several functions:
+
+  - from package `base`: `all()`, `any()`, `diff()`, `ISOdatetime()`, 
+    `length()`, `rev()`, `unique()`.
+  
+  - from package `dplyr`: `consecutive_id()`, `min_rank()`, `na_if()`, 
+    `n_distinct()`, `nth()`.
+  
+  - from package `lubridate`: `make_datetime()`.
+  
+  - from package `stringr`: `str_dup()`, `str_split()`, `str_split_i()`, 
+    `str_trunc()`.
+  
+  - from package `tidyr`: `replace_na()` (the data.frame method was already
+    translated but not the vector one that can be used in `mutate()` for example).
+    
+* It is now possible to use explicit namespaces (such as `dplyr::first()` instead
+  of `first()`) in `mutate()`, `summarize()` and `filter()` (#114).
+  
+* In `bind_rows_polars()`, if all elements are named and `.id` is specified, the
+  `.id` column will use the names of the elements (#116).
+  
+* It is now possible to rename variables in `select()` (#117).
+
+* Add support for argument `na_matches` in all join functions (except 
+  `cross_join()` that doesn't need it) (#109).
 
 ## Bug fixes
 
 * Local variables in custom functions could not be used in tidypolars functions
   (reported in a blog post of Art Steinmetz). This is now fixed.
+  
+* `across()` now works when `.cols` contains only one variable and `.fns` contains
+  only one function.
+  
+* In `across()`, the `.cols` argument now takes into account variables created
+  in the same `mutate()` or `summarize()` call before `across()`. 
+  
+  ```r
+  as_polars_df(mtcars) |> 
+    head(n = 3) |> 
+    mutate(
+      foo = 1, 
+      across(.cols = contains("oo"), \(x) x - 1)
+    )
+  
+  shape: (3, 12)
+  ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬─────┐
+  │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ foo │
+  │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ --- │
+  │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ f64 │
+  ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═════╡
+  │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 0.0 │
+  │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 0.0 │
+  │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 0.0 │
+  └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴─────┘
+  ```
+  
+  Note that the `where()` function is not supported here. For example:
+  
+  ```r
+  as_polars_df(mtcars) |> 
+    mutate(
+      foo = 1, 
+      across(.cols = where(is.numeric), \(x) x - 1)
+    )
+  ```
+  will *not* return 0 for the variable `foo`. A warning is emitted about this 
+  behavior. 
+  
+* Better handling of negative values in `c()` when called in `mutate()` and
+  `summarize()`.
 
 
 # tidypolars 0.7.0

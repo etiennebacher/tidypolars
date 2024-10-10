@@ -13,7 +13,7 @@
 \item{.data}{A Polars Data/LazyFrame}
 
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
-column numbers, select helpers, etc.}
+column numbers, select helpers, etc. Renaming is also possible.}
 }
 \description{
 Select columns from a Data/LazyFrame
@@ -28,5 +28,8 @@ select(pl_iris, Sepal.Length, Sepal.Width)
 select(pl_iris, 1:3)
 select(pl_iris, starts_with("Sepal"))
 select(pl_iris, -ends_with("Length"))
+
+# Renaming while selecting is also possible
+select(pl_iris, foo1 = Sepal.Length, Sepal.Width)
 \dontshow{\}) # examplesIf}
 }

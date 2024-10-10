@@ -19,7 +19,7 @@ pl_all <- function(..., na.rm = FALSE) {
     return(x$expr$list$eval(pl$element()$all())$explode())
   }
   if (length(dots) == 1) {
-    dots[[1]]$all(drop_nulls = na.rm)
+    dots[[1]]$all(ignore_nulls = na.rm)
   } else {
     abort(
       "`all()` only works with one element in `...`",
@@ -42,7 +42,7 @@ pl_any <- function(..., na.rm = FALSE) {
     return(x$expr$list$eval(pl$element()$any())$explode())
   }
   if (length(dots) == 1) {
-    dots[[1]]$any(drop_nulls = na.rm)
+    dots[[1]]$any(ignore_nulls = na.rm)
   } else {
     abort(
       "`any()` only works with one element in `...`",
@@ -51,65 +51,144 @@ pl_any <- function(..., na.rm = FALSE) {
   }
 }
 
-pl_mean <- function(x, ...) {
+pl_desc_dplyr <- function(x) {
+  attr(x, "descending") <- TRUE
+  x
+}
+
+pl_mean <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$mean())$explode()
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$mean())$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$has_nulls())$
+          then(NA)$
+          otherwise(pl$element()$mean())
+        )$
+        explode()
+    }
   } else {
-    x$expr$mean()
+    if (isTRUE(na.rm)) {
+      x$expr$mean()
+    } else {
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$mean())
+    }
   }
 }
 
-pl_median <- function(x, ...) {
+pl_median <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$median())$explode()
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$median())$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$has_nulls())$
+          then(NA)$
+          otherwise(pl$element()$median())
+      )$
+        explode()
+    }
   } else {
-    x$expr$median()
+    if (isTRUE(na.rm)) {
+      x$expr$median()
+    } else {
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$median())
+    }
   }
 }
 
-pl_min <- function(x, ...) {
+pl_min <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$min())$explode()
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$min())$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$has_nulls())$
+          then(NA)$
+          otherwise(pl$element()$min())
+      )$
+        explode()
+    }
   } else {
-    x$expr$min()
+    if (isTRUE(na.rm)) {
+      x$expr$min()
+    } else {
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$min())
+    }
   }
 }
 
-pl_max <- function(x, ...) {
+pl_max <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
   x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$max())$explode()
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$max())$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$has_nulls())$
+          then(NA)$
+          otherwise(pl$element()$max())
+      )$
+        explode()
+    }
   } else {
-    x$expr$max()
+    if (isTRUE(na.rm)) {
+      x$expr$max()
+    } else {
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$max())
+    }
   }
 }
 
 pl_sum <- function(..., na.rm = FALSE) {
-  if (isTRUE(na.rm)) {
-    rlang::inform("Argument `na.rm` in `sum()` is ignored.")
-  }
   x <- check_rowwise_dots(...)
   if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$sum())$explode()
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$sum())$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$has_nulls())$
+          then(NA)$
+          otherwise(pl$element()$sum())
+      )$
+        explode()
+    }
   } else {
-    x$expr$sum()
+    if (isTRUE(na.rm)) {
+      x$expr$sum()
+    } else {
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$sum())
+    }
   }
 }
 
-pl_sd <- function(x, ddof = 1, ...) {
-  check_empty_dots(...)
-  x <- check_rowwise(x, ...)
+pl_sd <- function(x, na.rm = FALSE) {
+  x <- check_rowwise(x)
   if (isTRUE(x$is_rowwise)) {
-    x$expr$list$eval(pl$element()$std(ddof = ddof))$explode()
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$std(ddof = 1))$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$has_nulls())$
+          then(NA)$
+          otherwise(pl$element()$std(ddof = 1))
+      )$
+        explode()
+    }
   } else {
-    x$expr$std(ddof = ddof)
+    if (isTRUE(na.rm)) {
+      x$expr$std(ddof = 1)
+    } else {
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$std(ddof = 1))
+    }
   }
 }
 
@@ -148,22 +227,7 @@ pl_atanh <- function(x, ...) {
   x$arctanh()
 }
 
-pl_which.max <- function(x, ...) {
-  check_empty_dots(...)
-  x$arg_max() + 1
-}
-
-pl_which.min <- function(x, ...) {
-  check_empty_dots(...)
-  x$arg_min() + 1
-}
-
-pl_arg_sort <- function(x, ...) {
-  check_empty_dots(...)
-  x$arg_sort()
-}
-
-pl_between <- function(x, left, right, ...) {
+pl_between_dplyr <- function(x, left, right, ...) {
   check_empty_dots(...)
   x$is_between(lower_bound = left, upper_bound = right, closed = "both")
 }
@@ -171,6 +235,7 @@ pl_between <- function(x, left, right, ...) {
 pl_case_match <- function(x, ..., .data) {
   env <- env_from_dots(...)
   new_vars <- new_vars_from_dots(...)
+  caller <- caller_from_dots(...)
   dots <- clean_dots(...)
 
   x <- polars::pl$col(deparse(substitute(x)))
@@ -182,12 +247,30 @@ pl_case_match <- function(x, ..., .data) {
   out <- NULL
   for (y in seq_along(dots)) {
     if (y == length(dots)) {
-      otw <- translate_expr(.data, dots[[y]], new_vars = new_vars, env = env)
+      otw <- translate_expr(
+        .data,
+        dots[[y]],
+        new_vars = new_vars,
+        env = env,
+        caller = caller
+      )
       out <- out$otherwise(otw)
       next
     }
-    lhs <- translate_expr(.data, dots[[y]][[2]], new_vars = new_vars, env = env)
-    rhs <- translate_expr(.data, dots[[y]][[3]], new_vars = new_vars, env = env)
+    lhs <- translate_expr(
+      .data,
+      dots[[y]][[2]],
+      new_vars = new_vars,
+      env = env,
+      caller = caller
+    )
+    rhs <- translate_expr(
+      .data,
+      dots[[y]][[3]],
+      new_vars = new_vars,
+      env = env,
+      caller = caller
+    )
     if (is.null(out)) {
       out <- polars::pl$when(x$is_in(lhs))$then(rhs)
     } else {
@@ -201,6 +284,7 @@ pl_case_match <- function(x, ..., .data) {
 pl_case_when <- function(..., .data) {
   env <- env_from_dots(...)
   new_vars <- new_vars_from_dots(...)
+  caller <- caller_from_dots(...)
   dots <- clean_dots(...)
 
   if (!".default" %in% names(dots)) {
@@ -210,12 +294,30 @@ pl_case_when <- function(..., .data) {
   out <- NULL
   for (y in seq_along(dots)) {
     if (y == length(dots)) {
-      otw <- translate_expr(.data, dots[[y]], new_vars = new_vars, env = env)
+      otw <- translate_expr(
+        .data,
+        dots[[y]],
+        new_vars = new_vars,
+        env = env,
+        caller = caller
+      )
       out <- out$otherwise(otw)
       next
     }
-    lhs <- translate_expr(.data, dots[[y]][[2]], new_vars = new_vars, env = env)
-    rhs <- translate_expr(.data, dots[[y]][[3]], new_vars = new_vars, env = env)
+    lhs <- translate_expr(
+      .data,
+      dots[[y]][[2]],
+      new_vars = new_vars,
+      env = env,
+      caller = caller
+    )
+    rhs <- translate_expr(
+      .data,
+      dots[[y]][[3]],
+      new_vars = new_vars,
+      env = env,
+      caller = caller
+    )
 
     if (is.null(out)) {
       out <- polars::pl$when(lhs)$then(rhs)
@@ -231,12 +333,12 @@ pl_ceiling <- function(x, ...) {
   x$ceil()
 }
 
-pl_coalesce <- function(..., default = NULL) {
+pl_coalesce_dplyr <- function(..., default = NULL) {
   # pl$coalesce() doesn't accept a list
   call2(pl$coalesce, !!!clean_dots(...), default) |> eval_bare()
 }
 
-pl_consecutive_id <- function(...) {
+pl_consecutive_id_dplyr <- function(...) {
   dots <- clean_dots(...)
   env <- env_from_dots(...)
   if (length(dots) == 0) {
@@ -279,9 +381,8 @@ pl_cumsum <- function(x, ...) {
   x$cum_sum()
 }
 
-pl_cumulative_eval <- function(x, ...) {
-  check_empty_dots(...)
-  x$cumulative_eval()
+pl_dense_rank_dplyr <- function(x) {
+  x$rank(method = "dense")
 }
 
 pl_diff <- function(x, lag = 1, differences = 1, ...) {
@@ -305,7 +406,7 @@ pl_exp <- function(x, ...) {
   x$exp()
 }
 
-pl_first <- function(x, ...) {
+pl_first_dplyr <- function(x, ...) {
   check_empty_dots(...)
   x$first()
 }
@@ -314,10 +415,29 @@ pl_ifelse <- function(cond, yes, no, .data, ...) {
   check_empty_dots(...)
   env <- env_from_dots(...)
   new_vars <- new_vars_from_dots(...)
+  caller <- caller_from_dots(...)
 
-  cond <- translate_expr(.data, enexpr(cond), new_vars = new_vars, env = env)
-  yes <- translate_expr(.data, enexpr(yes), new_vars = new_vars, env = env)
-  no <- translate_expr(.data, enexpr(no), new_vars = new_vars, env = env)
+  cond <- translate_expr(
+    .data,
+    enexpr(cond),
+    new_vars = new_vars,
+    env = env,
+    caller = caller
+  )
+  yes <- translate_expr(
+    .data,
+    enexpr(yes),
+    new_vars = new_vars,
+    env = env,
+    caller = caller
+  )
+  no <- translate_expr(
+    .data,
+    enexpr(no),
+    new_vars = new_vars,
+    env = env,
+    caller = caller
+  )
   pl$when(cond)$then(yes)$otherwise(no)
 }
 
@@ -329,11 +449,6 @@ pl_infinite <- function(x, ...) {
 pl_interpolate <- function(x, ...) {
   check_empty_dots(...)
   x$interpolate()
-}
-
-pl_is_duplicated <- function(x, ...) {
-  check_empty_dots(...)
-  x$is_duplicated()
 }
 
 pl_is.finite <- function(x, ...) {
@@ -361,22 +476,29 @@ pl_is.null <- function(x, ...) {
   x$is_null()
 }
 
-pl_is_unique <- function(x, ...) {
-  check_empty_dots(...)
-  x$is_unique()
-}
-
-pl_bottom_k <- function(x, ...) {
-  check_empty_dots(...)
-  x$bottom_k()
-}
-
 pl_kurtosis <- function(x, ...) {
   check_empty_dots(...)
   x$kurtosis()
 }
 
-pl_last <- function(x, ...) {
+pl_lag <- function(x, k = 1, ...) {
+  check_empty_dots(...)
+  x$shift(k)
+}
+
+pl_lag_dplyr <- function(x, n = 1, ...) {
+  check_empty_dots(...)
+  # if (is.null(order_by)) {
+    x$shift(n)
+  # } else {
+  #   # Need to have at least one group so use 1 to use all data
+  #   # Requires: https://github.com/pola-rs/polars/issues/12051
+  #   x$shift(n)$over(1, order_by = order_by)
+  # }
+
+}
+
+pl_last_dplyr <- function(x, ...) {
   check_empty_dots(...)
   x$last()
 }
@@ -400,50 +522,79 @@ pl_mode <- function(x, ...) {
   x$mode()
 }
 
-pl_fill_nan <- function(x, ...) {
-  check_empty_dots(...)
-  x$fill_nan()
+pl_min_rank_dplyr <- function(x) {
+  x$rank(method = "min")
 }
 
-pl_drop_nans <- function(x, ...) {
-  check_empty_dots(...)
-  x$drop_nans()
+pl_n_dplyr <- function(...) {
+  check_empty_dots()
+  pl$len()
 }
 
-pl_fill_null <- function(x, ...) {
-  check_empty_dots(...)
-  x$fill_null()
+pl_na_if_dplyr <- function(x, y) {
+  if (length(y) == 1 && !inherits(y, "RPolarsExpr") && is.na(y)) {
+    pl$when(x$is_null())$then(pl$lit(NA))$otherwise(x)
+  } else {
+    pl$when(x == y)$then(pl$lit(NA))$otherwise(x)
+  }
 }
 
-pl_drop_nulls <- function(x, ...) {
-  check_empty_dots(...)
-  x$drop_nulls()
-}
-
-pl_n_distinct <- function(..., na.rm = FALSE) {
+pl_n_distinct_dplyr <- function(..., na.rm = FALSE) {
   dots <- clean_dots(...)
-  env <- env_from_dots(...)
   if (length(dots) == 0) {
     abort(
       "`...` is absent, but must be supplied.",
-      call = env
+      call = env_from_dots(...)
     )
   }
-  dots <- pl$struct(dots)
   if (isTRUE(na.rm)) {
-    dots$drop_nulls()$n_unique()
+    # https://stackoverflow.com/a/78888889/11598948
+    check_is_null <- lapply(dots, function(x) x$is_null())
+    check_any_is_null <- call2(pl$any_horizontal, !!!check_is_null) |> eval_bare()
+    pl$struct(dots)$filter(check_any_is_null$not())$n_unique()
   } else {
-    dots$n_unique()
+    pl$struct(dots)$n_unique()
   }
 }
 
-pl_quantile <- function(x, ...) {
-  check_empty_dots(...)
-  x$quantile()
+pl_nth_dplyr <- function(x, n, ...) {
+  if (length(n) > 1) {
+    abort(
+      paste0("`n` must have size 1, not size ", length(n), "."),
+      call = env_from_dots(...)
+    )
+  }
+  if (is.na(n)) {
+    abort(
+      "`n` can't be `NA`.",
+      call = env_from_dots(...)
+    )
+  }
+  if (as.integer(n) != n) {
+    abort(
+      "`n` must be an integer.",
+      call = env_from_dots(...)
+    )
+  }
+  # 0-indexed
+  if (n > 0) {
+    n <- n - 1
+  }
+  x$gather(n)
 }
+
 pl_rank <- function(x, ...) {
   check_empty_dots(...)
   x$rank()
+}
+
+pl_replace_na_tidyr <- function(data, replace, ...) {
+  check_empty_dots(...)
+  data$fill_null(replace)
+}
+
+pl_rev <- function(x) {
+  x$reverse()
 }
 
 pl_round <- function(x, digits = 0, ...) {
@@ -451,16 +602,18 @@ pl_round <- function(x, digits = 0, ...) {
   x$round(decimals = digits)
 }
 
+pl_row_number_dplyr <- function(x = NULL) {
+  if (is.null(x)) {
+    pl$int_range(start = 1, pl$len() + 1)
+  } else {
+    x$rank(method = "ordinal")
+  }
+}
+
 pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
   check_empty_dots(...)
   # TODO: how should I handle seed, given that R sample() doesn't have this arg
   x$sample(n = size, with_replacement = replace, shuffle = TRUE)
-}
-
-pl_lag <- function(x, n = 1, k = NULL, ...) {
-  check_empty_dots(...)
-  if (!is.null(k)) n <- k
-  x$shift(n)
 }
 
 pl_sign <- function(x, ...) {
@@ -481,11 +634,6 @@ pl_sinh <- function(x, ...) {
 pl_skew <- function(x, ...) {
   check_empty_dots(...)
   x$skew()
-}
-
-pl_slice <- function(x, ...) {
-  check_empty_dots(...)
-  x$slice()
 }
 
 pl_sort <- function(x, ...) {
@@ -518,111 +666,21 @@ pl_unique_counts <- function(x, ...) {
   x$unique_counts()
 }
 
-pl_var <- function(x, ddof = 1, ...) {
+pl_var <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
-  x$var(ddof = ddof)
+  if (isTRUE(na.rm)) {
+    x$var(ddof = 1)
+  } else {
+    pl$when(x$has_nulls())$then(NA)$otherwise(x$var(ddof = 1))
+  }
 }
 
-pl_n_unique <- function(x, ...) {
+pl_which.max <- function(x, ...) {
   check_empty_dots(...)
-  x$n_unique()
+  x$arg_max() + 1
 }
 
-pl_nan_max <- function(x, ...) {
+pl_which.min <- function(x, ...) {
   check_empty_dots(...)
-  x$nan_max()
-}
-
-pl_nan_min <- function(x, ...) {
-  check_empty_dots(...)
-  x$nan_min()
-}
-
-pl_null_count <- function(x, ...) {
-  check_empty_dots(...)
-  x$null_count()
-}
-
-pl_pct_change <- function(x, ...) {
-  check_empty_dots(...)
-  x$pct_change()
-}
-
-pl_rev <- function(x) {
-  x$reverse()
-}
-
-pl_rolling_max <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_max()
-}
-
-pl_rolling_mean <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_mean()
-}
-
-pl_rolling_median <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_median()
-}
-
-pl_rolling_min <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_min()
-}
-
-pl_rolling_quantile <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_quantile()
-}
-
-pl_rolling_skew <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_skew()
-}
-
-pl_rolling_std <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_std()
-}
-
-pl_rolling_sum <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_sum()
-}
-
-pl_rolling_var <- function(x, ...) {
-  check_empty_dots(...)
-  x$rolling_var()
-}
-
-pl_shift_and_fill <- function(x, ...) {
-  check_empty_dots(...)
-  x$shift_and_fill()
-}
-
-pl_top_k <- function(x, ...) {
-  check_empty_dots(...)
-  x$top_k()
-}
-
-pl_unique_counts <- function(x, ...) {
-  check_empty_dots(...)
-  x$unique_counts()
-}
-
-pl_upper_lower_bound <- function(x, ...) {
-  check_empty_dots(...)
-  x$upper_lower_bound()
-}
-
-pl_value_counts <- function(x, ...) {
-  check_empty_dots(...)
-  x$value_counts()
-}
-
-pl_n <- function(...) {
-  check_empty_dots()
-  pl$len()
+  x$arg_min() + 1
 }

@@ -3,8 +3,7 @@
 #' @param data A Polars Data/LazyFrame
 #' @param replace Either a scalar that will be used to replace `NA` in all
 #'   columns, or a named list with the column name and the value that will be
-#'   used to replace `NA` in it. **The column type will be automatically
-#'   converted to the type of the replacement value.**
+#'   used to replace `NA` in it.
 #' @inheritParams slice_tail.RPolarsDataFrame
 #'
 #' @export
@@ -16,25 +15,35 @@
 #'
 #' # custom replacement per column
 #' replace_na(pl_test, list(x = 0, y = 999))
-#'
-#' # be careful to use the same type for the replacement and for the column!
-#' replace_na(pl_test, list(x = "a", y = "unknown"))
 
 replace_na.RPolarsDataFrame <- function(data, replace, ...) {
 
   data <- check_polars_data(data)
   is_scalar <- length(replace) == 1 && !is.list(replace)
 
-  out <- if (is_scalar) {
-    data$with_columns(
-      pl$all()$fill_null(replace)
-    )
+  # TODO: maybe re-use fill_null() once this is fixed
+  # https://github.com/pola-rs/polars/issues/13789
+  #
+  # replace() errors if we try to replace numeric by character, but coerces
+  # floats to integer.
+  # fill_null() does the opposite
+  #
+  # => depending on the replacement, use one or the other.
+  if (is_scalar) {
+    if (is.character(replace)) {
+      exprs <- pl$all()$replace(NA, replace)
+    } else {
+      exprs <- pl$all()$fill_null(replace)
+    }
   } else if (is.list(replace)) {
     exprs <- list()
     for (i in seq_along(replace)) {
-      exprs[[i]] <- polars::pl$col(names(replace)[i])$fill_null(replace[[i]])
+      if (is.character(replace[[i]])) {
+        exprs[[i]] <- polars::pl$col(names(replace)[i])$replace(NA, replace[[i]])
+      } else {
+        exprs[[i]] <- polars::pl$col(names(replace)[i])$fill_null(replace[[i]])
+      }
     }
-    data$with_columns(exprs)
   }
 
   out

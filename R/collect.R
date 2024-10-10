@@ -27,6 +27,8 @@
 #' @param comm_subplan_elim Cache branching subplans that occur on self-joins or
 #' unions (default is `TRUE`).
 #' @param comm_subexpr_elim Cache common subexpressions (default is `TRUE`).
+#' @param cluster_with_columns Combine sequential independent calls to
+#' `$with_columns()`.
 #' @param no_optimization Sets the following optimizations to `FALSE`:
 #' `predicate_pushdown`, `projection_pushdown`,  `slice_pushdown`,
 #' `simplify_expression`. Default is `FALSE`.
@@ -36,8 +38,6 @@
 #' will start in background. Get a handle which later can be converted into the
 #' resulting DataFrame. Useful in interactive mode to not lock R session (default
 #' is `FALSE`).
-#' @param verbose If `TRUE` (default), show the deprecation warning on the
-#' usage of `collect()`.
 #' @inheritParams slice_tail.RPolarsDataFrame
 #'
 #' @export
@@ -52,8 +52,16 @@
 #'   select(starts_with("Sepal")) |>
 #'   filter(between(Sepal.Length, 5, 6)) |>
 #'   compute()
+#'
+#' # call collect() instead to return a data.frame (note that this is more
+#' # expensive than compute())
+#' dat_lazy |>
+#'   select(starts_with("Sepal")) |>
+#'   filter(between(Sepal.Length, 5, 6)) |>
+#'   collect()
 compute.RPolarsLazyFrame <- function(
     x,
+    ...,
     type_coercion = TRUE,
     predicate_pushdown = TRUE,
     projection_pushdown = TRUE,
@@ -61,10 +69,10 @@ compute.RPolarsLazyFrame <- function(
     slice_pushdown = TRUE,
     comm_subplan_elim = TRUE,
     comm_subexpr_elim = TRUE,
+    cluster_with_columns = TRUE,
     no_optimization = FALSE,
     streaming = FALSE,
-    collect_in_background = FALSE,
-    ...
+    collect_in_background = FALSE
   ) {
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order
@@ -78,6 +86,7 @@ compute.RPolarsLazyFrame <- function(
     slice_pushdown = slice_pushdown,
     comm_subplan_elim = comm_subplan_elim,
     comm_subexpr_elim = comm_subexpr_elim,
+    cluster_with_columns = cluster_with_columns,
     no_optimization = no_optimization,
     streaming = streaming,
     collect_in_background = collect_in_background
@@ -85,7 +94,7 @@ compute.RPolarsLazyFrame <- function(
 
   out <- if (is_grouped) {
     out |>
-      group_by(grps, maintain_order = mo)
+      group_by(all_of(grps), maintain_order = mo)
   } else {
     out
   }
@@ -98,6 +107,7 @@ compute.RPolarsLazyFrame <- function(
 #' @export
 collect.RPolarsLazyFrame <- function(
     x,
+    ...,
     type_coercion = TRUE,
     predicate_pushdown = TRUE,
     projection_pushdown = TRUE,
@@ -105,19 +115,13 @@ collect.RPolarsLazyFrame <- function(
     slice_pushdown = TRUE,
     comm_subplan_elim = TRUE,
     comm_subexpr_elim = TRUE,
+    cluster_with_columns = TRUE,
     no_optimization = FALSE,
     streaming = FALSE,
-    collect_in_background = FALSE,
-    verbose = TRUE,
-    ...
+    collect_in_background = FALSE
 ) {
-  if (isTRUE(verbose)) {
-    rlang::warn(
-      "As of `tidypolars` 0.8.0, `collect()` will automatically convert the Polars DataFrame to a standard R data.frame. \nUse `compute()` instead (with the same arguments) to have a Polars DataFrame as output.\nUse `verbose = FALSE` to remove this warning."
-    )
-  }
   x |>
-    compute(
+    as.data.frame(
       type_coercion = type_coercion,
       predicate_pushdown = predicate_pushdown,
       projection_pushdown = projection_pushdown,
@@ -125,36 +129,9 @@ collect.RPolarsLazyFrame <- function(
       slice_pushdown = slice_pushdown,
       comm_subplan_elim = comm_subplan_elim,
       comm_subexpr_elim = comm_subexpr_elim,
+      cluster_with_columns = cluster_with_columns,
       no_optimization = no_optimization,
       streaming = streaming,
       collect_in_background = collect_in_background
     )
 }
-# collect.RPolarsLazyFrame <- function(
-#     x,
-#     type_coercion = TRUE,
-#     predicate_pushdown = TRUE,
-#     projection_pushdown = TRUE,
-#     simplify_expression = TRUE,
-#     slice_pushdown = TRUE,
-#     comm_subplan_elim = TRUE,
-#     comm_subexpr_elim = TRUE,
-#     no_optimization = FALSE,
-#     streaming = FALSE,
-#     collect_in_background = FALSE,
-#     ...
-# ) {
-#   x |>
-#     as.data.frame(
-#       type_coercion = type_coercion,
-#       predicate_pushdown = predicate_pushdown,
-#       projection_pushdown = projection_pushdown,
-#       simplify_expression = simplify_expression,
-#       slice_pushdown = slice_pushdown,
-#       comm_subplan_elim = comm_subplan_elim,
-#       comm_subexpr_elim = comm_subexpr_elim,
-#       no_optimization = no_optimization,
-#       streaming = streaming,
-#       collect_in_background = collect_in_background
-#     )
-# }

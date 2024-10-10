@@ -11,6 +11,10 @@
 #'   * A vector the same length as the current group (or the whole data
 #'    frame if ungrouped).
 #'   * NULL, to remove the column.
+#'
+#' `across()` is mostly supported, except in a few cases. In particular, if the
+#' `.cols` argument is `where(...)`, it will *not* select variables that were
+#' created before `across()`. Other select helpers are supported. See the examples.
 #' @param .by Optionally, a selection of columns to group by for just this
 #'   operation, functioning as an alternative to `group_by()`. The group order
 #'   is not maintained, use `group_by()` if you want more control over it.
@@ -34,11 +38,10 @@
 #' syntax under the hood so that you can continue using the classic R syntax and
 #' functions.
 #'
-# TODO: not true for now
-# If a Polars built-in replacement doesn't exist (for example for custom
-# functions), the R function will be passed to `map()` in the Polars workflow.
-# Note that this is slower than using functions that can be translated to
-# Polars syntax.
+#' If a Polars built-in replacement doesn't exist (for example for custom
+#' functions), then `tidypolars` will throw an error. See the vignette on Polars
+#' expressions to know how to write custom functions that are accepted by
+#' `tidypolars`.
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -77,6 +80,22 @@
 #'       .names = "{.fn}_of_{.col}"
 #'     )
 #'   )
+#'
+#' # Be careful when using across(.cols = where(...), ...) as it will not include
+#' # variables created in the same `...` (this is only the case for `where()`):
+#' \dontrun{
+#' pl_iris |>
+#'   mutate(
+#'     foo = 1,
+#'     across(
+#'       .cols = where(is.numeric),
+#'       \(x) x - 1000   # <<<<<<<<< this will not be applied on variable "foo"
+#'     )
+#'   )
+#' }
+#' # Warning message:
+#' # In `across()`, the argument `.cols = where(is.numeric)` will not take into account
+#' # variables created in the same `mutate()`/`summarize` call.
 #'
 #' # Embracing an external variable works
 #' some_value <- 1
@@ -145,7 +164,7 @@ mutate.RPolarsDataFrame <- function(
   }
 
   out <- if (is_grouped && missing(.by)) {
-    group_by(.data, grps, maintain_order = mo)
+    group_by(.data, all_of(grps), maintain_order = mo)
   } else if (isTRUE(is_rowwise)) {
     rowwise(.data)
   } else {

@@ -1,4 +1,0 @@
-Pure polars expression:
-
-<data>$
-  select(c("Sepal.Length", "Sepal.Width", "Species"))

@@ -27,7 +27,7 @@ library(dplyr, warn.conflicts = FALSE)
 library(dplyr, warn.conflicts = FALSE)
 
 filter(mtcars, am + gear > carb)
-mutate(mtcars, x = (qsec - mean(qsec) / sd(qsec)))
+mutate(mtcars, x = (qsec - mean(qsec)) / sd(qsec))
 mtcars |> 
   group_by(cyl) |> 
   summarize(x = mean(qsec) / sd(qsec))
@@ -53,7 +53,7 @@ translated to Polars syntax.
 However, there are some situations where this might not work, so this vignette
 explains the process and the limitations.
 
-# How does `tidypolars` translate R expressions into Polars expressions?
+## How does `tidypolars` translate R expressions into Polars expressions?
 
 When `tidypolars` receives an expression, it runs a function `translate()` 
 several times until all components are translated to their Polars equivalent. 
@@ -61,7 +61,7 @@ There are four possible components: single values, column names, external object
 and functions.
 
 
-## Single values, column names, and external objects
+### Single values, column names, and external objects
 
 If you pass a single value, like `x = 1` or `x = "a"`, it is wrapped into 
 `pl$lit()`. This is also the case for external objects with the difference that
@@ -76,7 +76,7 @@ x = {{ some_value }}  ->  x = pl$lit(*value*)
 x = mpg               ->  x = pl$col("mpg")
 ```
 
-## Functions
+### Functions
 
 
 Functions are split into two categories: built-in functions (i.e functions 
@@ -84,28 +84,21 @@ provided by base R or by other packages), and user-defined functions (UDF) that
 are written by the user (you). 
 
 
-### Built-in functions
+#### Built-in functions
 
-In the first case, `tidypolars` checks the function name and whether there's an
-equivalent function in Polars. For example, the R function `sd(x, na.rm = TRUE)`
-is converted to `std(x, na.rm = TRUE)`. Since R and Polars functions often don't 
-share the same name, this check relies on a custom list containing all equivalencies 
-between R and Polars functions. You can see the list of supported R functions at
-the bottom of this vignette. Note that **most of essential base R functions are
-supported, but also some functions from `dplyr` or from `stringr` for example**.
+In the first case, `tidypolars` checks the function name and whether it has 
+already been translated internally. For example, if we call the R function 
+`mean(x, trim = 2)`, then it looks for a translation of `mean()`. You can see the
+list of supported R functions at the bottom of this vignette. Note that most of
+essential base R functions are supported, as well as many functions from `dplyr` 
+or from `stringr` for example.
 
-Here, replacing R's `sd()` function with `std()` is not enough because the 
-argument `x` (which usually is a variable in the dataset) is not in the right 
-format to be used by Polars. Therefore, `tidypolars` calls `translate()` a 
-second time on the inside of the function.  
-
-We now have `std(pl$col("x"))`^[Not exactly because `tidypolars` actually calls
-an internal function `pl_std()` that contains the right Polars syntax, but this
-is the main idea.]. To end this example, we need to see what happens to additional
-arguments. You can see that we didn't modify the `na.rm = TRUE` for now. This is 
-because Polars doesn't have this argument in `std()` (it automatically drops the
-missing values). Internally, `tidypolars` checks whether additional arguments 
-are accepted and throws a message if this is not the case:
+Now that `tidypolars` knows that a translation of `mean()` exists, it parses
+the arguments in the call to translate them to the Polars syntax: internally,
+`x` is converted to `pl$col("x")` if there is a column `"x"` in the data. 
+Sometimes, additional arguments do not have an equivalent in Polars. This is
+the case for the argument `trim` here. In this case, `tidypolars` ignores
+this argument and warns the user:
 
 ```{r}
 library(tidypolars)
@@ -113,11 +106,14 @@ library(polars)
 
 mtcars |> 
   as_polars_df() |> 
-  mutate(x = sd(mpg, na.rm = TRUE))
+  mutate(x = mean(mpg, trim = 2))
 ```
 
+This behavior [can be changed](https://tidypolars.etiennebacher.com/reference/tidypolars-options.html) 
+to throw an error instead. 
 
-### User-defined functions
+
+#### User-defined functions
 
 User-defined functions (UDF) are more challenging. Indeed, it is technically 
 possible to inspect the code inside a UDF, but rewriting it to match Polars syntax
@@ -149,7 +145,7 @@ mtcars |>
 ```
 
 
-### Special case: `across()`
+#### Special case: `across()`
 
 [`across()`](https://dplyr.tidyverse.org/reference/across.html) is a very useful
 function that applies a function (or a list of functions) to a selection of 
@@ -187,7 +183,7 @@ mtcars |>
 ```
 
 
-## List of base R and `tidyverse` functions supported by `tidypolars` 
+### List of base R and `tidyverse` functions supported by `tidypolars` 
 
 
 ```{r echo=FALSE, message=FALSE}
@@ -214,6 +210,7 @@ out <- tribble(
   "`base`",             "`floor`",
   "`base`",             "`grepl`",
   "`base`",             "`ifelse`",
+  "`base`",             "`ISOdatetime`",
   "`base`",             "`length`",
   "`base`",             "`log`", 
   "`base`",             "`log10`",
@@ -231,6 +228,7 @@ out <- tribble(
   "`base`",             "`sort`", 
   "`base`",             "`sqrt`", 
   "`base`",             "`strptime`",
+  "`base`",             "`substr`",
   "`base`",             "`tan`", 
   "`base`",             "`tanh`",
   "`base`",             "`tolower`",
@@ -243,14 +241,18 @@ out <- tribble(
   "`dplyr`",            "`case_when`",
   "`dplyr`",            "`coalesce`",
   "`dplyr`",            "`consecutive_id`",
+  "`dplyr`",            "`dense_rank`",
   "`dplyr`",            "`first`",
   "`dplyr`",            "`group_keys`",
   "`dplyr`",            "`group_vars`",
   "`dplyr`",            "`if_else`",
-  "`dplyr`/`stats`",    "`lag`",
-  "`dplyr`",            "`n`",
-  "`dplyr`",            "`n_distinct`",
+  "`dplyr`",            "`lag`",
   "`dplyr`",            "`last`",
+  "`dplyr`",            "`min_rank`",
+  "`dplyr`",            "`n`",
+  "`dplyr`",            "`nth`",
+  "`dplyr`",            "`n_distinct`",
+  "`dplyr`",            "`row_number`",
   "`lubridate`",        "`ddays`",
   "`lubridate`",        "`dhours`",
   "`lubridate`",        "`dmilliseconds`",
@@ -258,11 +260,16 @@ out <- tribble(
   "`lubridate`",        "`dseconds`",
   "`lubridate`",        "`dweeks`",
   "`lubridate`",        "`make_date`",
+  "`lubridate`",        "`make_datetime`",
+  "`lubridate`",        "`wday`",
   "`stats`",            "`median`", 
+  "`stats`",            "`lag`", 
   "`stats`",            "`sd`", 
   "`stats`",            "`var`",
   "`stringr`",          "`regex`",
   "`stringr`",          "`str_count`",
+  "`stringr`",          "`str_detect`",
+  "`stringr`",          "`str_dup`",
   "`stringr`",          "`str_ends`",
   "`stringr`",          "`str_extract`",
   "`stringr`",          "`str_extract_all`",
@@ -272,6 +279,8 @@ out <- tribble(
   "`stringr`",          "`str_remove_all`",
   "`stringr`",          "`str_replace`",
   "`stringr`",          "`str_replace_all`",
+  "`stringr`",          "`str_split`",
+  "`stringr`",          "`str_split_i`",
   "`stringr`",          "`str_squish`",
   "`stringr`",          "`str_starts`",
   "`stringr`",          "`str_sub`",
@@ -279,14 +288,20 @@ out <- tribble(
   "`stringr`",          "`str_to_lower`",
   "`stringr`",          "`str_to_title`",
   "`stringr`",          "`str_to_upper`",
+  "`stringr`",          "`str_trunc`",
   "`stringr`",          "`word`",
+  "`tidyr`",            "`replace_na`",
   "`tools`",            "`toTitleCase`"
 ) |>
+  mutate(Notes = case_when(
+    Package == "`lubridate`" & Function == "`make_datetime`" ~ "In `lubridate::make_datetime()`, when there is an overflow (for example `hours = 25`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this returns `NA`.",
+    Package == "`lubridate`" & Function == "`wday`" ~ "Requires `week_start == 7`. If `label = TRUE`, it returns a string variable and not a factor as in `lubridate`.",
+    Package == "`dplyr`" & Function == "`row_number`" ~ "Doesn't work when `x` is missing.",
+    Package == "`stringr`" & Function == "`str_to_title`" ~ "Letters following apostrophe will be capitalized as well, which differs from the `stringr` implementation.",
+    Package == "`tools`" & Function == "`toTitleCase`" ~ "Letters following apostrophe will be capitalized as well, which differs from the `tools` implementation.",
+    .default = ""
+  )) |> 
   arrange(Package)
 
-rows <- seq_len(nrow(out) %/% 3)
-kable(list(out[rows,], matrix(numeric(), nrow=0, ncol=1),
-           out[rows + length(rows), ], matrix(numeric(), nrow=0, ncol=1),
-           out[rows + length(rows) + length(rows), ])) 
+kable(out) 
 ```
-

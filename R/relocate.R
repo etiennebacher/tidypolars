@@ -3,7 +3,7 @@
 #' Use `relocate()` to change column positions, using the same syntax as
 #' `select()` to make it easy to move blocks of columns at once.
 #'
-#' @inheritParams select.RPolarsDataFrame
+#' @inheritParams complete.RPolarsDataFrame
 #' @param .before,.after Column name (either quoted or unquoted) that
 #' indicates the destination of columns selected by `...`. Supplying neither
 #' will move columns to the left-hand side; specifying both is an error.
@@ -58,9 +58,6 @@ relocate.RPolarsDataFrame <- function(.data, ..., .before = NULL, .after = NULL)
 
   if (where == "BEFORE") {
     limit <- which(names_data == .before) - 1
-    if (length(limit) == 0) {
-      rlang::abort("The column specified in `.before` doesn't exist in the dataset.")
-    }
     lhs <- names_data[seq_len(limit)]
     lhs <- lhs[which(lhs %in% not_moving)]
     rhs <- names_data[seq(limit + 1, ncol(.data))]
@@ -68,9 +65,6 @@ relocate.RPolarsDataFrame <- function(.data, ..., .before = NULL, .after = NULL)
     new_order <- c(lhs, vars, rhs)
   } else if (where == "AFTER") {
     limit <- which(names_data == .after)
-    if (length(limit) == 0) {
-      rlang::abort("The column specified in `.after` doesn't exist in the dataset.")
-    }
     lhs <- names_data[seq_len(limit)]
     lhs <- lhs[which(lhs %in% not_moving)]
     # we don't have RHS if we relocate columns to be in the last position

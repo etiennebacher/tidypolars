@@ -95,7 +95,7 @@ pivot_wider.RPolarsDataFrame <- function(
 
   new_data <- data$pivot(
     values = value_vars,
-    columns = names_vars,
+    on = names_vars,
     index = id_vars,
     separator = names_sep
   )
@@ -113,19 +113,8 @@ pivot_wider.RPolarsDataFrame <- function(
     final_cols <- glue::glue_data(final_cols, names_glue)
     names_prefix <- NULL
 
-  # polars adds names_from in the middle of the generated names so I remove it
   } else if (length(value_vars) > 1 && length(names_vars) == 1) {
-    old_names <- grep(
-      paste0(names_sep, names_vars, names_sep),
-      names(new_data),
-      value = TRUE
-    )
-    new_names <- gsub(
-      paste0(names_sep, names_vars, names_sep),
-      names_sep,
-      old_names
-    )
-    final_cols <- new_names
+    final_cols <- setdiff(names(new_data), data_names)
   } else {
     final_cols <- do.call(paste, c(final_cols, sep = names_sep))
   }
@@ -139,7 +128,11 @@ pivot_wider.RPolarsDataFrame <- function(
     names(new_cols) <- paste0(names_prefix, final_cols)
   }
 
-  new_data <- new_data$rename(new_cols)
+  # TODO: refactor this, it's just a patch for the breaking change in $rename()
+  # in polars 0.17.0
+  mapping <- as.list(names(new_cols))
+  names(mapping) <- unlist(new_cols)
+  new_data <- new_data$rename(mapping)
 
   if (length(value_vars) > 1) {
     tmp <- paste(value_vars, collapse = "|")

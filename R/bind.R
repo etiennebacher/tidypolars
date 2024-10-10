@@ -4,7 +4,9 @@
 #'  either be a Data/LazyFrame, or a list of Data/LazyFrames. Columns are matched
 #'  by name, and any missing columns will be filled with `NA`.
 #' @param .id The name of an optional identifier column. Provide a string to
-#' create an output column that identifies each input.
+#' create an output column that identifies each input. If all elements in
+#' `...` are named, the identifier will use their names. Otherwise, it will be
+#' a simple count.
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -25,6 +27,9 @@
 #'
 #' # create an id colum
 #' bind_rows_polars(p1, p2, .id = "id")
+#'
+#' # create an id colum with named elements
+#' bind_rows_polars(p1 = p1, p2 = p2, .id = "id")
 
 bind_rows_polars <- function(..., .id = NULL) {
   concat_(..., how = "diagonal_relaxed", .id = .id)
@@ -69,24 +74,12 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
     dots <- dots[[1]]
   }
 
-  any_not_polars <- any(vapply(dots, \(y) {
-    !inherits(y, "RPolarsDataFrame") && !inherits(y, "RPolarsLazyFrame")
-  }, FUN.VALUE = logical(1L)))
+  all_df <- all(vapply(dots, inherits, "RPolarsDataFrame", FUN.VALUE = logical(1L)))
+  all_lf <- all(vapply(dots, inherits, "RPolarsLazyFrame", FUN.VALUE = logical(1L)))
 
-  if (any_not_polars) {
+  if (!(all_df || all_lf)) {
     rlang::abort(
-      "All elements in `...` must be either DataFrames or LazyFrames.",
-      call = caller_env()
-    )
-  }
-
-  all_df_or_lf <- all(vapply(dots, \(y) {
-    inherits(y, "RPolarsDataFrame") || inherits(y, "RPolarsLazyFrame")
-  }, FUN.VALUE = logical(1L)))
-
-  if (!all_df_or_lf) {
-    rlang::abort(
-      "All elements in `...` must be of the same class (either DataFrame or LazyFrame).",
+      "All elements in `...` must be of the same class (either all Polars DataFrames or all Polars LazyFrames).",
       call = caller_env()
     )
   }
@@ -94,11 +87,15 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
   dots <- lapply(dots, add_tidypolars_class)
 
   if (!is.null(.id)) {
+    all_named <- !is.null(names(dots)) && all(names(dots) != "")
     dots <- lapply(seq_along(dots), \(x) {
+      val <- if (all_named) {
+        names(dots)[x]
+      } else {
+        as.character(x)
+      }
       dots[[x]]$
-        with_columns(
-          pl$lit(x)$alias(.id)
-        )$
+        with_columns(pl$lit(val)$alias(.id))$
         select(pl$col(.id), pl$col("*")$exclude(.id))
     })
   }
@@ -132,8 +129,8 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
           # default with quiet = FALSE is *incredibly* slow (more than 60ms)
           # so I print the message myself
           new_names <- vctrs::vec_as_names(all_names, repair = .name_repair, quiet = TRUE)
-          mapping <- as.list(all_names)
-          names(mapping) <- new_names
+          mapping <- as.list(new_names)
+          names(mapping) <- all_names
 
           # make the message myself
           tmp <- mapping[!names(mapping) %in% all_names]
