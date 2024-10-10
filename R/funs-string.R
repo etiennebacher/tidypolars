@@ -10,8 +10,18 @@ pl_paste0 <- function(..., collapse = NULL) {
 }
 
 pl_paste <- function(..., sep = " ", collapse = NULL) {
-  # pl$concat_str() doesn't support a list input
-  call2(pl$concat_str, !!!clean_dots(...), separator = sep) |> eval_bare()
+  sep <- polars_expr_to_r(sep)
+  dots <- clean_dots(...)
+  # paste(NA) -> "NA"
+  dots <- lapply(seq_along(dots), function(x) {
+    elem <- dots[[x]]
+    if (!inherits(elem, "RPolarsExpr")) {
+      return(elem)
+    }
+    elem$fill_null(pl$lit("NA"))
+  })
+  call2(pl$concat_str, !!!dots, separator = sep) |>
+    eval_bare()
 }
 
 pl_str_count_stringr <- function(string, pattern = "", ...) {

@@ -2,47 +2,45 @@
 
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
-# TODO: Counter example:
-#  string = NA
+test_that("paste() and paste0() work", {
+  for_all(
+    tests = 40,
+    string = character_(any_na = TRUE),
+    separator = character_(len = 1),
+    property = function(string, separator) {
+      test_df <- data.frame(x1 = string)
+      test <- pl$LazyFrame(x1 = string)
 
-# test_that("paste() and paste0() work", {
-#   for_all(
-#     tests = 40,
-#     string = character_(any_na = TRUE),
-#     property = function(string, fun) {
-#       test_df <- data.frame(x1 = string)
-#       test <- pl$LazyFrame(x1 = string)
-#
-#       expect_equal_lazy(
-#         mutate(test, foo = paste(x1, "he")) |>
-#           pull(foo),
-#         mutate(test_df, foo = paste(x1, "he")) |>
-#           pull(foo)
-#       )
-#
-#       expect_equal_lazy(
-#         mutate(test, foo = paste(x1, "he", sep = "--")) |>
-#           pull(foo),
-#         mutate(test_df, foo = paste(x1, "he", sep = "--")) |>
-#           pull(foo)
-#       )
-#
-#       expect_equal_lazy(
-#         mutate(test, foo = paste0(x1, "he")) |>
-#           pull(foo),
-#         mutate(test_df, foo = paste0(x1, "he")) |>
-#           pull(foo)
-#       )
-#
-#       expect_equal_lazy(
-#         mutate(test, foo = paste0(x1, "he", x1)) |>
-#           pull(foo),
-#         mutate(test_df, foo = paste0(x1, "he", x1)) |>
-#           pull(foo)
-#       )
-#     }
-#   )
-# })
+      expect_equal_lazy(
+        mutate(test, foo = paste(x1, "he")) |>
+          pull(foo),
+        mutate(test_df, foo = paste(x1, "he")) |>
+          pull(foo)
+      )
+
+      expect_equal_lazy(
+        mutate(test, foo = paste(x1, "he", sep = separator)) |>
+          pull(foo),
+        mutate(test_df, foo = paste(x1, "he", sep = separator)) |>
+          pull(foo)
+      )
+
+      expect_equal_lazy(
+        mutate(test, foo = paste0(x1, "he")) |>
+          pull(foo),
+        mutate(test_df, foo = paste0(x1, "he")) |>
+          pull(foo)
+      )
+
+      expect_equal_lazy(
+        mutate(test, foo = paste0(x1, "he", x1)) |>
+          pull(foo),
+        mutate(test_df, foo = paste0(x1, "he", x1)) |>
+          pull(foo)
+      )
+    }
+  )
+})
 
 patrick::with_parameters_test_that("several non-regex functions work",
   {
