@@ -19,6 +19,5 @@ describe <- function(.data, percentiles = c(0.25, 0.75)) {
     what = "describe()",
     details = "Please use `summary()` with the same arguments instead."
   )
-  out <- .data$describe(percentiles)
-  out
+  summary(object = .data, percentiles = percentiles)
 }

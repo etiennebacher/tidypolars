@@ -27,8 +27,10 @@
 #' rename_with(pl_test_2, \(x) tolower(gsub(".", "_", x, fixed = TRUE)))
 rename.RPolarsDataFrame <- function(.data, ...) {
   dots <- get_dots(...)
-  dots <- lapply(dots, rlang::as_name)
-  out <- .data$rename(dots)
+  # polars wants a list with old names as names and new names as values
+  new_names <- as.list(names(dots))
+  names(new_names) <- dots
+  out <- .data$rename(new_names)
   out
 }
 

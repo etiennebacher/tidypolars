@@ -70,7 +70,7 @@
 #'   mutate(
 #'     across(.cols = contains("Sepal"), .fns = mean, .names = "{.fn}_of_{.col}")
 #'   )
-#' #
+#'
 #' # It can receive several types of functions:
 #' pl_iris |>
 #'   mutate(

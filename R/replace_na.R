@@ -43,6 +43,13 @@ replace_na.RPolarsDataFrame <- function(data, replace, ...) {
     }
   }
 
+  out <- tryCatch(
+    data$with_columns(exprs),
+    error = function(e) {
+      rlang::abort(e$message, call = caller_env(4))
+    }
+  )
+
   out
 }
 

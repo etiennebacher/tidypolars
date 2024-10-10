@@ -22,7 +22,7 @@ count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
 
   vars <- tidyselect_dots(x, ...)
   vars <- c(grps, vars)
-  out <- count_(x, vars, sort = sort, name = name, new_col = FALSE, missing_name = missing(name))
+  out <- count_(x, vars, sort = sort, name = name, new_col = FALSE)
 
   out <- if (is_grouped) {
     group_by(out, all_of(grps), maintain_order = mo)
@@ -46,7 +46,7 @@ add_count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
 
   vars <- tidyselect_dots(x, ...)
   vars <- c(grps, vars)
-  out <- count_(x, vars, sort = sort, name = name, new_col = TRUE)
+  out <- count_(x, vars, sort = sort, name = name, new_col = TRUE, missing_name = missing(name))
 
   out <- if (is_grouped) {
     group_by(out, all_of(grps), maintain_order = mo)
@@ -61,7 +61,7 @@ add_count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
 #' @export
 add_count.RPolarsLazyFrame <- add_count.RPolarsDataFrame
 
-count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = missing(name)) {
+count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
   name <- check_name(x, vars, name, missing_name)
   if (isTRUE(new_col)) {
     if (length(vars) == 0) {
