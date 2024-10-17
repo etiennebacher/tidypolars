@@ -15,6 +15,9 @@
 * New function `sink_ndjson()` to write the results of a lazy query to a NDJSON
   file without collecting it in memory.
 
+* `inner_join()` now accepts inequality joins in the `by` argument, including 
+  the following helpers: `between()`, `overlaps()`, `within()` (#148).
+
 ## Bug fixes
 
 * Using an external object in `case_when()`, `ifelse()` and `ifelse()` now works.
