@@ -150,7 +150,7 @@ test_that("basic slice_sample works", {
     expect_equal(pull(foo, y), "b")
     expect_equal(pull(foo, z), 5)
   } else if (pull(foo, x) == 3) {
-    expect_equal(pull(foo, y), "5")
+    expect_equal(pull(foo, y), "c")
     expect_equal(pull(foo, z), 6)
   }
 })

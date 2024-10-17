@@ -1,63 +1,64 @@
-# TODO: Counter example:
-#  string = NA
-
-# test_that("paste() and paste0() work", {
-#   for_all(
-#     tests = 40,
-#     string = character_(any_na = TRUE),
-#     property = function(string, fun) {
-#       test_df <- data.frame(x1 = string)
-#       test <- pl$DataFrame(x1 = string)
-#
-#       expect_equal(
-#         mutate(test, foo = paste(x1, "he")) |>
-#           pull(foo),
-#         mutate(test_df, foo = paste(x1, "he")) |>
-#           pull(foo)
-#       )
-#
-#       expect_equal(
-#         mutate(test, foo = paste(x1, "he", sep = "--")) |>
-#           pull(foo),
-#         mutate(test_df, foo = paste(x1, "he", sep = "--")) |>
-#           pull(foo)
-#       )
-#
-#       expect_equal(
-#         mutate(test, foo = paste0(x1, "he")) |>
-#           pull(foo),
-#         mutate(test_df, foo = paste0(x1, "he")) |>
-#           pull(foo)
-#       )
-#
-#       expect_equal(
-#         mutate(test, foo = paste0(x1, "he", x1)) |>
-#           pull(foo),
-#         mutate(test_df, foo = paste0(x1, "he", x1)) |>
-#           pull(foo)
-#       )
-#     }
-#   )
-# })
-
-patrick::with_parameters_test_that("several non-regex functions work", {
+test_that("paste() and paste0() work", {
   for_all(
     tests = 40,
     string = character_(any_na = TRUE),
-    property = function(string) {
+    separator = character_(len = 1),
+    property = function(string, separator) {
       test_df <- data.frame(x1 = string)
       test <- pl$DataFrame(x1 = string)
 
-      pl_code <- paste0("mutate(test, foo = ", fun, "(string)) |> pull(foo)")
-      tv_code <- paste0("mutate(test_df, foo = ", fun, "(string)) |> pull(foo)")
+      expect_equal(
+        mutate(test, foo = paste(x1, "he")) |>
+          pull(foo),
+        mutate(test_df, foo = paste(x1, "he")) |>
+          pull(foo)
+      )
 
       expect_equal(
-        eval(parse(text = pl_code)),
-        eval(parse(text = tv_code)),
+        mutate(test, foo = paste(x1, "he", sep = separator)) |>
+          pull(foo),
+        mutate(test_df, foo = paste(x1, "he", sep = separator)) |>
+          pull(foo)
+      )
+
+      expect_equal(
+        mutate(test, foo = paste0(x1, "he")) |>
+          pull(foo),
+        mutate(test_df, foo = paste0(x1, "he")) |>
+          pull(foo)
+      )
+
+      expect_equal(
+        mutate(test, foo = paste0(x1, "he", x1)) |>
+          pull(foo),
+        mutate(test_df, foo = paste0(x1, "he", x1)) |>
+          pull(foo)
       )
     }
   )
-}, fun = c("str_to_upper", "str_to_lower", "str_length", "str_squish"))
+})
+
+patrick::with_parameters_test_that("several non-regex functions work",
+  {
+    for_all(
+      tests = 40,
+      string = character_(any_na = TRUE),
+      property = function(string) {
+        test_df <- data.frame(x1 = string)
+        test <- pl$DataFrame(x1 = string)
+
+        pl_code <- paste0("mutate(test, foo = ", fun, "(string)) |> pull(foo)")
+        tv_code <- paste0("mutate(test_df, foo = ", fun, "(string)) |> pull(foo)")
+
+        expect_equal(
+          eval(parse(text = pl_code)),
+          eval(parse(text = tv_code)),
+        )
+      }
+    )
+  },
+  fun = c("str_to_upper", "str_to_lower", "str_length", "str_squish")
+)
 
 
 test_that("str_trim() works", {
@@ -121,25 +122,25 @@ test_that("str_trim() works", {
 #   )
 # })
 
-# test_that("str_dup() works", {
-#   for_all(
-#     tests = 40,
-#     string = character_(any_na = TRUE),
-#     # Very high numbers crash the session, I guess because of stringr
-#     times = numeric_bounded(-10000, 10000, any_na = TRUE),
-#     property = function(string, times) {
-#       test_df <- data.frame(x1 = string)
-#       test <- pl$DataFrame(x1 = string)
-#
-#       expect_equal_or_both_error(
-#         mutate(test, foo = str_dup(x1, times = times)) |>
-#           pull(foo),
-#         mutate(test_df, foo = str_dup(x1, times = times)) |>
-#           pull(foo)
-#       )
-#     }
-#   )
-# })
+test_that("str_dup() works", {
+  for_all(
+    tests = 100,
+    string = character_(any_na = TRUE),
+    # Very high numbers crash the session, I guess because of stringr
+    times = numeric_bounded(-10000, 10000, any_na = TRUE),
+    property = function(string, times) {
+      test_df <- data.frame(x1 = string)
+      test <- pl$DataFrame(x1 = string)
+
+      expect_equal_or_both_error(
+        mutate(test, foo = str_dup(x1, times = times)) |>
+          pull(foo),
+        mutate(test_df, foo = str_dup(x1, times = times)) |>
+          pull(foo)
+      )
+    }
+  )
+})
 
 # string = c("B#co4Nq,q", "B#co4Nq,q", "B#co4Nq,q", NA, NA, "B#co4Nq,q", NA)
 # start = -999
