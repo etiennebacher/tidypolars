@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,19 +38,21 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.11.0" id="tidypolars-0110">tidypolars 0.11.0<a class="anchor" aria-label="anchor" href="#tidypolars-0110"></a></h2>
+<p><code>tidypolars</code> requires <code>polars</code> &gt;= 0.20.0.</p>
 <div class="section level3">
-<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<h3 id="breaking-changes-0-11-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-11-0"></a></h3>
 <ul><li><p><code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange()</a></code> now errors with unknown variable names (like <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">dplyr::arrange()</a></code>). Previously, unknown variables were silently ignored. Using expressions (like <code>a + b</code>) is now accepted (<a href="https://github.com/etiennebacher/tidypolars/issues/144" class="external-link">#144</a>).</p></li>
 <li><p>The parameter <code>inherit_optimization</code> is removed from all <code>sink_*()</code> functions.</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="new-features-0-11-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-11-0"></a></h3>
 <ul><li><p>The power operators <code>^</code> and <code>**</code> now work.</p></li>
 <li><p>New function <code><a href="../reference/sink_ndjson.html">sink_ndjson()</a></code> to write the results of a lazy query to a NDJSON file without collecting it in memory.</p></li>
+<li><p><code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join()</a></code> now accepts inequality joins in the <code>by</code> argument, including the following helpers: <code><a href="https://dplyr.tidyverse.org/reference/between.html" class="external-link">between()</a></code>, <code>overlaps()</code>, <code><a href="https://rdrr.io/r/base/with.html" class="external-link">within()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/148" class="external-link">#148</a>).</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
+<h3 id="bug-fixes-0-11-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-11-0"></a></h3>
 <ul><li><p>Using an external object in <code><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when()</a></code>, <code><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse()</a></code> and <code><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse()</a></code> now works.</p></li>
 <li><p><code><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub()</a></code> doesn’t error anymore when <code>start</code> is positive and <code>end</code> is negative.</p></li>
 <li><p><code>read_*_polars()</code> functions used to return a standard <code>data.frame</code> by mistake. They now return a Polars DataFrame.</p></li>

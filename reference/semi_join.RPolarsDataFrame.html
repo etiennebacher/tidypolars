@@ -17,7 +17,7 @@ anti_join() return all rows from x without a match in y.
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@ matches in <code>y</code>:</p><ul><li><p><code><a href="https://dplyr.tidyverse.
 
 
 <dt id="arg-by">by<a class="anchor" aria-label="anchor" href="#arg-by"></a></dt>
-<dd><p>Variables to join by. If <code>NULL</code>, the default, <code>*_join()</code> will
+<dd><p>Variables to join by. If <code>NULL</code> (default), <code>*_join()</code> will
 perform a natural join, using all variables in common across <code>x</code> and <code>y</code>. A
 message lists the variables so that you can check they're correct; suppress
 the message by supplying <code>by</code> explicitly.</p>
@@ -86,11 +86,14 @@ the message by supplying <code>by</code> explicitly.</p>
 in both datasets. To join on variables that don't have the same name, use
 equalities in the character vector, like <code>c("x1" = "x2", "y")</code>. If you use
 a character vector, the join can only be done using strict equality.</p>
-<p>Finally, <code>by</code> can be a specification created by <code><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">dplyr::join_by()</a></code>. Contrary
-to the input as character vector shown above, <code><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by()</a></code> uses unquoted column
-names, e.g <code>join_by(x1 == x2, y)</code>. It also uses equality and inequality
-operators <code>==</code>, <code>&gt;</code> and similar. <strong>For now, only equality operators are
-supported</strong>.</p></dd>
+<p><code>by</code> can also be a specification created by <code><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">dplyr::join_by()</a></code>. Contrary
+to the input as character vector shown above, <code><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by()</a></code> uses unquoted
+column names, e.g <code>join_by(x1 == x2, y)</code>.</p>
+<p>Finally, <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join()</a></code> also supports inequality joins, e.g.
+<code>join_by(x1 &gt;= x2)</code>, and the helpers <code><a href="https://dplyr.tidyverse.org/reference/between.html" class="external-link">between()</a></code>, <code>overlaps()</code>, and
+<code><a href="https://rdrr.io/r/base/with.html" class="external-link">within()</a></code>. See the documentation of <code><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">dplyr::join_by()</a></code> for more
+information. Other join types will likely support inequality joins in the
+future.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
