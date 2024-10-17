@@ -4,7 +4,7 @@
 #' the keys.
 #'
 #' @param x,y Two Polars Data/LazyFrames
-#' @param by Variables to join by. If `NULL`, the default, `*_join()` will
+#' @param by Variables to join by. If `NULL` (default), `*_join()` will
 #' perform a natural join, using all variables in common across `x` and `y`. A
 #' message lists the variables so that you can check they're correct; suppress
 #' the message by supplying `by` explicitly.
@@ -14,11 +14,15 @@
 #' equalities in the character vector, like `c("x1" = "x2", "y")`. If you use
 #' a character vector, the join can only be done using strict equality.
 #'
-#' Finally, `by` can be a specification created by `dplyr::join_by()`. Contrary
-#' to the input as character vector shown above, `join_by()` uses unquoted column
-#' names, e.g `join_by(x1 == x2, y)`. It also uses equality and inequality
-#' operators `==`, `>` and similar. **For now, only equality operators are
-#' supported**.
+#' `by` can also be a specification created by `dplyr::join_by()`. Contrary
+#' to the input as character vector shown above, `join_by()` uses unquoted
+#' column names, e.g `join_by(x1 == x2, y)`.
+#'
+#' Finally, `inner_join()` also supports inequality joins, e.g.
+#' `join_by(x1 >= x2)`, and the helpers `between()`, `overlaps()`, and
+#' `within()`. See the documentation of [`dplyr::join_by()`] for more
+#' information. Other join types will likely support inequality joins in the
+#' future.
 #'
 #' @param suffix If there are non-joined duplicate variables in `x` and `y`,
 #' these suffixes will be added to the output to disambiguate them. Should be a
@@ -329,8 +333,7 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
   if (is.null(na_matches)) {
     join_nulls <- FALSE
   } else {
-    join_nulls <- switch(
-      na_matches,
+    join_nulls <- switch(na_matches,
       "na" = TRUE,
       "never" = FALSE,
       abort(
@@ -356,9 +359,12 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
     )
   }
 
-  if (inherits(by, "dplyr_join_by")) {
-    by <- unpack_join_by(by)
+  if (is_inequality_join(by)) {
+    out <- eval_inequality_join(x, y, how, by, suffix)
+    return(out)
   }
+
+  by <- unpack_join_by(by)
 
   if (!is.null(names(by))) {
     for (i in seq_along(by)) {
@@ -411,13 +417,67 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
 
 
 unpack_join_by <- function(by) {
-  if (!all(by$condition == "==")) {
-    rlang::abort(
-      "`tidypolars` doesn't support inequality conditions in `join_by()` yet.",
-      call = rlang::caller_env(2)
+  if (inherits(by, "dplyr_join_by")) {
+    out <- by$y
+    names(out) <- by$x
+    out
+  } else {
+    by
+  }
+}
+
+is_inequality_join <- function(by) {
+  inherits(by, "dplyr_join_by") && !all(by$condition == "==")
+}
+
+eval_inequality_join <- function(x, y, how, by, suffix) {
+  if (how != "inner") {
+    abort(
+      "Inequality joins are only supported in `inner_join()` for now.",
+      call = caller_env(2)
     )
   }
-  out <- by$y
-  names(out) <- by$x
-  out
+  by2 <- by
+
+  common_cols <- intersect(names(x), names(y))
+
+  by2$x <- lapply(by2$x, function(elem) {
+    pl$col(as.character(elem))
+  })
+
+  by2$y <- lapply(by2$y, function(elem) {
+    if (length(common_cols) > 0 && as.character(elem) %in% common_cols) {
+      pl$col(paste0(as.character(elem), suffix[2]))
+    } else {
+      pl$col(as.character(elem))
+    }
+  })
+
+  by3 <- lapply(seq_along(by$condition), function(i) {
+    if (by$condition[i] == "==") {
+      by2$x[[i]]$eq(by2$y[[i]])
+    } else if (by$condition[i] == ">") {
+      by2$x[[i]]$gt(by2$y[[i]])
+    } else if (by$condition[i] == ">=") {
+      by2$x[[i]]$gt_eq(by2$y[[i]])
+    } else if (by$condition[i] == "<") {
+      by2$x[[i]]$lt(by2$y[[i]])
+    } else if (by$condition[i] == "<=") {
+      by2$x[[i]]$lt_eq(by2$y[[i]])
+    }
+  })
+
+  res <- x$join_where(y, by3, suffix = suffix[2])
+  if (length(common_cols) > 0) {
+    # Only keep common columns that were involved in inequality joins, otherwise
+    # they just don't have a duplicate in the output
+    common_cols <- Filter(
+      function(x) paste0(x, suffix[2]) %in% names(res),
+      common_cols
+    )
+    new_cols <- as.list(paste0(common_cols, suffix[1]))
+    names(new_cols) <- common_cols
+    res <- res$rename(new_cols)
+  }
+  res
 }
