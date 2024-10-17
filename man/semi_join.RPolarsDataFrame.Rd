@@ -18,7 +18,7 @@
 \arguments{
 \item{x, y}{Two Polars Data/LazyFrames}
 
-\item{by}{Variables to join by. If \code{NULL}, the default, \verb{*_join()} will
+\item{by}{Variables to join by. If \code{NULL} (default), \verb{*_join()} will
 perform a natural join, using all variables in common across \code{x} and \code{y}. A
 message lists the variables so that you can check they're correct; suppress
 the message by supplying \code{by} explicitly.
@@ -28,11 +28,15 @@ in both datasets. To join on variables that don't have the same name, use
 equalities in the character vector, like \code{c("x1" = "x2", "y")}. If you use
 a character vector, the join can only be done using strict equality.
 
-Finally, \code{by} can be a specification created by \code{dplyr::join_by()}. Contrary
-to the input as character vector shown above, \code{join_by()} uses unquoted column
-names, e.g \code{join_by(x1 == x2, y)}. It also uses equality and inequality
-operators \code{==}, \code{>} and similar. \strong{For now, only equality operators are
-supported}.}
+\code{by} can also be a specification created by \code{dplyr::join_by()}. Contrary
+to the input as character vector shown above, \code{join_by()} uses unquoted
+column names, e.g \code{join_by(x1 == x2, y)}.
+
+Finally, \code{inner_join()} also supports inequality joins, e.g.
+\code{join_by(x1 >= x2)}, and the helpers \code{between()}, \code{overlaps()}, and
+\code{within()}. See the documentation of \code{\link[dplyr:join_by]{dplyr::join_by()}} for more
+information. Other join types will likely support inequality joins in the
+future.}
 
 \item{...}{Not used.}
 
