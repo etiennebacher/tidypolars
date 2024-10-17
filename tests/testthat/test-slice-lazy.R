@@ -154,7 +154,7 @@ test_that("basic slice_sample works", {
     expect_equal_lazy(pull(foo, y), "b")
     expect_equal_lazy(pull(foo, z), 5)
   } else if (pull(foo, x) == 3) {
-    expect_equal_lazy(pull(foo, y), "5")
+    expect_equal_lazy(pull(foo, y), "c")
     expect_equal_lazy(pull(foo, z), 6)
   }
 })
