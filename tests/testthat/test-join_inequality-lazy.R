@@ -15,8 +15,8 @@ test_that("basic inequality join works", {
     revenue = c(50, 4, 10, 12)
   )
 
-  companies_pl <- as_polars_df(companies)
-  transactions_pl <- as_polars_df(transactions)
+  companies_pl <- as_polars_lf(companies)
+  transactions_pl <- as_polars_lf(transactions)
   
   by <- join_by(company == id, year >= since)
   expect_equal_lazy(
@@ -56,8 +56,8 @@ test_that("'between' helper works", {
     end = c(150, 250, 399, 450)
   )
 
-  segments_pl <- as_polars_df(segments)
-  reference_pl <- as_polars_df(reference)
+  segments_pl <- as_polars_lf(segments)
+  reference_pl <- as_polars_lf(reference)
 
   for (bnds in c("[]", "[)", "(]", "()")) {
     by <- join_by(
@@ -100,8 +100,8 @@ test_that("'within' helper works", {
     end = c(150, 250, 399, 450)
   )
 
-  segments_pl <- as_polars_df(segments)
-  reference_pl <- as_polars_df(reference)
+  segments_pl <- as_polars_lf(segments)
+  reference_pl <- as_polars_lf(reference)
 
   by <- join_by(
     chromosome, 
@@ -142,32 +142,34 @@ test_that("'overlaps' helper works", {
     end = c(150, 250, 399, 450)
   )
 
-  segments_pl <- as_polars_df(segments)
-  reference_pl <- as_polars_df(reference)
+  segments_pl <- as_polars_lf(segments)
+  reference_pl <- as_polars_lf(reference)
 
-  by <- join_by(
-    chromosome, 
-    overlaps(start, end, start, end)
-  )
+  for (bnds in c("[]", "[)", "(]", "()")) {
+    by <- join_by(
+      chromosome, 
+      overlaps(start, end, start, end, bounds = !!bnds)
+    )
+    
+    expect_identical(
+      inner_join(segments, reference, by),
+      inner_join(segments_pl, reference_pl, by) |> 
+        arrange(segment_id) |> 
+        as_tibble()
+    )   
   
-  expect_identical(
-    inner_join(segments, reference, by),
-    inner_join(segments_pl, reference_pl, by) |> 
-      arrange(segment_id) |> 
-      as_tibble()
-  )   
-
-  by2 <- join_by(
-    chromosome, 
-    overlaps(x$start, x$end, y$start, y$end)
-  )
-  
-  expect_identical(
-    inner_join(segments, reference, by2),
-    inner_join(segments_pl, reference_pl, by2) |> 
-      arrange(segment_id) |> 
-      as_tibble()
-  )   
+    by2 <- join_by(
+      chromosome, 
+      overlaps(x$start, x$end, y$start, y$end, bounds = !!bnds)
+    )
+    
+    expect_identical(
+      inner_join(segments, reference, by2),
+      inner_join(segments_pl, reference_pl, by2) |> 
+        arrange(segment_id) |> 
+        as_tibble()
+    ) 
+  }  
 })
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
