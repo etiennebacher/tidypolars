@@ -7,13 +7,13 @@
 \alias{summarise.RPolarsLazyFrame}
 \title{Summarize each group down to one row}
 \usage{
-\method{summarize}{RPolarsDataFrame}(.data, ..., .by = NULL)
+\method{summarize}{RPolarsDataFrame}(.data, ..., .by = NULL, .groups = "drop_last")
 
-\method{summarise}{RPolarsDataFrame}(.data, ..., .by = NULL)
+\method{summarise}{RPolarsDataFrame}(.data, ..., .by = NULL, .groups = "drop_last")
 
-\method{summarize}{RPolarsLazyFrame}(.data, ..., .by = NULL)
+\method{summarize}{RPolarsLazyFrame}(.data, ..., .by = NULL, .groups = "drop_last")
 
-\method{summarise}{RPolarsLazyFrame}(.data, ..., .by = NULL)
+\method{summarise}{RPolarsLazyFrame}(.data, ..., .by = NULL, .groups = "drop_last")
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
@@ -33,6 +33,17 @@ created before \code{across()}. Other select helpers are supported. See the exam
 \item{.by}{Optionally, a selection of columns to group by for just this
 operation, functioning as an alternative to \code{group_by()}. The group order
 is not maintained, use \code{group_by()} if you want more control over it.}
+
+\item{.groups}{Grouping structure of the result. Must be one of:
+\itemize{
+\item \code{"drop_last"} (default): drop the last level of grouping;
+\item \code{"drop"}: all levels of grouping are dropped;
+\item \code{"keep"}: keep the same grouping structure as \code{.data}.
+}
+
+For now, \code{"rowwise"} is not supported. Note that \code{dplyr} uses \code{.groups = NULL} by default, whose behavior depends on the number of rows by group in
+the output. However, returning several rows by group in \code{summarize()} is
+deprecated (one should use \code{reframe()} instead), which is why \code{.groups = NULL} is not supported by \code{tidypolars}.}
 }
 \description{
 \code{summarize()} returns one row for each combination of grouping variables

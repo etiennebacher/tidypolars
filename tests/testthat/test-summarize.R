@@ -20,8 +20,9 @@ test_that("basic behavior works", {
 
   expect_equal(
     summarize(pl_iris_g,
-                x = sum(Sepal.Length),
-                y = mean(Sepal.Length)) |>
+      x = sum(Sepal.Length),
+      y = mean(Sepal.Length)
+    ) |>
       pull(y),
     c(5.006, 5.936, 6.588)
   )
@@ -45,35 +46,37 @@ test_that("basic behavior works", {
 })
 
 test_that("correctly handles attributes", {
-  pl_iris <- polars::pl$DataFrame(iris)
-  pl_iris_g <- pl_iris |>
-    group_by(Species, maintain_order = TRUE)
+  pl_mtcars <- polars::pl$DataFrame(mtcars)
+  pl_mtcars_g <- pl_mtcars |>
+    group_by(cyl, am, maintain_order = TRUE)
 
   expect_equal(
-    summarize(pl_iris_g, x = mean(Sepal.Length)) |>
+    summarize(pl_mtcars_g, x = mean(mpg)) |>
       attr("pl_grps"),
-    "Species"
+    "cyl"
   )
 
   expect_equal(
-    summarize(pl_iris_g, x = mean(Sepal.Length)) |>
+    summarize(pl_mtcars_g, x = mean(mpg)) |>
       attr("maintain_grp_order"),
     TRUE
   )
 
   expect_equal(
-    summarize(pl_iris, x = mean(Sepal.Length), .by = Species) |>
+    summarize(pl_mtcars, x = mean(mpg), .by = c(cyl, am)) |>
       attr("pl_grps"),
     NULL
   )
 
   expect_equal(
-    summarize(pl_iris, x = mean(Sepal.Length), .by = Species) |>
+    summarize(pl_mtcars, x = mean(mpg), .by = c(cyl, am)) |>
       attr("maintain_grp_order"),
     NULL
   )
 
-  expect_is_tidypolars(summarize(pl_iris, x = mean(Sepal.Length), .by = Species))
+  expect_is_tidypolars(
+    summarize(pl_mtcars, x = mean(mpg), .by = c(cyl, am))
+  )
 })
 
 test_that("works with a local variable defined in a function", {
@@ -105,5 +108,62 @@ test_that("check .add argument of group_by works", {
       group_by(cyl, maintain_order = TRUE) |>
       group_by(am, maintain_order = TRUE, .add = TRUE) |>
       summarize(foo = sum(drat))
+  )
+})
+
+test_that("argument .groups works", {
+  pl_mtcars <- as_polars_df(mtcars)
+
+  # default is "drop_last"
+  expect_equal(
+    pl_mtcars |>
+      group_by(am, cyl, vs) |>
+      summarise(cyl_n = n()) |>
+      group_vars(),
+    c("am", "cyl")
+  )
+
+  # other values
+  expect_equal(
+    pl_mtcars |>
+      group_by(am, cyl, vs) |>
+      summarise(cyl_n = n(), .groups = "drop_last") |>
+      group_vars(),
+    c("am", "cyl")
+  )
+  expect_equal(
+    pl_mtcars |>
+      group_by(am, cyl, vs) |>
+      summarise(cyl_n = n(), .groups = "keep") |>
+      group_vars(),
+    c("am", "cyl", "vs")
+  )
+  expect_equal(
+    pl_mtcars |>
+      group_by(am, cyl, vs) |>
+      summarise(cyl_n = n(), .groups = "drop") |>
+      group_vars(),
+    character(0)
+  )
+  expect_snapshot(
+    pl_mtcars |>
+      group_by(am, cyl, vs) |>
+      summarise(cyl_n = n(), .groups = "rowwise"),
+    error = TRUE
+  )
+  expect_snapshot(
+    pl_mtcars |>
+      group_by(am, cyl, vs) |>
+      summarise(cyl_n = n(), .groups = "foobar"),
+    error = TRUE
+  )
+
+  # "drop_last" with one group originally
+  expect_equal(
+    pl_mtcars |>
+      group_by(am) |>
+      summarise(cyl_n = n(), .groups = "drop_last") |>
+      group_vars(),
+    character(0)
   )
 })
