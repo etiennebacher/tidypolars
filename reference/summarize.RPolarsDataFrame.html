@@ -40,7 +40,7 @@ and one column for each of the summary statistics that you have specified."><met
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Summarize each group down to one row</h1>
-      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/tidypolars/blob/v0.11.0/R/summarize.R" class="external-link"><code>R/summarize.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/tidypolars/blob/main/R/summarize.R" class="external-link"><code>R/summarize.R</code></a></small>
       <div class="d-none name"><code>summarize.RPolarsDataFrame.Rd</code></div>
     </div>
 
@@ -54,16 +54,16 @@ and one column for each of the summary statistics that you have specified.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'RPolarsDataFrame'</span></span>
-<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, .by <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, .by <span class="op">=</span> <span class="cn">NULL</span>, .groups <span class="op">=</span> <span class="st">"drop_last"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'RPolarsDataFrame'</span></span>
-<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, .by <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, .by <span class="op">=</span> <span class="cn">NULL</span>, .groups <span class="op">=</span> <span class="st">"drop_last"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'RPolarsLazyFrame'</span></span>
-<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, .by <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, .by <span class="op">=</span> <span class="cn">NULL</span>, .groups <span class="op">=</span> <span class="st">"drop_last"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'RPolarsLazyFrame'</span></span>
-<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, .by <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, .by <span class="op">=</span> <span class="cn">NULL</span>, .groups <span class="op">=</span> <span class="st">"drop_last"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -89,6 +89,15 @@ created before <code><a href="https://dplyr.tidyverse.org/reference/across.html"
 operation, functioning as an alternative to <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code>. The group order
 is not maintained, use <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code> if you want more control over it.</p></dd>
 
+
+<dt id="arg--groups">.groups<a class="anchor" aria-label="anchor" href="#arg--groups"></a></dt>
+<dd><p>Grouping structure of the result. Must be one of:</p><ul><li><p><code>"drop_last"</code> (default): drop the last level of grouping;</p></li>
+<li><p><code>"drop"</code>: all levels of grouping are dropped;</p></li>
+<li><p><code>"keep"</code>: keep the same grouping structure as <code>.data</code>.</p></li>
+</ul><p>For now, <code>"rowwise"</code> is not supported. Note that <code>dplyr</code> uses <code>.groups = NULL</code> by default, whose behavior depends on the number of rows by group in
+the output. However, returning several rows by group in <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> is
+deprecated (one should use <code><a href="https://dplyr.tidyverse.org/reference/reframe.html" class="external-link">reframe()</a></code> instead), which is why <code>.groups = NULL</code> is not supported by <code>tidypolars</code>.</p></dd>
+
 </dl></div>
 
     <div class="section level2">
@@ -103,12 +112,10 @@ is not maintained, use <code><a href="https://dplyr.tidyverse.org/reference/grou
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ ---      ┆ ---      │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64      ┆ f64      │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪══════════╪══════════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 3.285714 ┆ 0.726273 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 3.857143 ┆ 0.690066 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 3.285714 ┆ 0.726273 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 4.090909 ┆ 0.53936  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴──────────┴──────────┘</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Groups [3]: cyl</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Maintain order: FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># an alternative syntax is to use `.by`</span></span></span>
 <span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span></span>
@@ -120,9 +127,9 @@ is not maintained, use <code><a href="https://dplyr.tidyverse.org/reference/grou
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ ---      ┆ ---      │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64      ┆ f64      │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪══════════╪══════════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 3.285714 ┆ 0.726273 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 3.857143 ┆ 0.690066 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 4.090909 ┆ 0.53936  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 3.285714 ┆ 0.726273 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴──────────┴──────────┘</span>
 </code></pre></div>
     </div>
