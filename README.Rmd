@@ -133,7 +133,7 @@ R-universe.
 
 ```{r eval=FALSE}
 Sys.setenv(NOT_CRAN = "true")
-install.packages("tidypolars", repos = "https://community.r-multiverse.org")
+install.packages("tidypolars", repos = c("https://community.r-multiverse.org", 'https://cloud.r-project.org'))
 ```
 
 

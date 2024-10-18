@@ -50,7 +50,7 @@ thorough, representative benchmarks about `polars`, take a look at
 
 ``` r
 library(collapse, warn.conflicts = FALSE)
-#> collapse 2.0.15, see ?`collapse-package` or ?`collapse-documentation`
+#> collapse 2.0.16, see ?`collapse-package` or ?`collapse-documentation`
 library(dplyr, warn.conflicts = FALSE)
 library(dtplyr)
 library(polars)
@@ -114,16 +114,17 @@ bench::mark(
   check = FALSE,
   iterations = 40
 )
-#> Warning: Some expressions had a GC in every iteration; so filtering is
-#> disabled.
+#> Warning: Some expressions had a GC in every iteration;
+#> so filtering is disabled.
 #> # A tibble: 5 × 6
-#>   expression      min   median `itr/sec` mem_alloc `gc/sec`
-#>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars      142.5ms 173.96ms     4.43     4.51MB    0.222
-#> 2 tidypolars  161.9ms 206.56ms     4.70     1.78MB    2.00 
-#> 3 dplyr          3.8s    4.07s     0.231    1.79GB    0.554
-#> 4 dtplyr      810.6ms       1s     0.999    1.72GB    2.82 
-#> 5 collapse    400.8ms  493.3ms     1.97   745.96MB    1.33
+#>   expression      min   median `itr/sec` mem_alloc
+#>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>
+#> 1 polars     260.22ms 317.05ms     3.03     19.2KB
+#> 2 tidypolars 305.11ms 362.84ms     2.21   157.66KB
+#> 3 dplyr         2.85s    3.19s     0.290    1.79GB
+#> 4 dtplyr        1.36s    2.53s     0.416    1.72GB
+#> 5 collapse   662.73ms 825.88ms     1.21   745.96MB
+#> # ℹ 1 more variable: `gc/sec` <dbl>
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
@@ -134,13 +135,13 @@ bench::mark(
 
 ## Installation
 
-`tidypolars` is built on `polars`, which is not available on CRAN. This means 
-that `tidypolars` also can't be on CRAN. However, you can install it from 
-R-universe.
+`tidypolars` is built on `polars`, which is not available on CRAN. This
+means that `tidypolars` also can’t be on CRAN. However, you can install
+it from R-universe.
 
 ``` r
 Sys.setenv(NOT_CRAN = "true")
-install.packages("tidypolars", repos = "https://community.r-multiverse.org")
+install.packages("tidypolars", repos = c("https://community.r-multiverse.org", 'https://cloud.r-project.org'))
 ```
 
 ## Contributing

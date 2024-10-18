@@ -1,3 +1,16 @@
+# tidypolars (development)
+
+## Breaking changes
+
+* `summarize()` now drops the last group of the output by default (for 
+  consistency with `dplyr`). Previously it kept the same groups as in the input 
+  data (#149).
+
+## New features
+
+* Add support for argument `.groups` in `summarize()`. Value `"rowwise"` is not
+  supported for now (#149).
+
 # tidypolars 0.11.0
 
 `tidypolars` requires `polars` >= 0.20.0.
