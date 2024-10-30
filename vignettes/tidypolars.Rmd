@@ -24,6 +24,7 @@ knitr::opts_chunk$set(
 }
 .custom_note > p, .custom_note > p > code {
   color: white;
+  background: #08505e;
 }
 
 .custom_note > p > code > a:any-link {
@@ -72,24 +73,24 @@ Note that you still need to load `dplyr` and `tidyr` in your code.
 Here's an example of some `dplyr` and `tidyr` code on the classic R `data.frame`:
 
 ```{r}
-who_df |> 
-  filter(year > 1990) |> 
-  drop_na(newrel_f3544) |> 
-  select(iso3, year, matches("^newrel(.*)_f")) |> 
-  arrange(iso3, year) |> 
-  rename_with(.fn = toupper) |> 
+who_df |>
+  filter(year > 1990) |>
+  drop_na(newrel_f3544) |>
+  select(iso3, year, matches("^newrel(.*)_f")) |>
+  arrange(iso3, year) |>
+  rename_with(.fn = toupper) |>
   head()
 ```
 
 We can simply use our Polars dataset instead:
 
 ```{r}
-who_pl |> 
-  filter(year > 1990) |> 
-  drop_na(newrel_f3544) |> 
-  select(iso3, year, matches("^newrel(.*)_f")) |> 
-  arrange(iso3, year) |> 
-  rename_with(.fn = toupper) |> 
+who_pl |>
+  filter(year > 1990) |>
+  drop_na(newrel_f3544) |>
+  select(iso3, year, matches("^newrel(.*)_f")) |>
+  arrange(iso3, year) |>
+  rename_with(.fn = toupper) |>
   head()
 ```
 
@@ -99,13 +100,13 @@ chained expression to evaluate the query:
 ```{r}
 who_pl_lazy <- as_polars_lf(tidyr::who)
 
-who_pl_lazy |> 
-  filter(year > 1990) |> 
-  drop_na(newrel_f3544) |> 
-  select(iso3, year, matches("^newrel(.*)_f")) |> 
-  arrange(iso3, year) |> 
-  rename_with(.fn = toupper) |> 
-  compute() |> 
+who_pl_lazy |>
+  filter(year > 1990) |>
+  drop_na(newrel_f3544) |>
+  select(iso3, year, matches("^newrel(.*)_f")) |>
+  arrange(iso3, year) |>
+  rename_with(.fn = toupper) |>
+  compute() |>
   head()
 ```
 
