@@ -584,11 +584,6 @@ pl_nth_dplyr <- function(x, n, ...) {
   x$gather(n)
 }
 
-pl_quantile <- function(x, probs, ...) {
-  check_empty_dots(...)
-  x$quantile(probs, interpolation = "midpoint")
-}
-
 pl_rank <- function(x, ...) {
   check_empty_dots(...)
   x$rank()
