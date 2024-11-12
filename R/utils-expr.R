@@ -102,9 +102,7 @@ translate_expr <- function(
     quo,
     new_vars = NULL,
     env,
-    caller = rlang::caller_env(2)
-) {
-
+    caller = rlang::caller_env(2)) {
   if (!is_quosure(quo)) {
     quo <- enquo(quo)
   }
@@ -178,26 +176,21 @@ translate <- function(
     new_vars,
     env,
     caller = NULL,
-    call_is_function = NULL
-) {
-
+    call_is_function = NULL) {
   names_data <- names(.data)
 
   # prepare function and arg if the user provided an anonymous function in
   # across()
   if (length(expr) == 1 && is.character(expr) &&
-      startsWith(expr, ".__tidypolars__across_fn")) {
+    startsWith(expr, ".__tidypolars__across_fn")) {
     col_name <- gsub(".__tidypolars__across_fn.*---", "", expr)
     expr <- gsub("---.*", "", expr)
     foo <- sym(expr)
     expr <- enquo(foo)
   }
 
-  switch(
-    typeof(expr),
-
+  switch(typeof(expr),
     "NULL" = return(list(NULL)),
-
     character = ,
     logical = ,
     integer = ,
@@ -209,7 +202,6 @@ translate <- function(
         polars_constant(expr)
       }
     },
-
     symbol = {
       expr_char <- as.character(expr)
       if (expr_char %in% names_data || expr_char %in% unlist(new_vars)) {
@@ -219,7 +211,6 @@ translate <- function(
         polars_constant(val)
       }
     },
-
     language = {
       expr2 <- if (is_quosure(expr)) {
         quo_get_expr(expr)
@@ -228,11 +219,7 @@ translate <- function(
       }
       name <- as.character(expr2)
       if (length(name) == 3 && name[[1]] == "::") {
-        if (name[[2]] %in% c("base", "stats", "utils", "tools")) {
-          new_fn_name <- name[[3]]
-        } else {
-          new_fn_name <- paste0(name[[2]], "::", name[[3]])
-        }
+        new_fn_name <- paste0(name[[2]], "::", name[[3]])
         expr[[1]] <- new_fn_name
         out <- translate(
           expr,
@@ -245,8 +232,7 @@ translate <- function(
         return(out)
       }
 
-      switch(
-        name,
+      switch(name,
         "[" = {
           out <- tryCatch(
             eval_tidy(expr, env = caller),
@@ -299,7 +285,7 @@ translate <- function(
             )
           }
           return(out)
-        } ,
+        },
         "$" = {
           first_term <- expr[[2]]
 
@@ -347,7 +333,7 @@ translate <- function(
         },
         # these two case_ functions are handled separately from other funs
         # because we don't want to evaluate the conditions inside too soon
-        "case_match" =  {
+        "case_match" = {
           args <- call_args(expr)
           args$.data <- .data
           args[["__tidypolars__new_vars"]] <- as.list(new_vars)
@@ -368,8 +354,8 @@ translate <- function(
           if (
             # we may pass a named vector in str_replace_all() for instance
             !is.null(names(expr)) |
-            # we may pass a vector of column names
-            any(vapply(expr, is.symbol, FUN.VALUE = logical(1L)))
+              # we may pass a vector of column names
+              any(vapply(expr, is.symbol, FUN.VALUE = logical(1L)))
           ) {
             return(lapply(
               expr,
@@ -430,7 +416,7 @@ translate <- function(
           return(out)
         },
         "ifelse" = ,
-        "if_else" =  {
+        "if_else" = {
           args <- call_args(expr)
           args$.data <- .data
           args[["__tidypolars__new_vars"]] <- as.list(new_vars)
@@ -441,7 +427,6 @@ translate <- function(
         "is.na" = {
           out <- tryCatch(
             {
-
               inside <- translate(
                 expr[[2]],
                 .data = .data,
@@ -483,7 +468,8 @@ translate <- function(
         "regex" = {
           out <- select_by_name_or_position(expr, "pattern", 1, env = env)
           case_insensitive <- select_by_name_or_position(
-            expr, "ignore_case", 2, default = FALSE, env = env
+            expr, "ignore_case", 2,
+            default = FALSE, env = env
           )
           names_expr <- names(expr)
           unexpected_names <- setdiff(names_expr[names_expr != ""], c("pattern", "ignore_case"))
@@ -502,8 +488,10 @@ translate <- function(
       )
 
       user_defined <- get_user_defined_functions(caller = caller)
-      known_ops <- c("+", "-", "*", "/", "^", "**", ">", ">=", "<", "<=", "==", "!=",
-                     "&", "|", "!", "%%", "%/%")
+      known_ops <- c(
+        "+", "-", "*", "/", "^", "**", ">", ">=", "<", "<=", "==", "!=",
+        "&", "|", "!", "%%", "%/%"
+      )
       fn_names <- add_pkg_suffix(name, known_ops, user_defined)
       name <- fn_names$name_to_eval
       is_known <- is_function_known(name)
@@ -551,7 +539,8 @@ translate <- function(
           } else {
             abort(
               c("Could not evaluate an anonymous function in `across()`.",
-                "i" = "Are you sure the anonymous function returns a Polars expression?"),
+                "i" = "Are you sure the anonymous function returns a Polars expression?"
+              ),
               call = env
             )
           }
@@ -610,7 +599,6 @@ translate <- function(
         }
       )
     },
-
     abort(
       paste("Internal: Unknown type", typeof(expr)),
       call = env
@@ -633,7 +621,7 @@ get_user_defined_functions <- function(caller) {
   list_fns <- list()
   for (i in x) {
     foo <- tryCatch(
-      env_get(nm = i, env = caller), 
+      env_get(nm = i, env = caller),
       warning = function(w) invisible(),
       error = function(e) NULL
     )
@@ -697,7 +685,7 @@ clean_dots <- function(...) {
   called_from_pl_paste <- length(caller_call) == 1 && caller_call %in% c("pl_paste", "pl_paste0")
   dots <- lapply(dots, function(x) {
     if (called_from_pl_paste &&
-        inherits(x, c("character", "logical", "double", "integer", "complex"))) {
+      inherits(x, c("character", "logical", "double", "integer", "complex"))) {
       pl$lit(x)
     } else {
       x
@@ -736,7 +724,9 @@ add_pkg_suffix <- function(name, known_ops, user_defined) {
   } else {
     pkg <- tryCatch(
       ns_env_name(as_function(name)),
-      error = function(e) return(NULL)
+      error = function(e) {
+        return(NULL)
+      }
     )
   }
 

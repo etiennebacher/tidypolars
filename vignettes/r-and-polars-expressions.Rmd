@@ -28,8 +28,8 @@ library(dplyr, warn.conflicts = FALSE)
 
 filter(mtcars, am + gear > carb)
 mutate(mtcars, x = (qsec - mean(qsec)) / sd(qsec))
-mtcars |> 
-  group_by(cyl) |> 
+mtcars |>
+  group_by(cyl) |>
   summarize(x = mean(qsec) / sd(qsec))
 ```
 
@@ -104,8 +104,8 @@ this argument and warns the user:
 library(tidypolars)
 library(polars)
 
-mtcars |> 
-  as_polars_df() |> 
+mtcars |>
+  as_polars_df() |>
   mutate(x = mean(mpg, trim = 2))
 ```
 
@@ -139,8 +139,8 @@ This function correctly returns a Polars expression, so we can now use it like
 any other function:
 
 ```{r}
-mtcars |> 
-  as_polars_df() |> 
+mtcars |>
+  as_polars_df() |>
   mutate(x = pl_standardize(mpg))
 ```
 
@@ -152,8 +152,8 @@ function that applies a function (or a list of functions) to a selection of
 columns. It accepts built-in functions, UDFs, and anonymous functions.
 
 ```{r}
-mtcars |> 
-  as_polars_df() |> 
+mtcars |>
+  as_polars_df() |>
   mutate(
     across(
       .cols = contains("a"),
@@ -166,15 +166,15 @@ Similarly, UDFs and anonymous functions will error if they don't return a Polars
 expression:
 
 ```{r error=TRUE}
-mtcars |> 
-  as_polars_df() |> 
+mtcars |>
+  as_polars_df() |>
   mutate(
     across(
       .cols = contains("a"),
       .fns = list(
-        mean = mean,  
+        mean = mean,
         function(x) {
-           (x - mean(x)) / sd(x)
+          (x - mean(x)) / sd(x)
         },
         ~ sd(.x)
       )
@@ -191,107 +191,108 @@ library(dplyr)
 library(knitr)
 out <- tribble(
   ~Package, ~Function,
-  "`base`",             "`abs`",
-  "`base`",             "`acos`", 
-  "`base`",             "`acosh`", 
-  "`base`",             "`all`",
-  "`base`",             "`any`",
-  "`base`",             "`asin`",
-  "`base`",             "`asinh`", 
-  "`base`",             "`atan`", 
-  "`base`",             "`atanh`",
-  "`base`",             "`ceiling`",
-  "`base`",             "`cos`", 
-  "`base`",             "`cosh`",
-  "`base`",             "`cummin`",
-  "`base`",             "`cumsum`", 
-  "`base`",             "`diff`", 
-  "`base`",             "`exp`", 
-  "`base`",             "`floor`",
-  "`base`",             "`grepl`",
-  "`base`",             "`ifelse`",
-  "`base`",             "`ISOdatetime`",
-  "`base`",             "`length`",
-  "`base`",             "`log`", 
-  "`base`",             "`log10`",
-  "`base`",             "`max`", 
-  "`base`",             "`mean`", 
-  "`base`",             "`min`",
-  "`base`",             "`nchar`",
-  "`base`",             "`paste0`",
-  "`base`",             "`paste`",
-  "`base`",             "`rank`",
-  "`base`",             "`rev`",
-  "`base`",             "`round`",
-  "`base`",             "`sin`", 
-  "`base`",             "`sinh`", 
-  "`base`",             "`sort`", 
-  "`base`",             "`sqrt`", 
-  "`base`",             "`strptime`",
-  "`base`",             "`substr`",
-  "`base`",             "`tan`", 
-  "`base`",             "`tanh`",
-  "`base`",             "`tolower`",
-  "`base`",             "`toupper`",
-  "`base`",             "`unique`",
-  "`base`",             "`which.min`",
-  "`base`",             "`which.max`",
-  "`dplyr`",            "`between`",
-  "`dplyr`",            "`case_match`",
-  "`dplyr`",            "`case_when`",
-  "`dplyr`",            "`coalesce`",
-  "`dplyr`",            "`consecutive_id`",
-  "`dplyr`",            "`dense_rank`",
-  "`dplyr`",            "`first`",
-  "`dplyr`",            "`group_keys`",
-  "`dplyr`",            "`group_vars`",
-  "`dplyr`",            "`if_else`",
-  "`dplyr`",            "`lag`",
-  "`dplyr`",            "`last`",
-  "`dplyr`",            "`min_rank`",
-  "`dplyr`",            "`n`",
-  "`dplyr`",            "`nth`",
-  "`dplyr`",            "`n_distinct`",
-  "`dplyr`",            "`row_number`",
-  "`lubridate`",        "`ddays`",
-  "`lubridate`",        "`dhours`",
-  "`lubridate`",        "`dmilliseconds`",
-  "`lubridate`",        "`dminutes`",
-  "`lubridate`",        "`dseconds`",
-  "`lubridate`",        "`dweeks`",
-  "`lubridate`",        "`make_date`",
-  "`lubridate`",        "`make_datetime`",
-  "`lubridate`",        "`wday`",
-  "`stats`",            "`median`", 
-  "`stats`",            "`lag`", 
-  "`stats`",            "`sd`", 
-  "`stats`",            "`var`",
-  "`stringr`",          "`regex`",
-  "`stringr`",          "`str_count`",
-  "`stringr`",          "`str_detect`",
-  "`stringr`",          "`str_dup`",
-  "`stringr`",          "`str_ends`",
-  "`stringr`",          "`str_extract`",
-  "`stringr`",          "`str_extract_all`",
-  "`stringr`",          "`str_length`",
-  "`stringr`",          "`str_pad`",
-  "`stringr`",          "`str_remove`",
-  "`stringr`",          "`str_remove_all`",
-  "`stringr`",          "`str_replace`",
-  "`stringr`",          "`str_replace_all`",
-  "`stringr`",          "`str_split`",
-  "`stringr`",          "`str_split_i`",
-  "`stringr`",          "`str_squish`",
-  "`stringr`",          "`str_starts`",
-  "`stringr`",          "`str_sub`",
-  "`stringr`",          "`str_trim`",
-  "`stringr`",          "`str_to_lower`",
-  "`stringr`",          "`str_to_title`",
-  "`stringr`",          "`str_to_upper`",
-  "`stringr`",          "`str_trunc`",
-  "`stringr`",          "`word`",
-  "`tidyr`",            "`replace_na`",
-  "`tools`",            "`toTitleCase`"
+  "`base`", "`abs`",
+  "`base`", "`acos`",
+  "`base`", "`acosh`",
+  "`base`", "`all`",
+  "`base`", "`any`",
+  "`base`", "`asin`",
+  "`base`", "`asinh`",
+  "`base`", "`atan`",
+  "`base`", "`atanh`",
+  "`base`", "`ceiling`",
+  "`base`", "`cos`",
+  "`base`", "`cosh`",
+  "`base`", "`cummin`",
+  "`base`", "`cumsum`",
+  "`base`", "`diff`",
+  "`base`", "`exp`",
+  "`base`", "`floor`",
+  "`base`", "`grepl`",
+  "`base`", "`ifelse`",
+  "`base`", "`ISOdatetime`",
+  "`base`", "`length`",
+  "`base`", "`log`",
+  "`base`", "`log10`",
+  "`base`", "`max`",
+  "`base`", "`mean`",
+  "`base`", "`min`",
+  "`base`", "`nchar`",
+  "`base`", "`paste0`",
+  "`base`", "`paste`",
+  "`base`", "`rank`",
+  "`base`", "`rev`",
+  "`base`", "`round`",
+  "`base`", "`sin`",
+  "`base`", "`sinh`",
+  "`base`", "`sort`",
+  "`base`", "`sqrt`",
+  "`base`", "`strptime`",
+  "`base`", "`substr`",
+  "`base`", "`tan`",
+  "`base`", "`tanh`",
+  "`base`", "`tolower`",
+  "`base`", "`toupper`",
+  "`base`", "`unique`",
+  "`base`", "`which.min`",
+  "`base`", "`which.max`",
+  "`dplyr`", "`between`",
+  "`dplyr`", "`case_match`",
+  "`dplyr`", "`case_when`",
+  "`dplyr`", "`coalesce`",
+  "`dplyr`", "`consecutive_id`",
+  "`dplyr`", "`dense_rank`",
+  "`dplyr`", "`first`",
+  "`dplyr`", "`group_keys`",
+  "`dplyr`", "`group_vars`",
+  "`dplyr`", "`if_else`",
+  "`dplyr`", "`lag`",
+  "`dplyr`", "`lead`",
+  "`dplyr`", "`last`",
+  "`dplyr`", "`min_rank`",
+  "`dplyr`", "`n`",
+  "`dplyr`", "`nth`",
+  "`dplyr`", "`n_distinct`",
+  "`dplyr`", "`row_number`",
+  "`lubridate`", "`ddays`",
+  "`lubridate`", "`dhours`",
+  "`lubridate`", "`dmilliseconds`",
+  "`lubridate`", "`dminutes`",
+  "`lubridate`", "`dseconds`",
+  "`lubridate`", "`dweeks`",
+  "`lubridate`", "`make_date`",
+  "`lubridate`", "`make_datetime`",
+  "`lubridate`", "`wday`",
+  "`stats`", "`median`",
+  "`stats`", "`lag`",
+  "`stats`", "`sd`",
+  "`stats`", "`var`",
+  "`stringr`", "`regex`",
+  "`stringr`", "`str_count`",
+  "`stringr`", "`str_detect`",
+  "`stringr`", "`str_dup`",
+  "`stringr`", "`str_ends`",
+  "`stringr`", "`str_extract`",
+  "`stringr`", "`str_extract_all`",
+  "`stringr`", "`str_length`",
+  "`stringr`", "`str_pad`",
+  "`stringr`", "`str_remove`",
+  "`stringr`", "`str_remove_all`",
+  "`stringr`", "`str_replace`",
+  "`stringr`", "`str_replace_all`",
+  "`stringr`", "`str_split`",
+  "`stringr`", "`str_split_i`",
+  "`stringr`", "`str_squish`",
+  "`stringr`", "`str_starts`",
+  "`stringr`", "`str_sub`",
+  "`stringr`", "`str_trim`",
+  "`stringr`", "`str_to_lower`",
+  "`stringr`", "`str_to_title`",
+  "`stringr`", "`str_to_upper`",
+  "`stringr`", "`str_trunc`",
+  "`stringr`", "`word`",
+  "`tidyr`", "`replace_na`",
+  "`tools`", "`toTitleCase`"
 ) |>
   mutate(Notes = case_when(
     Package == "`lubridate`" & Function == "`make_datetime`" ~ "In `lubridate::make_datetime()`, when there is an overflow (for example `hours = 25`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this returns `NA`.",
@@ -300,8 +301,8 @@ out <- tribble(
     Package == "`stringr`" & Function == "`str_to_title`" ~ "Letters following apostrophe will be capitalized as well, which differs from the `stringr` implementation.",
     Package == "`tools`" & Function == "`toTitleCase`" ~ "Letters following apostrophe will be capitalized as well, which differs from the `tools` implementation.",
     .default = ""
-  )) |> 
+  )) |>
   arrange(Package)
 
-kable(out) 
+kable(out)
 ```

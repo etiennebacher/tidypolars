@@ -11,6 +11,9 @@
 * Add support for argument `.groups` in `summarize()`. Value `"rowwise"` is not
   supported for now (#149).
 
+* Added support for `dplyr::lead()`. In `dplyr::lead()` and `dplyr::lag()`, the 
+  argument `order_by` is now supported.
+
 # tidypolars 0.11.0
 
 `tidypolars` requires `polars` >= 0.20.0.

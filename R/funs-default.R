@@ -67,7 +67,7 @@ pl_mean <- function(x, na.rm = FALSE, ...) {
         pl$when(pl$element()$has_nulls())$
           then(NA)$
           otherwise(pl$element()$mean())
-        )$
+      )$
         explode()
     }
   } else {
@@ -481,26 +481,27 @@ pl_kurtosis <- function(x, ...) {
   x$kurtosis()
 }
 
-pl_lag <- function(x, k = 1, ...) {
+pl_lag_dplyr <- function(x, n = 1, order_by = NULL, ...) {
   check_empty_dots(...)
-  x$shift(k)
-}
-
-pl_lag_dplyr <- function(x, n = 1, ...) {
-  check_empty_dots(...)
-  # if (is.null(order_by)) {
-    x$shift(n)
-  # } else {
-  #   # Need to have at least one group so use 1 to use all data
-  #   # Requires: https://github.com/pola-rs/polars/issues/12051
-  #   x$shift(n)$over(1, order_by = order_by)
-  # }
-
+  out <- x$shift(n)
+  if (!is.null(order_by)) {
+    attr(out, "order_by") <- order_by
+  }
+  out
 }
 
 pl_last_dplyr <- function(x, ...) {
   check_empty_dots(...)
   x$last()
+}
+
+pl_lead_dplyr <- function(x, n = 1, order_by = NULL, ...) {
+  check_empty_dots(...)
+  out <- x$shift(-n)
+  if (!is.null(order_by)) {
+    attr(out, "order_by") <- order_by
+  }
+  out
 }
 
 pl_length <- function(x) {
@@ -581,6 +582,11 @@ pl_nth_dplyr <- function(x, n, ...) {
     n <- n - 1
   }
   x$gather(n)
+}
+
+pl_quantile <- function(x, probs, ...) {
+  check_empty_dots(...)
+  x$quantile(probs, interpolation = "midpoint")
 }
 
 pl_rank <- function(x, ...) {

@@ -11,10 +11,8 @@ test_that("which.min() and which.max() work", {
       mutate(
         argmin = which.min(x),
         argmax = which.max(x),
-
         argmin_na = which.min(x_na),
         argmax_na = which.max(x_na),
-
         argmin_inf = which.min(x_inf),
         argmax_inf = which.max(x_inf)
       ),
@@ -22,10 +20,8 @@ test_that("which.min() and which.max() work", {
       mutate(
         argmin = which.min(x),
         argmax = which.max(x),
-
         argmin_na = which.min(x_na),
         argmax_na = which.max(x_na),
-
         argmin_inf = which.min(x_inf),
         argmax_inf = which.max(x_inf)
       )
@@ -543,26 +539,91 @@ test_that("row_number() works", {
 
   expect_equal(
     test4 |>
-      mutate(
-        rn = row_number(),
-        .by = grp
-      ) |>
-      summarize(
-        foo = sum(val),
-        .by = rn
-      ) |>
+      mutate(rn = row_number(), .by = grp) |>
+      summarize(foo = sum(val), .by = rn) |>
       arrange(rn) |>
       as_tibble(),
     test4 |>
       as_tibble() |>
-      mutate(
-        rn = row_number(),
-        .by = grp
-      ) |>
-      summarize(
-        foo = sum(val),
-        .by = rn
-      ),
+      mutate(rn = row_number(), .by = grp) |>
+      summarize(foo = sum(val), .by = rn),
     ignore_attr = TRUE
+  )
+})
+
+test_that("stats::lag() is not supported", {
+  dat <- pl$DataFrame(x = c(10, 20, 30, 40, 10, 20, 30, 40))
+  expect_error(
+    dat |> mutate(x_lag = stats::lag(x)),
+    "doesn't know how to translate this function: `stats::lag()`",
+    fixed = TRUE
+  )
+})
+
+test_that("dplyr::lag() works", {
+  dat <- pl$DataFrame(
+    g = c(1, 1, 1, 1, 2, 2, 2, 2),
+    t = c(1, 2, 3, 4, 4, 1, 2, 3),
+    x = c(10, 20, 30, 40, 10, 20, 30, 40)
+  )
+  expect_equal(
+    dat |>
+      mutate(
+        x_lag = lag(x, order_by = t),
+        .by = g
+      ),
+    dat |>
+      as.data.frame() |>
+      mutate(
+        x_lag = lag(x, order_by = t),
+        .by = g
+      )
+  )
+  expect_equal(
+    dat |>
+      mutate(
+        x_lag = lag(x, order_by = t, n = 2),
+        .by = g
+      ),
+    dat |>
+      as.data.frame() |>
+      mutate(
+        x_lag = lag(x, order_by = t, n = 2),
+        .by = g
+      )
+  )
+})
+
+test_that("dplyr::lead() works", {
+  dat <- pl$DataFrame(
+    g = c(1, 1, 1, 1, 2, 2, 2, 2),
+    t = c(1, 2, 3, 4, 4, 1, 2, 3),
+    x = c(10, 20, 30, 40, 10, 20, 30, 40)
+  )
+  expect_equal(
+    dat |>
+      mutate(
+        x_lead = lead(x, order_by = t),
+        .by = g
+      ),
+    dat |>
+      as.data.frame() |>
+      mutate(
+        x_lead = lead(x, order_by = t),
+        .by = g
+      )
+  )
+  expect_equal(
+    dat |>
+      mutate(
+        x_lead = lead(x, order_by = t, n = 2),
+        .by = g
+      ),
+    dat |>
+      as.data.frame() |>
+      mutate(
+        x_lead = lead(x, order_by = t, n = 2),
+        .by = g
+      )
   )
 })
