@@ -573,16 +573,16 @@ test_that("dplyr::lag() works", {
   expect_equal_lazy(
     dat |>
       as_polars_lf() |>
-      mutate(x_lag = lag(x, order_by = t), .by = g),
+      mutate(x_lag = dplyr::lag(x, order_by = t), .by = g),
     dat |>
-      mutate(x_lag = lag(x, order_by = t), .by = g)
+      mutate(x_lag = dplyr::lag(x, order_by = t), .by = g)
   )
   expect_equal_lazy(
     dat |>
       as_polars_lf() |>
-      mutate(x_lag = lag(x, order_by = t, n = 2), .by = g),
+      mutate(x_lag = dplyr::lag(x, order_by = t, n = 2), .by = g),
     dat |>
-      mutate(x_lag = lag(x, order_by = t, n = 2), .by = g)
+      mutate(x_lag = dplyr::lag(x, order_by = t, n = 2), .by = g)
   )
 
   # With one group only
@@ -594,9 +594,9 @@ test_that("dplyr::lag() works", {
   expect_equal_lazy(
     dat |>
       as_polars_lf() |>
-      mutate(x_lag = lag(x, order_by = t), .by = g),
+      mutate(x_lag = dplyr::lag(x, order_by = t), .by = g),
     dat |>
-      mutate(x_lag = lag(x, order_by = t), .by = g)
+      mutate(x_lag = dplyr::lag(x, order_by = t), .by = g)
   )
 
   # fill NA
@@ -608,9 +608,9 @@ test_that("dplyr::lag() works", {
   expect_equal_lazy(
     dat |>
       as_polars_lf() |>
-      mutate(x_lag = lag(x, order_by = t, default = 99), .by = g),
+      mutate(x_lag = dplyr::lag(x, order_by = t, default = 99), .by = g),
     dat |>
-      mutate(x_lag = lag(x, order_by = t, default = 99), .by = g)
+      mutate(x_lag = dplyr::lag(x, order_by = t, default = 99), .by = g)
   )
 })
 

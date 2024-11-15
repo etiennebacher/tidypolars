@@ -566,19 +566,21 @@ test_that("dplyr::lag() works", {
     t = c(1, 2, 3, 4, 4, 1, 2, 3),
     x = c(10, 20, 30, 40, 10, 20, 30, 40)
   )
+  # Need to explicitly namespace this because there is no pl_lag(). Without
+  # namespace it works fine in interactive mode but not via devtools::test().
   expect_equal(
     dat |>
       as_polars_df() |>
-      mutate(x_lag = lag(x, order_by = t), .by = g),
+      mutate(x_lag = dplyr::lag(x, order_by = t), .by = g),
     dat |>
-      mutate(x_lag = lag(x, order_by = t), .by = g)
+      mutate(x_lag = dplyr::lag(x, order_by = t), .by = g)
   )
   expect_equal(
     dat |>
       as_polars_df() |>
-      mutate(x_lag = lag(x, order_by = t, n = 2), .by = g),
+      mutate(x_lag = dplyr::lag(x, order_by = t, n = 2), .by = g),
     dat |>
-      mutate(x_lag = lag(x, order_by = t, n = 2), .by = g)
+      mutate(x_lag = dplyr::lag(x, order_by = t, n = 2), .by = g)
   )
 
   # With one group only
@@ -590,9 +592,9 @@ test_that("dplyr::lag() works", {
   expect_equal(
     dat |>
       as_polars_df() |>
-      mutate(x_lag = lag(x, order_by = t), .by = g),
+      mutate(x_lag = dplyr::lag(x, order_by = t), .by = g),
     dat |>
-      mutate(x_lag = lag(x, order_by = t), .by = g)
+      mutate(x_lag = dplyr::lag(x, order_by = t), .by = g)
   )
 
   # fill NA
@@ -604,9 +606,9 @@ test_that("dplyr::lag() works", {
   expect_equal(
     dat |>
       as_polars_df() |>
-      mutate(x_lag = lag(x, order_by = t, default = 99), .by = g),
+      mutate(x_lag = dplyr::lag(x, order_by = t, default = 99), .by = g),
     dat |>
-      mutate(x_lag = lag(x, order_by = t, default = 99), .by = g)
+      mutate(x_lag = dplyr::lag(x, order_by = t, default = 99), .by = g)
   )
 })
 
