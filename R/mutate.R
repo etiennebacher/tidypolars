@@ -54,7 +54,7 @@
 #' mutate(pl_iris, x = Sepal.Width > Sepal.Length & Petal.Width > Petal.Length)
 #'
 #' # overwrite existing variable
-#' mutate(pl_iris, Sepal.Width = Sepal.Width*2)
+#' mutate(pl_iris, Sepal.Width = Sepal.Width * 2)
 #'
 #' # grouped computation
 #' pl_iris |>
@@ -70,7 +70,7 @@
 #'   mutate(
 #'     across(.cols = contains("Sepal"), .fns = mean, .names = "{.fn}_of_{.col}")
 #'   )
-#
+#' #
 #' # It can receive several types of functions:
 #' pl_iris |>
 #'   mutate(
@@ -89,7 +89,7 @@
 #'     foo = 1,
 #'     across(
 #'       .cols = where(is.numeric),
-#'       \(x) x - 1000   # <<<<<<<<< this will not be applied on variable "foo"
+#'       \(x) x - 1000 # <<<<<<<<< this will not be applied on variable "foo"
 #'     )
 #'   )
 #' }
@@ -100,14 +100,11 @@
 #' # Embracing an external variable works
 #' some_value <- 1
 #' mutate(pl_iris, x = {{ some_value }})
-
 mutate.RPolarsDataFrame <- function(
     .data,
     ...,
     .by = NULL,
-    .keep = c("all", "used", "unused", "none")
-  ) {
-
+    .keep = c("all", "used", "unused", "none")) {
   .keep <- rlang::arg_match0(.keep, values = c("all", "used", "unused", "none"))
 
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
@@ -140,7 +137,14 @@ mutate.RPolarsDataFrame <- function(
 
     if (length(sub) > 0) {
       if (is_grouped) {
-        sub <- lapply(sub, \(x) x$over(grps))
+        sub <- lapply(sub, \(x) {
+          order_by <- attributes(x)[["order_by"]]
+          if (!is.null(order_by)) {
+            x$over(grps, order_by = order_by)
+          } else {
+            x$over(grps)
+          }
+        })
       }
       .data <- .data$with_columns(sub)
     }

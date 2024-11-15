@@ -15,13 +15,13 @@ test_that("using other package namespace works", {
   test <- polars::pl$LazyFrame(x = 1:3)
 
   expect_equal_lazy(
-    test |> mutate(y = lag(x)),
-    test |> mutate(y = dplyr::lag(x))
+    test |> mutate(y = first(x)),
+    test |> mutate(y = dplyr::first(x))
   )
 
   expect_equal_lazy(
-    test |> summarize(y = lag(x)),
-    test |> summarize(y = dplyr::lag(x))
+    test |> summarize(y = first(x)),
+    test |> summarize(y = dplyr::first(x))
   )
 
   expect_equal_lazy(

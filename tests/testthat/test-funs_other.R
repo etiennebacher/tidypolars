@@ -11,10 +11,8 @@ test_that("which.min() and which.max() work", {
       mutate(
         argmin = which.min(x),
         argmax = which.max(x),
-
         argmin_na = which.min(x_na),
         argmax_na = which.max(x_na),
-
         argmin_inf = which.min(x_inf),
         argmax_inf = which.max(x_inf)
       ),
@@ -22,10 +20,8 @@ test_that("which.min() and which.max() work", {
       mutate(
         argmin = which.min(x),
         argmax = which.max(x),
-
         argmin_na = which.min(x_na),
         argmax_na = which.max(x_na),
-
         argmin_inf = which.min(x_inf),
         argmax_inf = which.max(x_inf)
       )
@@ -543,26 +539,125 @@ test_that("row_number() works", {
 
   expect_equal(
     test4 |>
-      mutate(
-        rn = row_number(),
-        .by = grp
-      ) |>
-      summarize(
-        foo = sum(val),
-        .by = rn
-      ) |>
+      mutate(rn = row_number(), .by = grp) |>
+      summarize(foo = sum(val), .by = rn) |>
       arrange(rn) |>
       as_tibble(),
     test4 |>
       as_tibble() |>
-      mutate(
-        rn = row_number(),
-        .by = grp
-      ) |>
-      summarize(
-        foo = sum(val),
-        .by = rn
-      ),
+      mutate(rn = row_number(), .by = grp) |>
+      summarize(foo = sum(val), .by = rn),
     ignore_attr = TRUE
+  )
+})
+
+test_that("stats::lag() is not supported", {
+  dat <- pl$DataFrame(x = c(10, 20, 30, 40, 10, 20, 30, 40))
+  expect_error(
+    dat |> mutate(x_lag = stats::lag(x)),
+    "doesn't know how to translate this function: `stats::lag()`",
+    fixed = TRUE
+  )
+})
+
+test_that("dplyr::lag() works", {
+  dat <- data.frame(
+    g = c(1, 1, 1, 1, 2, 2, 2, 2),
+    t = c(1, 2, 3, 4, 4, 1, 2, 3),
+    x = c(10, 20, 30, 40, 10, 20, 30, 40)
+  )
+  # Need to explicitly namespace this because there is no pl_lag(). Without
+  # namespace it works fine in interactive mode but not via devtools::test().
+  expect_equal(
+    dat |>
+      as_polars_df() |>
+      mutate(x_lag = dplyr::lag(x, order_by = t), .by = g),
+    dat |>
+      mutate(x_lag = dplyr::lag(x, order_by = t), .by = g)
+  )
+  expect_equal(
+    dat |>
+      as_polars_df() |>
+      mutate(x_lag = dplyr::lag(x, order_by = t, n = 2), .by = g),
+    dat |>
+      mutate(x_lag = dplyr::lag(x, order_by = t, n = 2), .by = g)
+  )
+
+  # With one group only
+  dat <- data.frame(
+    g = c(1, 1, 1, 1),
+    t = c(1, 2, 3, 4),
+    x = c(10, 20, 30, 40)
+  )
+  expect_equal(
+    dat |>
+      as_polars_df() |>
+      mutate(x_lag = dplyr::lag(x, order_by = t), .by = g),
+    dat |>
+      mutate(x_lag = dplyr::lag(x, order_by = t), .by = g)
+  )
+
+  # fill NA
+  dat <- data.frame(
+    g = c(1, 1, 1, 1, 2),
+    t = c(1, 2, 3, 4, 5),
+    x = c(10, 20, 30, 40, 50)
+  )
+  expect_equal(
+    dat |>
+      as_polars_df() |>
+      mutate(x_lag = dplyr::lag(x, order_by = t, default = 99), .by = g),
+    dat |>
+      mutate(x_lag = dplyr::lag(x, order_by = t, default = 99), .by = g)
+  )
+})
+
+test_that("dplyr::lead() works", {
+  dat <- data.frame(
+    g = c(1, 1, 1, 1, 2, 2, 2, 2),
+    t = c(1, 2, 3, 4, 4, 1, 2, 3),
+    x = c(10, 20, 30, 40, 10, 20, 30, 40)
+  )
+  expect_equal(
+    dat |>
+      as_polars_df() |>
+      mutate(x_lead = lead(x, order_by = t), .by = g),
+    dat |>
+      mutate(x_lead = lead(x, order_by = t), .by = g)
+  )
+  expect_equal(
+    dat |>
+      as_polars_df() |>
+      mutate(x_lead = lead(x, order_by = t, n = 2), .by = g),
+    dat |>
+      mutate(x_lead = lead(x, order_by = t, n = 2), .by = g)
+  )
+
+  # With one group only
+  dat <- data.frame(
+    g = c(1, 1, 1, 1),
+    t = c(1, 2, 3, 4),
+    x = c(10, 20, 30, 40)
+  )
+  expect_equal(
+    dat |>
+      as_polars_df() |>
+      mutate(x_lead = lead(x, order_by = t), .by = g),
+    dat |>
+      mutate(x_lead = lead(x, order_by = t), .by = g)
+  )
+
+  # fill NA
+  dat <- data.frame(
+    g = c(1, 1, 1, 1, 2),
+    t = c(1, 2, 3, 4, 5),
+    x = c(10, 20, 30, 40, 50)
+  )
+  expect_equal(
+    dat |>
+      as_polars_df() |>
+      mutate(x_lead = lead(x, order_by = t, default = 99), .by = g),
+    dat |>
+      mutate(x_lead = lead(x, order_by = t, default = 99), .by = g)
   )
 })

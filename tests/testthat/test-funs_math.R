@@ -1,4 +1,4 @@
-test_that("multiplication works", {
+test_that("mathematical functions work", {
   test_df <- data.frame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
@@ -17,18 +17,17 @@ test_that("multiplication works", {
     "cummin",
     "cumprod",
     "cumsum", "exp", "first",
-    "floor", "lag",
+    "floor",
     "last", "log", "log10",
     "rank",
     "sign",
-    "sin", "sinh", "sort",  "sqrt", "tan", "tanh"
+    "sin", "sinh", "sort", "sqrt", "tan", "tanh"
   )) {
-
-    if (i %in% c("acos", "asin", "atan", "atanh", "ceiling", "cos", "floor",
-                "sin", "tan")) {
-
+    if (i %in% c(
+      "acos", "asin", "atan", "atanh", "ceiling", "cos", "floor",
+      "sin", "tan"
+    )) {
       variable <- "value_trigo"
-
     } else if (i %in% c("abs", "mean")) {
       variable <- "value_mix"
     } else {
@@ -46,7 +45,6 @@ test_that("multiplication works", {
       pull(foo)
 
     expect_equal(pol, res, info = i)
-
   }
 })
 
@@ -60,10 +58,12 @@ test_that("warns if unknown args", {
     value_with_NA = c(-2, -1, NA, 1, 2)
   )
   test <- pl$DataFrame(test_df)
-  foo <- test |> mutate(x = sample(x2)) |> pull(x)
-  
+  foo <- test |>
+    mutate(x = sample(x2)) |>
+    pull(x)
+
   expect_true(all(foo %in% c(1, 2, 3, 5)))
-  
+
   expect_warning(
     test |> mutate(x = sample(x2, prob = 0.5)),
     "doesn't know how to use some arguments"
@@ -89,7 +89,7 @@ test_that("diff() works", {
       pull(foo) |>
       suppressWarnings()
   )
-  
+
   expect_equal(
     test |>
       summarize(foo = diff(value, lag = 2)) |>
@@ -99,7 +99,7 @@ test_that("diff() works", {
       pull(foo) |>
       suppressWarnings()
   )
-  
+
   expect_error(
     test |> summarize(foo = diff(value, differences = 2)),
     "doesn't support"
