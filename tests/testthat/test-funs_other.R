@@ -561,69 +561,101 @@ test_that("stats::lag() is not supported", {
 })
 
 test_that("dplyr::lag() works", {
-  dat <- pl$DataFrame(
+  dat <- data.frame(
     g = c(1, 1, 1, 1, 2, 2, 2, 2),
     t = c(1, 2, 3, 4, 4, 1, 2, 3),
     x = c(10, 20, 30, 40, 10, 20, 30, 40)
   )
   expect_equal(
     dat |>
-      mutate(
-        x_lag = lag(x, order_by = t),
-        .by = g
-      ),
+      as_polars_df() |>
+      mutate(x_lag = lag(x, order_by = t), .by = g),
     dat |>
-      as.data.frame() |>
-      mutate(
-        x_lag = lag(x, order_by = t),
-        .by = g
-      )
+      mutate(x_lag = lag(x, order_by = t), .by = g)
   )
   expect_equal(
     dat |>
-      mutate(
-        x_lag = lag(x, order_by = t, n = 2),
-        .by = g
-      ),
+      as_polars_df() |>
+      mutate(x_lag = lag(x, order_by = t, n = 2), .by = g),
     dat |>
-      as.data.frame() |>
-      mutate(
-        x_lag = lag(x, order_by = t, n = 2),
-        .by = g
-      )
+      mutate(x_lag = lag(x, order_by = t, n = 2), .by = g)
+  )
+
+  # With one group only
+  dat <- data.frame(
+    g = c(1, 1, 1, 1),
+    t = c(1, 2, 3, 4),
+    x = c(10, 20, 30, 40)
+  )
+  expect_equal(
+    dat |>
+      as_polars_df() |>
+      mutate(x_lag = lag(x, order_by = t), .by = g),
+    dat |>
+      mutate(x_lag = lag(x, order_by = t), .by = g)
+  )
+
+  # fill NA
+  dat <- data.frame(
+    g = c(1, 1, 1, 1, 2),
+    t = c(1, 2, 3, 4, 5),
+    x = c(10, 20, 30, 40, 50)
+  )
+  expect_equal(
+    dat |>
+      as_polars_df() |>
+      mutate(x_lag = lag(x, order_by = t, default = 99), .by = g),
+    dat |>
+      mutate(x_lag = lag(x, order_by = t, default = 99), .by = g)
   )
 })
 
 test_that("dplyr::lead() works", {
-  dat <- pl$DataFrame(
+  dat <- data.frame(
     g = c(1, 1, 1, 1, 2, 2, 2, 2),
     t = c(1, 2, 3, 4, 4, 1, 2, 3),
     x = c(10, 20, 30, 40, 10, 20, 30, 40)
   )
   expect_equal(
     dat |>
-      mutate(
-        x_lead = lead(x, order_by = t),
-        .by = g
-      ),
+      as_polars_df() |>
+      mutate(x_lead = lead(x, order_by = t), .by = g),
     dat |>
-      as.data.frame() |>
-      mutate(
-        x_lead = lead(x, order_by = t),
-        .by = g
-      )
+      mutate(x_lead = lead(x, order_by = t), .by = g)
   )
   expect_equal(
     dat |>
-      mutate(
-        x_lead = lead(x, order_by = t, n = 2),
-        .by = g
-      ),
+      as_polars_df() |>
+      mutate(x_lead = lead(x, order_by = t, n = 2), .by = g),
     dat |>
-      as.data.frame() |>
-      mutate(
-        x_lead = lead(x, order_by = t, n = 2),
-        .by = g
-      )
+      mutate(x_lead = lead(x, order_by = t, n = 2), .by = g)
+  )
+
+  # With one group only
+  dat <- data.frame(
+    g = c(1, 1, 1, 1),
+    t = c(1, 2, 3, 4),
+    x = c(10, 20, 30, 40)
+  )
+  expect_equal(
+    dat |>
+      as_polars_df() |>
+      mutate(x_lead = lead(x, order_by = t), .by = g),
+    dat |>
+      mutate(x_lead = lead(x, order_by = t), .by = g)
+  )
+
+  # fill NA
+  dat <- data.frame(
+    g = c(1, 1, 1, 1, 2),
+    t = c(1, 2, 3, 4, 5),
+    x = c(10, 20, 30, 40, 50)
+  )
+  expect_equal(
+    dat |>
+      as_polars_df() |>
+      mutate(x_lead = lead(x, order_by = t, default = 99), .by = g),
+    dat |>
+      mutate(x_lead = lead(x, order_by = t, default = 99), .by = g)
   )
 })

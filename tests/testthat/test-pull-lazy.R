@@ -2,7 +2,7 @@
 
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
-test_that("multiplication works", {
+test_that("basic behavior works", {
   test <- polars::pl$LazyFrame(mtcars)
 
   expect_equal_lazy(

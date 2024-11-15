@@ -1,4 +1,4 @@
-test_that("multiplication works", {
+test_that("basic behavior works", {
   test <- polars::pl$DataFrame(mtcars)
 
   expect_equal(

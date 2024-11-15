@@ -481,9 +481,13 @@ pl_kurtosis <- function(x, ...) {
   x$kurtosis()
 }
 
-pl_lag_dplyr <- function(x, n = 1, order_by = NULL, ...) {
+pl_lag_dplyr <- function(x, n = 1, default = NULL, order_by = NULL, ...) {
   check_empty_dots(...)
-  out <- x$shift(n)
+  if (!is.null(default)) {
+    out <- x$shift(n, fill_value = default)
+  } else {
+    out <- x$shift(n)
+  }
   if (!is.null(order_by)) {
     attr(out, "order_by") <- order_by
   }
@@ -495,9 +499,13 @@ pl_last_dplyr <- function(x, ...) {
   x$last()
 }
 
-pl_lead_dplyr <- function(x, n = 1, order_by = NULL, ...) {
+pl_lead_dplyr <- function(x, n = 1, default = NULL, order_by = NULL, ...) {
   check_empty_dots(...)
-  out <- x$shift(-n)
+  if (!is.null(default)) {
+    out <- x$shift(-n, fill_value = default)
+  } else {
+    out <- x$shift(-n)
+  }
   if (!is.null(order_by)) {
     attr(out, "order_by") <- order_by
   }

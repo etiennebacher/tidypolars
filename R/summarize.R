@@ -61,7 +61,6 @@ summarize.RPolarsDataFrame <- function(.data, ..., .by = NULL, .groups = "drop_l
 
     if (length(sub) > 0) {
       if (is_grouped) {
-        print(sub)
         .data <- .data$group_by(grps, maintain_order = mo)$agg(sub)
       } else {
         .data <- .data$select(sub)
