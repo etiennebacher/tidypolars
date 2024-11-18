@@ -1,5 +1,7 @@
 # tidypolars (development)
 
+`tidypolars` requires `polars` >= 0.21.0.
+
 ## Breaking changes
 
 * `summarize()` now drops the last group of the output by default (for 
