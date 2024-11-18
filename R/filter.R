@@ -14,7 +14,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_iris <- polars::pl$DataFrame(iris)
+#' pl_iris <- polars::as_polars_df(iris)
 #'
 #' filter(pl_iris, Sepal.Length < 5, Species == "setosa")
 #'
@@ -37,9 +37,7 @@
 #' # an alternative syntax for grouping is to use `.by`
 #' pl_iris |>
 #'   filter(Sepal.Length == max(Sepal.Length), .by = Species)
-
 filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
-
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)

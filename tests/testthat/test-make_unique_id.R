@@ -1,5 +1,5 @@
 test_that("basic behavior works", {
-  test <- pl$DataFrame(mtcars)
+  test <- as_polars_df(mtcars)
 
   expect_is_tidypolars(make_unique_id(test, am, gear))
 
@@ -34,7 +34,7 @@ test_that("basic behavior works", {
 test_that("can't overwrite existing column", {
   mtcars2 <- mtcars
   mtcars2$hash <- 1
-  test2 <- pl$DataFrame(mtcars2)
+  test2 <- as_polars_df(mtcars2)
 
   expect_snapshot(
     make_unique_id(test2, am, gear),

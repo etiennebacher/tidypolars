@@ -1,5 +1,5 @@
 test_that("basic behavior works", {
-  pl_fish_encounters <- polars::pl$DataFrame(tidyr::fish_encounters)
+  pl_fish_encounters <- as_polars_df(tidyr::fish_encounters)
 
   out <- pl_fish_encounters |>
     pivot_wider(names_from = station, values_from = seen)
@@ -7,8 +7,10 @@ test_that("basic behavior works", {
   expect_is_tidypolars(out)
 
   expect_equal(dim(out), c(19, 12))
-  expect_colnames(out, c("fish", "Release", "I80_1", "Lisbon", "Rstr", "Base_TD",
-                        "BCE", "BCW", "BCE2", "BCW2", "MAE", "MAW"))
+  expect_colnames(out, c(
+    "fish", "Release", "I80_1", "Lisbon", "Rstr", "Base_TD",
+    "BCE", "BCW", "BCE2", "BCW2", "MAE", "MAW"
+  ))
 
 
   first <- slice_head(out, n = 5)
@@ -24,7 +26,7 @@ test_that("basic behavior works", {
 })
 
 test_that("names_prefix works", {
-  pl_fish_encounters <- polars::pl$DataFrame(tidyr::fish_encounters)
+  pl_fish_encounters <- as_polars_df(tidyr::fish_encounters)
   prefixed <- pl_fish_encounters |>
     pivot_wider(names_from = station, values_from = seen, names_prefix = "foo_") |>
     slice_head(n = 5)
@@ -46,7 +48,7 @@ test_that("names_prefix works", {
 })
 
 test_that("names_sep works", {
-  pl_us_rent_income <- polars::pl$DataFrame(tidyr::us_rent_income)
+  pl_us_rent_income <- as_polars_df(tidyr::us_rent_income)
 
   sep <- pl_us_rent_income |>
     pivot_wider(
@@ -62,7 +64,7 @@ test_that("names_sep works", {
 })
 
 test_that("values_fill works", {
-  pl_fish_encounters <- polars::pl$DataFrame(tidyr::fish_encounters)
+  pl_fish_encounters <- as_polars_df(tidyr::fish_encounters)
 
   filled <- pl_fish_encounters |>
     pivot_wider(names_from = station, values_from = seen, values_fill = 0) |>
@@ -80,10 +82,10 @@ test_that("values_fill works", {
 
 test_that("several columns in names_from works", {
   production <- expand.grid(
-      product = c("A", "B"),
-      country = c("AI", "EI"),
-      year = 2000:2014
-    ) |>
+    product = c("A", "B"),
+    country = c("AI", "EI"),
+    year = 2000:2014
+  ) |>
     filter((product == "A" & country == "AI") | product == "B") |>
     mutate(production = 1:45) |>
     as_polars_df()

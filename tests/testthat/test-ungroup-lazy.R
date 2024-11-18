@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- pl$LazyFrame(mtcars)
+  test <- as_polars_lf(mtcars)
 
   expect_equal_lazy(
     test |> group_by(am, cyl) |> ungroup() |> attributes() |> length(),

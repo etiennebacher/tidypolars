@@ -124,10 +124,10 @@ test_that("returns grouped output if input was grouped", {
 })
 
 test_that("works with expressions", {
-  test <- pl$LazyFrame(mtcars)
+  test <- as_polars_lf(mtcars)
   expect_equal_lazy(
     test |> arrange(-mpg) |> pull(mpg),
-    test |> arrange(1/mpg) |> pull(mpg)
+    test |> arrange(1 / mpg) |> pull(mpg)
   )
 })
 

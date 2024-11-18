@@ -120,9 +120,9 @@ test_that("returns grouped output if input was grouped", {
 })
 
 test_that("works with expressions", {
-  test <- pl$DataFrame(mtcars)
+  test <- as_polars_df(mtcars)
   expect_equal(
     test |> arrange(-mpg) |> pull(mpg),
-    test |> arrange(1/mpg) |> pull(mpg)
+    test |> arrange(1 / mpg) |> pull(mpg)
   )
 })

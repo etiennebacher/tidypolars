@@ -30,7 +30,7 @@ test_that("basic behavior works", {
     rep(3, 3)
   )
 
-  pl_mtcars <- pl$DataFrame(mtcars)
+  pl_mtcars <- as_polars_df(mtcars)
 
   out <- pl_mtcars |>
     group_by(cyl) |>

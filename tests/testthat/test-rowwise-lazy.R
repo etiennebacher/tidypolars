@@ -5,7 +5,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 test_that("basic behavior with statistical functions works", {
   test_df <- data.frame(x = c(2, 2), y = c(2, 3), z = c(5, NA)) |>
     rowwise()
-  test <- polars::pl$LazyFrame(test_df) |>
+  test <- as_polars_lf(test_df) |>
     rowwise()
 
   expect_is_tidypolars(test)
@@ -18,7 +18,6 @@ test_that("basic behavior with statistical functions works", {
         median = median(c(x, y, z)),
         min = min(c(x, y, z)),
         max = max(c(x, y, z)),
-
         mean2 = mean(c(x, y, z), na.rm = TRUE),
         sum2 = sum(c(x, y, z), na.rm = TRUE),
         median2 = median(c(x, y, z), na.rm = TRUE),
@@ -32,7 +31,6 @@ test_that("basic behavior with statistical functions works", {
         median = median(c(x, y, z)),
         min = min(c(x, y, z)),
         max = max(c(x, y, z)),
-
         mean2 = mean(c(x, y, z), na.rm = TRUE),
         sum2 = sum(c(x, y, z), na.rm = TRUE),
         median2 = median(c(x, y, z), na.rm = TRUE),
@@ -49,7 +47,7 @@ test_that("basic behavior with all() and any() works", {
   # - Polars all() returns TRUE if only NA, R returns NA (unless na.rm = TRUE)
   # - Polars any() returns FALSE if only NA, R returns NA (unless na.rm = TRUE)
 
-  test <- polars::pl$LazyFrame(x = c(TRUE, TRUE, NA), y = c(TRUE, FALSE, NA), z = c(TRUE, NA, NA)) |>
+  test <- as_polars_lf(x = c(TRUE, TRUE, NA), y = c(TRUE, FALSE, NA), z = c(TRUE, NA, NA)) |>
     rowwise()
 
   expect_equal_lazy(
@@ -82,7 +80,7 @@ test_that("basic behavior with all() and any() works", {
 })
 
 test_that("can only use rowwise() on a subset of functions", {
-  test <- polars::pl$LazyFrame(x = c(TRUE, TRUE, NA), y = c(TRUE, FALSE, NA), z = c(TRUE, NA, NA)) |>
+  test <- as_polars_lf(x = c(TRUE, TRUE, NA), y = c(TRUE, FALSE, NA), z = c(TRUE, NA, NA)) |>
     rowwise()
   expect_snapshot_lazy(
     test |> mutate(m = range(c(x, y, !z))),
@@ -91,7 +89,7 @@ test_that("can only use rowwise() on a subset of functions", {
 })
 
 test_that("rowwise mode is kept after operations", {
-  test <- polars::pl$LazyFrame(x = c(TRUE, TRUE, NA), y = c(TRUE, FALSE, NA), z = c(TRUE, NA, NA)) |>
+  test <- as_polars_lf(x = c(TRUE, TRUE, NA), y = c(TRUE, FALSE, NA), z = c(TRUE, NA, NA)) |>
     rowwise()
 
   expect_equal_lazy(
@@ -111,13 +109,13 @@ test_that("rowwise mode is kept after operations", {
 
 test_that("can't apply rowwise on grouped data, and vice versa", {
   expect_snapshot_lazy(
-    pl$LazyFrame(mtcars) |>
+    as_polars_lf(mtcars) |>
       group_by(cyl) |>
       rowwise(),
     error = TRUE
   )
   expect_snapshot_lazy(
-    pl$LazyFrame(mtcars) |>
+    as_polars_lf(mtcars) |>
       rowwise() |>
       group_by(cyl),
     error = TRUE

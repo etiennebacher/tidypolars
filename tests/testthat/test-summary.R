@@ -1,5 +1,5 @@
 test_that("basic behavior works", {
-  test <- pl$DataFrame(mtcars)
+  test <- as_polars_df(mtcars)
 
   expect_is_tidypolars(summary(test))
 
@@ -23,7 +23,7 @@ test_that("basic behavior works", {
 })
 
 test_that("check percentiles", {
-  test <- pl$DataFrame(mtcars)
+  test <- as_polars_df(mtcars)
   expect_snapshot(
     summary(test, percentiles = c(0.2, 0.4, NA)),
     error = TRUE

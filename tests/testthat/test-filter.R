@@ -42,7 +42,7 @@ test_that("is.na() works", {
 
   iris2 <- iris
   iris2[c(3, 8, 58, 133), "Species"] <- NA
-  pl_iris_2 <- pl$DataFrame(iris2)
+  pl_iris_2 <- as_polars_df(iris2)
 
   expect_dim(
     filter(pl_iris_2, is.na(Species)),
@@ -65,7 +65,7 @@ test_that("is.na() works", {
 test_that("is.nan() works", {
   iris2 <- iris
   iris2[c(3, 8, 58, 133), "Sepal.Length"] <- NaN
-  pl_iris_2 <- pl$DataFrame(iris2)
+  pl_iris_2 <- as_polars_df(iris2)
 
   expect_dim(
     filter(pl_iris_2, is.nan(Sepal.Length)),
@@ -86,7 +86,7 @@ test_that("is.nan() works", {
 })
 
 test_that("%in% works", {
-  pl_mtcars <- pl$DataFrame(mtcars)
+  pl_mtcars <- as_polars_df(mtcars)
 
   expect_dim(
     filter(pl_mtcars, cyl %in% 4:5),
@@ -148,7 +148,7 @@ test_that("between() works", {
 })
 
 test_that("works with grouped data", {
-  by_cyl <- polars::pl$DataFrame(mtcars) |>
+  by_cyl <- polars::as_polars_df(mtcars) |>
     group_by(cyl, maintain_order = TRUE)
 
   expect_equal(
@@ -177,7 +177,8 @@ test_that("works with grouped data", {
   expect_dim(
     as_polars_df(iris) |>
       filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4,
-             .by = Species),
+        .by = Species
+      ),
     c(123, 5)
   )
 

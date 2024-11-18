@@ -1,6 +1,6 @@
 test_that("basic behavior works", {
-  pl_iris <- pl$DataFrame(iris)
-  pl_iris_lazy <- pl$LazyFrame(iris)
+  pl_iris <- as_polars_df(iris)
+  pl_iris_lazy <- as_polars_lf(iris)
 
   expect_s3_class(collect(pl_iris_lazy), "data.frame")
 
@@ -22,7 +22,7 @@ test_that("basic behavior works", {
 })
 
 test_that("can't collect non-LazyFrame object", {
-  pl_iris <- pl$DataFrame(iris)
+  pl_iris <- as_polars_df(iris)
 
   expect_snapshot(
     collect(pl_iris),

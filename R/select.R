@@ -7,7 +7,7 @@
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #'
-#' pl_iris <- polars::pl$DataFrame(iris)
+#' pl_iris <- polars::as_polars_df(iris)
 #'
 #' select(pl_iris, c("Sepal.Length", "Sepal.Width"))
 #' select(pl_iris, Sepal.Length, Sepal.Width)
@@ -17,7 +17,6 @@
 #'
 #' # Renaming while selecting is also possible
 #' select(pl_iris, foo1 = Sepal.Length, Sepal.Width)
-
 select.RPolarsDataFrame <- function(.data, ...) {
   dots <- get_dots(...)
   with_renaming <- !is.null(names(dots))

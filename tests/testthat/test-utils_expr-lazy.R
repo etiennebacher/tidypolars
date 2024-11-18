@@ -4,7 +4,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 # TODO: not sure that is useful
 # test_that("internally, expressions are correctly split in pools", {
-#   pl_iris <- pl$LazyFrame(iris)
+#   pl_iris <- as_polars_lf(iris)
 
 #   expect_equal_lazy(
 #     translate_dots(
@@ -66,7 +66,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 # })
 
 test_that("error messages when error in known function is good", {
-  pl_iris <- pl$LazyFrame(iris)
+  pl_iris <- as_polars_lf(iris)
   expect_snapshot_lazy(
     pl_iris |> mutate(foo = min_rank()),
     error = TRUE

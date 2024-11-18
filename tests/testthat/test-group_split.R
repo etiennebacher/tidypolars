@@ -1,5 +1,5 @@
 test_that("works with ungrouped data", {
-  spl <- pl$DataFrame(iris) |>
+  spl <- as_polars_df(iris) |>
     group_split(Species)
 
   expect_equal(length(spl), 3)
@@ -7,7 +7,7 @@ test_that("works with ungrouped data", {
 })
 
 test_that("works with when split variables and group variables are the same", {
-  test <- pl$DataFrame(iris) |>
+  test <- as_polars_df(iris) |>
     group_by(Species)
 
   spl2 <- group_split(test)
@@ -17,7 +17,7 @@ test_that("works with when split variables and group variables are the same", {
 })
 
 test_that("warn that split variables that are not group variables are ignored", {
-  test <- pl$DataFrame(iris) |>
+  test <- as_polars_df(iris) |>
     group_by(Species)
 
   expect_warning(

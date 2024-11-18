@@ -7,7 +7,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' test <- polars::pl$DataFrame(mtcars)
+#' test <- polars::as_polars_df(mtcars)
 #' count(test, cyl)
 #'
 #' count(test, cyl, am)
@@ -15,7 +15,6 @@
 #' count(test, cyl, am, sort = TRUE, name = "count")
 #'
 #' add_count(test, cyl, am, sort = TRUE, name = "count")
-
 count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order
@@ -65,7 +64,6 @@ add_count.RPolarsLazyFrame <- add_count.RPolarsDataFrame
 
 
 count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
-
   name <- check_name(x, vars, name, missing_name)
   if (isTRUE(new_col)) {
     if (length(vars) == 0) {
