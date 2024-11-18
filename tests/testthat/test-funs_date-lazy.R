@@ -20,7 +20,7 @@ test_that("extracting components of date works", {
     min = 24:27,
     s = 55:58
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   for (i in c("year", "month", "day", "quarter", "week", "mday", "yday")) {
     pol <- paste0("mutate(test, foo = ", i, "(YMD))") |>
@@ -83,7 +83,7 @@ test_that("weekday is a special function", {
     min = 24:27,
     s = 55:58
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test |>
@@ -91,12 +91,12 @@ test_that("weekday is a special function", {
     test_df |>
       mutate(foo = wday(YMD))
   )
-  
+
   expect_error_lazy(
     test |> mutate(foo = wday(YMD, week_start = 1)),
     "Currently, tidypolars only works if `week_start` is 7."
   )
-  
+
   expect_equal_lazy(
     test |>
       mutate(foo = wday(YMD, label = TRUE)) |>
@@ -129,7 +129,7 @@ test_that("strptime() works", {
     min = 24:27,
     s = 55:58
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test |>
@@ -141,8 +141,9 @@ test_that("strptime() works", {
 
 
 test_that("isoyear (test taken from the lubridate test suite)", {
-  df <- read.table(textConnection(
-    "Sat 1 Jan 2005 	2005-01-01 	2004-W53-6
+  df <- read.table(
+    textConnection(
+      "Sat 1 Jan 2005 	2005-01-01 	2004-W53-6
       Sun 2 Jan 2005 	2005-01-02 	2004-W53-7
       Sat 31 Dec 2005 	2005-12-31 	2005-W52-6
       Mon 1 Jan 2007 	2007-01-01 	2007-W01-1 	Both years 2007 start with the same day.
@@ -158,8 +159,8 @@ test_that("isoyear (test taken from the lubridate test suite)", {
       Fri 1 Jan 2010 	2010-01-01 	2009-W53-5
       Sat 2 Jan 2010 	2010-01-02 	2009-W53-6
       Sun 3 Jan 2010 	2010-01-03 	2009-W53-7"
-  ),
-  sep = "\t", fill = TRUE, stringsAsFactors = FALSE, header = FALSE
+    ),
+    sep = "\t", fill = TRUE, stringsAsFactors = FALSE, header = FALSE
   )
 
   names(df) <- c("Gregorian", "ymd", "iso", "note")
@@ -196,7 +197,7 @@ test_that("handling durations work", {
     min = 24:27,
     s = 55:58
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test |>
@@ -241,7 +242,7 @@ test_that("handling durations work", {
       pull(foo)
   )
 
-# TODO: will be hard to check for accuracy for microseconds and nanoseconds
+  # TODO: will be hard to check for accuracy for microseconds and nanoseconds
 })
 
 
@@ -263,7 +264,7 @@ test_that("make_date() works", {
     min = 24:27,
     s = 55:58
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test |>
@@ -312,7 +313,7 @@ test_that("make_datetime() works", {
     min = 24:27,
     s = 55:58
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   # setting hour = 25 adds 1 day + 1 hour, which is not the behavior of
   # ISOdatetime() or pl$datetime()
@@ -355,40 +356,52 @@ test_that("ISOdatetime() works", {
     min = 24:27,
     s = 55:58
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test |>
-      mutate(foo = ISOdatetime(year = 0, month = 1, day = 1, hour = h,
-                              min = min, sec = s)) |>
+      mutate(foo = ISOdatetime(
+        year = 0, month = 1, day = 1, hour = h,
+        min = min, sec = s
+      )) |>
       pull(foo),
     test_df |>
-      mutate(foo = ISOdatetime(year = 0, month = 1, day = 1, hour = h,
-                              min = min, sec = s)) |>
+      mutate(foo = ISOdatetime(
+        year = 0, month = 1, day = 1, hour = h,
+        min = min, sec = s
+      )) |>
       pull(foo),
     ignore_attr = TRUE
   )
 
   expect_equal_lazy(
     test |>
-      mutate(foo = ISOdatetime(year = 0, month = 1, day = 1, hour = 6,
-                              min = min, sec = s, tz = "Australia/Sydney")) |>
+      mutate(foo = ISOdatetime(
+        year = 0, month = 1, day = 1, hour = 6,
+        min = min, sec = s, tz = "Australia/Sydney"
+      )) |>
       pull(foo),
     test_df |>
-      mutate(foo = ISOdatetime(year = 0, month = 1, day = 1, hour = 6,
-                              min = min, sec = s, tz = "Australia/Sydney")) |>
+      mutate(foo = ISOdatetime(
+        year = 0, month = 1, day = 1, hour = 6,
+        min = min, sec = s, tz = "Australia/Sydney"
+      )) |>
       pull(foo),
     ignore_attr = TRUE
   )
 
   expect_equal_lazy(
     test |>
-      mutate(foo = ISOdatetime(year = 0, month = 1, day = 1, hour = 25,
-                              min = min, sec = s, tz = "Australia/Sydney")) |>
+      mutate(foo = ISOdatetime(
+        year = 0, month = 1, day = 1, hour = 25,
+        min = min, sec = s, tz = "Australia/Sydney"
+      )) |>
       pull(foo),
     test_df |>
-      mutate(foo = ISOdatetime(year = 0, month = 1, day = 1, hour = 25,
-                              min = min, sec = s, tz = "Australia/Sydney")) |>
+      mutate(foo = ISOdatetime(
+        year = 0, month = 1, day = 1, hour = 25,
+        min = min, sec = s, tz = "Australia/Sydney"
+      )) |>
       pull(foo),
     ignore_attr = TRUE
   )

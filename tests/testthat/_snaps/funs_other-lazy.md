@@ -54,7 +54,7 @@
       ! Execution halted with the following contexts
          0: In R: in $collect():
          1: Encountered the following error in Rust-Polars:
-            	cannot evaluate two Series of different lengths (5 and 2)
+            	lengths don't match: cannot evaluate two Series of different lengths (5 and 2)
       
             Error originated in expression: '[(col("x")) == (Series)]'
 

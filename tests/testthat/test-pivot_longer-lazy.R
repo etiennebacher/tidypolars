@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  pl_relig_income <- polars::pl$LazyFrame(tidyr::relig_income)
+  pl_relig_income <- as_polars_lf(tidyr::relig_income)
   out <- pl_relig_income |>
     pivot_longer(!religion, names_to = "income", values_to = "count")
 
@@ -48,7 +48,7 @@ test_that("basic behavior works", {
 })
 
 test_that("argument names_prefix works", {
-  pl_billboard <- polars::pl$LazyFrame(tidyr::billboard)
+  pl_billboard <- as_polars_lf(tidyr::billboard)
 
   expect_equal_lazy(
     pl_billboard |>

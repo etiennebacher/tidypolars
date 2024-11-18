@@ -4,7 +4,7 @@ test_that("which.min() and which.max() work", {
     x_na = c(1:4, NA, 1:5, 11, 10),
     x_inf = c(1, Inf, 3:4, -Inf, 1:5, 11, 10)
   )
-  test <- polars::pl$DataFrame(test_df)
+  test <- as_polars_df(test_df)
 
   expect_equal(
     test |>

@@ -43,7 +43,7 @@ test_that("basic behavior with all() and any() works", {
   # - Polars all() returns TRUE if only NA, R returns NA (unless na.rm = TRUE)
   # - Polars any() returns FALSE if only NA, R returns NA (unless na.rm = TRUE)
 
-  test <- as_polars_df(x = c(TRUE, TRUE, NA), y = c(TRUE, FALSE, NA), z = c(TRUE, NA, NA)) |>
+  test <- pl$DataFrame(x = c(TRUE, TRUE, NA), y = c(TRUE, FALSE, NA), z = c(TRUE, NA, NA)) |>
     rowwise()
 
   expect_equal(
@@ -85,7 +85,7 @@ test_that("can only use rowwise() on a subset of functions", {
 })
 
 test_that("rowwise mode is kept after operations", {
-  test <- as_polars_df(x = c(TRUE, TRUE, NA), y = c(TRUE, FALSE, NA), z = c(TRUE, NA, NA)) |>
+  test <- pl$DataFrame(x = c(TRUE, TRUE, NA), y = c(TRUE, FALSE, NA), z = c(TRUE, NA, NA)) |>
     rowwise()
 
   expect_equal(
