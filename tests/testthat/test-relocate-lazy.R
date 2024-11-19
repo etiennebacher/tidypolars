@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- polars::pl$LazyFrame(mtcars)
+  test <- polars::as_polars_lf(mtcars)
 
   expect_is_tidypolars(relocate(test))
   expect_is_tidypolars(relocate(test, hp, .before = cyl))
@@ -20,7 +20,7 @@ test_that("basic behavior works", {
 })
 
 test_that("moved to first positions if no .before or .after", {
-  test <- polars::pl$LazyFrame(mtcars)
+  test <- polars::as_polars_lf(mtcars)
 
   expect_colnames(
     test |> relocate(hp, vs),
@@ -29,7 +29,7 @@ test_that("moved to first positions if no .before or .after", {
 })
 
 test_that(".before and .after can be quoted or unquoted", {
-  test <- polars::pl$LazyFrame(mtcars)
+  test <- polars::as_polars_lf(mtcars)
 
   expect_colnames(
     test |> relocate(hp, vs, .after = "gear"),
@@ -39,7 +39,7 @@ test_that(".before and .after can be quoted or unquoted", {
 
 
 test_that("select helpers are also available", {
-  test <- polars::pl$LazyFrame(mtcars)
+  test <- polars::as_polars_lf(mtcars)
 
   expect_colnames(
     test |> relocate(matches("[aeiouy]")),
@@ -58,7 +58,7 @@ test_that("select helpers are also available", {
 })
 
 test_that("error cases work", {
-  test <- polars::pl$LazyFrame(mtcars)
+  test <- polars::as_polars_lf(mtcars)
 
   expect_snapshot_lazy(
     test |> relocate(mpg, .before = cyl, .after = drat),

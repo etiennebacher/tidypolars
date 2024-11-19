@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  pl_test <- polars::pl$LazyFrame(mtcars)
+  pl_test <- polars::as_polars_lf(mtcars)
 
   expect_is_tidypolars(rename(pl_test, miles_per_gallon = "mpg"))
 
@@ -25,25 +25,25 @@ test_that("basic behavior works", {
 })
 
 test_that("rename_with works with builtin function", {
-  pl_test <- polars::pl$LazyFrame(mtcars)
+  pl_test <- polars::as_polars_lf(mtcars)
   test <- rename_with(pl_test, toupper, c(mpg, cyl)) |>
     names()
-  
+
   expect_true("MPG" %in% test)
   expect_true("CYL" %in% test)
   expect_false("mpg" %in% test)
   expect_false("cyl" %in% test)
-  
+
   testbis <- rename_with(pl_test, toupper) |>
     names()
-  
+
   expect_true("DISP" %in% testbis)
   expect_true("DRAT" %in% testbis)
   expect_false("mpg" %in% testbis)
-  
+
   test4 <- rename_with(pl_test, toupper, contains("p")) |>
     names()
-  
+
   expect_true("MPG" %in% test4)
   expect_true("DISP" %in% test4)
   expect_true("HP" %in% test4)
@@ -52,7 +52,7 @@ test_that("rename_with works with builtin function", {
 })
 
 test_that("rename_with works with custom function", {
-  pl_test <- polars::pl$LazyFrame(iris)
+  pl_test <- polars::as_polars_lf(iris)
 
   test <- rename_with(
     pl_test,

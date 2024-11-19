@@ -12,7 +12,7 @@ test_that("error if no common variables and and `by` no provided", {
     z = c(1, 2, 3)
   )
   expect_snapshot_lazy(
-    left_join(test, polars::pl$LazyFrame(iris)),
+    left_join(test, polars::as_polars_lf(iris)),
     error = TRUE
   )
 })
@@ -290,7 +290,7 @@ test_that("error if two inputs don't have the same class", {
 
   expect_equal_lazy(
     test2 |>
-      mutate(foo = 1) |>  # adds class "tidypolars"
+      mutate(foo = 1) |> # adds class "tidypolars"
       left_join(test2) |>
       select(-foo),
     test2 |>

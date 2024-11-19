@@ -40,7 +40,7 @@ Subset rows of a Data/LazyFrame
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pl_test <- polars::pl$DataFrame(iris)
+pl_test <- polars::as_polars_df(iris)
 slice_head(pl_test, n = 3)
 slice_tail(pl_test, n = 3)
 slice_sample(pl_test, n = 5)

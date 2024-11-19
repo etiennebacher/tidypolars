@@ -6,7 +6,7 @@ test_that("basic behavior works", {
   tmp <- mtcars
   tmp[1:3, "mpg"] <- NA
   tmp[4, "hp"] <- NA
-  pl_tmp <- polars::pl$LazyFrame(tmp)
+  pl_tmp <- as_polars_lf(tmp)
 
   expect_is_tidypolars(drop_na(pl_tmp, drat))
 
@@ -37,7 +37,7 @@ test_that("basic behavior works", {
 })
 
 test_that("error if variable doesn't exist", {
-  pl_tmp <- polars::pl$LazyFrame(mtcars)
+  pl_tmp <- polars::as_polars_lf(mtcars)
   expect_snapshot_lazy(
     drop_na(pl_tmp, foo),
     error = TRUE

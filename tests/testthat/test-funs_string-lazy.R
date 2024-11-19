@@ -16,10 +16,9 @@ test_that("case functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper", "nchar")) {
-
     pol <- paste0("mutate(test, foo = ", i, "(x1))") |>
       str2lang() |>
       eval() |>
@@ -31,7 +30,6 @@ test_that("case functions work", {
       pull(foo)
 
     expect_equal_lazy(pol, res, info = i)
-
   }
 
   if (polars::polars_info()$features$full_features) {
@@ -66,7 +64,7 @@ test_that("paste and paste0 work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     mutate(test, foo = paste(x1, "he")) |>
@@ -111,7 +109,7 @@ test_that("start and end functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     mutate(test, foo = str_starts(x1, "he")) |>
@@ -191,7 +189,7 @@ test_that("extract functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     mutate(test, foo = str_extract(x2, "\\d")) |>
@@ -271,7 +269,7 @@ test_that("length functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     mutate(test, foo = str_length(x2)) |>
@@ -309,7 +307,7 @@ test_that("replace functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     mutate(test, foo = str_replace(x1, "[aeiou]", "-")) |>
@@ -411,7 +409,7 @@ test_that("remove functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     mutate(test, foo = str_remove(x1, "[aeiou]")) |>
@@ -463,7 +461,7 @@ test_that("sub functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     mutate(test, foo = str_sub(x1, 1, 1)) |>
@@ -602,7 +600,7 @@ test_that("count functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     mutate(test, foo = str_count(x1, "[aeiou]")) |>
@@ -647,7 +645,7 @@ test_that("trim functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     mutate(test, foo = str_trim(x6)) |>
@@ -711,7 +709,7 @@ test_that("pad functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     mutate(test, foo = str_pad(x6, width = 10)) |>
@@ -759,7 +757,7 @@ test_that("word functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     mutate(test, foo = word(x7)) |>
@@ -802,7 +800,7 @@ test_that("squish functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     mutate(test, foo = str_squish(x9)) |>
@@ -833,7 +831,7 @@ test_that("detect functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     mutate(test, foo = str_detect(x1, "e")) |>
@@ -904,7 +902,7 @@ test_that("regex functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_warning(
     mutate(test, foo = str_detect(x1, regex("hello", multiline = TRUE))),
@@ -933,7 +931,7 @@ test_that("dup functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     mutate(test, foo = str_dup(x1, 5)) |>
@@ -999,7 +997,7 @@ test_that("split functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     mutate(test, foo = str_split(x8, "-")) |>
@@ -1063,7 +1061,7 @@ test_that("trunc functions work", {
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
     n = 1:2
   )
-  test <- pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     mutate(test, foo = str_trunc(x1, 5)) |>

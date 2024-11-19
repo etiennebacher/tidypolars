@@ -16,7 +16,7 @@
       ! Execution halted with the following contexts
          0: In R: in $pivot():
          1: Encountered the following error in Rust-Polars:
-            	duplicate: column with name 'a' has more than one occurrences
+            	duplicate: column with name 'a' has more than one occurrence
 
 # `names_from` must be supplied if `name` isn't in data
 

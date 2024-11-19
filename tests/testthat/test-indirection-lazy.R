@@ -34,7 +34,7 @@ test_that("basic behavior works", {
     rep(3, 3)
   )
 
-  pl_mtcars <- pl$LazyFrame(mtcars)
+  pl_mtcars <- as_polars_lf(mtcars)
 
   out <- pl_mtcars |>
     group_by(cyl) |>

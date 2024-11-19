@@ -10,12 +10,11 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_test <- polars::pl$DataFrame(iris)
+#' pl_test <- polars::as_polars_df(iris)
 #' slice_head(pl_test, n = 3)
 #' slice_tail(pl_test, n = 3)
 #' slice_sample(pl_test, n = 5)
 #' slice_sample(pl_test, prop = 0.1)
-
 slice_tail.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
@@ -82,7 +81,6 @@ slice_head.RPolarsLazyFrame <- slice_head.RPolarsDataFrame
 #' @export
 
 slice_sample.RPolarsDataFrame <- function(.data, ..., n = NULL, prop = NULL, replace = FALSE, by = NULL) {
-
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
@@ -95,8 +93,8 @@ slice_sample.RPolarsDataFrame <- function(.data, ..., n = NULL, prop = NULL, rep
     n <- 1
   }
   if (isFALSE(replace) &&
-      ((!is.null(n) && n > nrow(.data)) ||
-       (!is.null(prop) && prop > 1))) {
+    ((!is.null(n) && n > nrow(.data)) ||
+      (!is.null(prop) && prop > 1))) {
     abort("Cannot take more rows than the total number of rows when `replace = FALSE`.")
   }
 

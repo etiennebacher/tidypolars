@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic ops +, -, *, /, ^, ** work", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
 
   expect_is_tidypolars(mutate(pl_iris, x = 1 + 1))
 
@@ -30,14 +30,14 @@ test_that("basic ops +, -, *, /, ^, ** work", {
     iris$Sepal.Width - iris$Sepal.Length + iris$Petal.Length
   )
   expect_equal_lazy(
-    mutate(pl_iris, x = Sepal.Width*Sepal.Length) |>
+    mutate(pl_iris, x = Sepal.Width * Sepal.Length) |>
       pull(x),
-    iris$Sepal.Width*iris$Sepal.Length
+    iris$Sepal.Width * iris$Sepal.Length
   )
   expect_equal_lazy(
-    mutate(pl_iris, x = Sepal.Width/Sepal.Length) |>
+    mutate(pl_iris, x = Sepal.Width / Sepal.Length) |>
       pull(x),
-    iris$Sepal.Width/iris$Sepal.Length
+    iris$Sepal.Width / iris$Sepal.Length
   )
   expect_equal_lazy(
     mutate(pl_iris, x = Sepal.Width^Sepal.Length) |>
@@ -52,7 +52,7 @@ test_that("basic ops +, -, *, /, ^, ** work", {
 })
 
 test_that("logical ops +, -, *, / work", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
 
   expect_equal_lazy(
     mutate(pl_iris, x = Sepal.Width > Sepal.Length) |>
@@ -66,7 +66,7 @@ test_that("logical ops +, -, *, / work", {
   )
 
   expect_false(
-    mutate(pl_iris, x = all(Sepal.Length/2 > Sepal.Width)) |>
+    mutate(pl_iris, x = all(Sepal.Length / 2 > Sepal.Width)) |>
       pull(x) |>
       unique()
   )
@@ -85,7 +85,7 @@ test_that("logical ops +, -, *, / work", {
 })
 
 test_that("%in operator works", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
 
   test <- pl$LazyFrame(
     x1 = c("a", "a", "foo", "a", "c"),
@@ -108,18 +108,18 @@ test_that("%in operator works", {
 
 
 test_that("can overwrite existin variables", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
 
   expect_equal_lazy(
-    mutate(pl_iris, Sepal.Width = Sepal.Width*2) |>
+    mutate(pl_iris, Sepal.Width = Sepal.Width * 2) |>
       pull(Sepal.Width),
-    iris$Sepal.Width*2
+    iris$Sepal.Width * 2
   )
 })
 
 
 test_that("scalar value works", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
 
   expect_equal_lazy(
     mutate(pl_iris, Sepal.Width = 2) |>
@@ -146,11 +146,11 @@ test_that("scalar value works", {
 })
 
 test_that("passing several expressions works", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
   out <- mutate(
     pl_iris,
-    Sepal.Width = Sepal.Width*2,
-    Petal.Width = Petal.Width*3
+    Sepal.Width = Sepal.Width * 2,
+    Petal.Width = Petal.Width * 3
   )
 
   expect_equal_lazy(
@@ -158,13 +158,13 @@ test_that("passing several expressions works", {
       pull(out, Sepal.Width),
       pull(out, Petal.Width)
     ),
-    c(iris$Sepal.Width*2, iris$Petal.Width*3)
+    c(iris$Sepal.Width * 2, iris$Petal.Width * 3)
   )
 })
 
 
 test_that("dropping columns works", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
 
   expect_colnames(
     mutate(pl_iris, Sepal.Length = 1, Species = NULL),
@@ -174,7 +174,7 @@ test_that("dropping columns works", {
 
 
 test_that("operations on grouped data work", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
 
   out <- pl_iris |>
     group_by(Species, maintain_order = TRUE) |>
@@ -219,7 +219,7 @@ test_that("operations on grouped data work", {
     NULL
   )
 
-  pl_mtcars <- polars::pl$LazyFrame(mtcars)
+  pl_mtcars <- polars::as_polars_lf(mtcars)
   out <- pl_mtcars |>
     group_by(cyl, am) |>
     mutate(
@@ -249,7 +249,7 @@ test_that("operations on grouped data work", {
 
 
 test_that("warning if unknown argument", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
 
   expect_warning(
     mutate(pl_iris, foo = mean(Sepal.Length, trim = 1)),
@@ -259,7 +259,7 @@ test_that("warning if unknown argument", {
 
 
 test_that("custom function that returns Polars expression", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
 
   foo <- function(x, y) {
     tmp <- x$mean()
@@ -272,12 +272,11 @@ test_that("custom function that returns Polars expression", {
       pull(x),
     rep(mean(iris$Sepal.Length) + mean(iris$Petal.Length), nrow(iris))
   )
-
 })
 
 
 test_that("custom function that doesn't return Polars expression", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
 
   foo <- function(x, y) {
     dplyr::near(x, y)
@@ -290,7 +289,7 @@ test_that("custom function that doesn't return Polars expression", {
 })
 
 test_that("embracing work", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
 
   some_value <- 1
 
@@ -306,7 +305,7 @@ test_that("embracing work", {
 })
 
 test_that("reordering expressions works", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
 
   expect_equal_lazy(
     pl_iris |>
@@ -344,7 +343,7 @@ test_that("reordering expressions works", {
 
 
 test_that("correct sequential operations", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
   expect_equal_lazy(
     iris[c(1, 2, 149, 150), ] |>
       as_polars_lf() |>
@@ -360,7 +359,7 @@ test_that("correct sequential operations", {
 
 
 test_that("argument .keep works", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
 
   expect_snapshot_lazy(
     mutate(pl_iris, x = 1, .keep = "foo"),
@@ -403,7 +402,7 @@ test_that("argument .keep works", {
 
 
 test_that("works with a local variable defined in a function", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
   foobar <- function(x) {
     local_var <- "a"
     x |> mutate(foo = local_var)
@@ -419,7 +418,7 @@ test_that("works with a local variable defined in a function", {
 
 
 test_that("works with external data.frame/list elements", {
-  pl_iris <- polars::pl$LazyFrame(iris)
+  pl_iris <- polars::as_polars_lf(iris)
   test <- polars::pl$LazyFrame(x = 1:3)
   test_df <- data.frame(x = 1:2)
 
@@ -437,6 +436,5 @@ test_that("works with external data.frame/list elements", {
     c(TRUE, TRUE, FALSE)
   )
 })
-
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

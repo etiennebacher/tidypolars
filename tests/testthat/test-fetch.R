@@ -1,5 +1,5 @@
 test_that("basic behavior works", {
-  pl_iris_lazy <- pl$LazyFrame(iris)
+  pl_iris_lazy <- as_polars_lf(iris)
 
   expect_is_tidypolars(fetch(pl_iris_lazy, n_rows = 30))
 
@@ -24,7 +24,7 @@ test_that("basic behavior works", {
 
 test_that("can only be used on LazyFrame", {
   expect_snapshot(
-    fetch(pl$DataFrame(iris)),
+    fetch(as_polars_df(iris)),
     error = TRUE
   )
 })

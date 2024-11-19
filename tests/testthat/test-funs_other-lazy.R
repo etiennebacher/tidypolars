@@ -8,7 +8,7 @@ test_that("which.min() and which.max() work", {
     x_na = c(1:4, NA, 1:5, 11, 10),
     x_inf = c(1, Inf, 3:4, -Inf, 1:5, 11, 10)
   )
-  test <- polars::pl$LazyFrame(test_df)
+  test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test |>
@@ -570,6 +570,8 @@ test_that("dplyr::lag() works", {
     t = c(1, 2, 3, 4, 4, 1, 2, 3),
     x = c(10, 20, 30, 40, 10, 20, 30, 40)
   )
+  # Need to explicitly namespace this because there is no pl_lag(). Without
+  # namespace it works fine in interactive mode but not via devtools::test().
   expect_equal_lazy(
     dat |>
       as_polars_lf() |>

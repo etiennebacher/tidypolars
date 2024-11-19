@@ -29,7 +29,7 @@ dropped, unlike base subsetting with \code{[}.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pl_iris <- polars::pl$DataFrame(iris)
+pl_iris <- polars::as_polars_df(iris)
 
 filter(pl_iris, Sepal.Length < 5, Species == "setosa")
 

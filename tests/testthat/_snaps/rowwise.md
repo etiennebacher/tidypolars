@@ -11,7 +11,7 @@
 # can't apply rowwise on grouped data, and vice versa
 
     Code
-      rowwise(group_by(pl$DataFrame(mtcars), cyl))
+      rowwise(group_by(as_polars_df(mtcars), cyl))
     Condition
       Error in `rowwise()`:
       ! Cannot use `rowwise()` on grouped data.
@@ -19,7 +19,7 @@
 ---
 
     Code
-      group_by(rowwise(pl$DataFrame(mtcars)), cyl)
+      group_by(rowwise(as_polars_df(mtcars)), cyl)
     Condition
       Error in `group_by()`:
       ! Cannot use `group_by()` if `rowwise()` is also used.

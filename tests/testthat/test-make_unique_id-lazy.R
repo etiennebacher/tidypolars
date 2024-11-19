@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- pl$LazyFrame(mtcars)
+  test <- as_polars_lf(mtcars)
 
   expect_is_tidypolars(make_unique_id(test, am, gear))
 
@@ -38,7 +38,7 @@ test_that("basic behavior works", {
 test_that("can't overwrite existing column", {
   mtcars2 <- mtcars
   mtcars2$hash <- 1
-  test2 <- pl$LazyFrame(mtcars2)
+  test2 <- as_polars_lf(mtcars2)
 
   expect_snapshot_lazy(
     make_unique_id(test2, am, gear),

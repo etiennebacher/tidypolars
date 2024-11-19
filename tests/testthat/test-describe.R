@@ -1,5 +1,5 @@
 test_that("describe() is deprecated", {
-  test <- pl$DataFrame(mtcars)
+  test <- as_polars_df(mtcars)
 
   expect_warning(
     expect_equal(

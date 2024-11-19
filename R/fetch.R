@@ -21,7 +21,7 @@
 #' @export
 #' @seealso [collect()] for applying a lazy query on the full data.
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' dat_lazy <- polars::pl$DataFrame(iris)$lazy()
+#' dat_lazy <- polars::as_polars_df(iris)$lazy()
 #'
 #' # this will return 30 rows
 #' fetch(dat_lazy, 30)
@@ -31,7 +31,6 @@
 #' dat_lazy |>
 #'   filter(Sepal.Length > 7.0) |>
 #'   fetch(30)
-
 fetch <- function(
     .data,
     n_rows = 500,
@@ -44,8 +43,7 @@ fetch <- function(
     comm_subexpr_elim = TRUE,
     cluster_with_columns = TRUE,
     no_optimization = FALSE,
-    streaming = FALSE
-) {
+    streaming = FALSE) {
   if (!inherits(.data, "RPolarsLazyFrame")) {
     rlang::abort("`fetch()` can only be used on a LazyFrame.")
   }

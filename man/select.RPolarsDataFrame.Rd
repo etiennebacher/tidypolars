@@ -21,7 +21,7 @@ Select columns from a Data/LazyFrame
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 
-pl_iris <- polars::pl$DataFrame(iris)
+pl_iris <- polars::as_polars_df(iris)
 
 select(pl_iris, c("Sepal.Length", "Sepal.Width"))
 select(pl_iris, Sepal.Length, Sepal.Width)

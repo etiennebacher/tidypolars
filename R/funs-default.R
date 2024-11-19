@@ -686,10 +686,10 @@ pl_var <- function(x, na.rm = FALSE, ...) {
 
 pl_which.max <- function(x, ...) {
   check_empty_dots(...)
-  x$arg_max() + 1
+  (x$arg_max() + 1)$first()
 }
 
 pl_which.min <- function(x, ...) {
   check_empty_dots(...)
-  x$arg_min() + 1
+  (x$arg_min() + 1)$first()
 }

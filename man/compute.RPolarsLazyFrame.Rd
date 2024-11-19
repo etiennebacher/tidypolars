@@ -92,7 +92,7 @@ now but will change in 0.8.0 to automatically convert a DataFrame to a
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-dat_lazy <- polars::pl$DataFrame(iris)$lazy()
+dat_lazy <- polars::as_polars_df(iris)$lazy()
 
 compute(dat_lazy)
 

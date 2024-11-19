@@ -7,7 +7,7 @@ test_that("mathematical functions work", {
     value_mix = -2:2,
     value_with_NA = c(-2, -1, NA, 1, 2)
   )
-  test <- pl$DataFrame(test_df)
+  test <- as_polars_df(test_df)
 
   for (i in c(
     "abs",
@@ -57,7 +57,7 @@ test_that("warns if unknown args", {
     value_mix = -2:2,
     value_with_NA = c(-2, -1, NA, 1, 2)
   )
-  test <- pl$DataFrame(test_df)
+  test <- as_polars_df(test_df)
   foo <- test |>
     mutate(x = sample(x2)) |>
     pull(x)
@@ -79,7 +79,7 @@ test_that("diff() works", {
     value_mix = -2:2,
     value_with_NA = c(-2, -1, NA, 1, 2)
   )
-  test <- pl$DataFrame(test_df)
+  test <- as_polars_df(test_df)
   expect_equal(
     test |>
       summarize(foo = diff(value)) |>
@@ -115,7 +115,7 @@ test_that("%% and %/% work", {
     value_mix = -2:2,
     value_with_NA = c(-2, -1, NA, 1, 2)
   )
-  test <- pl$DataFrame(test_df)
+  test <- as_polars_df(test_df)
 
   expect_equal(
     test |>
@@ -145,7 +145,7 @@ test_that("ensure na.rm works fine", {
     value_mix = -2:2,
     value_with_NA = c(-2, -1, NA, 1, 2)
   )
-  test <- pl$DataFrame(test_df)
+  test <- as_polars_df(test_df)
 
   for (i in c("max", "mean", "median", "min", "sd", "sum", "var")) {
     for (remove_na in c(TRUE, FALSE)) {

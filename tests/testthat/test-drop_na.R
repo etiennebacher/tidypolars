@@ -2,7 +2,7 @@ test_that("basic behavior works", {
   tmp <- mtcars
   tmp[1:3, "mpg"] <- NA
   tmp[4, "hp"] <- NA
-  pl_tmp <- polars::pl$DataFrame(tmp)
+  pl_tmp <- as_polars_df(tmp)
 
   expect_is_tidypolars(drop_na(pl_tmp, drat))
 
@@ -33,7 +33,7 @@ test_that("basic behavior works", {
 })
 
 test_that("error if variable doesn't exist", {
-  pl_tmp <- polars::pl$DataFrame(mtcars)
+  pl_tmp <- polars::as_polars_df(mtcars)
   expect_snapshot(
     drop_na(pl_tmp, foo),
     error = TRUE

@@ -1,6 +1,6 @@
 test_that("basic behavior works", {
-  pl_iris <- pl$DataFrame(iris)
-  pl_iris_lazy <- pl$LazyFrame(iris)
+  pl_iris <- as_polars_df(iris)
+  pl_iris_lazy <- as_polars_lf(iris)
 
   expect_is_tidypolars(compute(pl_iris_lazy))
 
@@ -33,10 +33,9 @@ test_that("basic behavior works", {
 })
 
 test_that("can't collect non-LazyFrame object", {
-  pl_iris <- pl$DataFrame(iris)
+  pl_iris <- as_polars_df(iris)
   expect_snapshot(
     compute(pl_iris),
     error = TRUE
   )
 })
-

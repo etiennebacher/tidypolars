@@ -1,6 +1,6 @@
 # TODO: not sure that is useful
 # test_that("internally, expressions are correctly split in pools", {
-#   pl_iris <- pl$DataFrame(iris)
+#   pl_iris <- as_polars_df(iris)
 
 #   expect_equal(
 #     translate_dots(
@@ -62,7 +62,7 @@
 # })
 
 test_that("error messages when error in known function is good", {
-  pl_iris <- pl$DataFrame(iris)
+  pl_iris <- as_polars_df(iris)
   expect_snapshot(
     pl_iris |> mutate(foo = min_rank()),
     error = TRUE

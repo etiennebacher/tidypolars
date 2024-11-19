@@ -30,7 +30,7 @@ Count the observations in each group
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-test <- polars::pl$DataFrame(mtcars)
+test <- polars::as_polars_df(mtcars)
 count(test, cyl)
 
 count(test, cyl, am)

@@ -1,7 +1,7 @@
 test_that("group_by() works without any variable", {
   expect_equal(
-    pl$DataFrame(mtcars) |> group_by(),
-    pl$DataFrame(mtcars)
+    as_polars_df(mtcars) |> group_by(),
+    as_polars_df(mtcars)
   )
 })
 
@@ -22,7 +22,7 @@ test_that("works with ungrouped data", {
 })
 
 test_that("works with grouped data", {
-  test2 <- pl$DataFrame(mtcars) |>
+  test2 <- as_polars_df(mtcars) |>
     group_by(cyl, am)
 
   expect_equal(
@@ -38,7 +38,7 @@ test_that("works with grouped data", {
 
 test_that("argument .add works", {
   expect_equal(
-    pl$DataFrame(mtcars) |>
+    as_polars_df(mtcars) |>
       group_by(cyl, am) |>
       group_by(vs) |>
       group_vars(),
@@ -46,7 +46,7 @@ test_that("argument .add works", {
   )
 
   expect_equal(
-    pl$DataFrame(mtcars) |>
+    as_polars_df(mtcars) |>
       group_by(cyl, am) |>
       group_by(vs, .add = TRUE) |>
       group_vars(),
@@ -54,7 +54,7 @@ test_that("argument .add works", {
   )
 
   expect_equal(
-    pl$DataFrame(mtcars) |>
+    as_polars_df(mtcars) |>
       group_by(cyl, am) |>
       group_by(cyl, .add = TRUE) |>
       group_vars(),
