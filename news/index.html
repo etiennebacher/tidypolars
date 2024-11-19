@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,9 +34,23 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/etiennebacher/tidypolars/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/etiennebacher/tidypolars/blob/v0.12.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.12.0" id="tidypolars-0120">tidypolars 0.12.0<a class="anchor" aria-label="anchor" href="#tidypolars-0120"></a></h2>
+<p><code>tidypolars</code> requires <code>polars</code> &gt;= 0.21.0.</p>
+<div class="section level3">
+<h3 id="breaking-changes-0-12-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-12-0"></a></h3>
+<ul><li>
+<code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> now drops the last group of the output by default (for consistency with <code>dplyr</code>). Previously it kept the same groups as in the input data (<a href="https://github.com/etiennebacher/tidypolars/issues/149" class="external-link">#149</a>).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-0-12-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-12-0"></a></h3>
+<ul><li><p>Add support for argument <code>.groups</code> in <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code>. Value <code>"rowwise"</code> is not supported for now (<a href="https://github.com/etiennebacher/tidypolars/issues/149" class="external-link">#149</a>).</p></li>
+<li><p>Added support for <code><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">dplyr::lead()</a></code>. In <code><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">dplyr::lead()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">dplyr::lag()</a></code>, the arguments <code>default</code> and <code>order_by</code> are now supported (<a href="https://github.com/etiennebacher/tidypolars/issues/151" class="external-link">#151</a>).</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.11.0" id="tidypolars-0110">tidypolars 0.11.0<a class="anchor" aria-label="anchor" href="#tidypolars-0110"></a></h2>
 <p><code>tidypolars</code> requires <code>polars</code> &gt;= 0.20.0.</p>
