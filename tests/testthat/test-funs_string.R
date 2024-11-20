@@ -1102,3 +1102,91 @@ test_that("trunc functions work", {
     "must be either"
   )
 })
+
+
+# str_replace_na ---------------------------------------------------------
+test_that("stringr::str_replace_na works", {
+  test_df <- data.frame(
+    generic = c(NA, "abc", "def"),
+    logical = c(NA, TRUE, FALSE),
+    integer = c(NA_integer_, 2L, 3L),
+    float = c(NA_real_, 2.1, 3.1),
+    character = c(NA_character_, "abc", "def")
+  )
+  test_pl <- as_polars_df(test_df)
+
+  # generic NA
+  expect_equal(
+    test_pl |>
+      mutate(rep = str_replace_na(generic)) |>
+      pull(rep),
+    test_df |>
+      mutate(rep = str_replace_na(generic)) |>
+      pull(rep)
+  )
+  # logical NA
+  # Logical is expected to be different, because `true` is converted to
+  # `"true"` in polars
+  expect_equal(
+    test_pl |>
+      mutate(rep = str_replace_na(logical)) |>
+      pull(rep) |>
+      tolower(),
+    test_df |>
+      mutate(rep = str_replace_na(logical)) |>
+      pull(rep) |>
+      tolower()
+  )
+  # integer NA
+  expect_equal(
+    test_pl |>
+      mutate(rep = str_replace_na(integer)) |>
+      pull(rep),
+    test_df |>
+      mutate(rep = str_replace_na(integer)) |>
+      pull(rep)
+  )
+  # float NA
+  expect_equal(
+    test_pl |>
+      mutate(rep = str_replace_na(float)) |>
+      pull(rep),
+    test_df |>
+      mutate(rep = str_replace_na(float)) |>
+      pull(rep)
+  )
+  # character NA
+  expect_equal(
+    test_pl |>
+      mutate(rep = str_replace_na(character)) |>
+      pull(rep),
+    test_df |>
+      mutate(rep = str_replace_na(character)) |>
+      pull(rep)
+  )
+
+  # arg 'replacement' works
+  expect_equal(
+    test_pl |>
+      mutate(rep = str_replace_na(generic, replacement = "foo")) |>
+      pull(rep),
+    test_df |>
+      mutate(rep = str_replace_na(generic, replacement = "foo")) |>
+      pull(rep)
+  )
+  expect_snapshot(
+    test_pl |>
+      mutate(rep = str_replace_na(generic, replacement = NA)),
+    error = TRUE
+  )
+  expect_snapshot(
+    test_pl |>
+      mutate(rep = str_replace_na(generic, replacement = 1)),
+    error = TRUE
+  )
+  expect_snapshot(
+    test_pl |>
+      mutate(rep = str_replace_na(generic, replacement = c("a", "b"))),
+    error = TRUE
+  )
+})

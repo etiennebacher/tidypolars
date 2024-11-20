@@ -267,6 +267,19 @@ pl_str_split_i_stringr <- function(string, pattern, i, ...) {
   string$str$split(by = pattern, inclusive = FALSE)$list$get(i, null_on_oob = TRUE)
 }
 
+pl_str_replace_na_stringr <- function(string, replacement = "NA", ...) {
+  replacement <- polars_expr_to_r(replacement)
+  if (length(replacement) > 1 || is.na(replacement) || !is.character(replacement)) {
+    abort("`replacement` must be a single string.", call = env_from_dots(...))
+  }
+  string$replace_strict(
+    old = NA,
+    new = replacement,
+    default = string,
+    return_dtype = pl$String
+  )
+}
+
 pl_str_to_lower_stringr <- function(string, ...) {
   check_empty_dots(...)
   string$str$to_lowercase()
