@@ -319,12 +319,11 @@ pl_word_stringr <- function(string, start = 1L, end = start, sep = " ", ...) {
   string$str$split(sep)$list$gather((start:end) - 1L)$list$join(sep)
 }
 
-pl_str_replace_na_stringr <- function(string, replacement = "NA", ...) {
-  check_empty_dots(...)
-  string$str$replace_strict(
+pl_str_replace_na_stringr <- function(string, replacement = "NA") {
+  string$replace_strict(
     old = NA, 
     new = replacement,
-    default = string$str,
+    default = string,
     return_dtype = pl$String
   )
 }

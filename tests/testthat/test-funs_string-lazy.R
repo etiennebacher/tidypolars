@@ -1107,4 +1107,76 @@ test_that("trunc functions work", {
   )
 })
 
+
+# str_replace_na ---------------------------------------------------------
+test_that(
+  "stringr::str_replace_na works",
+  {
+    test_df <-
+      data.frame(
+        generic = c(NA, "abc", "def"),
+        logical = c(NA, TRUE, FALSE),
+        integer = c(NA_integer_, 2L, 3L),
+        float = c(NA_real_, 2.1, 3.1),
+        character = c(NA_character_, "abc", "def")
+      )
+    test_pl <- as_polars_lf(test_df)
+
+    # generic NA
+    generic_pl <-
+      test_pl |>
+      mutate(rep = str_replace_na(generic)) |>
+      pull(rep)
+    generic_df <-
+      test_df |>
+      mutate(rep = str_replace_na(generic)) |>
+      pull(rep)
+    # logical NA
+    logical_pl <-
+      test_pl |>
+      mutate(rep = str_replace_na(logical)) |>
+      pull(rep)
+    logical_df <-
+      test_df |>
+      mutate(rep = str_replace_na(logical)) |>
+      pull(rep)
+    # integer NA
+    integer_pl <-
+      test_pl |>
+      mutate(rep = str_replace_na(integer)) |>
+      pull(rep)
+    integer_df <-
+      test_df |>
+      mutate(rep = str_replace_na(integer)) |>
+      pull(rep)
+    # float NA
+    float_pl <-
+      test_pl |>
+      mutate(rep = str_replace_na(float)) |>
+      pull(rep)
+    float_df <-
+      test_df |>
+      mutate(rep = str_replace_na(float)) |>
+      pull(rep)
+    # character NA
+    character_pl <-
+      test_pl |>
+      mutate(rep = str_replace_na(character)) |>
+      pull(rep)
+    character_df <-
+      test_df |>
+      mutate(rep = str_replace_na(character)) |>
+      pull(rep)
+
+    expect_equal_lazy(generic_pl, generic_df)
+    expect_equal_lazy(integer_pl, integer_df)
+    expect_equal_lazy(float_pl, float_df)
+    expect_equal_lazy(character_pl, character_df)
+    # Logical is expected to be different,
+    # because of the way boolean values are represented in Rust
+    expect_false(identical(logical_pl, logical_df))
+    expect_equal_lazy(tolower(logical_pl), tolower(logical_df))
+  }
+)
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
