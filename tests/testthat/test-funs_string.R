@@ -1179,4 +1179,14 @@ test_that("stringr::str_replace_na works", {
       mutate(rep = str_replace_na(generic, replacement = NA)),
     error = TRUE
   )
+  expect_snapshot(
+    test_pl |>
+      mutate(rep = str_replace_na(generic, replacement = 1)),
+    error = TRUE
+  )
+  expect_snapshot(
+    test_pl |>
+      mutate(rep = str_replace_na(generic, replacement = c("a", "b"))),
+    error = TRUE
+  )
 })

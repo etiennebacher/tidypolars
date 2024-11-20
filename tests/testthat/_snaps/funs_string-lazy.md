@@ -1,7 +1,7 @@
 # stringr::str_replace_na works
 
     Code
-      mutate(test_pl, rep = str_replace_na(generic, replacement = NA))
+      current$collect()
     Condition
       Error in `mutate()`:
       ! Error while running function `str_replace_na()` in Polars.
@@ -10,7 +10,7 @@
 ---
 
     Code
-      mutate(test_pl, rep = str_replace_na(generic, replacement = 1))
+      current$collect()
     Condition
       Error in `mutate()`:
       ! Error while running function `str_replace_na()` in Polars.
@@ -19,7 +19,7 @@
 ---
 
     Code
-      mutate(test_pl, rep = str_replace_na(generic, replacement = c("a", "b")))
+      current$collect()
     Condition
       Error in `mutate()`:
       ! Error while running function `str_replace_na()` in Polars.

@@ -268,8 +268,9 @@ pl_str_split_i_stringr <- function(string, pattern, i, ...) {
 }
 
 pl_str_replace_na_stringr <- function(string, replacement = "NA", ...) {
-  if (is.na(replacement)) {
-    abort("`replacement` must be a single string, not `NA`.", call = env_from_dots(...))
+  replacement <- polars_expr_to_r(replacement)
+  if (length(replacement) > 1 || is.na(replacement) || !is.character(replacement)) {
+    abort("`replacement` must be a single string.", call = env_from_dots(...))
   }
   string$replace_strict(
     old = NA,
