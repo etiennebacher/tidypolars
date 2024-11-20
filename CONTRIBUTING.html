@@ -34,7 +34,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="logo.png" class="logo" alt=""><h1>Contributing to tidypolars</h1>
-      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/tidypolars/blob/v0.12.0/.github/CONTRIBUTING.md" class="external-link"><code>.github/CONTRIBUTING.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/tidypolars/blob/main/.github/CONTRIBUTING.md" class="external-link"><code>.github/CONTRIBUTING.md</code></a></small>
     </div>
 
 <div id="contributing-to-tidypolars" class="section level1">
@@ -121,12 +121,14 @@
 <span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="do">## │ a1  ┆ false       │</span></span>
 <span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="do">## │ dac ┆ true        │</span></span>
 <span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="do">## └─────┴─────────────┘</span></span></code></pre></div>
-<p>Finally, the only thing left to do is to add some tests in the <code>tests/tinytest</code> folder.</p>
+<p>Finally, the only thing left to do is to add some tests in the <code>tests/testthat</code> folder.</p>
 </div>
 <div class="section level3">
 <h3 id="testing-changes">Testing changes<a class="anchor" aria-label="anchor" href="#testing-changes"></a></h3>
-<p><code>tidypolars</code> uses <a href="https://cran.r-project.org/web/packages/tinytest/" class="external-link"><code>tinytest</code></a> for checking that functions have the expected output. If changes affect the behavior of some functions (for example when adding an extra argument), add some tests in the related file in <code>tests/tinytest</code>.</p>
-<p>Note that you only need to edit the file with <code>test_&lt;function name&gt;.R</code>. Files ending with <code>_lazy.R</code> are automatically generated. Use <code>devtools::load_all()</code> and <code>test_all_tidypolars()</code> to run the test suite.</p>
+<p><code>tidypolars</code> uses <a href="https://cran.r-project.org/web/packages/testthat/" class="external-link"><code>testthat</code></a> to check that functions have the expected output. If changes affect the behavior of some functions (for example when adding an extra argument), add some tests in the related file in <code>tests/testthat</code>.</p>
+<p><code>tidyverse</code> functions that apply to an entire dataframe (e.g., <code>drop_na()</code>) have their own test file (<code>test-drop_na.R</code> in this case).</p>
+<p>Functions that apply to one or multiple vectors only (i.e. functions that are used in <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code>, etc.) are tested in specific files. If you added a function in <code>R/funs-string.R</code>, then you should add tests in <code>tests/testthat/test-funs_string.R</code> (same for datetime functions, etc.).</p>
+<p>No matter the type of function you added or modified, you should only write tests on Polars DataFrames. Those will be automatically modified when running the tests to run on LazyFrames as well (for instance, the file <code>test-drop_na-lazy.R</code> will be automatically generated).</p>
 </div>
 </div>
 </div>
