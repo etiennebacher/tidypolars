@@ -1105,72 +1105,73 @@ test_that("trunc functions work", {
 
 
 # str_replace_na ---------------------------------------------------------
-test_that(
-  "stringr::str_replace_na works",
-  {
-    test_df <-
-      data.frame(
-        generic = c(NA, "abc", "def"),
-        logical = c(NA, TRUE, FALSE),
-        integer = c(NA_integer_, 2L, 3L),
-        float = c(NA_real_, 2.1, 3.1),
-        character = c(NA_character_, "abc", "def")
-      )
-    test_pl <- as_polars_df(test_df)
+test_that("stringr::str_replace_na works", {
+  test_df <- data.frame(
+    generic = c(NA, "abc", "def"),
+    logical = c(NA, TRUE, FALSE),
+    integer = c(NA_integer_, 2L, 3L),
+    float = c(NA_real_, 2.1, 3.1),
+    character = c(NA_character_, "abc", "def")
+  )
+  test_pl <- as_polars_df(test_df)
 
-    # generic NA
-    generic_pl <-
-      test_pl |>
+  # generic NA
+  expect_equal(
+    test_pl |>
+      mutate(rep = str_replace_na(generic)) |>
+      pull(rep),
+    test_df |>
       mutate(rep = str_replace_na(generic)) |>
       pull(rep)
-    generic_df <-
-      test_df |>
-      mutate(rep = str_replace_na(generic)) |>
-      pull(rep)
-    # logical NA
-    logical_pl <-
-      test_pl |>
+  )
+  # logical NA
+  # Logical is expected to be different, because `true` is converted to
+  # `"true"` in polars
+  expect_equal(
+    test_pl |>
       mutate(rep = str_replace_na(logical)) |>
-      pull(rep)
-    logical_df <-
-      test_df |>
+      pull(rep) |>
+      tolower(),
+    test_df |>
       mutate(rep = str_replace_na(logical)) |>
-      pull(rep)
-    # integer NA
-    integer_pl <-
-      test_pl |>
+      pull(rep) |>
+      tolower()
+  )
+  # integer NA
+  expect_equal(
+    test_pl |>
+      mutate(rep = str_replace_na(integer)) |>
+      pull(rep),
+    test_df |>
       mutate(rep = str_replace_na(integer)) |>
       pull(rep)
-    integer_df <-
-      test_df |>
-      mutate(rep = str_replace_na(integer)) |>
-      pull(rep)
-    # float NA
-    float_pl <-
-      test_pl |>
+  )
+  # float NA
+  expect_equal(
+    test_pl |>
+      mutate(rep = str_replace_na(float)) |>
+      pull(rep),
+    test_df |>
       mutate(rep = str_replace_na(float)) |>
       pull(rep)
-    float_df <-
-      test_df |>
-      mutate(rep = str_replace_na(float)) |>
-      pull(rep)
-    # character NA
-    character_pl <-
-      test_pl |>
+  )
+  # character NA
+  expect_equal(
+    test_pl |>
+      mutate(rep = str_replace_na(character)) |>
+      pull(rep),
+    test_df |>
       mutate(rep = str_replace_na(character)) |>
       pull(rep)
-    character_df <-
-      test_df |>
-      mutate(rep = str_replace_na(character)) |>
-      pull(rep)
+  )
 
-    expect_equal(generic_pl, generic_df)
-    expect_equal(integer_pl, integer_df)
-    expect_equal(float_pl, float_df)
-    expect_equal(character_pl, character_df)
-    # Logical is expected to be different,
-    # because of the way boolean values are represented in Rust
-    expect_false(identical(logical_pl, logical_df))
-    expect_equal(tolower(logical_pl), tolower(logical_df))
-  }
-)
+  # arg 'replacement' works
+  expect_equal(
+    test_pl |>
+      mutate(rep = str_replace_na(generic, replacement = "foo")) |>
+      pull(rep),
+    test_df |>
+      mutate(rep = str_replace_na(generic, replacement = "foo")) |>
+      pull(rep)
+  )
+})
