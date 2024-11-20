@@ -1,3 +1,9 @@
+# tidypolars (development version)
+
+## New features
+
+* Added support for `stringr::str_replace_na()` (#153).
+
 # tidypolars 0.12.0
 
 `tidypolars` requires `polars` >= 0.21.0.
@@ -16,7 +22,6 @@
 * Added support for `dplyr::lead()`. In `dplyr::lead()` and `dplyr::lag()`, the 
   arguments `default` and `order_by` are now supported (#151).
 
-* Added support for `stringr::str_replace_na()` (#153)
 
 # tidypolars 0.11.0
 
