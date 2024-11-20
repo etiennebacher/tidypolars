@@ -103,7 +103,7 @@ Once we add support for the `negate` argument, this is what it will look
 like:
 
 ``` r
-pl_str_ends <- function(string, pattern, negate = FALSE, ...) {
+pl_str_ends_stringr <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
   out <- string$str$ends_with(pattern)
   if (isTRUE(negate)) {
@@ -113,6 +113,11 @@ pl_str_ends <- function(string, pattern, negate = FALSE, ...) {
   }
 }
 ```
+
+You can notice that the new function must be named as 
+`pl_<function_name>_<package_name>`. This is because multiple packages can
+export functions with the same name (for example `data.table::between()` and
+`dplyr::between()`).
 
 The `check_empty_dots(...)` is here to grab all additional arguments
 that `stringr::str_ends()` might have and ignore them because they have
