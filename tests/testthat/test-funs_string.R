@@ -1102,3 +1102,25 @@ test_that("trunc functions work", {
     "must be either"
   )
 })
+
+test_that(
+  "str_replace_na from stringr works", {
+  test_df <- 
+    data.frame(x = c(NA, "abc", "def"), y = c(NA, 2, 3))
+  test_pl <- 
+    as_polars_df(test_df)
+  
+  # FIXME: stringr::str_replace_na doesn't work
+  tidypolars_res <- 
+    test_pl |> 
+    mutate(foo = str_replace_na(y, replacement = "BBB"))
+    
+  polars_res <- 
+    test_pl$with_columns(
+      foo = pl$col("x")$replace_strict(
+        old = NA, new = "BBB", default = pl$col("x"), return_dtype = pl$String
+      )
+    )
+  
+  expect_equal(tidypolars_res, polars_res)
+  })
