@@ -117,7 +117,8 @@ pl_str_ends_stringr <- function(string, pattern, negate = FALSE, ...) {
 You can notice that the new function must be named as 
 `pl_<function_name>_<package_name>`. This is because multiple packages can
 export functions with the same name (for example `data.table::between()` and
-`dplyr::between()`).
+`dplyr::between()`). Therefore, we want to ensure that our translation is called 
+only if the function comes from a specific package.
 
 The `check_empty_dots(...)` is here to grab all additional arguments
 that `stringr::str_ends()` might have and ignore them because they have
