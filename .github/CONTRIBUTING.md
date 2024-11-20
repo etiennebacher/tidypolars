@@ -141,17 +141,25 @@ test_pl |>
     ## └─────┴─────────────┘
 
 Finally, the only thing left to do is to add some tests in the
-`tests/tinytest` folder.
+`tests/testthat` folder.
 
 ### Testing changes
 
 `tidypolars` uses
-[`tinytest`](https://cran.r-project.org/web/packages/tinytest/) for
-checking that functions have the expected output. If changes affect the
+[`testthat`](https://cran.r-project.org/web/packages/testthat/) to
+check that functions have the expected output. If changes affect the
 behavior of some functions (for example when adding an extra argument),
-add some tests in the related file in `tests/tinytest`.
+add some tests in the related file in `tests/testthat`.
 
-Note that you only need to edit the file with `test_<function name>.R`.
-Files ending with `_lazy.R` are automatically generated. Use
-`devtools::load_all()` and `test_all_tidypolars()` to run the test
-suite.
+`tidyverse` functions that apply to an entire dataframe (e.g., `drop_na()`) have
+their own test file (`test-drop_na.R` in this case). 
+
+Functions that apply to one or multiple vectors only (i.e. functions that are
+used in `mutate()`, `summarize()`, etc.) are tested in specific files. If you
+added a function in `R/funs-string.R`, then you should add tests in 
+`tests/testthat/test-funs_string.R` (same for datetime functions, etc.).
+
+No matter the type of function you added or modified, you should only write
+tests on Polars DataFrames. Those will be automatically modified when running 
+the tests to run on LazyFrames as well (for instance, the file 
+`test-drop_na-lazy.R` will be automatically generated). 
