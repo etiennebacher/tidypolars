@@ -1,0 +1,49 @@
+name: check-spelling
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  check-spelling:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
+        with:
+          pandoc-version: "latest"
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          pak-version: devel
+          upgrade: "TRUE"
+          cache-version: 2
+          dependencies: '"hard"'
+          extra-packages: |
+            any::rcmdcheck
+            any::rlang
+            any::spelling
+
+      - name: Spell check
+        run: |
+          options(crayon.enabled = TRUE)
+          spelling_mistakes <- spelling::spell_check_package()
+          cli::cli_rule()
+          if (length(spelling_mistakes$word) > 0L) {
+            print(spelling_mistakes)
+            cli::cli_abort("Spelling errors found. Either correct them or update `inst/WORDLIST` using `spelling::update_wordlist()`.")
+          } else {
+            cli::cli_alert_success("No spelling errors found.")
+          }
+          cli::cli_rule()
+        shell: Rscript {0}
