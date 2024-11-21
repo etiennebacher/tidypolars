@@ -183,15 +183,15 @@ pl_ISOdatetime <- function(
 #   x$dt$strftime()
 # }
 
-# pl_strptime <- function(string, format, tz = "", strict = TRUE, ...) {
-#   check_empty_dots(...)
-#   if (grepl("%(I|H|c|T|M|p|r|R|S|X|z)", format)) {
-#     dtype <- pl$Datetime("us", tz = tz)
-#   } else {
-#     dtype <- pl$Date
-#   }
-#   string$str$strptime(dtype = dtype, format = format, strict = strict)
-# }
+pl_strptime <- function(string, format, tz = "", strict = TRUE, ...) {
+  check_empty_dots(...)
+  if (grepl("%(I|H|c|T|M|p|r|R|S|X|z)", format)) {
+    dtype <- pl$Datetime("us", tz = tz)
+  } else {
+    dtype <- pl$Date
+  }
+  string$str$strptime(dtype = dtype, format = format, strict = strict)
+}
 
 # pl_timestamp <- function(x, ...) {
 #   check_empty_dots(...)
