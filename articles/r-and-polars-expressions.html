@@ -615,40 +615,45 @@ return a Polars expression:</p>
 </tr>
 <tr class="even">
 <td align="left"><code>lubridate</code></td>
-<td align="left"><code>ddays</code></td>
+<td align="left"><code>day</code></td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left"><code>lubridate</code></td>
+<td align="left"><code>ddays</code></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>dhours</code></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>dmilliseconds</code></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>dminutes</code></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>dseconds</code></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>dweeks</code></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>make_date</code></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>make_datetime</code></td>
 <td align="left">In <code><a href="https://lubridate.tidyverse.org/reference/make_datetime.html" class="external-link">lubridate::make_datetime()</a></code>, when there
@@ -656,12 +661,37 @@ is an overflow (for example <code>hours = 25</code>), then it is
 automatically converted to the higher unit (for example 1 day and 1h).
 In Polars, this returns <code>NA</code>.</td>
 </tr>
+<tr class="odd">
+<td align="left"><code>lubridate</code></td>
+<td align="left"><code>mday</code></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><code>lubridate</code></td>
+<td align="left"><code>month</code></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>lubridate</code></td>
+<td align="left"><code>quarter</code></td>
+<td align="left"></td>
+</tr>
 <tr class="even">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>wday</code></td>
 <td align="left">Requires <code>week_start == 7</code>. If
 <code>label = TRUE</code>, it returns a string variable and not a factor
 as in <code>lubridate</code>.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>lubridate</code></td>
+<td align="left"><code>yday</code></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><code>lubridate</code></td>
+<td align="left"><code>year</code></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left"><code>stats</code></td>
