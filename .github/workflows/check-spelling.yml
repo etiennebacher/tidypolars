@@ -1,0 +1,36 @@
+name: check-spelling
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-spelling:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+          
+      - name: Spell check
+        run: |
+          install.packages(c("spelling", "cli"))
+          options(crayon.enabled = TRUE)
+          spelling_mistakes <- spelling::spell_check_package()
+          cli::cli_rule()
+          if (length(spelling_mistakes$word) > 0L) {
+            print(spelling_mistakes)
+            cli::cli_abort("Spelling errors found. Either correct them or update `inst/WORDLIST` using `spelling::update_wordlist()`.")
+          } else {
+            cli::cli_alert_success("No spelling errors found.")
+          }
+          cli::cli_rule()
+        shell: Rscript {0}

@@ -17,7 +17,7 @@
 #'   `int64` values will depend on the options set in `polars`. Use
 #'   `options(polars.int64_conversion =)` to specify how int64 variables should
 #'   be handled. See the [documentation in
-#'   `polars`](https://rpolars.github.io/man/polars_options.html#details) for
+#'   `polars`](https://pola-rs.github.io/r-polars/man/polars_options.html) for
 #'   the possible options.
 #'
 #' @export
@@ -29,8 +29,7 @@
 as_tibble.tidypolars <- function(
     x,
     int64_conversion = polars::polars_options()$int64_conversion,
-    ...
-  ) {
+    ...) {
   dplyr::as_tibble(as.data.frame(x, int64_conversion = int64_conversion, ...))
 }
 
