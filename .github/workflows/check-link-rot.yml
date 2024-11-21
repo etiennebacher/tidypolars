@@ -29,7 +29,7 @@ jobs:
 
       - name: Run URL checker
         run: |
-          install.packages("urlchecker", "cli")
+          install.packages(c("urlchecker", "cli"))
           options(crayon.enabled = TRUE)
           rotten_links <- urlchecker::url_check(progress = FALSE)
           print(rotten_links)

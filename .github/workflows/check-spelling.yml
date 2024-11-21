@@ -25,7 +25,7 @@ jobs:
           
       - name: Spell check
         run: |
-          install.packages("spelling", "cli")
+          install.packages(c("spelling", "cli"))
           options(crayon.enabled = TRUE)
           spelling_mistakes <- spelling::spell_check_package()
           cli::cli_rule()
