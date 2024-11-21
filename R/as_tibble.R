@@ -17,7 +17,7 @@
 #'   `int64` values will depend on the options set in `polars`. Use
 #'   `options(polars.int64_conversion =)` to specify how int64 variables should
 #'   be handled. See the [documentation in
-#'   `polars`](https://rpolars.github.io/man/polars_options.html) for
+#'   `polars`](https://pola-rs.github.io/r-polars/man/polars_options.html) for
 #'   the possible options.
 #'
 #' @export
