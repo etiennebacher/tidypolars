@@ -14,11 +14,6 @@ jobs:
   html-5-check:
     runs-on: ubuntu-latest
 
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      R_KEEP_PKG_SOURCE: yes
-      #_R_CHECK_RD_VALIDATE_RD2HTML_: true
-
     steps:
       - uses: actions/checkout@v4
 
