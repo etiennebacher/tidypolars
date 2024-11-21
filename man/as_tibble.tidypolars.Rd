@@ -27,7 +27,7 @@ in R (the package \code{bit64} helps with that).
 Since \code{tidypolars} is simply a wrapper around \code{polars}, the behavior of
 \code{int64} values will depend on the options set in \code{polars}. Use
 \code{options(polars.int64_conversion =)} to specify how int64 variables should
-be handled. See the \href{https://rpolars.github.io/man/polars_options.html#details}{documentation in \code{polars}} for
+be handled. See the \href{https://rpolars.github.io/man/polars_options.html}{documentation in \code{polars}} for
 the possible options.
 }
 
