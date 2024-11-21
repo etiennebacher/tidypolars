@@ -133,8 +133,7 @@ pl_make_datetime_lubridate <- function(
     hour = 0,
     min = 0,
     sec = 0,
-    tz = "UTC"
-) {
+    tz = "UTC") {
   pl$datetime(
     year = year,
     month = month,
@@ -153,8 +152,7 @@ pl_ISOdatetime <- function(
     hour = 0,
     min = 0,
     sec = 0,
-    tz = ""
-) {
+    tz = "") {
   if (tz == "") {
     tz <- Sys.timezone()
   }
@@ -180,56 +178,10 @@ pl_ISOdatetime <- function(
 
 # OLD IMPLEMENTATIONS
 
-pl_hours_lubridate <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$hours()
-}
-
-pl_microsecond_lubridate <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$microsecond()
-}
-
-pl_microseconds_lubridate <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$microseconds()
-}
-
-pl_millisecond_lubridate <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$millisecond()
-}
-
-pl_milliseconds_lubridate <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$milliseconds()
-}
-
-pl_minutes_lubridate <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$minutes()
-}
-
-
-pl_nanosecond_lubridate <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$nanosecond()
-}
-
-pl_nanoseconds_lubridate <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$nanoseconds()
-}
-
-pl_seconds_lubridate <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$seconds()
-}
-
-pl_strftime <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$strftime()
-}
+# pl_strftime <- function(x, ...) {
+#   check_empty_dots(...)
+#   x$dt$strftime()
+# }
 
 pl_strptime <- function(string, format, tz = "", strict = TRUE, ...) {
   check_empty_dots(...)
@@ -241,20 +193,20 @@ pl_strptime <- function(string, format, tz = "", strict = TRUE, ...) {
   string$str$strptime(dtype = dtype, format = format, strict = strict)
 }
 
-pl_timestamp <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$timestamp()
-}
+# pl_timestamp <- function(x, ...) {
+#   check_empty_dots(...)
+#   x$dt$timestamp()
+# }
 
-pl_truncate <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$truncate()
-}
+# pl_truncate <- function(x, ...) {
+#   check_empty_dots(...)
+#   x$dt$truncate()
+# }
 
-pl_tz_localize <- function(x, ...) {
-  check_empty_dots(...)
-  x$dt$tz_localize()
-}
+# pl_tz_localize <- function(x, ...) {
+#   check_empty_dots(...)
+#   x$dt$tz_localize()
+# }
 
 
 # TODO: check the day of weekstart (lubridate starts the
@@ -264,8 +216,7 @@ pl_wday_lubridate <- function(
     label = FALSE,
     abbr = TRUE,
     week_start = getOption("lubridate.week.start", 7),
-    ...
-) {
+    ...) {
   check_empty_dots(...)
   env <- env_from_dots(...)
   if (week_start != 7) {
