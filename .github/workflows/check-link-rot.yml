@@ -26,22 +26,10 @@ jobs:
       - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
-          extra-repositories: 'https://community.r-multiverse.org' 
-        env:
-          NOT_CRAN: true
-
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          pak-version: devel
-          upgrade: "TRUE"
-          cache-version: 2
-          dependencies: '"hard"'
-          extra-packages: |
-            any::rcmdcheck
-            r-lib/urlchecker
 
       - name: Run URL checker
         run: |
+          install.packages("urlchecker", "cli")
           options(crayon.enabled = TRUE)
           rotten_links <- urlchecker::url_check(progress = FALSE)
           print(rotten_links)
