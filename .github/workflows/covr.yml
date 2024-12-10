@@ -5,8 +5,22 @@ name: covr
 on:
   push:
     branches: [main, master]
+    paths:
+      - .Rbuildignore
+      - R/**
+      - tests/**
+      - vignettes/*
+      - DESCRIPTION
+      - NAMESPACE
   pull_request:
     branches: [main, master]
+    paths:
+      - .Rbuildignore
+      - R/**
+      - tests/**
+      - vignettes/*
+      - DESCRIPTION
+      - NAMESPACE
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
