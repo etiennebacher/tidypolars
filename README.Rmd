@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 # tidypolars <a href="https://tidypolars.etiennebacher.com/"><img src="man/figures/logo.png" align="right" height="160" /></a>
 
 <!-- badges: start -->
-[![check](https://github.com/etiennebacher/tidypolars/actions/workflows/check.yml/badge.svg)](https://github.com/etiennebacher/tidypolars/actions/workflows/check.yml)
+[![R-CMD-check](https://github.com/etiennebacher/tidypolars/actions/workflows/R-CMD-check.yml/badge.svg)](https://github.com/etiennebacher/tidypolars/actions/workflows/R-CMD-check.yml)
 [![tidypolars status badge](https://etiennebacher.r-universe.dev/badges/tidypolars)](https://etiennebacher.r-universe.dev/tidypolars)
 [![Codecov test coverage](https://codecov.io/gh/etiennebacher/tidypolars/branch/main/graph/badge.svg)](https://app.codecov.io/gh/etiennebacher/tidypolars?branch=main)
 <!-- badges: end -->

@@ -3,7 +3,7 @@
 
 <!-- badges: start -->
 
-[![check](https://github.com/etiennebacher/tidypolars/actions/workflows/check.yml/badge.svg)](https://github.com/etiennebacher/tidypolars/actions/workflows/check.yml)
+[![R-CMD-check](https://github.com/etiennebacher/tidypolars/actions/workflows/R-CMD-check.yml/badge.svg)](https://github.com/etiennebacher/tidypolars/actions/workflows/R-CMD-check.yml)
 [![tidypolars status
 badge](https://etiennebacher.r-universe.dev/badges/tidypolars)](https://etiennebacher.r-universe.dev/tidypolars)
 [![Codecov test
@@ -119,11 +119,11 @@ bench::mark(
 #> # A tibble: 5 × 6
 #>   expression      min   median `itr/sec` mem_alloc
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>
-#> 1 polars     260.22ms 317.05ms     3.03     19.2KB
-#> 2 tidypolars 305.11ms 362.84ms     2.21   157.66KB
-#> 3 dplyr         2.85s    3.19s     0.290    1.79GB
-#> 4 dtplyr        1.36s    2.53s     0.416    1.72GB
-#> 5 collapse   662.73ms 825.88ms     1.21   745.96MB
+#> 1 polars     277.93ms 304.59ms     3.17     1.99MB
+#> 2 tidypolars 286.78ms 362.65ms     2.35      1.2MB
+#> 3 dplyr         3.16s    3.63s     0.257    1.79GB
+#> 4 dtplyr        1.58s    1.92s     0.461    1.72GB
+#> 5 collapse   702.79ms 948.19ms     0.987  745.96MB
 #> # ℹ 1 more variable: `gc/sec` <dbl>
 
 # NOTE: do NOT take the "mem_alloc" results into account.
