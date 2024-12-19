@@ -28,7 +28,7 @@
       slice_sample(pl_mtcars, weight_by = cyl > 5, n = 5)
     Condition
       Error in `slice_sample()`:
-      ! Argument weight_by is not supported by tidypolars yet.
+      ! Argument `weight_by` is not supported by tidypolars yet.
 
 ---
 

@@ -16,7 +16,7 @@
 
 \method{slice_head}{RPolarsLazyFrame}(.data, ..., n, by = NULL)
 
-\method{slice_sample}{RPolarsDataFrame}(.data, ..., n = NULL, prop = NULL, replace = FALSE, by = NULL)
+\method{slice_sample}{RPolarsDataFrame}(.data, ..., n = NULL, prop = NULL, by = NULL, replace = FALSE)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}

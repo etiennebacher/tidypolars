@@ -115,7 +115,7 @@ check_unsupported_arg <- function(arg_name, ...) {
   dots <- enquos(...)
   if (arg_name %in% names(dots)) {
     abort(
-      paste("Argument", arg_name, "is not supported by tidypolars yet."),
+      paste0("Argument `", arg_name, "` is not supported by tidypolars yet."),
       call = caller_env()
     )
   }
