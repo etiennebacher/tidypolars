@@ -70,3 +70,11 @@ test_that("argument names_prefix works", {
     error = TRUE
   )
 })
+
+test_that("dots must be empty", {
+  pl_billboard <- as_polars_df(tidyr::billboard)
+
+  expect_error(
+    pivot_longer(pl_billboard, foo = TRUE)
+  )
+})

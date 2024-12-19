@@ -38,7 +38,7 @@ Finally, \code{inner_join()} also supports inequality joins, e.g.
 information. Other join types will likely support inequality joins in the
 future.}
 
-\item{...}{Not used.}
+\item{...}{Dots which should be empty.}
 
 \item{na_matches}{Should two \code{NA} values match?
 \itemize{

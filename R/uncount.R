@@ -5,7 +5,7 @@
 #'
 #' @param data A Polars Data/LazyFrame
 #' @param weights A vector of weights. Evaluated in the context of `data`.
-#' @param ... Not used.
+#' @inheritParams rlang::check_dots_empty0
 #' @param .remove If `TRUE`, and weights is the name of a column in data, then
 #' this column is removed.
 #' @param .id Supply a string to create a new variable which gives a unique
@@ -25,9 +25,8 @@
 #'
 #' # using expressions
 #' uncount(test, 2 / n)
-
 uncount.RPolarsDataFrame <- function(data, weights, ..., .remove = TRUE, .id = NULL) {
-
+  check_dots_empty()
   weights_quo <- enquo(weights)
   repeat_expr <- translate_expr(data, weights_quo, new_vars = NULL, env = rlang::current_env())
 

@@ -16,7 +16,7 @@
 these suffixes will be added to the output to disambiguate them. Should be a
 character vector of length 2.}
 
-\item{...}{Not used.}
+\item{...}{Dots which should be empty.}
 }
 \description{
 Cross joins match each row in \code{x} to every row in \code{y}, resulting in a dataset

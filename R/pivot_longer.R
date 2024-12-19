@@ -9,7 +9,7 @@
 #'  the start of each variable name.
 #' @param values_to A string specifying the name of the column to create from the
 #'  data stored in cell values.
-#' @inheritParams slice_tail.RPolarsDataFrame
+#' @inheritParams rlang::check_dots_empty0
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -29,11 +29,10 @@
 #'     names_prefix = "wk",
 #'     values_to = "rank",
 #'   )
-
 pivot_longer.RPolarsDataFrame <- function(data, cols, ..., names_to = "name",
-                                   names_prefix = NULL,
-                                   values_to = "value") {
-
+                                          names_prefix = NULL,
+                                          values_to = "value") {
+  check_dots_empty()
   data_names <- names(data)
   on <- tidyselect_named_arg(data, rlang::enquo(cols))
   index <- data_names[!data_names %in% on]
@@ -50,8 +49,8 @@ pivot_longer.RPolarsDataFrame <- function(data, cols, ..., names_to = "name",
     }
     out <- out$
       with_columns(
-        pl$col(names_to)$str$replace(paste0("^", names_prefix), "")
-      )
+      pl$col(names_to)$str$replace(paste0("^", names_prefix), "")
+    )
   }
 
   add_tidypolars_class(out)

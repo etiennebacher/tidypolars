@@ -29,7 +29,7 @@
 \item{cols}{Columns to pivot into longer format. Can be anything accepted by
 \code{dplyr::select()}.}
 
-\item{...}{Not used.}
+\item{...}{Dots which should be empty.}
 
 \item{names_to}{The (quoted) name of the column that will contain the column
 names specified by \code{cols}.}

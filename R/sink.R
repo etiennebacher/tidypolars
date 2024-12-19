@@ -76,9 +76,7 @@
 #'     hp_gear_ratio = hp / gear
 #'   ) |>
 #'   sink_parquet(path = file_parquet)
-#'
 #' }
-
 sink_parquet <- function(
     .data,
     path,
@@ -94,8 +92,8 @@ sink_parquet <- function(
     projection_pushdown = TRUE,
     simplify_expression = TRUE,
     slice_pushdown = TRUE,
-    no_optimization = FALSE
-  ) {
+    no_optimization = FALSE) {
+  check_dots_empty()
 
   if (!inherits(.data, "RPolarsLazyFrame")) {
     rlang::abort("`sink_parquet()` can only be used on a Polars LazyFrame.")
@@ -116,7 +114,6 @@ sink_parquet <- function(
     slice_pushdown = slice_pushdown,
     no_optimization = no_optimization
   )
-
 }
 
 #' Stream output to a CSV file
@@ -179,9 +176,7 @@ sink_parquet <- function(
 #'     hp_gear_ratio = hp / gear
 #'   ) |>
 #'   sink_csv(path = file_csv2)
-#'
 #' }
-
 sink_csv <- function(
     .data,
     path,
@@ -204,9 +199,8 @@ sink_csv <- function(
     projection_pushdown = TRUE,
     simplify_expression = TRUE,
     slice_pushdown = TRUE,
-    no_optimization = FALSE
-) {
-
+    no_optimization = FALSE) {
+  check_dots_empty()
   if (!inherits(.data, "RPolarsLazyFrame")) {
     rlang::abort("`sink_csv()` can only be used on a Polars LazyFrame.")
   }
@@ -235,7 +229,6 @@ sink_csv <- function(
     slice_pushdown = slice_pushdown,
     no_optimization = no_optimization
   )
-
 }
 
 #' Stream output to an IPC file
@@ -267,7 +260,7 @@ sink_ipc <- function(
     simplify_expression = TRUE,
     slice_pushdown = TRUE,
     no_optimization = FALSE) {
-
+  check_dots_empty()
   if (!inherits(.data, "RPolarsLazyFrame")) {
     rlang::abort("`sink_ipc()` can only be used on a Polars LazyFrame.")
   }
@@ -285,7 +278,6 @@ sink_ipc <- function(
     slice_pushdown = slice_pushdown,
     no_optimization = no_optimization
   )
-
 }
 
 #' Stream output to a NDJSON file
@@ -312,7 +304,7 @@ sink_ndjson <- function(
     simplify_expression = TRUE,
     slice_pushdown = TRUE,
     no_optimization = FALSE) {
-
+  check_dots_empty()
   if (!inherits(.data, "RPolarsLazyFrame")) {
     rlang::abort("`sink_ndjson()` can only be used on a Polars LazyFrame.")
   }
@@ -329,4 +321,3 @@ sink_ndjson <- function(
     no_optimization = no_optimization
   )
 }
-
