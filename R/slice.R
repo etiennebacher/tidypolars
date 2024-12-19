@@ -80,7 +80,10 @@ slice_head.RPolarsLazyFrame <- slice_head.RPolarsDataFrame
 #' @rdname slice_tail.RPolarsDataFrame
 #' @export
 
-slice_sample.RPolarsDataFrame <- function(.data, ..., n = NULL, prop = NULL, replace = FALSE, by = NULL) {
+slice_sample.RPolarsDataFrame <- function(.data, ..., n = NULL, prop = NULL, by = NULL, replace = FALSE) {
+  check_unsupported_arg("weight_by", ...)
+  check_dots_empty0(...)
+
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)

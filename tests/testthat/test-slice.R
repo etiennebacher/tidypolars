@@ -211,3 +211,18 @@ test_that("slice_sample works with grouped data", {
     NULL
   )
 })
+
+test_that("slice_sample errors on unknown args", {
+  pl_mtcars <- as_polars_df(mtcars)
+  skip_if_not(inherits(pl_mtcars, "RPolarsDataFrame"))
+  expect_snapshot(
+    pl_mtcars |>
+      slice_sample(weight_by = cyl > 5, n = 5),
+    error = TRUE
+  )
+  expect_snapshot(
+    pl_mtcars |>
+      slice_sample(foo = 1, n = 5),
+    error = TRUE
+  )
+})

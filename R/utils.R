@@ -4,7 +4,7 @@ get_dots <- function(...) {
   eval(substitute(alist(...)))
 }
 
-safe_deparse <- function (x, ...) {
+safe_deparse <- function(x, ...) {
   if (is.null(x)) {
     return(NULL)
   }
@@ -108,5 +108,15 @@ select_by_name_or_position <- function(expr, name, position, default, env) {
     expr[[position]]
   } else {
     default
+  }
+}
+
+check_unsupported_arg <- function(arg_name, ...) {
+  dots <- enquos(...)
+  if (arg_name %in% names(dots)) {
+    abort(
+      paste("Argument", arg_name, "is not supported by tidypolars yet."),
+      call = caller_env()
+    )
   }
 }

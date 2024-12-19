@@ -4,6 +4,11 @@
 
 * Added support for `stringr::str_replace_na()` (#153).
 
+## Bug fixes
+
+* `slice_sample()` now errors when unknown or unsupported arguments are 
+  passed (thanks @fkohrt for the report).
+
 # tidypolars 0.12.0
 
 `tidypolars` requires `polars` >= 0.21.0.

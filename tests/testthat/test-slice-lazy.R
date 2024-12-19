@@ -216,4 +216,19 @@ test_that("slice_sample works with grouped data", {
   )
 })
 
+test_that("slice_sample errors on unknown args", {
+  pl_mtcars <- as_polars_lf(mtcars)
+  skip_if_not(inherits(pl_mtcars, "RPolarsDataFrame"))
+  expect_snapshot_lazy(
+    pl_mtcars |>
+      slice_sample(weight_by = cyl > 5, n = 5),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    pl_mtcars |>
+      slice_sample(foo = 1, n = 5),
+    error = TRUE
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
