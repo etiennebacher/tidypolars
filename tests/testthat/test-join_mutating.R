@@ -293,3 +293,37 @@ test_that("error if two inputs don't have the same class", {
       left_join(test2)
   )
 })
+
+test_that("unsupported args throw warning", {
+  test <- polars::pl$DataFrame(
+    country = c("ALG", "FRA", "GER"),
+    year = c(2020, 2020, 2021)
+  )
+
+  test2 <- polars::pl$DataFrame(
+    country = c("USA", "JPN", "BRA"),
+    language = c("english", "japanese", "portuguese")
+  )
+
+  expect_warning(
+    left_join(test, test2, by = "country", copy = TRUE),
+    "Argument `copy` is not supported by tidypolars"
+  )
+})
+
+test_that("dots must be empty", {
+  test <- polars::pl$DataFrame(
+    country = c("ALG", "FRA", "GER"),
+    year = c(2020, 2020, 2021)
+  )
+
+  test2 <- polars::pl$DataFrame(
+    country = c("USA", "JPN", "BRA"),
+    language = c("english", "japanese", "portuguese")
+  )
+
+  expect_error(
+    left_join(test, test2, by = "country", foo = TRUE),
+    "must be empty"
+  )
+})

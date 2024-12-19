@@ -21,7 +21,7 @@
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
 
-\item{...}{Not used.}
+\item{...}{Dots which should be empty.}
 
 \item{n}{The number of rows to select from the start or the end of the data.
 Cannot be used with \code{prop}.}

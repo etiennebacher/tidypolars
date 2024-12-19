@@ -15,10 +15,8 @@
   x,
   y,
   by = NULL,
-  copy = NULL,
   suffix = c(".x", ".y"),
   ...,
-  keep = NULL,
   na_matches = "na",
   relationship = NULL
 )
@@ -27,10 +25,8 @@
   x,
   y,
   by = NULL,
-  copy = NULL,
   suffix = c(".x", ".y"),
   ...,
-  keep = NULL,
   na_matches = "na",
   relationship = NULL
 )
@@ -39,10 +35,8 @@
   x,
   y,
   by = NULL,
-  copy = NULL,
   suffix = c(".x", ".y"),
   ...,
-  keep = NULL,
   na_matches = "na",
   relationship = NULL
 )
@@ -51,10 +45,8 @@
   x,
   y,
   by = NULL,
-  copy = NULL,
   suffix = c(".x", ".y"),
   ...,
-  keep = NULL,
   na_matches = "na",
   relationship = NULL
 )
@@ -63,10 +55,8 @@
   x,
   y,
   by = NULL,
-  copy = NULL,
   suffix = c(".x", ".y"),
   ...,
-  keep = NULL,
   na_matches = "na",
   relationship = NULL
 )
@@ -75,10 +65,8 @@
   x,
   y,
   by = NULL,
-  copy = NULL,
   suffix = c(".x", ".y"),
   ...,
-  keep = NULL,
   na_matches = "na",
   relationship = NULL
 )
@@ -87,10 +75,8 @@
   x,
   y,
   by = NULL,
-  copy = NULL,
   suffix = c(".x", ".y"),
   ...,
-  keep = NULL,
   na_matches = "na",
   relationship = NULL
 )
@@ -99,10 +85,8 @@
   x,
   y,
   by = NULL,
-  copy = NULL,
   suffix = c(".x", ".y"),
   ...,
-  keep = NULL,
   na_matches = "na",
   relationship = NULL
 )
@@ -130,13 +114,11 @@ Finally, \code{inner_join()} also supports inequality joins, e.g.
 information. Other join types will likely support inequality joins in the
 future.}
 
-\item{copy, keep}{Not used.}
-
 \item{suffix}{If there are non-joined duplicate variables in \code{x} and \code{y},
 these suffixes will be added to the output to disambiguate them. Should be a
 character vector of length 2.}
 
-\item{...}{Not used.}
+\item{...}{Dots which should be empty.}
 
 \item{na_matches}{Should two \code{NA} values match?
 \itemize{

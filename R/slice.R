@@ -6,7 +6,7 @@
 #' @param by Optionally, a selection of columns to group by for just this
 #'   operation, functioning as an alternative to `group_by()`. The group order
 #'   is not maintained, use `group_by()` if you want more control over it.
-#' @param ... Not used.
+#' @inheritParams rlang::check_dots_empty0
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)

@@ -1,7 +1,7 @@
 #' Pivot a DataFrame from long to wide
 #'
 #' @param data A Polars DataFrame (LazyFrames are not supported).
-#' @param ... Not used.
+#' @inheritParams rlang::check_dots_empty0
 #' @param id_cols A set of columns that uniquely identify each observation.
 #'   Typically used when you have redundant variables, i.e. variables whose
 #'   values are perfectly correlated with existing variables.
@@ -61,7 +61,6 @@
 #'     values_from = production,
 #'     names_glue = "prod_{product}_{country}"
 #'   )
-
 pivot_wider.RPolarsDataFrame <- function(
     data,
     ...,
@@ -71,9 +70,8 @@ pivot_wider.RPolarsDataFrame <- function(
     names_prefix = "",
     names_sep = "_",
     names_glue = NULL,
-    values_fill = NULL
-  ) {
-
+    values_fill = NULL) {
+  check_dots_empty()
   data_names <- names(data)
   value_vars <- tidyselect_named_arg(data, rlang::enquo(values_from))
   names_vars <- tidyselect_named_arg(data, rlang::enquo(names_from))
@@ -110,7 +108,6 @@ pivot_wider.RPolarsDataFrame <- function(
   if (!is.null(names_glue)) {
     final_cols <- glue::glue_data(final_cols, names_glue)
     names_prefix <- NULL
-
   } else if (length(value_vars) > 1 && length(names_vars) == 1) {
     final_cols <- setdiff(names(new_data), data_names)
   } else {

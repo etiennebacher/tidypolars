@@ -3,6 +3,7 @@
 #' Mutating joins add columns from `y` to `x`, matching observations based on
 #' the keys.
 #'
+#' @inheritParams rlang::check_dots_empty0
 #' @param x,y Two Polars Data/LazyFrames
 #' @param by Variables to join by. If `NULL` (default), `*_join()` will
 #' perform a natural join, using all variables in common across `x` and `y`. A
@@ -28,7 +29,6 @@
 #' these suffixes will be added to the output to disambiguate them. Should be a
 #' character vector of length 2.
 #' @inheritParams slice_tail.RPolarsDataFrame
-#' @param copy,keep Not used.
 #' @param na_matches Should two `NA` values match?
 #' * `"na"`, the default, treats two `NA` values as equal.
 #' * `"never"` treats two `NA` values as different and will never match them
@@ -105,10 +105,12 @@
 #'
 #' # A correct expectation would be "one-to-many":
 #' left_join(country, country_year, join_by(iso), relationship = "one-to-many")
-left_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
-                                       suffix = c(".x", ".y"), ..., keep = NULL,
+left_join.RPolarsDataFrame <- function(x, y, by = NULL,
+                                       suffix = c(".x", ".y"), ...,
                                        na_matches = "na", relationship = NULL) {
-  unused_args(copy, keep)
+  check_unsupported_arg("copy", ..., .action = "warn")
+  check_unsupported_arg("keep", ..., .action = "warn")
+  check_dots_empty_ignore(..., .ignore = c("copy", "keep"))
   join_(
     x = x,
     y = y,
@@ -122,10 +124,12 @@ left_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
 
 #' @rdname left_join.RPolarsDataFrame
 #' @export
-right_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
-                                        suffix = c(".x", ".y"), ..., keep = NULL,
+right_join.RPolarsDataFrame <- function(x, y, by = NULL,
+                                        suffix = c(".x", ".y"), ...,
                                         na_matches = "na", relationship = NULL) {
-  unused_args(copy, keep)
+  check_unsupported_arg("copy", ..., .action = "warn")
+  check_unsupported_arg("keep", ..., .action = "warn")
+  check_dots_empty_ignore(..., .ignore = c("copy", "keep"))
   join_(
     x = x,
     y = y,
@@ -139,10 +143,12 @@ right_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
 
 #' @rdname left_join.RPolarsDataFrame
 #' @export
-full_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
-                                       suffix = c(".x", ".y"), ..., keep = NULL,
+full_join.RPolarsDataFrame <- function(x, y, by = NULL,
+                                       suffix = c(".x", ".y"), ...,
                                        na_matches = "na", relationship = NULL) {
-  unused_args(copy, keep)
+  check_unsupported_arg("copy", ..., .action = "warn")
+  check_unsupported_arg("keep", ..., .action = "warn")
+  check_dots_empty_ignore(..., .ignore = c("copy", "keep"))
   join_(
     x = x,
     y = y,
@@ -156,10 +162,12 @@ full_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
 
 #' @rdname left_join.RPolarsDataFrame
 #' @export
-inner_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
-                                        suffix = c(".x", ".y"), ..., keep = NULL,
+inner_join.RPolarsDataFrame <- function(x, y, by = NULL,
+                                        suffix = c(".x", ".y"), ...,
                                         na_matches = "na", relationship = NULL) {
-  unused_args(copy, keep)
+  check_unsupported_arg("copy", ..., .action = "warn")
+  check_unsupported_arg("keep", ..., .action = "warn")
+  check_dots_empty_ignore(..., .ignore = c("copy", "keep"))
   join_(
     x = x,
     y = y,
@@ -221,6 +229,7 @@ inner_join.RPolarsLazyFrame <- inner_join.RPolarsDataFrame
 #' # only keep the rows of `test` that don't have matching keys in `test2`
 #' anti_join(test, test2, by = c("x", "y"))
 semi_join.RPolarsDataFrame <- function(x, y, by = NULL, ..., na_matches = "na") {
+  check_dots_empty()
   join_(
     x = x,
     y = y,
@@ -236,6 +245,7 @@ semi_join.RPolarsDataFrame <- function(x, y, by = NULL, ..., na_matches = "na") 
 #' @export
 
 anti_join.RPolarsDataFrame <- function(x, y, by = NULL, ..., na_matches = "na") {
+  check_dots_empty()
   join_(
     x = x,
     y = y,

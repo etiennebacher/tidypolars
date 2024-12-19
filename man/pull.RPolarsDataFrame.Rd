@@ -14,7 +14,7 @@
 
 \item{var}{A quoted or unquoted variable name, or a variable index.}
 
-\item{...}{Not used.}
+\item{...}{Dots which should be empty.}
 }
 \description{
 This returns an R vector and not a Polars Series.

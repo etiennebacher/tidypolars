@@ -111,12 +111,30 @@ select_by_name_or_position <- function(expr, name, position, default, env) {
   }
 }
 
-check_unsupported_arg <- function(arg_name, ...) {
+check_unsupported_arg <- function(.arg_name, ..., .action = "error") {
   dots <- enquos(...)
-  if (arg_name %in% names(dots)) {
-    abort(
-      paste0("Argument `", arg_name, "` is not supported by tidypolars yet."),
-      call = caller_env()
+  if (.arg_name %in% names(dots)) {
+    if (.action == "error") {
+      fn <- abort
+    } else {
+      fn <- warn
+    }
+    do.call(
+      fn,
+      list(
+        paste0("Argument `", .arg_name, "` is not supported by tidypolars yet."),
+        call = caller_env()
+      )
     )
+  }
+}
+
+check_dots_empty_ignore <- function(..., .ignore = NULL) {
+  dots <- list2(...)
+  for (i in seq_along(.ignore)) {
+    dots[[.ignore[i]]] <- NULL
+  }
+  if (length(dots) > 0) {
+    abort("`...` must be empty.", call = caller_env())
   }
 }

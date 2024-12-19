@@ -27,7 +27,6 @@
 #' )
 #' by_cyl |> filter(disp == max(disp))
 #'
-
 group_by.RPolarsDataFrame <- function(.data, ..., maintain_order = FALSE, .add = FALSE) {
   if (isTRUE(attributes(.data)$grp_type == "rowwise")) {
     rlang::abort(
@@ -81,7 +80,6 @@ ungroup.RPolarsLazyFrame <- ungroup.RPolarsDataFrame
 #' variables. `group_keys()` returns a data frame with one row per group.
 #'
 #' @param x,.tbl A Polars Data/LazyFrame
-#' @param ... Not used.
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE)
@@ -106,7 +104,7 @@ group_vars.RPolarsLazyFrame <- group_vars.RPolarsDataFrame
 
 #' @rdname group_vars.RPolarsDataFrame
 #' @export
-group_keys.RPolarsDataFrame <- function(.tbl, ...) {
+group_keys.RPolarsDataFrame <- function(.tbl) {
   grps <- attributes(.tbl)$pl_grps
   if (length(grps) > 0) {
     out <- .tbl$group_by(grps)$

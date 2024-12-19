@@ -142,3 +142,24 @@ test_that("argument na_matches works", {
     c(1, NaN)
   )
 })
+
+test_that("dots must be empty", {
+  test <- polars::pl$DataFrame(
+    origin = c("ALG", "FRA", "GER"),
+    year = c(2020, 2020, 2021)
+  )
+
+  test2 <- polars::pl$DataFrame(
+    destination = c("USA", "JPN", "BRA"),
+    language = c("english", "japanese", "portuguese")
+  )
+
+  expect_error(
+    anti_join(test, test2, foo = TRUE),
+    "Problematic argument"
+  )
+  expect_error(
+    semi_join(test, test2, foo = TRUE),
+    "Problematic argument"
+  )
+})

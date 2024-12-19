@@ -73,6 +73,7 @@ compute.RPolarsLazyFrame <- function(
     no_optimization = FALSE,
     streaming = FALSE,
     collect_in_background = FALSE) {
+  check_dots_empty()
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order
   is_grouped <- !is.null(grps)
@@ -118,6 +119,7 @@ collect.RPolarsLazyFrame <- function(
     no_optimization = FALSE,
     streaming = FALSE,
     collect_in_background = FALSE) {
+  check_dots_empty()
   x |>
     as.data.frame(
       type_coercion = type_coercion,

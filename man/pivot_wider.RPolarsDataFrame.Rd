@@ -19,7 +19,7 @@
 \arguments{
 \item{data}{A Polars DataFrame (LazyFrames are not supported).}
 
-\item{...}{Not used.}
+\item{...}{Dots which should be empty.}
 
 \item{id_cols}{A set of columns that uniquely identify each observation.
 Typically used when you have redundant variables, i.e. variables whose

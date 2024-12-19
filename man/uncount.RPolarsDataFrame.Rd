@@ -14,7 +14,7 @@
 
 \item{weights}{A vector of weights. Evaluated in the context of \code{data}.}
 
-\item{...}{Not used.}
+\item{...}{Dots which should be empty.}
 
 \item{.remove}{If \code{TRUE}, and weights is the name of a column in data, then
 this column is removed.}

@@ -16,7 +16,7 @@
 columns, or a named list with the column name and the value that will be
 used to replace \code{NA} in it.}
 
-\item{...}{Not used.}
+\item{...}{Dots which should be empty.}
 }
 \description{
 Replace NAs with specified values

@@ -39,3 +39,12 @@ test_that("can't collect non-LazyFrame object", {
     error = TRUE
   )
 })
+
+test_that("error on unknown args", {
+  pl_iris <- as_polars_lf(iris)
+
+  expect_snapshot(
+    compute(pl_iris, foo = TRUE),
+    error = TRUE
+  )
+})
