@@ -103,8 +103,9 @@ group_vars.RPolarsDataFrame <- function(x) {
 group_vars.RPolarsLazyFrame <- group_vars.RPolarsDataFrame
 
 #' @rdname group_vars.RPolarsDataFrame
+#' @inheritParams rlang::args_dots_empty
 #' @export
-group_keys.RPolarsDataFrame <- function(.tbl) {
+group_keys.RPolarsDataFrame <- function(.tbl, ...) {
   grps <- attributes(.tbl)$pl_grps
   if (length(grps) > 0) {
     out <- .tbl$group_by(grps)$

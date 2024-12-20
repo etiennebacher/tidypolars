@@ -157,8 +157,6 @@
     Code
       current$collect()
     Condition
-      Warning in `left_join()`:
-      Argument `copy` is not supported by tidypolars.
       Error in `left_join()`:
       ! `...` must be empty.
 

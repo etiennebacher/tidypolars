@@ -4,6 +4,15 @@
 
 * Added support for `stringr::str_replace_na()` (#153).
 
+* Better checks for unknown and unsupported arguments in `*_join()`, `pivot_*()`,
+  `slice_sample()`(#158, thanks to @fkohrt for the report). Now, when those
+  functions receive:
+  - an argument that exists in the `tidyverse` implementation but not supported
+    by `tidypolars`, they warn the user. This default behaviour can be changed 
+    to error instead with `options(tidypolars_unknown_args = "error")`.  
+  - an argument that doesn't exist at all, they error.
+
+
 ## Bug fixes
 
 * `slice_sample()` now errors when unknown or unsupported arguments are 

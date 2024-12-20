@@ -157,8 +157,6 @@
     Code
       left_join(test, test2, by = "country", copy = TRUE, foo = TRUE)
     Condition
-      Warning in `left_join()`:
-      Argument `copy` is not supported by tidypolars.
       Error in `left_join()`:
       ! `...` must be empty.
 

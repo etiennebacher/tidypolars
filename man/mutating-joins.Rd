@@ -15,8 +15,10 @@
   x,
   y,
   by = NULL,
+  copy = FALSE,
   suffix = c(".x", ".y"),
   ...,
+  keep = NULL,
   na_matches = "na",
   relationship = NULL
 )
@@ -25,8 +27,10 @@
   x,
   y,
   by = NULL,
+  copy = FALSE,
   suffix = c(".x", ".y"),
   ...,
+  keep = NULL,
   na_matches = "na",
   relationship = NULL
 )
@@ -35,8 +39,10 @@
   x,
   y,
   by = NULL,
+  copy = FALSE,
   suffix = c(".x", ".y"),
   ...,
+  keep = NULL,
   na_matches = "na",
   relationship = NULL
 )
@@ -45,8 +51,10 @@
   x,
   y,
   by = NULL,
+  copy = FALSE,
   suffix = c(".x", ".y"),
   ...,
+  keep = NULL,
   na_matches = "na",
   relationship = NULL
 )
@@ -55,8 +63,10 @@
   x,
   y,
   by = NULL,
+  copy = FALSE,
   suffix = c(".x", ".y"),
   ...,
+  keep = NULL,
   na_matches = "na",
   relationship = NULL
 )
@@ -65,8 +75,10 @@
   x,
   y,
   by = NULL,
+  copy = FALSE,
   suffix = c(".x", ".y"),
   ...,
+  keep = NULL,
   na_matches = "na",
   relationship = NULL
 )
@@ -75,8 +87,10 @@
   x,
   y,
   by = NULL,
+  copy = FALSE,
   suffix = c(".x", ".y"),
   ...,
+  keep = NULL,
   na_matches = "na",
   relationship = NULL
 )
@@ -85,8 +99,10 @@
   x,
   y,
   by = NULL,
+  copy = FALSE,
   suffix = c(".x", ".y"),
   ...,
+  keep = NULL,
   na_matches = "na",
   relationship = NULL
 )
@@ -113,6 +129,8 @@ Finally, \code{inner_join()} also supports inequality joins, e.g.
 \code{within()}. See the documentation of \code{\link[dplyr:join_by]{dplyr::join_by()}} for more
 information. Other join types will likely support inequality joins in the
 future.}
+
+\item{copy, keep}{Not supported.}
 
 \item{suffix}{If there are non-joined duplicate variables in \code{x} and \code{y},
 these suffixes will be added to the output to disambiguate them. Should be a

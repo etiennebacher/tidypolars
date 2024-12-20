@@ -3,6 +3,8 @@
 #' Mutating joins add columns from `y` to `x`, matching observations based on
 #' the keys.
 #'
+#' @rdname mutating-joins
+#'
 #' @inheritParams rlang::check_dots_empty0
 #' @param x,y Two Polars Data/LazyFrames
 #' @param by Variables to join by. If `NULL` (default), `*_join()` will
@@ -45,6 +47,7 @@
 #'   each row in `y` to match at most 1 row in `x`.
 #' * `"one-to-many"` expects each row in `y` to match at most 1 row in `x`.
 #' * `"many-to-one"` expects each row in `x` matches at most 1 row in `y`.
+#' @param copy,keep Not supported.
 #'
 #' @section Unknown arguments:
 #'
@@ -112,10 +115,38 @@
 #'
 #' # A correct expectation would be "one-to-many":
 #' left_join(country, country_year, join_by(iso), relationship = "one-to-many")
-left_join.RPolarsDataFrame <- function(x, y, by = NULL,
+left_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = FALSE,
                                        suffix = c(".x", ".y"), ...,
+                                       keep = NULL,
                                        na_matches = "na", relationship = NULL) {
-  check_dots_empty_ignore(..., .unsupported = c("copy", "keep"))
+  # 'copy' and 'keep' must be present because they are in the generic definition
+  check_dots_empty_ignore(...)
+  rlang_action <- getOption("tidypolars_unknown_args", "warn")
+  if (isTRUE(copy)) {
+    if (rlang_action == "warn") {
+      warn("Argument `copy` is not supported by tidypolars.")
+    } else {
+      abort(
+        c(
+          "Argument `copy` is not supported by tidypolars.",
+          "i" = "Use `options(tidypolars_unknown_args = \"warn\")` to warn when this happens instead of throwing an error."
+        )
+      )
+    }
+  }
+  if (!is.null(keep)) {
+    rlang_action <- getOption("tidypolars_unknown_args", "warn")
+    if (rlang_action == "warn") {
+      warn("Argument `keep` is not supported by tidypolars.")
+    } else {
+      abort(
+        c(
+          "Argument `keep` is not supported by tidypolars.",
+          "i" = "Use `options(tidypolars_unknown_args = \"warn\")` to warn when this happens instead of throwing an error."
+        )
+      )
+    }
+  }
   join_(
     x = x,
     y = y,
@@ -127,12 +158,40 @@ left_join.RPolarsDataFrame <- function(x, y, by = NULL,
   )
 }
 
-#' @rdname left_join.RPolarsDataFrame
+#' @rdname mutating-joins
 #' @export
-right_join.RPolarsDataFrame <- function(x, y, by = NULL,
+right_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = FALSE,
                                         suffix = c(".x", ".y"), ...,
+                                        keep = NULL,
                                         na_matches = "na", relationship = NULL) {
-  check_dots_empty_ignore(..., .unsupported = c("copy", "keep"))
+  # 'copy' and 'keep' must be present because they are in the generic definition
+  check_dots_empty_ignore(...)
+  rlang_action <- getOption("tidypolars_unknown_args", "warn")
+  if (isTRUE(copy)) {
+    if (rlang_action == "warn") {
+      warn("Argument `copy` is not supported by tidypolars.")
+    } else {
+      abort(
+        c(
+          "Argument `copy` is not supported by tidypolars.",
+          "i" = "Use `options(tidypolars_unknown_args = \"warn\")` to warn when this happens instead of throwing an error."
+        )
+      )
+    }
+  }
+  if (!is.null(keep)) {
+    rlang_action <- getOption("tidypolars_unknown_args", "warn")
+    if (rlang_action == "warn") {
+      warn("Argument `keep` is not supported by tidypolars.")
+    } else {
+      abort(
+        c(
+          "Argument `keep` is not supported by tidypolars.",
+          "i" = "Use `options(tidypolars_unknown_args = \"warn\")` to warn when this happens instead of throwing an error."
+        )
+      )
+    }
+  }
   join_(
     x = x,
     y = y,
@@ -144,12 +203,40 @@ right_join.RPolarsDataFrame <- function(x, y, by = NULL,
   )
 }
 
-#' @rdname left_join.RPolarsDataFrame
+#' @rdname mutating-joins
 #' @export
-full_join.RPolarsDataFrame <- function(x, y, by = NULL,
+full_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = FALSE,
                                        suffix = c(".x", ".y"), ...,
+                                       keep = NULL,
                                        na_matches = "na", relationship = NULL) {
-  check_dots_empty_ignore(..., .unsupported = c("copy", "keep"))
+  # 'copy' and 'keep' must be present because they are in the generic definition
+  check_dots_empty_ignore(...)
+  rlang_action <- getOption("tidypolars_unknown_args", "warn")
+  if (isTRUE(copy)) {
+    if (rlang_action == "warn") {
+      warn("Argument `copy` is not supported by tidypolars.")
+    } else {
+      abort(
+        c(
+          "Argument `copy` is not supported by tidypolars.",
+          "i" = "Use `options(tidypolars_unknown_args = \"warn\")` to warn when this happens instead of throwing an error."
+        )
+      )
+    }
+  }
+  if (!is.null(keep)) {
+    rlang_action <- getOption("tidypolars_unknown_args", "warn")
+    if (rlang_action == "warn") {
+      warn("Argument `keep` is not supported by tidypolars.")
+    } else {
+      abort(
+        c(
+          "Argument `keep` is not supported by tidypolars.",
+          "i" = "Use `options(tidypolars_unknown_args = \"warn\")` to warn when this happens instead of throwing an error."
+        )
+      )
+    }
+  }
   join_(
     x = x,
     y = y,
@@ -161,12 +248,40 @@ full_join.RPolarsDataFrame <- function(x, y, by = NULL,
   )
 }
 
-#' @rdname left_join.RPolarsDataFrame
+#' @rdname mutating-joins
 #' @export
-inner_join.RPolarsDataFrame <- function(x, y, by = NULL,
+inner_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = FALSE,
                                         suffix = c(".x", ".y"), ...,
+                                        keep = NULL,
                                         na_matches = "na", relationship = NULL) {
-  check_dots_empty_ignore(..., .unsupported = c("copy", "keep"))
+  # 'copy' and 'keep' must be present because they are in the generic definition
+  check_dots_empty_ignore(...)
+  rlang_action <- getOption("tidypolars_unknown_args", "warn")
+  if (isTRUE(copy)) {
+    if (rlang_action == "warn") {
+      warn("Argument `copy` is not supported by tidypolars.")
+    } else {
+      abort(
+        c(
+          "Argument `copy` is not supported by tidypolars.",
+          "i" = "Use `options(tidypolars_unknown_args = \"warn\")` to warn when this happens instead of throwing an error."
+        )
+      )
+    }
+  }
+  if (!is.null(keep)) {
+    rlang_action <- getOption("tidypolars_unknown_args", "warn")
+    if (rlang_action == "warn") {
+      warn("Argument `keep` is not supported by tidypolars.")
+    } else {
+      abort(
+        c(
+          "Argument `keep` is not supported by tidypolars.",
+          "i" = "Use `options(tidypolars_unknown_args = \"warn\")` to warn when this happens instead of throwing an error."
+        )
+      )
+    }
+  }
   join_(
     x = x,
     y = y,
@@ -178,19 +293,19 @@ inner_join.RPolarsDataFrame <- function(x, y, by = NULL,
   )
 }
 
-#' @rdname left_join.RPolarsDataFrame
+#' @rdname mutating-joins
 #' @export
 left_join.RPolarsLazyFrame <- left_join.RPolarsDataFrame
 
-#' @rdname left_join.RPolarsDataFrame
+#' @rdname mutating-joins
 #' @export
 right_join.RPolarsLazyFrame <- right_join.RPolarsDataFrame
 
-#' @rdname left_join.RPolarsDataFrame
+#' @rdname mutating-joins
 #' @export
 full_join.RPolarsLazyFrame <- full_join.RPolarsDataFrame
 
-#' @rdname left_join.RPolarsDataFrame
+#' @rdname mutating-joins
 #' @export
 inner_join.RPolarsLazyFrame <- inner_join.RPolarsDataFrame
 
