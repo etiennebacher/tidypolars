@@ -40,7 +40,7 @@
 \arguments{
 \item{x}{A Polars LazyFrame}
 
-\item{...}{Not used.}
+\item{...}{Dots which should be empty.}
 
 \item{type_coercion}{Coerce types such that operations succeed and run on
 minimal required memory (default is \code{TRUE}).}

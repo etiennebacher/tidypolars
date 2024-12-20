@@ -19,7 +19,7 @@
 \arguments{
 \item{data}{A Polars DataFrame (LazyFrames are not supported).}
 
-\item{...}{Not used.}
+\item{...}{Dots which should be empty.}
 
 \item{id_cols}{A set of columns that uniquely identify each observation.
 Typically used when you have redundant variables, i.e. variables whose
@@ -56,6 +56,15 @@ columns, then all these columns will be converted to character.}
 \description{
 Pivot a DataFrame from long to wide
 }
+\section{Unknown arguments}{
+
+
+Arguments that are supported by the original implementation in the tidyverse
+but are not listed above will throw a warning by default if they are
+specified. To change this behavior to error instead, use
+\code{options(tidypolars_unknown_args = "error")}.
+}
+
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pl_fish_encounters <- polars::pl$DataFrame(tidyr::fish_encounters)

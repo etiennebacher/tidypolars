@@ -22,7 +22,7 @@ not supported yet.}
 
 \item{remove}{If \code{TRUE}, remove input column from output data frame.}
 
-\item{...}{Not used.}
+\item{...}{Dots which should be empty.}
 }
 \description{
 Currently, splitting a column on a regular expression or position is not

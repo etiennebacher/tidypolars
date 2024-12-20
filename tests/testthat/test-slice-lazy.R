@@ -216,14 +216,17 @@ test_that("slice_sample works with grouped data", {
   )
 })
 
-test_that("slice_sample errors on unknown args", {
+test_that("unsupported args throw warning", {
   pl_mtcars <- as_polars_lf(mtcars)
   skip_if_not(inherits(pl_mtcars, "RPolarsDataFrame"))
-  expect_snapshot_lazy(
-    pl_mtcars |>
-      slice_sample(weight_by = cyl > 5, n = 5),
-    error = TRUE
+  expect_warning(
+    slice_sample(pl_mtcars, weight_by = cyl > 5, n = 5)
   )
+})
+
+test_that("dots must be empty", {
+  pl_mtcars <- as_polars_lf(mtcars)
+  skip_if_not(inherits(pl_mtcars, "RPolarsDataFrame"))
   expect_snapshot_lazy(
     pl_mtcars |>
       slice_sample(foo = 1, n = 5),

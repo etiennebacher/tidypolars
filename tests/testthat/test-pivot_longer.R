@@ -70,3 +70,22 @@ test_that("argument names_prefix works", {
     error = TRUE
   )
 })
+
+test_that("unsupported args throw warning", {
+  pl_billboard <- as_polars_df(tidyr::billboard)
+
+  expect_warning(
+    pivot_longer(pl_billboard, cols_vary = "fastest", names_ptypes = TRUE)
+  )
+})
+
+test_that("dots must be empty", {
+  pl_billboard <- as_polars_df(tidyr::billboard)
+
+  # Also gets the message from rlang because check_dots_used() is called before
+  # dispatching the generic
+  expect_snapshot(
+    pivot_longer(pl_billboard, foo = TRUE, cols_vary = "fastest"),
+    error = TRUE
+  )
+})

@@ -74,3 +74,14 @@
          1: Encountered the following error in Rust-Polars:
             	index cannot be zero length
 
+# dots must be empty
+
+    Code
+      pivot_wider(pl_fish_encounters, names_from = station, values_from = seen, foo = TRUE,
+        names_sort = TRUE)
+    Condition
+      Warning in `pivot_wider()`:
+      Argument `names_sort` is not supported by tidypolars.
+      Error in `pivot_wider()`:
+      ! `...` must be empty.
+

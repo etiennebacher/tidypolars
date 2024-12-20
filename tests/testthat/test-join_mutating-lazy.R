@@ -67,16 +67,6 @@ test_that("basic behavior works", {
       z = c(1, 2), z2 = c(4, 5)
     )
   )
-
-  expect_warning(
-    left_join(test, test2, keep = TRUE),
-    "Unused arguments: keep"
-  )
-
-  expect_warning(
-    left_join(test, test2, copy = TRUE),
-    "Unused arguments: copy"
-  )
 })
 
 test_that("works if join by different variable names", {
@@ -295,6 +285,51 @@ test_that("error if two inputs don't have the same class", {
       select(-foo),
     test2 |>
       left_join(test2)
+  )
+})
+
+test_that("unsupported args throw warning", {
+  test <- polars::pl$LazyFrame(
+    country = c("ALG", "FRA", "GER"),
+    year = c(2020, 2020, 2021)
+  )
+  test2 <- polars::pl$LazyFrame(
+    country = c("USA", "JPN", "BRA"),
+    language = c("english", "japanese", "portuguese")
+  )
+  expect_warning(
+    left_join(test, test2, by = "country", copy = TRUE),
+    "Argument `copy` is not supported by tidypolars"
+  )
+  expect_warning(
+    left_join(test, test2, by = "country", keep = TRUE),
+    "Argument `keep` is not supported by tidypolars"
+  )
+  withr::with_options(
+    list(tidypolars_unknown_args = "error"),
+    expect_snapshot_lazy(
+      left_join(test, test2, by = "country", keep = TRUE),
+      error = TRUE
+    )
+  )
+})
+
+test_that("dots must be empty", {
+  test <- polars::pl$LazyFrame(
+    country = c("ALG", "FRA", "GER"),
+    year = c(2020, 2020, 2021)
+  )
+  test2 <- polars::pl$LazyFrame(
+    country = c("USA", "JPN", "BRA"),
+    language = c("english", "japanese", "portuguese")
+  )
+  expect_snapshot_lazy(
+    left_join(test, test2, by = "country", foo = TRUE),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    left_join(test, test2, by = "country", copy = TRUE, foo = TRUE),
+    error = TRUE
   )
 })
 

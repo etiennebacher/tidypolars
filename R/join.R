@@ -3,6 +3,9 @@
 #' Mutating joins add columns from `y` to `x`, matching observations based on
 #' the keys.
 #'
+#' @rdname mutating-joins
+#'
+#' @inheritParams rlang::check_dots_empty0
 #' @param x,y Two Polars Data/LazyFrames
 #' @param by Variables to join by. If `NULL` (default), `*_join()` will
 #' perform a natural join, using all variables in common across `x` and `y`. A
@@ -28,7 +31,6 @@
 #' these suffixes will be added to the output to disambiguate them. Should be a
 #' character vector of length 2.
 #' @inheritParams slice_tail.RPolarsDataFrame
-#' @param copy,keep Not used.
 #' @param na_matches Should two `NA` values match?
 #' * `"na"`, the default, treats two `NA` values as equal.
 #' * `"never"` treats two `NA` values as different and will never match them
@@ -45,6 +47,14 @@
 #'   each row in `y` to match at most 1 row in `x`.
 #' * `"one-to-many"` expects each row in `y` to match at most 1 row in `x`.
 #' * `"many-to-one"` expects each row in `x` matches at most 1 row in `y`.
+#' @param copy,keep Not supported.
+#'
+#' @section Unknown arguments:
+#'
+#' Arguments that are supported by the original implementation in the tidyverse
+#' but are not listed above will throw a warning by default if they are
+#' specified. To change this behavior to error instead, use
+#' `options(tidypolars_unknown_args = "error")`.
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -105,10 +115,12 @@
 #'
 #' # A correct expectation would be "one-to-many":
 #' left_join(country, country_year, join_by(iso), relationship = "one-to-many")
-left_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
-                                       suffix = c(".x", ".y"), ..., keep = NULL,
+left_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = FALSE,
+                                       suffix = c(".x", ".y"), ...,
+                                       keep = NULL,
                                        na_matches = "na", relationship = NULL) {
-  unused_args(copy, keep)
+  check_unsupported_arg(copy = copy, keep = keep)
+  check_dots_empty()
   join_(
     x = x,
     y = y,
@@ -120,12 +132,14 @@ left_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
   )
 }
 
-#' @rdname left_join.RPolarsDataFrame
+#' @rdname mutating-joins
 #' @export
-right_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
-                                        suffix = c(".x", ".y"), ..., keep = NULL,
+right_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = FALSE,
+                                        suffix = c(".x", ".y"), ...,
+                                        keep = NULL,
                                         na_matches = "na", relationship = NULL) {
-  unused_args(copy, keep)
+  check_unsupported_arg(copy = copy, keep = keep)
+  check_dots_empty()
   join_(
     x = x,
     y = y,
@@ -137,12 +151,14 @@ right_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
   )
 }
 
-#' @rdname left_join.RPolarsDataFrame
+#' @rdname mutating-joins
 #' @export
-full_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
-                                       suffix = c(".x", ".y"), ..., keep = NULL,
+full_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = FALSE,
+                                       suffix = c(".x", ".y"), ...,
+                                       keep = NULL,
                                        na_matches = "na", relationship = NULL) {
-  unused_args(copy, keep)
+  check_unsupported_arg(copy = copy, keep = keep)
+  check_dots_empty()
   join_(
     x = x,
     y = y,
@@ -154,12 +170,14 @@ full_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
   )
 }
 
-#' @rdname left_join.RPolarsDataFrame
+#' @rdname mutating-joins
 #' @export
-inner_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
-                                        suffix = c(".x", ".y"), ..., keep = NULL,
+inner_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = FALSE,
+                                        suffix = c(".x", ".y"), ...,
+                                        keep = NULL,
                                         na_matches = "na", relationship = NULL) {
-  unused_args(copy, keep)
+  check_unsupported_arg(copy = copy, keep = keep)
+  check_dots_empty()
   join_(
     x = x,
     y = y,
@@ -171,19 +189,19 @@ inner_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
   )
 }
 
-#' @rdname left_join.RPolarsDataFrame
+#' @rdname mutating-joins
 #' @export
 left_join.RPolarsLazyFrame <- left_join.RPolarsDataFrame
 
-#' @rdname left_join.RPolarsDataFrame
+#' @rdname mutating-joins
 #' @export
 right_join.RPolarsLazyFrame <- right_join.RPolarsDataFrame
 
-#' @rdname left_join.RPolarsDataFrame
+#' @rdname mutating-joins
 #' @export
 full_join.RPolarsLazyFrame <- full_join.RPolarsDataFrame
 
-#' @rdname left_join.RPolarsDataFrame
+#' @rdname mutating-joins
 #' @export
 inner_join.RPolarsLazyFrame <- inner_join.RPolarsDataFrame
 
@@ -196,6 +214,8 @@ inner_join.RPolarsLazyFrame <- inner_join.RPolarsDataFrame
 #'
 #' @param x,y Two Polars Data/LazyFrames
 #' @inheritParams left_join.RPolarsDataFrame
+#'
+#' @inheritSection left_join.RPolarsDataFrame Unknown arguments
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -221,6 +241,7 @@ inner_join.RPolarsLazyFrame <- inner_join.RPolarsDataFrame
 #' # only keep the rows of `test` that don't have matching keys in `test2`
 #' anti_join(test, test2, by = c("x", "y"))
 semi_join.RPolarsDataFrame <- function(x, y, by = NULL, ..., na_matches = "na") {
+  check_dots_empty_ignore(..., .unsupported = "copy")
   join_(
     x = x,
     y = y,
@@ -236,6 +257,7 @@ semi_join.RPolarsDataFrame <- function(x, y, by = NULL, ..., na_matches = "na") 
 #' @export
 
 anti_join.RPolarsDataFrame <- function(x, y, by = NULL, ..., na_matches = "na") {
+  check_dots_empty_ignore(..., .unsupported = "copy")
   join_(
     x = x,
     y = y,
@@ -262,6 +284,8 @@ anti_join.RPolarsLazyFrame <- anti_join.RPolarsDataFrame
 #'
 #' @inheritParams left_join.RPolarsDataFrame
 #'
+#' @inheritSection left_join.RPolarsDataFrame Unknown arguments
+#'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' test <- polars::pl$DataFrame(
@@ -279,7 +303,8 @@ anti_join.RPolarsLazyFrame <- anti_join.RPolarsDataFrame
 #' test2
 #'
 #' cross_join(test, test2)
-cross_join.RPolarsDataFrame <- function(x, y, suffix = c(".x", ".y"), ...) {
+cross_join.RPolarsDataFrame <- function(x, y, ..., suffix = c(".x", ".y")) {
+  check_dots_empty_ignore(..., .unsupported = "copy")
   join_(
     x = x,
     y = y,

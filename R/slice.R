@@ -6,7 +6,9 @@
 #' @param by Optionally, a selection of columns to group by for just this
 #'   operation, functioning as an alternative to `group_by()`. The group order
 #'   is not maintained, use `group_by()` if you want more control over it.
-#' @param ... Not used.
+#' @inheritParams rlang::check_dots_empty0
+#'
+#' @inheritSection left_join.RPolarsDataFrame Unknown arguments
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -81,8 +83,7 @@ slice_head.RPolarsLazyFrame <- slice_head.RPolarsDataFrame
 #' @export
 
 slice_sample.RPolarsDataFrame <- function(.data, ..., n = NULL, prop = NULL, by = NULL, replace = FALSE) {
-  check_unsupported_arg("weight_by", ...)
-  check_dots_empty0(...)
+  check_dots_empty_ignore(..., .unsupported = "weight_by")
 
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order

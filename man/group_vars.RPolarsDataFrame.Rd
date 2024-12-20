@@ -18,7 +18,7 @@
 \arguments{
 \item{x, .tbl}{A Polars Data/LazyFrame}
 
-\item{...}{Not used.}
+\item{...}{These dots are for future extensions and must be empty.}
 }
 \description{
 \code{group_vars()} returns a character vector with the names of the grouping

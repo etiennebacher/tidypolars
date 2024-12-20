@@ -135,3 +135,34 @@
       Error in `left_join()`:
       ! `x` and `y` must be either two DataFrames or two LazyFrames.
 
+# unsupported args throw warning
+
+    Code
+      current$collect()
+    Condition
+      Error in `left_join()`:
+      ! Argument `keep` is not supported by tidypolars.
+      i Use `options(tidypolars_unknown_args = "warn")` to warn when this happens instead of throwing an error.
+
+# dots must be empty
+
+    Code
+      current$collect()
+    Condition
+      Error in `left_join()`:
+      ! `...` must be empty.
+      x Problematic argument:
+      * foo = TRUE
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Warning in `left_join()`:
+      Argument `copy` is not supported by tidypolars.
+      Error in `left_join()`:
+      ! `...` must be empty.
+      x Problematic argument:
+      * foo = TRUE
+

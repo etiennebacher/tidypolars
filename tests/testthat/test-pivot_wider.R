@@ -209,3 +209,30 @@ test_that("`id_cols` can't select columns from `names_from` or `values_from`", {
     error = TRUE
   )
 })
+
+test_that("unsupported args throw warning", {
+  pl_fish_encounters <- as_polars_df(tidyr::fish_encounters)
+
+  expect_warning(
+    pivot_wider(
+      pl_fish_encounters,
+      names_from = station, values_from = seen,
+      names_sort = TRUE, names_vary = TRUE
+    )
+  )
+})
+
+test_that("dots must be empty", {
+  pl_fish_encounters <- as_polars_df(tidyr::fish_encounters)
+
+  # Also gets the message from rlang because check_dots_used() is called before
+  # dispatching the generic
+  expect_snapshot(
+    pivot_wider(
+      pl_fish_encounters,
+      names_from = station, values_from = seen,
+      foo = TRUE, names_sort = TRUE
+    ),
+    error = TRUE
+  )
+})

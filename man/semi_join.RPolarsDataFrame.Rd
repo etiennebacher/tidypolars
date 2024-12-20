@@ -38,7 +38,7 @@ Finally, \code{inner_join()} also supports inequality joins, e.g.
 information. Other join types will likely support inequality joins in the
 future.}
 
-\item{...}{Not used.}
+\item{...}{Dots which should be empty.}
 
 \item{na_matches}{Should two \code{NA} values match?
 \itemize{
@@ -59,6 +59,15 @@ matches in \code{y}:
 \item \code{anti_join()} return all rows from \code{x} without a match in \code{y}.
 }
 }
+\section{Unknown arguments}{
+
+
+Arguments that are supported by the original implementation in the tidyverse
+but are not listed above will throw a warning by default if they are
+specified. To change this behavior to error instead, use
+\code{options(tidypolars_unknown_args = "error")}.
+}
+
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 test <- polars::pl$DataFrame(

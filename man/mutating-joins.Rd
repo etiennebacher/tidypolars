@@ -15,7 +15,7 @@
   x,
   y,
   by = NULL,
-  copy = NULL,
+  copy = FALSE,
   suffix = c(".x", ".y"),
   ...,
   keep = NULL,
@@ -27,7 +27,7 @@
   x,
   y,
   by = NULL,
-  copy = NULL,
+  copy = FALSE,
   suffix = c(".x", ".y"),
   ...,
   keep = NULL,
@@ -39,7 +39,7 @@
   x,
   y,
   by = NULL,
-  copy = NULL,
+  copy = FALSE,
   suffix = c(".x", ".y"),
   ...,
   keep = NULL,
@@ -51,7 +51,7 @@
   x,
   y,
   by = NULL,
-  copy = NULL,
+  copy = FALSE,
   suffix = c(".x", ".y"),
   ...,
   keep = NULL,
@@ -63,7 +63,7 @@
   x,
   y,
   by = NULL,
-  copy = NULL,
+  copy = FALSE,
   suffix = c(".x", ".y"),
   ...,
   keep = NULL,
@@ -75,7 +75,7 @@
   x,
   y,
   by = NULL,
-  copy = NULL,
+  copy = FALSE,
   suffix = c(".x", ".y"),
   ...,
   keep = NULL,
@@ -87,7 +87,7 @@
   x,
   y,
   by = NULL,
-  copy = NULL,
+  copy = FALSE,
   suffix = c(".x", ".y"),
   ...,
   keep = NULL,
@@ -99,7 +99,7 @@
   x,
   y,
   by = NULL,
-  copy = NULL,
+  copy = FALSE,
   suffix = c(".x", ".y"),
   ...,
   keep = NULL,
@@ -130,13 +130,13 @@ Finally, \code{inner_join()} also supports inequality joins, e.g.
 information. Other join types will likely support inequality joins in the
 future.}
 
-\item{copy, keep}{Not used.}
+\item{copy, keep}{Not supported.}
 
 \item{suffix}{If there are non-joined duplicate variables in \code{x} and \code{y},
 these suffixes will be added to the output to disambiguate them. Should be a
 character vector of length 2.}
 
-\item{...}{Not used.}
+\item{...}{Dots which should be empty.}
 
 \item{na_matches}{Should two \code{NA} values match?
 \itemize{
@@ -164,6 +164,15 @@ each row in \code{y} to match at most 1 row in \code{x}.
 Mutating joins add columns from \code{y} to \code{x}, matching observations based on
 the keys.
 }
+\section{Unknown arguments}{
+
+
+Arguments that are supported by the original implementation in the tidyverse
+but are not listed above will throw a warning by default if they are
+specified. To change this behavior to error instead, use
+\code{options(tidypolars_unknown_args = "error")}.
+}
+
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 test <- polars::pl$DataFrame(
