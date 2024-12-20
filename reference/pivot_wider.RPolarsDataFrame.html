@@ -67,7 +67,7 @@
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Not used.</p></dd>
+<dd><p>Dots which should be empty.</p></dd>
 
 
 <dt id="arg-id-cols">id_cols<a class="anchor" aria-label="anchor" href="#arg-id-cols"></a></dt>
@@ -115,6 +115,16 @@ columns. For example, if you provide a character value to fill numeric
 columns, then all these columns will be converted to character.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="unknown-arguments">Unknown arguments<a class="anchor" aria-label="anchor" href="#unknown-arguments"></a></h2>
+
+
+
+<p>Arguments that are supported by the original implementation in the tidyverse
+but are not listed above will throw a warning by default if they are
+specified. To change this behavior to error instead, use
+<code>options(tidypolars_unknown_args = "error")</code>.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

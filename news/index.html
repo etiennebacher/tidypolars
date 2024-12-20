@@ -41,7 +41,12 @@
 <h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
 <div class="section level3">
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
-<ul><li>Added support for <code><a href="https://stringr.tidyverse.org/reference/str_replace_na.html" class="external-link">stringr::str_replace_na()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/153" class="external-link">#153</a>).</li>
+<ul><li><p>Added support for <code><a href="https://stringr.tidyverse.org/reference/str_replace_na.html" class="external-link">stringr::str_replace_na()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/153" class="external-link">#153</a>).</p></li>
+<li>
+<p>Better checks for unknown and unsupported arguments in <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code>, <code>*_join()</code>, <code>pivot_*()</code>, <code>sink_*()</code>, <code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample()</a></code> and <code><a href="https://tidyr.tidyverse.org/reference/uncount.html" class="external-link">uncount()</a></code>(<a href="https://github.com/etiennebacher/tidypolars/issues/158" class="external-link">#158</a>, thanks <a href="https://github.com/fkohrt" class="external-link">@fkohrt</a> for the report). Now, when those functions receive:</p>
+<ul><li>an argument that exists in the <code>tidyverse</code> implementation but not supported by <code>tidypolars</code>, they warn the user. This default behaviour can be changed to error instead with <code>options(tidypolars_unknown_args = "error")</code>.<br></li>
+<li>an argument that doesn’t exist at all, they error.</li>
+</ul></li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
