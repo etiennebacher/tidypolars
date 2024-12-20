@@ -29,6 +29,8 @@
 #'   columns. For example, if you provide a character value to fill numeric
 #'   columns, then all these columns will be converted to character.
 #'
+#' @inheritSection left_join.RPolarsDataFrame Unknown arguments
+#'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_fish_encounters <- polars::pl$DataFrame(tidyr::fish_encounters)
@@ -71,7 +73,13 @@ pivot_wider.RPolarsDataFrame <- function(
     names_sep = "_",
     names_glue = NULL,
     values_fill = NULL) {
-  check_dots_empty()
+  check_dots_empty_ignore(
+    ...,
+    .unsupported = c(
+      "id_expand", "names_sort", "names_vary", "names_expand", "names_repair",
+      "values_fn", "unused_fn"
+    )
+  )
   data_names <- names(data)
   value_vars <- tidyselect_named_arg(data, rlang::enquo(values_from))
   names_vars <- tidyselect_named_arg(data, rlang::enquo(names_from))

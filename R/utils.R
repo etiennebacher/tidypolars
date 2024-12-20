@@ -111,30 +111,45 @@ select_by_name_or_position <- function(expr, name, position, default, env) {
   }
 }
 
-check_unsupported_arg <- function(.arg_name, ..., .action = "error") {
+check_dots_empty_ignore <- function(..., .unsupported = NULL) {
   dots <- enquos(...)
-  if (.arg_name %in% names(dots)) {
-    if (.action == "error") {
-      fn <- abort
+  rlang_action <- getOption("tidypolars_unknown_args", "warn")
+  unsupported_dots <- names(dots[.unsupported])
+  unsupported_dots <- unsupported_dots[!is.na(unsupported_dots)]
+
+  if (length(unsupported_dots) > 0) {
+    if (length(unsupported_dots) == 1) {
+      msg <- paste0("Argument `", unsupported_dots, "` is not supported by tidypolars.")
     } else {
-      fn <- warn
+      msg <- paste(
+        "Arguments",
+        toString(paste0("`", unsupported_dots, "`")),
+        "are not supported by tidypolars."
+      )
     }
-    do.call(
-      fn,
-      list(
-        paste0("Argument `", .arg_name, "` is not supported by tidypolars yet."),
+    if (rlang_action == "warn") {
+      warn(msg, call = caller_env())
+    } else if (rlang_action == "error") {
+      abort(
+        c(
+          msg,
+          "i" = "Use `options(tidypolars_unknown_args = \"warn\")` to warn when this happens instead of throwing an error."
+        ),
         call = caller_env()
       )
-    )
+    }
   }
-}
+  for (i in .unsupported) {
+    dots[[i]] <- NULL
+  }
 
-check_dots_empty_ignore <- function(..., .ignore = NULL) {
-  dots <- list2(...)
-  for (i in seq_along(.ignore)) {
-    dots[[.ignore[i]]] <- NULL
-  }
   if (length(dots) > 0) {
-    abort("`...` must be empty.", call = caller_env())
+    abort(
+      c(
+        "`...` must be empty."
+        # "i" = paste("Unknown args:", dots))
+      ),
+      call = caller_env()
+    )
   }
 }

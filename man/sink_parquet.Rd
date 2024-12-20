@@ -112,7 +112,6 @@ scan_csv_polars(file_csv) |>
     hp_gear_ratio = hp / gear
   ) |>
   sink_parquet(path = file_parquet)
-
 }
 \dontshow{\}) # examplesIf}
 }

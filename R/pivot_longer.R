@@ -11,6 +11,8 @@
 #'  data stored in cell values.
 #' @inheritParams rlang::check_dots_empty0
 #'
+#' @inheritSection left_join.RPolarsDataFrame Unknown arguments
+#'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_relig_income <- polars::pl$DataFrame(tidyr::relig_income)
@@ -32,7 +34,14 @@
 pivot_longer.RPolarsDataFrame <- function(data, cols, ..., names_to = "name",
                                           names_prefix = NULL,
                                           values_to = "value") {
-  check_dots_empty()
+  check_dots_empty_ignore(
+    ...,
+    .unsupported = c(
+      "cols_vary", "names_sep", "names_pattern", "names_ptypes",
+      "names_transform", "names_repair", "values_drop_na", "values_ptypes",
+      "values_transform"
+    )
+  )
   data_names <- names(data)
   on <- tidyselect_named_arg(data, rlang::enquo(cols))
   index <- data_names[!data_names %in% on]

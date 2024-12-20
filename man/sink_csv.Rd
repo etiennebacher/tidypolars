@@ -127,7 +127,6 @@ scan_csv_polars(file_csv) |>
     hp_gear_ratio = hp / gear
   ) |>
   sink_csv(path = file_csv2)
-
 }
 \dontshow{\}) # examplesIf}
 }

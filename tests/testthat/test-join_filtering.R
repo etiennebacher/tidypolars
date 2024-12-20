@@ -143,23 +143,43 @@ test_that("argument na_matches works", {
   )
 })
 
-test_that("dots must be empty", {
+test_that("unsupported args throw warning", {
   test <- polars::pl$DataFrame(
-    origin = c("ALG", "FRA", "GER"),
+    country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-
   test2 <- polars::pl$DataFrame(
-    destination = c("USA", "JPN", "BRA"),
+    country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )
-
-  expect_error(
-    anti_join(test, test2, foo = TRUE),
-    "Problematic argument"
+  expect_warning(
+    semi_join(test, test2, copy = TRUE),
+    "Argument `copy` is not supported by tidypolars"
   )
-  expect_error(
+  withr::with_options(
+    list(tidypolars_unknown_args = "error"),
+    expect_snapshot(
+      semi_join(test, test2, copy = TRUE),
+      error = TRUE
+    )
+  )
+})
+
+test_that("dots must be empty", {
+  test <- polars::pl$DataFrame(
+    country = c("ALG", "FRA", "GER"),
+    year = c(2020, 2020, 2021)
+  )
+  test2 <- polars::pl$DataFrame(
+    country = c("USA", "JPN", "BRA"),
+    language = c("english", "japanese", "portuguese")
+  )
+  expect_snapshot(
     semi_join(test, test2, foo = TRUE),
-    "Problematic argument"
+    error = TRUE
+  )
+  expect_snapshot(
+    semi_join(test, test2, copy = TRUE, foo = TRUE),
+    error = TRUE
   )
 })

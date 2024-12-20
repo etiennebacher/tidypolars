@@ -63,16 +63,6 @@ test_that("basic behavior works", {
       z = c(1, 2), z2 = c(4, 5)
     )
   )
-
-  expect_warning(
-    left_join(test, test2, keep = TRUE),
-    "Unused arguments: keep"
-  )
-
-  expect_warning(
-    left_join(test, test2, copy = TRUE),
-    "Unused arguments: copy"
-  )
 })
 
 test_that("works if join by different variable names", {
@@ -299,15 +289,24 @@ test_that("unsupported args throw warning", {
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-
   test2 <- polars::pl$DataFrame(
     country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )
-
   expect_warning(
     left_join(test, test2, by = "country", copy = TRUE),
     "Argument `copy` is not supported by tidypolars"
+  )
+  expect_warning(
+    left_join(test, test2, by = "country", keep = TRUE),
+    "Argument `keep` is not supported by tidypolars"
+  )
+  withr::with_options(
+    list(tidypolars_unknown_args = "error"),
+    expect_snapshot(
+      left_join(test, test2, by = "country", keep = TRUE),
+      error = TRUE
+    )
   )
 })
 
@@ -316,14 +315,16 @@ test_that("dots must be empty", {
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-
   test2 <- polars::pl$DataFrame(
     country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )
-
-  expect_error(
+  expect_snapshot(
     left_join(test, test2, by = "country", foo = TRUE),
-    "must be empty"
+    error = TRUE
+  )
+  expect_snapshot(
+    left_join(test, test2, by = "country", copy = TRUE, foo = TRUE),
+    error = TRUE
   )
 })

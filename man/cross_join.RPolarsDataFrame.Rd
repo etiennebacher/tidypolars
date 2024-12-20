@@ -5,23 +5,32 @@
 \alias{cross_join.RPolarsLazyFrame}
 \title{Cross join}
 \usage{
-\method{cross_join}{RPolarsDataFrame}(x, y, suffix = c(".x", ".y"), ...)
+\method{cross_join}{RPolarsDataFrame}(x, y, ..., suffix = c(".x", ".y"))
 
-\method{cross_join}{RPolarsLazyFrame}(x, y, suffix = c(".x", ".y"), ...)
+\method{cross_join}{RPolarsLazyFrame}(x, y, ..., suffix = c(".x", ".y"))
 }
 \arguments{
 \item{x, y}{Two Polars Data/LazyFrames}
 
+\item{...}{Dots which should be empty.}
+
 \item{suffix}{If there are non-joined duplicate variables in \code{x} and \code{y},
 these suffixes will be added to the output to disambiguate them. Should be a
 character vector of length 2.}
-
-\item{...}{Dots which should be empty.}
 }
 \description{
 Cross joins match each row in \code{x} to every row in \code{y}, resulting in a dataset
 with \code{nrow(x) * nrow(y)} rows.
 }
+\section{Unknown arguments}{
+
+
+Arguments that are supported by the original implementation in the tidyverse
+but are not listed above will throw a warning by default if they are
+specified. To change this behavior to error instead, use
+\code{options(tidypolars_unknown_args = "error")}.
+}
+
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 test <- polars::pl$DataFrame(

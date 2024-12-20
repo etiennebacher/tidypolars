@@ -38,6 +38,15 @@ is not maintained, use \code{group_by()} if you want more control over it.}
 \description{
 Subset rows of a Data/LazyFrame
 }
+\section{Unknown arguments}{
+
+
+Arguments that are supported by the original implementation in the tidyverse
+but are not listed above will throw a warning by default if they are
+specified. To change this behavior to error instead, use
+\code{options(tidypolars_unknown_args = "error")}.
+}
+
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 pl_test <- polars::as_polars_df(iris)

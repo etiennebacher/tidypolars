@@ -146,6 +146,15 @@ each row in \code{y} to match at most 1 row in \code{x}.
 Mutating joins add columns from \code{y} to \code{x}, matching observations based on
 the keys.
 }
+\section{Unknown arguments}{
+
+
+Arguments that are supported by the original implementation in the tidyverse
+but are not listed above will throw a warning by default if they are
+specified. To change this behavior to error instead, use
+\code{options(tidypolars_unknown_args = "error")}.
+}
+
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 test <- polars::pl$DataFrame(

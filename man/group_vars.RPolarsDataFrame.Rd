@@ -11,14 +11,12 @@
 
 \method{group_vars}{RPolarsLazyFrame}(x)
 
-\method{group_keys}{RPolarsDataFrame}(.tbl, ...)
+\method{group_keys}{RPolarsDataFrame}(.tbl)
 
-\method{group_keys}{RPolarsLazyFrame}(.tbl, ...)
+\method{group_keys}{RPolarsLazyFrame}(.tbl)
 }
 \arguments{
 \item{x, .tbl}{A Polars Data/LazyFrame}
-
-\item{...}{Dots which should be empty.}
 }
 \description{
 \code{group_vars()} returns a character vector with the names of the grouping
