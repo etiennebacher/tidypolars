@@ -4,8 +4,9 @@
 
 * Added support for `stringr::str_replace_na()` (#153).
 
-* Better checks for unknown and unsupported arguments in `*_join()`, `pivot_*()`,
-  `slice_sample()`(#158, thanks to @fkohrt for the report). Now, when those
+* Better checks for unknown and unsupported arguments in `compute()`, 
+  `collect()`, `*_join()`, `pivot_*()`, `sink_*()`, `slice_sample()` and 
+  `uncount()`(#158, thanks @fkohrt for the report). Now, when those
   functions receive:
   - an argument that exists in the `tidyverse` implementation but not supported
     by `tidypolars`, they warn the user. This default behaviour can be changed 
