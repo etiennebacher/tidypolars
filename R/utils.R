@@ -111,6 +111,8 @@ select_by_name_or_position <- function(expr, name, position, default, env) {
   }
 }
 
+# Check that dots are not used, but throw a custom error when some args are
+# supported by tidyverse but not tidypolars.
 check_dots_empty_ignore <- function(..., .unsupported = NULL) {
   dots <- enquos(...)
   rlang_action <- getOption("tidypolars_unknown_args", "warn")
@@ -148,6 +150,37 @@ check_dots_empty_ignore <- function(..., .unsupported = NULL) {
       c(
         "`...` must be empty."
         # "i" = paste("Unknown args:", dots))
+      ),
+      call = caller_env()
+    )
+  }
+}
+
+check_unsupported_arg <- function(...) {
+  dots <- list2(...)
+  unsupported_args <- names(Filter(Negate(is.null), dots))
+  rlang_action <- getOption("tidypolars_unknown_args", "warn")
+
+  if (length(unsupported_args) == 0) {
+    return(invisible())
+  }
+
+  if (length(unsupported_args) == 1) {
+    msg <- paste0("Argument `", unsupported_args, "` is not supported by tidypolars.")
+  } else {
+    msg <- paste(
+      "Arguments",
+      toString(paste0("`", unsupported_args, "`")),
+      "are not supported by tidypolars."
+    )
+  }
+  if (rlang_action == "warn") {
+    warn(msg, call = caller_env())
+  } else if (rlang_action == "error") {
+    abort(
+      c(
+        msg,
+        "i" = "Use `options(tidypolars_unknown_args = \"warn\")` to warn when this happens instead of throwing an error."
       ),
       call = caller_env()
     )
