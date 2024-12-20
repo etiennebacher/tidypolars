@@ -36,24 +36,6 @@ parse_replacement <- function(x) {
   gsub("\\\\(\\d+)", "$\\1", x)
 }
 
-# mostly to make R CMD check happy about S3 consistency
-unused_args <- function(...) {
-  x <- get_dots(...)
-  unused <- c()
-  for (i in seq_along(x)) {
-    if (!is.null(eval(x[[i]], parent.frame(1L)))) {
-      unused <- c(unused, deparse(x[[i]]))
-    }
-  }
-  if (length(unused) == 0) {
-    return(invisible())
-  }
-  warn(
-    paste("Unused arguments:", toString(unused)),
-    call = caller_env(2)
-  )
-}
-
 get_grps <- function(.data, .by, env) {
   grps <- attributes(.data)$pl_grps
   inline_grps <- tidyselect_named_arg(.data, .by)
@@ -156,6 +138,7 @@ check_dots_empty_ignore <- function(..., .unsupported = NULL) {
   }
 }
 
+# mostly to make R CMD check happy about S3 consistency
 check_unsupported_arg <- function(...) {
   dots <- list2(...)
   if ("copy" %in% names(dots) && isFALSE(dots[["copy"]])) {
