@@ -115,7 +115,7 @@
 #'
 #' # A correct expectation would be "one-to-many":
 #' left_join(country, country_year, join_by(iso), relationship = "one-to-many")
-left_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
+left_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = FALSE,
                                        suffix = c(".x", ".y"), ...,
                                        keep = NULL,
                                        na_matches = "na", relationship = NULL) {
@@ -134,7 +134,7 @@ left_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
 
 #' @rdname mutating-joins
 #' @export
-right_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
+right_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = FALSE,
                                         suffix = c(".x", ".y"), ...,
                                         keep = NULL,
                                         na_matches = "na", relationship = NULL) {
@@ -153,7 +153,7 @@ right_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
 
 #' @rdname mutating-joins
 #' @export
-full_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
+full_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = FALSE,
                                        suffix = c(".x", ".y"), ...,
                                        keep = NULL,
                                        na_matches = "na", relationship = NULL) {
@@ -172,7 +172,7 @@ full_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
 
 #' @rdname mutating-joins
 #' @export
-inner_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = NULL,
+inner_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = FALSE,
                                         suffix = c(".x", ".y"), ...,
                                         keep = NULL,
                                         na_matches = "na", relationship = NULL) {

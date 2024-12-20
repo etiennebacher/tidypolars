@@ -158,6 +158,9 @@ check_dots_empty_ignore <- function(..., .unsupported = NULL) {
 
 check_unsupported_arg <- function(...) {
   dots <- list2(...)
+  if ("copy" %in% names(dots) && isFALSE(dots[["copy"]])) {
+    dots[["copy"]] <- NULL
+  }
   unsupported_args <- names(Filter(Negate(is.null), dots))
   rlang_action <- getOption("tidypolars_unknown_args", "warn")
 
