@@ -51,7 +51,7 @@ reference:
       - group_split.RPolarsDataFrame
       - group_vars.RPolarsDataFrame
       - inner_join.RPolarsDataFrame
-      - mutating-joins
+      - left_join.RPolarsDataFrame
       - mutate.RPolarsDataFrame
       - pull.RPolarsDataFrame
       - relocate.RPolarsDataFrame
