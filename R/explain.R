@@ -5,7 +5,7 @@
 #'
 #' By default, `explain()` shows the query plan that is optimized and then run
 #' by Polars. Setting `optimized = FALSE` shows the query plan as-is, without
-#' any optimization done, but this not the query performed. Note that the
+#' any optimization done, but this is not the query performed. Note that the
 #' plans are read from bottom to top.
 #'
 #' @param x A Polars LazyFrame.
@@ -30,7 +30,6 @@
 #'
 #' # optimized query run by polars
 #' cat(explain(query))
-
 # nocov start
 explain.RPolarsLazyFrame <- function(x, optimized = TRUE, ...) {
   x$explain(optimized = optimized)

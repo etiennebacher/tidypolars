@@ -19,7 +19,7 @@ This function is available for \code{LazyFrame}s only.
 
 By default, \code{explain()} shows the query plan that is optimized and then run
 by Polars. Setting \code{optimized = FALSE} shows the query plan as-is, without
-any optimization done, but this not the query performed. Note that the
+any optimization done, but this is not the query performed. Note that the
 plans are read from bottom to top.
 }
 \examples{
