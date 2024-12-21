@@ -29,67 +29,76 @@
 #' mtcars |>
 #'   as_polars_df() |>
 #'   summarize(m_gear = mean(gear), sd_gear = sd(gear), .by = cyl)
-summarize.RPolarsDataFrame <- function(.data, ..., .by = NULL, .groups = "drop_last") {
-  grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
-  mo <- attributes(.data)$maintain_grp_order
-  if (is.null(mo)) mo <- FALSE
-  is_grouped <- !is.null(grps)
-  is_rowwise <- attributes(.data)$grp_type == "rowwise"
+summarize.RPolarsDataFrame <- function(
+	.data,
+	...,
+	.by = NULL,
+	.groups = "drop_last"
+) {
+	grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
+	mo <- attributes(.data)$maintain_grp_order
+	if (is.null(mo)) mo <- FALSE
+	is_grouped <- !is.null(grps)
+	is_rowwise <- attributes(.data)$grp_type == "rowwise"
 
-  # Technically, .groups can be NULL and then the value depends on the number
-  # of rows for each group after aggregation, but returning multiple rows is
-  # deprecated so I only use those 4 values.
-  .groups <- rlang::arg_match0(.groups, values = c("drop_last", "drop", "keep", "rowwise"))
-  if (.groups == "rowwise") {
-    abort("`tidypolars` doesn't support `.groups = \"rowwise\"` for now.")
-  }
+	# Technically, .groups can be NULL and then the value depends on the number
+	# of rows for each group after aggregation, but returning multiple rows is
+	# deprecated so I only use those 4 values.
+	.groups <- rlang::arg_match0(
+		.groups,
+		values = c("drop_last", "drop", "keep", "rowwise")
+	)
+	if (.groups == "rowwise") {
+		abort("`tidypolars` doesn't support `.groups = \"rowwise\"` for now.")
+	}
 
-  # Do not take the groups into account, especially useful when applying across()
-  # on everything().
-  .data_for_translation <- select(.data, -all_of(grps))
-  polars_exprs <- translate_dots(
-    .data = .data_for_translation,
-    ...,
-    env = rlang::current_env(),
-    caller = rlang::caller_env()
-  )
+	# Do not take the groups into account, especially useful when applying across()
+	# on everything().
+	.data_for_translation <- select(.data, -all_of(grps))
+	polars_exprs <- translate_dots(
+		.data = .data_for_translation,
+		...,
+		env = rlang::current_env(),
+		caller = rlang::caller_env()
+	)
 
-  for (i in seq_along(polars_exprs)) {
-    sub <- polars_exprs[[i]]
-    to_drop <- names(empty_elems(sub))
-    sub <- compact(sub)
+	for (i in seq_along(polars_exprs)) {
+		sub <- polars_exprs[[i]]
+		to_drop <- names(empty_elems(sub))
+		sub <- compact(sub)
 
-    if (length(sub) > 0) {
-      if (is_grouped) {
-        .data <- .data$group_by(grps, maintain_order = mo)$agg(sub)
-      } else {
-        .data <- .data$select(sub)
-      }
-    }
+		if (length(sub) > 0) {
+			if (is_grouped) {
+				.data <- .data$group_by(grps, maintain_order = mo)$agg(sub)
+			} else {
+				.data <- .data$select(sub)
+			}
+		}
 
-    if (length(to_drop) > 0) {
-      .data <- .data$drop(to_drop)
-    }
-  }
+		if (length(to_drop) > 0) {
+			.data <- .data$drop(to_drop)
+		}
+	}
 
-  out <- if (is_grouped && missing(.by)) {
-    grps <- switch(.groups,
-      "drop_last" = grps[-length(grps)],
-      "drop" = character(0),
-      "keep" = grps,
-      abort("Unreachable")
-    )
-    if (length(grps) == 0) {
-      return(.data)
-    }
-    group_by(.data, all_of(grps), maintain_order = mo)
-  } else if (isTRUE(is_rowwise)) {
-    rowwise(.data)
-  } else {
-    .data
-  }
+	out <- if (is_grouped && missing(.by)) {
+		grps <- switch(
+			.groups,
+			"drop_last" = grps[-length(grps)],
+			"drop" = character(0),
+			"keep" = grps,
+			abort("Unreachable")
+		)
+		if (length(grps) == 0) {
+			return(.data)
+		}
+		group_by(.data, all_of(grps), maintain_order = mo)
+	} else if (isTRUE(is_rowwise)) {
+		rowwise(.data)
+	} else {
+		.data
+	}
 
-  add_tidypolars_class(out)
+	add_tidypolars_class(out)
 }
 
 #' @rdname summarize.RPolarsDataFrame

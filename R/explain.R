@@ -32,6 +32,6 @@
 #' cat(explain(query))
 # nocov start
 explain.RPolarsLazyFrame <- function(x, optimized = TRUE, ...) {
-  x$explain(optimized = optimized)
+	x$explain(optimized = optimized)
 }
 # nocov end

@@ -27,10 +27,11 @@
 #'   filter(Sepal.Length > 6) |>
 #'   as_tibble()
 as_tibble.tidypolars <- function(
-    x,
-    int64_conversion = polars::polars_options()$int64_conversion,
-    ...) {
-  dplyr::as_tibble(as.data.frame(x, int64_conversion = int64_conversion, ...))
+	x,
+	int64_conversion = polars::polars_options()$int64_conversion,
+	...
+) {
+	dplyr::as_tibble(as.data.frame(x, int64_conversion = int64_conversion, ...))
 }
 
 #' @export

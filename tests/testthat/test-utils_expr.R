@@ -62,13 +62,13 @@
 # })
 
 test_that("error messages when error in known function is good", {
-  pl_iris <- as_polars_df(iris)
-  expect_snapshot(
-    pl_iris |> mutate(foo = min_rank()),
-    error = TRUE
-  )
-  expect_snapshot(
-    pl_iris |> mutate(foo = dplyr::min_rank()),
-    error = TRUE
-  )
+	pl_iris <- as_polars_df(iris)
+	expect_snapshot(
+		pl_iris |> mutate(foo = min_rank()),
+		error = TRUE
+	)
+	expect_snapshot(
+		pl_iris |> mutate(foo = dplyr::min_rank()),
+		error = TRUE
+	)
 })

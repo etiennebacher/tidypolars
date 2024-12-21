@@ -78,42 +78,43 @@
 #'   sink_parquet(path = file_parquet)
 #' }
 sink_parquet <- function(
-    .data,
-    path,
-    ...,
-    compression = "zstd",
-    compression_level = 3,
-    statistics = FALSE,
-    row_group_size = NULL,
-    data_page_size = NULL,
-    maintain_order = TRUE,
-    type_coercion = TRUE,
-    predicate_pushdown = TRUE,
-    projection_pushdown = TRUE,
-    simplify_expression = TRUE,
-    slice_pushdown = TRUE,
-    no_optimization = FALSE) {
-  check_dots_empty()
+	.data,
+	path,
+	...,
+	compression = "zstd",
+	compression_level = 3,
+	statistics = FALSE,
+	row_group_size = NULL,
+	data_page_size = NULL,
+	maintain_order = TRUE,
+	type_coercion = TRUE,
+	predicate_pushdown = TRUE,
+	projection_pushdown = TRUE,
+	simplify_expression = TRUE,
+	slice_pushdown = TRUE,
+	no_optimization = FALSE
+) {
+	check_dots_empty()
 
-  if (!inherits(.data, "RPolarsLazyFrame")) {
-    rlang::abort("`sink_parquet()` can only be used on a Polars LazyFrame.")
-  }
+	if (!inherits(.data, "RPolarsLazyFrame")) {
+		rlang::abort("`sink_parquet()` can only be used on a Polars LazyFrame.")
+	}
 
-  .data$sink_parquet(
-    path = path,
-    compression = compression,
-    compression_level = compression_level,
-    statistics = statistics,
-    row_group_size = row_group_size,
-    data_page_size = data_page_size,
-    maintain_order = maintain_order,
-    type_coercion = type_coercion,
-    predicate_pushdown = predicate_pushdown,
-    projection_pushdown = projection_pushdown,
-    simplify_expression = simplify_expression,
-    slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization
-  )
+	.data$sink_parquet(
+		path = path,
+		compression = compression,
+		compression_level = compression_level,
+		statistics = statistics,
+		row_group_size = row_group_size,
+		data_page_size = data_page_size,
+		maintain_order = maintain_order,
+		type_coercion = type_coercion,
+		predicate_pushdown = predicate_pushdown,
+		projection_pushdown = projection_pushdown,
+		simplify_expression = simplify_expression,
+		slice_pushdown = slice_pushdown,
+		no_optimization = no_optimization
+	)
 }
 
 #' Stream output to a CSV file
@@ -178,57 +179,61 @@ sink_parquet <- function(
 #'   sink_csv(path = file_csv2)
 #' }
 sink_csv <- function(
-    .data,
-    path,
-    ...,
-    include_bom = FALSE,
-    include_header = TRUE,
-    separator = ",",
-    line_terminator = "\n",
-    quote = '"',
-    batch_size = 1024,
-    datetime_format = NULL,
-    date_format = NULL,
-    time_format = NULL,
-    float_precision = NULL,
-    null_values = "",
-    quote_style = "necessary",
-    maintain_order = TRUE,
-    type_coercion = TRUE,
-    predicate_pushdown = TRUE,
-    projection_pushdown = TRUE,
-    simplify_expression = TRUE,
-    slice_pushdown = TRUE,
-    no_optimization = FALSE) {
-  check_dots_empty()
-  if (!inherits(.data, "RPolarsLazyFrame")) {
-    rlang::abort("`sink_csv()` can only be used on a Polars LazyFrame.")
-  }
+	.data,
+	path,
+	...,
+	include_bom = FALSE,
+	include_header = TRUE,
+	separator = ",",
+	line_terminator = "\n",
+	quote = '"',
+	batch_size = 1024,
+	datetime_format = NULL,
+	date_format = NULL,
+	time_format = NULL,
+	float_precision = NULL,
+	null_values = "",
+	quote_style = "necessary",
+	maintain_order = TRUE,
+	type_coercion = TRUE,
+	predicate_pushdown = TRUE,
+	projection_pushdown = TRUE,
+	simplify_expression = TRUE,
+	slice_pushdown = TRUE,
+	no_optimization = FALSE
+) {
+	check_dots_empty()
+	if (!inherits(.data, "RPolarsLazyFrame")) {
+		rlang::abort("`sink_csv()` can only be used on a Polars LazyFrame.")
+	}
 
-  rlang::arg_match0(quote_style, values = c("necessary", "always", "non_numeric"))
+	rlang::arg_match0(
+		quote_style,
+		values = c("necessary", "always", "non_numeric")
+	)
 
-  .data$sink_csv(
-    path = path,
-    include_bom = include_bom,
-    include_header = include_header,
-    separator = separator,
-    line_terminator = line_terminator,
-    quote = quote,
-    batch_size = batch_size,
-    datetime_format = datetime_format,
-    date_format = date_format,
-    time_format = time_format,
-    float_precision = float_precision,
-    null_values = null_values,
-    quote_style = quote_style,
-    maintain_order = maintain_order,
-    type_coercion = type_coercion,
-    predicate_pushdown = predicate_pushdown,
-    projection_pushdown = projection_pushdown,
-    simplify_expression = simplify_expression,
-    slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization
-  )
+	.data$sink_csv(
+		path = path,
+		include_bom = include_bom,
+		include_header = include_header,
+		separator = separator,
+		line_terminator = line_terminator,
+		quote = quote,
+		batch_size = batch_size,
+		datetime_format = datetime_format,
+		date_format = date_format,
+		time_format = time_format,
+		float_precision = float_precision,
+		null_values = null_values,
+		quote_style = quote_style,
+		maintain_order = maintain_order,
+		type_coercion = type_coercion,
+		predicate_pushdown = predicate_pushdown,
+		projection_pushdown = projection_pushdown,
+		simplify_expression = simplify_expression,
+		slice_pushdown = slice_pushdown,
+		no_optimization = no_optimization
+	)
 }
 
 #' Stream output to an IPC file
@@ -249,35 +254,36 @@ sink_csv <- function(
 #' @export
 
 sink_ipc <- function(
-    .data,
-    path,
-    ...,
-    compression = "zstd",
-    maintain_order = TRUE,
-    type_coercion = TRUE,
-    predicate_pushdown = TRUE,
-    projection_pushdown = TRUE,
-    simplify_expression = TRUE,
-    slice_pushdown = TRUE,
-    no_optimization = FALSE) {
-  check_dots_empty()
-  if (!inherits(.data, "RPolarsLazyFrame")) {
-    rlang::abort("`sink_ipc()` can only be used on a Polars LazyFrame.")
-  }
+	.data,
+	path,
+	...,
+	compression = "zstd",
+	maintain_order = TRUE,
+	type_coercion = TRUE,
+	predicate_pushdown = TRUE,
+	projection_pushdown = TRUE,
+	simplify_expression = TRUE,
+	slice_pushdown = TRUE,
+	no_optimization = FALSE
+) {
+	check_dots_empty()
+	if (!inherits(.data, "RPolarsLazyFrame")) {
+		rlang::abort("`sink_ipc()` can only be used on a Polars LazyFrame.")
+	}
 
-  rlang::arg_match0(compression, values = c("zstd", "lz4", "uncompressed"))
+	rlang::arg_match0(compression, values = c("zstd", "lz4", "uncompressed"))
 
-  .data$sink_ipc(
-    path = path,
-    compression = "zstd",
-    maintain_order = maintain_order,
-    type_coercion = type_coercion,
-    predicate_pushdown = predicate_pushdown,
-    projection_pushdown = projection_pushdown,
-    simplify_expression = simplify_expression,
-    slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization
-  )
+	.data$sink_ipc(
+		path = path,
+		compression = "zstd",
+		maintain_order = maintain_order,
+		type_coercion = type_coercion,
+		predicate_pushdown = predicate_pushdown,
+		projection_pushdown = projection_pushdown,
+		simplify_expression = simplify_expression,
+		slice_pushdown = slice_pushdown,
+		no_optimization = no_optimization
+	)
 }
 
 #' Stream output to a NDJSON file
@@ -294,30 +300,31 @@ sink_ipc <- function(
 #' @export
 
 sink_ndjson <- function(
-    .data,
-    path,
-    ...,
-    maintain_order = TRUE,
-    type_coercion = TRUE,
-    predicate_pushdown = TRUE,
-    projection_pushdown = TRUE,
-    simplify_expression = TRUE,
-    slice_pushdown = TRUE,
-    no_optimization = FALSE) {
-  check_dots_empty()
-  if (!inherits(.data, "RPolarsLazyFrame")) {
-    rlang::abort("`sink_ndjson()` can only be used on a Polars LazyFrame.")
-  }
+	.data,
+	path,
+	...,
+	maintain_order = TRUE,
+	type_coercion = TRUE,
+	predicate_pushdown = TRUE,
+	projection_pushdown = TRUE,
+	simplify_expression = TRUE,
+	slice_pushdown = TRUE,
+	no_optimization = FALSE
+) {
+	check_dots_empty()
+	if (!inherits(.data, "RPolarsLazyFrame")) {
+		rlang::abort("`sink_ndjson()` can only be used on a Polars LazyFrame.")
+	}
 
-  .data$sink_ndjson(
-    path = path,
-    compression = "zstd",
-    maintain_order = maintain_order,
-    type_coercion = type_coercion,
-    predicate_pushdown = predicate_pushdown,
-    projection_pushdown = projection_pushdown,
-    simplify_expression = simplify_expression,
-    slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization
-  )
+	.data$sink_ndjson(
+		path = path,
+		compression = "zstd",
+		maintain_order = maintain_order,
+		type_coercion = type_coercion,
+		predicate_pushdown = predicate_pushdown,
+		projection_pushdown = projection_pushdown,
+		simplify_expression = simplify_expression,
+		slice_pushdown = slice_pushdown,
+		no_optimization = no_optimization
+	)
 }

@@ -115,78 +115,106 @@
 #'
 #' # A correct expectation would be "one-to-many":
 #' left_join(country, country_year, join_by(iso), relationship = "one-to-many")
-left_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = FALSE,
-                                       suffix = c(".x", ".y"), ...,
-                                       keep = NULL,
-                                       na_matches = "na", relationship = NULL) {
-  check_unsupported_arg(copy = copy, keep = keep)
-  check_dots_empty()
-  join_(
-    x = x,
-    y = y,
-    by = by,
-    how = "left",
-    suffix = suffix,
-    na_matches = na_matches,
-    relationship = relationship
-  )
+left_join.RPolarsDataFrame <- function(
+	x,
+	y,
+	by = NULL,
+	copy = FALSE,
+	suffix = c(".x", ".y"),
+	...,
+	keep = NULL,
+	na_matches = "na",
+	relationship = NULL
+) {
+	check_unsupported_arg(copy = copy, keep = keep)
+	check_dots_empty()
+	join_(
+		x = x,
+		y = y,
+		by = by,
+		how = "left",
+		suffix = suffix,
+		na_matches = na_matches,
+		relationship = relationship
+	)
 }
 
 #' @rdname mutating-joins
 #' @export
-right_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = FALSE,
-                                        suffix = c(".x", ".y"), ...,
-                                        keep = NULL,
-                                        na_matches = "na", relationship = NULL) {
-  check_unsupported_arg(copy = copy, keep = keep)
-  check_dots_empty()
-  join_(
-    x = x,
-    y = y,
-    by = by,
-    how = "right",
-    suffix = suffix,
-    na_matches = na_matches,
-    relationship = relationship
-  )
+right_join.RPolarsDataFrame <- function(
+	x,
+	y,
+	by = NULL,
+	copy = FALSE,
+	suffix = c(".x", ".y"),
+	...,
+	keep = NULL,
+	na_matches = "na",
+	relationship = NULL
+) {
+	check_unsupported_arg(copy = copy, keep = keep)
+	check_dots_empty()
+	join_(
+		x = x,
+		y = y,
+		by = by,
+		how = "right",
+		suffix = suffix,
+		na_matches = na_matches,
+		relationship = relationship
+	)
 }
 
 #' @rdname mutating-joins
 #' @export
-full_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = FALSE,
-                                       suffix = c(".x", ".y"), ...,
-                                       keep = NULL,
-                                       na_matches = "na", relationship = NULL) {
-  check_unsupported_arg(copy = copy, keep = keep)
-  check_dots_empty()
-  join_(
-    x = x,
-    y = y,
-    by = by,
-    how = "full",
-    suffix = suffix,
-    na_matches = na_matches,
-    relationship = relationship
-  )
+full_join.RPolarsDataFrame <- function(
+	x,
+	y,
+	by = NULL,
+	copy = FALSE,
+	suffix = c(".x", ".y"),
+	...,
+	keep = NULL,
+	na_matches = "na",
+	relationship = NULL
+) {
+	check_unsupported_arg(copy = copy, keep = keep)
+	check_dots_empty()
+	join_(
+		x = x,
+		y = y,
+		by = by,
+		how = "full",
+		suffix = suffix,
+		na_matches = na_matches,
+		relationship = relationship
+	)
 }
 
 #' @rdname mutating-joins
 #' @export
-inner_join.RPolarsDataFrame <- function(x, y, by = NULL, copy = FALSE,
-                                        suffix = c(".x", ".y"), ...,
-                                        keep = NULL,
-                                        na_matches = "na", relationship = NULL) {
-  check_unsupported_arg(copy = copy, keep = keep)
-  check_dots_empty()
-  join_(
-    x = x,
-    y = y,
-    by = by,
-    how = "inner",
-    suffix = suffix,
-    na_matches = na_matches,
-    relationship = relationship
-  )
+inner_join.RPolarsDataFrame <- function(
+	x,
+	y,
+	by = NULL,
+	copy = FALSE,
+	suffix = c(".x", ".y"),
+	...,
+	keep = NULL,
+	na_matches = "na",
+	relationship = NULL
+) {
+	check_unsupported_arg(copy = copy, keep = keep)
+	check_dots_empty()
+	join_(
+		x = x,
+		y = y,
+		by = by,
+		how = "inner",
+		suffix = suffix,
+		na_matches = na_matches,
+		relationship = relationship
+	)
 }
 
 #' @rdname mutating-joins
@@ -240,33 +268,45 @@ inner_join.RPolarsLazyFrame <- inner_join.RPolarsDataFrame
 #'
 #' # only keep the rows of `test` that don't have matching keys in `test2`
 #' anti_join(test, test2, by = c("x", "y"))
-semi_join.RPolarsDataFrame <- function(x, y, by = NULL, ..., na_matches = "na") {
-  check_dots_empty_ignore(..., .unsupported = "copy")
-  join_(
-    x = x,
-    y = y,
-    by = by,
-    how = "semi",
-    suffix = NULL,
-    na_matches = na_matches,
-    relationship = NULL
-  )
+semi_join.RPolarsDataFrame <- function(
+	x,
+	y,
+	by = NULL,
+	...,
+	na_matches = "na"
+) {
+	check_dots_empty_ignore(..., .unsupported = "copy")
+	join_(
+		x = x,
+		y = y,
+		by = by,
+		how = "semi",
+		suffix = NULL,
+		na_matches = na_matches,
+		relationship = NULL
+	)
 }
 
 #' @rdname semi_join.RPolarsDataFrame
 #' @export
 
-anti_join.RPolarsDataFrame <- function(x, y, by = NULL, ..., na_matches = "na") {
-  check_dots_empty_ignore(..., .unsupported = "copy")
-  join_(
-    x = x,
-    y = y,
-    by = by,
-    how = "anti",
-    suffix = NULL,
-    na_matches = na_matches,
-    relationship = NULL
-  )
+anti_join.RPolarsDataFrame <- function(
+	x,
+	y,
+	by = NULL,
+	...,
+	na_matches = "na"
+) {
+	check_dots_empty_ignore(..., .unsupported = "copy")
+	join_(
+		x = x,
+		y = y,
+		by = by,
+		how = "anti",
+		suffix = NULL,
+		na_matches = na_matches,
+		relationship = NULL
+	)
 }
 
 #' @rdname semi_join.RPolarsDataFrame
@@ -304,205 +344,226 @@ anti_join.RPolarsLazyFrame <- anti_join.RPolarsDataFrame
 #'
 #' cross_join(test, test2)
 cross_join.RPolarsDataFrame <- function(x, y, ..., suffix = c(".x", ".y")) {
-  check_dots_empty_ignore(..., .unsupported = "copy")
-  join_(
-    x = x,
-    y = y,
-    by = NULL,
-    how = "cross",
-    suffix = suffix,
-    na_matches = NULL,
-    relationship = NULL
-  )
+	check_dots_empty_ignore(..., .unsupported = "copy")
+	join_(
+		x = x,
+		y = y,
+		by = NULL,
+		how = "cross",
+		suffix = suffix,
+		na_matches = NULL,
+		relationship = NULL
+	)
 }
 
 #' @rdname cross_join.RPolarsDataFrame
 #' @export
 cross_join.RPolarsLazyFrame <- cross_join.RPolarsDataFrame
 
-
 join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
-  all_df_or_lf <-
-    all(vapply(list(x, y), inherits, what = "RPolarsDataFrame", FUN.VALUE = logical(1L))) ||
-      all(vapply(list(x, y), inherits, what = "RPolarsLazyFrame", FUN.VALUE = logical(1L)))
+	all_df_or_lf <- all(
+		vapply(
+			list(x, y),
+			inherits,
+			what = "RPolarsDataFrame",
+			FUN.VALUE = logical(1L)
+		)
+	) ||
+		all(
+			vapply(
+				list(x, y),
+				inherits,
+				what = "RPolarsLazyFrame",
+				FUN.VALUE = logical(1L)
+			)
+		)
 
-  if (!all_df_or_lf) {
-    rlang::abort(
-      "`x` and `y` must be either two DataFrames or two LazyFrames.",
-      call = caller_env()
-    )
-  }
+	if (!all_df_or_lf) {
+		rlang::abort(
+			"`x` and `y` must be either two DataFrames or two LazyFrames.",
+			call = caller_env()
+		)
+	}
 
-  if (!is.null(suffix) && length(suffix) != 2) {
-    rlang::abort(
-      "`suffix` must be of length 2.",
-      call = caller_env()
-    )
-  }
+	if (!is.null(suffix) && length(suffix) != 2) {
+		rlang::abort(
+			"`suffix` must be of length 2.",
+			call = caller_env()
+		)
+	}
 
-  if (!is.null(relationship)) {
-    validate <- switch(relationship,
-      "many-to-many" = "m:m",
-      "one-to-one" = "1:1",
-      "many-to-one" = "m:1",
-      "one-to-many" = "1:m",
-      abort(
-        paste0("`relationship` must be one of \"one-to-one\", \"one-to-many\", \"many-to-one\", or \"many-to-many\", not \"", relationship, "\"."),
-        call = caller_env()
-      )
-    )
-  } else {
-    validate <- "m:m"
-  }
+	if (!is.null(relationship)) {
+		validate <- switch(
+			relationship,
+			"many-to-many" = "m:m",
+			"one-to-one" = "1:1",
+			"many-to-one" = "m:1",
+			"one-to-many" = "1:m",
+			abort(
+				paste0(
+					"`relationship` must be one of \"one-to-one\", \"one-to-many\", \"many-to-one\", or \"many-to-many\", not \"",
+					relationship,
+					"\"."
+				),
+				call = caller_env()
+			)
+		)
+	} else {
+		validate <- "m:m"
+	}
 
-  if (is.null(na_matches)) {
-    join_nulls <- FALSE
-  } else {
-    join_nulls <- switch(na_matches,
-      "na" = TRUE,
-      "never" = FALSE,
-      abort(
-        paste0("`relationship` must be one of \"na\" or \"never\", not \"", na_matches, "\"."),
-        call = caller_env()
-      )
-    )
-  }
+	if (is.null(na_matches)) {
+		join_nulls <- FALSE
+	} else {
+		join_nulls <- switch(
+			na_matches,
+			"na" = TRUE,
+			"never" = FALSE,
+			abort(
+				paste0(
+					"`relationship` must be one of \"na\" or \"never\", not \"",
+					na_matches,
+					"\"."
+				),
+				call = caller_env()
+			)
+		)
+	}
 
-  if (is.null(by) && how != "cross") {
-    by <- intersect(names(x), names(y))
-    if (length(by) == 0) {
-      rlang::abort(
-        c(
-          "`by` must be supplied when `x` and `y` have no common variables.",
-          "i" = "Use `cross_join()` to perform a cross-join."
-        ),
-        call = caller_env()
-      )
-    }
-    rlang::inform(
-      paste0("Joining by ", paste("`", by, "`", collapse = ", ", sep = ""))
-    )
-  }
+	if (is.null(by) && how != "cross") {
+		by <- intersect(names(x), names(y))
+		if (length(by) == 0) {
+			rlang::abort(
+				c(
+					"`by` must be supplied when `x` and `y` have no common variables.",
+					"i" = "Use `cross_join()` to perform a cross-join."
+				),
+				call = caller_env()
+			)
+		}
+		rlang::inform(
+			paste0("Joining by ", paste("`", by, "`", collapse = ", ", sep = ""))
+		)
+	}
 
-  if (is_inequality_join(by)) {
-    out <- eval_inequality_join(x, y, how, by, suffix)
-    return(out)
-  }
+	if (is_inequality_join(by)) {
+		out <- eval_inequality_join(x, y, how, by, suffix)
+		return(out)
+	}
 
-  by <- unpack_join_by(by)
+	by <- unpack_join_by(by)
 
-  if (!is.null(names(by))) {
-    for (i in seq_along(by)) {
-      if (names(by)[i] == "") {
-        names(by)[i] <- by[i]
-      }
-    }
-    left_on <- names(by)
-    right_on <- unname(by)
-  } else {
-    left_on <- by
-    right_on <- by
-  }
+	if (!is.null(names(by))) {
+		for (i in seq_along(by)) {
+			if (names(by)[i] == "") {
+				names(by)[i] <- by[i]
+			}
+		}
+		left_on <- names(by)
+		right_on <- unname(by)
+	} else {
+		left_on <- by
+		right_on <- by
+	}
 
-  dupes <- intersect(
-    setdiff(names(x), by),
-    setdiff(names(y), by)
-  )
+	dupes <- intersect(
+		setdiff(names(x), by),
+		setdiff(names(y), by)
+	)
 
-  if (how == "right") {
-    out <- y$join(
-      other = x,
-      left_on = left_on,
-      right_on = right_on,
-      how = "left",
-      join_nulls = join_nulls,
-      validate = validate
-    )
-  } else {
-    out <- x$join(
-      other = y,
-      left_on = left_on,
-      right_on = right_on,
-      how = how,
-      join_nulls = join_nulls,
-      validate = validate,
-      coalesce = TRUE
-    )
-  }
+	if (how == "right") {
+		out <- y$join(
+			other = x,
+			left_on = left_on,
+			right_on = right_on,
+			how = "left",
+			join_nulls = join_nulls,
+			validate = validate
+		)
+	} else {
+		out <- x$join(
+			other = y,
+			left_on = left_on,
+			right_on = right_on,
+			how = how,
+			join_nulls = join_nulls,
+			validate = validate,
+			coalesce = TRUE
+		)
+	}
 
-  out <- if (length(dupes) > 0) {
-    mapping <- as.list(c(paste0(dupes, suffix[1]), paste0(dupes, suffix[2])))
-    names(mapping) <- c(dupes, paste0(dupes, "_right"))
-    out$rename(mapping)
-  } else {
-    out
-  }
-  add_tidypolars_class(out)
+	out <- if (length(dupes) > 0) {
+		mapping <- as.list(c(paste0(dupes, suffix[1]), paste0(dupes, suffix[2])))
+		names(mapping) <- c(dupes, paste0(dupes, "_right"))
+		out$rename(mapping)
+	} else {
+		out
+	}
+	add_tidypolars_class(out)
 }
 
-
 unpack_join_by <- function(by) {
-  if (inherits(by, "dplyr_join_by")) {
-    out <- by$y
-    names(out) <- by$x
-    out
-  } else {
-    by
-  }
+	if (inherits(by, "dplyr_join_by")) {
+		out <- by$y
+		names(out) <- by$x
+		out
+	} else {
+		by
+	}
 }
 
 is_inequality_join <- function(by) {
-  inherits(by, "dplyr_join_by") && !all(by$condition == "==")
+	inherits(by, "dplyr_join_by") && !all(by$condition == "==")
 }
 
 eval_inequality_join <- function(x, y, how, by, suffix) {
-  if (how != "inner") {
-    abort(
-      "Inequality joins are only supported in `inner_join()` for now.",
-      call = caller_env(2)
-    )
-  }
-  by2 <- by
+	if (how != "inner") {
+		abort(
+			"Inequality joins are only supported in `inner_join()` for now.",
+			call = caller_env(2)
+		)
+	}
+	by2 <- by
 
-  common_cols <- intersect(names(x), names(y))
+	common_cols <- intersect(names(x), names(y))
 
-  by2$x <- lapply(by2$x, function(elem) {
-    pl$col(as.character(elem))
-  })
+	by2$x <- lapply(by2$x, function(elem) {
+		pl$col(as.character(elem))
+	})
 
-  by2$y <- lapply(by2$y, function(elem) {
-    if (length(common_cols) > 0 && as.character(elem) %in% common_cols) {
-      pl$col(paste0(as.character(elem), suffix[2]))
-    } else {
-      pl$col(as.character(elem))
-    }
-  })
+	by2$y <- lapply(by2$y, function(elem) {
+		if (length(common_cols) > 0 && as.character(elem) %in% common_cols) {
+			pl$col(paste0(as.character(elem), suffix[2]))
+		} else {
+			pl$col(as.character(elem))
+		}
+	})
 
-  by3 <- lapply(seq_along(by$condition), function(i) {
-    if (by$condition[i] == "==") {
-      by2$x[[i]]$eq(by2$y[[i]])
-    } else if (by$condition[i] == ">") {
-      by2$x[[i]]$gt(by2$y[[i]])
-    } else if (by$condition[i] == ">=") {
-      by2$x[[i]]$gt_eq(by2$y[[i]])
-    } else if (by$condition[i] == "<") {
-      by2$x[[i]]$lt(by2$y[[i]])
-    } else if (by$condition[i] == "<=") {
-      by2$x[[i]]$lt_eq(by2$y[[i]])
-    }
-  })
+	by3 <- lapply(seq_along(by$condition), function(i) {
+		if (by$condition[i] == "==") {
+			by2$x[[i]]$eq(by2$y[[i]])
+		} else if (by$condition[i] == ">") {
+			by2$x[[i]]$gt(by2$y[[i]])
+		} else if (by$condition[i] == ">=") {
+			by2$x[[i]]$gt_eq(by2$y[[i]])
+		} else if (by$condition[i] == "<") {
+			by2$x[[i]]$lt(by2$y[[i]])
+		} else if (by$condition[i] == "<=") {
+			by2$x[[i]]$lt_eq(by2$y[[i]])
+		}
+	})
 
-  res <- x$join_where(y, by3, suffix = suffix[2])
-  if (length(common_cols) > 0) {
-    # Only keep common columns that were involved in inequality joins, otherwise
-    # they just don't have a duplicate in the output
-    common_cols <- Filter(
-      function(x) paste0(x, suffix[2]) %in% names(res),
-      common_cols
-    )
-    new_cols <- as.list(paste0(common_cols, suffix[1]))
-    names(new_cols) <- common_cols
-    res <- res$rename(new_cols)
-  }
-  res
+	res <- x$join_where(y, by3, suffix = suffix[2])
+	if (length(common_cols) > 0) {
+		# Only keep common columns that were involved in inequality joins, otherwise
+		# they just don't have a duplicate in the output
+		common_cols <- Filter(
+			function(x) paste0(x, suffix[2]) %in% names(res),
+			common_cols
+		)
+		new_cols <- as.list(paste0(common_cols, suffix[1]))
+		names(new_cols) <- common_cols
+		res <- res$rename(new_cols)
+	}
+	res
 }

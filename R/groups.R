@@ -27,31 +27,36 @@
 #' )
 #' by_cyl |> filter(disp == max(disp))
 #'
-group_by.RPolarsDataFrame <- function(.data, ..., maintain_order = FALSE, .add = FALSE) {
-  if (isTRUE(attributes(.data)$grp_type == "rowwise")) {
-    rlang::abort(
-      c(
-        "Cannot use `group_by()` if `rowwise()` is also used.",
-        "i" = "Use `ungroup()` first, and then `group_by()`."
-      )
-    )
-  }
+group_by.RPolarsDataFrame <- function(
+	.data,
+	...,
+	maintain_order = FALSE,
+	.add = FALSE
+) {
+	if (isTRUE(attributes(.data)$grp_type == "rowwise")) {
+		rlang::abort(
+			c(
+				"Cannot use `group_by()` if `rowwise()` is also used.",
+				"i" = "Use `ungroup()` first, and then `group_by()`."
+			)
+		)
+	}
 
-  vars <- tidyselect_dots(.data, ...)
+	vars <- tidyselect_dots(.data, ...)
 
-  if (isTRUE(.add)) {
-    existing_groups <- attributes(.data)$pl_grps
-    vars <- unique(c(existing_groups, vars))
-  }
+	if (isTRUE(.add)) {
+		existing_groups <- attributes(.data)$pl_grps
+		vars <- unique(c(existing_groups, vars))
+	}
 
-  if (length(vars) == 0) {
-    return(.data)
-  }
-  # need to clone, otherwise the data gets attributes, even if unassigned
-  .data2 <- .data$clone()
-  attr(.data2, "pl_grps") <- vars
-  attr(.data2, "maintain_grp_order") <- maintain_order
-  add_tidypolars_class(.data2)
+	if (length(vars) == 0) {
+		return(.data)
+	}
+	# need to clone, otherwise the data gets attributes, even if unassigned
+	.data2 <- .data$clone()
+	attr(.data2, "pl_grps") <- vars
+	attr(.data2, "maintain_grp_order") <- maintain_order
+	add_tidypolars_class(.data2)
 }
 
 #' @param x A Polars Data/LazyFrame
@@ -59,10 +64,10 @@ group_by.RPolarsDataFrame <- function(.data, ..., maintain_order = FALSE, .add =
 #' @export
 
 ungroup.RPolarsDataFrame <- function(x, ...) {
-  attributes(x)$pl_grps <- NULL
-  attributes(x)$maintain_grp_order <- NULL
-  attributes(x)$grp_type <- NULL
-  x
+	attributes(x)$pl_grps <- NULL
+	attributes(x)$maintain_grp_order <- NULL
+	attributes(x)$grp_type <- NULL
+	x
 }
 
 #' @rdname group_by.RPolarsDataFrame
@@ -72,7 +77,6 @@ group_by.RPolarsLazyFrame <- group_by.RPolarsDataFrame
 #' @rdname group_by.RPolarsDataFrame
 #' @export
 ungroup.RPolarsLazyFrame <- ungroup.RPolarsDataFrame
-
 
 #' Grouping metadata
 #'
@@ -90,12 +94,12 @@ ungroup.RPolarsLazyFrame <- ungroup.RPolarsDataFrame
 #'
 #' group_keys(pl_g)
 group_vars.RPolarsDataFrame <- function(x) {
-  grps <- attributes(x)$pl_grps
-  if (length(grps) > 0) {
-    grps
-  } else {
-    character(0)
-  }
+	grps <- attributes(x)$pl_grps
+	if (length(grps) > 0) {
+		grps
+	} else {
+		character(0)
+	}
 }
 
 #' @rdname group_vars.RPolarsDataFrame
@@ -106,26 +110,22 @@ group_vars.RPolarsLazyFrame <- group_vars.RPolarsDataFrame
 #' @inheritParams rlang::args_dots_empty
 #' @export
 group_keys.RPolarsDataFrame <- function(.tbl, ...) {
-  grps <- attributes(.tbl)$pl_grps
-  if (length(grps) > 0) {
-    out <- .tbl$group_by(grps)$
-      agg(pl$lit(1))$
-      drop("literal")$
-      sort(grps)
+	grps <- attributes(.tbl)$pl_grps
+	if (length(grps) > 0) {
+		out <- .tbl$group_by(grps)$agg(pl$lit(1))$drop("literal")$sort(grps)
 
-    if (inherits(out, "RPolarsLazyFrame")) {
-      out <- out$collect()
-    }
-    out$to_data_frame()
-  } else {
-    data.frame()
-  }
+		if (inherits(out, "RPolarsLazyFrame")) {
+			out <- out$collect()
+		}
+		out$to_data_frame()
+	} else {
+		data.frame()
+	}
 }
 
 #' @rdname group_vars.RPolarsDataFrame
 #' @export
 group_keys.RPolarsLazyFrame <- group_keys.RPolarsDataFrame
-
 
 #' Grouping metadata
 #'
@@ -144,14 +144,14 @@ group_keys.RPolarsLazyFrame <- group_keys.RPolarsDataFrame
 #'
 #' group_split(pl_g)
 group_split.RPolarsDataFrame <- function(.tbl, ..., .keep = TRUE) {
-  grps <- attributes(.tbl)$pl_grps
-  dots <- tidyselect_dots(.tbl, ...)
+	grps <- attributes(.tbl)$pl_grps
+	dots <- tidyselect_dots(.tbl, ...)
 
-  if (length(grps) > 0 && length(dots) > 0) {
-    warn("`.tbl` is already grouped so variables in `...` are ignored.")
-  }
+	if (length(grps) > 0 && length(dots) > 0) {
+		warn("`.tbl` is already grouped so variables in `...` are ignored.")
+	}
 
-  grps <- grps %||% dots
+	grps <- grps %||% dots
 
-  .tbl$partition_by(grps, include_key = .keep)
+	.tbl$partition_by(grps, include_key = .keep)
 }

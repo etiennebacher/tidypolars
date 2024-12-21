@@ -30,39 +30,46 @@
 #'
 #' fill(pl_grouped, x, y, .direction = "down")
 
-fill.RPolarsDataFrame <- function(data, ..., .direction = c("down", "up", "downup", "updown")) {
+fill.RPolarsDataFrame <- function(
+	data,
+	...,
+	.direction = c("down", "up", "downup", "updown")
+) {
+	vars <- tidyselect_dots(data, ...)
+	if (length(vars) == 0) {
+		return(data)
+	}
+	.direction <- match.arg(.direction)
 
-  vars <- tidyselect_dots(data, ...)
-  if (length(vars) == 0) {
-    return(data)
-  }
-  .direction <- match.arg(.direction)
+	grps <- attributes(data)$pl_grps
+	is_grouped <- !is.null(grps)
+	mo <- attributes(data)$maintain_grp_order
 
-  grps <- attributes(data)$pl_grps
-  is_grouped <- !is.null(grps)
-  mo <- attributes(data)$maintain_grp_order
+	expr <- polars::pl$col(vars)
+	expr <- switch(
+		.direction,
+		"down" = expr$fill_null(strategy = 'forward'),
+		"up" = expr$fill_null(strategy = 'backward'),
+		"downup" = expr$fill_null(strategy = 'forward')$fill_null(
+			strategy = 'backward'
+		),
+		"updown" = expr$fill_null(strategy = 'backward')$fill_null(
+			strategy = 'forward'
+		)
+	)
 
-  expr <- polars::pl$col(vars)
-  expr <- switch(
-    .direction,
-    "down" = expr$fill_null(strategy = 'forward'),
-    "up" = expr$fill_null(strategy = 'backward'),
-    "downup" = expr$fill_null(strategy = 'forward')$fill_null(strategy = 'backward'),
-    "updown" = expr$fill_null(strategy = 'backward')$fill_null(strategy = 'forward')
-  )
+	if (is_grouped) {
+		expr <- expr$over(grps)
+	}
 
-  if (is_grouped) {
-    expr <- expr$over(grps)
-  }
+	out <- if (is_grouped) {
+		data$with_columns(expr) |>
+			group_by(all_of(grps), maintain_order = mo)
+	} else {
+		data$with_columns(expr)
+	}
 
-  out <- if (is_grouped) {
-    data$with_columns(expr) |>
-      group_by(all_of(grps), maintain_order = mo)
-  } else {
-    data$with_columns(expr)
-  }
-
-  add_tidypolars_class(out)
+	add_tidypolars_class(out)
 }
 
 #' @export

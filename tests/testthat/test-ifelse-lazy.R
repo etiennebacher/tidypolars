@@ -3,92 +3,92 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior of ifelse() works", {
-  test <- pl$LazyFrame(
-    x1 = c("a", "a", "b", "a", "c"),
-    x2 = c(2, 1, 5, 3, 1),
-    x3 = "hello"
-  )
+	test <- pl$LazyFrame(
+		x1 = c("a", "a", "b", "a", "c"),
+		x2 = c(2, 1, 5, 3, 1),
+		x3 = "hello"
+	)
 
-  expect_equal_lazy(
-    test |>
-      mutate(y = ifelse(x1 == 'a', "foo", "bar")) |>
-      pull(y),
-    c("foo", "foo", "bar", "foo", "bar")
-  )
+	expect_equal_lazy(
+		test |>
+			mutate(y = ifelse(x1 == 'a', "foo", "bar")) |>
+			pull(y),
+		c("foo", "foo", "bar", "foo", "bar")
+	)
 
-  expect_equal_lazy(
-    test |>
-      mutate(y = ifelse(x1 == 'a', x3, x1)) |>
-      pull(y),
-    c("hello", "hello", "b", "hello", "c")
-  )
+	expect_equal_lazy(
+		test |>
+			mutate(y = ifelse(x1 == 'a', x3, x1)) |>
+			pull(y),
+		c("hello", "hello", "b", "hello", "c")
+	)
 })
 
 test_that("basic behavior of if_else() works", {
-  test <- pl$LazyFrame(
-    x1 = c("a", "a", "b", "a", "c"),
-    x2 = c(2, 1, 5, 3, 1),
-    x3 = "hello"
-  )
+	test <- pl$LazyFrame(
+		x1 = c("a", "a", "b", "a", "c"),
+		x2 = c(2, 1, 5, 3, 1),
+		x3 = "hello"
+	)
 
-  expect_equal_lazy(
-    test |>
-      mutate(y = if_else(x1 == 'a', "foo", "bar")) |>
-      pull(y),
-    c("foo", "foo", "bar", "foo", "bar")
-  )
+	expect_equal_lazy(
+		test |>
+			mutate(y = if_else(x1 == 'a', "foo", "bar")) |>
+			pull(y),
+		c("foo", "foo", "bar", "foo", "bar")
+	)
 
-  expect_equal_lazy(
-    test |>
-      mutate(y = if_else(x1 == 'a', x3, x1)) |>
-      pull(y),
-    c("hello", "hello", "b", "hello", "c")
-  )
+	expect_equal_lazy(
+		test |>
+			mutate(y = if_else(x1 == 'a', x3, x1)) |>
+			pull(y),
+		c("hello", "hello", "b", "hello", "c")
+	)
 })
 
 test_that("error when different types", {
-  test <- pl$LazyFrame(
-    x1 = c("a", "a", "b", "a", "c"),
-    x2 = c(2, 1, 5, 3, 1),
-    x3 = "hello"
-  )
+	test <- pl$LazyFrame(
+		x1 = c("a", "a", "b", "a", "c"),
+		x2 = c(2, 1, 5, 3, 1),
+		x3 = "hello"
+	)
 
-  # different behavior than from classic R (e.g iris$Species == 1
-  # returns all FALSE)
-  # I think it's better like this because it forces the user to
-  # be clear about data types
-  expect_snapshot_lazy(
-    test |> mutate(y = ifelse(x1 == 1, "foo", "bar")),
-    error = TRUE
-  )
-  expect_snapshot_lazy(
-    test |> mutate(y = if_else(x1 == 1, "foo", "bar")),
-    error = TRUE
-  )
+	# different behavior than from classic R (e.g iris$Species == 1
+	# returns all FALSE)
+	# I think it's better like this because it forces the user to
+	# be clear about data types
+	expect_snapshot_lazy(
+		test |> mutate(y = ifelse(x1 == 1, "foo", "bar")),
+		error = TRUE
+	)
+	expect_snapshot_lazy(
+		test |> mutate(y = if_else(x1 == 1, "foo", "bar")),
+		error = TRUE
+	)
 })
 
 test_that("evaluation of external objects works", {
-  test <- pl$LazyFrame(
-    x1 = c("a", "a", "b", "a", "c"),
-    x2 = c(2, 1, 5, 3, 1),
-    x3 = "hello"
-  )
+	test <- pl$LazyFrame(
+		x1 = c("a", "a", "b", "a", "c"),
+		x2 = c(2, 1, 5, 3, 1),
+		x3 = "hello"
+	)
 
-  foo <- "a"
+	foo <- "a"
 
-  expect_equal_lazy(
-    test |>
-      mutate(y = ifelse(x1 %in% foo, x3, x1)) |>
-      pull(y),
-    c("hello", "hello", "b", "hello", "c")
-  )
+	expect_equal_lazy(
+		test |>
+			mutate(y = ifelse(x1 %in% foo, x3, x1)) |>
+			pull(y),
+		c("hello", "hello", "b", "hello", "c")
+	)
 
-  expect_equal_lazy(
-    test |>
-      mutate(y = if_else(x1 %in% foo, x3, x1)) |>
-      pull(y),
-    c("hello", "hello", "b", "hello", "c")
-  )
+	expect_equal_lazy(
+		test |>
+			mutate(y = if_else(x1 %in% foo, x3, x1)) |>
+			pull(y),
+		c("hello", "hello", "b", "hello", "c")
+	)
 })
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

@@ -3,94 +3,101 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("paste() and paste0() work", {
-  for_all(
-    tests = 40,
-    string = character_(any_na = TRUE),
-    separator = character_(len = 1),
-    property = function(string, separator) {
-      test_df <- data.frame(x1 = string)
-      test <- pl$LazyFrame(x1 = string)
+	for_all(
+		tests = 40,
+		string = character_(any_na = TRUE),
+		separator = character_(len = 1),
+		property = function(string, separator) {
+			test_df <- data.frame(x1 = string)
+			test <- pl$LazyFrame(x1 = string)
 
-      expect_equal_lazy(
-        mutate(test, foo = paste(x1, "he")) |>
-          pull(foo),
-        mutate(test_df, foo = paste(x1, "he")) |>
-          pull(foo)
-      )
+			expect_equal_lazy(
+				mutate(test, foo = paste(x1, "he")) |>
+					pull(foo),
+				mutate(test_df, foo = paste(x1, "he")) |>
+					pull(foo)
+			)
 
-      expect_equal_lazy(
-        mutate(test, foo = paste(x1, "he", sep = separator)) |>
-          pull(foo),
-        mutate(test_df, foo = paste(x1, "he", sep = separator)) |>
-          pull(foo)
-      )
+			expect_equal_lazy(
+				mutate(test, foo = paste(x1, "he", sep = separator)) |>
+					pull(foo),
+				mutate(test_df, foo = paste(x1, "he", sep = separator)) |>
+					pull(foo)
+			)
 
-      expect_equal_lazy(
-        mutate(test, foo = paste0(x1, "he")) |>
-          pull(foo),
-        mutate(test_df, foo = paste0(x1, "he")) |>
-          pull(foo)
-      )
+			expect_equal_lazy(
+				mutate(test, foo = paste0(x1, "he")) |>
+					pull(foo),
+				mutate(test_df, foo = paste0(x1, "he")) |>
+					pull(foo)
+			)
 
-      expect_equal_lazy(
-        mutate(test, foo = paste0(x1, "he", x1)) |>
-          pull(foo),
-        mutate(test_df, foo = paste0(x1, "he", x1)) |>
-          pull(foo)
-      )
-    }
-  )
+			expect_equal_lazy(
+				mutate(test, foo = paste0(x1, "he", x1)) |>
+					pull(foo),
+				mutate(test_df, foo = paste0(x1, "he", x1)) |>
+					pull(foo)
+			)
+		}
+	)
 })
 
-patrick::with_parameters_test_that("several non-regex functions work",
-  {
-    for_all(
-      tests = 40,
-      string = character_(any_na = TRUE),
-      property = function(string) {
-        test_df <- data.frame(x1 = string)
-        test <- pl$LazyFrame(x1 = string)
+patrick::with_parameters_test_that(
+	"several non-regex functions work",
+	{
+		for_all(
+			tests = 40,
+			string = character_(any_na = TRUE),
+			property = function(string) {
+				test_df <- data.frame(x1 = string)
+				test <- pl$LazyFrame(x1 = string)
 
-        pl_code <- paste0("mutate(test, foo = ", fun, "(string)) |> pull(foo)")
-        tv_code <- paste0("mutate(test_df, foo = ", fun, "(string)) |> pull(foo)")
+				pl_code <- paste0("mutate(test, foo = ", fun, "(string)) |> pull(foo)")
+				tv_code <- paste0(
+					"mutate(test_df, foo = ",
+					fun,
+					"(string)) |> pull(foo)"
+				)
 
-        expect_equal_lazy(
-          eval(parse(text = pl_code)),
-          eval(parse(text = tv_code)),
-        )
-      }
-    )
-  },
-  fun = c("str_to_upper", "str_to_lower", "str_length", "str_squish")
+				expect_equal_lazy(
+					eval(parse(text = pl_code)),
+					eval(parse(text = tv_code)),
+				)
+			}
+		)
+	},
+	fun = c("str_to_upper", "str_to_lower", "str_length", "str_squish")
 )
 
-
 test_that("str_trim() works", {
-  for_all(
-    tests = 40,
-    string = character_(any_na = TRUE),
-    side = quickcheck::one_of(constant("both"), constant("left"), constant("right")),
-    property = function(string, side) {
-      test_df <- data.frame(x1 = string)
-      test <- pl$LazyFrame(x1 = string)
+	for_all(
+		tests = 40,
+		string = character_(any_na = TRUE),
+		side = quickcheck::one_of(
+			constant("both"),
+			constant("left"),
+			constant("right")
+		),
+		property = function(string, side) {
+			test_df <- data.frame(x1 = string)
+			test <- pl$LazyFrame(x1 = string)
 
-      expect_equal_lazy(
-        mutate(test, foo = str_trim(x1)) |>
-          pull(foo),
-        mutate(test_df, foo = str_trim(x1)) |>
-          pull(foo)
-      )
+			expect_equal_lazy(
+				mutate(test, foo = str_trim(x1)) |>
+					pull(foo),
+				mutate(test_df, foo = str_trim(x1)) |>
+					pull(foo)
+			)
 
-      expect_equal_lazy(
-        mutate(test, foo = str_trim(x1, side = side)) |>
-          pull(foo),
-        mutate(test_df, foo = str_trim(x1, side = side)) |>
-          pull(foo)
-      )
-    }
-  )
+			expect_equal_lazy(
+				mutate(test, foo = str_trim(x1, side = side)) |>
+					pull(foo),
+				mutate(test_df, foo = str_trim(x1, side = side)) |>
+					pull(foo)
+			)
+		}
+	)
 })
-
 
 # TODO: Problem is that I don't have a way to check that length of string is the
 # same as length of pad or width. This will probably error in polars but
@@ -127,23 +134,23 @@ test_that("str_trim() works", {
 # })
 
 test_that("str_dup() works", {
-  for_all(
-    tests = 100,
-    string = character_(any_na = TRUE),
-    # Very high numbers crash the session, I guess because of stringr
-    times = numeric_bounded(-10000, 10000, any_na = TRUE),
-    property = function(string, times) {
-      test_df <- data.frame(x1 = string)
-      test <- pl$LazyFrame(x1 = string)
+	for_all(
+		tests = 100,
+		string = character_(any_na = TRUE),
+		# Very high numbers crash the session, I guess because of stringr
+		times = numeric_bounded(-10000, 10000, any_na = TRUE),
+		property = function(string, times) {
+			test_df <- data.frame(x1 = string)
+			test <- pl$LazyFrame(x1 = string)
 
-      expect_equal_or_both_error(
-        mutate(test, foo = str_dup(x1, times = times)) |>
-          pull(foo),
-        mutate(test_df, foo = str_dup(x1, times = times)) |>
-          pull(foo)
-      )
-    }
-  )
+			expect_equal_or_both_error(
+				mutate(test, foo = str_dup(x1, times = times)) |>
+					pull(foo),
+				mutate(test_df, foo = str_dup(x1, times = times)) |>
+					pull(foo)
+			)
+		}
+	)
 })
 
 # string = c("B#co4Nq,q", "B#co4Nq,q", "B#co4Nq,q", NA, NA, "B#co4Nq,q", NA)

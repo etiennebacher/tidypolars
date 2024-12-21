@@ -9,11 +9,18 @@ lf <- list.files(test_path(), pattern = "^test")
 eager <- lf[grep("lazy", lf, invert = TRUE)]
 
 exceptions <- c(
-  "test-benchmark.R", "test-compute.R", "test-collect.R",
-  "test-describe.R", "test-fetch.R",
+  "test-benchmark.R",
+  "test-compute.R",
+  "test-collect.R",
+  "test-describe.R",
+  "test-fetch.R",
   "test-group_split.R",
-  "test-pivot_wider.R", "test-read-write.R", "test-sink_csv.R",
-  "test-sink.R", "test-summary.R", "test-utils.R",
+  "test-pivot_wider.R",
+  "test-read-write.R",
+  "test-sink_csv.R",
+  "test-sink.R",
+  "test-summary.R",
+  "test-utils.R",
   "test-write.R"
 )
 
@@ -27,10 +34,12 @@ for (i in eager) {
   out <- gsub("expect_error\\(", "expect_error_lazy(", out)
   out <- gsub("expect_snapshot", "expect_snapshot_lazy", out)
   out <- paste0(
-    "### [GENERATED AUTOMATICALLY] Update ", i, " instead.\n\n",
+    "### [GENERATED AUTOMATICALLY] Update ",
+    i,
+    " instead.\n\n",
     "Sys.setenv('TIDYPOLARS_TEST' = TRUE)\n\n",
     paste(out, collapse = "\n"),
-    "\n\nSys.setenv('TIDYPOLARS_TEST' = FALSE)"
+    "\n\nSys.setenv('TIDYPOLARS_TEST' = FALSE)\n"
   )
   cat(out, file = test_path(gsub("\\.R$", "-lazy\\.R", i)))
 }

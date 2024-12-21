@@ -17,42 +17,44 @@
 #' replace_na(pl_test, list(x = 0, y = 999))
 
 replace_na.RPolarsDataFrame <- function(data, replace, ...) {
+	is_scalar <- length(replace) == 1 && !is.list(replace)
 
-  is_scalar <- length(replace) == 1 && !is.list(replace)
+	# TODO: maybe re-use fill_null() once this is fixed
+	# https://github.com/pola-rs/polars/issues/13789
+	#
+	# replace() errors if we try to replace numeric by character, but coerces
+	# floats to integer.
+	# fill_null() does the opposite
+	#
+	# => depending on the replacement, use one or the other.
+	if (is_scalar) {
+		if (is.character(replace)) {
+			exprs <- pl$all()$replace(NA, replace)
+		} else {
+			exprs <- pl$all()$fill_null(replace)
+		}
+	} else if (is.list(replace)) {
+		exprs <- list()
+		for (i in seq_along(replace)) {
+			if (is.character(replace[[i]])) {
+				exprs[[i]] <- polars::pl$col(names(replace)[i])$replace(
+					NA,
+					replace[[i]]
+				)
+			} else {
+				exprs[[i]] <- polars::pl$col(names(replace)[i])$fill_null(replace[[i]])
+			}
+		}
+	}
 
-  # TODO: maybe re-use fill_null() once this is fixed
-  # https://github.com/pola-rs/polars/issues/13789
-  #
-  # replace() errors if we try to replace numeric by character, but coerces
-  # floats to integer.
-  # fill_null() does the opposite
-  #
-  # => depending on the replacement, use one or the other.
-  if (is_scalar) {
-    if (is.character(replace)) {
-      exprs <- pl$all()$replace(NA, replace)
-    } else {
-      exprs <- pl$all()$fill_null(replace)
-    }
-  } else if (is.list(replace)) {
-    exprs <- list()
-    for (i in seq_along(replace)) {
-      if (is.character(replace[[i]])) {
-        exprs[[i]] <- polars::pl$col(names(replace)[i])$replace(NA, replace[[i]])
-      } else {
-        exprs[[i]] <- polars::pl$col(names(replace)[i])$fill_null(replace[[i]])
-      }
-    }
-  }
+	out <- tryCatch(
+		data$with_columns(exprs),
+		error = function(e) {
+			rlang::abort(e$message, call = caller_env(4))
+		}
+	)
 
-  out <- tryCatch(
-    data$with_columns(exprs),
-    error = function(e) {
-      rlang::abort(e$message, call = caller_env(4))
-    }
-  )
-
-  add_tidypolars_class(out)
+	add_tidypolars_class(out)
 }
 
 #' @rdname replace_na.RPolarsDataFrame

@@ -33,44 +33,45 @@
 #'   complete(item_id, item_name)
 
 complete.RPolarsDataFrame <- function(data, ..., fill = list()) {
+	vars <- tidyselect_dots(data, ...)
+	if (length(vars) < 2) return(data)
 
-  vars <- tidyselect_dots(data, ...)
-  if (length(vars) < 2) return(data)
+	grps <- attributes(data)$pl_grps
+	mo <- attributes(data)$maintain_grp_order
+	is_grouped <- !is.null(grps)
 
-  grps <- attributes(data)$pl_grps
-  mo <- attributes(data)$maintain_grp_order
-  is_grouped <- !is.null(grps)
+	if (isTRUE(is_grouped)) {
+		chain <- data$group_by(grps, maintain_order = mo)$agg(
+			pl$col(vars)$unique()$sort()
+		)
+	} else {
+		chain <- data$select(pl$col(vars)$unique()$sort()$implode())
+	}
 
-  if (isTRUE(is_grouped)) {
-    chain <- data$group_by(grps, maintain_order = mo)$agg(pl$col(vars)$unique()$sort())
-  } else {
-    chain <- data$select(pl$col(vars)$unique()$sort()$implode())
-  }
+	for (i in seq_along(vars)) {
+		chain <- chain$explode(vars[i])
+	}
 
-  for (i in seq_along(vars)) {
-    chain <- chain$explode(vars[i])
-  }
+	if (isTRUE(is_grouped)) {
+		out <- chain$join(data, on = c(grps, vars), how = 'left')
+	} else {
+		out <- chain$join(data, on = vars, how = 'left')
+	}
 
-  if (isTRUE(is_grouped)) {
-    out <- chain$join(data, on = c(grps, vars), how = 'left')
-  } else {
-    out <- chain$join(data, on = vars, how = 'left')
-  }
+	# TODO: implement argument `explicit`
+	if (length(fill) > 0) {
+		out <- replace_na(out, fill)
+	}
 
-  # TODO: implement argument `explicit`
-  if (length(fill) > 0) {
-    out <- replace_na(out, fill)
-  }
+	out <- if (is_grouped) {
+		out |>
+			relocate(all_of(grps), .before = 1) |>
+			group_by(all_of(grps), maintain_order = mo)
+	} else {
+		out
+	}
 
-  out <- if (is_grouped) {
-    out |>
-      relocate(all_of(grps), .before = 1) |>
-      group_by(all_of(grps), maintain_order = mo)
-  } else {
-    out
-  }
-
-  add_tidypolars_class(out)
+	add_tidypolars_class(out)
 }
 
 #' @rdname complete.RPolarsDataFrame
