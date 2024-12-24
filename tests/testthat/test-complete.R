@@ -68,3 +68,35 @@ test_that("works on grouped data", {
 		TRUE
 	)
 })
+
+test_that("argument 'explicit' works", {
+	df <- pl$DataFrame(
+		g = c("a", "b", "a"),
+		a = c(1L, 1L, 2L),
+		b = c("a", NA, "b"),
+		c = c(4, 5, NA)
+	)
+
+	expect_equal(
+		df |>
+			complete(g, a, fill = list(b = "foo", c = 1), explicit = FALSE),
+		data.frame(
+			g = rep(c("a", "b"), each = 2),
+			a = rep(1:2, 2),
+			b = c("a", "b", NA, "foo"),
+			c = c(4, NA, 5, 1)
+		)
+	)
+
+	expect_equal(
+		df |>
+			group_by(g, maintain_order = TRUE) |>
+			complete(a, b, fill = list(c = 1), explicit = FALSE),
+		data.frame(
+			g = rep(c("a", "b"), c(4L, 1L)),
+			a = c(1L, 1L, 2L, 2L, 1L),
+			b = c("a", "b", "a", "b", NA),
+			c = c(4, 1, 1, NA, 5)
+		)
+	)
+})

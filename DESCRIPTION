@@ -7,11 +7,10 @@ Authors@R:
            family = "Bacher",
            role = c("aut", "cre", "cph"),
            email = "etienne.bacher@protonmail.com")
-Description: Polars is an amazing cross-language tool for manipulating very large
-    data. However, one drawback is that the R implementation has a syntax that
-    will look odd to many R users who are not used to Python syntax. The objective
-    of tidypolars is to improve the ease-of-use of Polars in R by providing
-    tidyverse syntax to polars.
+Description: Polars is a cross-language tool for manipulating very large data.
+    However, one drawback is that the R implementation has a syntax that
+    will look odd to many R users who are not used to Python syntax. The objective of tidypolars is to improve the ease-of-use of Polars in R by 
+    providing tidyverse syntax to polars.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

@@ -13,6 +13,7 @@
     to error instead with `options(tidypolars_unknown_args = "error")`.  
   - an argument that doesn't exist at all, they error.
 
+* Add support for argument `explicit` in `tidyr::complete()`.
 
 ## Bug fixes
 

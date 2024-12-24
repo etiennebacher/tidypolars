@@ -5,9 +5,9 @@
 \alias{complete.RPolarsLazyFrame}
 \title{Complete a data frame with missing combinations of data}
 \usage{
-\method{complete}{RPolarsDataFrame}(data, ..., fill = list())
+\method{complete}{RPolarsDataFrame}(data, ..., fill = list(), explicit = TRUE)
 
-\method{complete}{RPolarsLazyFrame}(data, ..., fill = list())
+\method{complete}{RPolarsLazyFrame}(data, ..., fill = list(), explicit = TRUE)
 }
 \arguments{
 \item{data}{A Polars Data/LazyFrame}
@@ -17,6 +17,11 @@ column numbers, select helpers, etc.}
 
 \item{fill}{A named list that for each variable supplies a single value to
 use instead of \code{NA} for missing combinations.}
+
+\item{explicit}{Should both implicit (newly created) and explicit
+(pre-existing) missing values be filled by \code{fill}? By default, this is
+\code{TRUE}, but if set to \code{FALSE} this will limit the fill to only implicit
+missing values.}
 }
 \description{
 Turns implicit missing values into explicit missing values. This is useful
@@ -35,10 +40,21 @@ df
 
 df |> complete(group, item_id, item_name)
 
+# Use `fill` to replace NAs with some value. By default, affects both new
+# (implicit) and pre-existing (explicit) missing values.
 df |>
   complete(
     group, item_id, item_name,
     fill = list(value1 = 0, value2 = 99)
+  )
+
+# Limit the fill to only the newly created (i.e. previously implicit)
+# missing values with `explicit = FALSE`
+df |>
+  complete(
+    group, item_id, item_name,
+    fill = list(value1 = 0, value2 = 99),
+    explicit = FALSE
   )
 
 df |>
