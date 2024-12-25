@@ -210,34 +210,93 @@ pl_str_starts_stringr <- function(string, pattern, negate = FALSE, ...) {
 
 pl_str_sub_stringr <- function(string, start, end = NULL) {
   end_is_null <- is.null(end)
+  string <- string$cast(pl$String)
+  len_string <- string$str$len_chars()
   if (!inherits(start, "RPolarsExpr")) {
-    start <- polars_constant(start)$cast(pl$Int64)
+    start <- polars_constant(start)
   }
   if (!inherits(end, "RPolarsExpr")) {
-    end <- polars_constant(end)$cast(pl$Int64)
+    end <- polars_constant(end)
   }
-  length <- end - start
+  start <- start$cast(pl$Int64)
+  end <- end$cast(pl$Int64)
+
+  old_start <- start
+  start_is_zero <- old_start == 0
+  end_is_zero <- end == 0
+  start <- old_start - 1
+  length <- end - old_start
   length <- pl$when(length < 0)$
     then(pl$lit(0))$
     otherwise(length + 1)
+  # +1 because when start = end we still want to take one character
 
-  foo <- pl$when(string$str$len_chars() - start + 1 + end + 1 >= 0)$
-    then(string$str$len_chars() - start + 1 + end + 1)$
-    otherwise(pl$lit(0))
+  # I need to have something like this that is used only in a special case
+  # below because polars eagerly evaluates all branches and then applies
+  # them, so having length = length - 1 errors when length = 0
+  foo <- pl$when(start < end & end < 0 & start$abs() <= len_string)$
+    then(length)$
+    otherwise(2000)
 
-  pl$when(end_is_null & start >= 0)$
-    then(string$str$tail(string$str$len_chars() - start))$
-    when(end_is_null & start < 0)$
-    then(string$str$tail(start$abs()))$
+  foo2 <- pl$when(start_is_zero & (end_is_null | end$abs() <= len_string))$
+    then(len_string - end - 1)$
+    otherwise(2000)
+
+  foo3 <- pl$when(start >= 0 & end_is_null)$
+    then(len_string - start)$
+    otherwise(2000)
+
+  foo4 <- pl$when(start < 0 & start$abs() >= len_string & end > 0)$
+    then(end)$
+    otherwise(2000)
+
+  foo5 <- pl$when(start >= 0 & end < 0 & end$abs() <= len_string)$
+    then(len_string + end + 1)$
+    otherwise(2000)
+
+  pl$
+
     when(string$is_null() | start$is_null() | end$is_null())$
     then(pl$lit(NA_character_))$
-    when(start < 0 & end >= 0)$
+
+    when(start_is_zero & (end_is_zero | end$abs() > len_string))$
     then(pl$lit(""))$
-    when(start >= 0 & end < 0)$
-    then(string$str$slice(start - 1, foo))$
-    when(start < 0 & end < 0 & length > 0)$
+
+    when(start_is_zero & (end_is_null | end$abs() <= len_string))$
+    then(string$str$slice(0, foo2))$
+
+    when(start >= 0 & end_is_null)$
+    then(string$str$slice(start, foo3))$
+
+    when(start < 0 & end_is_null & start$abs() >= len_string)$
+    then(string$str$slice(0, len_string))$
+
+    when(start < 0 & end_is_null & start$abs() < len_string)$
+    then(string$str$slice(len_string + start + 1, start$abs()))$
+
+    when(start >= 0 & start <= end & end <= len_string)$
     then(string$str$slice(start, length))$
-    otherwise(string$str$slice(pl$when(start == 0)$then(start)$otherwise(start - 1), length))
+
+    when(start < 0 & start$abs() < len_string & end > 0)$
+    then(pl$lit(""))$
+
+    when(start < 0 & start$abs() >= len_string & end > 0)$
+    then(string$str$slice(0, foo4))$
+
+    when(start < end & end < 0 & start$abs() <= len_string)$
+    then(string$str$slice(len_string + start + 1, foo))$
+
+    when(start >= 0 & end < 0 & end$abs() <= len_string)$
+    then(string$str$slice(start, foo5))$
+
+    when(start > 0 & end_is_zero)$
+    then(pl$lit(""))$
+
+    when(start < 0 & end < 0 & start$abs() > len_string & end$abs() > len_string)$
+    then(pl$lit(""))$
+
+    when(start > 0 & end > 0 & start > end)$
+    then(pl$lit(""))
 }
 
 pl_substr <- function(x, start, stop) {

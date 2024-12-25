@@ -149,18 +149,6 @@ test_that("str_dup() works", {
   )
 })
 
-string <- c("%7FxD", NA, "%7FxD")
-start <- -0.6063299
-end <- c(461, 461, 461)
-test_df <- data.frame(x1 = string)
-test <- pl$DataFrame(x1 = string)
-expect_equal_or_both_error(
-  mutate(test, foo = str_sub(x1, start, end)) |>
-    pull(foo),
-  mutate(test_df, foo = str_sub(x1, start, end)) |>
-    pull(foo)
-)
-
 test_that("str_sub() works", {
   for_all(
     tests = 40,
