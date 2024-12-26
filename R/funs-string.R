@@ -360,7 +360,7 @@ pl_substr <- function(x, start, stop) {
 		len_string - start
 	)$otherwise(2000)
 
-	foo4 <- pl$when(start < 0 & start$abs() >= len_string & stop > 0)$then(
+	foo4 <- pl$when(start < 0 & stop > 0)$then(
 		stop
 	)$otherwise(2000)
 
@@ -401,10 +401,7 @@ pl_substr <- function(x, start, stop) {
 	when(start >= 0 & start <= stop & stop <= len_string)$
     then(x$str$slice(start, length))$
 
-	when(start < 0 & start$abs() < len_string & stop > 0)$
-    then(pl$lit(""))$
-
-	when(start < 0 & start$abs() >= len_string & stop > 0)$
+	when(start < 0 & stop > 0)$
     then(x$str$slice(0, foo4))$
 
 	when(start < stop & stop < 0 & start$abs() <= len_string)$
