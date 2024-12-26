@@ -155,7 +155,7 @@ test_that("str_dup() works", {
 
 test_that("str_sub() works", {
 	for_all(
-		tests = 40,
+		tests = 100,
 		string = character_(any_na = TRUE),
 		start = numeric_(any_na = TRUE),
 		end = numeric_(any_na = TRUE),
@@ -180,7 +180,7 @@ test_that("substr() works", {
 	length <- sample(1:10, 1)
 
 	for_all(
-		tests = 40,
+		tests = 100,
 		string = character_(any_na = TRUE, len = length),
 		start = numeric_(any_na = TRUE, len = length),
 		end = numeric_(any_na = TRUE, len = length),

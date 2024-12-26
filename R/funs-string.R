@@ -258,19 +258,32 @@ pl_str_sub_stringr <- function(string, start, end = NULL) {
 		len_string + end + 1
 	)$otherwise(2000)
 
+	foo6 <- pl$when(start_is_zero & end < 0 & end$abs() <= len_string)$then(
+		len_string + end + 1
+	)$otherwise(2000)
+
 	pl$
 
 	when(string$is_null() | start$is_null() | (end$is_null() & !end_is_null))$
     then(pl$lit(NA_character_))$
 
-	when(start_is_zero & (end_is_zero | end$abs() > len_string))$
+	when(start > 0 & start > len_string & end > 0 & end > len_string)$
     then(pl$lit(""))$
+
+	when(start_is_zero & end_is_zero)$
+    then(pl$lit(""))$
+
+	when(start_is_zero & (end_is_null | end$abs() > len_string))$
+    then(string)$
 
 	when(!start_is_zero & start >= 0 & end < 0 & end$abs() > len_string)$
     then(pl$lit(""))$
 
-	when(start_is_zero & (end_is_null | end$abs() <= len_string))$
+	when(start_is_zero & end > 0 & end <= len_string)$
     then(string$str$slice(0, foo2))$
+
+	when(start_is_zero & end < 0 & end$abs() <= len_string)$
+    then(string$str$slice(0, foo6))$
 
 	when(start >= 0 & end_is_null)$
     then(string$str$slice(start, foo3))$
