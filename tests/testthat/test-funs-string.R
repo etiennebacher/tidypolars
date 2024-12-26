@@ -149,35 +149,47 @@ test_that("str_dup() works", {
 	)
 })
 
-# string = c("B#co4Nq,q", "B#co4Nq,q", "B#co4Nq,q", NA, NA, "B#co4Nq,q", NA)
-# start = -999
-# end = c(0, 0, 0, NA, 0, NA, NA)
-# test_df <- data.frame(x1 = string)
-# test <- pl$DataFrame(x1 = string)
-#
-# expect_equal_or_both_error(
-#   mutate(test, foo = str_sub(x1, start, end)) |>
-#     pull(foo),
-#   mutate(test_df, foo = str_sub(x1, start, end)) |>
-#     pull(foo)
-# )
-#
-# test_that("str_sub() works", {
-#   for_all(
-#     tests = 40,
-#     string = character_(any_na = TRUE),
-#     start = numeric_(any_na = TRUE),
-#     end = numeric_(any_na = TRUE),
-#     property = function(string, start, end) {
-#       test_df <- data.frame(x1 = string)
-#       test <- pl$DataFrame(x1 = string)
-#
-#       expect_equal_or_both_error(
-#         mutate(test, foo = str_sub(x1, start, end)) |>
-#           pull(foo),
-#         mutate(test_df, foo = str_sub(x1, start, end)) |>
-#           pull(foo)
-#       )
-#     }
-#   )
-# })
+test_that("str_sub() works", {
+	for_all(
+		tests = 40,
+		string = character_(any_na = TRUE),
+		start = numeric_(any_na = TRUE),
+		end = numeric_(any_na = TRUE),
+		property = function(string, start, end) {
+			test_df <- data.frame(x1 = string)
+			test <- pl$DataFrame(x1 = string)
+
+			expect_equal_or_both_error(
+				mutate(test, foo = str_sub(x1, start, end)) |>
+					pull(foo),
+				mutate(test_df, foo = str_sub(x1, start, end)) |>
+					pull(foo)
+			)
+		}
+	)
+})
+
+test_that("substr() works", {
+	# substr() doesn't error with different lengths but polars does. I don't want
+	# this weird case to prevent quickcheck to run, especially since this is a
+	# weird behavior in base R and we're more conservative on this.
+	length <- sample(1:10, 1)
+
+	for_all(
+		tests = 40,
+		string = character_(any_na = TRUE, len = length),
+		start = numeric_(any_na = TRUE, len = length),
+		end = numeric_(any_na = TRUE, len = length),
+		property = function(string, start, end) {
+			test_df <- data.frame(x1 = string)
+			test <- pl$DataFrame(x1 = string)
+
+			expect_equal_or_both_error(
+				mutate(test, foo = substr(x1, start, end)) |>
+					pull(foo),
+				mutate(test_df, foo = substr(x1, start, end)) |>
+					pull(foo)
+			)
+		}
+	)
+})

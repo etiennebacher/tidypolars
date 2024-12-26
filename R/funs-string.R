@@ -211,46 +211,199 @@ pl_str_starts_stringr <- function(string, pattern, negate = FALSE, ...) {
 	out
 }
 
-pl_str_sub_stringr <- function(string, start, end = NULL, ...) {
-	check_empty_dots(...)
-	start <- polars_expr_to_r(start)
-	end <- polars_expr_to_r(end)
+### Very ashamed of those two functions, would be so much better if polars
+### had $str$slice(start, end) instead of $str$slice(start, length)
 
-	if (is.na(start) || (!is.null(end) && is.na(end))) {
-		return(pl$lit(NA_character_))
+pl_str_sub_stringr <- function(string, start, end = NULL) {
+	end_is_null <- is.null(end)
+	string <- string$cast(pl$String)
+	len_string <- string$str$len_chars()
+	if (!inherits(start, "RPolarsExpr")) {
+		start <- polars_constant(start)
 	}
+	if (!inherits(end, "RPolarsExpr")) {
+		end <- polars_constant(end)
+	}
+	start <- start$cast(pl$Int64)
+	end <- end$cast(pl$Int64)
 
-	# polars is 0-indexed
-	if (start > 0) {
-		start <- start - 1
-	}
-	if (is.null(end)) {
-		length <- NULL
-	} else if (end >= 0) {
-		length <- end - start
-	} else if (end == -1) {
-		length <- end - start + 1
-	} else if (end < -1) {
-		end <- end + 1
-		# Do not make this the default because I guess it's more expensive
-		return(string$str$slice(start)$str$head(end))
-	}
-	string$str$slice(start, length)
+	old_start <- start
+	start_is_zero <- old_start == 0
+	end_is_zero <- end == 0
+	start <- old_start - 1
+	length <- end - old_start
+	length <- pl$when(length < 0)$then(pl$lit(0))$otherwise(length + 1)
+	# +1 because when start = end we still want to take one character
+
+	# I need to have something like this that is used only in a special case
+	# below because polars eagerly evaluates all branches and then applies
+	# them, so having length = length - 1 errors when length = 0
+	foo <- pl$when(start < end & end < 0 & start$abs() <= len_string)$then(
+		length
+	)$otherwise(2000)
+
+	foo2 <- pl$when(start_is_zero & (end_is_null | end$abs() <= len_string))$then(
+		len_string - end - 1
+	)$otherwise(2000)
+
+	foo3 <- pl$when(start >= 0 & end_is_null)$then(len_string - start)$otherwise(
+		2000
+	)
+
+	foo4 <- pl$when(start < 0 & start$abs() >= len_string & end > 0)$then(
+		end
+	)$otherwise(2000)
+
+	foo5 <- pl$when(start >= 0 & end < 0 & end$abs() <= len_string)$then(
+		len_string + end + 1
+	)$otherwise(2000)
+
+	pl$
+
+	when(string$is_null() | start$is_null() | (end$is_null() & !end_is_null))$
+    then(pl$lit(NA_character_))$
+
+	when(start_is_zero & (end_is_zero | end$abs() > len_string))$
+    then(pl$lit(""))$
+
+	when(!start_is_zero & start >= 0 & end < 0 & end$abs() > len_string)$
+    then(pl$lit(""))$
+
+	when(start_is_zero & (end_is_null | end$abs() <= len_string))$
+    then(string$str$slice(0, foo2))$
+
+	when(start >= 0 & end_is_null)$
+    then(string$str$slice(start, foo3))$
+
+	when(start < 0 & end_is_null & start$abs() >= len_string)$
+    then(string$str$slice(0, len_string))$
+
+	when(start < 0 & end_is_null & start$abs() < len_string)$
+    then(string$str$slice(len_string + start + 1, start$abs()))$
+
+	when(start >= 0 & start <= end & end <= len_string)$
+    then(string$str$slice(start, length))$
+
+	when(start < 0 & start$abs() < len_string & end > 0)$
+    then(pl$lit(""))$
+
+	when(start < 0 & start$abs() >= len_string & end > 0)$
+    then(string$str$slice(0, foo4))$
+
+	when(start < end & end < 0 & start$abs() <= len_string)$
+    then(string$str$slice(len_string + start + 1, foo))$
+
+	when(start >= 0 & end < 0 & end$abs() <= len_string)$
+    then(string$str$slice(start, foo5))$
+
+	when(start > 0 & end_is_zero)$
+    then(pl$lit(""))$
+
+	when(start < 0 & end < 0 & start$abs() > len_string & end$abs() > len_string)$
+    then(pl$lit(""))$
+
+	when(start > 0 & end > 0 & start > end)$then(pl$lit(""))
 }
 
 pl_substr <- function(x, start, stop) {
-	if (is.na(start) | is.na(stop)) {
-		return(pl$lit(NA_character_))
+	x <- x$cast(pl$String)
+	len_string <- x$str$len_chars()
+	if (!inherits(start, "RPolarsExpr")) {
+		start <- polars_constant(start)
 	}
-	if (start < 0 | stop < 0) {
-		return(pl$lit(""))
+	if (!inherits(stop, "RPolarsExpr")) {
+		stop <- polars_constant(stop)
 	}
-	# polars is 0-indexed
-	if (start > 0) {
-		start <- start - 1
-	}
-	length <- stop - start
-	x$str$slice(start, length)
+	start <- start$cast(pl$Int64)
+	stop <- stop$cast(pl$Int64)
+
+	old_start <- start
+	start_is_zero <- old_start == 0
+	stop_is_zero <- stop == 0
+	start <- old_start - 1
+	length <- stop - old_start
+	length <- pl$when(length < 0)$then(pl$lit(0))$otherwise(length + 1)
+	# +1 because when start = stop we still want to take one character
+
+	# I need to have something like this that is used only in a special case
+	# below because polars eagerly evaluates all branches and then applies
+	# them, so having length = length - 1 errors when length = 0
+
+	# Probably a bunch of useless conditions below since they're copied from
+	# pl_str_sub_stringr but I don't have the motivation to clean this since it
+	# works
+	foo <- pl$when(start < stop & stop < 0 & start$abs() <= len_string)$then(
+		length
+	)$otherwise(2000)
+
+	foo2 <- pl$when(start_is_zero & stop$abs() <= len_string)$then(
+		len_string - stop - 1
+	)$otherwise(2000)
+
+	foo3 <- pl$when(start > 0 & start <= len_string & stop > len_string)$then(
+		len_string - start
+	)$otherwise(2000)
+
+	foo4 <- pl$when(start < 0 & start$abs() >= len_string & stop > 0)$then(
+		stop
+	)$otherwise(2000)
+
+	foo5 <- pl$when(start >= 0 & stop < 0 & stop$abs() <= len_string)$then(
+		len_string + stop + 1
+	)$otherwise(2000)
+
+	foo6 <- pl$when(start_is_zero & stop > 0 & stop$abs() <= len_string)$then(
+		stop
+	)$otherwise(2000)
+
+	pl$
+
+	when(x$is_null() | start$is_null() | stop$is_null())$
+    then(pl$lit(NA_character_))$
+
+	when(start >= 0 & stop > len_string)$
+    then(x$str$slice(start, foo3))$
+
+	when(start_is_zero & stop > 0 & stop$abs() <= len_string)$
+    then(x$str$slice(0, foo6))$
+
+	when(start_is_zero & stop_is_zero)$
+    then(pl$lit(""))$
+
+	when(start_is_zero & stop < 0 & stop$abs() > len_string)$
+    then(pl$lit(""))$
+
+	when(start_is_zero & stop$abs() > len_string)$
+    then(x$str$slice(0, len_string))$
+
+	when(start < 0 & stop <= 0)$
+    then(pl$lit(""))$
+
+	when(start > 0 & stop <= 0)$
+    then(pl$lit(""))$
+
+	when(start >= 0 & start <= stop & stop <= len_string)$
+    then(x$str$slice(start, length))$
+
+	when(start < 0 & start$abs() < len_string & stop > 0)$
+    then(pl$lit(""))$
+
+	when(start < 0 & start$abs() >= len_string & stop > 0)$
+    then(x$str$slice(0, foo4))$
+
+	when(start < stop & stop < 0 & start$abs() <= len_string)$
+    then(x$str$slice(len_string + start + 1, foo))$
+
+	when(start >= 0 & stop < 0 & stop$abs() <= len_string)$
+    then(x$str$slice(start, foo5))$
+
+	when(start > 0 & stop_is_zero)$
+    then(pl$lit(""))$
+
+	when(start < 0 & stop < 0 & start$abs() > len_string & stop$abs() > len_string)$
+    then(pl$lit(""))$
+
+	when(start > 0 & stop > 0 & start > stop)$then(pl$lit(""))
 }
 
 # I would need `$splitn()` for cases where n is not Inf, but it returns a struct

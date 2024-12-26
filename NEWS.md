@@ -20,6 +20,9 @@
 * `slice_sample()` now errors when unknown or unsupported arguments are 
   passed (thanks @fkohrt for the report).
 
+* Fix edge cases in the `tidypolars` implementation of `stringr::str_sub()`
+  and `substr()` compared to their original implementation (#159). 
+
 # tidypolars 0.12.0
 
 `tidypolars` requires `polars` >= 0.21.0.
