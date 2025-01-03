@@ -1,13 +1,17 @@
 #' `tidypolars` global options
 #'
 #' @description
-#' There is currently one global option:
+#' Currently, `tidypolars` has only one global option:
 #'
 #' * `tidypolars_unknown_args` controls what happens when some arguments passed
 #'   in an expression are unknown, e.g the argument `prob` in `sample()`. The
 #'   default (`"warn"`) only warns the user that some arguments are ignored by
 #'   `tidypolars`. The only other accepted value is `"error"` to throw an
 #'   error when this happens.
+#'
+#' The package `polars` also contains several global options that may be useful,
+#' such as changing the default behavior when converting Int64 values to R:
+#' <https://pola-rs.github.io/r-polars/man/polars_options.html>.
 #'
 #' @name tidypolars-options
 #'

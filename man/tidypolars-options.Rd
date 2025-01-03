@@ -4,7 +4,7 @@
 \alias{tidypolars-options}
 \title{\code{tidypolars} global options}
 \description{
-There is currently one global option:
+Currently, \code{tidypolars} has only one global option:
 \itemize{
 \item \code{tidypolars_unknown_args} controls what happens when some arguments passed
 in an expression are unknown, e.g the argument \code{prob} in \code{sample()}. The
@@ -12,6 +12,10 @@ default (\code{"warn"}) only warns the user that some arguments are ignored by
 \code{tidypolars}. The only other accepted value is \code{"error"} to throw an
 error when this happens.
 }
+
+The package \code{polars} also contains several global options that may be useful,
+such as changing the default behavior when converting Int64 values to R:
+\url{https://pola-rs.github.io/r-polars/man/polars_options.html}.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
