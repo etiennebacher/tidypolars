@@ -242,8 +242,8 @@ pl_str_sub_stringr <- function(string, start, end = NULL) {
 		length
 	)$otherwise(2000)
 
-	foo2 <- pl$when(start_is_zero & (end_is_null | end$abs() <= len_string))$then(
-		len_string - end - 1
+	foo2 <- pl$when(start_is_zero & end > 0 & end <= len_string)$then(
+		end
 	)$otherwise(2000)
 
 	foo3 <- pl$when(start >= 0 & end_is_null)$then(len_string - start)$otherwise(
@@ -282,6 +282,9 @@ pl_str_sub_stringr <- function(string, start, end = NULL) {
 	when(start_is_zero & end > 0 & end <= len_string)$
     then(string$str$slice(0, foo2))$
 
+	when(start_is_zero & end > 0 & end > len_string)$
+    then(string)$
+
 	when(start_is_zero & end < 0 & end$abs() <= len_string)$
     then(string$str$slice(0, foo6))$
 
@@ -316,6 +319,9 @@ pl_str_sub_stringr <- function(string, start, end = NULL) {
     then(pl$lit(""))$
 
 	when(start < 0 & end < 0 & start$abs() > len_string & end$abs() > len_string)$
+    then(pl$lit(""))$
+
+	when(start < 0 & end_is_zero & start$abs() > len_string)$
     then(pl$lit(""))$
 
 	when(start > 0 & end > 0 & start > end)$then(pl$lit(""))
