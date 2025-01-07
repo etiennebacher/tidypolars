@@ -5,16 +5,8 @@ name: format
 on:
   push:
     branches: [main, master]
-    paths:
-      - R/**
-      - tests/**
-      - vignettes/*
   pull_request:
     branches: [main, master]
-    paths:
-      - R/**
-      - tests/**
-      - vignettes/*
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
