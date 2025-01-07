@@ -1,0 +1,40 @@
+# Run CI for R using https://eddelbuettel.github.io/r-ci/
+
+name: format
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - R/**
+      - tests/**
+      - vignettes/*
+  pull_request:
+    branches: [main, master]
+    paths:
+      - R/**
+      - tests/**
+      - vignettes/*
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Install `air`
+        run: cargo install --git https://github.com/posit-dev/air air
+      - name: Check for changes
+        run: |
+          if air format . --check; then
+            exit 0
+          else
+            exit 1
+          fi
