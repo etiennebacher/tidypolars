@@ -75,9 +75,7 @@
 <p>When we use the <code>tidyverse</code>, we use R expressions in
 mainly three places: <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code>, and
 <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code>.</p>
-<pre><code><span><span class="co">#&gt; Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
-<span><span class="co">#&gt;   object 'type_sum.accel' not found</span></span></code></pre>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">am</span> <span class="op">+</span> <span class="va">gear</span> <span class="op">&gt;</span> <span class="va">carb</span><span class="op">)</span></span>
@@ -152,7 +150,7 @@ converted to <code>pl$col("x")</code> if there is a column
 have an equivalent in Polars. This is the case for the argument
 <code>trim</code> here. In this case, <code>tidypolars</code> ignores
 this argument and warns the user:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidypolars.etiennebacher.com">tidypolars</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pola-rs.github.io/r-polars/" class="external-link">polars</a></span><span class="op">)</span></span>
 <span></span>
@@ -192,7 +190,7 @@ to match Polars syntax would be extremely complicated. In this
 situation, you will have to rewrite your custom function using Polars
 syntax so that it returns a Polars expression. For example, we could
 make a function to standardize a column like this:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pl_standardize</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">x</span><span class="op">$</span><span class="fu">mean</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="va">x</span><span class="op">$</span><span class="fu">std</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
@@ -200,12 +198,12 @@ make a function to standardize a column like this:</p>
 wrapped into <code>pl$col()</code>, so to check that your function
 returns a Polars expression, you have to provide a <code>pl$col()</code>
 call:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pl_standardize</span><span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"mpg"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; polars Expr: [([(col("mpg")) - (col("mpg").mean())]) // (col("mpg").std())]</span></span></code></pre></div>
 <p>This function correctly returns a Polars expression, so we can now
 use it like any other function:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu">pl_standardize</span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span></span>
@@ -235,7 +233,7 @@ use it like any other function:</p>
 is a very useful function that applies a function (or a list of
 functions) to a selection of columns. It accepts built-in functions,
 UDFs, and anonymous functions.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
@@ -264,7 +262,7 @@ UDFs, and anonymous functions.</p>
 <span><span class="co">#&gt; └──────┴─────┴───────┴───────┴───┴──────────┴───────────┴────────────┴────────┘</span></span></code></pre></div>
 <p>Similarly, UDFs and anonymous functions will error if they don’t
 return a Polars expression:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
