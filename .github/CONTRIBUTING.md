@@ -28,7 +28,7 @@ possible, try to illustrate your proposal or the bug with a minimal
 - tidypolars uses
   [roxygen2](https://cran.r-project.org/package=roxygen2), with
   [Markdown
-  syntax](https://cran.r-project.org/web/packages/roxygen2/vignettes/markdown.html),
+  syntax](https://cran.r-project.org/web/packages/roxygen2/vignettes/rd-formatting.html),
   for documentation.
 - If your PR is a user-visible change, you may add a bullet point in
   `NEWS.md` describing the changes made. You may optionally add your

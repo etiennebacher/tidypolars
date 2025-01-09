@@ -29,7 +29,7 @@ example](https://www.tidyverse.org/help/#reprex).
 
 *  Please create a Git branch for each pull request (PR).
 *  tidypolars uses [roxygen2](https://cran.r-project.org/package=roxygen2), with
-[Markdown syntax](https://cran.r-project.org/web/packages/roxygen2/vignettes/markdown.html),
+[Markdown syntax](https://cran.r-project.org/web/packages/roxygen2/vignettes/rd-formatting.html),
 for documentation.
 *  If your PR is a user-visible change, you may add a bullet point in `NEWS.md` 
    describing the changes made. You may optionally add your GitHub username, and 
@@ -60,7 +60,7 @@ test_pl <- pl$DataFrame(x = c("abc", "a1", "dac"))
 Then, find the `polars` syntax that gives the same output as `stringr::str_ends()`. In this case, `polars` has a string methods `$ends_with()`:
 
 ```{r}
-test |> 
+test |>
   mutate(ends_with_c = str_ends(x, "c"))
 
 test_pl$with_columns(
@@ -100,7 +100,7 @@ Once the package is reloaded, we can use this function in a `tidypolars` workflo
 ```{r}
 library(tidypolars, warn.conflicts = FALSE)
 
-test_pl |> 
+test_pl |>
   mutate(ends_with_c = str_ends(x, "c"))
 ```
 
