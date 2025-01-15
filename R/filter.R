@@ -38,40 +38,40 @@
 #' pl_iris |>
 #'   filter(Sepal.Length == max(Sepal.Length), .by = Species)
 filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
-	grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
-	mo <- attributes(.data)$maintain_grp_order
-	is_grouped <- !is.null(grps)
+  grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
+  mo <- attributes(.data)$maintain_grp_order
+  is_grouped <- !is.null(grps)
 
-	polars_exprs <- translate_dots(
-		.data,
-		...,
-		env = rlang::current_env(),
-		caller = rlang::caller_env()
-	)
+  polars_exprs <- translate_dots(
+    .data,
+    ...,
+    env = rlang::current_env(),
+    caller = rlang::caller_env()
+  )
 
-	if (is_grouped) {
-		polars_exprs <- lapply(polars_exprs, \(x) x$over(grps))
-	}
+  if (is_grouped) {
+    polars_exprs <- lapply(polars_exprs, \(x) x$over(grps))
+  }
 
-	# this is only applied between expressions that were separated by a comma
-	# in the filter() call. So it won't replace the "|" call.
-	polars_exprs <- Reduce(`&`, polars_exprs)
+  # this is only applied between expressions that were separated by a comma
+  # in the filter() call. So it won't replace the "|" call.
+  polars_exprs <- Reduce(`&`, polars_exprs)
 
-	tryCatch(
-		{
-			out <- .data$filter(polars_exprs)
-		},
-		error = function(e) {
-			rlang::abort(e$message, call = caller_env(4))
-		}
-	)
-	out <- if (is_grouped && missing(.by)) {
-		group_by(out, all_of(grps), maintain_order = mo)
-	} else {
-		out
-	}
+  tryCatch(
+    {
+      out <- .data$filter(polars_exprs)
+    },
+    error = function(e) {
+      rlang::abort(e$message, call = caller_env(4))
+    }
+  )
+  out <- if (is_grouped && missing(.by)) {
+    group_by(out, all_of(grps), maintain_order = mo)
+  } else {
+    out
+  }
 
-	add_tidypolars_class(out)
+  add_tidypolars_class(out)
 }
 
 #' @rdname filter.RPolarsDataFrame

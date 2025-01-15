@@ -13,29 +13,29 @@
 
 # nocov start
 describe_plan <- function(.data) {
-	if (!inherits(.data, "RPolarsLazyFrame")) {
-		rlang::abort("`describe_plan()` only works on a LazyFrame.")
-	}
-	lifecycle::deprecate_warn(
-		when = "0.10.0",
-		what = "describe_plan()",
-		details = "Please use `explain(optimized = FALSE)` instead."
-	)
-	.data$describe_plan()
+  if (!inherits(.data, "RPolarsLazyFrame")) {
+    rlang::abort("`describe_plan()` only works on a LazyFrame.")
+  }
+  lifecycle::deprecate_warn(
+    when = "0.10.0",
+    what = "describe_plan()",
+    details = "Please use `explain(optimized = FALSE)` instead."
+  )
+  .data$describe_plan()
 }
 
 #' @export
 #' @rdname describe_plan
 
 describe_optimized_plan <- function(.data) {
-	if (!inherits(.data, "RPolarsLazyFrame")) {
-		rlang::abort("`describe_optimized_plan()` only works on a LazyFrame.")
-	}
-	lifecycle::deprecate_warn(
-		when = "0.10.0",
-		what = "describe_optimized_plan()",
-		details = "Please use `explain()` instead."
-	)
-	.data$describe_optimized_plan()
+  if (!inherits(.data, "RPolarsLazyFrame")) {
+    rlang::abort("`describe_optimized_plan()` only works on a LazyFrame.")
+  }
+  lifecycle::deprecate_warn(
+    when = "0.10.0",
+    what = "describe_optimized_plan()",
+    details = "Please use `explain()` instead."
+  )
+  .data$describe_optimized_plan()
 }
 # nocov end

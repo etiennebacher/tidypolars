@@ -32,35 +32,35 @@
 #'   filter(Sepal.Length > 7.0) |>
 #'   fetch(30)
 fetch <- function(
-	.data,
-	n_rows = 500,
-	type_coercion = TRUE,
-	predicate_pushdown = TRUE,
-	projection_pushdown = TRUE,
-	simplify_expression = TRUE,
-	slice_pushdown = TRUE,
-	comm_subplan_elim = TRUE,
-	comm_subexpr_elim = TRUE,
-	cluster_with_columns = TRUE,
-	no_optimization = FALSE,
-	streaming = FALSE
+  .data,
+  n_rows = 500,
+  type_coercion = TRUE,
+  predicate_pushdown = TRUE,
+  projection_pushdown = TRUE,
+  simplify_expression = TRUE,
+  slice_pushdown = TRUE,
+  comm_subplan_elim = TRUE,
+  comm_subexpr_elim = TRUE,
+  cluster_with_columns = TRUE,
+  no_optimization = FALSE,
+  streaming = FALSE
 ) {
-	if (!inherits(.data, "RPolarsLazyFrame")) {
-		rlang::abort("`fetch()` can only be used on a LazyFrame.")
-	}
-	out <- .data$fetch(
-		n_rows = n_rows,
-		type_coercion = type_coercion,
-		predicate_pushdown = predicate_pushdown,
-		projection_pushdown = projection_pushdown,
-		simplify_expression = simplify_expression,
-		slice_pushdown = slice_pushdown,
-		comm_subplan_elim = comm_subplan_elim,
-		comm_subexpr_elim = comm_subexpr_elim,
-		cluster_with_columns = cluster_with_columns,
-		no_optimization = no_optimization,
-		streaming = streaming
-	)
+  if (!inherits(.data, "RPolarsLazyFrame")) {
+    rlang::abort("`fetch()` can only be used on a LazyFrame.")
+  }
+  out <- .data$fetch(
+    n_rows = n_rows,
+    type_coercion = type_coercion,
+    predicate_pushdown = predicate_pushdown,
+    projection_pushdown = projection_pushdown,
+    simplify_expression = simplify_expression,
+    slice_pushdown = slice_pushdown,
+    comm_subplan_elim = comm_subplan_elim,
+    comm_subexpr_elim = comm_subexpr_elim,
+    cluster_with_columns = cluster_with_columns,
+    no_optimization = no_optimization,
+    streaming = streaming
+  )
 
-	add_tidypolars_class(out)
+  add_tidypolars_class(out)
 }

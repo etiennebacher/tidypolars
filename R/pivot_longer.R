@@ -32,49 +32,49 @@
 #'     values_to = "rank",
 #'   )
 pivot_longer.RPolarsDataFrame <- function(
-	data,
-	cols,
-	...,
-	names_to = "name",
-	names_prefix = NULL,
-	values_to = "value"
+  data,
+  cols,
+  ...,
+  names_to = "name",
+  names_prefix = NULL,
+  values_to = "value"
 ) {
-	check_dots_empty_ignore(
-		...,
-		.unsupported = c(
-			"cols_vary",
-			"names_sep",
-			"names_pattern",
-			"names_ptypes",
-			"names_transform",
-			"names_repair",
-			"values_drop_na",
-			"values_ptypes",
-			"values_transform"
-		)
-	)
-	data_names <- names(data)
-	on <- tidyselect_named_arg(data, rlang::enquo(cols))
-	index <- data_names[!data_names %in% on]
-	out <- data$unpivot(
-		index = index,
-		on = on,
-		variable_name = names_to,
-		value_name = values_to
-	)$sort(index)
+  check_dots_empty_ignore(
+    ...,
+    .unsupported = c(
+      "cols_vary",
+      "names_sep",
+      "names_pattern",
+      "names_ptypes",
+      "names_transform",
+      "names_repair",
+      "values_drop_na",
+      "values_ptypes",
+      "values_transform"
+    )
+  )
+  data_names <- names(data)
+  on <- tidyselect_named_arg(data, rlang::enquo(cols))
+  index <- data_names[!data_names %in% on]
+  out <- data$unpivot(
+    index = index,
+    on = on,
+    variable_name = names_to,
+    value_name = values_to
+  )$sort(index)
 
-	if (!is.null(names_prefix)) {
-		if (length(names_prefix) > 1) {
-			rlang::abort(
-				"`names_prefix` must be of length 1."
-			)
-		}
-		out <- out$with_columns(
-			pl$col(names_to)$str$replace(paste0("^", names_prefix), "")
-		)
-	}
+  if (!is.null(names_prefix)) {
+    if (length(names_prefix) > 1) {
+      rlang::abort(
+        "`names_prefix` must be of length 1."
+      )
+    }
+    out <- out$with_columns(
+      pl$col(names_to)$str$replace(paste0("^", names_prefix), "")
+    )
+  }
 
-	add_tidypolars_class(out)
+  add_tidypolars_class(out)
 }
 
 #' @rdname pivot_longer.RPolarsDataFrame

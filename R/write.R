@@ -46,47 +46,47 @@
 #'
 #' read.csv(dest)
 write_csv_polars <- function(
-	.data,
-	file,
-	...,
-	include_bom = FALSE,
-	include_header = TRUE,
-	separator = ",",
-	line_terminator = "\n",
-	quote = "\"",
-	batch_size = 1024,
-	datetime_format = NULL,
-	date_format = NULL,
-	time_format = NULL,
-	float_precision = NULL,
-	null_values = "",
-	quote_style = "necessary"
+  .data,
+  file,
+  ...,
+  include_bom = FALSE,
+  include_header = TRUE,
+  separator = ",",
+  line_terminator = "\n",
+  quote = "\"",
+  batch_size = 1024,
+  datetime_format = NULL,
+  date_format = NULL,
+  time_format = NULL,
+  float_precision = NULL,
+  null_values = "",
+  quote_style = "necessary"
 ) {
-	if (!inherits(.data, "RPolarsDataFrame")) {
-		rlang::abort("`write_csv_polars()` can only be used on a DataFrame.")
-	}
+  if (!inherits(.data, "RPolarsDataFrame")) {
+    rlang::abort("`write_csv_polars()` can only be used on a DataFrame.")
+  }
 
-	rlang::arg_match0(
-		quote_style,
-		values = c("necessary", "always", "non_numeric", "never")
-	)
-	rlang::check_dots_empty()
+  rlang::arg_match0(
+    quote_style,
+    values = c("necessary", "always", "non_numeric", "never")
+  )
+  rlang::check_dots_empty()
 
-	.data$write_csv(
-		file,
-		include_bom = include_bom,
-		include_header = include_header,
-		separator = separator,
-		line_terminator = line_terminator,
-		quote = quote,
-		batch_size = batch_size,
-		datetime_format = datetime_format,
-		date_format = date_format,
-		time_format = time_format,
-		float_precision = float_precision,
-		null_values = null_values,
-		quote_style = quote_style
-	)
+  .data$write_csv(
+    file,
+    include_bom = include_bom,
+    include_header = include_header,
+    separator = separator,
+    line_terminator = line_terminator,
+    quote = quote,
+    batch_size = batch_size,
+    datetime_format = datetime_format,
+    date_format = date_format,
+    time_format = time_format,
+    float_precision = float_precision,
+    null_values = null_values,
+    quote_style = quote_style
+  )
 }
 
 #' Export data to Parquet file(s)
@@ -111,37 +111,37 @@ write_csv_polars <- function(
 #'
 #' nanoparquet::read_parquet(dest)
 write_parquet_polars <- function(
-	.data,
-	file,
-	...,
-	compression = "zstd",
-	compression_level = 3,
-	statistics = TRUE,
-	row_group_size = NULL,
-	data_page_size = NULL,
-	partition_by = NULL,
-	partition_chunk_size_bytes = 4294967296
+  .data,
+  file,
+  ...,
+  compression = "zstd",
+  compression_level = 3,
+  statistics = TRUE,
+  row_group_size = NULL,
+  data_page_size = NULL,
+  partition_by = NULL,
+  partition_chunk_size_bytes = 4294967296
 ) {
-	if (!inherits(.data, "RPolarsDataFrame")) {
-		rlang::abort("`write_parquet_polars()` can only be used on a DataFrame.")
-	}
+  if (!inherits(.data, "RPolarsDataFrame")) {
+    rlang::abort("`write_parquet_polars()` can only be used on a DataFrame.")
+  }
 
-	rlang::arg_match0(
-		compression,
-		values = c("lz4", "uncompressed", "snappy", "gzip", "lzo", "brotli", "zstd")
-	)
-	rlang::check_dots_empty()
+  rlang::arg_match0(
+    compression,
+    values = c("lz4", "uncompressed", "snappy", "gzip", "lzo", "brotli", "zstd")
+  )
+  rlang::check_dots_empty()
 
-	.data$write_parquet(
-		file,
-		compression = compression,
-		compression_level = compression_level,
-		statistics = statistics,
-		row_group_size = row_group_size,
-		data_page_size = data_page_size,
-		partition_by = partition_by,
-		partition_chunk_size_bytes = partition_chunk_size_bytes
-	)
+  .data$write_parquet(
+    file,
+    compression = compression,
+    compression_level = compression_level,
+    statistics = statistics,
+    row_group_size = row_group_size,
+    data_page_size = data_page_size,
+    partition_by = partition_by,
+    partition_chunk_size_bytes = partition_chunk_size_bytes
+  )
 }
 
 #' Export data to NDJSON file(s)
@@ -159,10 +159,10 @@ write_parquet_polars <- function(
 #'
 #' jsonlite::stream_in(file(dest), verbose = FALSE)
 write_ndjson_polars <- function(.data, file) {
-	if (!inherits(.data, "RPolarsDataFrame")) {
-		rlang::abort("`write_ndjson_polars()` can only be used on a DataFrame.")
-	}
-	.data$write_ndjson(file = file)
+  if (!inherits(.data, "RPolarsDataFrame")) {
+    rlang::abort("`write_ndjson_polars()` can only be used on a DataFrame.")
+  }
+  .data$write_ndjson(file = file)
 }
 
 #' Export data to JSON file(s)
@@ -183,23 +183,23 @@ write_ndjson_polars <- function(.data, file) {
 #'
 #' jsonlite::fromJSON(dest)
 write_json_polars <- function(
-	.data,
-	file,
-	...,
-	pretty = FALSE,
-	row_oriented = FALSE
+  .data,
+  file,
+  ...,
+  pretty = FALSE,
+  row_oriented = FALSE
 ) {
-	if (!inherits(.data, "RPolarsDataFrame")) {
-		rlang::abort("`write_json_polars()` can only be used on a DataFrame.")
-	}
+  if (!inherits(.data, "RPolarsDataFrame")) {
+    rlang::abort("`write_json_polars()` can only be used on a DataFrame.")
+  }
 
-	rlang::check_dots_empty()
+  rlang::check_dots_empty()
 
-	.data$write_json(
-		file = file,
-		pretty = pretty,
-		row_oriented = row_oriented
-	)
+  .data$write_json(
+    file = file,
+    pretty = pretty,
+    row_oriented = row_oriented
+  )
 }
 
 #' Export data to IPC file(s)
@@ -215,22 +215,22 @@ write_json_polars <- function(
 #' @inherit write_csv_polars return
 #' @export
 write_ipc_polars <- function(
-	.data,
-	file,
-	compression = "uncompressed",
-	...,
-	future = FALSE
+  .data,
+  file,
+  compression = "uncompressed",
+  ...,
+  future = FALSE
 ) {
-	if (!inherits(.data, "RPolarsDataFrame")) {
-		rlang::abort("`write_ipc_polars()` can only be used on a DataFrame.")
-	}
+  if (!inherits(.data, "RPolarsDataFrame")) {
+    rlang::abort("`write_ipc_polars()` can only be used on a DataFrame.")
+  }
 
-	rlang::arg_match0(compression, values = c("uncompressed", "zstd", "lz4"))
-	rlang::check_dots_empty()
+  rlang::arg_match0(compression, values = c("uncompressed", "zstd", "lz4"))
+  rlang::check_dots_empty()
 
-	.data$write_ipc(
-		file,
-		compression = compression,
-		future = future
-	)
+  .data$write_ipc(
+    file,
+    compression = compression,
+    future = future
+  )
 }

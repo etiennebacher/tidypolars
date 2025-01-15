@@ -20,30 +20,30 @@
 #' separate(test, x, into = c("foo", "foo2"), sep = ".")
 
 separate.RPolarsDataFrame <- function(
-	data,
-	col,
-	into,
-	sep = " ",
-	remove = TRUE,
-	...
+  data,
+  col,
+  into,
+  sep = " ",
+  remove = TRUE,
+  ...
 ) {
-	col <- deparse(substitute(col))
+  col <- deparse(substitute(col))
 
-	into_len <- length(into) - 1
-	# to avoid collision with an existing col
-	temp_id <- paste(sample(letters), collapse = "")
+  into_len <- length(into) - 1
+  # to avoid collision with an existing col
+  temp_id <- paste(sample(letters), collapse = "")
 
-	data <- data$with_columns(
-		pl$col(col)$cast(pl$Utf8)$str$split_exact(sep, into_len)$alias(
-			temp_id
-		)$struct$rename_fields(into)
-	)$unnest(temp_id)
+  data <- data$with_columns(
+    pl$col(col)$cast(pl$Utf8)$str$split_exact(sep, into_len)$alias(
+      temp_id
+    )$struct$rename_fields(into)
+  )$unnest(temp_id)
 
-	if (isTRUE(remove)) {
-		data <- data$drop(col)
-	}
+  if (isTRUE(remove)) {
+    data <- data$drop(col)
+  }
 
-	add_tidypolars_class(data)
+  add_tidypolars_class(data)
 }
 
 #' @rdname separate.RPolarsDataFrame
