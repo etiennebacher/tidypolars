@@ -32,42 +32,42 @@
 #' unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
 
 unite.RPolarsDataFrame <- function(
-	data,
-	col,
-	...,
-	sep = "_",
-	remove = TRUE,
-	na.rm = FALSE
+  data,
+  col,
+  ...,
+  sep = "_",
+  remove = TRUE,
+  na.rm = FALSE
 ) {
-	if (missing(col)) {
-		rlang::abort("`col` is absent but must be supplied.")
-	}
-	vars <- tidyselect_dots(data, ...)
-	if (length(vars) == 0) {
-		vars <- names(data)
-	}
-	# can be a character or symbol
-	col <- rlang::as_string(rlang::ensym(col))
+  if (missing(col)) {
+    rlang::abort("`col` is absent but must be supplied.")
+  }
+  vars <- tidyselect_dots(data, ...)
+  if (length(vars) == 0) {
+    vars <- names(data)
+  }
+  # can be a character or symbol
+  col <- rlang::as_string(rlang::ensym(col))
 
-	if (isTRUE(na.rm)) {
-		fill <- ""
-	} else {
-		fill <- "NA"
-	}
+  if (isTRUE(na.rm)) {
+    fill <- ""
+  } else {
+    fill <- "NA"
+  }
 
-	vars_concat <- pl$col(vars)$fill_null(fill)
+  vars_concat <- pl$col(vars)$fill_null(fill)
 
-	out <- data$with_columns(
-		pl$concat_str(vars_concat, separator = sep)$alias(col)
-	)
+  out <- data$with_columns(
+    pl$concat_str(vars_concat, separator = sep)$alias(col)
+  )
 
-	out <- if (isTRUE(remove)) {
-		out$drop(vars)
-	} else {
-		out
-	}
+  out <- if (isTRUE(remove)) {
+    out$drop(vars)
+  } else {
+    out
+  }
 
-	add_tidypolars_class(out)
+  add_tidypolars_class(out)
 }
 
 #' @rdname unite.RPolarsDataFrame

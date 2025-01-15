@@ -60,79 +60,79 @@
 #'   filter(between(Sepal.Length, 5, 6)) |>
 #'   collect()
 compute.RPolarsLazyFrame <- function(
-	x,
-	...,
-	type_coercion = TRUE,
-	predicate_pushdown = TRUE,
-	projection_pushdown = TRUE,
-	simplify_expression = TRUE,
-	slice_pushdown = TRUE,
-	comm_subplan_elim = TRUE,
-	comm_subexpr_elim = TRUE,
-	cluster_with_columns = TRUE,
-	no_optimization = FALSE,
-	streaming = FALSE,
-	collect_in_background = FALSE
+  x,
+  ...,
+  type_coercion = TRUE,
+  predicate_pushdown = TRUE,
+  projection_pushdown = TRUE,
+  simplify_expression = TRUE,
+  slice_pushdown = TRUE,
+  comm_subplan_elim = TRUE,
+  comm_subexpr_elim = TRUE,
+  cluster_with_columns = TRUE,
+  no_optimization = FALSE,
+  streaming = FALSE,
+  collect_in_background = FALSE
 ) {
-	check_dots_empty()
-	grps <- attributes(x)$pl_grps
-	mo <- attributes(x)$maintain_grp_order
-	is_grouped <- !is.null(grps)
+  check_dots_empty()
+  grps <- attributes(x)$pl_grps
+  mo <- attributes(x)$maintain_grp_order
+  is_grouped <- !is.null(grps)
 
-	out <- x$collect(
-		type_coercion = type_coercion,
-		predicate_pushdown = predicate_pushdown,
-		projection_pushdown = projection_pushdown,
-		simplify_expression = simplify_expression,
-		slice_pushdown = slice_pushdown,
-		comm_subplan_elim = comm_subplan_elim,
-		comm_subexpr_elim = comm_subexpr_elim,
-		cluster_with_columns = cluster_with_columns,
-		no_optimization = no_optimization,
-		streaming = streaming,
-		collect_in_background = collect_in_background
-	)
+  out <- x$collect(
+    type_coercion = type_coercion,
+    predicate_pushdown = predicate_pushdown,
+    projection_pushdown = projection_pushdown,
+    simplify_expression = simplify_expression,
+    slice_pushdown = slice_pushdown,
+    comm_subplan_elim = comm_subplan_elim,
+    comm_subexpr_elim = comm_subexpr_elim,
+    cluster_with_columns = cluster_with_columns,
+    no_optimization = no_optimization,
+    streaming = streaming,
+    collect_in_background = collect_in_background
+  )
 
-	out <- if (is_grouped) {
-		out |>
-			group_by(all_of(grps), maintain_order = mo)
-	} else {
-		out
-	}
+  out <- if (is_grouped) {
+    out |>
+      group_by(all_of(grps), maintain_order = mo)
+  } else {
+    out
+  }
 
-	add_tidypolars_class(out)
+  add_tidypolars_class(out)
 }
 
 #' @rdname compute.RPolarsLazyFrame
 #' @export
 collect.RPolarsLazyFrame <- function(
-	x,
-	...,
-	type_coercion = TRUE,
-	predicate_pushdown = TRUE,
-	projection_pushdown = TRUE,
-	simplify_expression = TRUE,
-	slice_pushdown = TRUE,
-	comm_subplan_elim = TRUE,
-	comm_subexpr_elim = TRUE,
-	cluster_with_columns = TRUE,
-	no_optimization = FALSE,
-	streaming = FALSE,
-	collect_in_background = FALSE
+  x,
+  ...,
+  type_coercion = TRUE,
+  predicate_pushdown = TRUE,
+  projection_pushdown = TRUE,
+  simplify_expression = TRUE,
+  slice_pushdown = TRUE,
+  comm_subplan_elim = TRUE,
+  comm_subexpr_elim = TRUE,
+  cluster_with_columns = TRUE,
+  no_optimization = FALSE,
+  streaming = FALSE,
+  collect_in_background = FALSE
 ) {
-	check_dots_empty()
-	x |>
-		as.data.frame(
-			type_coercion = type_coercion,
-			predicate_pushdown = predicate_pushdown,
-			projection_pushdown = projection_pushdown,
-			simplify_expression = simplify_expression,
-			slice_pushdown = slice_pushdown,
-			comm_subplan_elim = comm_subplan_elim,
-			comm_subexpr_elim = comm_subexpr_elim,
-			cluster_with_columns = cluster_with_columns,
-			no_optimization = no_optimization,
-			streaming = streaming,
-			collect_in_background = collect_in_background
-		)
+  check_dots_empty()
+  x |>
+    as.data.frame(
+      type_coercion = type_coercion,
+      predicate_pushdown = predicate_pushdown,
+      projection_pushdown = projection_pushdown,
+      simplify_expression = simplify_expression,
+      slice_pushdown = slice_pushdown,
+      comm_subplan_elim = comm_subplan_elim,
+      comm_subexpr_elim = comm_subexpr_elim,
+      cluster_with_columns = cluster_with_columns,
+      no_optimization = no_optimization,
+      streaming = streaming,
+      collect_in_background = collect_in_background
+    )
 }

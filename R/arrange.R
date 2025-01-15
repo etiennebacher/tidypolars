@@ -23,40 +23,40 @@
 #'   arrange(-x2, .by_group = TRUE)
 
 arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
-	grps <- attributes(.data)$pl_grps
-	mo <- attributes(data)$maintain_grp_order
-	is_grouped <- !is.null(grps)
+  grps <- attributes(.data)$pl_grps
+  mo <- attributes(data)$maintain_grp_order
+  is_grouped <- !is.null(grps)
 
-	attr(.data, "called_from_arrange") <- TRUE
+  attr(.data, "called_from_arrange") <- TRUE
 
-	polars_exprs <- translate_dots(
-		.data,
-		...,
-		env = rlang::current_env(),
-		caller = rlang::caller_env()
-	)
+  polars_exprs <- translate_dots(
+    .data,
+    ...,
+    env = rlang::current_env(),
+    caller = rlang::caller_env()
+  )
 
-	descending <- vapply(
-		polars_exprs,
-		function(x) {
-			attr(x, "descending") %||% FALSE
-		},
-		FUN.VALUE = logical(1L)
-	)
+  descending <- vapply(
+    polars_exprs,
+    function(x) {
+      attr(x, "descending") %||% FALSE
+    },
+    FUN.VALUE = logical(1L)
+  )
 
-	if (is_grouped && isTRUE(.by_group)) {
-		polars_exprs <- c(grps, polars_exprs)
-		descending <- c(rep(FALSE, length(grps)), descending)
-	}
+  if (is_grouped && isTRUE(.by_group)) {
+    polars_exprs <- c(grps, polars_exprs)
+    descending <- c(rep(FALSE, length(grps)), descending)
+  }
 
-	out <- if (is_grouped) {
-		.data$sort(polars_exprs, descending = descending) |>
-			group_by(all_of(grps), maintain_order = mo)
-	} else {
-		.data$sort(polars_exprs, descending = descending)
-	}
+  out <- if (is_grouped) {
+    .data$sort(polars_exprs, descending = descending) |>
+      group_by(all_of(grps), maintain_order = mo)
+  } else {
+    .data$sort(polars_exprs, descending = descending)
+  }
 
-	add_tidypolars_class(out)
+  add_tidypolars_class(out)
 }
 
 #' @export

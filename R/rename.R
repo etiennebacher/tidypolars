@@ -26,13 +26,13 @@
 #'
 #' rename_with(pl_test_2, \(x) tolower(gsub(".", "_", x, fixed = TRUE)))
 rename.RPolarsDataFrame <- function(.data, ...) {
-	dots <- get_dots(...)
-	dots <- lapply(dots, rlang::as_name)
-	# polars wants a list with old names as names and new names as values
-	new_names <- as.list(names(dots))
-	names(new_names) <- dots
-	out <- .data$rename(new_names)
-	add_tidypolars_class(out)
+  dots <- get_dots(...)
+  dots <- lapply(dots, rlang::as_name)
+  # polars wants a list with old names as names and new names as values
+  new_names <- as.list(names(dots))
+  names(new_names) <- dots
+  out <- .data$rename(new_names)
+  add_tidypolars_class(out)
 }
 
 #' @rdname rename.RPolarsDataFrame
@@ -43,18 +43,18 @@ rename.RPolarsLazyFrame <- rename.RPolarsDataFrame
 #' @export
 
 rename_with.RPolarsDataFrame <- function(
-	.data,
-	.fn,
-	.cols = tidyselect::everything(),
-	...
+  .data,
+  .fn,
+  .cols = tidyselect::everything(),
+  ...
 ) {
-	to_replace <- tidyselect_named_arg(.data, rlang::enquo(.cols))
-	new <- do.call(.fn, list(to_replace, ...))
-	# polars wants a list with old names as names and new names as values
-	mapping <- as.list(new)
-	names(mapping) <- to_replace
-	out <- .data$rename(mapping)
-	add_tidypolars_class(out)
+  to_replace <- tidyselect_named_arg(.data, rlang::enquo(.cols))
+  new <- do.call(.fn, list(to_replace, ...))
+  # polars wants a list with old names as names and new names as values
+  mapping <- as.list(new)
+  names(mapping) <- to_replace
+  out <- .data$rename(mapping)
+  add_tidypolars_class(out)
 }
 
 #' @rdname rename.RPolarsDataFrame

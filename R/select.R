@@ -18,20 +18,20 @@
 #' # Renaming while selecting is also possible
 #' select(pl_iris, foo1 = Sepal.Length, Sepal.Width)
 select.RPolarsDataFrame <- function(.data, ...) {
-	dots <- get_dots(...)
-	with_renaming <- !is.null(names(dots))
-	vars <- tidyselect_dots(.data, ..., with_renaming = with_renaming)
+  dots <- get_dots(...)
+  with_renaming <- !is.null(names(dots))
+  vars <- tidyselect_dots(.data, ..., with_renaming = with_renaming)
 
-	# named means that we allow renaming in dots
-	if (is_named(vars)) {
-		out <- .data[, unname(vars), drop = FALSE]
-		ls <- as.list(names(vars))
-		names(ls) <- names(out)
-		out <- out$rename(ls)
-	} else {
-		out <- .data$select(vars)
-	}
-	add_tidypolars_class(out)
+  # named means that we allow renaming in dots
+  if (is_named(vars)) {
+    out <- .data[, unname(vars), drop = FALSE]
+    ls <- as.list(names(vars))
+    names(ls) <- names(out)
+    out <- out$rename(ls)
+  } else {
+    out <- .data$select(vars)
+  }
+  add_tidypolars_class(out)
 }
 
 #' @rdname select.RPolarsDataFrame

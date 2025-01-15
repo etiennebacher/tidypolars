@@ -101,82 +101,82 @@
 #' some_value <- 1
 #' mutate(pl_iris, x = {{ some_value }})
 mutate.RPolarsDataFrame <- function(
-	.data,
-	...,
-	.by = NULL,
-	.keep = c("all", "used", "unused", "none")
+  .data,
+  ...,
+  .by = NULL,
+  .keep = c("all", "used", "unused", "none")
 ) {
-	.keep <- rlang::arg_match0(.keep, values = c("all", "used", "unused", "none"))
+  .keep <- rlang::arg_match0(.keep, values = c("all", "used", "unused", "none"))
 
-	grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
-	mo <- attributes(.data)$maintain_grp_order
-	is_grouped <- !is.null(grps)
-	is_rowwise <- attributes(.data)$grp_type == "rowwise"
-	to_drop <- list()
+  grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
+  mo <- attributes(.data)$maintain_grp_order
+  is_grouped <- !is.null(grps)
+  is_rowwise <- attributes(.data)$grp_type == "rowwise"
+  to_drop <- list()
 
-	polars_exprs <- translate_dots(
-		.data = .data,
-		...,
-		env = rlang::current_env(),
-		caller = rlang::caller_env()
-	)
+  polars_exprs <- translate_dots(
+    .data = .data,
+    ...,
+    env = rlang::current_env(),
+    caller = rlang::caller_env()
+  )
 
-	used <- c()
-	orig_names <- names(.data)
+  used <- c()
+  orig_names <- names(.data)
 
-	for (i in seq_along(polars_exprs)) {
-		sub <- polars_exprs[[i]]
-		to_drop <- names(empty_elems(sub))
-		sub <- compact(sub)
+  for (i in seq_along(polars_exprs)) {
+    sub <- polars_exprs[[i]]
+    to_drop <- names(empty_elems(sub))
+    sub <- compact(sub)
 
-		used <- c(
-			used,
-			lapply(sub, \(x) x$meta$root_names()) |>
-				unlist() |>
-				unique()
-		)
+    used <- c(
+      used,
+      lapply(sub, \(x) x$meta$root_names()) |>
+        unlist() |>
+        unique()
+    )
 
-		if (length(sub) > 0) {
-			if (is_grouped) {
-				sub <- lapply(sub, \(x) {
-					order_by <- attributes(x)[["order_by"]]
-					if (!is.null(order_by)) {
-						x$over(grps, order_by = order_by)
-					} else {
-						x$over(grps)
-					}
-				})
-			}
-			.data <- .data$with_columns(sub)
-		}
+    if (length(sub) > 0) {
+      if (is_grouped) {
+        sub <- lapply(sub, \(x) {
+          order_by <- attributes(x)[["order_by"]]
+          if (!is.null(order_by)) {
+            x$over(grps, order_by = order_by)
+          } else {
+            x$over(grps)
+          }
+        })
+      }
+      .data <- .data$with_columns(sub)
+    }
 
-		if (length(to_drop) > 0) {
-			.data <- .data$drop(to_drop)
-		}
-	}
+    if (length(to_drop) > 0) {
+      .data <- .data$drop(to_drop)
+    }
+  }
 
-	if (.keep != "all") {
-		new_vars <- setdiff(names(.data), orig_names)
-		not_used <- setdiff(orig_names, used)
-		not_used <- setdiff(not_used, grps)
-		if (.keep == "used") {
-			.data <- .data$drop(not_used)
-		} else if (.keep == "unused") {
-			.data <- .data$drop(used)
-		} else if (.keep == "none") {
-			.data <- .data$drop(c(not_used, used))
-		}
-	}
+  if (.keep != "all") {
+    new_vars <- setdiff(names(.data), orig_names)
+    not_used <- setdiff(orig_names, used)
+    not_used <- setdiff(not_used, grps)
+    if (.keep == "used") {
+      .data <- .data$drop(not_used)
+    } else if (.keep == "unused") {
+      .data <- .data$drop(used)
+    } else if (.keep == "none") {
+      .data <- .data$drop(c(not_used, used))
+    }
+  }
 
-	out <- if (is_grouped && missing(.by)) {
-		group_by(.data, all_of(grps), maintain_order = mo)
-	} else if (isTRUE(is_rowwise)) {
-		rowwise(.data)
-	} else {
-		.data
-	}
+  out <- if (is_grouped && missing(.by)) {
+    group_by(.data, all_of(grps), maintain_order = mo)
+  } else if (isTRUE(is_rowwise)) {
+    rowwise(.data)
+  } else {
+    .data
+  }
 
-	add_tidypolars_class(out)
+  add_tidypolars_class(out)
 }
 
 #' @rdname mutate.RPolarsDataFrame
