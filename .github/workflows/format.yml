@@ -1,0 +1,27 @@
+name: format
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install `air`
+        run: curl -LsSf https://github.com/posit-dev/air/releases/latest/download/air-installer.sh | sh
+      - name: Check for changes
+        run: |
+          if air format . --check; then
+            exit 0
+          else
+            exit 1
+          fi
