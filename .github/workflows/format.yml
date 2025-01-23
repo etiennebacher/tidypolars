@@ -19,9 +19,5 @@ jobs:
       - name: Install `air`
         run: curl -LsSf https://github.com/posit-dev/air/releases/latest/download/air-installer.sh | sh
       - name: Check for changes
-        run: |
-          if air format . --check; then
-            exit 0
-          else
-            exit 1
-          fi
+        run: air format . --check
+        
