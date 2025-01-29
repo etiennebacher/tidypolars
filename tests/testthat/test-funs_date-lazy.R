@@ -565,4 +565,27 @@ test_that("ISOdatetime() works", {
   )
 })
 
+test_that("force_tz() works", {
+  x_df <- data.frame(
+    dt_utc = ymd_hms(
+      c(
+        "2012-03-26 12:00:00",
+        "2020-01-01 12:00:00",
+        "2023-12-14 12:00:00",
+        NA
+      ),
+      tz = "UTC"
+    )
+  )
+  y_df <- mutate(x_df, dt_utc = force_tz(dt_utc, "Pacific/Auckland"))
+  x <- as_polars_lf(x_df)
+
+  expect_equal_lazy(
+    x |>
+      mutate(dt_utc = force_tz(dt_utc, "Pacific/Auckland")) |>
+      pull(dt_utc),
+    y_df$dt_utc
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

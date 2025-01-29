@@ -963,3 +963,26 @@ polars_expr_to_r <- function(x) {
   }
   x
 }
+
+#' Timezone assertion
+#'
+#' @description `polars` tzone limitations
+#' https://pola-rs.github.io/r-polars/man/ExprDT_convert_time_zone.html
+#'
+#' @noRd
+#' @keywords internal
+check_timezone <- function(tz, null_allowed = FALSE) {
+  if (tz == "" & null_allowed) {
+    tz <- NULL
+    return(tz)
+  } else if (tz == "" & !null_allowed) {
+    stop("This expession in `tidypolars` doesn't support NULL timezone")
+  } else if (tz != "") {
+    if (!any(tz == base::OlsonNames())) {
+      stop(sprintf("Unrecognized time zone '%s'", tz))
+    } else {
+      tz <- tz
+    }
+  }
+  tz
+}
