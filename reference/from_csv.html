@@ -71,7 +71,8 @@ scan_csv_polars() imports the data as a Polars LazyFrame."><meta property="og:im
 <span>  eol_char <span class="op">=</span> <span class="st">"\n"</span>,</span>
 <span>  raise_if_empty <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  truncate_ragged_lines <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  reuse_downloaded <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  reuse_downloaded <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  include_file_paths <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">scan_csv_polars</span><span class="op">(</span></span>
@@ -98,7 +99,8 @@ scan_csv_polars() imports the data as a Polars LazyFrame."><meta property="og:im
 <span>  eol_char <span class="op">=</span> <span class="st">"\n"</span>,</span>
 <span>  raise_if_empty <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  truncate_ragged_lines <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  reuse_downloaded <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  reuse_downloaded <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  include_file_paths <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -233,6 +235,11 @@ DataFrame or LazyFrame.</p></dd>
 <dt id="arg-reuse-downloaded">reuse_downloaded<a class="anchor" aria-label="anchor" href="#arg-reuse-downloaded"></a></dt>
 <dd><p>If <code>TRUE</code>(default) and a URL was provided, cache the
 downloaded files in session for an easy reuse.</p></dd>
+
+
+<dt id="arg-include-file-paths">include_file_paths<a class="anchor" aria-label="anchor" href="#arg-include-file-paths"></a></dt>
+<dd><p>Include the path of the source file(s) as a column
+with this name.</p></dd>
 
 </dl></div>
 
