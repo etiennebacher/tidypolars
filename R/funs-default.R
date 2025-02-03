@@ -614,6 +614,12 @@ pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
   x$sample(n = size, with_replacement = replace, shuffle = TRUE)
 }
 
+pl_seq <- function(from = 1, to = 1, by = NULL, length.out = NULL, ...) {
+  check_empty_dots(...)
+  by <- by %||% 1
+  pl$int_range(start = from, end = to + 1, step = by)
+}
+
 pl_sign <- function(x, ...) {
   check_empty_dots(...)
   x$sign()

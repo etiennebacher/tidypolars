@@ -672,4 +672,29 @@ test_that("dplyr::lead() works", {
   )
 })
 
+test_that("seq() works", {
+  dat <- data.frame(x = 1:4)
+  expect_equal_lazy(
+    mutate(as_polars_lf(dat), y = seq(1, 4)),
+    mutate(dat, y = seq(1, 4))
+  )
+  expect_equal_lazy(
+    mutate(as_polars_lf(dat), y = seq(1, 2, 4)),
+    mutate(dat, y = seq(1, 2, 4))
+  )
+
+  dat <- data.frame(x = 1:2)
+  expect_equal_lazy(
+    mutate(as_polars_lf(dat), y = seq(1, 4, by = 2)),
+    mutate(dat, y = seq(1, 4, by = 2))
+  )
+
+  expect_error_lazy(
+    expect_warning(
+      mutate(as_polars_lf(dat), y = seq(1, 4, length.out = 2)),
+      "doesn't know how to"
+    )
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

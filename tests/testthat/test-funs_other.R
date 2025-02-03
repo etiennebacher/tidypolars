@@ -667,3 +667,28 @@ test_that("dplyr::lead() works", {
       mutate(x_lead = lead(x, order_by = t, default = 99), .by = g)
   )
 })
+
+test_that("seq() works", {
+  dat <- data.frame(x = 1:4)
+  expect_equal(
+    mutate(as_polars_df(dat), y = seq(1, 4)),
+    mutate(dat, y = seq(1, 4))
+  )
+  expect_equal(
+    mutate(as_polars_df(dat), y = seq(1, 2, 4)),
+    mutate(dat, y = seq(1, 2, 4))
+  )
+
+  dat <- data.frame(x = 1:2)
+  expect_equal(
+    mutate(as_polars_df(dat), y = seq(1, 4, by = 2)),
+    mutate(dat, y = seq(1, 4, by = 2))
+  )
+
+  expect_error(
+    expect_warning(
+      mutate(as_polars_df(dat), y = seq(1, 4, length.out = 2)),
+      "doesn't know how to"
+    )
+  )
+})

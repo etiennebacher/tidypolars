@@ -52,9 +52,6 @@ complete.RPolarsDataFrame <- function(
   fill = list(),
   explicit = TRUE
 ) {
-  # if (isFALSE(explicit)) {
-  #   abort("`explicit = FALSE` is not supported by tidypolars.")
-  # }
   vars <- tidyselect_dots(data, ...)
   if (length(vars) < 2) {
     return(data)
