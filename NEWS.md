@@ -14,7 +14,10 @@
   - an argument that doesn't exist at all, they error.
 
 * Add support for argument `explicit` in `tidyr::complete()`.
-* Add option to keep track of filenames in `scan_csv_polars()` (#171 @ginolhac)
+
+* Add option to keep track of filenames in `scan_csv_polars()` (#171, @ginolhac).
+
+* Add partial support for `seq()` (argument `length.out` is not supported).
 
 ## Bug fixes
 
