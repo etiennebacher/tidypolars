@@ -136,7 +136,8 @@ read_csv_polars <- function(
   eol_char = "\n",
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
-  reuse_downloaded = TRUE
+  reuse_downloaded = TRUE,
+  include_file_paths = NULL
 ) {
   rlang::arg_match0(encoding, values = c("utf8", "utf8-lossy"))
   rlang::check_dots_empty()
@@ -164,7 +165,8 @@ read_csv_polars <- function(
     eol_char = eol_char,
     raise_if_empty = raise_if_empty,
     truncate_ragged_lines = truncate_ragged_lines,
-    reuse_downloaded = reuse_downloaded
+    reuse_downloaded = reuse_downloaded,
+    include_file_paths = include_file_paths
   ) |>
     compute()
 }
@@ -196,7 +198,8 @@ scan_csv_polars <- function(
   eol_char = "\n",
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
-  reuse_downloaded = TRUE
+  reuse_downloaded = TRUE,
+  include_file_paths = NULL
 ) {
   rlang::arg_match0(encoding, values = c("utf8", "utf8-lossy"))
   rlang::check_dots_empty()
@@ -224,7 +227,8 @@ scan_csv_polars <- function(
     eol_char = eol_char,
     raise_if_empty = raise_if_empty,
     truncate_ragged_lines = truncate_ragged_lines,
-    reuse_downloaded = reuse_downloaded
+    reuse_downloaded = reuse_downloaded,
+    include_file_paths = include_file_paths
   )
 }
 

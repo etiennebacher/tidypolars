@@ -1,4 +1,4 @@
-expect_equal_or_both_error <- function(object, other) {
+expect_equal_or_both_error <- function(object, other, ...) {
   polars_error <- FALSE
   polars_res <- tryCatch(
     object,
@@ -19,7 +19,7 @@ expect_equal_or_both_error <- function(object, other) {
       "tidypolars errored but tidyverse didn't."
     )
   } else {
-    testthat::expect_equal(polars_res, other_res)
+    expect_equal(polars_res, other_res, ...)
   }
 
   invisible(NULL)

@@ -30,7 +30,8 @@ read_csv_polars(
   eol_char = "\\n",
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
-  reuse_downloaded = TRUE
+  reuse_downloaded = TRUE,
+  include_file_paths = NULL
 )
 
 scan_csv_polars(
@@ -57,7 +58,8 @@ scan_csv_polars(
   eol_char = "\\n",
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
-  reuse_downloaded = TRUE
+  reuse_downloaded = TRUE,
+  include_file_paths = NULL
 )
 }
 \arguments{
@@ -145,6 +147,9 @@ DataFrame or LazyFrame.}
 
 \item{reuse_downloaded}{If \code{TRUE}(default) and a URL was provided, cache the
 downloaded files in session for an easy reuse.}
+
+\item{include_file_paths}{Include the path of the source file(s) as a column
+with this name.}
 }
 \description{
 \code{read_csv_polars()} imports the data as a Polars DataFrame.
