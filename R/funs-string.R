@@ -255,7 +255,7 @@ pl_str_sub_stringr <- function(string, start, end = NULL) {
   )$otherwise(2000)
 
   foo5 <- pl$when(start >= 0 & end < 0 & end$abs() <= len_string)$then(
-    len_string + end + 1
+    len_string - start + end + 1
   )$otherwise(2000)
 
   foo6 <- pl$when(start_is_zero & end < 0 & end$abs() <= len_string)$then(
