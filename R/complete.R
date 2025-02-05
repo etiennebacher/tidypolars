@@ -52,8 +52,35 @@ complete.RPolarsDataFrame <- function(
   fill = list(),
   explicit = TRUE
 ) {
-  vars <- tidyselect_dots(data, ...)
-  if (length(vars) < 2) {
+  dots <- enquos(...)
+  names_dots <- names(dots)
+
+  unnamed_dots <- dots[which(names_dots == "")]
+  named_dots <- dots[which(names_dots != "")]
+
+  data_eval_dots <- build_data_context(data)
+  unnamed_dots <- lapply(unnamed_dots, function(x) {
+    tidyselect::eval_select(
+      x,
+      data_eval_dots,
+      error_call = caller_env()
+    )
+  }) |>
+    unlist() |>
+    names()
+
+  named_dots <- lapply(names(named_dots), function(x) {
+    out <- tibble(!!named_dots[[x]])
+    names(out) <- x
+    if (is_polars_df(data)) {
+      as_polars_df(out)
+    } else if (is_polars_lf(data)) {
+      as_polars_lf(out)
+    }
+  }) |>
+    set_names(names(named_dots))
+
+  if (length(unnamed_dots) < 2 && length(named_dots) == 0) {
     return(data)
   }
 
@@ -61,17 +88,31 @@ complete.RPolarsDataFrame <- function(
   mo <- attributes(data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
-  if (isTRUE(is_grouped)) {
-    chain <- data$group_by(grps, maintain_order = mo)$agg(
-      pl$col(vars)$unique()$sort()
-    )
+  if (length(unnamed_dots) == 0) {
+    chain <- if (is_polars_df(data)) {
+      pl$DataFrame()
+    } else if (is_polars_lf(data)) {
+      pl$LazyFrame()
+    }
   } else {
-    chain <- data$select(pl$col(vars)$unique()$sort()$implode())
+    if (isTRUE(is_grouped)) {
+      chain <- data$group_by(grps, maintain_order = mo)$agg(
+        pl$col(unnamed_dots)$unique()$sort()
+      )
+    } else {
+      chain <- data$select(pl$col(unnamed_dots)$unique()$sort()$implode())
+    }
   }
 
-  for (i in seq_along(vars)) {
-    chain <- chain$explode(vars[i])
+  for (i in seq_along(unnamed_dots)) {
+    chain <- chain$explode(unnamed_dots[i])
   }
+
+  for (i in seq_along(named_dots)) {
+    chain <- chain$join(named_dots[[i]], how = "cross", join_nulls = TRUE)
+  }
+
+  all_dots <- c(unnamed_dots, names(named_dots))
 
   # To avoid filling explicit missings, i.e. missings that were already in the
   # original data, I split the expanded combinations between those that were
@@ -80,33 +121,36 @@ complete.RPolarsDataFrame <- function(
     if (isTRUE(is_grouped)) {
       already_exist <- chain$join(
         data,
-        on = c(grps, vars),
+        on = c(grps, all_dots),
         how = "inner",
         join_nulls = TRUE
       )
       dont_already_exist <- chain$join(
         data,
-        on = c(grps, vars),
+        on = c(grps, all_dots),
         how = "anti",
         join_nulls = TRUE
       )
     } else {
       already_exist <- chain$join(
         data,
-        on = vars,
+        on = all_dots,
         how = "inner",
         join_nulls = TRUE
       )
       dont_already_exist <- chain$join(
         data,
-        on = vars,
+        on = all_dots,
         how = "anti",
         join_nulls = TRUE
       )
     }
-    other_vars <- setdiff(names(already_exist), names(dont_already_exist))
+    other_unnamed_dots <- setdiff(
+      names(already_exist),
+      names(dont_already_exist)
+    )
     schema <- already_exist$schema
-    for (i in other_vars) {
+    for (i in other_unnamed_dots) {
       dont_already_exist <- dont_already_exist$with_columns(
         pl$lit(NA)$cast(schema[[i]])$alias(i)
       )
@@ -115,21 +159,28 @@ complete.RPolarsDataFrame <- function(
     out <- bind_rows_polars(already_exist, dont_already_exist)
     if (isTRUE(mo)) {
       if (isTRUE(is_grouped)) {
-        out <- out$sort(c(grps, vars))
+        out <- out$sort(c(grps, all_dots))
       } else {
-        out <- out$sort(vars)
+        out <- out$sort(all_dots)
       }
     }
   } else {
     if (isTRUE(is_grouped)) {
       out <- chain$join(
         data,
-        on = c(grps, vars),
-        how = "left",
-        join_nulls = TRUE
+        on = c(grps, all_dots),
+        how = "full",
+        join_nulls = TRUE,
+        coalesce = TRUE
       )
     } else {
-      out <- chain$join(data, on = vars, how = "left", join_nulls = TRUE)
+      out <- chain$join(
+        data,
+        on = all_dots,
+        how = "full",
+        join_nulls = TRUE,
+        coalesce = TRUE
+      )
     }
 
     if (length(fill) > 0) {

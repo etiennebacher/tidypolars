@@ -100,3 +100,38 @@ test_that("argument 'explicit' works", {
     )
   )
 })
+
+test_that("can use named arguments", {
+  df <- pl$DataFrame(
+    group = c(1:2, 1, 2),
+    item_id = c(1:2, 2, 3),
+    item_name = c("a", "a", "b", "b"),
+    value1 = c(1, NA, 3, 4),
+    value2 = 4:7
+  )
+
+  expect_equal(
+    complete(df, group, value1 = c(1, 2, 3, 4)),
+    data.frame(
+      group = rep(c(1, 2), 4:5),
+      value1 = c(1, 2, 3, 4, 1, 2, 3, 4, NA),
+      item_id = c(1, NA, 2, NA, NA, NA, NA, 3, 2),
+      item_name = c("a", NA, "b", NA, NA, NA, NA, "b", "a"),
+      value2 = c(4L, NA, 6L, NA, NA, NA, NA, 7L, 5L)
+    )
+  )
+
+  # expect_equal(
+  #   complete(df, value1 = c(1, 2, 3, 4)),
+  #   data.frame(
+  #     group = rep(c(1, 2), 4:5),
+  #     value1 = c(1, 2, 3, 4, 1, 2, 3, 4, NA),
+  #     item_id = c(1, NA, 2, NA, NA, NA, NA, 3, 2),
+  #     item_name = c("a", NA, "b", NA, NA, NA, NA, "b", "a"),
+  #     value2 = c(4L, NA, 6L, NA, NA, NA, NA, 7L, 5L)
+  #   )
+  # )
+
+  # add a test with "value1 = ..., group" to ensure that column order
+  # matches tidyr's
+})
