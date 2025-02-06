@@ -50,10 +50,10 @@ arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
   }
 
   out <- if (is_grouped) {
-    .data$sort(polars_exprs, descending = descending) |>
+    .data$sort(polars_exprs, descending = descending, nulls_last = TRUE) |>
       group_by(all_of(grps), maintain_order = mo)
   } else {
-    .data$sort(polars_exprs, descending = descending)
+    .data$sort(polars_exprs, descending = descending, nulls_last = TRUE)
   }
 
   add_tidypolars_class(out)
