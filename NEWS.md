@@ -19,6 +19,9 @@
 
 * Add partial support for `seq()` (argument `length.out` is not supported) and `seq_len()`.
 
+* `complete()` now accepts named elements, e.g. `complete(df, group, value = 1:4)`
+  (#176).
+
 ## Bug fixes
 
 * Fix edge cases in the `tidypolars` implementation of `stringr::str_sub()`

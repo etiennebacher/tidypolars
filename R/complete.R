@@ -6,6 +6,10 @@
 #' @param data A Polars Data/LazyFrame
 #' @param ... Any expression accepted by `dplyr::select()`: variable names,
 #'  column numbers, select helpers, etc.
+#'
+#' When used with continuous variables, you may need to fill in values that do
+#' not appear in the data: to do so use expressions like `year = 2010:2020` or
+#' `year = full_seq(year, 1)`.
 #' @param fill A named list that for each variable supplies a single value to
 #' use instead of `NA` for missing combinations.
 #' @param explicit Should both implicit (newly created) and explicit
@@ -52,6 +56,13 @@ complete.RPolarsDataFrame <- function(
   fill = list(),
   explicit = TRUE
 ) {
+  # Determine the dots names for the relocate() call at the end. Seems like
+  # the simplest way to get this info and shouldn't be too expensive.
+  dots <- enquos(..., .named = TRUE)
+  final_names <- names(dots)
+
+  # I want the separation named/unnamed dots, which is why I don't reuse the
+  # `dots` variable from above.
   dots <- enquos(...)
   names_dots <- names(dots)
 
@@ -194,14 +205,13 @@ complete.RPolarsDataFrame <- function(
     }
   }
 
-  out <- if (is_grouped) {
-    out |>
+  out <- relocate(out, all_of(final_names), .before = 1)
+
+  if (is_grouped) {
+    out <- out |>
       relocate(all_of(grps), .before = 1) |>
       group_by(all_of(grps), maintain_order = mo)
-  } else {
-    out
   }
-
   add_tidypolars_class(out)
 }
 

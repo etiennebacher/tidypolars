@@ -108,29 +108,45 @@ test_that("can use named arguments", {
   )
 
   expect_equal(
-    complete(df, group, value1 = c(1, 2, 3, 4)) |>
+    df |>
+      complete(group, value1 = c(1, 2, 3, 4)) |>
       arrange(group, value1),
-    data.frame(
-      group = rep(c(1, 2), 4:5),
-      value1 = c(1, 2, 3, 4, 1, 2, 3, 4, NA),
-      item_id = c(1, NA, 2, NA, NA, NA, NA, 3, 2),
-      item_name = c("a", NA, "b", NA, NA, NA, NA, "b", "a"),
-      value2 = c(4L, NA, 6L, NA, NA, NA, NA, 7L, 5L)
-    )
+    as.data.frame(df) |>
+      complete(group, value1 = c(1, 2, 3, 4)) |>
+      arrange(group, value1) |>
+      as.data.frame()
   )
 
+  # only one named input
   expect_equal(
-    complete(df, value1 = c(1, 2, 3, 4)) |>
+    df |>
+      complete(value1 = c(1, 2, 3, 4)) |>
       arrange(value1),
-    data.frame(
-      group = rep(c(1, 2), 4:5),
-      value1 = c(1, 2, 3, 4, 1, 2, 3, 4, NA),
-      item_id = c(1, NA, 2, NA, NA, NA, NA, 3, 2),
-      item_name = c("a", NA, "b", NA, NA, NA, NA, "b", "a"),
-      value2 = c(4L, NA, 6L, NA, NA, NA, NA, 7L, 5L)
-    )
+    as.data.frame(df) |>
+      complete(value1 = c(1, 2, 3, 4)) |>
+      arrange(value1) |>
+      as.data.frame()
   )
 
-  # add a test with "value1 = ..., group" to ensure that column order
-  # matches tidyr's
+  # input columns are reordered
+  expect_equal(
+    df |>
+      complete(value1 = c(1, 2, 3, 4), group) |>
+      arrange(value1, group),
+    as.data.frame(df) |>
+      complete(value1 = c(1, 2, 3, 4), group) |>
+      arrange(value1, group) |>
+      as.data.frame()
+  )
+  expect_equal(
+    df |>
+      group_by(item_id) |>
+      complete(value1 = c(1, 2, 3, 4), group) |>
+      arrange(item_id, value1, group),
+    as.data.frame(df) |>
+      group_by(item_id) |>
+      complete(value1 = c(1, 2, 3, 4), group) |>
+      arrange(item_id, value1, group) |>
+      as.data.frame()
+  )
 })

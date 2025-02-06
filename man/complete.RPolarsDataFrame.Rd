@@ -13,7 +13,11 @@
 \item{data}{A Polars Data/LazyFrame}
 
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
-column numbers, select helpers, etc.}
+column numbers, select helpers, etc.
+
+When used with continuous variables, you may need to fill in values that do
+not appear in the data: to do so use expressions like \code{year = 2010:2020} or
+\code{year = full_seq(year, 1)}.}
 
 \item{fill}{A named list that for each variable supplies a single value to
 use instead of \code{NA} for missing combinations.}
