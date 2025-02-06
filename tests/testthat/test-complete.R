@@ -113,7 +113,6 @@ test_that("can use named arguments", {
       arrange(group, value1),
     as.data.frame(df) |>
       complete(group, value1 = c(1, 2, 3, 4)) |>
-      arrange(group, value1) |>
       as.data.frame()
   )
 
@@ -124,7 +123,6 @@ test_that("can use named arguments", {
       arrange(value1),
     as.data.frame(df) |>
       complete(value1 = c(1, 2, 3, 4)) |>
-      arrange(value1) |>
       as.data.frame()
   )
 
@@ -135,7 +133,6 @@ test_that("can use named arguments", {
       arrange(value1, group),
     as.data.frame(df) |>
       complete(value1 = c(1, 2, 3, 4), group) |>
-      arrange(value1, group) |>
       as.data.frame()
   )
   expect_equal(
@@ -146,7 +143,17 @@ test_that("can use named arguments", {
     as.data.frame(df) |>
       group_by(item_id) |>
       complete(value1 = c(1, 2, 3, 4), group) |>
-      arrange(item_id, value1, group) |>
+      as.data.frame()
+  )
+
+  # more than 1 unnamed and 1 named
+  df <- pl$DataFrame(a = 1:2, b = 3:4, c = 5:6)
+  expect_equal(
+    df |>
+      complete(a, b = 1:4, c) |>
+      arrange(a, b, c),
+    as.data.frame(df) |>
+      complete(a, b = 1:4, c) |>
       as.data.frame()
   )
 })

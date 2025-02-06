@@ -58,11 +58,10 @@ complete.RPolarsDataFrame <- function(
 ) {
   # Determine the dots names for the relocate() call at the end. Seems like
   # the simplest way to get this info and shouldn't be too expensive.
-  dots <- enquos(..., .named = TRUE)
-  final_names <- names(dots)
+  all_dots <- names(enquos(..., .named = TRUE))
 
   # I want the separation named/unnamed dots, which is why I don't reuse the
-  # `dots` variable from above.
+  # `all_dots` variable from above.
   dots <- enquos(...)
   names_dots <- names(dots)
 
@@ -129,7 +128,7 @@ complete.RPolarsDataFrame <- function(
     }
   }
 
-  all_dots <- c(unnamed_dots, names(named_dots))
+  # all_dots <- c(unnamed_dots, names(named_dots))
 
   # To avoid filling explicit missings, i.e. missings that were already in the
   # original data, I split the expanded combinations between those that were
@@ -205,7 +204,7 @@ complete.RPolarsDataFrame <- function(
     }
   }
 
-  out <- relocate(out, all_of(final_names), .before = 1)
+  out <- relocate(out, all_of(all_dots), .before = 1)
 
   if (is_grouped) {
     out <- out |>
