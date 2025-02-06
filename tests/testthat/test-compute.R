@@ -26,10 +26,7 @@ test_that("basic behavior works", {
     "Species"
   )
 
-  expect_equal(
-    attr(out, "maintain_grp_order"),
-    TRUE
-  )
+  expect_true(attr(out, "maintain_grp_order"))
 })
 
 test_that("can't collect non-LazyFrame object", {

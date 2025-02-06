@@ -80,10 +80,9 @@ test_that("works with grouped data", {
     "grp"
   )
 
-  expect_equal_lazy(
+  expect_true(
     fill(pl_grouped, everything(), .direction = "down") |>
-      attr("maintain_grp_order"),
-    TRUE
+      attr("maintain_grp_order")
   )
 })
 

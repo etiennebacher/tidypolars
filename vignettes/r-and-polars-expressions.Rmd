@@ -223,6 +223,8 @@ out <- tribble(
   "`base`", "`rank`",
   "`base`", "`rev`",
   "`base`", "`round`",
+  "`base`", "`seq`",
+  "`base`", "`seq_len`",
   "`base`", "`sin`",
   "`base`", "`sinh`",
   "`base`", "`sort`",

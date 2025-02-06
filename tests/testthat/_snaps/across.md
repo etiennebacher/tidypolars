@@ -1,7 +1,7 @@
 # anonymous functions has to return a Polars expression
 
     Code
-      mutate(test, across(.cols = contains("a"), function(x) mean(x)), )
+      mutate(test, across(.cols = contains("a"), function(x) mean(x)))
     Condition
       Error in `mutate()`:
       ! Could not evaluate an anonymous function in `across()`.

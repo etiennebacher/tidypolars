@@ -61,7 +61,7 @@ patrick::with_parameters_test_that(
 
         expect_equal_lazy(
           eval(parse(text = pl_code)),
-          eval(parse(text = tv_code)),
+          eval(parse(text = tv_code))
         )
       }
     )
@@ -177,7 +177,7 @@ test_that("substr() works", {
   # substr() doesn't error with different lengths but polars does. I don't want
   # this weird case to prevent quickcheck to run, especially since this is a
   # weird behavior in base R and we're more conservative on this.
-  length <- sample(1:10, 1)
+  length <- sample.int(10, 1)
 
   for_all(
     tests = 200,

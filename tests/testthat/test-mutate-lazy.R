@@ -191,10 +191,7 @@ test_that("operations on grouped data work", {
     "Species"
   )
 
-  expect_equal_lazy(
-    attr(out, "maintain_grp_order"),
-    TRUE
-  )
+  expect_true(attr(out, "maintain_grp_order"))
 
   expect_equal_lazy(
     pull(out, foo) |> unique(),
@@ -204,18 +201,16 @@ test_that("operations on grouped data work", {
       unique()
   )
 
-  expect_equal_lazy(
+  expect_null(
     as_polars_lf(iris) |>
       mutate(foo = mean(Sepal.Length), .by = Species) |>
-      attr("pl_grps"),
-    NULL
+      attr("pl_grps")
   )
 
-  expect_equal_lazy(
+  expect_null(
     as_polars_lf(iris) |>
       mutate(foo = mean(Sepal.Length), .by = Species) |>
-      attr("maintain_grp_order"),
-    NULL
+      attr("maintain_grp_order")
   )
 
   pl_mtcars <- polars::as_polars_lf(mtcars)

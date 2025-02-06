@@ -50,10 +50,7 @@ test_that("slice_head works with grouped data", {
     "Species"
   )
 
-  expect_equal(
-    attr(hd, "maintain_grp_order"),
-    TRUE
-  )
+  expect_true(attr(hd, "maintain_grp_order"))
 })
 
 test_that("slice_tail works on grouped data", {
@@ -87,10 +84,7 @@ test_that("slice_tail works on grouped data", {
     "Species"
   )
 
-  expect_equal(
-    attr(tl, "maintain_grp_order"),
-    TRUE
-  )
+  expect_true(attr(tl, "maintain_grp_order"))
 })
 
 test_that("basic slice_sample works", {
@@ -175,12 +169,11 @@ test_that("slice_sample works with grouped data", {
     "Species"
   )
 
-  expect_equal(
+  expect_true(
     pl_iris |>
       group_by(Species, maintain_order = TRUE) |>
       slice_sample(n = 5) |>
-      attr("maintain_grp_order"),
-    TRUE
+      attr("maintain_grp_order")
   )
 
   expect_equal(
@@ -197,18 +190,16 @@ test_that("slice_sample works with grouped data", {
     15
   )
 
-  expect_equal(
+  expect_null(
     pl_iris |>
       slice_sample(prop = 0.1, by = Species) |>
-      attr("pl_grps"),
-    NULL
+      attr("pl_grps")
   )
 
-  expect_equal(
+  expect_null(
     pl_iris |>
       slice_sample(prop = 0.1, by = Species) |>
-      attr("maintain_grp_order"),
-    NULL
+      attr("maintain_grp_order")
   )
 })
 
