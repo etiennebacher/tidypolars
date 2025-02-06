@@ -24,6 +24,8 @@
 * Fix edge cases in the `tidypolars` implementation of `stringr::str_sub()`
   and `substr()` compared to their original implementation (#159). 
 
+* `arrange()` now places `NA` values last, like `dplyr`.
+
 # tidypolars 0.12.0
 
 `tidypolars` requires `polars` >= 0.21.0.

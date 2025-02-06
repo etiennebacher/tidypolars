@@ -126,3 +126,18 @@ test_that("works with expressions", {
     test |> arrange(1 / mpg) |> pull(mpg)
   )
 })
+
+test_that("NA are placed last", {
+  test <- pl$DataFrame(
+    x = c(2, 1, 3, NA),
+    g = c("a", "b", "a", "b")
+  )
+  expect_equal(
+    test |> arrange(x),
+    data.frame(x = c(1, 2, 3, NA), g = c("b", "a", "a", "b"))
+  )
+  expect_equal(
+    test |> arrange(g, x),
+    data.frame(x = c(2, 3, 1, NA), g = rep(c("a", "b"), each = 2))
+  )
+})
