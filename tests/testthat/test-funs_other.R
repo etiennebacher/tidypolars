@@ -692,3 +692,19 @@ test_that("seq() works", {
     )
   )
 })
+
+test_that("seq_len() works", {
+  dat <- data.frame(x = 1:4)
+  expect_equal(
+    mutate(as_polars_df(dat), y = seq_len(4)),
+    mutate(dat, y = seq_len(4))
+  )
+  expect_equal(
+    mutate(as_polars_df(dat), y = seq_len(1)),
+    mutate(dat, y = seq_len(1))
+  )
+  expect_error(
+    mutate(as_polars_df(dat), y = seq_len(-1)),
+    "must be a non-negative integer"
+  )
+})

@@ -17,7 +17,7 @@
 
 * Add option to keep track of filenames in `scan_csv_polars()` (#171, @ginolhac).
 
-* Add partial support for `seq()` (argument `length.out` is not supported).
+* Add partial support for `seq()` (argument `length.out` is not supported) and `seq_len()`.
 
 ## Bug fixes
 
