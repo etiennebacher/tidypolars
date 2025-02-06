@@ -972,16 +972,18 @@ polars_expr_to_r <- function(x) {
 #' @noRd
 #' @keywords internal
 check_timezone <- function(tz, null_allowed = FALSE) {
-  if (tz == "" & null_allowed) {
+  if (length(tz) > 1) {
+    rlang::abort("The timezone argument should be a character string of length 1")
+  }
+
+  if (tz == "" && null_allowed) {
     tz <- NULL
     return(tz)
-  } else if (tz == "" & !null_allowed) {
-    stop("This expession in `tidypolars` doesn't support NULL timezone")
+  } else if (tz == "" && !null_allowed) {
+    rlang::abort("This expession in `tidypolars` doesn't support NULL timezone")
   } else if (tz != "") {
     if (!any(tz == base::OlsonNames())) {
-      stop(sprintf("Unrecognized time zone '%s'", tz))
-    } else {
-      tz <- tz
+      rlang::abort(sprintf("Unrecognized time zone '%s'", tz))
     }
   }
   tz
