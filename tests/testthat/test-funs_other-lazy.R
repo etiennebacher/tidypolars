@@ -697,4 +697,20 @@ test_that("seq() works", {
   )
 })
 
+test_that("seq_len() works", {
+  dat <- data.frame(x = 1:4)
+  expect_equal_lazy(
+    mutate(as_polars_lf(dat), y = seq_len(4)),
+    mutate(dat, y = seq_len(4))
+  )
+  expect_equal_lazy(
+    mutate(as_polars_lf(dat), y = seq_len(1)),
+    mutate(dat, y = seq_len(1))
+  )
+  expect_error_lazy(
+    mutate(as_polars_lf(dat), y = seq_len(-1)),
+    "must be a non-negative integer"
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
