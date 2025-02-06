@@ -88,12 +88,14 @@ complete.RPolarsDataFrame <- function(
   mo <- attributes(data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
+  chain_is_empty <- FALSE
   if (length(unnamed_dots) == 0) {
     chain <- if (is_polars_df(data)) {
       pl$DataFrame()
     } else if (is_polars_lf(data)) {
       pl$LazyFrame()
     }
+    chain_is_empty <- TRUE
   } else {
     if (isTRUE(is_grouped)) {
       chain <- data$group_by(grps, maintain_order = mo)$agg(
@@ -109,7 +111,11 @@ complete.RPolarsDataFrame <- function(
   }
 
   for (i in seq_along(named_dots)) {
-    chain <- chain$join(named_dots[[i]], how = "cross", join_nulls = TRUE)
+    if (chain_is_empty) {
+      chain <- named_dots[[i]]
+    } else {
+      chain <- chain$join(named_dots[[i]], how = "cross", join_nulls = TRUE)
+    }
   }
 
   all_dots <- c(unnamed_dots, names(named_dots))
