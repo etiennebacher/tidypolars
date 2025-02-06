@@ -599,6 +599,10 @@ test_that("force_tz() works", {
     test |>
       mutate(t = force_tz(dt_utc, "bla"))
   )
+  expect_error(
+    test |>
+      mutate(t = force_tz(dt_utc, c("bla", "bla")))
+  )
 })
 
 test_that("with_tz() works", {
@@ -632,6 +636,10 @@ test_that("with_tz() works", {
   expect_error(
     test |>
       mutate(t = with_tz(dt_utc, "bla"))
+  )
+  expect_error(
+    test |>
+      mutate(t = with_tz(dt_utc, c("bla", "bla")))
   )
   expect_error(
     test |>
