@@ -671,8 +671,8 @@ test_that("dplyr::lead() works", {
 test_that("seq() works", {
   dat <- data.frame(x = 1:4)
   expect_equal(
-    mutate(as_polars_df(dat), y = seq_len(4)),
-    mutate(dat, y = seq_len(4))
+    mutate(as_polars_df(dat), y = seq(2, 5)),
+    mutate(dat, y = seq(2, 5))
   )
   expect_equal(
     mutate(as_polars_df(dat), y = seq(1, 2, 4)),
