@@ -64,7 +64,10 @@ for completing missing combinations of data.</p>
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Any expression accepted by <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select()</a></code>: variable names,
-column numbers, select helpers, etc.</p></dd>
+column numbers, select helpers, etc.</p>
+<p>When used with continuous variables, you may need to fill in values that do
+not appear in the data: to do so use expressions like <code>year = 2010:2020</code> or
+<code>year = full_seq(year, 1)</code>.</p></dd>
 
 
 <dt id="arg-fill">fill<a class="anchor" aria-label="anchor" href="#arg-fill"></a></dt>
