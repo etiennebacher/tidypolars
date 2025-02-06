@@ -67,10 +67,7 @@ test_that("works on grouped data", {
     "g"
   )
 
-  expect_equal_lazy(
-    attr(out, "maintain_grp_order"),
-    TRUE
-  )
+  expect_true(attr(out, "maintain_grp_order"))
 })
 
 test_that("argument 'explicit' works", {

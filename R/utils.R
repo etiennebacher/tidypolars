@@ -8,7 +8,7 @@ safe_deparse <- function(x, ...) {
   if (is.null(x)) {
     return(NULL)
   }
-  paste0(
+  paste(
     vapply(deparse(x, width.cutoff = 500), trimws, FUN.VALUE = character(1)),
     collapse = " "
   )

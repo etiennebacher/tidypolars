@@ -6,11 +6,11 @@ test_that("basic behavior works", {
   l <- list(
     polars::pl$LazyFrame(
       x = sample(letters, 20),
-      y = sample(1:100, 20)
+      y = sample.int(100, 20)
     ),
     polars::pl$LazyFrame(
       x = sample(letters, 20),
-      y = sample(1:100, 20)
+      y = sample.int(100, 20)
     )
   )
 
@@ -25,11 +25,11 @@ test_that("basic behavior works", {
 test_that("dots and list are equivalent", {
   p1 <- pl$LazyFrame(
     x = sample(letters, 20),
-    y = sample(1:100, 20)
+    y = sample.int(100, 20)
   )
   p2 <- pl$LazyFrame(
     x = sample(letters, 20),
-    y = sample(1:100, 20)
+    y = sample.int(100, 20)
   )
 
   expect_equal_lazy(
@@ -63,11 +63,11 @@ test_that("different dtypes work", {
 test_that("arg .id works", {
   p1 <- pl$LazyFrame(
     x = sample(letters, 20),
-    y = sample(1:100, 20)
+    y = sample.int(100, 20)
   )
   p2 <- pl$LazyFrame(
     x = sample(letters, 20),
-    y = sample(1:100, 20)
+    y = sample.int(100, 20)
   )
 
   expect_equal_lazy(
@@ -98,11 +98,11 @@ test_that("arg .id works", {
 test_that("error if not all elements don't have the same class", {
   p1 <- pl$LazyFrame(
     x = sample(letters, 20),
-    y = sample(1:100, 20)
+    y = sample.int(100, 20)
   )
   p2 <- data.frame(
     x = sample(letters, 20),
-    y = sample(1:100, 20)
+    y = sample.int(100, 20)
   )
 
   expect_snapshot_lazy(bind_rows_polars(p1, p2), error = TRUE)
@@ -112,11 +112,11 @@ test_that("elements must be either all DataFrames or all LazyFrames", {
   skip_if(Sys.getenv("TIDYPOLARS_TEST") == "TRUE")
   p1 <- pl$LazyFrame(
     x = sample(letters, 20),
-    y = sample(1:100, 20)
+    y = sample.int(100, 20)
   )
   p2 <- pl$LazyFrame(
     x = sample(letters, 20),
-    y = sample(1:100, 20)
+    y = sample.int(100, 20)
   )
 
   expect_snapshot_lazy(bind_rows_polars(p1, p2), error = TRUE)
