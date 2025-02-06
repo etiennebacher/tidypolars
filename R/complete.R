@@ -128,8 +128,6 @@ complete.RPolarsDataFrame <- function(
     }
   }
 
-  # all_dots <- c(unnamed_dots, names(named_dots))
-
   # To avoid filling explicit missings, i.e. missings that were already in the
   # original data, I split the expanded combinations between those that were
   # already in the data and those that weren't, and I only fill the latter.
