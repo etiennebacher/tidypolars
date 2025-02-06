@@ -44,7 +44,7 @@ keep:
   - T_and_F_symbol
   - undesirable_operator
   - unnecessary_nesting
-  # - unreachable_code
+  - unreachable_code
   - which_grepl
 
 exclude:
