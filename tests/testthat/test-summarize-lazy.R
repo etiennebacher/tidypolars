@@ -57,22 +57,19 @@ test_that("correctly handles attributes", {
     "cyl"
   )
 
-  expect_equal_lazy(
+  expect_true(
     summarize(pl_mtcars_g, x = mean(mpg)) |>
-      attr("maintain_grp_order"),
-    TRUE
+      attr("maintain_grp_order")
   )
 
-  expect_equal_lazy(
+  expect_null(
     summarize(pl_mtcars, x = mean(mpg), .by = c(cyl, am)) |>
-      attr("pl_grps"),
-    NULL
+      attr("pl_grps")
   )
 
-  expect_equal_lazy(
+  expect_null(
     summarize(pl_mtcars, x = mean(mpg), .by = c(cyl, am)) |>
-      attr("maintain_grp_order"),
-    NULL
+      attr("maintain_grp_order")
   )
 
   expect_is_tidypolars(

@@ -69,7 +69,7 @@ test_that("anonymous functions has to return a Polars expression", {
       gear_mean = mean(gear),
       gear_std = sd(gear),
       carb_mean = mean(carb),
-      carb_std = sd(carb),
+      carb_std = sd(carb)
     )
   )
 
@@ -98,7 +98,7 @@ test_that("anonymous functions has to return a Polars expression", {
   expect_snapshot(
     mutate(
       test,
-      across(.cols = contains("a"), \(x) mean(x)),
+      across(.cols = contains("a"), \(x) mean(x))
     ),
     error = TRUE
   )

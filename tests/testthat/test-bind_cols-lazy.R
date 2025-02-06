@@ -127,13 +127,13 @@ test_that("arg .name_repair works", {
     pl$LazyFrame(z = 1, x = 2, y = 3)
   )
 
-  expect_equal_lazy(
-    names(bind_cols_polars(l)),
+  expect_named(
+    bind_cols_polars(l),
     c("a", "x...2", "y...3", "z", "x...5", "y...6")
   )
 
-  expect_equal_lazy(
-    names(bind_cols_polars(l, .name_repair = "universal")),
+  expect_named(
+    bind_cols_polars(l, .name_repair = "universal"),
     c("a", "x...2", "y...3", "z", "x...5", "y...6")
   )
 
@@ -160,13 +160,10 @@ test_that("arg .name_repair works", {
     pl$LazyFrame(x = 1)$rename(list(x = " "))
   )
 
-  expect_equal_lazy(
-    names(bind_cols_polars(l)),
-    c(" ...1", " ...2")
-  )
+  expect_named(bind_cols_polars(l), c(" ...1", " ...2"))
 
-  expect_equal_lazy(
-    names(bind_cols_polars(l, .name_repair = "universal")),
+  expect_named(
+    bind_cols_polars(l, .name_repair = "universal"),
     c("....1", "....2")
   )
 })

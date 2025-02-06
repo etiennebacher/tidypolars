@@ -61,7 +61,7 @@ patrick::with_parameters_test_that(
 
         expect_equal_lazy(
           eval(parse(text = pl_code)),
-          eval(parse(text = tv_code)),
+          eval(parse(text = tv_code))
         )
       }
     )
