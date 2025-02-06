@@ -17,7 +17,8 @@
 
 * Add option to keep track of filenames in `scan_csv_polars()` (#171, @ginolhac).
 
-* Add partial support for `seq()` (argument `length.out` is not supported) and `seq_len()`.
+* Add partial support for `seq()` (argument `length.out` is not supported) and 
+  `seq_len()`.
 
 * `complete()` now accepts named elements, e.g. `complete(df, group, value = 1:4)`
   (#176).
