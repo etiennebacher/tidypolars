@@ -539,7 +539,7 @@ test_that("row_number() works", {
 
   set.seed(123)
   test4 <- polars::pl$DataFrame(
-    grp = sample(1:5, 10, replace = TRUE),
+    grp = sample.int(5, 10, replace = TRUE),
     val = 1:10
   )
 
@@ -671,8 +671,8 @@ test_that("dplyr::lead() works", {
 test_that("seq() works", {
   dat <- data.frame(x = 1:4)
   expect_equal(
-    mutate(as_polars_df(dat), y = seq(1, 4)),
-    mutate(dat, y = seq(1, 4))
+    mutate(as_polars_df(dat), y = seq_len(4)),
+    mutate(dat, y = seq_len(4))
   )
   expect_equal(
     mutate(as_polars_df(dat), y = seq(1, 2, 4)),

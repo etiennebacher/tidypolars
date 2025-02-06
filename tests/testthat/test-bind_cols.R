@@ -2,11 +2,11 @@ test_that("returns custom class", {
   l <- list(
     polars::pl$DataFrame(
       x = sample(letters, 20),
-      y = sample(1:100, 20)
+      y = sample.int(100, 20)
     ),
     polars::pl$DataFrame(
       a = sample(letters, 20),
-      z = sample(1:100, 20)
+      z = sample.int(100, 20)
     )
   )
 
@@ -17,11 +17,11 @@ test_that("basic behavior with list works", {
   l <- list(
     polars::pl$DataFrame(
       x = sample(letters, 20),
-      y = sample(1:100, 20)
+      y = sample.int(100, 20)
     ),
     polars::pl$DataFrame(
       a = sample(letters, 20),
-      z = sample(1:100, 20)
+      z = sample.int(100, 20)
     )
   )
   expect_dim(
@@ -33,11 +33,11 @@ test_that("basic behavior with list works", {
 test_that("passing individual elements works", {
   p1 <- pl$DataFrame(
     x = sample(letters, 20),
-    y = sample(1:100, 20)
+    y = sample.int(100, 20)
   )
   p2 <- pl$DataFrame(
     z = sample(letters, 20),
-    w = sample(1:100, 20)
+    w = sample.int(100, 20)
   )
 
   expect_equal(
@@ -50,11 +50,11 @@ test_that("error if not all elements don't have the same class", {
   l <- list(
     data.frame(
       x = sample(letters, 20),
-      y = sample(1:100, 20)
+      y = sample.int(100, 20)
     ),
     polars::pl$DataFrame(
       y = sample(letters, 20),
-      z = sample(1:100, 20)
+      z = sample.int(100, 20)
     )
   )
 
@@ -69,11 +69,11 @@ test_that("elements must be either all DataFrames or all LazyFrames", {
   l <- list(
     polars::pl$LazyFrame(
       x = sample(letters, 20),
-      y = sample(1:100, 20)
+      y = sample.int(100, 20)
     ),
     polars::pl$DataFrame(
       y = sample(letters, 20),
-      z = sample(1:100, 20)
+      z = sample.int(100, 20)
     )
   )
 
@@ -87,15 +87,15 @@ test_that("can only bind more than 2 elements if DataFrame", {
   l <- list(
     polars::pl$DataFrame(
       x = sample(letters, 20),
-      y = sample(1:100, 20)
+      y = sample.int(100, 20)
     ),
     polars::pl$DataFrame(
       a = sample(letters, 20),
-      z = sample(1:100, 20)
+      z = sample.int(100, 20)
     ),
     polars::pl$DataFrame(
       v = sample(letters, 20),
-      w = sample(1:100, 20)
+      w = sample.int(100, 20)
     )
   )
 
@@ -123,13 +123,13 @@ test_that("arg .name_repair works", {
     pl$DataFrame(z = 1, x = 2, y = 3)
   )
 
-  expect_equal(
-    names(bind_cols_polars(l)),
+  expect_named(
+    bind_cols_polars(l),
     c("a", "x...2", "y...3", "z", "x...5", "y...6")
   )
 
-  expect_equal(
-    names(bind_cols_polars(l, .name_repair = "universal")),
+  expect_named(
+    bind_cols_polars(l, .name_repair = "universal"),
     c("a", "x...2", "y...3", "z", "x...5", "y...6")
   )
 
@@ -156,13 +156,10 @@ test_that("arg .name_repair works", {
     pl$DataFrame(x = 1)$rename(list(x = " "))
   )
 
-  expect_equal(
-    names(bind_cols_polars(l)),
-    c(" ...1", " ...2")
-  )
+  expect_named(bind_cols_polars(l), c(" ...1", " ...2"))
 
-  expect_equal(
-    names(bind_cols_polars(l, .name_repair = "universal")),
+  expect_named(
+    bind_cols_polars(l, .name_repair = "universal"),
     c("....1", "....2")
   )
 })

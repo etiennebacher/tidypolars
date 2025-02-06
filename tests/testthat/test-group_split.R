@@ -2,7 +2,7 @@ test_that("works with ungrouped data", {
   spl <- as_polars_df(iris) |>
     group_split(Species)
 
-  expect_equal(length(spl), 3)
+  expect_length(spl, 3)
   expect_equal(lapply(spl, nrow), list(50, 50, 50))
 })
 
@@ -12,7 +12,7 @@ test_that("works with when split variables and group variables are the same", {
 
   spl2 <- group_split(test)
 
-  expect_equal(length(spl2), 3)
+  expect_length(spl2, 3)
   expect_equal(lapply(spl2, nrow), list(50, 50, 50))
 })
 
