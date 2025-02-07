@@ -975,6 +975,8 @@ polars_expr_to_r <- function(x) {
 check_timezone <- function(tz, null_allowed = FALSE) {
   tz <- polars_expr_to_r(tz)
 
+  # This happens when one passes an existing column as the timezone,
+  # polars_expr_to_r() doesn't return an R object in this case.
   if (inherits(tz, "RPolarsExpr")) {
     rlang::abort("`tidypolars` cannot pass a variable of the data as timezone.")
   }
