@@ -194,11 +194,10 @@ test_that("works with grouped data", {
     "cyl"
   )
 
-  expect_equal_lazy(
+  expect_true(
     by_cyl |>
       filter(disp == max(disp)) |>
-      attr("maintain_grp_order"),
-    TRUE
+      attr("maintain_grp_order")
   )
 })
 
@@ -241,18 +240,16 @@ test_that("works with .by", {
     c(4, 2)
   )
 
-  expect_equal_lazy(
+  expect_null(
     foo |>
       filter(all(x), .by = starts_with("g")) |>
-      attr("pl_grps"),
-    NULL
+      attr("pl_grps")
   )
 
-  expect_equal_lazy(
+  expect_null(
     foo |>
       filter(all(x), .by = starts_with("g")) |>
-      attr("maintain_grp_order"),
-    NULL
+      attr("maintain_grp_order")
   )
 })
 

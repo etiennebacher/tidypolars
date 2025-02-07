@@ -614,6 +614,20 @@ pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
   x$sample(n = size, with_replacement = replace, shuffle = TRUE)
 }
 
+pl_seq <- function(from = 1, to = 1, by = NULL, ...) {
+  check_empty_dots(...)
+  by <- by %||% 1
+  pl$int_range(start = from, end = to + 1, step = by)
+}
+
+pl_seq_len <- function(length.out) {
+  length.out <- polars_expr_to_r(length.out)
+  if (length.out < 0) {
+    abort("`length.out` must be a non-negative integer.")
+  }
+  pl$int_range(start = 1, end = length.out + 1, step = 1)
+}
+
 pl_sign <- function(x, ...) {
   check_empty_dots(...)
   x$sign()

@@ -8,7 +8,8 @@
 #' meaning that it won't fill across group boundaries.
 #'
 #' @param data A Polars Data/LazyFrame
-#' @inheritParams complete.RPolarsDataFrame
+#' @param ... Any expression accepted by `dplyr::select()`: variable names,
+#'  column numbers, select helpers, etc.
 #' @param .direction Direction in which to fill missing values. Either "down"
 #'    (the default), "up", "downup" (i.e. first down and then up) or "updown"
 #'    (first up and then down).

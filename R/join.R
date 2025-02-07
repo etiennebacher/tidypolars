@@ -442,7 +442,7 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
       )
     }
     rlang::inform(
-      paste0("Joining by ", paste("`", by, "`", collapse = ", ", sep = ""))
+      paste0("Joining by ", paste0("`", by, "`", collapse = ", "))
     )
   }
 

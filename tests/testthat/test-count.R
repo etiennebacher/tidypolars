@@ -90,15 +90,9 @@ test_that("add_count works on grouped data", {
     "am"
   )
 
-  expect_equal(
-    attr(count(test_grp), "maintain_grp_order"),
-    TRUE
-  )
+  expect_true(attr(count(test_grp), "maintain_grp_order"))
 
-  expect_equal(
-    attr(add_count(test_grp), "maintain_grp_order"),
-    TRUE
-  )
+  expect_true(attr(add_count(test_grp), "maintain_grp_order"))
 })
 
 test_that("message if overwriting variable", {

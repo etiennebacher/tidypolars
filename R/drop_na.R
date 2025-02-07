@@ -4,7 +4,7 @@
 #' possible to specify a subset of variables so that only missing values in these
 #' variables will be considered.
 #'
-#' @inheritParams complete.RPolarsDataFrame
+#' @inheritParams fill.RPolarsDataFrame
 #' @inheritParams slice_tail.RPolarsDataFrame
 #'
 #' @export

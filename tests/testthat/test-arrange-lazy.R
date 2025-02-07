@@ -131,4 +131,19 @@ test_that("works with expressions", {
   )
 })
 
+test_that("NA are placed last", {
+  test <- pl$LazyFrame(
+    x = c(2, 1, 3, NA),
+    g = c("a", "b", "a", "b")
+  )
+  expect_equal_lazy(
+    test |> arrange(x),
+    data.frame(x = c(1, 2, 3, NA), g = c("b", "a", "a", "b"))
+  )
+  expect_equal_lazy(
+    test |> arrange(g, x),
+    data.frame(x = c(2, 3, 1, NA), g = rep(c("a", "b"), each = 2))
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

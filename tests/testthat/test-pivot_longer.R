@@ -51,7 +51,7 @@ test_that("argument names_prefix works", {
       pivot_longer(
         cols = starts_with("wk"),
         names_to = "week",
-        names_prefix = "wk",
+        names_prefix = "wk"
       ) |>
       arrange(artist, track, date.entered, week) |>
       head(3) |>
@@ -65,7 +65,7 @@ test_that("argument names_prefix works", {
       pivot_longer(
         cols = starts_with("wk"),
         names_to = "week",
-        names_prefix = c("wk", "foo"),
+        names_prefix = c("wk", "foo")
       ),
     error = TRUE
   )

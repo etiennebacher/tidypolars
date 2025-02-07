@@ -10,3 +10,7 @@
 ^codecov\.yml$
 ^doc$
 ^Meta$
+
+
+# flint files
+^flint$

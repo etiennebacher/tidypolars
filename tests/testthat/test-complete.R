@@ -63,10 +63,7 @@ test_that("works on grouped data", {
     "g"
   )
 
-  expect_equal(
-    attr(out, "maintain_grp_order"),
-    TRUE
-  )
+  expect_true(attr(out, "maintain_grp_order"))
 })
 
 test_that("argument 'explicit' works", {
@@ -98,5 +95,65 @@ test_that("argument 'explicit' works", {
       b = c("a", "b", "a", "b", NA),
       c = c(4, 1, 1, NA, 5)
     )
+  )
+})
+
+test_that("can use named arguments", {
+  df <- pl$DataFrame(
+    group = c(1:2, 1, 2),
+    item_id = c(1:2, 2, 3),
+    item_name = c("a", "a", "b", "b"),
+    value1 = c(1, NA, 3, 4),
+    value2 = 4:7
+  )
+
+  expect_equal(
+    df |>
+      complete(group, value1 = c(1, 2, 3, 4)) |>
+      arrange(group, value1),
+    as.data.frame(df) |>
+      complete(group, value1 = c(1, 2, 3, 4)) |>
+      as.data.frame()
+  )
+
+  # only one named input
+  expect_equal(
+    df |>
+      complete(value1 = c(1, 2, 3, 4)) |>
+      arrange(value1),
+    as.data.frame(df) |>
+      complete(value1 = c(1, 2, 3, 4)) |>
+      as.data.frame()
+  )
+
+  # input columns are reordered
+  expect_equal(
+    df |>
+      complete(value1 = c(1, 2, 3, 4), group) |>
+      arrange(value1, group),
+    as.data.frame(df) |>
+      complete(value1 = c(1, 2, 3, 4), group) |>
+      as.data.frame()
+  )
+  expect_equal(
+    df |>
+      group_by(item_id) |>
+      complete(value1 = c(1, 2, 3, 4), group) |>
+      arrange(item_id, value1, group),
+    as.data.frame(df) |>
+      group_by(item_id) |>
+      complete(value1 = c(1, 2, 3, 4), group) |>
+      as.data.frame()
+  )
+
+  # more than 1 unnamed and 1 named
+  df <- pl$DataFrame(a = 1:2, b = 3:4, c = 5:6)
+  expect_equal(
+    df |>
+      complete(a, b = 1:4, c) |>
+      arrange(a, b, c),
+    as.data.frame(df) |>
+      complete(a, b = 1:4, c) |>
+      as.data.frame()
   )
 })

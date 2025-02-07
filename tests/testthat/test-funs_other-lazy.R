@@ -543,7 +543,7 @@ test_that("row_number() works", {
 
   set.seed(123)
   test4 <- polars::pl$LazyFrame(
-    grp = sample(1:5, 10, replace = TRUE),
+    grp = sample.int(5, 10, replace = TRUE),
     val = 1:10
   )
 
@@ -669,6 +669,47 @@ test_that("dplyr::lead() works", {
       mutate(x_lead = lead(x, order_by = t, default = 99), .by = g),
     dat |>
       mutate(x_lead = lead(x, order_by = t, default = 99), .by = g)
+  )
+})
+
+test_that("seq() works", {
+  dat <- data.frame(x = 1:4)
+  expect_equal_lazy(
+    mutate(as_polars_lf(dat), y = seq(2, 5)),
+    mutate(dat, y = seq(2, 5))
+  )
+  expect_equal_lazy(
+    mutate(as_polars_lf(dat), y = seq(1, 2, 4)),
+    mutate(dat, y = seq(1, 2, 4))
+  )
+
+  dat <- data.frame(x = 1:2)
+  expect_equal_lazy(
+    mutate(as_polars_lf(dat), y = seq(1, 4, by = 2)),
+    mutate(dat, y = seq(1, 4, by = 2))
+  )
+
+  expect_error_lazy(
+    expect_warning(
+      mutate(as_polars_lf(dat), y = seq(1, 4, length.out = 2)),
+      "doesn't know how to"
+    )
+  )
+})
+
+test_that("seq_len() works", {
+  dat <- data.frame(x = 1:4)
+  expect_equal_lazy(
+    mutate(as_polars_lf(dat), y = seq_len(4)),
+    mutate(dat, y = seq_len(4))
+  )
+  expect_equal_lazy(
+    mutate(as_polars_lf(dat), y = seq_len(1)),
+    mutate(dat, y = seq_len(1))
+  )
+  expect_error_lazy(
+    mutate(as_polars_lf(dat), y = seq_len(-1)),
+    "must be a non-negative integer"
   )
 })
 
