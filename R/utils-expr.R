@@ -972,19 +972,28 @@ polars_expr_to_r <- function(x) {
 #' @noRd
 #' @keywords internal
 check_timezone <- function(tz, null_allowed = FALSE) {
+  tz <- polars_expr_to_r(tz)
+
   if (length(tz) > 1) {
-    rlang::abort("The timezone argument should be a character string of length 1")
+    rlang::abort(
+      "`tidypolars` cannot use several timezones in a single column."
+    )
   }
 
-  if (tz == "" && null_allowed) {
-    tz <- NULL
-    return(tz)
-  } else if (tz == "" && !null_allowed) {
-    rlang::abort("This expession in `tidypolars` doesn't support NULL timezone")
-  } else if (tz != "") {
-    if (!any(tz == base::OlsonNames())) {
-      rlang::abort(sprintf("Unrecognized time zone '%s'", tz))
+  if (tz == "") {
+    if (null_allowed) {
+      return(NULL)
+    } else {
+      rlang::abort(
+        "This expression in `tidypolars` doesn't support NULL timezone"
+      )
     }
   }
+
+  # TODO: remove this once we have cleaner error messages in r-polars
+  if (!tz %in% OlsonNames()) {
+    rlang::abort(sprintf("Unrecognized time zone: '%s'", tz))
+  }
+
   tz
 }
