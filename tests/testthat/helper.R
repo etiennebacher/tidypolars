@@ -21,7 +21,11 @@ expect_equal_or_both_error <- function(object, other, ...) {
       "tidypolars errored but tidyverse didn't."
     )
   } else {
-    expect_equal(polars_res, other_res, ...)
+    if (is_polars_lf(polars_res)) {
+      expect_equal_lazy(polars_res, other_res, ...)
+    } else {
+      expect_equal(polars_res, other_res, ...)
+    }
   }
 
   invisible(NULL)

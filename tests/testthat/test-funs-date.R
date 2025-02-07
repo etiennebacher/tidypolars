@@ -37,3 +37,31 @@ patrick::with_parameters_test_that(
   },
   fun = c("year", "month", "day", "quarter", "mday", "yday")
 )
+
+patrick::with_parameters_test_that(
+  "changing timezone works",
+  {
+    for_all(
+      tests = 20,
+      datetime = posixct_(any_na = TRUE),
+      property = function(datetime) {
+        test_df <- data.frame(x1 = ymd_hms(datetime, tz = "UTC"))
+        test <- pl$DataFrame(x1 = ymd_hms(datetime, tz = "UTC"))
+
+        expect_equal_or_both_error(
+          mutate(
+            test,
+            x1 = force_tz(x1, tz)
+          ),
+          mutate(
+            test_df,
+            x1 = force_tz(x1, tz)
+          ),
+          # TODO: investigate more why this is needed
+          tolerance = 1e-6
+        )
+      }
+    )
+  },
+  tz = list("Pacific/Auckland", "foobar", "", NA)
+)
