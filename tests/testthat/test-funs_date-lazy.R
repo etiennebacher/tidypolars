@@ -566,7 +566,7 @@ test_that("ISOdatetime() works", {
 })
 
 test_that("force_tz() works", {
-  x_df <- data.frame(
+  test_df <- data.frame(
     dt_utc = ymd_hms(
       c(
         "2012-03-26 12:00:00",
@@ -577,14 +577,77 @@ test_that("force_tz() works", {
       tz = "UTC"
     )
   )
-  y_df <- mutate(x_df, dt_utc = force_tz(dt_utc, "Pacific/Auckland"))
-  x <- as_polars_lf(x_df)
+  test <- as_polars_lf(test_df) |>
+    mutate(
+      dt_utc = force_tz(dt_utc, "Pacific/Auckland"),
+      dt_na = force_tz(dt_utc, "")
+    )
+  test_df <- mutate(
+    test_df,
+    dt_utc = force_tz(dt_utc, "Pacific/Auckland"),
+    dt_na = force_tz(dt_utc, "") # empty TZ
+  )
 
+  # Existing timezone
   expect_equal_lazy(
-    x |>
-      mutate(dt_utc = force_tz(dt_utc, "Pacific/Auckland")) |>
-      pull(dt_utc),
-    y_df$dt_utc
+    pull(test, dt_utc),
+    test_df$dt_utc
+  )
+  # Empty timezone
+  expect_equal_lazy(
+    pull(test, dt_na),
+    test_df$dt_na
+  )
+  # Unrecognized timezone or NULL
+  expect_error_lazy(
+    test |>
+      mutate(t = force_tz(dt_utc, "bla"))
+  )
+  expect_error_lazy(
+    test |>
+      mutate(t = force_tz(dt_utc, c("bla", "bla")))
+  )
+})
+
+test_that("with_tz() works", {
+  test_df <- data.frame(
+    dt_utc = ymd_hms(
+      c(
+        "2012-03-26 12:00:00",
+        "2020-01-01 12:00:00",
+        "2023-12-14 12:00:00",
+        NA
+      ),
+      tz = "UTC"
+    )
+  )
+  test <- as_polars_lf(test_df) |>
+    mutate(
+      dt_utc = with_tz(dt_utc, "Pacific/Auckland")
+    )
+  test_df <- mutate(
+    test_df,
+    dt_utc = with_tz(dt_utc, "Pacific/Auckland")
+  )
+
+  # Existing timezone
+  expect_equal_lazy(
+    pull(test, dt_utc),
+    test_df$dt_utc
+  )
+
+  # Unrecognized timezone or NULL
+  expect_error_lazy(
+    test |>
+      mutate(t = with_tz(dt_utc, "bla"))
+  )
+  expect_error_lazy(
+    test |>
+      mutate(t = with_tz(dt_utc, c("bla", "bla")))
+  )
+  expect_error_lazy(
+    test |>
+      mutate(t = with_tz(dt_utc, ""))
   )
 })
 
