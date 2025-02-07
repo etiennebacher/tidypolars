@@ -974,6 +974,10 @@ polars_expr_to_r <- function(x) {
 check_timezone <- function(tz, null_allowed = FALSE) {
   tz <- polars_expr_to_r(tz)
 
+  if (inherits(tz, "RPolarsExpr")) {
+    rlang::abort("`tidypolars` cannot pass a variable of the data as timezone.")
+  }
+
   if (length(tz) > 1) {
     rlang::abort(
       "`tidypolars` cannot use several timezones in a single column."
