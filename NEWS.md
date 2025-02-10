@@ -23,6 +23,10 @@
 * `complete()` now accepts named elements, e.g. `complete(df, group, value = 1:4)`
   (#176).
 
+* Add support for several `lubridate` functions:
+
+  - `am()`, `pm()`, `leap_year()`, `days_in_month()` (#175);
+
 ## Bug fixes
 
 * Fix edge cases in the `tidypolars` implementation of `stringr::str_sub()`
