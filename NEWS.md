@@ -25,7 +25,7 @@
 
 * Add support for several `lubridate` functions:
 
-  - `am()`, `pm()`, `leap_year()`, `days_in_month()` (#175);
+  - `am()`, `pm()`, `leap_year()`, `days_in_month()` (#178);
 
 ## Bug fixes
 
