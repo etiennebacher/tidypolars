@@ -625,7 +625,18 @@ return a Polars expression:</p>
 </tr>
 <tr class="even">
 <td align="left"><code>lubridate</code></td>
+<td align="left"><code>am</code></td>
+<td align="left">Contrarily to <code>lubridate</code>, this doesn’t work
+on dates, only datetimes.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>lubridate</code></td>
 <td align="left"><code>day</code></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><code>lubridate</code></td>
+<td align="left"><code>days_in_month</code></td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
@@ -660,10 +671,15 @@ return a Polars expression:</p>
 </tr>
 <tr class="odd">
 <td align="left"><code>lubridate</code></td>
-<td align="left"><code>make_date</code></td>
+<td align="left"><code>leap_year</code></td>
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left"><code>lubridate</code></td>
+<td align="left"><code>make_date</code></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>make_datetime</code></td>
 <td align="left">In <code><a href="https://lubridate.tidyverse.org/reference/make_datetime.html" class="external-link">lubridate::make_datetime()</a></code>, when there
@@ -671,15 +687,21 @@ is an overflow (for example <code>hours = 25</code>), then it is
 automatically converted to the higher unit (for example 1 day and 1h).
 In Polars, this returns <code>NA</code>.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>mday</code></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>month</code></td>
 <td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><code>lubridate</code></td>
+<td align="left"><code>pm</code></td>
+<td align="left">Contrarily to <code>lubridate</code>, this doesn’t work
+on dates, only datetimes.</td>
 </tr>
 <tr class="odd">
 <td align="left"><code>lubridate</code></td>
