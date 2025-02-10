@@ -256,17 +256,21 @@ out <- tribble(
   "`dplyr`", "`nth`",
   "`dplyr`", "`n_distinct`",
   "`dplyr`", "`row_number`",
+  "`lubridate`", "`am`",
   "`lubridate`", "`day`",
+  "`lubridate`", "`days_in_month`",
   "`lubridate`", "`ddays`",
   "`lubridate`", "`dhours`",
   "`lubridate`", "`dmilliseconds`",
   "`lubridate`", "`dminutes`",
   "`lubridate`", "`dseconds`",
   "`lubridate`", "`dweeks`",
+  "`lubridate`", "`leap_year`",
   "`lubridate`", "`make_date`",
   "`lubridate`", "`make_datetime`",
   "`lubridate`", "`mday`",
   "`lubridate`", "`month`",
+  "`lubridate`", "`pm`",
   "`lubridate`", "`quarter`",
   "`lubridate`", "`wday`",
   "`lubridate`", "`yday`",
@@ -304,6 +308,7 @@ out <- tribble(
   "`tools`", "`toTitleCase`"
 ) |>
   mutate(Notes = case_when(
+    Package == "`lubridate`" & Function %in% c("`am`", "`pm`") ~ "Contrarily to `lubridate`, this doesn't work on dates, only datetimes.",
     Package == "`lubridate`" & Function == "`make_datetime`" ~ "In `lubridate::make_datetime()`, when there is an overflow (for example `hours = 25`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this returns `NA`.",
     Package == "`lubridate`" & Function == "`wday`" ~ "Requires `week_start == 7`. If `label = TRUE`, it returns a string variable and not a factor as in `lubridate`.",
     Package == "`dplyr`" & Function == "`row_number`" ~ "Doesn't work when `x` is missing.",
@@ -315,3 +320,4 @@ out <- tribble(
 
 kable(out)
 ```
+
