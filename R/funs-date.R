@@ -79,6 +79,11 @@ pl_second_lubridate <- function(x, ...) {
 
 # Date-time helpers --------------------------------------
 
+# TODO: implement when $dt$date() is in r-polars
+# pl_date_lubridate <- function(x) {
+#   x$dt$date()
+# }
+
 # Durations --------------------------------------
 
 # TODO: annoying to parse `...` because of partial matching of args, e.g
