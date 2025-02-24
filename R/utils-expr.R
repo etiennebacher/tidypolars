@@ -50,7 +50,7 @@ translate_dots <- function(.data, ..., env, caller) {
       env = env,
       caller = caller
     )
-    # flint-ignore
+    # flir-ignore
     new_vars <<- c(new_vars, names(dots)[x])
     tmp
   })

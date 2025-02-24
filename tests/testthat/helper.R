@@ -1,5 +1,5 @@
 expect_equal_or_both_error <- function(object, other, ...) {
-  # flint-ignore-start
+  # flir-ignore-start
   polars_error <- FALSE
   polars_res <- tryCatch(
     object,
@@ -13,7 +13,7 @@ expect_equal_or_both_error <- function(object, other, ...) {
       error = function(e) other_error <<- TRUE
     )
   )
-  # flint-ignore-end
+  # flir-ignore-end
 
   if (isTRUE(polars_error)) {
     testthat::expect(

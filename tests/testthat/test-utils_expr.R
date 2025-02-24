@@ -1,7 +1,7 @@
 test_that("internally, expressions are correctly split in pools", {
   pl_iris <- as_polars_df(iris)
 
-  # flint-ignore-start
+  # flir-ignore-start
   result <- translate_dots(
     pl_iris,
     x = Sepal.Length * 3,
@@ -12,7 +12,7 @@ test_that("internally, expressions are correctly split in pools", {
     env = rlang::current_env(),
     caller = rlang::current_env()
   )
-  # flint-ignore-end
+  # flir-ignore-end
   expected <- list(
     pool_exprs_1 = list(
       x = pl$col("Sepal.Length") * 3,
@@ -33,7 +33,7 @@ test_that("internally, expressions are correctly split in pools", {
     result$pool_exprs_2$Petal.Length$meta$eq(expected$pool_exprs_2$Petal.Length)
   )
 
-  # flint-ignore-start
+  # flir-ignore-start
   result <- translate_dots(
     pl_iris,
     x = 1,
@@ -42,7 +42,7 @@ test_that("internally, expressions are correctly split in pools", {
     env = rlang::current_env(),
     caller = rlang::current_env()
   )
-  # flint-ignore-end
+  # flir-ignore-end
   expected <- list(
     pool_exprs_1 = list(x = pl$lit(1)),
     pool_exprs_2 = list(x = pl$lit("a")),
