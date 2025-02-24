@@ -104,10 +104,8 @@ slice_sample.RPolarsDataFrame <- function(
   }
   if (
     isFALSE(replace) &&
-      (
-        (!is.null(n) && n > nrow(.data)) ||
-          (!is.null(prop) && prop > 1)
-      )
+      ((!is.null(n) && n > nrow(.data)) ||
+        (!is.null(prop) && prop > 1))
   ) {
     abort(
       "Cannot take more rows than the total number of rows when `replace = FALSE`."
