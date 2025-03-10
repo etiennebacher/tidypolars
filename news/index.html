@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.13.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,17 +34,17 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/etiennebacher/tidypolars/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/etiennebacher/tidypolars/blob/v0.13.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.13.0" id="tidypolars-0130">tidypolars 0.13.0<a class="anchor" aria-label="anchor" href="#tidypolars-0130"></a></h2>
 <div class="section level3">
-<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="new-features-0-13-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-13-0"></a></h3>
 <ul><li><p>Added support for <code><a href="https://stringr.tidyverse.org/reference/str_replace_na.html" class="external-link">stringr::str_replace_na()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/153" class="external-link">#153</a>).</p></li>
 <li>
 <p>Better checks for unknown and unsupported arguments in <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code>, <code>*_join()</code>, <code>pivot_*()</code>, <code>sink_*()</code>, <code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample()</a></code> and <code><a href="https://tidyr.tidyverse.org/reference/uncount.html" class="external-link">uncount()</a></code>(<a href="https://github.com/etiennebacher/tidypolars/issues/158" class="external-link">#158</a>, thanks <a href="https://github.com/fkohrt" class="external-link">@fkohrt</a> for the report). Now, when those functions receive:</p>
-<ul><li>an argument that exists in the <code>tidyverse</code> implementation but not supported by <code>tidypolars</code>, they warn the user. This default behaviour can be changed to error instead with <code>options(tidypolars_unknown_args = "error")</code>.<br></li>
+<ul><li>an argument that exists in the <code>tidyverse</code> implementation but not supported by <code>tidypolars</code>, they warn the user. This default behaviour can be changed to error instead with <code>options(tidypolars_unknown_args = "error")</code>.</li>
 <li>an argument that doesn’t exist at all, they error.</li>
 </ul></li>
 <li><p>Add support for argument <code>explicit</code> in <code><a href="https://tidyr.tidyverse.org/reference/complete.html" class="external-link">tidyr::complete()</a></code>.</p></li>
@@ -58,7 +58,7 @@
 </ul></li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
+<h3 id="bug-fixes-0-13-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-13-0"></a></h3>
 <ul><li><p>Fix edge cases in the <code>tidypolars</code> implementation of <code><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">stringr::str_sub()</a></code> and <code><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr()</a></code> compared to their original implementation (<a href="https://github.com/etiennebacher/tidypolars/issues/159" class="external-link">#159</a>).</p></li>
 <li><p><code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange()</a></code> now places <code>NA</code> values last, like <code>dplyr</code>.</p></li>
 </ul></div>
@@ -148,9 +148,9 @@
 <li><p><code><a href="https://tidyr.tidyverse.org/reference/unite.html" class="external-link">unite()</a></code> now provides a proper error message when <code>col</code> is missing.</p></li>
 <li><p><code><a href="https://tidyr.tidyverse.org/reference/unite.html" class="external-link">unite()</a></code> doesn’t error anymore when <code>...</code> is empty. Instead, it uses all variables in the dataset.</p></li>
 <li>
-<p><code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> now work when using a column from another data.frame, e.g. </p>
+<p><code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> now work when using a column from another data.frame, e.g.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_polars_df</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">my_polars_df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">some_data_frame</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span></code></pre></div>
 </li>
 <li><p><code><a href="https://tidyr.tidyverse.org/reference/replace_na.html" class="external-link">replace_na()</a></code> no longer converts the column to the datatype of the replacement, e.g. <code>data |&gt; replace_na("a")</code> will error if the input data is numeric.</p></li>
@@ -207,10 +207,10 @@
 <li><p><code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code> now works when <code>.cols</code> contains only one variable and <code>.fns</code> contains only one function.</p></li>
 <li>
 <p>In <code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code>, the <code>.cols</code> argument now takes into account variables created in the same <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code> or <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> call before <code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code>.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">as_polars_df</span>(mtcars) <span class="sc">|&gt;</span> </span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span> </span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">as_polars_df</span>(mtcars) <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>    <span class="at">foo =</span> <span class="dv">1</span>, </span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>    <span class="at">foo =</span> <span class="dv">1</span>,</span>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>    <span class="fu">across</span>(<span class="at">.cols =</span> <span class="fu">contains</span>(<span class="st">"oo"</span>), \(x) x <span class="sc">-</span> <span class="dv">1</span>)</span>
 <span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  )</span>
 <span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a></span>
@@ -226,9 +226,9 @@
 <span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>└──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴─────┘</span></code></pre></div>
 <p>Note that the <code><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where()</a></code> function is not supported here. For example:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    foo <span class="op">=</span> <span class="fl">1</span>, </span>
+<span>    foo <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span>.cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.numeric</span><span class="op">)</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p>will <em>not</em> return 0 for the variable <code>foo</code>. A warning is emitted about this behavior.</p>

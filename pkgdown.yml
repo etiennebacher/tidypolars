@@ -5,7 +5,7 @@ articles:
   faq: faq.html
   r-and-polars-expressions: r-and-polars-expressions.html
   tidypolars: tidypolars.html
-last_built: 2025-02-24T16:12Z
+last_built: 2025-03-10T18:07Z
 urls:
   reference: https://tidypolars.etiennebacher.com/reference
   article: https://tidypolars.etiennebacher.com/articles
