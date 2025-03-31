@@ -597,15 +597,18 @@ test_that("force_tz() works", {
   # Unrecognized timezone, multiple timezones or NULL
   expect_error(
     test |>
-      mutate(t = force_tz(dt_utc, "bla"))
+      mutate(t = force_tz(dt_utc, "bla")),
+    "Unrecognized time zone: 'bla'"
   )
   expect_error(
     test |>
-      mutate(t = force_tz(dt_utc, NULL))
+      mutate(t = force_tz(dt_utc, NULL)),
+    "Unrecognized time zone: 'NULL'"
   )
   expect_error(
     test |>
-      mutate(t = force_tz(dt_utc, c("bla", "bla")))
+      mutate(t = force_tz(dt_utc, c("bla", "bla"))),
+    "cannot use several timezones in a single column"
   )
 })
 
@@ -639,19 +642,23 @@ test_that("with_tz() works", {
   # Unrecognized timezone or NULL
   expect_error(
     test |>
-      mutate(t = with_tz(dt_utc, "bla"))
+      mutate(t = with_tz(dt_utc, "bla")),
+    "Unrecognized time zone: 'bla'"
   )
   expect_error(
     test |>
-      mutate(t = with_tz(dt_utc, c("bla", "bla")))
+      mutate(t = with_tz(dt_utc, c("bla", "bla"))),
+    "cannot use several timezones in a single"
   )
   expect_error(
     test |>
-      mutate(t = with_tz(dt_utc, ""))
+      mutate(t = with_tz(dt_utc, "")),
+    "doesn't support empty timezone"
   )
   expect_error(
     test |>
-      mutate(t = with_tz(dt_utc, NULL))
+      mutate(t = with_tz(dt_utc, NULL)),
+    "Unrecognized time zone: 'NULL'"
   )
 })
 
@@ -693,7 +700,7 @@ test_that("check_timezone() throws expected errors", {
       mutate(
         dt_utc = with_tz(dt_utc, "")
       ),
-    "This expression in `tidypolars` doesn't support NULL timezone."
+    "This expression in `tidypolars` doesn't support empty timezone."
   )
 
   # Column as a timezone

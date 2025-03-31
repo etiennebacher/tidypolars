@@ -972,7 +972,7 @@ polars_expr_to_r <- function(x) {
 #'
 #' @noRd
 #' @keywords internal
-check_timezone <- function(tz, null_allowed = FALSE) {
+check_timezone <- function(tz, empty_allowed = FALSE) {
   tz <- polars_expr_to_r(tz)
 
   # This happens when one passes an existing column as the timezone,
@@ -988,11 +988,11 @@ check_timezone <- function(tz, null_allowed = FALSE) {
   }
 
   if (tz == "") {
-    if (null_allowed) {
+    if (empty_allowed) {
       return(NULL)
     } else {
       rlang::abort(
-        "This expression in `tidypolars` doesn't support NULL timezone."
+        "This expression in `tidypolars` doesn't support empty timezone."
       )
     }
   }

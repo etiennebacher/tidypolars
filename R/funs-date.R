@@ -173,7 +173,7 @@ pl_ISOdatetime <- function(
 # Other modification functions -------------------------------------------
 pl_force_tz_lubridate <- function(time, tzone = "", ...) {
   check_empty_dots(...)
-  tzone <- check_timezone(tzone, null_allowed = TRUE)
+  tzone <- check_timezone(tzone, empty_allowed = TRUE)
 
   time$dt$replace_time_zone(tzone)
 }
@@ -183,7 +183,7 @@ pl_force_tz_lubridate <- function(time, tzone = "", ...) {
 # `convert_time_zone()` doesn't support NULL timezone
 pl_with_tz_lubridate <- function(time, tzone = "UTC", ...) {
   check_empty_dots(...)
-  tzone <- check_timezone(tzone, null_allowed = FALSE)
+  tzone <- check_timezone(tzone, empty_allowed = FALSE)
 
   time$dt$convert_time_zone(tzone)
 }

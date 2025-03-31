@@ -598,14 +598,21 @@ test_that("force_tz() works", {
     pull(test, dt_na),
     test_df$dt_na
   )
-  # Unrecognized timezone or NULL
+  # Unrecognized timezone, multiple timezones or NULL
   expect_error_lazy(
     test |>
-      mutate(t = force_tz(dt_utc, "bla"))
+      mutate(t = force_tz(dt_utc, "bla")),
+    "Unrecognized time zone: 'bla'"
   )
   expect_error_lazy(
     test |>
-      mutate(t = force_tz(dt_utc, c("bla", "bla")))
+      mutate(t = force_tz(dt_utc, NULL)),
+    "Unrecognized time zone: 'NULL'"
+  )
+  expect_error_lazy(
+    test |>
+      mutate(t = force_tz(dt_utc, c("bla", "bla"))),
+    "cannot use several timezones in a single column"
   )
 })
 
@@ -639,15 +646,75 @@ test_that("with_tz() works", {
   # Unrecognized timezone or NULL
   expect_error_lazy(
     test |>
-      mutate(t = with_tz(dt_utc, "bla"))
+      mutate(t = with_tz(dt_utc, "bla")),
+    "Unrecognized time zone: 'bla'"
   )
   expect_error_lazy(
     test |>
-      mutate(t = with_tz(dt_utc, c("bla", "bla")))
+      mutate(t = with_tz(dt_utc, c("bla", "bla"))),
+    "cannot use several timezones in a single"
   )
   expect_error_lazy(
     test |>
-      mutate(t = with_tz(dt_utc, ""))
+      mutate(t = with_tz(dt_utc, "")),
+    "doesn't support empty timezone"
+  )
+  expect_error_lazy(
+    test |>
+      mutate(t = with_tz(dt_utc, NULL)),
+    "Unrecognized time zone: 'NULL'"
+  )
+})
+
+test_that("check_timezone() throws expected errors", {
+  test_df <- data.frame(
+    dt_utc = ymd_hms(
+      c(
+        "2012-03-26 12:00:00",
+        "2020-01-01 12:00:00",
+        "2023-12-14 12:00:00",
+        NA
+      ),
+      tz = "UTC"
+    )
+  )
+  test <- as_polars_lf(test_df)
+
+  # Multiple timezones
+  expect_error_lazy(
+    test |>
+      mutate(
+        dt_utc = with_tz(dt_utc, c("Pacific/Auckland", "Pacific/Auckland"))
+      ),
+    "cannot use several timezones in a single column."
+  )
+
+  # Unrecognized timezone
+  expect_error_lazy(
+    test |>
+      mutate(
+        dt_utc = with_tz(dt_utc, "foo")
+      ),
+    "Unrecognized time zone:"
+  )
+
+  # NULL timezone
+  expect_error_lazy(
+    test |>
+      mutate(
+        dt_utc = with_tz(dt_utc, "")
+      ),
+    "This expression in `tidypolars` doesn't support empty timezone."
+  )
+
+  # Column as a timezone
+  expect_error_lazy(
+    test |>
+      mutate(
+        tzone = "Pacific/Auckland",
+        dt_utc = with_tz(dt_utc, tzone)
+      ),
+    "`tidypolars` cannot pass a variable of the data as timezone."
   )
 })
 

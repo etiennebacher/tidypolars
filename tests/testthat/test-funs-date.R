@@ -1,5 +1,7 @@
 # TODO:
-# Sometimes this test fails, e.g. try seed == 1
+# Sometimes this test fails for day() (and maybe others), e.g. with:
+# date <- as.POSIXct("2493-05-15 00:00:00 CEST")
+
 set.seed(123)
 patrick::with_parameters_test_that(
   "extracting date components works",
@@ -94,8 +96,7 @@ patrick::with_parameters_test_that(
       }
     )
   },
-  # TODO:
-  # Add support for unrecognized timezone ("foo") and NULL ("")
-  # Currently implemented only as unit-tests
+  # TODO: see https://github.com/tidyverse/lubridate/issues/1186
+  # If lubridate changed the behavior to error, then we can add "foo" and ""
   tz = list("Pacific/Auckland", "US/Alaska", NA)
 )
