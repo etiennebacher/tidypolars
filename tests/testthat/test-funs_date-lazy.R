@@ -641,6 +641,7 @@ test_that("leap_year() works", {
   )
 })
 
+
 test_that("force_tz() works", {
   test_df <- data.frame(
     dt_utc = ymd_hms(
@@ -781,6 +782,15 @@ test_that("check_timezone() throws expected errors", {
         dt_utc = with_tz(dt_utc, "")
       ),
     "This expression in `tidypolars` doesn't support empty timezone."
+  )
+
+  # NA timezone
+  expect_error_lazy(
+    test |>
+      mutate(
+        dt_utc = with_tz(dt_utc, NA)
+      ),
+    "This expression in `tidypolars` doesn't support `NA` timezone."
   )
 
   # Column as a timezone

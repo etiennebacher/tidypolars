@@ -987,6 +987,12 @@ check_timezone <- function(tz, empty_allowed = FALSE) {
     )
   }
 
+  if (is.na(tz)) {
+    rlang::abort(
+      "This expression in `tidypolars` doesn't support `NA` timezone."
+    )
+  }
+
   if (tz == "") {
     if (empty_allowed) {
       return(NULL)

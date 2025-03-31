@@ -780,6 +780,15 @@ test_that("check_timezone() throws expected errors", {
     "This expression in `tidypolars` doesn't support empty timezone."
   )
 
+  # NA timezone
+  expect_error(
+    test |>
+      mutate(
+        dt_utc = with_tz(dt_utc, NA)
+      ),
+    "This expression in `tidypolars` doesn't support `NA` timezone."
+  )
+
   # Column as a timezone
   expect_error(
     test |>
