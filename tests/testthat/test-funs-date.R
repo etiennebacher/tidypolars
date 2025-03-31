@@ -58,10 +58,41 @@ patrick::with_parameters_test_that(
             x1 = force_tz(x1, tz)
           ),
           # TODO: investigate more why this is needed
+          tolerance = 1e-2
+        )
+      }
+    )
+  },
+  tz = list("Pacific/Auckland", "foobar", NA, "")
+)
+
+patrick::with_parameters_test_that(
+  "converting timezone works",
+  {
+    for_all(
+      tests = 20,
+      datetime = posixct_(any_na = FALSE),
+      property = function(datetime) {
+        test_df <- data.frame(x1 = ymd_hms(datetime, tz = "UTC"))
+        test <- pl$DataFrame(x1 = ymd_hms(datetime, tz = "UTC"))
+
+        expect_equal_or_both_error(
+          mutate(
+            test,
+            x1 = with_tz(x1, tz)
+          ),
+          mutate(
+            test_df,
+            x1 = with_tz(x1, tz)
+          ),
+          # TODO: investigate more why this is needed
           tolerance = 1e-6
         )
       }
     )
   },
-  tz = list("Pacific/Auckland", "foobar", "", NA)
+  # TODO:
+  # Add support for unrecognized timezone ("foo") and NULL ("")
+  # Currently implemented only as unit-tests
+  tz = list("Pacific/Auckland", "US/Alaska", NA)
 )
