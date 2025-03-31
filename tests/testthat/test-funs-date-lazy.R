@@ -102,7 +102,7 @@ patrick::with_parameters_test_that(
   },
   # TODO: see https://github.com/tidyverse/lubridate/issues/1186
   # If lubridate changed the behavior to error, then we can add "foo" and ""
-  tz = list("Pacific/Auckland", "US/Alaska", NA)
+  tz = list("Pacific/Auckland", "Europe/Rome", NA)
 )
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
