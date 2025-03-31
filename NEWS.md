@@ -1,3 +1,10 @@
+# tidypolars (development version)
+
+## New features
+
+* Added support for `lubridate::force_tz()` and `lubridate::with_tz()`
+  (@atsyplenkov, #170).
+
 # tidypolars 0.13.0
 
 ## New features

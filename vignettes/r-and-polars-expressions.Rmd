@@ -36,39 +36,39 @@ mtcars |>
 This is very convenient but creates a challenge for `tidypolars`. Indeed, while
 it is possible to pass R functions directly to a Polars Data/LazyFrame, it is
 **strongly discouraged** to do so because it doesn't take advantage of Polars
-optimizations. 
+optimizations.
 
-Indeed, Polars comes with dozens of built-in functions for maths (`median`, 
-`var`, `arccos`, ...), string manipulation (`len_chars`, `starts`, ...), and date-time 
+Indeed, Polars comes with dozens of built-in functions for maths (`median`,
+`var`, `arccos`, ...), string manipulation (`len_chars`, `starts`, ...), and date-time
 (`hour`, `quarter`, `ordinal_day`, ...). All of these functions are optimized
 internally and are ran in parallel under the hood, which will not be the case if
 we pass R functions.
 
 However, using these Polars expressions would imply that we need to learn these
-new functions and this new syntax. To avoid doing that, `tidypolars` will 
+new functions and this new syntax. To avoid doing that, `tidypolars` will
 automatically translate R expressions into Polars ones. Basically, **you can
 keep writing R expressions in most situations**, and they will automatically be
-translated to Polars syntax. 
+translated to Polars syntax.
 
 However, there are some situations where this might not work, so this vignette
 explains the process and the limitations.
 
 ## How does `tidypolars` translate R expressions into Polars expressions?
 
-When `tidypolars` receives an expression, it runs a function `translate()` 
-several times until all components are translated to their Polars equivalent. 
+When `tidypolars` receives an expression, it runs a function `translate()`
+several times until all components are translated to their Polars equivalent.
 There are four possible components: single values, column names, external objects,
 and functions.
 
 
 ### Single values, column names, and external objects
 
-If you pass a single value, like `x = 1` or `x = "a"`, it is wrapped into 
+If you pass a single value, like `x = 1` or `x = "a"`, it is wrapped into
 `pl$lit()`. This is also the case for external objects with the difference that
 these need to be wrapped in `{{ }}` and are evaluated before being wrapped into
 `pl$lit()`.
 
-Column names, like `x = mpg`, are wrapped into `pl$col()`. 
+Column names, like `x = mpg`, are wrapped into `pl$col()`.
 
 ```
 x = "a"               ->  x = pl$lit("a")
@@ -79,23 +79,23 @@ x = mpg               ->  x = pl$col("mpg")
 ### Functions
 
 
-Functions are split into two categories: built-in functions (i.e functions 
+Functions are split into two categories: built-in functions (i.e functions
 provided by base R or by other packages), and user-defined functions (UDF) that
-are written by the user (you). 
+are written by the user (you).
 
 
 #### Built-in functions
 
-In the first case, `tidypolars` checks the function name and whether it has 
-already been translated internally. For example, if we call the R function 
+In the first case, `tidypolars` checks the function name and whether it has
+already been translated internally. For example, if we call the R function
 `mean(x, trim = 2)`, then it looks for a translation of `mean()`. You can see the
 list of supported R functions at the bottom of this vignette. Note that most of
-essential base R functions are supported, as well as many functions from `dplyr` 
+essential base R functions are supported, as well as many functions from `dplyr`
 or from `stringr` for example.
 
 Now that `tidypolars` knows that a translation of `mean()` exists, it parses
 the arguments in the call to translate them to the Polars syntax: internally,
-`x` is converted to `pl$col("x")` if there is a column `"x"` in the data. 
+`x` is converted to `pl$col("x")` if there is a column `"x"` in the data.
 Sometimes, additional arguments do not have an equivalent in Polars. This is
 the case for the argument `trim` here. In this case, `tidypolars` ignores
 this argument and warns the user:
@@ -109,13 +109,13 @@ mtcars |>
   mutate(x = mean(mpg, trim = 2))
 ```
 
-This behavior [can be changed](https://tidypolars.etiennebacher.com/reference/tidypolars-options.html) 
-to throw an error instead. 
+This behavior [can be changed](https://tidypolars.etiennebacher.com/reference/tidypolars-options.html)
+to throw an error instead.
 
 
 #### User-defined functions
 
-User-defined functions (UDF) are more challenging. Indeed, it is technically 
+User-defined functions (UDF) are more challenging. Indeed, it is technically
 possible to inspect the code inside a UDF, but rewriting it to match Polars syntax
 would be extremely complicated. In this situation, you will have to rewrite your
 custom function using Polars syntax so that it returns a Polars expression. For
@@ -127,7 +127,7 @@ pl_standardize <- function(x) {
 }
 ```
 
-Remember that the column name used as `x` will end up wrapped into `pl$col()`, 
+Remember that the column name used as `x` will end up wrapped into `pl$col()`,
 so to check that your function returns a Polars expression, you have to provide
 a `pl$col()` call:
 
@@ -148,7 +148,7 @@ mtcars |>
 #### Special case: `across()`
 
 [`across()`](https://dplyr.tidyverse.org/reference/across.html) is a very useful
-function that applies a function (or a list of functions) to a selection of 
+function that applies a function (or a list of functions) to a selection of
 columns. It accepts built-in functions, UDFs, and anonymous functions.
 
 ```{r}
@@ -183,12 +183,13 @@ mtcars |>
 ```
 
 
-### List of base R and `tidyverse` functions supported by `tidypolars` 
+### List of base R and `tidyverse` functions supported by `tidypolars`
 
 
 ```{r echo=FALSE, message=FALSE}
 library(dplyr)
 library(knitr)
+# fmt:skip
 out <- tribble(
   ~Package, ~Function,
   "`base`", "`abs`",
@@ -265,6 +266,7 @@ out <- tribble(
   "`lubridate`", "`dminutes`",
   "`lubridate`", "`dseconds`",
   "`lubridate`", "`dweeks`",
+  "`lubridate`", "`force_tz`",
   "`lubridate`", "`leap_year`",
   "`lubridate`", "`make_date`",
   "`lubridate`", "`make_datetime`",
@@ -273,6 +275,7 @@ out <- tribble(
   "`lubridate`", "`pm`",
   "`lubridate`", "`quarter`",
   "`lubridate`", "`wday`",
+  "`lubridate`", "`with_tz`",
   "`lubridate`", "`yday`",
   "`lubridate`", "`year`",
   "`stats`", "`median`",
@@ -307,15 +310,26 @@ out <- tribble(
   "`tidyr`", "`replace_na`",
   "`tools`", "`toTitleCase`"
 ) |>
-  mutate(Notes = case_when(
-    Package == "`lubridate`" & Function %in% c("`am`", "`pm`") ~ "Contrarily to `lubridate`, this doesn't work on dates, only datetimes.",
-    Package == "`lubridate`" & Function == "`make_datetime`" ~ "In `lubridate::make_datetime()`, when there is an overflow (for example `hours = 25`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this returns `NA`.",
-    Package == "`lubridate`" & Function == "`wday`" ~ "Requires `week_start == 7`. If `label = TRUE`, it returns a string variable and not a factor as in `lubridate`.",
-    Package == "`dplyr`" & Function == "`row_number`" ~ "Doesn't work when `x` is missing.",
-    Package == "`stringr`" & Function == "`str_to_title`" ~ "Letters following apostrophe will be capitalized as well, which differs from the `stringr` implementation.",
-    Package == "`tools`" & Function == "`toTitleCase`" ~ "Letters following apostrophe will be capitalized as well, which differs from the `tools` implementation.",
-    .default = ""
-  )) |>
+  mutate(
+    Notes = case_when(
+      Package == "`lubridate`" & Function %in% c("`am`", "`pm`") ~ "Contrarily to `lubridate`, this doesn't work on dates, only datetimes.",
+      Package == "`lubridate`" & Function == "`make_datetime`" ~
+        "In `lubridate::make_datetime()`, when there is an overflow (for example `hours = 25`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this returns `NA`.",
+      Package == "`lubridate`" & Function == "`wday`" ~
+        "Requires `week_start == 7`. If `label = TRUE`, it returns a string variable and not a factor as in `lubridate`.",
+      Package == "`lubridate`" & Function == "`with_tz`" ~
+        "`tidypolars` cannot use several timezones in a single column, while `lubridate::with_tz() can. Unrecognized timezones and/or NULL are not supported and will throw an error.",
+      Package == "`lubridate`" & Function == "`force_tz`" ~
+        "`tidypolars` cannot use several timezones in a single column, while `lubridate::force_tz() can.",
+      Package == "`dplyr`" & Function == "`row_number`" ~
+        "Doesn't work when `x` is missing.",
+      Package == "`stringr`" & Function == "`str_to_title`" ~
+        "Letters following apostrophe will be capitalized as well, which differs from the `stringr` implementation.",
+      Package == "`tools`" & Function == "`toTitleCase`" ~
+        "Letters following apostrophe will be capitalized as well, which differs from the `tools` implementation.",
+      .default = ""
+    )
+  ) |>
   arrange(Package)
 
 kable(out)

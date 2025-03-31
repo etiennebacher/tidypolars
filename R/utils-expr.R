@@ -964,3 +964,49 @@ polars_expr_to_r <- function(x) {
   }
   x
 }
+
+#' Timezone assertion
+#'
+#' @description `polars` tzone limitations
+#' https://pola-rs.github.io/r-polars/man/ExprDT_convert_time_zone.html
+#'
+#' @noRd
+#' @keywords internal
+check_timezone <- function(tz, empty_allowed = FALSE) {
+  tz <- polars_expr_to_r(tz)
+
+  # This happens when one passes an existing column as the timezone,
+  # polars_expr_to_r() doesn't return an R object in this case.
+  if (inherits(tz, "RPolarsExpr")) {
+    rlang::abort("`tidypolars` cannot pass a variable of the data as timezone.")
+  }
+
+  if (length(tz) > 1) {
+    rlang::abort(
+      "`tidypolars` cannot use several timezones in a single column."
+    )
+  }
+
+  if (is.na(tz)) {
+    rlang::abort(
+      "This expression in `tidypolars` doesn't support `NA` timezone."
+    )
+  }
+
+  if (tz == "") {
+    if (empty_allowed) {
+      return(NULL)
+    } else {
+      rlang::abort(
+        "This expression in `tidypolars` doesn't support empty timezone."
+      )
+    }
+  }
+
+  # TODO: remove this once we have cleaner error messages in r-polars
+  if (!tz %in% OlsonNames()) {
+    rlang::abort(sprintf("Unrecognized time zone: '%s'", tz))
+  }
+
+  tz
+}
