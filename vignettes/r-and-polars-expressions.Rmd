@@ -189,6 +189,7 @@ mtcars |>
 ```{r echo=FALSE, message=FALSE}
 library(dplyr)
 library(knitr)
+# fmt:skip
 out <- tribble(
   ~Package, ~Function,
   "`base`", "`abs`",
@@ -263,12 +264,14 @@ out <- tribble(
   "`lubridate`", "`dminutes`",
   "`lubridate`", "`dseconds`",
   "`lubridate`", "`dweeks`",
+  "`lubridate`", "`force_tz`",
   "`lubridate`", "`make_date`",
   "`lubridate`", "`make_datetime`",
   "`lubridate`", "`mday`",
   "`lubridate`", "`month`",
   "`lubridate`", "`quarter`",
   "`lubridate`", "`wday`",
+  "`lubridate`", "`with_tz`",
   "`lubridate`", "`yday`",
   "`lubridate`", "`year`",
   "`stats`", "`median`",
@@ -303,14 +306,25 @@ out <- tribble(
   "`tidyr`", "`replace_na`",
   "`tools`", "`toTitleCase`"
 ) |>
-  mutate(Notes = case_when(
-    Package == "`lubridate`" & Function == "`make_datetime`" ~ "In `lubridate::make_datetime()`, when there is an overflow (for example `hours = 25`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this returns `NA`.",
-    Package == "`lubridate`" & Function == "`wday`" ~ "Requires `week_start == 7`. If `label = TRUE`, it returns a string variable and not a factor as in `lubridate`.",
-    Package == "`dplyr`" & Function == "`row_number`" ~ "Doesn't work when `x` is missing.",
-    Package == "`stringr`" & Function == "`str_to_title`" ~ "Letters following apostrophe will be capitalized as well, which differs from the `stringr` implementation.",
-    Package == "`tools`" & Function == "`toTitleCase`" ~ "Letters following apostrophe will be capitalized as well, which differs from the `tools` implementation.",
-    .default = ""
-  )) |>
+  mutate(
+    Notes = case_when(
+      Package == "`lubridate`" & Function == "`make_datetime`" ~
+        "In `lubridate::make_datetime()`, when there is an overflow (for example `hours = 25`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this returns `NA`.",
+      Package == "`lubridate`" & Function == "`wday`" ~
+        "Requires `week_start == 7`. If `label = TRUE`, it returns a string variable and not a factor as in `lubridate`.",
+      Package == "`lubridate`" & Function == "`with_tz`" ~
+        "`tidypolars` cannot use several timezones in a single column, while `lubridate::with_tz() can. Unrecognized timezones and/or NULL are not supported and will throw an error.",
+      Package == "`lubridate`" & Function == "`force_tz`" ~
+        "`tidypolars` cannot use several timezones in a single column, while `lubridate::force_tz() can.",
+      Package == "`dplyr`" & Function == "`row_number`" ~
+        "Doesn't work when `x` is missing.",
+      Package == "`stringr`" & Function == "`str_to_title`" ~
+        "Letters following apostrophe will be capitalized as well, which differs from the `stringr` implementation.",
+      Package == "`tools`" & Function == "`toTitleCase`" ~
+        "Letters following apostrophe will be capitalized as well, which differs from the `tools` implementation.",
+      .default = ""
+    )
+  ) |>
   arrange(Package)
 
 kable(out)

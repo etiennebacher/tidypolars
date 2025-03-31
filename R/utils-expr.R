@@ -992,7 +992,7 @@ check_timezone <- function(tz, null_allowed = FALSE) {
       return(NULL)
     } else {
       rlang::abort(
-        "This expression in `tidypolars` doesn't support NULL timezone"
+        "This expression in `tidypolars` doesn't support NULL timezone."
       )
     }
   }

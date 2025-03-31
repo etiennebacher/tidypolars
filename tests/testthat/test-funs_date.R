@@ -594,10 +594,14 @@ test_that("force_tz() works", {
     pull(test, dt_na),
     test_df$dt_na
   )
-  # Unrecognized timezone or NULL
+  # Unrecognized timezone, multiple timezones or NULL
   expect_error(
     test |>
       mutate(t = force_tz(dt_utc, "bla"))
+  )
+  expect_error(
+    test |>
+      mutate(t = force_tz(dt_utc, NULL))
   )
   expect_error(
     test |>
@@ -644,5 +648,61 @@ test_that("with_tz() works", {
   expect_error(
     test |>
       mutate(t = with_tz(dt_utc, ""))
+  )
+  expect_error(
+    test |>
+      mutate(t = with_tz(dt_utc, NULL))
+  )
+})
+
+test_that("check_timezone() throws expected errors", {
+  test_df <- data.frame(
+    dt_utc = ymd_hms(
+      c(
+        "2012-03-26 12:00:00",
+        "2020-01-01 12:00:00",
+        "2023-12-14 12:00:00",
+        NA
+      ),
+      tz = "UTC"
+    )
+  )
+  test <- as_polars_df(test_df)
+
+  # Multiple timezones
+  expect_error(
+    test |>
+      mutate(
+        dt_utc = with_tz(dt_utc, c("Pacific/Auckland", "Pacific/Auckland"))
+      ),
+    "cannot use several timezones in a single column."
+  )
+
+  # Unrecognized timezone
+  expect_error(
+    test |>
+      mutate(
+        dt_utc = with_tz(dt_utc, "foo")
+      ),
+    "Unrecognized time zone:"
+  )
+
+  # NULL timezone
+  expect_error(
+    test |>
+      mutate(
+        dt_utc = with_tz(dt_utc, "")
+      ),
+    "This expression in `tidypolars` doesn't support NULL timezone."
+  )
+
+  # Column as a timezone
+  expect_error(
+    test |>
+      mutate(
+        tzone = "Pacific/Auckland",
+        dt_utc = with_tz(dt_utc, tzone)
+      ),
+    "`tidypolars` cannot pass a variable of the data as timezone."
   )
 })
