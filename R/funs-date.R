@@ -79,6 +79,11 @@ pl_second_lubridate <- function(x, ...) {
 
 # Date-time helpers --------------------------------------
 
+# TODO: implement when $dt$date() is in r-polars
+# pl_date_lubridate <- function(x) {
+#   x$dt$date()
+# }
+
 # Durations --------------------------------------
 
 # TODO: annoying to parse `...` because of partial matching of args, e.g
@@ -244,4 +249,28 @@ pl_wday_lubridate <- function(
     out <- x$dt$weekday() + 1L
   }
   out
+}
+
+# Other date-time components --------------------------------------
+
+pl_am_lubridate <- function(x) {
+  x$dt$hour() < 12
+}
+
+pl_pm_lubridate <- function(x) {
+  x$dt$hour() >= 12
+}
+
+pl_days_in_month_lubridate <- function(x) {
+  pl$when(x$is_null())$then(NA)$when(
+    x$dt$month()$is_in(c(1, 3, 5, 7, 8, 10, 12))
+  )$then(31)$when(
+    x$dt$month()$is_in(c(4, 6, 9, 11))
+  )$then(30)$when(x$dt$month() == 2 & x$dt$is_leap_year())$then(29)$otherwise(
+    28
+  )$cast(pl$Int32)
+}
+
+pl_leap_year_lubridate <- function(x) {
+  x$dt$is_leap_year()
 }

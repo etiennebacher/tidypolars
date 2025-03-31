@@ -80,7 +80,7 @@ test_that("select helpers work", {
   )
 
   expect_snapshot_lazy(
-    select(pl_iris, where(~mean(.x) > 3.5)),
+    select(pl_iris, where(~ mean(.x) > 3.5)),
     error = TRUE
   )
 

@@ -105,20 +105,16 @@ test_that("rowwise mode is kept after operations", {
     rowwise()
 
   expect_equal_lazy(
-    (
-      test |>
-        mutate(m = all(c(x, y, z))) |>
-        attributes()
-    )$grp_type,
+    (test |>
+      mutate(m = all(c(x, y, z))) |>
+      attributes())$grp_type,
     "rowwise"
   )
 
   expect_equal_lazy(
-    (
-      test |>
-        summarize(m = all(c(x, y, z))) |>
-        attributes()
-    )$grp_type,
+    (test |>
+      summarize(m = all(c(x, y, z))) |>
+      attributes())$grp_type,
     "rowwise"
   )
 })

@@ -24,7 +24,7 @@ test_that("purrr-style function work", {
   expect_equal(
     mutate(
       test,
-      across(.cols = contains("a"), ~mean(.x)),
+      across(.cols = contains("a"), ~ mean(.x)),
       cyl = cyl + 1
     ),
     mutate(
@@ -141,7 +141,7 @@ test_that("works with grouped data", {
       mutate(
         across(
           .cols = contains("a"),
-          ~mean(.x)
+          ~ mean(.x)
         )
       ) |>
       pull(carb),
@@ -216,7 +216,7 @@ test_that("argument .names works", {
       test,
       across(
         .cols = contains("a"),
-        ~mean(.x),
+        ~ mean(.x),
         .names = "{.fn}_{.col}"
       ),
       cyl = NULL
@@ -282,7 +282,7 @@ test_that("passing a list of functions works", {
       test,
       across(
         .cols = mpg,
-        list(mean = ~mean(.x), median = median),
+        list(mean = ~ mean(.x), median = median),
         .nms = "{.col}_foo_{.fn}"
       )
     ),

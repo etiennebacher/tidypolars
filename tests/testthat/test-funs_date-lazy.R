@@ -565,6 +565,82 @@ test_that("ISOdatetime() works", {
   )
 })
 
+test_that("am/pm work", {
+  test_df <- data.frame(
+    datetime = ymd_hms(
+      c(
+        "2012-03-26 00:00:00",
+        "2012-03-26 11:30:20",
+        "2020-01-01 12:00:00",
+        "2023-12-14 24:00:00",
+        NA
+      )
+    )
+  )
+  test <- as_polars_lf(test_df)
+  expect_equal_lazy(
+    test |>
+      mutate(
+        am = am(datetime),
+        pm = pm(datetime)
+      ),
+    test_df |>
+      mutate(
+        am = am(datetime),
+        pm = pm(datetime)
+      )
+  )
+
+  expect_error_lazy(
+    pl$LazyFrame(x = as.Date("2020-01-01")) |>
+      mutate(x = am(x)),
+    "not supported for dtype `date`"
+  )
+})
+
+test_that("days_in_month() works", {
+  test_df <- data.frame(
+    x = ymd_hms(
+      c(
+        "2012-03-26 00:00:00",
+        "2011-02-26 11:30:20",
+        "2012-02-26 11:30:20", # leap year
+        "2023-11-14 24:00:00",
+        NA
+      )
+    )
+  )
+  test <- as_polars_lf(test_df)
+  expect_equal_lazy(
+    mutate(test, x = days_in_month(x)),
+    mutate(test_df, x = days_in_month(x)),
+    # lubridate output is a named integer vector
+    ignore_attr = TRUE
+  )
+})
+
+test_that("leap_year() works", {
+  test_df <- data.frame(
+    date = ymd(c("2011-02-26", "2012-02-26", NA)),
+    datetime = ymd_hms(
+      c(
+        "2011-02-26 11:30:20",
+        "2012-02-26 11:30:20", # leap year
+        NA
+      )
+    )
+  )
+  test <- as_polars_lf(test_df)
+  expect_equal_lazy(
+    mutate(test, date = leap_year(date)),
+    mutate(test_df, date = leap_year(date))
+  )
+  expect_equal_lazy(
+    mutate(test, datetime = leap_year(datetime)),
+    mutate(test_df, datetime = leap_year(datetime))
+  )
+})
+
 test_that("force_tz() works", {
   test_df <- data.frame(
     dt_utc = ymd_hms(

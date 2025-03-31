@@ -12,5 +12,5 @@
 ^Meta$
 
 
-# flint files
-^flint$
+# flir files
+^flir$

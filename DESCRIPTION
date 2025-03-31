@@ -1,15 +1,15 @@
 Package: tidypolars
 Type: Package
 Title: Get the Power of Polars with the Syntax of the Tidyverse
-Version: 0.12.0.9000
-Authors@R: 
+Version: 0.13.0
+Authors@R:
     person(given = "Etienne",
            family = "Bacher",
            role = c("aut", "cre", "cph"),
            email = "etienne.bacher@protonmail.com")
 Description: Polars is a cross-language tool for manipulating very large data.
     However, one drawback is that the R implementation has a syntax that
-    will look odd to many R users who are not used to Python syntax. The objective of tidypolars is to improve the ease-of-use of Polars in R by 
+    will look odd to many R users who are not used to Python syntax. The objective of tidypolars is to improve the ease-of-use of Polars in R by
     providing tidyverse syntax to polars.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -19,7 +19,7 @@ Roxygen: list(markdown = TRUE)
 URL: https://tidypolars.etiennebacher.com, https://etiennebacher.r-universe.dev/tidypolars
 BugReports: https://github.com/etiennebacher/tidypolars/issues
 Depends: R (>= 4.1.0)
-Imports: 
+Imports:
     dplyr,
     glue,
     lifecycle,
@@ -29,7 +29,7 @@ Imports:
     tidyselect,
     utils,
     vctrs
-Suggests: 
+Suggests:
     arrow,
     bench,
     data.table,
