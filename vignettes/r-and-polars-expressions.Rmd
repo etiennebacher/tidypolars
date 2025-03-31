@@ -318,9 +318,9 @@ out <- tribble(
       Package == "`lubridate`" & Function == "`wday`" ~
         "Requires `week_start == 7`. If `label = TRUE`, it returns a string variable and not a factor as in `lubridate`.",
       Package == "`lubridate`" & Function == "`with_tz`" ~
-        "`tidypolars` cannot use several timezones in a single column, while `lubridate::with_tz() can. Unrecognized timezones and/or NULL are not supported and will throw an error.",
+        "`tidypolars` cannot use several timezones in a single column, while `lubridate::with_tz()` can. Unrecognized timezones and/or NULL are not supported and will throw an error.",
       Package == "`lubridate`" & Function == "`force_tz`" ~
-        "`tidypolars` cannot use several timezones in a single column, while `lubridate::force_tz() can.",
+        "`tidypolars` cannot use several timezones in a single column, while `lubridate::force_tz()` can. ",
       Package == "`dplyr`" & Function == "`row_number`" ~
         "Doesn't work when `x` is missing.",
       Package == "`stringr`" & Function == "`str_to_title`" ~
