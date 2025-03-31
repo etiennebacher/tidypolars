@@ -35,5 +35,5 @@ patrick::with_parameters_test_that(
       }
     )
   },
-  fun = c("year", "month", "day", "quarter", "mday", "yday")
+  fun = c("year", "month", "day", "quarter", "mday", "yday", "date")
 )

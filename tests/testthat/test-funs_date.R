@@ -47,7 +47,7 @@ test_that("extracting components of date works", {
     expect_equal(pol, res, info = i)
   }
 
-  for (i in c("hour", "minute", "second")) {
+  for (i in c("hour", "minute", "second", "date")) {
     pol <- paste0("mutate(test, foo = ", i, "(YMD_HMS))") |>
       str2lang() |>
       eval() |>
