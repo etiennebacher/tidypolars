@@ -42,4 +42,25 @@ patrick::with_parameters_test_that(
   fun = c("year", "month", "day", "quarter", "mday", "yday")
 )
 
+# patrick::with_parameters_test_that(
+#   "extracting date component",
+#   {
+#     test_df <- data.frame(x1 = ymd_hms(datetime, tz = "UTC"))
+#     test <- pl$LazyFrame(x1 = ymd_hms(datetime, tz = "UTC"))
+
+#     expect_equal_or_both_error(
+#       mutate(
+#         test,
+#         x2 = date(x1)
+#       ) |>
+#         as_tibble(),
+#       mutate(
+#         test_df,
+#         x2 = date(x1)
+#       )
+#     )
+#   },
+#   datetime = c("2021-03-04 10:01:00", "1990-12-01 00:01:00")
+# )
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
