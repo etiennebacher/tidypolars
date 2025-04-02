@@ -78,9 +78,14 @@ pl_second_lubridate <- function(x, ...) {
 }
 
 # Date-time helpers --------------------------------------
-# TODO: implement when $dt$date() is in r-polars
+# TODO: simplify when $dt$date() is in r-polars
 pl_date_lubridate <- function(x, ...) {
   check_empty_dots(...)
+
+  if (is.na(x)) {
+    return(NA)
+  }
+
   year <- x$dt$year()
   month <- x$dt$month()
   day <- x$dt$day()
