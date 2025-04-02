@@ -32,25 +32,53 @@ knitr::opts_chunk$set(
 }
 ```
 
-Using `tidypolars` requires importing data as Polars `DataFrame`s or
-`LazyFrame`s. You can read files with the [various `read_*_polars()` functions](https://tidypolars.etiennebacher.com/reference/#import-data)
-(such as `read_parquet_polars()`) to import them as `DataFrame`s, or with
-`scan_*_polars()` functions (such as `scan_parquet_polars()`) to import them as
-`LazyFrame`s. There are several functions to import various file formats, such
-as CSV, Parquet, or JSON.
+## Eager and lazy evaluation
+
+Before we start writing code, it is important to understand the data structures in `polars` and hence in `tidypolars`.
+To use `tidypolars`, you need to import data as Polars `DataFrame`s or `LazyFrame`s.
+
+A `DataFrame` is very similar to the standard R `data.frame` (or `tibble` in the `tidyverse`).
+All functions that are applied to a `DataFrame` are **eagerly** evaluated. This means that they are executed one after the other, without knowing where in the data pipeline they are located.
+Therefore, applying a function on a `DataFrame` returns another `DataFrame` that you can directly explore.
+
+A `LazyFrame`, on the other hand, doesn't immediately run the functions applied to it.
+Instead, the data pipeline is built but isn't executed until some specific functions are called (see below).
+This is **lazy** evaluation, and the advantage of this approach is that it allows for *query optimizations*.
 
 <div class="custom_note">
-  <p><b>Note:</b> in examples or some tutorials, the functions <code>as_polars_df()</code>
-  and <code>as_polars_lf()</code> are sometimes used to convert an existing R 
-  data.frame to a Polars DataFrame or LazyFrame. Those are merely convenience 
+  <p><b>Eager vs Lazy: a brief example</b> </p>
+  <p>Suppose you have some data on several countries and several years. You might want to sort the data by country and year, but you are only interested in a subset of countries.<p>
+  <p>If you sort the data and then filter it, you may waste some time and energy as sorting is much slower than filtering. But keeping track of the optimal order of operations is hard.</p>
+  <p>Using a LazyFrame allows to bypass that: before the query is executed, it is optimized in various ways. In this case, polars detects that a filter is called after a sort and rearranges the code to run the filter as early as possible and the sort afterwards. This kind of optimization is not possible with a DataFrame, since all functions are immediately evaluated.</p>
+</div>
+
+For optimal performance, **it is recommended to use `LazyFrame`s** so that your code can take advantages of all optimizations made by `polars`.
+
+`DataFrame`s can be used on medium-sized datasets and in cases where you frequently want to see the data. This can be the case when you only explore a sample of the final data that you will use.
+
+## Importing data
+
+With `tidypolars`, you can read files with the [various `read_*_polars()` functions](https://tidypolars.etiennebacher.com/reference/#import-data) (such as `read_parquet_polars()`) to import them as `DataFrame`s, or with
+`scan_*_polars()` functions (such as `scan_parquet_polars()`) to import them as `LazyFrame`s.
+There are several functions to import various file formats, such as CSV, Parquet, or JSON.
+
+<div class="custom_note">
+  <p><b>From R to Polars</b> </p>
+  <p>In some examples or some tutorials, the functions <code>as_polars_df()</code>
+  and <code>as_polars_lf()</code> are sometimes used to convert an existing R
+  data.frame to a Polars DataFrame or LazyFrame. Those are merely convenience
   functions to quickly convert an existing dataset to Polars, which is
   useful for showcase purposes. However, this conversion from R to Polars has
-  some cost and it hurts the performance. In real-life usecases, be sure to load 
-  the data with the <code>read_\*()</code> or the <code>scan_\*()</code> functions 
+  some cost and it hurts the performance.</p>
+
+  <p>In real-life usecases, be sure to load
+  the data with the <code>read_\*()</code> or the <code>scan_\*()</code> functions
   mentioned above.</p>
 </div>
 
-Here, we're going to use the `who` dataset that is available in the `tidyr` 
+## Example
+
+Here, we're going to use the `who` dataset that is available in the `tidyr`
 package. I import it both as a classic R `data.frame` and as a Polars `DataFrame`
 so that we can easily compare `dplyr` and `tidypolars` functions.
 
@@ -64,7 +92,7 @@ who_df <- tidyr::who
 who_pl <- as_polars_df(tidyr::who)
 ```
 
-`tidypolars` provides methods for `dplyr` and `tidyr` S3 generics. In simpler words, it 
+`tidypolars` provides methods for `dplyr` and `tidyr` S3 generics. In simpler words, it
 means that you can use the same functions on a Polars `DataFrame` or `LazyFrame`
 as in a classic `tidyverse` workflow and it should just work (if it doesn't,
 please [open an issue](https://github.com/etiennebacher/tidypolars/issues)).
@@ -94,8 +122,7 @@ who_pl |>
   head()
 ```
 
-If you use Polars lazy API, you need to call `compute()` at the end of the 
-chained expression to evaluate the query:
+If you use a Polars `LazyFrame`, you need to call `compute()` at the end of the chained expression to evaluate the query:
 
 ```{r}
 who_pl_lazy <- as_polars_lf(tidyr::who)
@@ -111,11 +138,13 @@ who_pl_lazy |>
 ```
 
 <div class="custom_note">
-  <p><b>Note:</b> Several functions trigger the evaluation of a lazy query: 
+  <p><b>Evaluate a lazy query</b></p>
+
+  <p>Several functions trigger the evaluation of a lazy query:
   `compute()`, `collect()`, `as.data.frame()`, and `as_tibble()`. If you want
   to return a Polars DataFrame, use `compute()`. If you want to return a
   standard R data.frame, for example to use it in statistical analysis, use any
-  of the three other functions. Be warned that if the dataset is too big compared
+  of the three other functions. Be aware that if the dataset is too big compared
   to your available memory, this will crash the R session.</p>
 </div>
 
