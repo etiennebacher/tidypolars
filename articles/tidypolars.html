@@ -89,9 +89,62 @@
     text-decoration-color: white;
 }
 </style>
-<p>Using <code>tidypolars</code> requires importing data as Polars
-<code>DataFrame</code>s or <code>LazyFrame</code>s. You can read files
-with the <a href="https://tidypolars.etiennebacher.com/reference/#import-data">various
+<div class="section level2">
+<h2 id="eager-and-lazy-evaluation">Eager and lazy evaluation<a class="anchor" aria-label="anchor" href="#eager-and-lazy-evaluation"></a>
+</h2>
+<p>Before we start writing code, it is important to understand the data
+structures in <code>polars</code> and hence in <code>tidypolars</code>.
+To use <code>tidypolars</code>, you need to import data as Polars
+<code>DataFrame</code>s or <code>LazyFrame</code>s.</p>
+<p>A <code>DataFrame</code> is very similar to the standard R
+<code>data.frame</code> (or <code>tibble</code> in the
+<code>tidyverse</code>). All functions that are applied to a
+<code>DataFrame</code> are <strong>eagerly</strong> evaluated. This
+means that they are executed one after the other, without knowing where
+in the data pipeline they are located. Therefore, applying a function on
+a <code>DataFrame</code> returns another <code>DataFrame</code> that you
+can directly explore.</p>
+<p>A <code>LazyFrame</code>, on the other hand, doesn’t immediately run
+the functions applied to it. Instead, the data pipeline is built but
+isn’t executed until some specific functions are called (see below).
+This is <strong>lazy</strong> evaluation, and the advantage of this
+approach is that it allows for <em>query optimizations</em>.</p>
+<div class="custom_note">
+<p>
+<b>Eager vs Lazy: a brief example</b>
+</p>
+<p>
+Suppose you have some data on several countries and several years. You
+might want to sort the data by country and year, but you are only
+interested in a subset of countries.
+</p>
+<p>
+</p>
+<p>
+If you sort the data and then filter it, you may waste some time and
+energy as sorting is much slower than filtering. But keeping track of
+the optimal order of operations is hard.
+</p>
+<p>
+Using a LazyFrame allows to bypass that: before the query is executed,
+it is optimized in various ways. In this case, polars detects that a
+filter is called after a sort and rearranges the code to run the filter
+as early as possible and the sort afterwards. This kind of optimization
+is not possible with a DataFrame, since all functions are immediately
+evaluated.
+</p>
+</div>
+<p>For optimal performance, <strong>it is recommended to use
+<code>LazyFrame</code>s</strong> so that your code can take advantages
+of all optimizations made by <code>polars</code>.</p>
+<p><code>DataFrame</code>s can be used on medium-sized datasets and in
+cases where you frequently want to see the data. This can be the case
+when you only explore a sample of the final data that you will use.</p>
+</div>
+<div class="section level2">
+<h2 id="importing-data">Importing data<a class="anchor" aria-label="anchor" href="#importing-data"></a>
+</h2>
+<p>With <code>tidypolars</code>, you can read files with the <a href="https://tidypolars.etiennebacher.com/reference/#import-data">various
 <code>read_*_polars()</code> functions</a> (such as
 <code><a href="../reference/from_parquet.html">read_parquet_polars()</a></code>) to import them as
 <code>DataFrame</code>s, or with <code>scan_*_polars()</code> functions
@@ -100,17 +153,27 @@ with the <a href="https://tidypolars.etiennebacher.com/reference/#import-data">v
 file formats, such as CSV, Parquet, or JSON.</p>
 <div class="custom_note">
 <p>
-<b>Note:</b> in examples or some tutorials, the functions
+<b>From R to Polars</b>
+</p>
+<p>
+In some examples or some tutorials, the functions
 <code><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df()</a></code> and <code><a href="https://pola-rs.github.io/r-polars/man/as_polars_lf.html" class="external-link">as_polars_lf()</a></code> are
 sometimes used to convert an existing R data.frame to a Polars DataFrame
 or LazyFrame. Those are merely convenience functions to quickly convert
 an existing dataset to Polars, which is useful for showcase purposes.
 However, this conversion from R to Polars has some cost and it hurts the
-performance. In real-life usecases, be sure to load the data with the
+performance.
+</p>
+<p>
+In real-life usecases, be sure to load the data with the
 <code>read_*()</code> or the <code>scan_*()</code> functions mentioned
 above.
 </p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
 <p>Here, we’re going to use the <code>who</code> dataset that is
 available in the <code>tidyr</code> package. I import it both as a
 classic R <code>data.frame</code> and as a Polars <code>DataFrame</code>
@@ -174,8 +237,9 @@ code on the classic R <code>data.frame</code>:</p>
 <span><span class="co">#&gt; │ ARE  ┆ 2013.0 ┆ 5.0         ┆ 4.0        ┆ … ┆ 3.0        ┆ 3.0        ┆ 1.0        ┆ 6.0        │</span></span>
 <span><span class="co">#&gt; │ ARG  ┆ 2013.0 ┆ 431.0       ┆ 927.0      ┆ … ┆ 537.0      ┆ 395.0      ┆ 307.0      ┆ 374.0      │</span></span>
 <span><span class="co">#&gt; └──────┴────────┴─────────────┴────────────┴───┴────────────┴────────────┴────────────┴────────────┘</span></span></code></pre></div>
-<p>If you use Polars lazy API, you need to call <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code>
-at the end of the chained expression to evaluate the query:</p>
+<p>If you use a Polars <code>LazyFrame</code>, you need to call
+<code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code> at the end of the chained expression to evaluate
+the query:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">who_pl_lazy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_lf.html" class="external-link">as_polars_lf</a></span><span class="op">(</span><span class="fu">tidyr</span><span class="fu">::</span><span class="va"><a href="https://tidyr.tidyverse.org/reference/who.html" class="external-link">who</a></span><span class="op">)</span></span>
 <span></span>
@@ -203,12 +267,15 @@ at the end of the chained expression to evaluate the query:</p>
 <span><span class="co">#&gt; └──────┴────────┴─────────────┴────────────┴───┴────────────┴────────────┴────────────┴────────────┘</span></span></code></pre></div>
 <div class="custom_note">
 <p>
-<b>Note:</b> Several functions trigger the evaluation of a lazy query:
+<b>Evaluate a lazy query</b>
+</p>
+<p>
+Several functions trigger the evaluation of a lazy query:
 <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code>,
 <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code>, and <code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble()</a></code>. If you want
 to return a Polars DataFrame, use <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code>. If you want to
 return a standard R data.frame, for example to use it in statistical
-analysis, use any of the three other functions. Be warned that if the
+analysis, use any of the three other functions. Be aware that if the
 dataset is too big compared to your available memory, this will crash
 the R session.
 </p>
@@ -220,7 +287,9 @@ these are used inside <code><a href="https://dplyr.tidyverse.org/reference/filte
 convert them to use the Polars engine under the hood. Take a look at the
 vignette <a href="https://tidypolars.etiennebacher.com/articles/r-and-polars-expressions">“R
 and Polars expressions”</a> for more information.</p>
-  </main>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
