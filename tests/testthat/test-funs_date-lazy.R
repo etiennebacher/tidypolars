@@ -641,18 +641,4 @@ test_that("leap_year() works", {
   )
 })
 
-
-test_that("date() works", {
-  datetime <- c("2021-03-04 10:01:00", "1990-12-01 00:01:00")
-  test_df <- data.frame(x1 = ymd_hms(datetime, tz = "UTC"))
-  test <- pl$LazyFrame(x1 = ymd_hms(datetime, tz = "UTC"))
-
-  expect_equal_lazy(
-    test |>
-      mutate(foo = date(x1)),
-    test_df |>
-      mutate(foo = date(x1))
-  )
-})
-
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

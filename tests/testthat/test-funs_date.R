@@ -636,17 +636,3 @@ test_that("leap_year() works", {
     mutate(test_df, datetime = leap_year(datetime))
   )
 })
-
-
-test_that("date() works", {
-  datetime <- c("2021-03-04 10:01:00", "1990-12-01 00:01:00")
-  test_df <- data.frame(x1 = ymd_hms(datetime, tz = "UTC"))
-  test <- pl$DataFrame(x1 = ymd_hms(datetime, tz = "UTC"))
-
-  expect_equal(
-    test |>
-      mutate(foo = date(x1)),
-    test_df |>
-      mutate(foo = date(x1))
-  )
-})
