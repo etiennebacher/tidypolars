@@ -47,7 +47,7 @@ test_that("extracting date component", {
       any_na = TRUE
     ),
     property = function(datetime) {
-      test_df <- data.frame(x1 = ymd_hms(datetime, tz = "UTC"))
+      test_df <- data.frame(x1 = ymd_hms(datetime))
       test <- as_polars_df(test_df)
 
       expect_equal_or_both_error(
