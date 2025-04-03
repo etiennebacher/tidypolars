@@ -259,6 +259,7 @@ out <- tribble(
   "`lubridate`", "`am`",
   "`lubridate`", "`day`",
   "`lubridate`", "`days_in_month`",
+  "`lubridate`", "`date`",
   "`lubridate`", "`ddays`",
   "`lubridate`", "`dhours`",
   "`lubridate`", "`dmilliseconds`",
