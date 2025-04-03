@@ -3,10 +3,15 @@ Type: Package
 Title: Get the Power of Polars with the Syntax of the Tidyverse
 Version: 0.13.0
 Authors@R:
-    person(given = "Etienne",
-           family = "Bacher",
-           role = c("aut", "cre", "cph"),
-           email = "etienne.bacher@protonmail.com")
+    c(person(given = "Etienne",
+             family = "Bacher",
+             role = c("aut", "cre", "cph"),
+             email = "etienne.bacher@protonmail.com"),
+      person(given = "Anatoly",
+             family = "Tsyplenkov",
+             role = "ctb",
+             email = "atsyplenkov@fastmail.com",
+             comment = c(ORCID = "0000-0003-4144-8402")))
 Description: Polars is a cross-language tool for manipulating very large data.
     However, one drawback is that the R implementation has a syntax that
     will look odd to many R users who are not used to Python syntax. The objective of tidypolars is to improve the ease-of-use of Polars in R by
