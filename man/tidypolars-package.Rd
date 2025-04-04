@@ -22,5 +22,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Etienne Bacher \email{etienne.bacher@protonmail.com} [copyright holder]
 
+Other contributors:
+\itemize{
+  \item Anatoly Tsyplenkov \email{atsyplenkov@fastmail.com} (\href{https://orcid.org/0000-0003-4144-8402}{ORCID}) [contributor]
+}
+
 }
 \keyword{internal}
