@@ -56,13 +56,15 @@ test_that("extracting date component", {
       any_na = TRUE
     ),
     property = function(datetime) {
-      test_df <- data.frame(x1 = ymd_hms(datetime, tz = "UTC"))
+      test_df <- data.frame(x1 = ymd_hms(datetime))
       test <- as_polars_lf(test_df)
 
+      # TODO: lubridate:: needed here otherwise the test_df call uses
+      # base::date(), which errors. Why is lubridate::date() not overwriting
+      # base::date()?
       expect_equal_or_both_error(
-        mutate(test, x1 = date(x1)),
-        mutate(test_df, x1 = date(x1)),
-        tolerance = 1e-6
+        mutate(test, x1 = lubridate::date(x1)),
+        mutate(test_df, x1 = lubridate::date(x1))
       )
     }
   )
