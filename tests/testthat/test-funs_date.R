@@ -812,3 +812,11 @@ test_that("today() works", {
     filter(test_df, date >= lubridate::today())
   )
 })
+
+test_that("errors for durations", {
+  test <- pl$DataFrame(x = 1)
+  expect_snapshot(mutate(test, x = weeks(1.2)), error = TRUE)
+  expect_snapshot(mutate(test, x = days(1.2)), error = TRUE)
+  expect_snapshot(mutate(test, x = hours(1.2)), error = TRUE)
+  expect_snapshot(mutate(test, x = minutes(1.2)), error = TRUE)
+})

@@ -180,3 +180,13 @@ check_unsupported_arg <- function(...) {
     )
   }
 }
+
+check_integerish <- function(x, name, allow_na = TRUE) {
+  x <- polars_expr_to_r(x)
+  if (is.na(x) && allow_na) {
+    return(invisible())
+  }
+  if (!rlang::is_integerish(x)) {
+    abort(paste0("`", name, "` must be integerish."))
+  }
+}

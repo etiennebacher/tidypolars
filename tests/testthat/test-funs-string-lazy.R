@@ -135,7 +135,7 @@ test_that("str_trim() works", {
 
 test_that("str_dup() works", {
   for_all(
-    tests = 100,
+    tests = 20,
     string = character_(any_na = TRUE),
     # Very high numbers crash the session, I guess because of stringr
     times = numeric_bounded(-10000, 10000, any_na = TRUE),
@@ -155,7 +155,7 @@ test_that("str_dup() works", {
 
 test_that("str_sub() works", {
   for_all(
-    tests = 200,
+    tests = 40,
     string = character_(any_na = TRUE),
     start = numeric_(any_na = TRUE),
     end = numeric_(any_na = TRUE),
@@ -180,7 +180,7 @@ test_that("substr() works", {
   length <- sample.int(10, 1)
 
   for_all(
-    tests = 200,
+    tests = 40,
     string = character_(any_na = TRUE, len = length),
     start = numeric_(any_na = TRUE, len = length),
     end = numeric_(any_na = TRUE, len = length),

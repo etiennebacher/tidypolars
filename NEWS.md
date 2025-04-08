@@ -8,6 +8,10 @@
 
 * Added support for `lubridate::today()` and `lubridate::now()` (#183).
 
+* Added support for the following `lubridate` functions: `weeks()`, `days()`,
+  `hours()`, `minutes()`, `seconds()`, `milliseconds()`, `microseconds()`,
+  `nanoseconds()` (#184).
+
 # tidypolars 0.13.0
 
 ## New features

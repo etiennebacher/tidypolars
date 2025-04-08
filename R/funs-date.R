@@ -185,6 +185,37 @@ pl_ISOdatetime <- function(
 
 # Periods --------------------------------------
 
+pl_weeks_lubridate <- function(x = 1) {
+  check_integerish(x, "x")
+  pl$duration(weeks = x)
+}
+pl_days_lubridate <- function(x = 1) {
+  check_integerish(x, "x")
+  pl$duration(days = x)
+}
+pl_hours_lubridate <- function(x = 1) {
+  check_integerish(x, "x")
+  pl$duration(hours = x)
+}
+pl_minutes_lubridate <- function(x = 1) {
+  check_integerish(x, "x")
+  pl$duration(minutes = x)
+}
+
+# Those don't have the integer check
+pl_seconds_lubridate <- function(x = 1) {
+  pl$duration(seconds = x)
+}
+pl_milliseconds_lubridate <- function(x = 1) {
+  pl$duration(milliseconds = x)
+}
+pl_microseconds_lubridate <- function(x = 1) {
+  pl$duration(microseconds = x)
+}
+pl_nanoseconds_lubridate <- function(x = 1) {
+  pl$duration(nanoseconds = x)
+}
+
 # Intervals --------------------------------------
 
 # Other modification functions -------------------------------------------
