@@ -804,4 +804,17 @@ test_that("check_timezone() throws expected errors", {
   )
 })
 
+test_that("today() works", {
+  test_df <- data.frame(
+    id = 1:6,
+    date = lubridate::now(tzone = "") + lubridate::days(-5:0)
+  )
+  test <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    filter(test, date >= lubridate::today()),
+    filter(test_df, date >= lubridate::today())
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

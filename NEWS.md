@@ -6,6 +6,8 @@
 
 * Added support for `lubridate::date()` (@atsyplenkov, #181).
 
+* Added support for `lubridate::today()` and `lubridate::now()` (#183).
+
 # tidypolars 0.13.0
 
 ## New features
