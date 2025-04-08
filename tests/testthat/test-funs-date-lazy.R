@@ -128,4 +128,61 @@ patrick::with_parameters_test_that(
   tz = list("Pacific/Auckland", "Europe/Rome", NA)
 )
 
+test_that("operations on dates and durations", {
+  for_all(
+    tests = 40,
+    datetime = posixct_(any_na = TRUE),
+    weeks = integer_(len = 1, any_na = TRUE),
+    days = integer_(len = 1, any_na = TRUE),
+    hours = integer_(len = 1, any_na = TRUE),
+    minutes = integer_(len = 1, any_na = TRUE),
+    seconds = integer_(len = 1, any_na = TRUE),
+    milliseconds = integer_(len = 1, any_na = TRUE),
+    microseconds = integer_(len = 1, any_na = TRUE),
+    nanoseconds = integer_(len = 1, any_na = TRUE),
+    property = function(
+      datetime,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    ) {
+      datetime[is.na(datetime)] <- NA_POSIXct_
+      test_df <- data.frame(x1 = ymd_hms(datetime))
+      test <- as_polars_lf(test_df)
+
+      expect_equal_or_both_error(
+        mutate(
+          test,
+          x1 = x1 +
+            weeks(weeks) +
+            days(days) +
+            hours(hours) +
+            minutes(minutes) +
+            seconds(seconds) +
+            milliseconds(milliseconds) +
+            microseconds(microseconds) +
+            nanoseconds(nanoseconds)
+        ),
+        mutate(
+          test_df,
+          x1 = x1 +
+            weeks(weeks) +
+            days(days) +
+            hours(hours) +
+            minutes(minutes) +
+            seconds(seconds) +
+            milliseconds(milliseconds) +
+            microseconds(microseconds) +
+            nanoseconds(nanoseconds)
+        )
+      )
+    }
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

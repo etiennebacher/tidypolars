@@ -817,4 +817,12 @@ test_that("today() works", {
   )
 })
 
+test_that("errors for durations", {
+  test <- pl$LazyFrame(x = 1)
+  expect_snapshot_lazy(mutate(test, x = weeks(1.2)), error = TRUE)
+  expect_snapshot_lazy(mutate(test, x = days(1.2)), error = TRUE)
+  expect_snapshot_lazy(mutate(test, x = hours(1.2)), error = TRUE)
+  expect_snapshot_lazy(mutate(test, x = minutes(1.2)), error = TRUE)
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
