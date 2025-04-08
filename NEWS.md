@@ -2,15 +2,12 @@
 
 ## New features
 
-* Added support for `lubridate::force_tz()` and `lubridate::with_tz()` (@atsyplenkov, #170).
-
-* Added support for `lubridate::date()` (@atsyplenkov, #181).
-
-* Added support for `lubridate::today()` and `lubridate::now()` (#183).
-
-* Added support for the following `lubridate` functions: `weeks()`, `days()`,
-  `hours()`, `minutes()`, `seconds()`, `milliseconds()`, `microseconds()`,
-  `nanoseconds()` (#184).
+* Added support for various `lubridate` functions:
+  - `force_tz()` and `with_tz()` (@atsyplenkov, #170);
+  - `date()` (@atsyplenkov, #181);
+  - `today()` and `now()` (#183);
+  - `weeks()`, `days()`, `hours()`, `minutes()`, `seconds()`, `milliseconds()`,
+    `microseconds()`, `nanoseconds()` (#184).
 
 # tidypolars 0.13.0
 
