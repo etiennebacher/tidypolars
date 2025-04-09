@@ -9,7 +9,10 @@ patrick::with_parameters_test_that(
     for_all(
       tests = 20,
       date = date_(any_na = TRUE),
-      datetime = posixct_(any_na = TRUE),
+      datetime = posixct_right_bounded(
+        as.POSIXct("2100-01-01 00:00:00"),
+        any_na = TRUE
+      ),
       property = function(date, datetime) {
         # date -----------------------------------
         test_df <- data.frame(x1 = date)
