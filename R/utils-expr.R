@@ -211,16 +211,16 @@ translate <- function(
       if (call_is_function) {
         return(expr)
       } else {
-        polars_constant(expr)
+        pl$lit(expr)
       }
     },
     symbol = {
       expr_char <- as.character(expr)
       if (expr_char %in% names_data || expr_char %in% unlist(new_vars)) {
-        polars_col(expr_char)
+        pl$col(expr_char)
       } else {
         val <- eval_tidy(expr, env = caller)
-        polars_constant(val)
+        pl$lit(val)
       }
     },
     language = {
@@ -273,7 +273,7 @@ translate <- function(
         "[[" = {
           first_term <- expr[[2]]
           if (first_term == ".data") {
-            out <- polars_col(expr[[3]])
+            out <- pl$col(expr[[3]])
           } else if (first_term == ".env") {
             out <- tryCatch(
               eval_tidy(sym(expr[[3]]), env = caller),
@@ -308,7 +308,7 @@ translate <- function(
 
           if (first_term == ".data") {
             dep <- rlang::as_string(expr[[3]])
-            out <- polars_col(dep)
+            out <- pl$col(dep)
           } else if (first_term == ".env") {
             out <- tryCatch(
               eval_tidy(expr[[3]], env = caller),
@@ -398,7 +398,7 @@ translate <- function(
             })
           }
 
-          return(polars_constant(unlist(expr)))
+          return(pl$lit(unlist(expr)))
         },
         ":" = {
           out <- tryCatch(eval_tidy(expr, env = caller_env()), error = identity)
@@ -658,14 +658,6 @@ translate <- function(
       call = env
     )
   )
-}
-
-polars_constant <- function(x) {
-  polars::pl$lit(x)
-}
-
-polars_col <- function(x) {
-  polars::pl$col(x)
 }
 
 get_user_defined_functions <- function(caller) {

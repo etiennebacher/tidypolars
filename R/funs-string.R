@@ -219,10 +219,10 @@ pl_str_sub_stringr <- function(string, start, end = NULL) {
   string <- string$cast(pl$String)
   len_string <- string$str$len_chars()
   if (!inherits(start, "RPolarsExpr")) {
-    start <- polars_constant(start)
+    start <- pl$lit(start)
   }
   if (!inherits(end, "RPolarsExpr")) {
-    end <- polars_constant(end)
+    end <- pl$lit(end)
   }
   start <- start$cast(pl$Int64)
   end <- end$cast(pl$Int64)
@@ -331,10 +331,10 @@ pl_substr <- function(x, start, stop) {
   x <- x$cast(pl$String)
   len_string <- x$str$len_chars()
   if (!inherits(start, "RPolarsExpr")) {
-    start <- polars_constant(start)
+    start <- pl$lit(start)
   }
   if (!inherits(stop, "RPolarsExpr")) {
-    stop <- polars_constant(stop)
+    stop <- pl$lit(stop)
   }
   start <- start$cast(pl$Int64)
   stop <- stop$cast(pl$Int64)
