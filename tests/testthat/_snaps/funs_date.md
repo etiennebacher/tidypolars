@@ -4,8 +4,9 @@
       mutate(test, x = weeks(1.2))
     Condition
       Error in `mutate()`:
-      ! Error while running function `weeks()` in Polars.
-      x `x` must be integerish.
+      ! Error in `weeks()`.
+      Caused by error in `validObject()`:
+      ! invalid class "Period" object: periods must have integer values
 
 ---
 
@@ -13,8 +14,9 @@
       mutate(test, x = days(1.2))
     Condition
       Error in `mutate()`:
-      ! Error while running function `days()` in Polars.
-      x `x` must be integerish.
+      ! Error in `days()`.
+      Caused by error in `validObject()`:
+      ! invalid class "Period" object: periods must have integer values
 
 ---
 
@@ -22,8 +24,9 @@
       mutate(test, x = hours(1.2))
     Condition
       Error in `mutate()`:
-      ! Error while running function `hours()` in Polars.
-      x `x` must be integerish.
+      ! Error in `hours()`.
+      Caused by error in `validObject()`:
+      ! invalid class "Period" object: periods must have integer values
 
 ---
 
@@ -31,6 +34,7 @@
       mutate(test, x = minutes(1.2))
     Condition
       Error in `mutate()`:
-      ! Error while running function `minutes()` in Polars.
-      x `x` must be integerish.
+      ! Error in `minutes()`.
+      Caused by error in `validObject()`:
+      ! invalid class "Period" object: periods must have integer values
 

@@ -558,12 +558,75 @@ translate <- function(
         }
       }
 
+      obj_name <- quo_name(expr)
+
+      if (!startsWith(obj_name, ".__tidypolars__across_fn")) {
+        ne <- new_environment()
+        assign("any_arg_is_polars_expr", FALSE, envir = ne)
+        args <- as.list(expr[-1])
+        new_args <- vector("list", length = length(args))
+
+        for (i in seq_along(args)) {
+          tryCatch(
+            new_args[[i]] <- translate(
+              args[[i]],
+              .data = .data,
+              new_vars = new_vars,
+              env = env,
+              caller = caller,
+              call_is_function = call_is_function
+            ),
+            error = function(e) {
+              print("here")
+            }
+          )
+          if (inherits(new_args[[i]], "RPolarsExpr")) {
+            assign("any_arg_is_polars_expr", TRUE, envir = ne)
+            break
+          }
+        }
+
+        any_arg_is_polars_expr <- get("any_arg_is_polars_expr", envir = ne)
+
+        if (!any_arg_is_polars_expr) {
+          fn_name <- as.character(expr[1])
+          has_namespace <- grepl("::", fn_name)
+          if (isTRUE(has_namespace)) {
+            ns_name <- gsub("(.*)::.*", "\\1", fn_name)
+            fn_name <- gsub("(.*)::(.*)", "\\2", fn_name)
+            try_fetch(
+              out <- call2(fn_name, !!!as.list(expr[-1]), .ns = ns_name) |>
+                eval_bare(),
+              error = function(cnd) {
+                abort(
+                  paste0("Error in `", ns_name, "::", fn_name, "()`."),
+                  call = env,
+                  parent = cnd
+                )
+              }
+            )
+          } else {
+            try_fetch(
+              out <- call2(fn_name, !!!as.list(expr[-1])) |>
+                eval_bare(),
+              error = function(cnd) {
+                abort(
+                  paste0("Error in `", fn_name, "()`."),
+                  call = env,
+                  parent = cnd
+                )
+              }
+            )
+          }
+          return(pl$lit(out))
+        }
+      }
+
       # If unknown function:
       # - either anonymous function called in across()
       # - or undefined function (typo, not run in the global env, etc.)
 
       if (!is_known && !(name %in% c(known_ops, user_defined))) {
-        obj_name <- quo_name(expr)
         if (startsWith(obj_name, ".__tidypolars__across_fn")) {
           fn <- eval_bare(global_env()[[obj_name]])
           col_name <- sym(col_name)
@@ -623,7 +686,11 @@ translate <- function(
       tryCatch(
         {
           if (name %in% c(known_ops, user_defined)) {
-            call2(name, !!!args) |> eval_bare(env = caller)
+            out <- call2(name, !!!args) |> eval_bare(env = caller)
+            if (!inherits(out, c("RPolarsExpr", "RPolarsSeries"))) {
+              out <- pl$lit(out)
+            }
+            out
           } else {
             accepted_args <- names(formals(name))
             if ("..." %in% accepted_args) {
