@@ -558,23 +558,28 @@ translate <- function(
 
       # Evaluate arguments early on because we need to know if the expression
       # contains columns or not.
-      args <- lapply(
-        as.list(expr[-1]),
-        translate,
-        .data = .data,
-        new_vars = new_vars,
-        env = env,
-        caller = caller,
-        call_is_function = call_is_function,
-        env_id = env_id
-      )
+      # Do not go through this step when we have anonymous functions in
+      # across().
+      obj_name <- quo_name(expr)
+      if (!startsWith(obj_name, ".__tidypolars__across_fn")) {
+        args <- lapply(
+          as.list(expr[-1]),
+          translate,
+          .data = .data,
+          new_vars = new_vars,
+          env = env,
+          caller = caller,
+          call_is_function = call_is_function,
+          env_id = env_id
+        )
 
-      if (isFALSE(expression_contains_column[[env_id]])) {
-        # Some expressions do not work when called outside of data, e.g. n()
-        # must be called only in summarize(), etc.
-        out <- try(eval_bare(expr, env = caller), silent = TRUE)
-        if (!inherits(out, "try-error")) {
-          return(pl$lit(out))
+        if (isFALSE(expression_contains_column[[env_id]])) {
+          # Some expressions do not work when called outside of data, e.g. n()
+          # must be called only in summarize(), etc.
+          out <- try(eval_bare(expr, env = caller), silent = TRUE)
+          if (!inherits(out, "try-error")) {
+            return(pl$lit(out))
+          }
         }
       }
 
