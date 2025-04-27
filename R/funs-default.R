@@ -222,6 +222,7 @@ pl_between_dplyr <- function(x, left, right, ...) {
 
 pl_case_match <- function(x, ..., .data) {
   env <- env_from_dots(...)
+  env_id <- env_id_from_dots(...)
   new_vars <- new_vars_from_dots(...)
   caller <- caller_from_dots(...)
   dots <- clean_dots(...)
@@ -240,7 +241,8 @@ pl_case_match <- function(x, ..., .data) {
         dots[[y]],
         new_vars = new_vars,
         env = env,
-        caller = caller
+        caller = caller,
+        env_id = env_id
       )
       out <- out$otherwise(otw)
       next
@@ -250,14 +252,16 @@ pl_case_match <- function(x, ..., .data) {
       dots[[y]][[2]],
       new_vars = new_vars,
       env = env,
-      caller = caller
+      caller = caller,
+      env_id = env_id
     )
     rhs <- translate_expr(
       .data,
       dots[[y]][[3]],
       new_vars = new_vars,
       env = env,
-      caller = caller
+      caller = caller,
+      env_id = env_id
     )
     if (is.null(out)) {
       out <- polars::pl$when(x$is_in(lhs))$then(rhs)
@@ -271,6 +275,7 @@ pl_case_match <- function(x, ..., .data) {
 
 pl_case_when <- function(..., .data) {
   env <- env_from_dots(...)
+  env_id <- env_id_from_dots(...)
   new_vars <- new_vars_from_dots(...)
   caller <- caller_from_dots(...)
   dots <- clean_dots(...)
@@ -287,7 +292,8 @@ pl_case_when <- function(..., .data) {
         dots[[y]],
         new_vars = new_vars,
         env = env,
-        caller = caller
+        caller = caller,
+        env_id = env_id
       )
       out <- out$otherwise(otw)
       next
@@ -297,14 +303,16 @@ pl_case_when <- function(..., .data) {
       dots[[y]][[2]],
       new_vars = new_vars,
       env = env,
-      caller = caller
+      caller = caller,
+      env_id = env_id
     )
     rhs <- translate_expr(
       .data,
       dots[[y]][[3]],
       new_vars = new_vars,
       env = env,
-      caller = caller
+      caller = caller,
+      env_id = env_id
     )
 
     if (is.null(out)) {
@@ -402,6 +410,7 @@ pl_first_dplyr <- function(x, ...) {
 pl_ifelse <- function(cond, yes, no, .data, ...) {
   check_empty_dots(...)
   env <- env_from_dots(...)
+  env_id <- env_id_from_dots(...)
   new_vars <- new_vars_from_dots(...)
   caller <- caller_from_dots(...)
 
@@ -410,21 +419,24 @@ pl_ifelse <- function(cond, yes, no, .data, ...) {
     enexpr(cond),
     new_vars = new_vars,
     env = env,
-    caller = caller
+    caller = caller,
+    env_id = env_id
   )
   yes <- translate_expr(
     .data,
     enexpr(yes),
     new_vars = new_vars,
     env = env,
-    caller = caller
+    caller = caller,
+    env_id = env_id
   )
   no <- translate_expr(
     .data,
     enexpr(no),
     new_vars = new_vars,
     env = env,
-    caller = caller
+    caller = caller,
+    env_id = env_id
   )
   pl$when(cond)$then(yes)$otherwise(no)
 }

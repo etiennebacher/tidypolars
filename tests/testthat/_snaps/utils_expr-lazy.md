@@ -4,9 +4,8 @@
       current$collect()
     Condition
       Error in `mutate()`:
-      ! Error in `min_rank()`.
-      Caused by error in `min_rank()`:
-      ! argument "x" is missing, with no default
+      ! Error while running function `min_rank()` in Polars.
+      x Argument "x" is missing, with no default
 
 ---
 
@@ -14,7 +13,6 @@
       current$collect()
     Condition
       Error in `mutate()`:
-      ! Error in `dplyr::min_rank()`.
-      Caused by error in `dplyr::min_rank()`:
-      ! argument "x" is missing, with no default
+      ! Error while running function `dplyr::min_rank()` in Polars.
+      x Argument "x" is missing, with no default
 

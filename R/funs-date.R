@@ -87,9 +87,9 @@ pl_date_lubridate <- function(x, ...) {
   pl$date(year = year, month = month, day = day)
 }
 
-# pl_today_lubridate <- function(tzone = "") {
-#   pl$lit(lubridate::today(tzone = tzone))
-# }
+pl_today_lubridate <- function(tzone = "") {
+  pl$lit(lubridate::today(tzone = tzone))
+}
 
 pl_now_lubridate <- function(tzone = "") {
   pl$lit(lubridate::now(tzone = tzone))
@@ -189,10 +189,10 @@ pl_weeks_lubridate <- function(x = 1) {
   check_integerish(x, "x")
   pl$duration(weeks = x)
 }
-# pl_days_lubridate <- function(x = 1) {
-#   check_integerish(x, "x")
-#   pl$duration(days = x)
-# }
+pl_days_lubridate <- function(x = 1) {
+  check_integerish(x, "x")
+  pl$duration(days = x)
+}
 pl_hours_lubridate <- function(x = 1) {
   check_integerish(x, "x")
   pl$duration(hours = x)

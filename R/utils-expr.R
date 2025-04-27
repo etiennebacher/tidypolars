@@ -196,7 +196,6 @@ translate <- function(
   call_is_function = NULL,
   env_id
 ) {
-  print(expr)
   names_data <- names(.data)
 
   # prepare function and arg if the user provided an anonymous function in
@@ -243,23 +242,25 @@ translate <- function(
         expr[[1]]
       }
       name <- as.character(expr2)
+      name2 <- name
       if (length(name) == 3 && name[[1]] == "::") {
         new_fn_name <- paste0(name[[2]], "::", name[[3]])
-        expr[[1]] <- new_fn_name
-        out <- translate(
-          expr,
-          .data = .data,
-          new_vars = new_vars,
-          env = env,
-          caller = caller,
-          call_is_function = call_is_function,
-          env_id = env_id
-        )
-        return(out)
+        # expr[[1]] <- new_fn_name
+        # out <- translate(
+        #   expr,
+        #   .data = .data,
+        #   new_vars = new_vars,
+        #   env = env,
+        #   caller = caller,
+        #   call_is_function = call_is_function,
+        #   env_id = env_id
+        # )
+        # return(out)
+        name2 <- new_fn_name
       }
 
       switch(
-        name,
+        name2,
         "[" = {
           out <- tryCatch(
             eval_tidy(expr, env = caller),
@@ -374,6 +375,7 @@ translate <- function(
           args[["__tidypolars__new_vars"]] <- as.list(new_vars)
           args[["__tidypolars__env"]] <- env
           args[["__tidypolars__caller"]] <- caller
+          args[["__tidypolars__env_id"]] <- env_id
           return(do.call(pl_case_match, args))
         },
         "case_when" = {
@@ -382,6 +384,7 @@ translate <- function(
           args[["__tidypolars__new_vars"]] <- as.list(new_vars)
           args[["__tidypolars__env"]] <- env
           args[["__tidypolars__caller"]] <- caller
+          args[["__tidypolars__env_id"]] <- env_id
           return(do.call(pl_case_when, args))
         },
         "c" = {
@@ -461,6 +464,7 @@ translate <- function(
           args[["__tidypolars__new_vars"]] <- as.list(new_vars)
           args[["__tidypolars__env"]] <- env
           args[["__tidypolars__caller"]] <- caller
+          args[["__tidypolars__env_id"]] <- env_id
           return(do.call(pl_ifelse, args))
         },
         "is.na" = {
@@ -551,6 +555,28 @@ translate <- function(
         check_allowed_rowwise(name, env)
       }
 
+      # Evaluate arguments early on because we need to know if the expression
+      # contains columns or not.
+      args <- lapply(
+        as.list(expr[-1]),
+        translate,
+        .data = .data,
+        new_vars = new_vars,
+        env = env,
+        caller = caller,
+        call_is_function = call_is_function,
+        env_id = env_id
+      )
+
+      if (isFALSE(expression_contains_column[[env_id]])) {
+        # Some expressions do not work when called outside of data, e.g. n()
+        # must be called only in summarize(), etc.
+        out <- try(eval_bare(expr, env = caller), silent = TRUE)
+        if (!inherits(out, "try-error")) {
+          return(pl$lit(out))
+        }
+      }
+
       # If unknown function:
       # - either anonymous function called in across()
       # - or undefined function (typo, not run in the global env, etc.)
@@ -585,10 +611,6 @@ translate <- function(
             )
           }
         } else {
-          if (isFALSE(expression_contains_column[[env_id]])) {
-            # browser()
-            return(eval_bare(expr, env = caller))
-          }
           if (!is.null(fn_names$pkg)) {
             msg <- paste0(
               "`tidypolars` doesn't know how to translate this function: `",
@@ -608,17 +630,6 @@ translate <- function(
         }
       }
 
-      args <- lapply(
-        as.list(expr[-1]),
-        translate,
-        .data = .data,
-        new_vars = new_vars,
-        env = env,
-        caller = caller,
-        call_is_function = call_is_function,
-        env_id = env_id
-      )
-
       tryCatch(
         {
           if (name %in% c(known_ops, user_defined)) {
@@ -628,6 +639,7 @@ translate <- function(
             if ("..." %in% accepted_args) {
               args[["__tidypolars__new_vars"]] <- as.list(new_vars)
               args[["__tidypolars__env"]] <- env
+              args[["__tidypolars__env_id"]] <- env_id
             }
             do.call(name, args)
           }
@@ -683,6 +695,7 @@ check_empty_dots <- function(...) {
   env <- dots[["__tidypolars__env"]]
   dots[["__tidypolars__new_vars"]] <- NULL
   dots[["__tidypolars__env"]] <- NULL
+  dots[["__tidypolars__env_id"]] <- NULL
   dots[["__tidypolars__caller"]] <- NULL
 
   if (length(dots) == 0) {
@@ -731,6 +744,7 @@ clean_dots <- function(...) {
   dots <- get_dots(...)
   dots[["__tidypolars__new_vars"]] <- NULL
   dots[["__tidypolars__env"]] <- NULL
+  dots[["__tidypolars__env_id"]] <- NULL
   dots[["__tidypolars__caller"]] <- NULL
   caller_call <- deparse(rlang::caller_call()[[1]])
   called_from_pl_paste <- length(caller_call) == 1 &&
@@ -760,12 +774,20 @@ env_from_dots <- function(...) {
   dots[["__tidypolars__env"]]
 }
 
+env_id_from_dots <- function(...) {
+  dots <- get_dots(...)
+  dots[["__tidypolars__env_id"]]
+}
+
 caller_from_dots <- function(...) {
   dots <- get_dots(...)
   dots[["__tidypolars__caller"]]
 }
 
 add_pkg_suffix <- function(name, known_ops, user_defined) {
+  if (length(name) == 3 && name[[1]] == "::") {
+    name <- paste0(name[[2]], "::", name[[3]])
+  }
   if (name %in% c(known_ops, user_defined)) {
     return(list(orig_name = name, name_to_eval = name))
   }
