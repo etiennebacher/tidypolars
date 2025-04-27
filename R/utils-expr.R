@@ -561,7 +561,11 @@ translate <- function(
       # Do not go through this step when we have anonymous functions in
       # across().
       obj_name <- quo_name(expr)
-      if (!startsWith(obj_name, ".__tidypolars__across_fn")) {
+      if (
+        !is_known &&
+          !(name %in% c(known_ops, user_defined)) &&
+          !startsWith(obj_name, ".__tidypolars__across_fn")
+      ) {
         args <- lapply(
           as.list(expr[-1]),
           translate,
@@ -635,6 +639,17 @@ translate <- function(
           abort(msg, call = env)
         }
       }
+
+      args <- lapply(
+        as.list(expr[-1]),
+        translate,
+        .data = .data,
+        new_vars = new_vars,
+        env = env,
+        caller = caller,
+        call_is_function = call_is_function,
+        env_id = env_id
+      )
 
       tryCatch(
         {

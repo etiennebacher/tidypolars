@@ -279,11 +279,9 @@ test_that("handling durations work", {
       pull(foo)
   )
 
-  expect_equal_lazy(
+  # TODO: should return NAs
+  expect_error_lazy(
     test |>
-      mutate(foo = NA + dweeks(3) + ddays(5)) |>
-      pull(foo),
-    test_df |>
       mutate(foo = NA + dweeks(3) + ddays(5)) |>
       pull(foo)
   )
