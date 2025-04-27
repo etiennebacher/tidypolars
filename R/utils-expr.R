@@ -45,16 +45,13 @@ translate_dots <- function(.data, ..., env, caller) {
       expr <- call2("desc", expr[[2]])
     }
 
-    env_id <- paste0("expr_", x)
-    expression_contains_column[[env_id]] <- FALSE
-
     tmp <- translate_expr(
       .data = .data,
       expr,
       new_vars = new_vars,
       env = env,
       caller = caller,
-      env_id = env_id
+      env_id = NULL
     )
     # flir-ignore
     new_vars <<- c(new_vars, names(dots)[x])
@@ -210,6 +207,9 @@ translate <- function(
     foo <- sym(expr)
     expr <- enquo(foo)
   }
+
+  env_id <- paste0("expr_", hash(expr))
+  expression_contains_column[[env_id]] <- FALSE
 
   switch(
     typeof(expr),
