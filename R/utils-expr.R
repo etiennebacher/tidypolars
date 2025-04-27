@@ -1,3 +1,5 @@
+expression_contains_column <- new.env()
+
 #' Translate all expressions in `...`
 #'
 #' This is the first out of 3 steps. Here, we convert each expression passed in
@@ -43,12 +45,16 @@ translate_dots <- function(.data, ..., env, caller) {
       expr <- call2("desc", expr[[2]])
     }
 
+    env_id <- paste0("expr_", x)
+    expression_contains_column[[env_id]] <- FALSE
+
     tmp <- translate_expr(
       .data = .data,
       expr,
       new_vars = new_vars,
       env = env,
-      caller = caller
+      caller = caller,
+      env_id = env_id
     )
     # flir-ignore
     new_vars <<- c(new_vars, names(dots)[x])
@@ -74,6 +80,7 @@ translate_dots <- function(.data, ..., env, caller) {
   out <- reorder_exprs(out)
   out
 }
+
 
 #' Translate an expression
 #'
@@ -103,7 +110,8 @@ translate_expr <- function(
   quo,
   new_vars = NULL,
   env,
-  caller = rlang::caller_env(2)
+  caller = rlang::caller_env(2),
+  env_id
 ) {
   if (!is_quosure(quo)) {
     quo <- enquo(quo)
@@ -140,7 +148,8 @@ translate_expr <- function(
       new_vars = new_vars,
       env = env,
       caller = caller,
-      call_is_function = call_is_function
+      call_is_function = call_is_function,
+      env_id = env_id
     )
   } else {
     translate(
@@ -149,7 +158,8 @@ translate_expr <- function(
       new_vars = new_vars,
       env = env,
       caller = caller,
-      call_is_function = call_is_function
+      call_is_function = call_is_function,
+      env_id = env_id
     )
   }
 }
@@ -183,8 +193,10 @@ translate <- function(
   new_vars,
   env,
   caller = NULL,
-  call_is_function = NULL
+  call_is_function = NULL,
+  env_id
 ) {
+  print(expr)
   names_data <- names(.data)
 
   # prepare function and arg if the user provided an anonymous function in
@@ -217,6 +229,7 @@ translate <- function(
     symbol = {
       expr_char <- as.character(expr)
       if (expr_char %in% names_data || expr_char %in% unlist(new_vars)) {
+        assign(env_id, TRUE, envir = expression_contains_column)
         pl$col(expr_char)
       } else {
         val <- eval_tidy(expr, env = caller)
@@ -239,7 +252,8 @@ translate <- function(
           new_vars = new_vars,
           env = env,
           caller = caller,
-          call_is_function = call_is_function
+          call_is_function = call_is_function,
+          env_id = env_id
         )
         return(out)
       }
@@ -259,7 +273,8 @@ translate <- function(
             new_vars = new_vars,
             env = env,
             caller = caller,
-            call_is_function = call_is_function
+            call_is_function = call_is_function,
+            env_id = env_id
           )
           return(out)
         },
@@ -273,6 +288,7 @@ translate <- function(
         "[[" = {
           first_term <- expr[[2]]
           if (first_term == ".data") {
+            assign(env_id, TRUE, envir = expression_contains_column)
             out <- pl$col(expr[[3]])
           } else if (first_term == ".env") {
             out <- tryCatch(
@@ -294,7 +310,8 @@ translate <- function(
               new_vars = new_vars,
               env = env,
               caller = caller,
-              call_is_function = call_is_function
+              call_is_function = call_is_function,
+              env_id = env_id
             )
           }
           return(out)
@@ -307,6 +324,7 @@ translate <- function(
           }
 
           if (first_term == ".data") {
+            assign(env_id, TRUE, envir = expression_contains_column)
             dep <- rlang::as_string(expr[[3]])
             out <- pl$col(dep)
           } else if (first_term == ".env") {
@@ -329,7 +347,8 @@ translate <- function(
               new_vars = new_vars,
               env = env,
               caller = caller,
-              call_is_function = call_is_function
+              call_is_function = call_is_function,
+              env_id = env_id
             )
           }
           return(out)
@@ -342,7 +361,8 @@ translate <- function(
               new_vars = new_vars,
               env = env,
               caller = caller,
-              call_is_function = call_is_function
+              call_is_function = call_is_function,
+              env_id = env_id
             )
           )
         },
@@ -413,7 +433,8 @@ translate <- function(
                 new_vars = new_vars,
                 env = env,
                 caller = caller,
-                call_is_function = call_is_function
+                call_is_function = call_is_function,
+                env_id = env_id
               )
               rhs <- translate(
                 expr[[3]],
@@ -421,7 +442,8 @@ translate <- function(
                 new_vars = new_vars,
                 env = env,
                 caller = caller,
-                call_is_function = call_is_function
+                call_is_function = call_is_function,
+                env_id = env_id
               )
               if (is.list(rhs)) {
                 rhs <- unlist(rhs)
@@ -450,7 +472,8 @@ translate <- function(
                 new_vars = new_vars,
                 env = env,
                 caller = caller,
-                call_is_function = call_is_function
+                call_is_function = call_is_function,
+                env_id = env_id
               )
               inside$is_null()
             },
@@ -467,7 +490,8 @@ translate <- function(
                 new_vars = new_vars,
                 env = env,
                 caller = caller,
-                call_is_function = call_is_function
+                call_is_function = call_is_function,
+                env_id = env_id
               )
               inside$is_nan()
             },
@@ -558,75 +582,12 @@ translate <- function(
         }
       }
 
-      obj_name <- quo_name(expr)
-
-      if (!startsWith(obj_name, ".__tidypolars__across_fn")) {
-        ne <- new_environment()
-        assign("any_arg_is_polars_expr", FALSE, envir = ne)
-        args <- as.list(expr[-1])
-        new_args <- vector("list", length = length(args))
-
-        for (i in seq_along(args)) {
-          tryCatch(
-            new_args[[i]] <- translate(
-              args[[i]],
-              .data = .data,
-              new_vars = new_vars,
-              env = env,
-              caller = caller,
-              call_is_function = call_is_function
-            ),
-            error = function(e) {
-              print("here")
-            }
-          )
-          if (inherits(new_args[[i]], "RPolarsExpr")) {
-            assign("any_arg_is_polars_expr", TRUE, envir = ne)
-            break
-          }
-        }
-
-        any_arg_is_polars_expr <- get("any_arg_is_polars_expr", envir = ne)
-
-        if (!any_arg_is_polars_expr) {
-          fn_name <- as.character(expr[1])
-          has_namespace <- grepl("::", fn_name)
-          if (isTRUE(has_namespace)) {
-            ns_name <- gsub("(.*)::.*", "\\1", fn_name)
-            fn_name <- gsub("(.*)::(.*)", "\\2", fn_name)
-            try_fetch(
-              out <- call2(fn_name, !!!as.list(expr[-1]), .ns = ns_name) |>
-                eval_bare(),
-              error = function(cnd) {
-                abort(
-                  paste0("Error in `", ns_name, "::", fn_name, "()`."),
-                  call = env,
-                  parent = cnd
-                )
-              }
-            )
-          } else {
-            try_fetch(
-              out <- call2(fn_name, !!!as.list(expr[-1])) |>
-                eval_bare(),
-              error = function(cnd) {
-                abort(
-                  paste0("Error in `", fn_name, "()`."),
-                  call = env,
-                  parent = cnd
-                )
-              }
-            )
-          }
-          return(pl$lit(out))
-        }
-      }
-
       # If unknown function:
       # - either anonymous function called in across()
       # - or undefined function (typo, not run in the global env, etc.)
 
       if (!is_known && !(name %in% c(known_ops, user_defined))) {
+        obj_name <- quo_name(expr)
         if (startsWith(obj_name, ".__tidypolars__across_fn")) {
           fn <- eval_bare(global_env()[[obj_name]])
           col_name <- sym(col_name)
@@ -636,7 +597,8 @@ translate <- function(
             env = env,
             new_vars = new_vars,
             caller = caller,
-            call_is_function = call_is_function
+            call_is_function = call_is_function,
+            env_id = env_id
           )
 
           suppressWarnings({
@@ -654,6 +616,10 @@ translate <- function(
             )
           }
         } else {
+          if (isFALSE(expression_contains_column[[env_id]])) {
+            # browser()
+            return(eval_bare(expr, env = caller))
+          }
           if (!is.null(fn_names$pkg)) {
             msg <- paste0(
               "`tidypolars` doesn't know how to translate this function: `",
@@ -680,17 +646,14 @@ translate <- function(
         new_vars = new_vars,
         env = env,
         caller = caller,
-        call_is_function = call_is_function
+        call_is_function = call_is_function,
+        env_id = env_id
       )
 
       tryCatch(
         {
           if (name %in% c(known_ops, user_defined)) {
-            out <- call2(name, !!!args) |> eval_bare(env = caller)
-            if (!inherits(out, c("RPolarsExpr", "RPolarsSeries"))) {
-              out <- pl$lit(out)
-            }
-            out
+            call2(name, !!!args) |> eval_bare(env = caller)
           } else {
             accepted_args <- names(formals(name))
             if ("..." %in% accepted_args) {

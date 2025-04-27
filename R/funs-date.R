@@ -189,10 +189,10 @@ pl_weeks_lubridate <- function(x = 1) {
   check_integerish(x, "x")
   pl$duration(weeks = x)
 }
-pl_days_lubridate <- function(x = 1) {
-  check_integerish(x, "x")
-  pl$duration(days = x)
-}
+# pl_days_lubridate <- function(x = 1) {
+#   check_integerish(x, "x")
+#   pl$duration(days = x)
+# }
 pl_hours_lubridate <- function(x = 1) {
   check_integerish(x, "x")
   pl$duration(hours = x)
