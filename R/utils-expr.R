@@ -403,7 +403,8 @@ translate <- function(
                 new_vars = new_vars,
                 env = env,
                 caller = caller,
-                call_is_function = call_is_function
+                call_is_function = call_is_function,
+                env_id = env_id
               )
             )
           }
@@ -939,6 +940,7 @@ check_rowwise_dots <- function(...) {
   is_rowwise <- dots[["__tidypolars__env"]]$is_rowwise
   dots[["__tidypolars__new_vars"]] <- NULL
   dots[["__tidypolars__env"]] <- NULL
+  dots[["__tidypolars__env_id"]] <- NULL
   dots[["__tidypolars__caller"]] <- NULL
   dots <- unlist(dots)
   if (isTRUE(is_rowwise)) {
