@@ -538,48 +538,17 @@ translate <- function(
       )
 
       user_defined <- get_user_defined_functions(caller = caller)
+      # fmt: skip
       known_ops <- c(
-        "+",
-        "-",
-        "*",
-        "/",
-        "^",
-        "**",
-        ">",
-        ">=",
-        "<",
-        "<=",
-        "==",
-        "!=",
-        "&",
-        "|",
-        "!",
-        "%%",
-        "%/%"
+        "+", "-", "*", "/", "^", "**", ">", ">=", "<", "<=", "==", "!=", "&",
+        "|", "!", "%%", "%/%"
       )
       fn_names <- add_pkg_suffix(name, known_ops, user_defined)
       name <- fn_names$name_to_eval
       is_known <- is_function_known(name)
 
       if (!missing(env) && isTRUE(env$is_rowwise)) {
-        shortlist <- c(
-          paste0("pl_", c("mean", "median", "min", "max", "sum", "all", "any")),
-          "!"
-        )
-        if (!name %in% shortlist) {
-          rlang::abort(
-            c(
-              "x" = paste0(
-                "Can't use function `",
-                name,
-                "()` in rowwise mode."
-              ),
-              "i" = "For now, `rowwise()` only works on the following functions:",
-              "i" = "`mean()`, `median()`, `min()`, `max()`, `sum()`, `all()`, `any()`"
-            ),
-            call = env
-          )
-        }
+        check_allowed_rowwise(name, env)
       }
 
       # If unknown function:
@@ -1031,4 +1000,25 @@ check_timezone <- function(tz, empty_allowed = FALSE) {
   }
 
   tz
+}
+
+check_allowed_rowwise <- function(name, env) {
+  shortlist <- c(
+    paste0("pl_", c("mean", "median", "min", "max", "sum", "all", "any")),
+    "!"
+  )
+  if (!name %in% shortlist) {
+    rlang::abort(
+      c(
+        "x" = paste0(
+          "Can't use function `",
+          name,
+          "()` in rowwise mode."
+        ),
+        "i" = "For now, `rowwise()` only works on the following functions:",
+        "i" = "`mean()`, `median()`, `min()`, `max()`, `sum()`, `all()`, `any()`"
+      ),
+      call = env
+    )
+  }
 }
