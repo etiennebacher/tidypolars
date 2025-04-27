@@ -50,8 +50,7 @@ translate_dots <- function(.data, ..., env, caller) {
       expr,
       new_vars = new_vars,
       env = env,
-      caller = caller,
-      env_id = NULL
+      caller = caller
     )
     # flir-ignore
     new_vars <<- c(new_vars, names(dots)[x])
@@ -108,7 +107,7 @@ translate_expr <- function(
   new_vars = NULL,
   env,
   caller = rlang::caller_env(2),
-  env_id
+  env_id = NULL
 ) {
   if (!is_quosure(quo)) {
     quo <- enquo(quo)

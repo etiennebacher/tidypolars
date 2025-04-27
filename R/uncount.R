@@ -38,8 +38,7 @@ uncount.RPolarsDataFrame <- function(
     data,
     weights_quo,
     new_vars = NULL,
-    env = rlang::current_env(),
-    env_id = NULL
+    env = rlang::current_env()
   )
 
   out <- data$with_columns(pl$col("x")$repeat_by(repeat_expr))$explode(
