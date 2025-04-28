@@ -83,3 +83,41 @@ test_that("correct behavior when two expressions are identical but used in a dif
     error = TRUE
   )
 })
+
+test_that("correct behavior with nested functions", {
+  test <- pl$DataFrame(foo = c("a", "b", "c"), bar = 1:3)
+  test_df <- as.data.frame(test)
+
+  a <- c("a", "b", "c")
+
+  ### Two unknown functions
+  expect_equal(
+    test |> mutate(x = identity(agrep("a", a))),
+    test_df |> mutate(x = identity(agrep("a", a)))
+  )
+  expect_snapshot(
+    test |> mutate(a = "a", x = identity(agrep("a", a))),
+    error = TRUE
+  )
+
+  ### One known function wrapping an unknown one
+  expect_equal(
+    test |> mutate(x = mean(agrep("a", a))),
+    test_df |> mutate(x = mean(agrep("a", a)))
+  )
+  expect_snapshot(
+    test |> mutate(a = "a", x = mean(agrep("a", a))),
+    error = TRUE
+  )
+
+  ### One unknown function wrapping a known one
+  a <- 1:3
+  expect_equal(
+    test |> mutate(x = agrep("a", mean(a))),
+    test_df |> mutate(x = agrep("a", mean(a)))
+  )
+  expect_snapshot(
+    test |> mutate(a = 1, x = agrep("a", mean(a))),
+    error = TRUE
+  )
+})

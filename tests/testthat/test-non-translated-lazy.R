@@ -88,4 +88,42 @@ test_that("correct behavior when two expressions are identical but used in a dif
   )
 })
 
+test_that("correct behavior with nested functions", {
+  test <- pl$LazyFrame(foo = c("a", "b", "c"), bar = 1:3)
+  test_df <- as.data.frame(test)
+
+  a <- c("a", "b", "c")
+
+  ### Two unknown functions
+  expect_equal_lazy(
+    test |> mutate(x = identity(agrep("a", a))),
+    test_df |> mutate(x = identity(agrep("a", a)))
+  )
+  expect_snapshot_lazy(
+    test |> mutate(a = "a", x = identity(agrep("a", a))),
+    error = TRUE
+  )
+
+  ### One known function wrapping an unknown one
+  expect_equal_lazy(
+    test |> mutate(x = mean(agrep("a", a))),
+    test_df |> mutate(x = mean(agrep("a", a)))
+  )
+  expect_snapshot_lazy(
+    test |> mutate(a = "a", x = mean(agrep("a", a))),
+    error = TRUE
+  )
+
+  ### One unknown function wrapping a known one
+  a <- 1:3
+  expect_equal_lazy(
+    test |> mutate(x = agrep("a", mean(a))),
+    test_df |> mutate(x = agrep("a", mean(a)))
+  )
+  expect_snapshot_lazy(
+    test |> mutate(a = 1, x = agrep("a", mean(a))),
+    error = TRUE
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
