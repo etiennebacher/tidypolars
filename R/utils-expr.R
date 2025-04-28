@@ -612,6 +612,7 @@ translate <- function(
           call_is_function = call_is_function,
           expr_uses_col = expr_uses_col
         )
+        latest_expr_id <- paste0("id", expr_uses_col[["counter"]])
 
         if (isFALSE(expr_uses_col[[latest_expr_id]])) {
           # Some expressions do not work when called outside of data, e.g. n()
@@ -628,7 +629,6 @@ translate <- function(
       # - or undefined function (typo, not run in the global env, etc.)
 
       if (!is_known && !(name %in% c(known_ops, user_defined))) {
-        obj_name <- quo_name(expr)
         if (startsWith(obj_name, ".__tidypolars__across_fn")) {
           fn <- eval_bare(global_env()[[obj_name]])
           col_name <- sym(col_name)
