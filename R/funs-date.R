@@ -87,10 +87,6 @@ pl_date_lubridate <- function(x, ...) {
   pl$date(year = year, month = month, day = day)
 }
 
-pl_today_lubridate <- function(tzone = "") {
-  pl$lit(lubridate::today(tzone = tzone))
-}
-
 pl_now_lubridate <- function(tzone = "") {
   pl$lit(lubridate::now(tzone = tzone))
 }
