@@ -41,7 +41,8 @@
 <h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
 <div class="section level3">
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
-<ul><li>Added support for various <code>lubridate</code> functions:
+<ul><li>
+<p>Added support for various <code>lubridate</code> functions:</p>
 <ul><li>
 <code>force_tz()</code> and <code>with_tz()</code> (<a href="https://github.com/atsyplenkov" class="external-link">@atsyplenkov</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/170" class="external-link">#170</a>);</li>
 <li>
@@ -51,6 +52,28 @@
 <li>
 <code>weeks()</code>, <code>days()</code>, <code>hours()</code>, <code>minutes()</code>, <code>seconds()</code>, <code>milliseconds()</code>, <code>microseconds()</code>, <code>nanoseconds()</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/184" class="external-link">#184</a>).</li>
 </ul></li>
+<li>
+<p><code>tidypolars</code> can now use expressions that contain non-translated functions if those expressions do not use columns from the data.</p>
+<p>Example:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span>foo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"e"</span>, <span class="st">"f"</span><span class="op">)</span></span>
+<span><span class="va">dat</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">foo</span> <span class="op">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/agrep.html" class="external-link">agrep</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="va">a</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="https://rdrr.io/r/base/agrep.html" class="external-link">agrep()</a></code> is not a translated function so this used to error:</p>
+<pre><code>Error in `filter()`:
+! `tidypolars` doesn't know how to translate this function: `agrep()`.</code></pre>
+<p>However, we see that <code>agrep("a", a)</code> doesn’t use any column but instead an object in the environment so it can be evaluated without caring whether <code>tidypolars</code> knows this function or not:</p>
+<pre><code>shape: (1, 1)
+┌─────┐
+│ foo │
+│ --- │
+│ f64 │
+╞═════╡
+│ 2.0 │
+└─────┘</code></pre>
+<p>Note that this is evaluated before running <code>polars</code> in the background so this expression can’t benefit from <code>polars</code> parallel evaluation for instance. Thanks <a href="https://github.com/mgacc0" class="external-link">@mgacc0</a> for the suggestion.</p>
+</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -165,7 +188,7 @@
 <li><p><code><a href="https://tidyr.tidyverse.org/reference/unite.html" class="external-link">unite()</a></code> doesn’t error anymore when <code>...</code> is empty. Instead, it uses all variables in the dataset.</p></li>
 <li>
 <p><code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> now work when using a column from another data.frame, e.g.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_polars_df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">some_data_frame</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span></code></pre></div>
 </li>
@@ -223,25 +246,25 @@
 <li><p><code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code> now works when <code>.cols</code> contains only one variable and <code>.fns</code> contains only one function.</p></li>
 <li>
 <p>In <code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code>, the <code>.cols</code> argument now takes into account variables created in the same <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code> or <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> call before <code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code>.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">as_polars_df</span>(mtcars) <span class="sc">|&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>    <span class="at">foo =</span> <span class="dv">1</span>,</span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>    <span class="fu">across</span>(<span class="at">.cols =</span> <span class="fu">contains</span>(<span class="st">"oo"</span>), \(x) x <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  )</span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>shape<span class="sc">:</span> (<span class="dv">3</span>, <span class="dv">12</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬─────┐</span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>│ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ foo │</span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>│ <span class="sc">---</span>  ┆ <span class="sc">---</span> ┆ <span class="sc">---</span>   ┆ <span class="sc">---</span>   ┆   ┆ <span class="sc">---</span> ┆ <span class="sc">---</span>  ┆ <span class="sc">---</span>  ┆ <span class="sc">---</span> │</span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>│ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ f64 │</span>
-<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═════╡</span>
-<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>│ <span class="fl">21.0</span> ┆ <span class="fl">6.0</span> ┆ <span class="fl">160.0</span> ┆ <span class="fl">110.0</span> ┆ … ┆ <span class="fl">1.0</span> ┆ <span class="fl">4.0</span>  ┆ <span class="fl">4.0</span>  ┆ <span class="fl">0.0</span> │</span>
-<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>│ <span class="fl">21.0</span> ┆ <span class="fl">6.0</span> ┆ <span class="fl">160.0</span> ┆ <span class="fl">110.0</span> ┆ … ┆ <span class="fl">1.0</span> ┆ <span class="fl">4.0</span>  ┆ <span class="fl">4.0</span>  ┆ <span class="fl">0.0</span> │</span>
-<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>│ <span class="fl">22.8</span> ┆ <span class="fl">4.0</span> ┆ <span class="fl">108.0</span> ┆ <span class="fl">93.0</span>  ┆ … ┆ <span class="fl">1.0</span> ┆ <span class="fl">4.0</span>  ┆ <span class="fl">1.0</span>  ┆ <span class="fl">0.0</span> │</span>
-<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>└──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴─────┘</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">as_polars_df</span>(mtcars) <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>    <span class="at">foo =</span> <span class="dv">1</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>    <span class="fu">across</span>(<span class="at">.cols =</span> <span class="fu">contains</span>(<span class="st">"oo"</span>), \(x) x <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  )</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>shape<span class="sc">:</span> (<span class="dv">3</span>, <span class="dv">12</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬─────┐</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>│ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ foo │</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>│ <span class="sc">---</span>  ┆ <span class="sc">---</span> ┆ <span class="sc">---</span>   ┆ <span class="sc">---</span>   ┆   ┆ <span class="sc">---</span> ┆ <span class="sc">---</span>  ┆ <span class="sc">---</span>  ┆ <span class="sc">---</span> │</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>│ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ f64 │</span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═════╡</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>│ <span class="fl">21.0</span> ┆ <span class="fl">6.0</span> ┆ <span class="fl">160.0</span> ┆ <span class="fl">110.0</span> ┆ … ┆ <span class="fl">1.0</span> ┆ <span class="fl">4.0</span>  ┆ <span class="fl">4.0</span>  ┆ <span class="fl">0.0</span> │</span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>│ <span class="fl">21.0</span> ┆ <span class="fl">6.0</span> ┆ <span class="fl">160.0</span> ┆ <span class="fl">110.0</span> ┆ … ┆ <span class="fl">1.0</span> ┆ <span class="fl">4.0</span>  ┆ <span class="fl">4.0</span>  ┆ <span class="fl">0.0</span> │</span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>│ <span class="fl">22.8</span> ┆ <span class="fl">4.0</span> ┆ <span class="fl">108.0</span> ┆ <span class="fl">93.0</span>  ┆ … ┆ <span class="fl">1.0</span> ┆ <span class="fl">4.0</span>  ┆ <span class="fl">1.0</span>  ┆ <span class="fl">0.0</span> │</span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>└──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴─────┘</span></code></pre></div>
 <p>Note that the <code><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where()</a></code> function is not supported here. For example:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    foo <span class="op">=</span> <span class="fl">1</span>,</span>
