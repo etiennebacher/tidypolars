@@ -9,6 +9,39 @@
   - `weeks()`, `days()`, `hours()`, `minutes()`, `seconds()`, `milliseconds()`,
     `microseconds()`, `nanoseconds()` (#184).
 
+* `tidypolars` can now use expressions that contain non-translated functions
+  if those expressions do not use columns from the data.
+
+  Example:
+  ```r
+  dat <- pl$DataFrame(foo = c(2, 1, 2))
+  a <- c("d", "e", "f")
+  dat |>
+    filter(foo >= agrep("a", a))
+  ```
+  `agrep()` is not a translated function so this used to error:
+  ```
+  Error in `filter()`:
+  ! `tidypolars` doesn't know how to translate this function: `agrep()`.
+  ```
+  However, we see that `agrep("a", a)` doesn't use any column but instead an
+  object in the environment so it can be evaluated without caring whether
+  `tidypolars` knows this function or not:
+  ```
+  shape: (1, 1)
+  ┌─────┐
+  │ foo │
+  │ --- │
+  │ f64 │
+  ╞═════╡
+  │ 2.0 │
+  └─────┘
+  ```
+
+  Note that this is evaluated before running `polars` in the background so this
+  expression can't benefit from `polars` parallel evaluation for instance.
+  Thanks @mgacc0 for the suggestion.
+
 # tidypolars 0.13.0
 
 ## New features
