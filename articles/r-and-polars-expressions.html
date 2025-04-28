@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.13.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.13.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,10 +84,10 @@ mainly three places: <code><a href="https://dplyr.tidyverse.org/reference/filter
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">qsec</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">qsec</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>This is very convenient but creates a challenge for
-<code>tidypolars</code>. Indeed, while it is possible to pass R
-functions directly to a Polars Data/LazyFrame, it is <strong>strongly
-discouraged</strong> to do so because it doesn’t take advantage of
-Polars optimizations.</p>
+<code>tidypolars</code>. While it is possible to convert a Polars
+Data/LazyFrame to an R <code>data.frame</code>, apply functions on it
+and then convert it back to Polars, it is strongly discouraged to do so
+because it doesn’t take advantage of Polars optimizations.</p>
 <p>Indeed, Polars comes with dozens of built-in functions for maths
 (<code>median</code>, <code>var</code>, <code>arccos</code>, …), string
 manipulation (<code>len_chars</code>, <code>starts</code>, …), and
@@ -281,7 +281,73 @@ return a Polars expression:</p>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Could not evaluate an anonymous function in `across()`.</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">ℹ</span> Are you sure the anonymous function returns a Polars expression?</span></span></code></pre></div>
 </div>
+<div class="section level4">
+<h4 id="non-translated-functions">Non-translated functions<a class="anchor" aria-label="anchor" href="#non-translated-functions"></a>
+</h4>
+<p>When a function provided in base R or in another package cannot be
+translated, <code>tidypolars</code> usually throws an error (it’s not
+necessary to understand what <code><a href="https://rdrr.io/r/base/agrep.html" class="external-link">agrep()</a></code> does here, you should
+only know that it is not translated by <code>tidypolars</code>):</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span>a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"e"</span>, <span class="st">"f"</span><span class="op">)</span>, foo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dat</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">foo</span> <span class="op">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/agrep.html" class="external-link">agrep</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="va">a</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `filter()`:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> `tidypolars` doesn't know how to translate this function: `agrep()`.</span></span></code></pre></div>
+<p>This is because <code>foo &gt;= agrep("a", a)</code> uses the values
+from the columns <code>a</code> and <code>foo</code>, which are stored
+in the <code>polars</code> DataFrame. Therefore, <code>polars</code>
+needs a translation of <code><a href="https://rdrr.io/r/base/agrep.html" class="external-link">agrep()</a></code>, which doesn’t exist.</p>
+<p>Now, let’s assume that we have this data instead:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span>foo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"e"</span>, <span class="st">"f"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dat</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">foo</span> <span class="op">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/agrep.html" class="external-link">agrep</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="va">a</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; shape: (1, 1)</span></span>
+<span><span class="co">#&gt; ┌─────┐</span></span>
+<span><span class="co">#&gt; │ foo │</span></span>
+<span><span class="co">#&gt; │ --- │</span></span>
+<span><span class="co">#&gt; │ f64 │</span></span>
+<span><span class="co">#&gt; ╞═════╡</span></span>
+<span><span class="co">#&gt; │ 2.0 │</span></span>
+<span><span class="co">#&gt; └─────┘</span></span></code></pre></div>
+<p>Starting from <code>tidypolars</code> 0.14.0, this doesn’t error
+anymore. Why is that? The reason is that while
+<code>foo &gt;= agrep("a", a)</code> uses a column from the data
+(<code>foo</code>), <code>agrep("a", a)</code> no longer does since
+<code>a</code> is an object in the environment and not in the data
+anymore. Therefore, we can evaluate <code>agrep("a", a)</code> first and
+then use its result when evaluating
+<code>foo &gt;= agrep("a", a)</code>.</p>
+<p>More generally, <code>tidypolars</code> checks whether a function
+uses columns from the data and skips the translation part if it doesn’t,
+allowing us to use more functions than what is translated by
+<code>tidypolars</code> (only if they don’t use columns as inputs).</p>
+<p>Note that expressions that don’t use the data are evaluated before
+running <code>polars</code> in the background so they don’t benefit from
+<code>polars</code> parallel evaluation for instance.</p>
 </div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="a-note-on-performance">A note on performance<a class="anchor" aria-label="anchor" href="#a-note-on-performance"></a>
+</h2>
+<p>As we saw above, a large part of the work of <code>tidypolars</code>
+is to translate existing R code to its <code>polars</code> equivalent.
+This takes some time, especially when translating R expressions used in
+<code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code> or <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code> for instance, and it
+might be noticeable if you run <code>tidypolars</code> many times on
+small datasets.</p>
+<p>This translation process takes more time as the number of expressions
+increases but it doesn’t depend on the size of the data. In other words,
+translating the code from R to <code>polars</code> takes about the same
+time when applied on a dataset of 1M or 10M observations. Therefore,
+this drawback should become less and less noticeable as the size of the
+dataset increases since most of the time will then be taken by the
+actual computation performed by <code>polars</code>.</p>
 <div class="section level3">
 <h3 id="list-of-base-r-and-tidyverse-functions-supported-by-tidypolars">List of base R and <code>tidyverse</code> functions supported by
 <code>tidypolars</code><a class="anchor" aria-label="anchor" href="#list-of-base-r-and-tidyverse-functions-supported-by-tidypolars"></a>
