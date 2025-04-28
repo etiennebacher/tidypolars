@@ -26,6 +26,14 @@ test_that("non-translated functions do not error if they don't use data context"
       )
   )
 
+  # also works with "pkg::" prefix
+  expect_equal(
+    test |>
+      mutate(x = base::agrep("a", "b")),
+    test_df |>
+      mutate(x = base::agrep("a", "b"))
+  )
+
   # column in parts of the expression
   expect_equal(
     test |>

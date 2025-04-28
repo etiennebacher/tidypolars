@@ -72,10 +72,8 @@ translate_dots <- function(.data, ..., env, caller) {
   })
   out <- unlist(out, recursive = FALSE, use.names = TRUE)
   out <- reorder_exprs(out)
-
   out
 }
-
 
 #' Translate an expression
 #'
@@ -257,11 +255,8 @@ translate <- function(
     expr_uses_col[["counter"]] + 1,
     envir = expr_uses_col
   )
-  assign(
-    paste0("id", expr_uses_col[["counter"]]),
-    FALSE,
-    envir = expr_uses_col
-  )
+  latest_expr_id <- paste0("id", expr_uses_col[["counter"]])
+  assign(latest_expr_id, FALSE, envir = expr_uses_col)
 
   switch(
     typeof(expr),
@@ -280,14 +275,7 @@ translate <- function(
     symbol = {
       expr_char <- as.character(expr)
       if (expr_char %in% names_data || expr_char %in% unlist(new_vars)) {
-        assign(
-          paste0(
-            "id",
-            expr_uses_col[["counter"]]
-          ),
-          TRUE,
-          envir = expr_uses_col
-        )
+        assign(latest_expr_id, TRUE, envir = expr_uses_col)
         pl$col(expr_char)
       } else {
         val <- eval_tidy(expr, env = caller)
@@ -301,25 +289,12 @@ translate <- function(
         expr[[1]]
       }
       name <- as.character(expr2)
-      name2 <- name
       if (length(name) == 3 && name[[1]] == "::") {
-        new_fn_name <- paste0(name[[2]], "::", name[[3]])
-        # expr[[1]] <- new_fn_name
-        # out <- translate(
-        #   expr,
-        #   .data = .data,
-        #   new_vars = new_vars,
-        #   env = env,
-        #   caller = caller,
-        #   call_is_function = call_is_function,
-        #   expr_uses_col = expr_uses_col
-        # )
-        # return(out)
-        name2 <- new_fn_name
+        name <- paste0(name[[2]], "::", name[[3]])
       }
 
       switch(
-        name2,
+        name,
         "[" = {
           out <- tryCatch(
             eval_tidy(expr, env = caller),
@@ -348,14 +323,7 @@ translate <- function(
         "[[" = {
           first_term <- expr[[2]]
           if (first_term == ".data") {
-            assign(
-              paste0(
-                "id",
-                expr_uses_col[["counter"]]
-              ),
-              TRUE,
-              envir = expr_uses_col
-            )
+            assign(latest_expr_id, TRUE, envir = expr_uses_col)
             out <- pl$col(expr[[3]])
           } else if (first_term == ".env") {
             out <- tryCatch(
@@ -391,14 +359,7 @@ translate <- function(
           }
 
           if (first_term == ".data") {
-            assign(
-              paste0(
-                "id",
-                expr_uses_col[["counter"]]
-              ),
-              TRUE,
-              envir = expr_uses_col
-            )
+            assign(latest_expr_id, TRUE, envir = expr_uses_col)
             dep <- rlang::as_string(expr[[3]])
             out <- pl$col(dep)
           } else if (first_term == ".env") {
@@ -631,8 +592,10 @@ translate <- function(
 
       # Evaluate arguments early on because we need to know if the expression
       # contains columns or not.
-      # Do not go through this step when we have anonymous functions in
-      # across().
+      # Do not go through this step when:
+      # - the function is already translated (allows us to not loop through
+      #   all elements, which is expensive)
+      # - we have anonymous functions in across()
       obj_name <- quo_name(expr)
       if (
         !is_known &&
@@ -650,12 +613,7 @@ translate <- function(
           expr_uses_col = expr_uses_col
         )
 
-        if (
-          isFALSE(expr_uses_col[[paste0(
-            "id",
-            expr_uses_col[["counter"]]
-          )]])
-        ) {
+        if (isFALSE(expr_uses_col[[latest_expr_id]])) {
           # Some expressions do not work when called outside of data, e.g. n()
           # must be called only in summarize(), etc.
           out <- try(eval_bare(expr, env = caller), silent = TRUE)
