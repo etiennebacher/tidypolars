@@ -222,7 +222,7 @@ pl_between_dplyr <- function(x, left, right, ...) {
 
 pl_case_match <- function(x, ..., .data) {
   env <- env_from_dots(...)
-  env_id <- env_id_from_dots(...)
+  expr_contains_col <- expr_contains_col_from_dots(...)
   new_vars <- new_vars_from_dots(...)
   caller <- caller_from_dots(...)
   dots <- clean_dots(...)
@@ -242,7 +242,7 @@ pl_case_match <- function(x, ..., .data) {
         new_vars = new_vars,
         env = env,
         caller = caller,
-        env_id = env_id
+        expr_contains_col = expr_contains_col
       )
       out <- out$otherwise(otw)
       next
@@ -253,7 +253,7 @@ pl_case_match <- function(x, ..., .data) {
       new_vars = new_vars,
       env = env,
       caller = caller,
-      env_id = env_id
+      expr_contains_col = expr_contains_col
     )
     rhs <- translate_expr(
       .data,
@@ -261,7 +261,7 @@ pl_case_match <- function(x, ..., .data) {
       new_vars = new_vars,
       env = env,
       caller = caller,
-      env_id = env_id
+      expr_contains_col = expr_contains_col
     )
     if (is.null(out)) {
       out <- polars::pl$when(x$is_in(lhs))$then(rhs)
@@ -275,7 +275,7 @@ pl_case_match <- function(x, ..., .data) {
 
 pl_case_when <- function(..., .data) {
   env <- env_from_dots(...)
-  env_id <- env_id_from_dots(...)
+  expr_contains_col <- expr_contains_col_from_dots(...)
   new_vars <- new_vars_from_dots(...)
   caller <- caller_from_dots(...)
   dots <- clean_dots(...)
@@ -293,7 +293,7 @@ pl_case_when <- function(..., .data) {
         new_vars = new_vars,
         env = env,
         caller = caller,
-        env_id = env_id
+        expr_contains_col = expr_contains_col
       )
       out <- out$otherwise(otw)
       next
@@ -304,7 +304,7 @@ pl_case_when <- function(..., .data) {
       new_vars = new_vars,
       env = env,
       caller = caller,
-      env_id = env_id
+      expr_contains_col = expr_contains_col
     )
     rhs <- translate_expr(
       .data,
@@ -312,7 +312,7 @@ pl_case_when <- function(..., .data) {
       new_vars = new_vars,
       env = env,
       caller = caller,
-      env_id = env_id
+      expr_contains_col = expr_contains_col
     )
 
     if (is.null(out)) {
@@ -410,7 +410,7 @@ pl_first_dplyr <- function(x, ...) {
 pl_ifelse <- function(cond, yes, no, .data, ...) {
   check_empty_dots(...)
   env <- env_from_dots(...)
-  env_id <- env_id_from_dots(...)
+  expr_contains_col <- expr_contains_col_from_dots(...)
   new_vars <- new_vars_from_dots(...)
   caller <- caller_from_dots(...)
 
@@ -420,7 +420,7 @@ pl_ifelse <- function(cond, yes, no, .data, ...) {
     new_vars = new_vars,
     env = env,
     caller = caller,
-    env_id = env_id
+    expr_contains_col = expr_contains_col
   )
   yes <- translate_expr(
     .data,
@@ -428,7 +428,7 @@ pl_ifelse <- function(cond, yes, no, .data, ...) {
     new_vars = new_vars,
     env = env,
     caller = caller,
-    env_id = env_id
+    expr_contains_col = expr_contains_col
   )
   no <- translate_expr(
     .data,
@@ -436,7 +436,7 @@ pl_ifelse <- function(cond, yes, no, .data, ...) {
     new_vars = new_vars,
     env = env,
     caller = caller,
-    env_id = env_id
+    expr_contains_col = expr_contains_col
   )
   pl$when(cond)$then(yes)$otherwise(no)
 }

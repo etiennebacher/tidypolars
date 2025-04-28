@@ -1,5 +1,3 @@
-expression_contains_column <- new.env()
-
 #' Translate all expressions in `...`
 #'
 #' This is the first out of 3 steps. Here, we convert each expression passed in
@@ -74,6 +72,7 @@ translate_dots <- function(.data, ..., env, caller) {
   })
   out <- unlist(out, recursive = FALSE, use.names = TRUE)
   out <- reorder_exprs(out)
+
   out
 }
 
@@ -107,8 +106,14 @@ translate_expr <- function(
   new_vars = NULL,
   env,
   caller = rlang::caller_env(2),
-  env_id = NULL
+  expr_contains_col = NULL
 ) {
+  if (is.null(expr_contains_col)) {
+    expr_contains_col <- new.env()
+    assign("id", FALSE, envir = expr_contains_col)
+    assign("counter", 0, envir = expr_contains_col)
+  }
+
   if (!is_quosure(quo)) {
     quo <- enquo(quo)
   }
@@ -145,7 +150,7 @@ translate_expr <- function(
       env = env,
       caller = caller,
       call_is_function = call_is_function,
-      env_id = env_id
+      expr_contains_col = expr_contains_col
     )
   } else {
     translate(
@@ -155,7 +160,7 @@ translate_expr <- function(
       env = env,
       caller = caller,
       call_is_function = call_is_function,
-      env_id = env_id
+      expr_contains_col = expr_contains_col
     )
   }
 }
@@ -190,7 +195,7 @@ translate <- function(
   env,
   caller = NULL,
   call_is_function = NULL,
-  env_id
+  expr_contains_col
 ) {
   names_data <- names(.data)
 
@@ -207,8 +212,16 @@ translate <- function(
     expr <- enquo(foo)
   }
 
-  env_id <- paste0("expr_", hash(expr))
-  expression_contains_column[[env_id]] <- FALSE
+  assign(
+    "counter",
+    expr_contains_col[["counter"]] + 1,
+    envir = expr_contains_col
+  )
+  assign(
+    paste0("id", expr_contains_col[["counter"]]),
+    FALSE,
+    envir = expr_contains_col
+  )
 
   switch(
     typeof(expr),
@@ -227,7 +240,14 @@ translate <- function(
     symbol = {
       expr_char <- as.character(expr)
       if (expr_char %in% names_data || expr_char %in% unlist(new_vars)) {
-        assign(env_id, TRUE, envir = expression_contains_column)
+        assign(
+          paste0(
+            "id",
+            expr_contains_col[["counter"]]
+          ),
+          TRUE,
+          envir = expr_contains_col
+        )
         pl$col(expr_char)
       } else {
         val <- eval_tidy(expr, env = caller)
@@ -252,7 +272,7 @@ translate <- function(
         #   env = env,
         #   caller = caller,
         #   call_is_function = call_is_function,
-        #   env_id = env_id
+        #   expr_contains_col = expr_contains_col
         # )
         # return(out)
         name2 <- new_fn_name
@@ -274,7 +294,7 @@ translate <- function(
             env = env,
             caller = caller,
             call_is_function = call_is_function,
-            env_id = env_id
+            expr_contains_col = expr_contains_col
           )
           return(out)
         },
@@ -288,7 +308,14 @@ translate <- function(
         "[[" = {
           first_term <- expr[[2]]
           if (first_term == ".data") {
-            assign(env_id, TRUE, envir = expression_contains_column)
+            assign(
+              paste0(
+                "id",
+                expr_contains_col[["counter"]]
+              ),
+              TRUE,
+              envir = expr_contains_col
+            )
             out <- pl$col(expr[[3]])
           } else if (first_term == ".env") {
             out <- tryCatch(
@@ -311,7 +338,7 @@ translate <- function(
               env = env,
               caller = caller,
               call_is_function = call_is_function,
-              env_id = env_id
+              expr_contains_col = expr_contains_col
             )
           }
           return(out)
@@ -324,7 +351,14 @@ translate <- function(
           }
 
           if (first_term == ".data") {
-            assign(env_id, TRUE, envir = expression_contains_column)
+            assign(
+              paste0(
+                "id",
+                expr_contains_col[["counter"]]
+              ),
+              TRUE,
+              envir = expr_contains_col
+            )
             dep <- rlang::as_string(expr[[3]])
             out <- pl$col(dep)
           } else if (first_term == ".env") {
@@ -348,7 +382,7 @@ translate <- function(
               env = env,
               caller = caller,
               call_is_function = call_is_function,
-              env_id = env_id
+              expr_contains_col = expr_contains_col
             )
           }
           return(out)
@@ -362,7 +396,7 @@ translate <- function(
               env = env,
               caller = caller,
               call_is_function = call_is_function,
-              env_id = env_id
+              expr_contains_col = expr_contains_col
             )
           )
         },
@@ -374,7 +408,7 @@ translate <- function(
           args[["__tidypolars__new_vars"]] <- as.list(new_vars)
           args[["__tidypolars__env"]] <- env
           args[["__tidypolars__caller"]] <- caller
-          args[["__tidypolars__env_id"]] <- env_id
+          args[["__tidypolars__expr_contains_col"]] <- expr_contains_col
           return(do.call(pl_case_match, args))
         },
         "case_when" = {
@@ -383,7 +417,7 @@ translate <- function(
           args[["__tidypolars__new_vars"]] <- as.list(new_vars)
           args[["__tidypolars__env"]] <- env
           args[["__tidypolars__caller"]] <- caller
-          args[["__tidypolars__env_id"]] <- env_id
+          args[["__tidypolars__expr_contains_col"]] <- expr_contains_col
           return(do.call(pl_case_when, args))
         },
         "c" = {
@@ -403,7 +437,7 @@ translate <- function(
                 env = env,
                 caller = caller,
                 call_is_function = call_is_function,
-                env_id = env_id
+                expr_contains_col = expr_contains_col
               )
             )
           }
@@ -437,7 +471,7 @@ translate <- function(
                 env = env,
                 caller = caller,
                 call_is_function = call_is_function,
-                env_id = env_id
+                expr_contains_col = expr_contains_col
               )
               rhs <- translate(
                 expr[[3]],
@@ -446,7 +480,7 @@ translate <- function(
                 env = env,
                 caller = caller,
                 call_is_function = call_is_function,
-                env_id = env_id
+                expr_contains_col = expr_contains_col
               )
               if (is.list(rhs)) {
                 rhs <- unlist(rhs)
@@ -464,7 +498,7 @@ translate <- function(
           args[["__tidypolars__new_vars"]] <- as.list(new_vars)
           args[["__tidypolars__env"]] <- env
           args[["__tidypolars__caller"]] <- caller
-          args[["__tidypolars__env_id"]] <- env_id
+          args[["__tidypolars__expr_contains_col"]] <- expr_contains_col
           return(do.call(pl_ifelse, args))
         },
         "is.na" = {
@@ -477,7 +511,7 @@ translate <- function(
                 env = env,
                 caller = caller,
                 call_is_function = call_is_function,
-                env_id = env_id
+                expr_contains_col = expr_contains_col
               )
               inside$is_null()
             },
@@ -495,7 +529,7 @@ translate <- function(
                 env = env,
                 caller = caller,
                 call_is_function = call_is_function,
-                env_id = env_id
+                expr_contains_col = expr_contains_col
               )
               inside$is_nan()
             },
@@ -573,10 +607,15 @@ translate <- function(
           env = env,
           caller = caller,
           call_is_function = call_is_function,
-          env_id = env_id
+          expr_contains_col = expr_contains_col
         )
 
-        if (isFALSE(expression_contains_column[[env_id]])) {
+        if (
+          isFALSE(expr_contains_col[[paste0(
+            "id",
+            expr_contains_col[["counter"]]
+          )]])
+        ) {
           # Some expressions do not work when called outside of data, e.g. n()
           # must be called only in summarize(), etc.
           out <- try(eval_bare(expr, env = caller), silent = TRUE)
@@ -602,7 +641,7 @@ translate <- function(
             new_vars = new_vars,
             caller = caller,
             call_is_function = call_is_function,
-            env_id = env_id
+            expr_contains_col = expr_contains_col
           )
 
           suppressWarnings({
@@ -647,7 +686,7 @@ translate <- function(
         env = env,
         caller = caller,
         call_is_function = call_is_function,
-        env_id = env_id
+        expr_contains_col = expr_contains_col
       )
 
       tryCatch(
@@ -659,7 +698,7 @@ translate <- function(
             if ("..." %in% accepted_args) {
               args[["__tidypolars__new_vars"]] <- as.list(new_vars)
               args[["__tidypolars__env"]] <- env
-              args[["__tidypolars__env_id"]] <- env_id
+              args[["__tidypolars__expr_contains_col"]] <- expr_contains_col
             }
             do.call(name, args)
           }
@@ -715,7 +754,7 @@ check_empty_dots <- function(...) {
   env <- dots[["__tidypolars__env"]]
   dots[["__tidypolars__new_vars"]] <- NULL
   dots[["__tidypolars__env"]] <- NULL
-  dots[["__tidypolars__env_id"]] <- NULL
+  dots[["__tidypolars__expr_contains_col"]] <- NULL
   dots[["__tidypolars__caller"]] <- NULL
 
   if (length(dots) == 0) {
@@ -764,7 +803,7 @@ clean_dots <- function(...) {
   dots <- get_dots(...)
   dots[["__tidypolars__new_vars"]] <- NULL
   dots[["__tidypolars__env"]] <- NULL
-  dots[["__tidypolars__env_id"]] <- NULL
+  dots[["__tidypolars__expr_contains_col"]] <- NULL
   dots[["__tidypolars__caller"]] <- NULL
   caller_call <- deparse(rlang::caller_call()[[1]])
   called_from_pl_paste <- length(caller_call) == 1 &&
@@ -794,9 +833,14 @@ env_from_dots <- function(...) {
   dots[["__tidypolars__env"]]
 }
 
-env_id_from_dots <- function(...) {
+expr_contains_col_from_dots <- function(...) {
   dots <- get_dots(...)
-  dots[["__tidypolars__env_id"]]
+  dots[["__tidypolars__expr_contains_col"]]
+}
+
+expr_contains_col_from_dots <- function(...) {
+  dots <- get_dots(...)
+  dots[["__tidypolars__expr_contains_col"]]
 }
 
 caller_from_dots <- function(...) {
@@ -959,7 +1003,7 @@ check_rowwise_dots <- function(...) {
   is_rowwise <- dots[["__tidypolars__env"]]$is_rowwise
   dots[["__tidypolars__new_vars"]] <- NULL
   dots[["__tidypolars__env"]] <- NULL
-  dots[["__tidypolars__env_id"]] <- NULL
+  dots[["__tidypolars__expr_contains_col"]] <- NULL
   dots[["__tidypolars__caller"]] <- NULL
   dots <- unlist(dots)
   if (isTRUE(is_rowwise)) {
