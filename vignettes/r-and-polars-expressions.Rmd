@@ -33,10 +33,10 @@ mtcars |>
   summarize(x = mean(qsec) / sd(qsec))
 ```
 
-This is very convenient but creates a challenge for `tidypolars`. Indeed, while
-it is possible to pass R functions directly to a Polars Data/LazyFrame, it is
-**strongly discouraged** to do so because it doesn't take advantage of Polars
-optimizations.
+This is very convenient but creates a challenge for `tidypolars`. While
+it is possible to convert a Polars Data/LazyFrame to an R `data.frame`, apply
+functions on it and then convert it back to Polars, it is strongly discouraged
+to do so because it doesn't take advantage of Polars optimizations.
 
 Indeed, Polars comes with dozens of built-in functions for maths (`median`,
 `var`, `arccos`, ...), string manipulation (`len_chars`, `starts`, ...), and date-time
@@ -181,6 +181,63 @@ mtcars |>
     )
   )
 ```
+
+#### Non-translated functions
+
+When a function provided in base R or in another package cannot be translated,
+`tidypolars` usually throws an error (it's not necessary to understand what
+`agrep()` does here, you should only know that it is not translated by
+`tidypolars`):
+
+```{r, error = TRUE}
+dat <- pl$DataFrame(a = c("d", "e", "f"), foo = c(2, 1, 2))
+
+dat |>
+  filter(foo >= agrep("a", a))
+```
+
+This is because `foo >= agrep("a", a)` uses the values from the columns `a` and
+`foo`, which are stored in the `polars` DataFrame. Therefore, `polars` needs a
+translation of `agrep()`, which doesn't exist.
+
+Now, let's assume that we have this data instead:
+
+```{r}
+dat <- pl$DataFrame(foo = c(2, 1, 2))
+a <- c("d", "e", "f")
+
+dat |>
+  filter(foo >= agrep("a", a))
+```
+
+Starting from `tidypolars` 0.14.0, this doesn't error anymore. Why is that? The
+reason is that while `foo >= agrep("a", a)` uses a column from the data (`foo`),
+`agrep("a", a)` no longer does since `a` is an object in the environment and not
+in the data anymore. Therefore, we can evaluate `agrep("a", a)` first and then use
+its result when evaluating `foo >= agrep("a", a)`.
+
+More generally, `tidypolars` checks whether a function uses columns from the
+data and skips the translation part if it doesn't, allowing us to use more
+functions than what is translated by `tidypolars` (only if they don't use
+columns as inputs).
+
+Note that expressions that don't use the data are evaluated before running
+`polars` in the background so they don't benefit from `polars` parallel
+evaluation for instance.
+
+## A note on performance
+
+As we saw above, a large part of the work of `tidypolars` is to translate
+existing R code to its `polars` equivalent. This takes some time, especially
+when translating R expressions used in `mutate()` or `filter()` for instance,
+and it might be noticeable if you run `tidypolars` many times on small datasets.
+
+This translation process takes more time as the number of expressions increases
+but it doesn't depend on the size of the data. In other words, translating the
+code from R to `polars` takes about the same time when applied on a dataset of
+1M or 10M observations. Therefore, this drawback should become less and less
+noticeable as the size of the dataset increases since most of the time will then
+be taken by the actual computation performed by `polars`.
 
 
 ### List of base R and `tidyverse` functions supported by `tidypolars`
