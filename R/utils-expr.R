@@ -96,6 +96,30 @@ translate_dots <- function(.data, ..., env, caller) {
 #' @param env Environment of the function from which this expression is called
 #' (`filter()`, `mutate()` or `summarize()`).
 #' @param caller User environment in which the function is called.
+#' @param expr_uses_col An environment that contains an id corresponding to the
+#' expression being translated. This is used to determine whether an expression
+#' (that can be part of a larger expression) uses a column from the data or
+#' not. If it doesn't, then we can evaluate this expression in the caller
+#' environment and not in the data context, meaning that it doesn't require
+#' the functions to be translated.
+#'
+#' Example:
+#' ```
+#' df <- pl$DataFrame(x = 1:3)
+#' a <- 4:6
+#' mutate(df, x = my_fun(a))
+#' ```
+#'
+#' `my_fun()` is not translated to polars, but we also see that `my_fun(a)`
+#' doesn't use any columns from the data, so it can be evaluated in the calling
+#' env and we can use the result after wrapping it in `pl$lit()`.
+#'
+#' If we changed the code to:
+#' ```
+#' mutate(df, a = 1, x = my_fun(a))
+#' ```
+#' then `my_fun(a)` would now use a column and this would error with
+#' "tidypolars doesn't how to translate `my_fun()`".
 #'
 #' @return A full polars expression
 #' @noRd
@@ -212,6 +236,22 @@ translate <- function(
     expr <- enquo(foo)
   }
 
+  # Passing `expr_uses_col` is not enough because even if the top expression
+  # uses a col, subexpressions don't necessarily.
+  #
+  # Example:
+  # ```
+  # dat <- pl$DataFrame(foo = 1:3)
+  # a <- c("d", "e", "f")
+  # dat |> filter(foo >= agrep("a", a))
+  # ```
+  #
+  # `foo >= agrep("a", a)` uses the column `foo` but `agrep("a", a)` doesn't
+  # use any column so we could evaluate it in the calling env.
+  #
+  # => we want to update the environment by adding an extra id and use this
+  #    latest id when checking whether a (sub)expression contains a column or
+  #    not.
   assign(
     "counter",
     expr_uses_col[["counter"]] + 1,
