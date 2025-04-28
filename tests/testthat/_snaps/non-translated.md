@@ -30,3 +30,27 @@
       Error in `mutate()`:
       ! `tidypolars` doesn't know how to translate this function: `agrep()`.
 
+# correct behavior with nested functions
+
+    Code
+      mutate(test, a = "a", x = identity(agrep("a", a)))
+    Condition
+      Error in `mutate()`:
+      ! `tidypolars` doesn't know how to translate this function: `agrep()`.
+
+---
+
+    Code
+      mutate(test, a = "a", x = mean(agrep("a", a)))
+    Condition
+      Error in `mutate()`:
+      ! `tidypolars` doesn't know how to translate this function: `agrep()`.
+
+---
+
+    Code
+      mutate(test, a = 1, x = agrep("a", mean(a)))
+    Condition
+      Error in `mutate()`:
+      ! `tidypolars` doesn't know how to translate this function: `agrep()`.
+
