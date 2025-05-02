@@ -166,4 +166,18 @@ test_that("argument .groups works", {
   )
 })
 
+
+test_that("empty expressions", {
+  test <- pl$LazyFrame(grp = 1:2, x = 1:2)
+  test_df <- data.frame(grp = 1:2, x = 1:2)
+  expect_equal_lazy(
+    test |> summarize() |> ncol(),
+    0
+  )
+  expect_equal_lazy(
+    test |> summarize(.by = grp) |> arrange(grp),
+    test_df |> summarize(.by = grp)
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
