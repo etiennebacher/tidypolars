@@ -42,6 +42,8 @@
   expression can't benefit from `polars` parallel evaluation for instance.
   Thanks @mgacc0 for the suggestion.
 
+* Add support for `as.Date()` for character columns (#190).
+
 # tidypolars 0.13.0
 
 ## New features
