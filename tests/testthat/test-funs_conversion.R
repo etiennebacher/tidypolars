@@ -74,4 +74,11 @@ test_that("as.Date() works for character columns", {
     mutate(test, a = as.Date(a)),
     "expected `String`"
   )
+
+  test <- pl$DataFrame(a = as.Date("2020-01-01"))
+  test_df <- as.data.frame(test)
+  expect_equal(
+    test |> filter(a >= as.Date("2020-01-01")),
+    test_df |> filter(a >= as.Date("2020-01-01"))
+  )
 })

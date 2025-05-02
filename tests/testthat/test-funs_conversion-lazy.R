@@ -78,6 +78,13 @@ test_that("as.Date() works for character columns", {
     mutate(test, a = as.Date(a)),
     "expected `String`"
   )
+
+  test <- pl$LazyFrame(a = as.Date("2020-01-01"))
+  test_df <- as.data.frame(test)
+  expect_equal_lazy(
+    test |> filter(a >= as.Date("2020-01-01")),
+    test_df |> filter(a >= as.Date("2020-01-01"))
+  )
 })
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
