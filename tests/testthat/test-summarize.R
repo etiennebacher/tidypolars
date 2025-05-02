@@ -161,3 +161,17 @@ test_that("argument .groups works", {
     character(0)
   )
 })
+
+
+test_that("empty expressions", {
+  test <- pl$DataFrame(grp = 1:2, x = 1:2)
+  test_df <- data.frame(grp = 1:2, x = 1:2)
+  expect_equal(
+    test |> summarize() |> ncol(),
+    0
+  )
+  expect_equal(
+    test |> summarize(.by = grp) |> arrange(grp),
+    test_df |> summarize(.by = grp)
+  )
+})

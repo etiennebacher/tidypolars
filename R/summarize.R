@@ -61,6 +61,18 @@ summarize.RPolarsDataFrame <- function(
     caller = rlang::caller_env()
   )
 
+  if (length(polars_exprs) == 0) {
+    if (!is_grouped) {
+      if (is_polars_df(.data)) {
+        return(pl$DataFrame())
+      } else if (is_polars_lf(.data)) {
+        return(pl$LazyFrame())
+      }
+    } else {
+      return(.data$group_by(grps, maintain_order = mo)$agg())
+    }
+  }
+
   for (i in seq_along(polars_exprs)) {
     sub <- polars_exprs[[i]]
     to_drop <- names(empty_elems(sub))

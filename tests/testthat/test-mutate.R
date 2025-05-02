@@ -419,3 +419,16 @@ test_that("works with external data.frame/list elements", {
     c(TRUE, TRUE, FALSE)
   )
 })
+
+test_that("empty expressions", {
+  test <- pl$DataFrame(grp = 1, x = 1)
+  test_df <- data.frame(grp = 1, x = 1)
+  expect_equal(
+    test |> mutate(),
+    test_df |> mutate()
+  )
+  expect_equal(
+    test |> mutate(.by = grp),
+    test_df |> mutate(.by = grp)
+  )
+})

@@ -29,6 +29,9 @@
 
 translate_dots <- function(.data, ..., env, caller) {
   dots <- enquos(...)
+  if (length(dots) == 0) {
+    return()
+  }
   dots <- lapply(dots, quo_squash)
   new_vars <- c()
   called_from_arrange <- attr(.data, "called_from_arrange") %||% FALSE

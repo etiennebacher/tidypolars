@@ -424,4 +424,17 @@ test_that("works with external data.frame/list elements", {
   )
 })
 
+test_that("empty expressions", {
+  test <- pl$LazyFrame(grp = 1, x = 1)
+  test_df <- data.frame(grp = 1, x = 1)
+  expect_equal_lazy(
+    test |> mutate(),
+    test_df |> mutate()
+  )
+  expect_equal_lazy(
+    test |> mutate(.by = grp),
+    test_df |> mutate(.by = grp)
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
