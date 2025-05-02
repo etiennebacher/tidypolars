@@ -32,3 +32,53 @@ test_that("basic behavior works", {
     c("true", "false", "true")
   )
 })
+
+test_that("as.Date() works for character columns", {
+  test <- pl$DataFrame(a = "2020-01-01")
+  test_df <- as.data.frame(test)
+  expect_equal(
+    mutate(test, a = as.Date(a)),
+    mutate(test_df, a = as.Date(a))
+  )
+
+  test <- pl$DataFrame(a = c("2020-01-01", "abc"))
+  test_df <- as.data.frame(test)
+  expect_equal(
+    mutate(test, a = as.Date(a)),
+    mutate(test_df, a = as.Date(a))
+  )
+  expect_equal(
+    mutate(test, a = as.Date(a, format = "%Y-%m-%d")),
+    mutate(test_df, a = as.Date(a, format = "%Y-%m-%d"))
+  )
+
+  expect_snapshot(
+    mutate(
+      test,
+      a = as.Date(a, format = c("%Y-%m-%d", "%Y-%m-%d", "%Y-%m-%d"))
+    ),
+    error = TRUE
+  )
+  expect_snapshot(
+    mutate(
+      test,
+      a = as.Date(a, tryFormats = c("%Y-%m-%d", "%Y-%m-%d", "%Y-%m-%d"))
+    )
+  )
+  expect_snapshot(
+    mutate(test, a = as.Date(a, optional = TRUE))
+  )
+
+  test <- pl$DataFrame(a = 1)
+  expect_error(
+    mutate(test, a = as.Date(a)),
+    "expected `String`"
+  )
+
+  test <- pl$DataFrame(a = as.Date("2020-01-01"))
+  test_df <- as.data.frame(test)
+  expect_equal(
+    test |> filter(a >= as.Date("2020-01-01")),
+    test_df |> filter(a >= as.Date("2020-01-01"))
+  )
+})

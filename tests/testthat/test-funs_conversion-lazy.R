@@ -37,4 +37,54 @@ test_that("basic behavior works", {
   )
 })
 
+test_that("as.Date() works for character columns", {
+  test <- pl$LazyFrame(a = "2020-01-01")
+  test_df <- as.data.frame(test)
+  expect_equal_lazy(
+    mutate(test, a = as.Date(a)),
+    mutate(test_df, a = as.Date(a))
+  )
+
+  test <- pl$LazyFrame(a = c("2020-01-01", "abc"))
+  test_df <- as.data.frame(test)
+  expect_equal_lazy(
+    mutate(test, a = as.Date(a)),
+    mutate(test_df, a = as.Date(a))
+  )
+  expect_equal_lazy(
+    mutate(test, a = as.Date(a, format = "%Y-%m-%d")),
+    mutate(test_df, a = as.Date(a, format = "%Y-%m-%d"))
+  )
+
+  expect_snapshot_lazy(
+    mutate(
+      test,
+      a = as.Date(a, format = c("%Y-%m-%d", "%Y-%m-%d", "%Y-%m-%d"))
+    ),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    mutate(
+      test,
+      a = as.Date(a, tryFormats = c("%Y-%m-%d", "%Y-%m-%d", "%Y-%m-%d"))
+    )
+  )
+  expect_snapshot_lazy(
+    mutate(test, a = as.Date(a, optional = TRUE))
+  )
+
+  test <- pl$LazyFrame(a = 1)
+  expect_error_lazy(
+    mutate(test, a = as.Date(a)),
+    "expected `String`"
+  )
+
+  test <- pl$LazyFrame(a = as.Date("2020-01-01"))
+  test_df <- as.data.frame(test)
+  expect_equal_lazy(
+    test |> filter(a >= as.Date("2020-01-01")),
+    test_df |> filter(a >= as.Date("2020-01-01"))
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
