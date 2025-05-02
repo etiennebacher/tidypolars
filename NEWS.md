@@ -42,7 +42,9 @@
   expression can't benefit from `polars` parallel evaluation for instance.
   Thanks @mgacc0 for the suggestion.
 
-* Add support for `as.Date()` for character columns (#190).## Bug fixes
+* Add support for `as.Date()` for character columns (#190).
+
+## Bug fixes
 
 * Fix behavior of `mutate()` and `summarize()` when they don't contain any
   expression (#191).
