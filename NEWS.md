@@ -48,6 +48,8 @@
 
 * Fix behavior of `mutate()` and `summarize()` when they don't contain any
   expression (#191).
+  
+* Fix error in `count()` when it includes grouping variables (#192).
 
 # tidypolars 0.13.0
 
