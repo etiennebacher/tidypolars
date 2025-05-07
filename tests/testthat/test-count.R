@@ -128,3 +128,34 @@ test_that("message if overwriting variable", {
       pull(n)
   )
 })
+
+test_that("count() on grouping variables", {
+  test <- pl$DataFrame(
+    year = c(1, 1, 2, 2),
+    vals = 1:4
+  ) |>
+    group_by(year) |>
+    count(year)
+
+  expect_equal(
+    test,
+    data.frame(year = c(1, 2), n = c(2L, 2L))
+  )
+  expect_equal(group_vars(test), "year")
+  expect_false(attr(test, "maintain_grp_order"))
+
+  test <- pl$DataFrame(
+    year = c(1, 1, 2, 2),
+    state = c("a", "a", "a", "b"),
+    vals = 1:4
+  ) |>
+    group_by(year, state) |>
+    count(year)
+
+  expect_equal(
+    test,
+    data.frame(year = c(1, 2, 2), state = c("a", "a", "b"), n = c(2L, 1L, 1L))
+  )
+  expect_equal(group_vars(test), c("year", "state"))
+  expect_false(attr(test, "maintain_grp_order"))
+})

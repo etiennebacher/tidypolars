@@ -87,6 +87,8 @@ count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
         pl$len()$alias(name)
       )
     } else {
+      # https://github.com/etiennebacher/tidypolars/issues/193
+      vars <- unique(vars)
       out <- x$group_by(vars, maintain_order = FALSE)$agg(
         pl$len()$alias(name)
       )
