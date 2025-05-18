@@ -1040,7 +1040,7 @@ polars_expr_to_r <- function(x) {
   if (is_polars_expr(x)) {
     is_col <- length(x$meta$root_names()) > 0
     if (!is_col) {
-      x <- x$to_r()
+      x <- pl$select(x)$to_series()$to_r_vector()
     }
   }
   x
