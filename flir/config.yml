@@ -9,6 +9,7 @@ keep:
   - equal_assignment
   - equals_na
   - expect_comparison
+  - expect_identical
   - expect_length
   - expect_named
   - expect_not
@@ -42,12 +43,9 @@ keep:
   - sort
   - stopifnot_all
   - T_and_F_symbol
+  - todo_comment
+  - undesirable_function
   - undesirable_operator
   - unnecessary_nesting
   - unreachable_code
   - which_grepl
-
-exclude:
-  - expect_identical
-  - todo_comment
-  - undesirable_function
