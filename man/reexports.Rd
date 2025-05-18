@@ -5,6 +5,9 @@
 \alias{reexports}
 \alias{as_polars_df}
 \alias{as_polars_lf}
+\alias{is_polars_lf}
+\alias{is_polars_df}
+\alias{is_polars_expr}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -12,6 +15,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{polars}{\code{\link[polars]{as_polars_df}}, \code{\link[polars]{as_polars_lf}}}
+  \item{neopolars}{\code{\link[neopolars]{as_polars_df}}, \code{\link[neopolars]{as_polars_lf}}, \code{\link[neopolars:check_polars]{is_polars_df}}, \code{\link[neopolars:check_polars]{is_polars_expr}}, \code{\link[neopolars:check_polars]{is_polars_lf}}}
 }}
 

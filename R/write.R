@@ -62,7 +62,7 @@ write_csv_polars <- function(
   null_values = "",
   quote_style = "necessary"
 ) {
-  if (!inherits(.data, "RPolarsDataFrame")) {
+  if (!is_polars_df(.data)) {
     rlang::abort("`write_csv_polars()` can only be used on a DataFrame.")
   }
 
@@ -122,7 +122,7 @@ write_parquet_polars <- function(
   partition_by = NULL,
   partition_chunk_size_bytes = 4294967296
 ) {
-  if (!inherits(.data, "RPolarsDataFrame")) {
+  if (!is_polars_df(.data)) {
     rlang::abort("`write_parquet_polars()` can only be used on a DataFrame.")
   }
 
@@ -159,7 +159,7 @@ write_parquet_polars <- function(
 #'
 #' jsonlite::stream_in(file(dest), verbose = FALSE)
 write_ndjson_polars <- function(.data, file) {
-  if (!inherits(.data, "RPolarsDataFrame")) {
+  if (!is_polars_df(.data)) {
     rlang::abort("`write_ndjson_polars()` can only be used on a DataFrame.")
   }
   .data$write_ndjson(file = file)
@@ -189,7 +189,7 @@ write_json_polars <- function(
   pretty = FALSE,
   row_oriented = FALSE
 ) {
-  if (!inherits(.data, "RPolarsDataFrame")) {
+  if (!is_polars_df(.data)) {
     rlang::abort("`write_json_polars()` can only be used on a DataFrame.")
   }
 
@@ -221,7 +221,7 @@ write_ipc_polars <- function(
   ...,
   future = FALSE
 ) {
-  if (!inherits(.data, "RPolarsDataFrame")) {
+  if (!is_polars_df(.data)) {
     rlang::abort("`write_ipc_polars()` can only be used on a DataFrame.")
   }
 

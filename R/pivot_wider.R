@@ -29,11 +29,11 @@
 #'   columns. For example, if you provide a character value to fill numeric
 #'   columns, then all these columns will be converted to character.
 #'
-#' @inheritSection left_join.RPolarsDataFrame Unknown arguments
+#' @inheritSection left_join.polars_data_frame Unknown arguments
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_fish_encounters <- polars::pl$DataFrame(tidyr::fish_encounters)
+#' pl_fish_encounters <- neopolars::pl$DataFrame(tidyr::fish_encounters)
 #'
 #' pl_fish_encounters |>
 #'   pivot_wider(names_from = station, values_from = seen)
@@ -63,7 +63,7 @@
 #'     values_from = production,
 #'     names_glue = "prod_{product}_{country}"
 #'   )
-pivot_wider.RPolarsDataFrame <- function(
+pivot_wider.polars_data_frame <- function(
   data,
   ...,
   id_cols = NULL,
@@ -141,7 +141,7 @@ pivot_wider.RPolarsDataFrame <- function(
   # in polars 0.17.0
   mapping <- as.list(names(new_cols))
   names(mapping) <- unlist(new_cols)
-  new_data <- new_data$rename(mapping)
+  new_data <- new_data$rename(!!!mapping)
 
   if (length(value_vars) > 1) {
     tmp <- paste(value_vars, collapse = "|")
@@ -157,12 +157,12 @@ pivot_wider.RPolarsDataFrame <- function(
     )
     replacements <- as.list(old_names)
     names(replacements) <- new_names
-    new_data <- new_data$rename(replacements)
+    new_data <- new_data$rename(!!!replacements)
   }
 
   out <- if (!is.null(values_fill)) {
     new_data$with_columns(
-      pl$col(unlist(new_cols))$fill_null(values_fill)
+      pl$col(!!!new_cols)$fill_null(values_fill)
     )
   } else {
     new_data

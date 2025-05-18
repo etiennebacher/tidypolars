@@ -227,7 +227,7 @@ pl_case_match <- function(x, ..., .data) {
   caller <- caller_from_dots(...)
   dots <- clean_dots(...)
 
-  x <- polars::pl$col(deparse(substitute(x)))
+  x <- neopolars::pl$col(deparse(substitute(x)))
 
   if (!".default" %in% names(dots)) {
     dots[[length(dots) + 1]] <- c(".default" = NA)
@@ -243,7 +243,8 @@ pl_case_match <- function(x, ..., .data) {
         env = env,
         caller = caller,
         expr_uses_col = expr_uses_col
-      )
+      ) |>
+        as_polars_expr(as_lit = TRUE)
       out <- out$otherwise(otw)
       next
     }
@@ -254,7 +255,8 @@ pl_case_match <- function(x, ..., .data) {
       env = env,
       caller = caller,
       expr_uses_col = expr_uses_col
-    )
+    ) |>
+      as_polars_expr(as_lit = TRUE)
     rhs <- translate_expr(
       .data,
       dots[[y]][[3]],
@@ -262,9 +264,10 @@ pl_case_match <- function(x, ..., .data) {
       env = env,
       caller = caller,
       expr_uses_col = expr_uses_col
-    )
+    ) |>
+      as_polars_expr(as_lit = TRUE)
     if (is.null(out)) {
-      out <- polars::pl$when(x$is_in(lhs))$then(rhs)
+      out <- neopolars::pl$when(x$is_in(lhs))$then(rhs)
     } else {
       out <- out$when(x$is_in(lhs))$then(rhs)
     }
@@ -294,7 +297,8 @@ pl_case_when <- function(..., .data) {
         env = env,
         caller = caller,
         expr_uses_col = expr_uses_col
-      )
+      ) |>
+        as_polars_expr(as_lit = TRUE)
       out <- out$otherwise(otw)
       next
     }
@@ -305,7 +309,8 @@ pl_case_when <- function(..., .data) {
       env = env,
       caller = caller,
       expr_uses_col = expr_uses_col
-    )
+    ) |>
+      as_polars_expr(as_lit = TRUE)
     rhs <- translate_expr(
       .data,
       dots[[y]][[3]],
@@ -313,10 +318,11 @@ pl_case_when <- function(..., .data) {
       env = env,
       caller = caller,
       expr_uses_col = expr_uses_col
-    )
+    ) |>
+      as_polars_expr(as_lit = TRUE)
 
     if (is.null(out)) {
-      out <- polars::pl$when(lhs)$then(rhs)
+      out <- neopolars::pl$when(lhs)$then(rhs)
     } else {
       out <- out$when(lhs)$then(rhs)
     }
@@ -541,7 +547,7 @@ pl_n_dplyr <- function(...) {
 }
 
 pl_na_if_dplyr <- function(x, y) {
-  if (length(y) == 1 && !inherits(y, "RPolarsExpr") && is.na(y)) {
+  if (length(y) == 1 && !is_polars_expr(y) && is.na(y)) {
     pl$when(x$is_null())$then(pl$lit(NA))$otherwise(x)
   } else {
     pl$when(x == y)$then(pl$lit(NA))$otherwise(x)

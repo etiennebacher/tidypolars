@@ -5,7 +5,7 @@
 #' also possible to keep either the first occurrence, the last occurence or
 #' remove all duplicates.
 #'
-#' @inheritParams fill.RPolarsDataFrame
+#' @inheritParams fill.polars_data_frame
 #' @param keep Either "first" (keep the first occurrence of the duplicated row),
 #'  "last" (last occurrence) or "none" (remove all ofccurences of duplicated
 #'  rows).
@@ -15,7 +15,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_test <- polars::pl$DataFrame(
+#' pl_test <- neopolars::pl$DataFrame(
 #'   iso_o = c(rep(c("AA", "AB"), each = 2), "AC", "DC"),
 #'   iso_d = rep(c("BA", "BB", "BC"), each = 2),
 #'   value = c(2, 2, 3, 4, 5, 6)
@@ -27,7 +27,7 @@
 #' duplicated_rows(pl_test)
 #' duplicated_rows(pl_test, iso_o, iso_d)
 
-distinct.RPolarsDataFrame <- function(
+distinct.polars_data_frame <- function(
   .data,
   ...,
   keep = "first",
@@ -43,11 +43,11 @@ distinct.RPolarsDataFrame <- function(
   add_tidypolars_class(out)
 }
 
-#' @rdname distinct.RPolarsDataFrame
+#' @rdname distinct.polars_data_frame
 #' @export
-distinct.RPolarsLazyFrame <- distinct.RPolarsDataFrame
+distinct.polars_lazy_frame <- distinct.polars_data_frame
 
-#' @rdname distinct.RPolarsDataFrame
+#' @rdname distinct.polars_data_frame
 #' @export
 
 duplicated_rows <- function(.data, ...) {

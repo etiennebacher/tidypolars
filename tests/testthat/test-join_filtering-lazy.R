@@ -3,12 +3,12 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior with common column names", {
-  test <- polars::pl$LazyFrame(
+  test <- neopolars::pl$LazyFrame(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- neopolars::pl$LazyFrame(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z2 = c(1, 2, 4)
@@ -37,12 +37,12 @@ test_that("basic behavior with common column names", {
 })
 
 test_that("basic behavior with different column names", {
-  test <- polars::pl$LazyFrame(
+  test <- neopolars::pl$LazyFrame(
     x = c(1, 2, 3),
     y1 = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- neopolars::pl$LazyFrame(
     x = c(1, 2, 4),
     y2 = c(1, 2, 4),
     z2 = c(1, 2, 4)
@@ -68,12 +68,12 @@ test_that("basic behavior with different column names", {
 })
 
 test_that("join_by() with strict equality", {
-  test <- polars::pl$LazyFrame(
+  test <- neopolars::pl$LazyFrame(
     x = c(1, 2, 3),
     y1 = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- neopolars::pl$LazyFrame(
     x = c(1, 2, 4),
     y2 = c(1, 2, 4),
     z2 = c(1, 2, 4)
@@ -99,12 +99,12 @@ test_that("join_by() with strict equality", {
 })
 
 test_that("join_by() doesn't work with inequality", {
-  test <- polars::pl$LazyFrame(
+  test <- neopolars::pl$LazyFrame(
     x = c(1, 2, 3),
     y1 = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- neopolars::pl$LazyFrame(
     x = c(1, 2, 4),
     y2 = c(1, 2, 4),
     z2 = c(1, 2, 4)
@@ -121,12 +121,12 @@ test_that("join_by() doesn't work with inequality", {
 })
 
 test_that("fallback on dplyr error if wrong join_by specification", {
-  test <- polars::pl$LazyFrame(
+  test <- neopolars::pl$LazyFrame(
     x = c(1, 2, 3),
     y1 = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- neopolars::pl$LazyFrame(
     x = c(1, 2, 4),
     y2 = c(1, 2, 4),
     z2 = c(1, 2, 4)
@@ -159,11 +159,11 @@ test_that("argument na_matches works", {
 })
 
 test_that("unsupported args throw warning", {
-  test <- polars::pl$LazyFrame(
+  test <- neopolars::pl$LazyFrame(
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- neopolars::pl$LazyFrame(
     country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )
@@ -181,11 +181,11 @@ test_that("unsupported args throw warning", {
 })
 
 test_that("dots must be empty", {
-  test <- polars::pl$LazyFrame(
+  test <- neopolars::pl$LazyFrame(
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- neopolars::pl$LazyFrame(
     country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )

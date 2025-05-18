@@ -8,7 +8,7 @@
 #'
 #' @param .data A Polars LazyFrame
 #' @param n_rows Number of rows to fetch.
-#' @inheritParams collect.RPolarsLazyFrame
+#' @inheritParams collect.polars_lazy_frame
 #'
 #' @details
 #' The parameter `n_rows` indicates how many rows from the LazyFrame should be
@@ -21,7 +21,7 @@
 #' @export
 #' @seealso [collect()] for applying a lazy query on the full data.
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' dat_lazy <- polars::as_polars_df(iris)$lazy()
+#' dat_lazy <- neopolars::as_polars_df(iris)$lazy()
 #'
 #' # this will return 30 rows
 #' fetch(dat_lazy, 30)
@@ -45,7 +45,7 @@ fetch <- function(
   no_optimization = FALSE,
   streaming = FALSE
 ) {
-  if (!inherits(.data, "RPolarsLazyFrame")) {
+  if (!is_polars_lf(.data)) {
     rlang::abort("`fetch()` can only be used on a LazyFrame.")
   }
   out <- .data$fetch(

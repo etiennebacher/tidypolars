@@ -1,5 +1,5 @@
 test_that("basic behavior works", {
-  pl_test <- polars::as_polars_df(mtcars)
+  pl_test <- neopolars::as_polars_df(mtcars)
 
   expect_is_tidypolars(rename(pl_test, miles_per_gallon = "mpg"))
 
@@ -21,7 +21,7 @@ test_that("basic behavior works", {
 })
 
 test_that("rename_with works with builtin function", {
-  pl_test <- polars::as_polars_df(mtcars)
+  pl_test <- neopolars::as_polars_df(mtcars)
   test <- rename_with(pl_test, toupper, c(mpg, cyl)) |>
     names()
 
@@ -48,7 +48,7 @@ test_that("rename_with works with builtin function", {
 })
 
 test_that("rename_with works with custom function", {
-  pl_test <- polars::as_polars_df(iris)
+  pl_test <- neopolars::as_polars_df(iris)
 
   test <- rename_with(
     pl_test,

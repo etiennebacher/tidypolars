@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  pl_iris <- polars::as_polars_lf(iris)
+  pl_iris <- neopolars::as_polars_lf(iris)
   pl_iris_g <- pl_iris |>
     group_by(Species, maintain_order = TRUE)
 
@@ -47,7 +47,7 @@ test_that("basic behavior works", {
 })
 
 test_that("correctly handles attributes", {
-  pl_mtcars <- polars::as_polars_lf(mtcars)
+  pl_mtcars <- neopolars::as_polars_lf(mtcars)
   pl_mtcars_g <- pl_mtcars |>
     group_by(cyl, am, maintain_order = TRUE)
 
@@ -78,7 +78,7 @@ test_that("correctly handles attributes", {
 })
 
 test_that("works with a local variable defined in a function", {
-  pl_iris <- polars::as_polars_lf(iris)
+  pl_iris <- neopolars::as_polars_lf(iris)
   pl_iris_g <- pl_iris |>
     group_by(Species, maintain_order = TRUE)
 
@@ -87,7 +87,7 @@ test_that("works with a local variable defined in a function", {
     x |> summarize(foo = local_var)
   }
 
-  test <- polars::pl$LazyFrame(chars = letters[1:3])
+  test <- neopolars::pl$LazyFrame(chars = letters[1:3])
 
   expect_equal_lazy(
     foobar(test),
@@ -96,7 +96,7 @@ test_that("works with a local variable defined in a function", {
 })
 
 test_that("check .add argument of group_by works", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- neopolars::as_polars_lf(mtcars)
 
   expect_equal_lazy(
     test |>

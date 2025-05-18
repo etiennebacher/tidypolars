@@ -20,7 +20,7 @@ such as changing the default behavior when converting Int64 values to R:
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 options(tidypolars_unknown_args = "warn")
-test <- polars::pl$DataFrame(x = c(2, 1, 5, 3, 1))
+test <- neopolars::pl$DataFrame(x = c(2, 1, 5, 3, 1))
 
 # The default is to warn the user
 mutate(test, x2 = sample(x, prob = 0.5))

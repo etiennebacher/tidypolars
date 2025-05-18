@@ -19,7 +19,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' df <- polars::pl$DataFrame(
+#' df <- neopolars::pl$DataFrame(
 #'   group = c(1:2, 1, 2),
 #'   item_id = c(1:2, 2, 3),
 #'   item_name = c("a", "a", "b", "b"),
@@ -50,7 +50,7 @@
 #' df |>
 #'   group_by(group, maintain_order = TRUE) |>
 #'   complete(item_id, item_name)
-complete.RPolarsDataFrame <- function(
+complete.polars_data_frame <- function(
   data,
   ...,
   fill = list(),
@@ -108,11 +108,11 @@ complete.RPolarsDataFrame <- function(
     chain_is_empty <- TRUE
   } else {
     if (isTRUE(is_grouped)) {
-      chain <- data$group_by(grps, maintain_order = mo)$agg(
-        pl$col(unnamed_dots)$unique()$sort()
+      chain <- data$group_by(grps, .maintain_order = mo)$agg(
+        pl$col(!!!unnamed_dots)$unique()$sort()
       )
     } else {
-      chain <- data$select(pl$col(unnamed_dots)$unique()$sort()$implode())
+      chain <- data$select(pl$col(!!!unnamed_dots)$unique()$sort()$implode())
     }
   }
 
@@ -163,7 +163,7 @@ complete.RPolarsDataFrame <- function(
       names(already_exist),
       names(dont_already_exist)
     )
-    schema <- already_exist$schema
+    schema <- already_exist$collect_schema()
     for (i in other_unnamed_dots) {
       dont_already_exist <- dont_already_exist$with_columns(
         pl$lit(NA)$cast(schema[[i]])$alias(i)
@@ -212,6 +212,6 @@ complete.RPolarsDataFrame <- function(
   add_tidypolars_class(out)
 }
 
-#' @rdname complete.RPolarsDataFrame
+#' @rdname complete.polars_data_frame
 #' @export
-complete.RPolarsLazyFrame <- complete.RPolarsDataFrame
+complete.polars_lazy_frame <- complete.polars_data_frame

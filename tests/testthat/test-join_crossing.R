@@ -1,10 +1,10 @@
 test_that("basic behavior works", {
-  test <- polars::pl$DataFrame(
+  test <- neopolars::pl$DataFrame(
     origin = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
 
-  test2 <- polars::pl$DataFrame(
+  test2 <- neopolars::pl$DataFrame(
     destination = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )
@@ -24,11 +24,11 @@ test_that("basic behavior works", {
 })
 
 test_that("unsupported args throw warning", {
-  test <- polars::pl$DataFrame(
+  test <- neopolars::pl$DataFrame(
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-  test2 <- polars::pl$DataFrame(
+  test2 <- neopolars::pl$DataFrame(
     country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )
@@ -46,11 +46,11 @@ test_that("unsupported args throw warning", {
 })
 
 test_that("dots must be empty", {
-  test <- polars::pl$DataFrame(
+  test <- neopolars::pl$DataFrame(
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-  test2 <- polars::pl$DataFrame(
+  test2 <- neopolars::pl$DataFrame(
     country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )

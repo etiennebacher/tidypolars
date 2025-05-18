@@ -27,7 +27,7 @@
 #' )
 #' by_cyl |> filter(disp == max(disp))
 #'
-group_by.RPolarsDataFrame <- function(
+group_by.polars_data_frame <- function(
   .data,
   ...,
   maintain_order = FALSE,
@@ -60,23 +60,23 @@ group_by.RPolarsDataFrame <- function(
 }
 
 #' @param x A Polars Data/LazyFrame
-#' @rdname group_by.RPolarsDataFrame
+#' @rdname group_by.polars_data_frame
 #' @export
 
-ungroup.RPolarsDataFrame <- function(x, ...) {
+ungroup.polars_data_frame <- function(x, ...) {
   attributes(x)$pl_grps <- NULL
   attributes(x)$maintain_grp_order <- NULL
   attributes(x)$grp_type <- NULL
   x
 }
 
-#' @rdname group_by.RPolarsDataFrame
+#' @rdname group_by.polars_data_frame
 #' @export
-group_by.RPolarsLazyFrame <- group_by.RPolarsDataFrame
+group_by.polars_lazy_frame <- group_by.polars_data_frame
 
-#' @rdname group_by.RPolarsDataFrame
+#' @rdname group_by.polars_data_frame
 #' @export
-ungroup.RPolarsLazyFrame <- ungroup.RPolarsDataFrame
+ungroup.polars_lazy_frame <- ungroup.polars_data_frame
 
 #' Grouping metadata
 #'
@@ -87,13 +87,13 @@ ungroup.RPolarsLazyFrame <- ungroup.RPolarsDataFrame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE)
-#' pl_g <- polars::as_polars_df(mtcars) |>
+#' pl_g <- neopolars::as_polars_df(mtcars) |>
 #'   group_by(cyl, am)
 #'
 #' group_vars(pl_g)
 #'
 #' group_keys(pl_g)
-group_vars.RPolarsDataFrame <- function(x) {
+group_vars.polars_data_frame <- function(x) {
   grps <- attributes(x)$pl_grps
   if (length(grps) > 0) {
     grps
@@ -102,19 +102,19 @@ group_vars.RPolarsDataFrame <- function(x) {
   }
 }
 
-#' @rdname group_vars.RPolarsDataFrame
+#' @rdname group_vars.polars_data_frame
 #' @export
-group_vars.RPolarsLazyFrame <- group_vars.RPolarsDataFrame
+group_vars.polars_lazy_frame <- group_vars.polars_data_frame
 
-#' @rdname group_vars.RPolarsDataFrame
+#' @rdname group_vars.polars_data_frame
 #' @inheritParams rlang::args_dots_empty
 #' @export
-group_keys.RPolarsDataFrame <- function(.tbl, ...) {
+group_keys.polars_data_frame <- function(.tbl, ...) {
   grps <- attributes(.tbl)$pl_grps
   if (length(grps) > 0) {
     out <- .tbl$group_by(grps)$agg(pl$lit(1))$drop("literal")$sort(grps)
 
-    if (inherits(out, "RPolarsLazyFrame")) {
+    if (is_polars_lf(out)) {
       out <- out$collect()
     }
     out$to_data_frame()
@@ -123,9 +123,9 @@ group_keys.RPolarsDataFrame <- function(.tbl, ...) {
   }
 }
 
-#' @rdname group_vars.RPolarsDataFrame
+#' @rdname group_vars.polars_data_frame
 #' @export
-group_keys.RPolarsLazyFrame <- group_keys.RPolarsDataFrame
+group_keys.polars_lazy_frame <- group_keys.polars_data_frame
 
 #' Grouping metadata
 #'
@@ -139,11 +139,11 @@ group_keys.RPolarsLazyFrame <- group_keys.RPolarsDataFrame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE)
-#' pl_g <- polars::as_polars_df(iris) |>
+#' pl_g <- neopolars::as_polars_df(iris) |>
 #'   group_by(Species)
 #'
 #' group_split(pl_g)
-group_split.RPolarsDataFrame <- function(.tbl, ..., .keep = TRUE) {
+group_split.polars_data_frame <- function(.tbl, ..., .keep = TRUE) {
   grps <- attributes(.tbl)$pl_grps
   dots <- tidyselect_dots(.tbl, ...)
 

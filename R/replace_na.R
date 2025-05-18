@@ -4,11 +4,11 @@
 #' @param replace Either a scalar that will be used to replace `NA` in all
 #'   columns, or a named list with the column name and the value that will be
 #'   used to replace `NA` in it.
-#' @inheritParams slice_tail.RPolarsDataFrame
+#' @inheritParams slice_tail.polars_data_frame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
+#' pl_test <- neopolars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 #'
 #' # replace all NA with 0
 #' replace_na(pl_test, 0)
@@ -16,7 +16,7 @@
 #' # custom replacement per column
 #' replace_na(pl_test, list(x = 0, y = 999))
 
-replace_na.RPolarsDataFrame <- function(data, replace, ...) {
+replace_na.polars_data_frame <- function(data, replace, ...) {
   is_scalar <- length(replace) == 1 && !is.list(replace)
 
   # TODO: maybe re-use fill_null() once this is fixed
@@ -37,18 +37,20 @@ replace_na.RPolarsDataFrame <- function(data, replace, ...) {
     exprs <- list()
     for (i in seq_along(replace)) {
       if (is.character(replace[[i]])) {
-        exprs[[i]] <- polars::pl$col(names(replace)[i])$replace(
+        exprs[[i]] <- neopolars::pl$col(names(replace)[i])$replace(
           NA,
           replace[[i]]
         )
       } else {
-        exprs[[i]] <- polars::pl$col(names(replace)[i])$fill_null(replace[[i]])
+        exprs[[i]] <- neopolars::pl$col(names(replace)[i])$fill_null(replace[[
+          i
+        ]])
       }
     }
   }
 
   out <- tryCatch(
-    data$with_columns(exprs),
+    data$with_columns(!!!exprs),
     error = function(e) {
       rlang::abort(e$message, call = caller_env(4))
     }
@@ -57,6 +59,6 @@ replace_na.RPolarsDataFrame <- function(data, replace, ...) {
   add_tidypolars_class(out)
 }
 
-#' @rdname replace_na.RPolarsDataFrame
+#' @rdname replace_na.polars_data_frame
 #' @export
-replace_na.RPolarsLazyFrame <- replace_na.RPolarsDataFrame
+replace_na.polars_lazy_frame <- replace_na.polars_data_frame

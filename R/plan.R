@@ -1,4 +1,4 @@
-#' @inherit explain.RPolarsLazyFrame title
+#' @inherit explain.polars_lazy_frame title
 #'
 #' @description
 #' `r lifecycle::badge("deprecated")`
@@ -13,7 +13,7 @@
 
 # nocov start
 describe_plan <- function(.data) {
-  if (!inherits(.data, "RPolarsLazyFrame")) {
+  if (!is_polars_lf(.data)) {
     rlang::abort("`describe_plan()` only works on a LazyFrame.")
   }
   lifecycle::deprecate_warn(
@@ -28,7 +28,7 @@ describe_plan <- function(.data) {
 #' @rdname describe_plan
 
 describe_optimized_plan <- function(.data) {
-  if (!inherits(.data, "RPolarsLazyFrame")) {
+  if (!is_polars_lf(.data)) {
     rlang::abort("`describe_optimized_plan()` only works on a LazyFrame.")
   }
   lifecycle::deprecate_warn(

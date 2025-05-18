@@ -28,7 +28,7 @@ test_that("case functions work", {
     expect_equal(pol, res, info = i)
   }
 
-  if (polars::polars_info()$features$full_features) {
+  if (neopolars::polars_info()$features$full_features) {
     # in this case, the output when there's an apostrophe is different from stringr
     # and tools::toTitleCase()
     # https://github.com/pola-rs/polars/issues/18260

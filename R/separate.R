@@ -10,16 +10,16 @@
 #' @param sep String that is used to split the column. Regular expressions are
 #' not supported yet.
 #' @param remove If `TRUE`, remove input column from output data frame.
-#' @inheritParams slice_tail.RPolarsDataFrame
+#' @inheritParams slice_tail.polars_data_frame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' test <- polars::pl$DataFrame(
+#' test <- neopolars::pl$DataFrame(
 #'   x = c(NA, "x.y", "x.z", "y.z")
 #' )
 #' separate(test, x, into = c("foo", "foo2"), sep = ".")
 
-separate.RPolarsDataFrame <- function(
+separate.polars_data_frame <- function(
   data,
   col,
   into,
@@ -46,6 +46,6 @@ separate.RPolarsDataFrame <- function(
   add_tidypolars_class(data)
 }
 
-#' @rdname separate.RPolarsDataFrame
+#' @rdname separate.polars_data_frame
 #' @export
-separate.RPolarsLazyFrame <- separate.RPolarsDataFrame
+separate.polars_lazy_frame <- separate.polars_data_frame

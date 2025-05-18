@@ -1,4 +1,4 @@
-#' @import polars
+#' @import neopolars
 #' @import dplyr
 #' @import tidyr
 #' @export

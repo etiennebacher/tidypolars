@@ -2,7 +2,7 @@
 #'
 #' @param data A Polars Data/LazyFrame
 #' @param col The name of the new column, as a string or symbol.
-#' @inheritParams fill.RPolarsDataFrame
+#' @inheritParams fill.polars_data_frame
 #' @param sep Separator to use between values.
 #' @param remove If `TRUE`, remove input columns from the output Data/LazyFrame.
 #' @param na.rm If `TRUE`, missing values will be replaced with an empty string
@@ -10,7 +10,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' test <- polars::pl$DataFrame(
+#' test <- neopolars::pl$DataFrame(
 #'   year = 2009:2011,
 #'   month = 10:12,
 #'   day = c(11L, 22L, 28L),
@@ -21,7 +21,7 @@
 #' unite(test, col = "full_date", year, month, day, sep = "-")
 #' unite(test, col = "full_date", year, month, day, sep = "-", remove = FALSE)
 #'
-#' test2 <- polars::pl$DataFrame(
+#' test2 <- neopolars::pl$DataFrame(
 #'   name = c("John", "Jack", "Thomas"),
 #'   middlename = c("T.", NA, "F."),
 #'   surname = c("Smith", "Thompson", "Jones")
@@ -31,7 +31,7 @@
 #' unite(test2, col = "full_name", everything(), sep = " ")
 #' unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
 
-unite.RPolarsDataFrame <- function(
+unite.polars_data_frame <- function(
   data,
   col,
   ...,
@@ -55,7 +55,7 @@ unite.RPolarsDataFrame <- function(
     fill <- "NA"
   }
 
-  vars_concat <- pl$col(vars)$fill_null(fill)
+  vars_concat <- pl$col(!!!vars)$fill_null(fill)
 
   out <- data$with_columns(
     pl$concat_str(vars_concat, separator = sep)$alias(col)
@@ -70,6 +70,6 @@ unite.RPolarsDataFrame <- function(
   add_tidypolars_class(out)
 }
 
-#' @rdname unite.RPolarsDataFrame
+#' @rdname unite.polars_data_frame
 #' @export
-unite.RPolarsLazyFrame <- unite.RPolarsDataFrame
+unite.polars_lazy_frame <- unite.polars_data_frame

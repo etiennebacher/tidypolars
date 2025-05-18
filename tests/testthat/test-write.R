@@ -28,7 +28,7 @@ test_that("basic behavior with CSV", {
     write_csv_polars(dest)
 
   expect_equal(read.csv(dest), mtcars, ignore_attr = TRUE)
-  expect_s3_class(read_csv_polars(dest), "RPolarsDataFrame")
+  expect_s3_class(read_csv_polars(dest), "polars_data_frame")
 })
 
 test_that("basic behavior with IPC", {
@@ -39,7 +39,7 @@ test_that("basic behavior with IPC", {
     write_ipc_polars(dest)
 
   expect_equal(arrow::read_ipc_file(dest), mtcars, ignore_attr = TRUE)
-  expect_s3_class(read_ipc_polars(dest), "RPolarsDataFrame")
+  expect_s3_class(read_ipc_polars(dest), "polars_data_frame")
 })
 
 test_that("basic behavior with JSON", {
@@ -64,7 +64,7 @@ test_that("basic behavior with NDJSON", {
     mtcars,
     ignore_attr = TRUE
   )
-  expect_s3_class(read_ndjson_polars(dest), "RPolarsDataFrame")
+  expect_s3_class(read_ndjson_polars(dest), "polars_data_frame")
 })
 
 test_that("basic behavior with Parquet", {
@@ -75,5 +75,5 @@ test_that("basic behavior with Parquet", {
     write_parquet_polars(dest)
 
   expect_equal(nanoparquet::read_parquet(dest), mtcars, ignore_attr = TRUE)
-  expect_s3_class(read_parquet_polars(dest), "RPolarsDataFrame")
+  expect_s3_class(read_parquet_polars(dest), "polars_data_frame")
 })

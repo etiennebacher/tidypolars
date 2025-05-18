@@ -476,7 +476,8 @@ translate <- function(
                 caller = caller,
                 call_is_function = call_is_function,
                 expr_uses_col = expr_uses_col
-              )
+              ) |>
+                as_polars_expr(as_lit = TRUE)
               rhs <- translate(
                 expr[[3]],
                 .data = .data,
@@ -485,7 +486,8 @@ translate <- function(
                 caller = caller,
                 call_is_function = call_is_function,
                 expr_uses_col = expr_uses_col
-              )
+              ) |>
+                as_polars_expr(as_lit = TRUE)
               if (is.list(rhs)) {
                 rhs <- unlist(rhs)
               }
@@ -648,7 +650,7 @@ translate <- function(
           suppressWarnings({
             tr <- try(do.call(fn, list(args)), silent = TRUE)
           })
-          if (inherits(tr, "RPolarsExpr")) {
+          if (is_polars_expr(tr)) {
             return(tr)
           } else {
             abort(
@@ -1035,7 +1037,7 @@ check_pattern <- function(x) {
 }
 
 polars_expr_to_r <- function(x) {
-  if (inherits(x, "RPolarsExpr")) {
+  if (is_polars_expr(x)) {
     is_col <- length(x$meta$root_names()) > 0
     if (!is_col) {
       x <- x$to_r()
@@ -1056,7 +1058,7 @@ check_timezone <- function(tz, empty_allowed = FALSE) {
 
   # This happens when one passes an existing column as the timezone,
   # polars_expr_to_r() doesn't return an R object in this case.
-  if (inherits(tz, "RPolarsExpr")) {
+  if (is_polars_expr(tz)) {
     rlang::abort("`tidypolars` cannot pass a variable of the data as timezone.")
   }
 

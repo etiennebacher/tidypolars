@@ -15,7 +15,7 @@ pl_paste <- function(..., sep = " ", collapse = NULL) {
   # paste(NA) -> "NA"
   dots <- lapply(seq_along(dots), function(x) {
     elem <- dots[[x]]
-    if (!inherits(elem, "RPolarsExpr")) {
+    if (!is_polars_expr(elem)) {
       return(elem)
     }
     elem$fill_null(pl$lit("NA"))
@@ -43,7 +43,7 @@ pl_str_detect_stringr <- function(string, pattern, negate = FALSE, ...) {
 
 pl_str_dup_stringr <- function(string, times) {
   times <- polars_expr_to_r(times)
-  if (!inherits(times, "RPolarsExpr")) {
+  if (!is_polars_expr(times)) {
     times[times < 0 | is.na(times)] <- NA
     if (length(times) == 1 && is.na(times)) {
       return(pl$lit(NA_character_))
@@ -83,7 +83,7 @@ pl_str_extract_stringr <- function(string, pattern, group = 0, ...) {
   # if pattern wasn't passed to pl$col() at this point then it must be parsed
   # as a literal otherwise extract() will error because can't find a column
   # named as pattern
-  if (!inherits(pattern$pattern, "RPolarsExpr")) {
+  if (!is_polars_expr(pattern$pattern)) {
     pattern$pattern <- pl$lit(pattern$pattern)
   }
   string$str$extract(pattern$pattern, group_index = group)
@@ -218,10 +218,10 @@ pl_str_sub_stringr <- function(string, start, end = NULL) {
   end_is_null <- is.null(end)
   string <- string$cast(pl$String)
   len_string <- string$str$len_chars()
-  if (!inherits(start, "RPolarsExpr")) {
+  if (!is_polars_expr(start)) {
     start <- pl$lit(start)
   }
-  if (!inherits(end, "RPolarsExpr")) {
+  if (!is_polars_expr(end)) {
     end <- pl$lit(end)
   }
   start <- start$cast(pl$Int64)
@@ -330,10 +330,10 @@ pl_str_sub_stringr <- function(string, start, end = NULL) {
 pl_substr <- function(x, start, stop) {
   x <- x$cast(pl$String)
   len_string <- x$str$len_chars()
-  if (!inherits(start, "RPolarsExpr")) {
+  if (!is_polars_expr(start)) {
     start <- pl$lit(start)
   }
-  if (!inherits(stop, "RPolarsExpr")) {
+  if (!is_polars_expr(stop)) {
     stop <- pl$lit(stop)
   }
   start <- start$cast(pl$Int64)

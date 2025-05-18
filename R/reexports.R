@@ -1,7 +1,19 @@
 #' @export
-#' @importFrom polars as_polars_df
-polars::as_polars_df
+#' @importFrom neopolars as_polars_df
+neopolars::as_polars_df
 
 #' @export
-#' @importFrom polars as_polars_lf
-polars::as_polars_lf
+#' @importFrom neopolars as_polars_lf
+neopolars::as_polars_lf
+
+#' @export
+#' @importFrom neopolars is_polars_lf
+neopolars::is_polars_lf
+
+#' @export
+#' @importFrom neopolars is_polars_df
+neopolars::is_polars_df
+
+#' @export
+#' @importFrom neopolars is_polars_expr
+neopolars::is_polars_expr

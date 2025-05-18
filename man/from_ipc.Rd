@@ -31,16 +31,12 @@ scan_ipc_polars(
 )
 }
 \arguments{
-\item{source}{Path to a file. You can use globbing with \code{*} to scan/read multiple
-files in the same directory (see examples).}
+\item{source}{Path(s) to a file or directory. When needing to authenticate
+for scanning cloud locations, see the \code{storage_options} parameter.}
 
-\item{...}{Ignored.}
+\item{...}{These dots are for future extensions and must be empty.}
 
-\item{n_rows}{Maximum number of rows to read.}
-
-\item{memory_map}{A logical. If \code{TRUE}, try to memory map the file.
-This can greatly improve performance on repeated queries as the OS may cache pages.
-Only uncompressed Arrow IPC files can be memory mapped.}
+\item{n_rows}{Stop reading from parquet file after reading \code{n_rows}.}
 
 \item{row_index_name}{If not \code{NULL}, this will insert a row index column with
 the given name into the DataFrame.}
@@ -48,19 +44,16 @@ the given name into the DataFrame.}
 \item{row_index_offset}{Offset to start the row index column (only used if
 the name is set).}
 
-\item{rechunk}{In case of reading multiple files via a glob pattern, rechunk
+\item{rechunk}{In case of reading multiple files via a glob pattern rechunk
 the final DataFrame into contiguous memory chunks.}
 
 \item{cache}{Cache the result after reading.}
 
-\item{include_file_paths}{Character value indicating the column name that will
-include the path of the source file(s).}
+\item{include_file_paths}{Character value indicating the column name that
+will include the path of the source file(s).}
 }
 \description{
 \code{read_ipc_polars()} imports the data as a Polars DataFrame.
 
 \code{scan_ipc_polars()} imports the data as a Polars LazyFrame.
-}
-\details{
-Hive-style partitioning is not supported yet.
 }
