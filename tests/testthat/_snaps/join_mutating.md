@@ -1,7 +1,7 @@
 # error if no common variables and and `by` no provided
 
     Code
-      left_join(test, polars::as_polars_df(iris))
+      left_join(test, neopolars::as_polars_df(iris))
     Condition
       Error in `left_join()`:
       ! `by` must be supplied when `x` and `y` have no common variables.
@@ -36,88 +36,96 @@
     Code
       do.call(i, list(country, country_year, join_by(iso), relationship = "one-to-one"))
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	join keys did not fulfill 1:1 validation
+      Error in `x$join()`:
+      ! Evaluation failed in `$join()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! join keys did not fulfill 1:1 validation
 
 ---
 
     Code
       do.call(i, list(country, country_year, join_by(iso), relationship = "many-to-one"))
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	join keys did not fulfill m:1 validation
+      Error in `x$join()`:
+      ! Evaluation failed in `$join()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! join keys did not fulfill m:1 validation
 
 ---
 
     Code
       do.call(i, list(country, country_year, join_by(iso), relationship = "one-to-one"))
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	join keys did not fulfill 1:1 validation
+      Error in `x$join()`:
+      ! Evaluation failed in `$join()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! join keys did not fulfill 1:1 validation
 
 ---
 
     Code
       do.call(i, list(country, country_year, join_by(iso), relationship = "many-to-one"))
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	join keys did not fulfill m:1 validation
+      Error in `x$join()`:
+      ! Evaluation failed in `$join()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! join keys did not fulfill m:1 validation
 
 ---
 
     Code
       do.call(i, list(country, country_year, join_by(iso), relationship = "one-to-one"))
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	join keys did not fulfill 1:1 validation
+      Error in `x$join()`:
+      ! Evaluation failed in `$join()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! join keys did not fulfill 1:1 validation
 
 ---
 
     Code
       do.call(i, list(country, country_year, join_by(iso), relationship = "many-to-one"))
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	join keys did not fulfill m:1 validation
+      Error in `x$join()`:
+      ! Evaluation failed in `$join()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! join keys did not fulfill m:1 validation
 
 ---
 
     Code
       right_join(country, country_year, join_by(iso), relationship = "one-to-one")
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	join keys did not fulfill 1:1 validation
+      Error in `y$join()`:
+      ! Evaluation failed in `$join()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! join keys did not fulfill 1:1 validation
 
 ---
 
     Code
       right_join(country, country_year, join_by(iso), relationship = "one-to-many")
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	join keys did not fulfill 1:m validation
+      Error in `y$join()`:
+      ! Evaluation failed in `$join()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! join keys did not fulfill 1:m validation
 
 # argument na_matches works
 

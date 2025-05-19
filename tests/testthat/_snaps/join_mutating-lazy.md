@@ -36,88 +36,80 @@
     Code
       current$collect()
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	join keys did not fulfill 1:1 validation
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! join keys did not fulfill 1:1 validation
 
 ---
 
     Code
       current$collect()
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	join keys did not fulfill m:1 validation
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! join keys did not fulfill m:1 validation
 
 ---
 
     Code
       current$collect()
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	join keys did not fulfill 1:1 validation
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! join keys did not fulfill 1:1 validation
 
 ---
 
     Code
       current$collect()
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	join keys did not fulfill m:1 validation
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! join keys did not fulfill m:1 validation
 
 ---
 
     Code
       current$collect()
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	join keys did not fulfill 1:1 validation
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! join keys did not fulfill 1:1 validation
 
 ---
 
     Code
       current$collect()
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	join keys did not fulfill m:1 validation
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! join keys did not fulfill m:1 validation
 
 ---
 
     Code
       current$collect()
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	join keys did not fulfill 1:1 validation
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! join keys did not fulfill 1:1 validation
 
 ---
 
     Code
       current$collect()
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	join keys did not fulfill 1:m validation
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! join keys did not fulfill 1:m validation
 
 # argument na_matches works
 
