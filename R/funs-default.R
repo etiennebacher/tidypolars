@@ -629,7 +629,11 @@ pl_row_number_dplyr <- function(x = NULL) {
 pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
   check_empty_dots(...)
   # TODO: how should I handle seed, given that R sample() doesn't have this arg
-  x$sample(n = size, with_replacement = replace, shuffle = TRUE)
+  out <- x$sample(n = size, with_replacement = replace, shuffle = TRUE)
+  if (is.null(size) || size == 1) {
+    out <- out$first()
+  }
+  out
 }
 
 pl_seq <- function(from = 1, to = 1, by = NULL, ...) {

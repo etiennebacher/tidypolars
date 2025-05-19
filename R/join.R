@@ -545,15 +545,15 @@ eval_inequality_join <- function(x, y, how, by, suffix) {
     } else if (by$condition[i] == ">") {
       by2$x[[i]]$gt(by2$y[[i]])
     } else if (by$condition[i] == ">=") {
-      by2$x[[i]]$gt_eq(by2$y[[i]])
+      by2$x[[i]]$ge(by2$y[[i]])
     } else if (by$condition[i] == "<") {
       by2$x[[i]]$lt(by2$y[[i]])
     } else if (by$condition[i] == "<=") {
-      by2$x[[i]]$lt_eq(by2$y[[i]])
+      by2$x[[i]]$le(by2$y[[i]])
     }
   })
 
-  res <- x$join_where(y, by3, suffix = suffix[2])
+  res <- x$join_where(y, !!!by3, suffix = suffix[2])
   if (length(common_cols) > 0) {
     # Only keep common columns that were involved in inequality joins, otherwise
     # they just don't have a duplicate in the output
