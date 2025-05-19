@@ -993,7 +993,7 @@ check_rowwise <- function(x = NULL, ...) {
   dots <- get_dots(...)
   is_rowwise <- dots[["__tidypolars__env"]]$is_rowwise
   if (is.list(x) && isTRUE(is_rowwise)) {
-    out <- pl$concat_list(x)
+    out <- pl$concat_list(!!!x)
   } else {
     out <- x
   }
@@ -1010,7 +1010,7 @@ check_rowwise_dots <- function(...) {
   dots[["__tidypolars__caller"]] <- NULL
   dots <- unlist(dots)
   if (isTRUE(is_rowwise)) {
-    out <- pl$concat_list(dots)
+    out <- pl$concat_list(!!!dots)
   } else {
     if (is.list(dots)) {
       out <- dots[[1]]
