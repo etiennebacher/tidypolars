@@ -34,7 +34,7 @@ separate.polars_data_frame <- function(
   temp_id <- paste(sample(letters), collapse = "")
 
   data <- data$with_columns(
-    pl$col(col)$cast(pl$Utf8)$str$split_exact(sep, into_len)$alias(
+    pl$col(col)$cast(pl$String)$str$split_exact(sep, into_len)$alias(
       temp_id
     )$struct$rename_fields(into)
   )$unnest(temp_id)

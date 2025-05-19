@@ -243,14 +243,16 @@ test_that("extract functions work", {
       test_df,
       foo = str_extract_all(x1, regex("[a-z]", ignore_case = TRUE))
     ) |>
-      pull(foo)
+      pull(foo),
+    ignore_attr = TRUE
   )
 
   expect_equal(
     mutate(test, foo = str_extract_all(x2, "[a-z]+")) |>
       pull(foo),
     mutate(test_df, foo = str_extract_all(x2, "[a-z]+")) |>
-      pull(foo)
+      pull(foo),
+    ignore_attr = TRUE
   )
 
   expect_warning(
@@ -1034,7 +1036,8 @@ test_that("split functions work", {
     mutate(test, foo = str_split(x8, "-")) |>
       pull(foo),
     mutate(test_df, foo = str_split(x8, "-")) |>
-      pull(foo)
+      pull(foo),
+    ignore_attr = TRUE
   )
 
   expect_warning(

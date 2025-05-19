@@ -48,11 +48,13 @@ replace_na.polars_data_frame <- function(data, replace, ...) {
       }
     }
   }
-
+  if (is_polars_expr(exprs)) {
+    exprs <- list(exprs)
+  }
   out <- tryCatch(
     data$with_columns(!!!exprs),
     error = function(e) {
-      rlang::abort(e$message, call = caller_env(4))
+      rlang::abort(e$message, call = caller_env(4), parent = e)
     }
   )
 

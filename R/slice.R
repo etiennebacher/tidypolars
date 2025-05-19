@@ -19,7 +19,7 @@
 #' slice_sample(pl_test, prop = 0.1)
 slice_tail.polars_data_frame <- function(.data, ..., n, by = NULL) {
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
-  mo <- attributes(.data)$maintain_grp_order
+  mo <- attributes(.data)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
 
   if (is_grouped) {
@@ -49,7 +49,7 @@ slice_tail.polars_lazy_frame <- slice_tail.polars_data_frame
 
 slice_head.polars_data_frame <- function(.data, ..., n, by = NULL) {
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
-  mo <- attributes(.data)$maintain_grp_order
+  mo <- attributes(.data)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
 
   if (is_grouped) {
@@ -92,7 +92,7 @@ slice_sample.polars_data_frame <- function(
   check_dots_empty_ignore(..., .unsupported = "weight_by")
 
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
-  mo <- attributes(.data)$maintain_grp_order
+  mo <- attributes(.data)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
 
   # arguments don't have the same name in polars so I check inputs here

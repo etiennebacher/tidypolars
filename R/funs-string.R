@@ -147,8 +147,8 @@ pl_str_pad_stringr <- function(
       class = "tidypolars_error"
     ),
     # polars and dplyr have the opposite understanding for "side"
-    "left" = string$str$pad_start(width = width, fillchar = pad),
-    "right" = string$str$pad_end(width = width, fillchar = pad)
+    "left" = string$str$pad_start(length = width, fill_char = pad),
+    "right" = string$str$pad_end(length = width, fill_char = pad)
   )
 }
 

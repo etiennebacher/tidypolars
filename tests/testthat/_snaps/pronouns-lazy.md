@@ -11,16 +11,15 @@
     Code
       current$collect()
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	not found: bar
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! Column(s) not found: bar
       
-            Resolved plan until failure:
+      Resolved plan until failure:
       
-            	---> FAILED HERE RESOLVING 'with_columns' <---
-            DF ["x", "y", "z"]; PROJECT */3 COLUMNS; SELECTION: None
+      	---> FAILED HERE RESOLVING 'sink' <---
+      DF ["x", "y", "z"]; PROJECT */3 COLUMNS
 
 # using [[ sign works
 
@@ -35,14 +34,13 @@
     Code
       current$collect()
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	not found: bar
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! Column(s) not found: bar
       
-            Resolved plan until failure:
+      Resolved plan until failure:
       
-            	---> FAILED HERE RESOLVING 'with_columns' <---
-            DF ["x", "y", "z"]; PROJECT */3 COLUMNS; SELECTION: None
+      	---> FAILED HERE RESOLVING 'sink' <---
+      DF ["x", "y", "z"]; PROJECT */3 COLUMNS
 

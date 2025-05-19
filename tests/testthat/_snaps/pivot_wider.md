@@ -12,11 +12,10 @@
     Code
       pivot_wider(df, names_from = key, values_from = val)
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $pivot():
-         1: Encountered the following error in Rust-Polars:
-            	duplicate: column with name 'a' has more than one occurrence
+      Error in `data$pivot()`:
+      ! Evaluation failed in `$pivot()`.
+      Caused by error:
+      ! Duplicated column(s): could not create a new DataFrame: column with name 'a' has more than one occurrence
 
 # `names_from` must be supplied if `name` isn't in data
 
@@ -57,22 +56,20 @@
     Code
       pivot_wider(df, id_cols = name, names_from = name, values_from = value)
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $pivot():
-         1: Encountered the following error in Rust-Polars:
-            	index cannot be zero length
+      Error in `data$pivot()`:
+      ! Evaluation failed in `$pivot()`.
+      Caused by error:
+      ! index cannot be zero length
 
 ---
 
     Code
       pivot_wider(df, id_cols = value, names_from = name, values_from = value)
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $pivot():
-         1: Encountered the following error in Rust-Polars:
-            	index cannot be zero length
+      Error in `data$pivot()`:
+      ! Evaluation failed in `$pivot()`.
+      Caused by error:
+      ! index cannot be zero length
 
 # dots must be empty
 

@@ -117,7 +117,7 @@ group_keys.polars_data_frame <- function(.tbl, ...) {
     if (is_polars_lf(out)) {
       out <- out$collect()
     }
-    out$to_data_frame()
+    as.data.frame(out)
   } else {
     data.frame()
   }

@@ -141,6 +141,9 @@ mutate.polars_data_frame <- function(
         sub <- lapply(sub, \(x) {
           order_by <- attributes(x)[["order_by"]]
           if (!is.null(order_by)) {
+            if (!is.list(order_by)) {
+              order_by <- list(order_by)
+            }
             x$over(!!!grps, order_by = order_by)
           } else {
             x$over(!!!grps)
