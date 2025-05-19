@@ -114,12 +114,9 @@ group_keys.polars_data_frame <- function(.tbl, ...) {
   if (length(grps) > 0) {
     out <- .tbl$group_by(grps)$agg(pl$lit(1))$drop("literal")$sort(grps)
 
-    if (is_polars_lf(out)) {
-      out <- out$collect()
-    }
-    as.data.frame(out)
+    as_tibble(out)
   } else {
-    data.frame()
+    tibble()
   }
 }
 
