@@ -16,8 +16,8 @@ read_ndjson_polars(
   rechunk = FALSE,
   row_index_name = NULL,
   row_index_offset = 0,
-  reuse_downloaded = TRUE,
-  ignore_errors = FALSE
+  ignore_errors = FALSE,
+  reuse_downloaded
 )
 
 scan_ndjson_polars(
@@ -30,8 +30,8 @@ scan_ndjson_polars(
   rechunk = FALSE,
   row_index_name = NULL,
   row_index_offset = 0,
-  reuse_downloaded = TRUE,
-  ignore_errors = FALSE
+  ignore_errors = FALSE,
+  reuse_downloaded
 )
 }
 \arguments{
@@ -60,6 +60,9 @@ the name is set).}
 \item{ignore_errors}{Keep reading the file even if some lines yield errors.
 You can also use \code{infer_schema = FALSE} to read all columns as UTF8 to
 check which values might cause an issue.}
+
+\item{reuse_downloaded}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+Deprecated with no replacement.}
 }
 \description{
 \code{read_ndjson_polars()} imports the data as a Polars DataFrame.

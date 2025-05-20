@@ -67,7 +67,7 @@ test_that("NDJSON can do a write-read roundtrip", {
 
 test_that("deprecated arguments in scan/read_csv_polars", {
   dat_pl <- as_polars_df(mtcars)
-  dest <- tempfile(fileext = paste0(".", "csv"))
+  dest <- tempfile(fileext = ".csv")
   x <- write_csv_polars(dat_pl, dest)
 
   expect_snapshot({
@@ -89,7 +89,7 @@ test_that("deprecated arguments in scan/read_csv_polars", {
 
 test_that("deprecated arguments in scan/read_ipc_polars", {
   dat_pl <- as_polars_df(mtcars)
-  dest <- tempfile(fileext = paste0(".", "arrow"))
+  dest <- tempfile(fileext = ".arrow")
   x <- write_ipc_polars(dat_pl, dest)
 
   expect_snapshot({
@@ -97,5 +97,18 @@ test_that("deprecated arguments in scan/read_ipc_polars", {
   })
   expect_snapshot({
     new_dat <- read_ipc_polars(dest, memory_map = TRUE)
+  })
+})
+
+test_that("deprecated arguments in scan/read_ndjson_polars", {
+  dat_pl <- as_polars_df(mtcars)
+  dest <- tempfile(fileext = ".ndjson")
+  x <- write_ndjson_polars(dat_pl, dest)
+
+  expect_snapshot({
+    new_dat <- scan_ndjson_polars(dest, reuse_downloaded = TRUE)
+  })
+  expect_snapshot({
+    new_dat <- read_ndjson_polars(dest, reuse_downloaded = TRUE)
   })
 })
