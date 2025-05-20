@@ -192,9 +192,10 @@ write_ndjson_polars <- function(.data, file) {
 #' Export data to JSON file(s)
 #'
 #' @inheritParams write_csv_polars
-#' @param pretty `r lifecycle::badge("deprecated")` Pretty serialize JSON.
-#' @param row_oriented `r lifecycle::badge("deprecated")` Write to row-oriented
-#' JSON. This is slower, but more common.
+#' @param pretty `r lifecycle::badge("deprecated")` Deprecated with no
+#' replacement.
+#' @param row_oriented `r lifecycle::badge("deprecated")` Deprecated with no
+#' replacement.
 #'
 #' @inherit write_csv_polars return
 #' @export
