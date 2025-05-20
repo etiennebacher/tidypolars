@@ -130,7 +130,7 @@ sink_parquet <- function(
 #' @param include_header Whether to include header in the CSV output.
 #' @param separator Separate CSV fields with this symbol.
 #' @param line_terminator String used to end each row.
-#' @param quote Byte to use as quoting character.
+#' @param quote_char Byte to use as quoting character.
 #' @param batch_size Number of rows that will be processed per thread.
 #' @param datetime_format,date_format,time_format A format string used to format
 #' date and time values. See `?strptime()` for accepted values. If no format
@@ -138,7 +138,7 @@ sink_parquet <- function(
 #' maximum time unit found in the `Datetime` cols (if any).
 #' @param float_precision Number of decimal places to write, applied to both
 #' `Float32` and `Float64` datatypes.
-#' @param null_values A string representing null values (defaulting to the empty
+#' @param null_value A string representing null values (defaulting to the empty
 #' string).
 #' @param quote_style Determines the quoting strategy used:
 #' * `"necessary"` (default): This puts quotes around fields only when necessary.
@@ -149,6 +149,10 @@ sink_parquet <- function(
 #' * `"non_numeric"`: This puts quotes around all fields that are non-numeric.
 #'   Namely, when writing a field that does not parse as a valid float or integer,
 #'   then quotes will be used even if they aren't strictly necessary.
+#' @param quote `r lifecycle::badge("deprecated")` Deprecated, use `quote_char`
+#' instead.
+#' @param null_values `r lifecycle::badge("deprecated")` Deprecated, use
+#' `null_value` instead.
 #'
 #' @inheritParams sink_parquet
 #'
@@ -186,13 +190,13 @@ sink_csv <- function(
   include_header = TRUE,
   separator = ",",
   line_terminator = "\n",
-  quote = '"',
+  quote_char = '"',
   batch_size = 1024,
   datetime_format = NULL,
   date_format = NULL,
   time_format = NULL,
   float_precision = NULL,
-  null_values = "",
+  null_value = "",
   quote_style = "necessary",
   maintain_order = TRUE,
   type_coercion = TRUE,
@@ -200,7 +204,9 @@ sink_csv <- function(
   projection_pushdown = TRUE,
   simplify_expression = TRUE,
   slice_pushdown = TRUE,
-  no_optimization = FALSE
+  no_optimization = FALSE,
+  quote,
+  null_values
 ) {
   check_dots_empty()
   if (!is_polars_lf(.data)) {
@@ -212,19 +218,37 @@ sink_csv <- function(
     values = c("necessary", "always", "non_numeric")
   )
 
+  if (!missing(quote)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "sink_csv_polars(quote)",
+      details = "Use `quote_char` instead."
+    )
+    quote_char <- quote
+  }
+
+  if (!missing(null_values)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "sink_csv_polars(null_values)",
+      details = "Use `null_value` instead."
+    )
+    null_values <- null_values
+  }
+
   .data$sink_csv(
     path = path,
     include_bom = include_bom,
     include_header = include_header,
     separator = separator,
     line_terminator = line_terminator,
-    quote = quote,
+    quote_char = quote_char,
     batch_size = batch_size,
     datetime_format = datetime_format,
     date_format = date_format,
     time_format = time_format,
     float_precision = float_precision,
-    null_values = null_values,
+    null_value = null_value,
     quote_style = quote_style,
     maintain_order = maintain_order,
     type_coercion = type_coercion,
@@ -249,6 +273,7 @@ sink_csv <- function(
 #' for fast compression/decompression.
 #'
 #' @inheritParams sink_parquet
+#' @inheritParams write_ipc_polars
 #'
 #' @inherit sink_parquet return
 #' @export
@@ -258,6 +283,7 @@ sink_ipc <- function(
   path,
   ...,
   compression = "zstd",
+  compat_level = "newest",
   maintain_order = TRUE,
   type_coercion = TRUE,
   predicate_pushdown = TRUE,
@@ -275,7 +301,8 @@ sink_ipc <- function(
 
   .data$sink_ipc(
     path = path,
-    compression = "zstd",
+    compat_level = compat_level,
+    compression = compression,
     maintain_order = maintain_order,
     type_coercion = type_coercion,
     predicate_pushdown = predicate_pushdown,
@@ -318,7 +345,6 @@ sink_ndjson <- function(
 
   .data$sink_ndjson(
     path = path,
-    compression = "zstd",
     maintain_order = maintain_order,
     type_coercion = type_coercion,
     predicate_pushdown = predicate_pushdown,

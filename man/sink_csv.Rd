@@ -12,13 +12,13 @@ sink_csv(
   include_header = TRUE,
   separator = ",",
   line_terminator = "\\n",
-  quote = "\\"",
+  quote_char = "\\"",
   batch_size = 1024,
   datetime_format = NULL,
   date_format = NULL,
   time_format = NULL,
   float_precision = NULL,
-  null_values = "",
+  null_value = "",
   quote_style = "necessary",
   maintain_order = TRUE,
   type_coercion = TRUE,
@@ -26,7 +26,9 @@ sink_csv(
   projection_pushdown = TRUE,
   simplify_expression = TRUE,
   slice_pushdown = TRUE,
-  no_optimization = FALSE
+  no_optimization = FALSE,
+  quote,
+  null_values
 )
 }
 \arguments{
@@ -45,7 +47,7 @@ output.}
 
 \item{line_terminator}{String used to end each row.}
 
-\item{quote}{Byte to use as quoting character.}
+\item{quote_char}{Byte to use as quoting character.}
 
 \item{batch_size}{Number of rows that will be processed per thread.}
 
@@ -57,7 +59,7 @@ maximum time unit found in the \code{Datetime} cols (if any).}
 \item{float_precision}{Number of decimal places to write, applied to both
 \code{Float32} and \code{Float64} datatypes.}
 
-\item{null_values}{A string representing null values (defaulting to the empty
+\item{null_value}{A string representing null values (defaulting to the empty
 string).}
 
 \item{quote_style}{Determines the quoting strategy used:
@@ -95,6 +97,12 @@ is \code{TRUE}).}
 \item{no_optimization}{Sets the following optimizations to \code{FALSE}:
 \code{predicate_pushdown}, \code{projection_pushdown},  \code{slice_pushdown},
 \code{simplify_expression}. Default is \code{FALSE}.}
+
+\item{quote}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use \code{quote_char}
+instead.}
+
+\item{null_values}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use
+\code{null_value} instead.}
 }
 \value{
 The input LazyFrame.
