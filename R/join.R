@@ -539,8 +539,14 @@ eval_inequality_join <- function(x, y, how, by, suffix) {
     }
   })
 
+  # TODO: either remove the comment or use the arg "coalesce" if implemented
+  # https://github.com/pola-rs/polars/issues/22819
+  to_drop <- list()
+
   by3 <- lapply(seq_along(by$condition), function(i) {
     if (by$condition[i] == "==") {
+      # flir-ignore
+      to_drop <<- append(to_drop, by2$y[[i]])
       by2$x[[i]]$eq(by2$y[[i]])
     } else if (by$condition[i] == ">") {
       by2$x[[i]]$gt(by2$y[[i]])
@@ -554,6 +560,10 @@ eval_inequality_join <- function(x, y, how, by, suffix) {
   })
 
   res <- x$join_where(y, !!!by3, suffix = suffix[2])
+  # Same todo as above
+  if (length(to_drop) > 0) {
+    res <- res$drop(!!!to_drop)
+  }
   if (length(common_cols) > 0) {
     # Only keep common columns that were involved in inequality joins, otherwise
     # they just don't have a duplicate in the output
