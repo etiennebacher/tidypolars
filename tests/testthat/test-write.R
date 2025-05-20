@@ -69,9 +69,22 @@ test_that("basic behavior with JSON", {
   dest <- tempfile(fileext = ".json")
   mtcars |>
     as_polars_df() |>
-    write_json_polars(dest, row_oriented = TRUE)
+    write_json_polars(dest)
 
   expect_equal(jsonlite::fromJSON(dest), mtcars, ignore_attr = TRUE)
+})
+
+test_that("deprecated args in write_json_polars()", {
+  skip_if_not_installed("jsonlite")
+  dest <- tempfile(fileext = ".json")
+  dat <- as_polars_df(mtcars)
+
+  expect_snapshot({
+    x <- write_json_polars(dat, dest, pretty = TRUE)
+  })
+  expect_snapshot({
+    x <- write_json_polars(dat, dest, row_oriented = TRUE)
+  })
 })
 
 test_that("basic behavior with NDJSON", {

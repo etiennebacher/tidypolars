@@ -13,10 +13,10 @@ write_json_polars(.data, file, ..., pretty = FALSE, row_oriented = FALSE)
 
 \item{...}{Ignored.}
 
-\item{pretty}{Pretty serialize JSON.}
+\item{pretty}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Pretty serialize JSON.}
 
-\item{row_oriented}{Write to row-oriented JSON. This is slower, but more
-common.}
+\item{row_oriented}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Write to row-oriented
+JSON. This is slower, but more common.}
 }
 \value{
 The input DataFrame.

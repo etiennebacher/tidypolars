@@ -61,3 +61,21 @@
       The `future` argument of `write_ipc_polars()` is deprecated as of tidypolars 0.14.0.
       i Use `compat_level` instead.
 
+# deprecated args in write_json_polars()
+
+    Code
+      x <- write_json_polars(dat, dest, pretty = TRUE)
+    Condition
+      Warning:
+      The `pretty` argument of `write_json_polars()` is deprecated as of tidypolars 0.14.0.
+      i `pretty` doesn't have a replacement.
+
+---
+
+    Code
+      x <- write_json_polars(dat, dest, row_oriented = TRUE)
+    Condition
+      Warning:
+      The `row_oriented` argument of `write_json_polars()` is deprecated as of tidypolars 0.14.0.
+      i `row_oriented` doesn't have a replacement.
+

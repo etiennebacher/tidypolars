@@ -192,9 +192,9 @@ write_ndjson_polars <- function(.data, file) {
 #' Export data to JSON file(s)
 #'
 #' @inheritParams write_csv_polars
-#' @param pretty Pretty serialize JSON.
-#' @param row_oriented Write to row-oriented JSON. This is slower, but more
-#' common.
+#' @param pretty `r lifecycle::badge("deprecated")` Pretty serialize JSON.
+#' @param row_oriented `r lifecycle::badge("deprecated")` Write to row-oriented
+#' JSON. This is slower, but more common.
 #'
 #' @inherit write_csv_polars return
 #' @export
@@ -217,13 +217,25 @@ write_json_polars <- function(
     rlang::abort("`write_json_polars()` can only be used on a DataFrame.")
   }
 
+  if (!missing(pretty)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "write_json_polars(pretty)",
+      details = "`pretty` doesn't have a replacement."
+    )
+  }
+
+  if (!missing(row_oriented)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "write_json_polars(row_oriented)",
+      details = "`row_oriented` doesn't have a replacement."
+    )
+  }
+
   rlang::check_dots_empty()
 
-  .data$write_json(
-    file = file,
-    pretty = pretty,
-    row_oriented = row_oriented
-  )
+  .data$write_json(file = file)
 }
 
 #' Export data to IPC file(s)
