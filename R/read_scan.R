@@ -151,7 +151,7 @@ read_csv_polars <- function(
   if (!missing(dtypes)) {
     lifecycle::deprecate_warn(
       when = "0.14.0",
-      what = "pl$scan_csv(dtypes)",
+      what = "pl$read_csv(dtypes)",
       details = "Use `schema_overrides` instead.",
     )
     schema_overrides <- dtypes
@@ -159,7 +159,7 @@ read_csv_polars <- function(
   if (!missing(reuse_downloaded)) {
     lifecycle::deprecate_warn(
       when = "0.14.0",
-      what = "pl$scan_csv(reuse_downloaded)",
+      what = "pl$read_csv(reuse_downloaded)",
       details = "This argument has no replacement.",
     )
   }
@@ -354,6 +354,8 @@ scan_ndjson_polars <- function(
 #' `scan_ipc_polars()` imports the data as a Polars LazyFrame.
 #'
 #' @inherit neopolars::pl__scan_ipc params details
+#' @param memory_map `r lifecycle::badge("deprecated")` Deprecated
+#' with no replacement.
 #'
 #' @rdname from_ipc
 #' @name from_ipc
@@ -362,19 +364,25 @@ read_ipc_polars <- function(
   source,
   ...,
   n_rows = NULL,
-  memory_map = TRUE,
   row_index_name = NULL,
   row_index_offset = 0L,
   rechunk = FALSE,
   cache = TRUE,
-  include_file_paths = NULL
+  include_file_paths = NULL,
+  memory_map
 ) {
   rlang::check_dots_empty()
+  if (!missing(memory_map)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "pl$read_ipc(memory_map)",
+      details = "This argument has no replacement.",
+    )
+  }
 
   scan_ipc_polars(
     source = source,
     n_rows = n_rows,
-    memory_map = memory_map,
     row_index_name = row_index_name,
     row_index_offset = row_index_offset,
     rechunk = rechunk,
@@ -391,19 +399,25 @@ scan_ipc_polars <- function(
   source,
   ...,
   n_rows = NULL,
-  memory_map = TRUE,
   row_index_name = NULL,
   row_index_offset = 0L,
   rechunk = FALSE,
   cache = TRUE,
-  include_file_paths = NULL
+  include_file_paths = NULL,
+  memory_map
 ) {
   rlang::check_dots_empty()
+  if (!missing(memory_map)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "pl$scan_ipc(memory_map)",
+      details = "This argument has no replacement.",
+    )
+  }
 
   pl$scan_ipc(
     source = source,
     n_rows = n_rows,
-    memory_map = memory_map,
     row_index_name = row_index_name,
     row_index_offset = row_index_offset,
     rechunk = rechunk,

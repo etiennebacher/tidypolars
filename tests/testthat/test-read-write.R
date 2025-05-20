@@ -27,28 +27,6 @@ patrick::with_parameters_test_that(
   file_format = c("ipc", "parquet")
 )
 
-test_that("deprecated arguments in scan/read_csv_polars", {
-  dat_pl <- as_polars_df(mtcars)
-  dest <- tempfile(fileext = paste0(".", "csv"))
-  x <- write_csv_polars(dat_pl, dest)
-
-  expect_snapshot({
-    new_dat <- scan_csv_polars(dest, dtypes = list(drat = pl$Float32))
-  })
-  expect_snapshot({
-    x <- scan_csv_polars(dest, reuse_downloaded = TRUE)
-  })
-  expect_true(new_dat$collect_schema()[["drat"]]$eq(pl$Float32))
-
-  expect_snapshot({
-    new_dat <- read_csv_polars(dest, dtypes = list(drat = pl$Float32))
-  })
-  expect_snapshot({
-    x <- read_csv_polars(dest, reuse_downloaded = TRUE)
-  })
-  expect_true(new_dat$collect_schema()[["drat"]]$eq(pl$Float32))
-})
-
 # Can't distinguish integers from floats
 test_that("CSV can do a write-read roundtrip", {
   for_all(
@@ -85,4 +63,39 @@ test_that("NDJSON can do a write-read roundtrip", {
       )
     }
   )
+})
+
+test_that("deprecated arguments in scan/read_csv_polars", {
+  dat_pl <- as_polars_df(mtcars)
+  dest <- tempfile(fileext = paste0(".", "csv"))
+  x <- write_csv_polars(dat_pl, dest)
+
+  expect_snapshot({
+    new_dat <- scan_csv_polars(dest, dtypes = list(drat = pl$Float32))
+  })
+  expect_snapshot({
+    x <- scan_csv_polars(dest, reuse_downloaded = TRUE)
+  })
+  expect_true(new_dat$collect_schema()[["drat"]]$eq(pl$Float32))
+
+  expect_snapshot({
+    new_dat <- read_csv_polars(dest, dtypes = list(drat = pl$Float32))
+  })
+  expect_snapshot({
+    x <- read_csv_polars(dest, reuse_downloaded = TRUE)
+  })
+  expect_true(new_dat$collect_schema()[["drat"]]$eq(pl$Float32))
+})
+
+test_that("deprecated arguments in scan/read_ipc_polars", {
+  dat_pl <- as_polars_df(mtcars)
+  dest <- tempfile(fileext = paste0(".", "arrow"))
+  x <- write_ipc_polars(dat_pl, dest)
+
+  expect_snapshot({
+    new_dat <- scan_ipc_polars(dest, memory_map = TRUE)
+  })
+  expect_snapshot({
+    new_dat <- read_ipc_polars(dest, memory_map = TRUE)
+  })
 })

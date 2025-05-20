@@ -10,24 +10,24 @@ read_ipc_polars(
   source,
   ...,
   n_rows = NULL,
-  memory_map = TRUE,
   row_index_name = NULL,
   row_index_offset = 0L,
   rechunk = FALSE,
   cache = TRUE,
-  include_file_paths = NULL
+  include_file_paths = NULL,
+  memory_map
 )
 
 scan_ipc_polars(
   source,
   ...,
   n_rows = NULL,
-  memory_map = TRUE,
   row_index_name = NULL,
   row_index_offset = 0L,
   rechunk = FALSE,
   cache = TRUE,
-  include_file_paths = NULL
+  include_file_paths = NULL,
+  memory_map
 )
 }
 \arguments{
@@ -51,6 +51,9 @@ the final DataFrame into contiguous memory chunks.}
 
 \item{include_file_paths}{Character value indicating the column name that
 will include the path of the source file(s).}
+
+\item{memory_map}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated
+with no replacement.}
 }
 \description{
 \code{read_ipc_polars()} imports the data as a Polars DataFrame.
