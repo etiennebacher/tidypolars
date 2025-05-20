@@ -233,8 +233,17 @@ write_json_polars <- function(
 #' `"uncompressed"` or "lz4" or "zstd". `NULL` is equivalent to `"uncompressed"`.
 #' Choose "zstd" for good compression performance. Choose "lz4"
 #' for fast compression/decompression.
-#' @param future Setting this to `TRUE` will write Polars' internal data
-#' structures that might not be available by other Arrow implementations.
+#' @param compat_level Determines the compatibility level when exporting Polars'
+#' internal data structures. When specifying a new compatibility level, Polars
+#' exports its internal data structures that might not be interpretable by other
+#' Arrow implementations. The level can be specified as the name (e.g.,
+#' `"newest"`) or as a scalar integer (currently, 0 or 1 is supported).
+#'
+#' - `"newest"` (default): Use the highest level, currently same as 1 (Low
+#'   compatibility).
+#' - `"oldest"`: Same as 0 (High compatibility).
+#' @param future `r lifecycle::badge("deprecated")` Deprecated, use
+#' ´compat_level´ instead.
 #'
 #' @inherit write_csv_polars return
 #' @export
@@ -243,10 +252,24 @@ write_ipc_polars <- function(
   file,
   compression = "uncompressed",
   ...,
-  future = FALSE
+  compat_level = "newest",
+  future
 ) {
   if (!is_polars_df(.data)) {
     rlang::abort("`write_ipc_polars()` can only be used on a DataFrame.")
+  }
+
+  if (!missing(future)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "write_ipc_polars(future)",
+      details = "Use `compat_level` instead."
+    )
+    compat_level <- if (isTRUE(future)) {
+      "newest"
+    } else {
+      "oldest"
+    }
   }
 
   rlang::arg_match0(compression, values = c("uncompressed", "zstd", "lz4"))
@@ -255,6 +278,6 @@ write_ipc_polars <- function(
   .data$write_ipc(
     file,
     compression = compression,
-    future = future
+    compat_level = compat_level
   )
 }

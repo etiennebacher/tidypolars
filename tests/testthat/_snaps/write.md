@@ -52,3 +52,12 @@
       The `quote` argument of `write_csv_polars()` is deprecated as of tidypolars 0.14.0.
       i Use `quote_char` instead.
 
+# deprecated args in write_ipc_polars()
+
+    Code
+      x <- write_ipc_polars(dat, dest, future = TRUE)
+    Condition
+      Warning:
+      The `future` argument of `write_ipc_polars()` is deprecated as of tidypolars 0.14.0.
+      i Use `compat_level` instead.
+

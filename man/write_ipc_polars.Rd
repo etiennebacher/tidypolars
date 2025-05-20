@@ -9,7 +9,8 @@ write_ipc_polars(
   file,
   compression = "uncompressed",
   ...,
-  future = FALSE
+  compat_level = "newest",
+  future
 )
 }
 \arguments{
@@ -24,8 +25,19 @@ for fast compression/decompression.}
 
 \item{...}{Ignored.}
 
-\item{future}{Setting this to \code{TRUE} will write Polars' internal data
-structures that might not be available by other Arrow implementations.}
+\item{compat_level}{Determines the compatibility level when exporting Polars'
+internal data structures. When specifying a new compatibility level, Polars
+exports its internal data structures that might not be interpretable by other
+Arrow implementations. The level can be specified as the name (e.g.,
+\code{"newest"}) or as a scalar integer (currently, 0 or 1 is supported).
+\itemize{
+\item \code{"newest"} (default): Use the highest level, currently same as 1 (Low
+compatibility).
+\item \code{"oldest"}: Same as 0 (High compatibility).
+}}
+
+\item{future}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use
+´compat_level´ instead.}
 }
 \value{
 The input DataFrame.

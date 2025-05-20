@@ -54,6 +54,16 @@ test_that("basic behavior with IPC", {
   expect_s3_class(read_ipc_polars(dest), "polars_data_frame")
 })
 
+test_that("deprecated args in write_ipc_polars()", {
+  skip_if_not_installed("arrow")
+  dest <- tempfile(fileext = ".arrow")
+  dat <- as_polars_df(mtcars)
+
+  expect_snapshot({
+    x <- write_ipc_polars(dat, dest, future = TRUE)
+  })
+})
+
 test_that("basic behavior with JSON", {
   skip_if_not_installed("jsonlite")
   dest <- tempfile(fileext = ".json")
