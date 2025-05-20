@@ -53,8 +53,8 @@ unions (default is \code{TRUE}).}
 \code{predicate_pushdown}, \code{projection_pushdown},  \code{slice_pushdown},
 \code{simplify_expression}. Default is \code{FALSE}.}
 
-\item{streaming}{Run parts of the query in a streaming fashion (this is in
-an alpha state). Default is \code{FALSE}.}
+\item{streaming}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use \code{engine}
+instead.}
 }
 \description{
 Fetch is a way to collect only the first \code{n} rows of a LazyFrame. It is

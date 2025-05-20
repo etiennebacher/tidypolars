@@ -32,9 +32,16 @@
 #' @param no_optimization Sets the following optimizations to `FALSE`:
 #' `predicate_pushdown`, `projection_pushdown`,  `slice_pushdown`,
 #' `simplify_expression`. Default is `FALSE`.
-#' @param streaming Run parts of the query in a streaming fashion (this is in
-#' an alpha state). Default is `FALSE`.
+#' @param engine The engine name to use for processing the query. One of the
+#' followings:
+#' - `"auto"` (default): Select the engine automatically. The `"in-memory"`
+#'   engine will be selected for most cases.
+#' - `"in-memory"`: Use the in-memory engine.
+#' - `"streaming"`: [Experimental] Use the (new) streaming engine.
+#' - `"old-streaming"`: [Superseded] Use the old streaming engine.
 #' @inheritParams slice_tail.polars_data_frame
+#' @param streaming `r lifecycle::badge("deprecated")` Deprecated, use `engine`
+#' instead.
 #'
 #' @export
 #' @seealso [fetch()] for applying a lazy query on a subset of the data.
@@ -68,7 +75,7 @@ compute.polars_lazy_frame <- function(
   cluster_with_columns = TRUE,
   no_optimization = FALSE,
   engine = c("auto", "in-memory", "streaming", "old-streaming"),
-  streaming # TODO: add deprecation in docs
+  streaming = FALSE
 ) {
   check_dots_empty()
   grps <- attributes(x)$pl_grps
@@ -77,13 +84,13 @@ compute.polars_lazy_frame <- function(
 
   if (!missing(streaming)) {
     lifecycle::deprecate_warn(
-      c(
-        "The `streaming` argument is deprecated and will be removed in the future.",
+      when = "0.14.0",
+      what = "compute(streaming)",
+      details = c(
         i = "Use `engine = \"old-streaming\"` for traditional streaming mode.",
         i = "Use `engine = \"streaming\"` for the new streaming mode.",
         i = "Use `engine = \"in-memory\"` for non-streaming mode."
       ),
-      always = TRUE
     )
     if (isTRUE(streaming)) engine <- "old-streaming"
     if (isFALSE(streaming)) engine <- "in-memory"
@@ -126,9 +133,25 @@ collect.polars_lazy_frame <- function(
   comm_subexpr_elim = TRUE,
   cluster_with_columns = TRUE,
   no_optimization = FALSE,
+  engine = c("auto", "in-memory", "streaming", "old-streaming"),
   streaming = FALSE
 ) {
   check_dots_empty()
+
+  if (!missing(streaming)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "collect(streaming)",
+      details = c(
+        i = "Use `engine = \"old-streaming\"` for traditional streaming mode.",
+        i = "Use `engine = \"streaming\"` for the new streaming mode.",
+        i = "Use `engine = \"in-memory\"` for non-streaming mode."
+      ),
+    )
+    if (isTRUE(streaming)) engine <- "old-streaming"
+    if (isFALSE(streaming)) engine <- "in-memory"
+  }
+
   x |>
     as.data.frame(
       type_coercion = type_coercion,
@@ -140,6 +163,7 @@ collect.polars_lazy_frame <- function(
       comm_subexpr_elim = comm_subexpr_elim,
       cluster_with_columns = cluster_with_columns,
       no_optimization = no_optimization,
+      engine = engine,
       streaming = streaming
     )
 }
