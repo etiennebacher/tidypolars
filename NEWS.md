@@ -3,7 +3,8 @@
 ## Deprecations and breaking changes
 
 * The following arguments are deprecated and will be removed in a future 
-  version (#194):
+  version. The recommended replacement is indicated on the right of the arrow
+  (#194):
   - in `compute()` and `collect()`: `streaming` -> `engine`;
   - in `read_csv_polars()` and `scan_csv_polars()`:
     * `dtypes` -> `schema_overrides`
