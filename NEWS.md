@@ -1,5 +1,29 @@
 # tidypolars (development version)
 
+## Deprecations and breaking changes
+
+* The following arguments are deprecated and will be removed in a future 
+  version (#194):
+  - in `compute()` and `collect()`: `streaming` -> `engine`;
+  - in `read_csv_polars()` and `scan_csv_polars()`:
+    * `dtypes` -> `schema_overrides`
+    * `reuse_downloaded` -> no replacement
+  - in `read_ndjson_polars` and `scan_ndjson_polars()`: 
+    * `reuse_downloaded` -> no replacement
+  - in `read_ipc_polars` and `scan_ipc_polars()`: 
+    * `memory_map` -> no replacement
+  - in `write_csv_polars()` and `sink_csv()`:
+    * `null_values` -> `null_value`
+    * `quote` -> `quote_char`
+  - in `write_ndjson_polars()`:
+    * `pretty` -> no replacement
+    * `row_oriented` -> no replacement
+  - in `write_ipc_polars()`:
+    * `future` -> `compat_level`
+
+  
+* `group_keys()` now returns a `tibble` and not a `data.frame` anymore (#194).
+
 ## New features
 
 * Added support for various `lubridate` functions:
@@ -50,6 +74,13 @@
   expression (#191).
   
 * Fix error in `count()` when it includes grouping variables (#193).
+
+## Other
+
+* `tidypolars` uses the rewritten version of `polars` (#194).
+
+
+
 
 # tidypolars 0.13.0
 
