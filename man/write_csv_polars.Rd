@@ -12,14 +12,16 @@ write_csv_polars(
   include_header = TRUE,
   separator = ",",
   line_terminator = "\\n",
-  quote = "\\"",
+  quote_char = "\\"",
   batch_size = 1024,
   datetime_format = NULL,
   date_format = NULL,
   time_format = NULL,
   float_precision = NULL,
-  null_values = "",
-  quote_style = "necessary"
+  null_value = "",
+  quote_style = "necessary",
+  quote,
+  null_values
 )
 }
 \arguments{
@@ -38,7 +40,7 @@ output.}
 
 \item{line_terminator}{String used to end each row.}
 
-\item{quote}{Byte to use as quoting character.}
+\item{quote_char}{Byte to use as quoting character.}
 
 \item{batch_size}{Number of rows that will be processed per thread.}
 
@@ -56,7 +58,7 @@ Rust crate.}
 \item{float_precision}{Number of decimal places to write, applied to both
 Float32 and Float64 datatypes.}
 
-\item{null_values}{A string representing null values (defaulting to the empty
+\item{null_value}{A string representing null values (defaulting to the empty
 string).}
 
 \item{quote_style}{Determines the quoting strategy used.
@@ -73,6 +75,12 @@ then quotes will be used even if they aren`t strictly necessary.
 \item \code{"never"}: This never puts quotes around fields, even if that results in
 invalid CSV data (e.g. by not quoting strings containing the separator).
 }}
+
+\item{quote}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use \code{quote_char}
+instead.}
+
+\item{null_values}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use
+\code{null_value} instead.}
 }
 \value{
 The input DataFrame.

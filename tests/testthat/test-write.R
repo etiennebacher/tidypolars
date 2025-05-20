@@ -31,6 +31,18 @@ test_that("basic behavior with CSV", {
   expect_s3_class(read_csv_polars(dest), "polars_data_frame")
 })
 
+test_that("deprecated args in write_csv_polars()", {
+  dest <- tempfile(fileext = ".csv")
+  dat <- as_polars_df(mtcars)
+
+  expect_snapshot({
+    x <- write_csv_polars(dat, dest, null_value = "a")
+  })
+  expect_snapshot({
+    x <- write_csv_polars(dat, dest, quote = "a")
+  })
+})
+
 test_that("basic behavior with IPC", {
   skip_if_not_installed("arrow")
   dest <- tempfile(fileext = ".arrow")
