@@ -108,6 +108,10 @@ scan_parquet_polars <- function(
 #' `scan_csv_polars()` imports the data as a Polars LazyFrame.
 #'
 #' @inherit neopolars::pl__scan_csv params details
+#' @param dtypes `r lifecycle::badge("deprecated")` Deprecated,
+#' use `schema_overrides` instead.
+#' @param reuse_downloaded `r lifecycle::badge("deprecated")`
+#' Deprecated with no replacement.
 #'
 #' @rdname from_csv
 #' @name from_csv
@@ -120,7 +124,8 @@ read_csv_polars <- function(
   comment_prefix = NULL,
   quote_char = "\"",
   skip_rows = 0,
-  dtypes = NULL,
+  schema = NULL,
+  schema_overrides = NULL,
   null_values = NULL,
   ignore_errors = FALSE,
   cache = FALSE,
@@ -136,11 +141,28 @@ read_csv_polars <- function(
   eol_char = "\n",
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
-  reuse_downloaded = TRUE,
-  include_file_paths = NULL
+  include_file_paths = NULL,
+  dtypes,
+  reuse_downloaded
 ) {
   rlang::arg_match0(encoding, values = c("utf8", "utf8-lossy"))
   rlang::check_dots_empty()
+
+  if (!missing(dtypes)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "pl$scan_csv(dtypes)",
+      details = "Use `schema_overrides` instead.",
+    )
+    schema_overrides <- dtypes
+  }
+  if (!missing(reuse_downloaded)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "pl$scan_csv(reuse_downloaded)",
+      details = "This argument has no replacement.",
+    )
+  }
 
   scan_csv_polars(
     source = source,
@@ -149,7 +171,8 @@ read_csv_polars <- function(
     comment_prefix = comment_prefix,
     quote_char = quote_char,
     skip_rows = skip_rows,
-    dtypes = dtypes,
+    schema = schema,
+    schema_overrides = schema_overrides,
     null_values = null_values,
     ignore_errors = ignore_errors,
     cache = cache,
@@ -165,7 +188,6 @@ read_csv_polars <- function(
     eol_char = eol_char,
     raise_if_empty = raise_if_empty,
     truncate_ragged_lines = truncate_ragged_lines,
-    reuse_downloaded = reuse_downloaded,
     include_file_paths = include_file_paths
   ) |>
     compute()
@@ -182,7 +204,8 @@ scan_csv_polars <- function(
   comment_prefix = NULL,
   quote_char = "\"",
   skip_rows = 0,
-  dtypes = NULL,
+  schema = NULL,
+  schema_overrides = NULL,
   null_values = NULL,
   ignore_errors = FALSE,
   cache = FALSE,
@@ -198,11 +221,28 @@ scan_csv_polars <- function(
   eol_char = "\n",
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
-  reuse_downloaded = TRUE,
-  include_file_paths = NULL
+  include_file_paths = NULL,
+  dtypes,
+  reuse_downloaded
 ) {
   rlang::arg_match0(encoding, values = c("utf8", "utf8-lossy"))
   rlang::check_dots_empty()
+
+  if (!missing(dtypes)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "pl$scan_csv(dtypes)",
+      details = "Use `schema_overrides` instead.",
+    )
+    schema_overrides <- dtypes
+  }
+  if (!missing(reuse_downloaded)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "pl$scan_csv(reuse_downloaded)",
+      details = "This argument has no replacement.",
+    )
+  }
 
   pl$scan_csv(
     source = source,
@@ -211,7 +251,8 @@ scan_csv_polars <- function(
     comment_prefix = comment_prefix,
     quote_char = quote_char,
     skip_rows = skip_rows,
-    dtypes = dtypes,
+    schema = schema,
+    schema_overrides = schema_overrides,
     null_values = null_values,
     ignore_errors = ignore_errors,
     cache = cache,
@@ -227,7 +268,6 @@ scan_csv_polars <- function(
     eol_char = eol_char,
     raise_if_empty = raise_if_empty,
     truncate_ragged_lines = truncate_ragged_lines,
-    reuse_downloaded = reuse_downloaded,
     include_file_paths = include_file_paths
   )
 }

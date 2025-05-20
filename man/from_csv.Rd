@@ -14,7 +14,8 @@ read_csv_polars(
   comment_prefix = NULL,
   quote_char = "\\"",
   skip_rows = 0,
-  dtypes = NULL,
+  schema = NULL,
+  schema_overrides = NULL,
   null_values = NULL,
   ignore_errors = FALSE,
   cache = FALSE,
@@ -30,8 +31,9 @@ read_csv_polars(
   eol_char = "\\n",
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
-  reuse_downloaded = TRUE,
-  include_file_paths = NULL
+  include_file_paths = NULL,
+  dtypes,
+  reuse_downloaded
 )
 
 scan_csv_polars(
@@ -42,7 +44,8 @@ scan_csv_polars(
   comment_prefix = NULL,
   quote_char = "\\"",
   skip_rows = 0,
-  dtypes = NULL,
+  schema = NULL,
+  schema_overrides = NULL,
   null_values = NULL,
   ignore_errors = FALSE,
   cache = FALSE,
@@ -58,8 +61,9 @@ scan_csv_polars(
   eol_char = "\\n",
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
-  reuse_downloaded = TRUE,
-  include_file_paths = NULL
+  include_file_paths = NULL,
+  dtypes,
+  reuse_downloaded
 )
 }
 \arguments{
@@ -85,6 +89,14 @@ turn off special handling and escaping of quotes.}
 
 \item{skip_rows}{Start reading after a particular number of rows. The header
 will be parsed at this offset.}
+
+\item{schema}{Provide the schema. This means that polars doesn't do schema
+inference. This argument expects the complete schema, whereas
+\code{schema_overrides} can be used to partially overwrite a schema. This must be
+a list. Names of list elements are used to match to inferred columns.}
+
+\item{schema_overrides}{Overwrite dtypes during inference. This must be a
+list. Names of list elements are used to match to inferred columns.}
 
 \item{null_values}{Character vector specifying the values to interpret as
 \code{NA} values. It can be named, in which case names specify the columns in
@@ -134,6 +146,12 @@ DataFrame or LazyFrame.}
 
 \item{include_file_paths}{Include the path of the source file(s) as a column
 with this name.}
+
+\item{dtypes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated,
+use \code{schema_overrides} instead.}
+
+\item{reuse_downloaded}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+Deprecated with no replacement.}
 }
 \description{
 \code{read_csv_polars()} imports the data as a Polars DataFrame.
