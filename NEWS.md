@@ -22,7 +22,6 @@
   - in `write_ipc_polars()`:
     * `future` -> `compat_level`
 
-  
 * `group_keys()` now returns a `tibble` and not a `data.frame` anymore (#194).
 
 ## New features
@@ -79,8 +78,6 @@
 ## Other
 
 * `tidypolars` uses the rewritten version of `polars` (#194).
-
-
 
 
 # tidypolars 0.13.0
