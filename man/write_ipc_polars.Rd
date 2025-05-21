@@ -37,7 +37,7 @@ compatibility).
 }}
 
 \item{future}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use
-´compat_level´ instead.}
+\code{compat_level} instead.}
 }
 \value{
 The input DataFrame.

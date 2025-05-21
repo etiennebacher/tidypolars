@@ -256,7 +256,7 @@ write_json_polars <- function(
 #'   compatibility).
 #' - `"oldest"`: Same as 0 (High compatibility).
 #' @param future `r lifecycle::badge("deprecated")` Deprecated, use
-#' ´compat_level´ instead.
+#' `compat_level` instead.
 #'
 #' @inherit write_csv_polars return
 #' @export
