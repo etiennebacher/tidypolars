@@ -675,6 +675,14 @@ translate <- function(
               "()`."
             )
           }
+          # Only suggest opening an issue for functions coming from other pkgs,
+          # not for custom functions.
+          if (!is.null(fn_names$pkg) || grepl("::", fn_names$orig_name)) {
+            msg <- c(
+              msg,
+              i = "You can ask for it to be translated here: <https://github.com/etiennebacher/tidypolars/issues>."
+            )
+          }
           abort(msg, call = env)
         }
       }
@@ -873,9 +881,15 @@ add_pkg_suffix <- function(name, known_ops, user_defined) {
 
   if (is.null(pkg) || pkg %in% c("base", "stats", "utils", "tools")) {
     name_to_eval <- paste0("pl_", fn)
-    pkg <- NULL
   } else {
     name_to_eval <- paste0("pl_", fn, "_", pkg)
+  }
+
+  if (grepl("::", name)) {
+    # Don't store the pkg name if it's explicitly specified.
+    # Don't do this too early because we need pkg when building the function to
+    # eval.
+    pkg <- NULL
   }
   list(orig_name = name, name_to_eval = name_to_eval, pkg = pkg)
 }
