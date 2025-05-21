@@ -2,16 +2,16 @@
 
 ## Deprecations and breaking changes
 
-* The following arguments are deprecated and will be removed in a future 
+* The following arguments are deprecated and will be removed in a future
   version. The recommended replacement is indicated on the right of the arrow
   (#194):
   - in `compute()` and `collect()`: `streaming` -> `engine`;
   - in `read_csv_polars()` and `scan_csv_polars()`:
     * `dtypes` -> `schema_overrides`
     * `reuse_downloaded` -> no replacement
-  - in `read_ndjson_polars` and `scan_ndjson_polars()`: 
+  - in `read_ndjson_polars` and `scan_ndjson_polars()`:
     * `reuse_downloaded` -> no replacement
-  - in `read_ipc_polars` and `scan_ipc_polars()`: 
+  - in `read_ipc_polars` and `scan_ipc_polars()`:
     * `memory_map` -> no replacement
   - in `write_csv_polars()` and `sink_csv()`:
     * `null_values` -> `null_value`
@@ -23,6 +23,11 @@
     * `future` -> `compat_level`
 
 * `group_keys()` now returns a `tibble` and not a `data.frame` anymore (#194).
+
+* `lubridate::make_date()`, `lubridate::make_datetime()`, and `ISOdatetime()`
+  now error if some components go over their expected range, e.g. `month = 20`
+  or `hour = 25`. Before, those functions were returning `NA` in this situation
+  (#194).
 
 ## New features
 
@@ -72,7 +77,7 @@
 
 * Fix behavior of `mutate()` and `summarize()` when they don't contain any
   expression (#191).
-  
+
 * Fix error in `count()` when it includes grouping variables (#193).
 
 ## Other
