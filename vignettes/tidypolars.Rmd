@@ -83,7 +83,7 @@ package. I import it both as a classic R `data.frame` and as a Polars `DataFrame
 so that we can easily compare `dplyr` and `tidypolars` functions.
 
 ```{r setup}
-library(polars)
+library(neopolars)
 library(tidypolars)
 library(dplyr, warn.conflicts = FALSE)
 library(tidyr, warn.conflicts = FALSE)

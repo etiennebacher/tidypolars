@@ -10,7 +10,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' library(polars)
+#' library(neopolars)
 #' p1 <- pl$DataFrame(
 #'   x = c("a", "b"),
 #'   y = 1:2

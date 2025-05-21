@@ -102,7 +102,7 @@ this argument and warns the user:
 
 ```{r}
 library(tidypolars)
-library(polars)
+library(neopolars)
 
 mtcars |>
   as_polars_df() |>
