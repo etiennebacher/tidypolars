@@ -293,7 +293,8 @@ only know that it is not translated by <code>tidypolars</code>):</p>
 <span><span class="va">dat</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">foo</span> <span class="op">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/agrep.html" class="external-link">agrep</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="va">a</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `filter()`:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> `tidypolars` doesn't know how to translate this function: `agrep()`.</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> `tidypolars` doesn't know how to translate this function: `agrep()` (from package `base`).</span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">ℹ</span> You can ask for it to be translated here: &lt;https://github.com/etiennebacher/tidypolars/issues&gt;.</span></span></code></pre></div>
 <p>This is because <code>foo &gt;= agrep("a", a)</code> uses the values
 from the columns <code>a</code> and <code>foo</code>, which are stored
 in the <code>polars</code> DataFrame. Therefore, <code>polars</code>
