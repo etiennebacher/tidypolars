@@ -67,7 +67,7 @@ specified. To change this behavior to error instead, use
 
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pl_fish_encounters <- neopolars::pl$DataFrame(tidyr::fish_encounters)
+pl_fish_encounters <- as_polars_df(tidyr::fish_encounters)
 
 pl_fish_encounters |>
   pivot_wider(names_from = station, values_from = seen)

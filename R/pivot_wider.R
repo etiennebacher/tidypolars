@@ -33,7 +33,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_fish_encounters <- neopolars::pl$DataFrame(tidyr::fish_encounters)
+#' pl_fish_encounters <- as_polars_df(tidyr::fish_encounters)
 #'
 #' pl_fish_encounters |>
 #'   pivot_wider(names_from = station, values_from = seen)
