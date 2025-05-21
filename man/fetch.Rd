@@ -16,6 +16,7 @@ fetch(
   comm_subexpr_elim = TRUE,
   cluster_with_columns = TRUE,
   no_optimization = FALSE,
+  engine = c("auto", "in-memory", "streaming", "old-streaming"),
   streaming = FALSE
 )
 }
@@ -52,6 +53,16 @@ unions (default is \code{TRUE}).}
 \item{no_optimization}{Sets the following optimizations to \code{FALSE}:
 \code{predicate_pushdown}, \code{projection_pushdown},  \code{slice_pushdown},
 \code{simplify_expression}. Default is \code{FALSE}.}
+
+\item{engine}{The engine name to use for processing the query. One of the
+followings:
+\itemize{
+\item \code{"auto"} (default): Select the engine automatically. The \code{"in-memory"}
+engine will be selected for most cases.
+\item \code{"in-memory"}: Use the in-memory engine.
+\item \code{"streaming"}: \link{Experimental} Use the (new) streaming engine.
+\item \code{"old-streaming"}: \link{Superseded} Use the old streaming engine.
+}}
 
 \item{streaming}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use \code{engine}
 instead.}
