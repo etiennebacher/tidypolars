@@ -20,7 +20,7 @@ replace_na.RPolarsDataFrame <- function(data, replace, ...) {
   is_scalar <- length(replace) == 1 && !is.list(replace)
 
   # TODO: maybe re-use fill_null() once this is fixed
-  # https://github.com/pola-rs/polars/issues/13789
+  # https://github.com/pola-rs/polars/issues/22892
   #
   # replace() errors if we try to replace numeric by character, but coerces
   # floats to integer.
