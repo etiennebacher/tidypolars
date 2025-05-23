@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  pl_test <- polars::pl$LazyFrame(
+  pl_test <- neopolars::pl$LazyFrame(
     grp = rep(c("A", "B"), each = 3),
     x = c(NA, 1, NA, NA, 2, NA),
     y = c(3, NA, 4, NA, 3, 1)
@@ -36,7 +36,7 @@ test_that("basic behavior works", {
 })
 
 test_that("when nothing to fill, input = output", {
-  pl_test <- polars::pl$LazyFrame(
+  pl_test <- neopolars::pl$LazyFrame(
     grp = rep(c("A", "B"), each = 3),
     x = c(NA, 1, NA, NA, 2, NA),
     y = c(3, NA, 4, NA, 3, 1)
@@ -49,7 +49,7 @@ test_that("when nothing to fill, input = output", {
 })
 
 test_that("works with grouped data", {
-  pl_grouped <- polars::pl$LazyFrame(
+  pl_grouped <- neopolars::pl$LazyFrame(
     grp = rep(c("A", "B"), each = 3),
     x = c(NA, 1, NA, NA, 2, NA),
     y = c(3, NA, 4, NA, 3, 1)

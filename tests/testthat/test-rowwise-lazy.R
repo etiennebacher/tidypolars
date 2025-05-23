@@ -84,7 +84,7 @@ test_that("basic behavior with all() and any() works", {
 })
 
 test_that("can only use rowwise() on a subset of functions", {
-  test <- as_polars_lf(
+  test <- pl$LazyFrame(
     x = c(TRUE, TRUE, NA),
     y = c(TRUE, FALSE, NA),
     z = c(TRUE, NA, NA)

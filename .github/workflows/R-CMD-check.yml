@@ -61,6 +61,9 @@ jobs:
         run: |
           Sys.setenv(NOT_CRAN = "true") # Enable installation with pre-built Rust library binary, or enable Rust caching
           install.packages("polars", repos = "https://community.r-multiverse.org")
+
+          ### TODO: remove this
+          install.packages("neopolars", repos = "https://eitsupi.r-universe.org")
         shell: Rscript {0}
 
       - name: Dependencies

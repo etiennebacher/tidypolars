@@ -8,7 +8,7 @@
 #'
 #' @param .data A Polars LazyFrame
 #' @param n_rows Number of rows to fetch.
-#' @inheritParams collect.RPolarsLazyFrame
+#' @inheritParams collect.polars_lazy_frame
 #'
 #' @details
 #' The parameter `n_rows` indicates how many rows from the LazyFrame should be
@@ -21,7 +21,7 @@
 #' @export
 #' @seealso [collect()] for applying a lazy query on the full data.
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' dat_lazy <- polars::as_polars_df(iris)$lazy()
+#' dat_lazy <- neopolars::as_polars_df(iris)$lazy()
 #'
 #' # this will return 30 rows
 #' fetch(dat_lazy, 30)
@@ -43,13 +43,27 @@ fetch <- function(
   comm_subexpr_elim = TRUE,
   cluster_with_columns = TRUE,
   no_optimization = FALSE,
+  engine = c("auto", "in-memory", "streaming", "old-streaming"),
   streaming = FALSE
 ) {
-  if (!inherits(.data, "RPolarsLazyFrame")) {
+  if (!is_polars_lf(.data)) {
     rlang::abort("`fetch()` can only be used on a LazyFrame.")
   }
-  out <- .data$fetch(
-    n_rows = n_rows,
+
+  if (!missing(streaming)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "fetch(streaming)",
+      details = c(
+        i = "Use `engine = \"old-streaming\"` for traditional streaming mode.",
+        i = "Use `engine = \"streaming\"` for the new streaming mode.",
+        i = "Use `engine = \"in-memory\"` for non-streaming mode."
+      ),
+    )
+    if (isTRUE(streaming)) engine <- "old-streaming"
+    if (isFALSE(streaming)) engine <- "in-memory"
+  }
+  out <- .data$head(n_rows)$collect(
     type_coercion = type_coercion,
     predicate_pushdown = predicate_pushdown,
     projection_pushdown = projection_pushdown,
@@ -59,7 +73,7 @@ fetch <- function(
     comm_subexpr_elim = comm_subexpr_elim,
     cluster_with_columns = cluster_with_columns,
     no_optimization = no_optimization,
-    streaming = streaming
+    engine = engine
   )
 
   add_tidypolars_class(out)

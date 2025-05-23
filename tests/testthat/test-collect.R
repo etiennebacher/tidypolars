@@ -21,6 +21,13 @@ test_that("basic behavior works", {
   )
 })
 
+test_that("deprecated arguments in collect()", {
+  test <- as_polars_lf(mtcars)
+  expect_snapshot({
+    x <- collect(test, streaming = TRUE)
+  })
+})
+
 test_that("can't collect non-LazyFrame object", {
   pl_iris <- as_polars_df(iris)
 

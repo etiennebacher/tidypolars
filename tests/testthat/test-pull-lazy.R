@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- neopolars::as_polars_lf(mtcars)
 
   expect_equal_lazy(
     pull(test, mpg),
@@ -22,7 +22,7 @@ test_that("basic behavior works", {
 })
 
 test_that("error cases work", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- neopolars::as_polars_lf(mtcars)
 
   expect_snapshot_lazy(
     pull(test, dplyr::all_of(c("mpg", "drat"))),

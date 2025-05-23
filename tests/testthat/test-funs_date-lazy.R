@@ -9,9 +9,6 @@ test_that("extracting components of date works", {
       c("2012-03-26", "2020-01-01", "2023-12-14", NA),
       tz = "America/Chicago"
     ),
-    # DMY = c("26-03-2012", "01-01-2020", "14-12-2023"),
-    # YDM = c("2012-26-03", "2020-01-01", "2023-14-12"),
-    # MDY = c("03-26-2012", "01-01-2020", "12-14-2023")
     YMD_HMS = ymd_hms(
       c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00", NA)
     ),
@@ -87,9 +84,6 @@ test_that("weekday is a special function", {
       c("2012-03-26", "2020-01-01", "2023-12-14", NA),
       tz = "America/Chicago"
     ),
-    # DMY = c("26-03-2012", "01-01-2020", "14-12-2023"),
-    # YDM = c("2012-26-03", "2020-01-01", "2023-14-12"),
-    # MDY = c("03-26-2012", "01-01-2020", "12-14-2023")
     YMD_HMS = ymd_hms(
       c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00", NA)
     ),
@@ -148,9 +142,6 @@ test_that("strptime() works", {
       c("2012-03-26", "2020-01-01", "2023-12-14", NA),
       tz = "America/Chicago"
     ),
-    # DMY = c("26-03-2012", "01-01-2020", "14-12-2023"),
-    # YDM = c("2012-26-03", "2020-01-01", "2023-14-12"),
-    # MDY = c("03-26-2012", "01-01-2020", "12-14-2023")
     YMD_HMS = ymd_hms(
       c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00", NA)
     ),
@@ -233,9 +224,6 @@ test_that("handling durations work", {
       c("2012-03-26", "2020-01-01", "2023-12-14", NA),
       tz = "America/Chicago"
     ),
-    # DMY = c("26-03-2012", "01-01-2020", "14-12-2023"),
-    # YDM = c("2012-26-03", "2020-01-01", "2023-14-12"),
-    # MDY = c("03-26-2012", "01-01-2020", "12-14-2023")
     YMD_HMS = ymd_hms(
       c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00", NA)
     ),
@@ -314,9 +302,6 @@ test_that("make_date() works", {
       c("2012-03-26", "2020-01-01", "2023-12-14", NA),
       tz = "America/Chicago"
     ),
-    # DMY = c("26-03-2012", "01-01-2020", "14-12-2023"),
-    # YDM = c("2012-26-03", "2020-01-01", "2023-14-12"),
-    # MDY = c("03-26-2012", "01-01-2020", "12-14-2023")
     YMD_HMS = ymd_hms(
       c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00", NA)
     ),
@@ -334,7 +319,7 @@ test_that("make_date() works", {
     ),
     somedate = c("Jul 24 2014", "Dec 24 2015", "Jan 21 2016", NA),
     y = c(2020:2022, NA),
-    m = c(1, 2, 20, 3),
+    m = c(1, 2, 12, 3),
     d = 1:4,
     h = 0:3,
     min = 24:27,
@@ -368,6 +353,12 @@ test_that("make_date() works", {
       mutate(foo = make_date(year = y, m, d)) |>
       pull(foo)
   )
+
+  expect_error_lazy(
+    test |>
+      mutate(foo = make_date(year = y, 30, 1)),
+    "Invalid date components"
+  )
 })
 
 test_that("make_datetime() works", {
@@ -377,9 +368,6 @@ test_that("make_datetime() works", {
       c("2012-03-26", "2020-01-01", "2023-12-14", NA),
       tz = "America/Chicago"
     ),
-    # DMY = c("26-03-2012", "01-01-2020", "14-12-2023"),
-    # YDM = c("2012-26-03", "2020-01-01", "2023-14-12"),
-    # MDY = c("03-26-2012", "01-01-2020", "12-14-2023")
     YMD_HMS = ymd_hms(
       c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00", NA)
     ),
@@ -397,7 +385,7 @@ test_that("make_datetime() works", {
     ),
     somedate = c("Jul 24 2014", "Dec 24 2015", "Jan 21 2016", NA),
     y = c(2020:2022, NA),
-    m = c(1, 2, 20, 3),
+    m = c(1, 2, 12, 3),
     d = 1:4,
     h = 0:3,
     min = 24:27,
@@ -439,6 +427,18 @@ test_that("make_datetime() works", {
       ) |>
       pull(foo)
   )
+
+  expect_error_lazy(
+    test |>
+      mutate(foo = make_datetime(year = y, 30, 1)),
+    "Invalid date components"
+  )
+
+  expect_error_lazy(
+    test |>
+      mutate(foo = make_datetime(year = y, 1, 1, hour = 25)),
+    "Invalid time components"
+  )
 })
 
 test_that("ISOdatetime() works", {
@@ -448,9 +448,6 @@ test_that("ISOdatetime() works", {
       c("2012-03-26", "2020-01-01", "2023-12-14", NA),
       tz = "America/Chicago"
     ),
-    # DMY = c("26-03-2012", "01-01-2020", "14-12-2023"),
-    # YDM = c("2012-26-03", "2020-01-01", "2023-14-12"),
-    # MDY = c("03-26-2012", "01-01-2020", "12-14-2023")
     YMD_HMS = ymd_hms(
       c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00", NA)
     ),
@@ -534,34 +531,10 @@ test_that("ISOdatetime() works", {
     ignore_attr = TRUE
   )
 
-  expect_equal_lazy(
+  expect_error_lazy(
     test |>
-      mutate(
-        foo = ISOdatetime(
-          year = 0,
-          month = 1,
-          day = 1,
-          hour = 25,
-          min = min,
-          sec = s,
-          tz = "Australia/Sydney"
-        )
-      ) |>
-      pull(foo),
-    test_df |>
-      mutate(
-        foo = ISOdatetime(
-          year = 0,
-          month = 1,
-          day = 1,
-          hour = 25,
-          min = min,
-          sec = s,
-          tz = "Australia/Sydney"
-        )
-      ) |>
-      pull(foo),
-    ignore_attr = TRUE
+      mutate(foo = ISOdatetime(year = y, 1, 1, hour = 25)),
+    "Invalid time components"
   )
 })
 
