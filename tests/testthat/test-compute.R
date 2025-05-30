@@ -29,6 +29,13 @@ test_that("basic behavior works", {
   expect_true(attr(out, "maintain_grp_order"))
 })
 
+test_that("deprecated arguments in compute()", {
+  test <- as_polars_lf(mtcars)
+  expect_snapshot({
+    x <- compute(test, streaming = TRUE)
+  })
+})
+
 test_that("can't collect non-LazyFrame object", {
   pl_iris <- as_polars_df(iris)
   expect_snapshot(

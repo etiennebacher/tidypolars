@@ -2,7 +2,7 @@ test_that("basic behavior of ifelse() works", {
   test <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    x3 = "hello"
+    x3 = rep("hello", 5)
   )
 
   expect_equal(
@@ -24,7 +24,7 @@ test_that("basic behavior of if_else() works", {
   test <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    x3 = "hello"
+    x3 = rep("hello", 5)
   )
 
   expect_equal(
@@ -46,7 +46,7 @@ test_that("error when different types", {
   test <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    x3 = "hello"
+    x3 = rep("hello", 5)
   )
 
   # different behavior than from classic R (e.g iris$Species == 1
@@ -67,7 +67,7 @@ test_that("evaluation of external objects works", {
   test <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    x3 = "hello"
+    x3 = rep("hello", 5)
   )
 
   foo <- "a"

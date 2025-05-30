@@ -7,12 +7,12 @@
 #' is most useful when a vectorised function doesn't exist. `rowwise()` produces
 #' another type of grouped data, and therefore can be removed with `ungroup()`.
 #'
-#' @inheritParams drop_na.RPolarsDataFrame
+#' @inheritParams drop_na.polars_data_frame
 #'
 #' @export
 #' @return A Polars Data/LazyFrame.
 #' @examplesIf require("dplyr", quietly = TRUE)
-#' df <- polars::pl$DataFrame(x = c(1, 3, 4), y = c(2, 1, 5), z = c(2, 3, 1))
+#' df <- neopolars::pl$DataFrame(x = c(1, 3, 4), y = c(2, 1, 5), z = c(2, 3, 1))
 #'
 #' # Compute the mean of x, y, z in each row
 #' df |>
@@ -23,7 +23,7 @@
 #' df |>
 #'  rowwise() |>
 #'  mutate(min = min(c(x, y)), max = max(c(x, y)))
-rowwise.RPolarsDataFrame <- function(data, ...) {
+rowwise.polars_data_frame <- function(data, ...) {
   if (!is.null(attributes(data)$pl_grps)) {
     rlang::abort("Cannot use `rowwise()` on grouped data.")
   }
@@ -38,6 +38,6 @@ rowwise.RPolarsDataFrame <- function(data, ...) {
   add_tidypolars_class(data2)
 }
 
-#' @rdname rowwise.RPolarsDataFrame
+#' @rdname rowwise.polars_data_frame
 #' @export
-rowwise.RPolarsLazyFrame <- rowwise.RPolarsDataFrame
+rowwise.polars_lazy_frame <- rowwise.polars_data_frame

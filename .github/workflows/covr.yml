@@ -46,7 +46,8 @@ jobs:
       - name: Package Dependencies
         run: |
           Sys.setenv(NOT_CRAN = "true") # Enable installation with pre-built Rust library binary, or enable Rust caching
-          remotes::install_deps(".", repos = c("https://community.r-multiverse.org", getOption("repos")), dependencies=TRUE, method = "libcurl")
+          # TODO: remove extra r-universe
+          remotes::install_deps(".", repos = c("https://community.r-multiverse.org", "https://eitsupi.r-universe.org", getOption("repos")), dependencies=TRUE, method = "libcurl")
         shell: Rscript {0}
 
       - name: Test coverage

@@ -2,7 +2,7 @@
 #'
 #' @description
 #' `compute()` checks the query, optimizes it in the background, and runs it.
-#' The output is a [Polars DataFrame][polars::DataFrame_class]. `collect()` is
+#' The output is a [Polars DataFrame][neopolars::pl__DataFrame]. `collect()` is
 #' similar to `compute()` but converts the output to an R [data.frame], which
 #' consumes more memory.
 #'
@@ -32,18 +32,21 @@
 #' @param no_optimization Sets the following optimizations to `FALSE`:
 #' `predicate_pushdown`, `projection_pushdown`,  `slice_pushdown`,
 #' `simplify_expression`. Default is `FALSE`.
-#' @param streaming Run parts of the query in a streaming fashion (this is in
-#' an alpha state). Default is `FALSE`.
-#' @param collect_in_background Detach this query from the R session. Computation
-#' will start in background. Get a handle which later can be converted into the
-#' resulting DataFrame. Useful in interactive mode to not lock R session (default
-#' is `FALSE`).
-#' @inheritParams slice_tail.RPolarsDataFrame
+#' @param engine The engine name to use for processing the query. One of the
+#' followings:
+#' - `"auto"` (default): Select the engine automatically. The `"in-memory"`
+#'   engine will be selected for most cases.
+#' - `"in-memory"`: Use the in-memory engine.
+#' - `"streaming"`: [Experimental] Use the (new) streaming engine.
+#' - `"old-streaming"`: [Superseded] Use the old streaming engine.
+#' @inheritParams slice_tail.polars_data_frame
+#' @param streaming `r lifecycle::badge("deprecated")` Deprecated, use `engine`
+#' instead.
 #'
 #' @export
 #' @seealso [fetch()] for applying a lazy query on a subset of the data.
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' dat_lazy <- polars::as_polars_df(iris)$lazy()
+#' dat_lazy <- neopolars::as_polars_df(iris)$lazy()
 #'
 #' compute(dat_lazy)
 #'
@@ -59,7 +62,7 @@
 #'   select(starts_with("Sepal")) |>
 #'   filter(between(Sepal.Length, 5, 6)) |>
 #'   collect()
-compute.RPolarsLazyFrame <- function(
+compute.polars_lazy_frame <- function(
   x,
   ...,
   type_coercion = TRUE,
@@ -71,13 +74,27 @@ compute.RPolarsLazyFrame <- function(
   comm_subexpr_elim = TRUE,
   cluster_with_columns = TRUE,
   no_optimization = FALSE,
-  streaming = FALSE,
-  collect_in_background = FALSE
+  engine = c("auto", "in-memory", "streaming", "old-streaming"),
+  streaming = FALSE
 ) {
   check_dots_empty()
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order
   is_grouped <- !is.null(grps)
+
+  if (!missing(streaming)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "compute(streaming)",
+      details = c(
+        i = "Use `engine = \"old-streaming\"` for traditional streaming mode.",
+        i = "Use `engine = \"streaming\"` for the new streaming mode.",
+        i = "Use `engine = \"in-memory\"` for non-streaming mode."
+      ),
+    )
+    if (isTRUE(streaming)) engine <- "old-streaming"
+    if (isFALSE(streaming)) engine <- "in-memory"
+  }
 
   out <- x$collect(
     type_coercion = type_coercion,
@@ -89,8 +106,7 @@ compute.RPolarsLazyFrame <- function(
     comm_subexpr_elim = comm_subexpr_elim,
     cluster_with_columns = cluster_with_columns,
     no_optimization = no_optimization,
-    streaming = streaming,
-    collect_in_background = collect_in_background
+    engine = engine
   )
 
   out <- if (is_grouped) {
@@ -103,9 +119,9 @@ compute.RPolarsLazyFrame <- function(
   add_tidypolars_class(out)
 }
 
-#' @rdname compute.RPolarsLazyFrame
+#' @rdname compute.polars_lazy_frame
 #' @export
-collect.RPolarsLazyFrame <- function(
+collect.polars_lazy_frame <- function(
   x,
   ...,
   type_coercion = TRUE,
@@ -117,10 +133,25 @@ collect.RPolarsLazyFrame <- function(
   comm_subexpr_elim = TRUE,
   cluster_with_columns = TRUE,
   no_optimization = FALSE,
-  streaming = FALSE,
-  collect_in_background = FALSE
+  engine = c("auto", "in-memory", "streaming", "old-streaming"),
+  streaming = FALSE
 ) {
   check_dots_empty()
+
+  if (!missing(streaming)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "collect(streaming)",
+      details = c(
+        i = "Use `engine = \"old-streaming\"` for traditional streaming mode.",
+        i = "Use `engine = \"streaming\"` for the new streaming mode.",
+        i = "Use `engine = \"in-memory\"` for non-streaming mode."
+      ),
+    )
+    if (isTRUE(streaming)) engine <- "old-streaming"
+    if (isFALSE(streaming)) engine <- "in-memory"
+  }
+
   x |>
     as.data.frame(
       type_coercion = type_coercion,
@@ -132,7 +163,7 @@ collect.RPolarsLazyFrame <- function(
       comm_subexpr_elim = comm_subexpr_elim,
       cluster_with_columns = cluster_with_columns,
       no_optimization = no_optimization,
-      streaming = streaming,
-      collect_in_background = collect_in_background
+      engine = engine,
+      streaming = streaming
     )
 }

@@ -17,7 +17,7 @@
 #'
 #' @examplesIf require("dplyr", quietly = TRUE)
 #' options(tidypolars_unknown_args = "warn")
-#' test <- polars::pl$DataFrame(x = c(2, 1, 5, 3, 1))
+#' test <- neopolars::pl$DataFrame(x = c(2, 1, 5, 3, 1))
 #'
 #' # The default is to warn the user
 #' mutate(test, x2 = sample(x, prob = 0.5))
