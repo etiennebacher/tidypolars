@@ -82,7 +82,7 @@ Click to see a small benchmark
 </summary><p>The main purpose of this benchmark is to show that <code>polars</code> and <code>tidypolars</code> are close and to give an idea of the performance. For more thorough, representative benchmarks about <code>polars</code>, take a look at <a href="https://duckdblabs.github.io/db-benchmark/" class="external-link">DuckDB benchmarks</a> instead.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sebkrantz.github.io/collapse/" class="external-link">collapse</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; collapse 2.0.16, see ?`collapse-package` or ?`collapse-documentation`</span></span>
+<span><span class="co">#&gt; collapse 2.1.1, see ?`collapse-package` or ?`collapse-documentation`</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dtplyr.tidyverse.org" class="external-link">dtplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pola-rs.github.io/r-polars/" class="external-link">polars</a></span><span class="op">)</span></span>
@@ -146,17 +146,16 @@ Click to see a small benchmark
 <span>  check <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  iterations <span class="op">=</span> <span class="fl">40</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Some expressions had a GC in every iteration;</span></span>
-<span><span class="co">#&gt; so filtering is disabled.</span></span>
+<span><span class="co">#&gt; Warning: Some expressions had a GC in every iteration; so filtering is</span></span>
+<span><span class="co">#&gt; disabled.</span></span>
 <span><span class="co">#&gt; # A tibble: 5 × 6</span></span>
-<span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc</span></span>
-<span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;</span></span>
-<span><span class="co">#&gt; 1 polars     277.93ms 304.59ms     3.17     1.99MB</span></span>
-<span><span class="co">#&gt; 2 tidypolars 286.78ms 362.65ms     2.35      1.2MB</span></span>
-<span><span class="co">#&gt; 3 dplyr         3.16s    3.63s     0.257    1.79GB</span></span>
-<span><span class="co">#&gt; 4 dtplyr        1.58s    1.92s     0.461    1.72GB</span></span>
-<span><span class="co">#&gt; 5 collapse   702.79ms 948.19ms     0.987  745.96MB</span></span>
-<span><span class="co">#&gt; # ℹ 1 more variable: `gc/sec` &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
+<span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 polars      91.75ms 101.63ms     8.67     2.03MB    0.217</span></span>
+<span><span class="co">#&gt; 2 tidypolars 128.61ms 269.19ms     3.37     1.49MB    1.01 </span></span>
+<span><span class="co">#&gt; 3 dplyr         3.21s    4.42s     0.235    1.79GB    0.611</span></span>
+<span><span class="co">#&gt; 4 dtplyr     916.43ms 964.62ms     1.02     1.72GB    2.25 </span></span>
+<span><span class="co">#&gt; 5 collapse   372.23ms 454.87ms     2.13   745.96MB    2.19</span></span>
 <span></span>
 <span><span class="co"># NOTE: do NOT take the "mem_alloc" results into account.</span></span>
 <span><span class="co"># `bench::mark()` doesn't report the accurate memory usage for packages calling</span></span>
@@ -170,6 +169,10 @@ Click to see a small benchmark
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>NOT_CRAN <span class="op">=</span> <span class="st">"true"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"tidypolars"</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://community.r-multiverse.org"</span>, <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>The development version contains the latest improvements and bug fixes:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"etiennebacher/tidypolars"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
@@ -241,7 +244,7 @@ Click to see a small benchmark
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>
