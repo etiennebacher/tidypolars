@@ -50,7 +50,7 @@ thorough, representative benchmarks about `polars`, take a look at
 
 ``` r
 library(collapse, warn.conflicts = FALSE)
-#> collapse 2.0.16, see ?`collapse-package` or ?`collapse-documentation`
+#> collapse 2.1.1, see ?`collapse-package` or ?`collapse-documentation`
 library(dplyr, warn.conflicts = FALSE)
 library(dtplyr)
 library(polars)
@@ -114,17 +114,16 @@ bench::mark(
   check = FALSE,
   iterations = 40
 )
-#> Warning: Some expressions had a GC in every iteration;
-#> so filtering is disabled.
+#> Warning: Some expressions had a GC in every iteration; so filtering is
+#> disabled.
 #> # A tibble: 5 × 6
-#>   expression      min   median `itr/sec` mem_alloc
-#>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>
-#> 1 polars     277.93ms 304.59ms     3.17     1.99MB
-#> 2 tidypolars 286.78ms 362.65ms     2.35      1.2MB
-#> 3 dplyr         3.16s    3.63s     0.257    1.79GB
-#> 4 dtplyr        1.58s    1.92s     0.461    1.72GB
-#> 5 collapse   702.79ms 948.19ms     0.987  745.96MB
-#> # ℹ 1 more variable: `gc/sec` <dbl>
+#>   expression      min   median `itr/sec` mem_alloc `gc/sec`
+#>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
+#> 1 polars      91.75ms 101.63ms     8.67     2.03MB    0.217
+#> 2 tidypolars 128.61ms 269.19ms     3.37     1.49MB    1.01 
+#> 3 dplyr         3.21s    4.42s     0.235    1.79GB    0.611
+#> 4 dtplyr     916.43ms 964.62ms     1.02     1.72GB    2.25 
+#> 5 collapse   372.23ms 454.87ms     2.13   745.96MB    2.19
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
@@ -142,6 +141,13 @@ it from R-universe.
 ``` r
 Sys.setenv(NOT_CRAN = "true")
 install.packages("tidypolars", repos = c("https://community.r-multiverse.org", 'https://cloud.r-project.org'))
+```
+
+The development version contains the latest improvements and bug fixes:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("etiennebacher/tidypolars")
 ```
 
 ## Contributing

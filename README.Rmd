@@ -136,6 +136,14 @@ Sys.setenv(NOT_CRAN = "true")
 install.packages("tidypolars", repos = c("https://community.r-multiverse.org", 'https://cloud.r-project.org'))
 ```
 
+The development version contains the latest improvements and bug fixes:
+
+```{r eval=FALSE}
+# install.packages("remotes")
+remotes::install_github("etiennebacher/tidypolars")
+```
+
+
 
 ## Contributing
 
