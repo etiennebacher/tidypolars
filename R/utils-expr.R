@@ -611,7 +611,6 @@ translate <- function(
         "+", "-", "*", "/", "^", "**", ">", ">=", "<", "<=", "==", "!=", "&",
         "|", "!", "%%", "%/%"
       )
-
       fn_names <- add_pkg_suffix(name, known_ops, user_defined)
       name <- fn_names$name_to_eval
       is_known <- is_function_known(name)
