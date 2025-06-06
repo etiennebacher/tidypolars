@@ -576,6 +576,32 @@ translate <- function(
           }
           attr(out, "case_insensitive") <- case_insensitive
           return(out)
+        },
+
+        "%>%" = {
+          lhs <- expr[[2]]
+          rhs <- expr[[3]]
+          replace_dot <- function(expr, replacement) {
+            if (is.symbol(expr) && identical(expr, sym("."))) {
+              return(replacement)
+            } else if (is.call(expr)) {
+              as.call(lapply(expr, replace_dot, replacement = replacement))
+            } else {
+              return(expr)
+            }
+          }
+
+          new_rhs <- replace_dot(rhs, lhs)
+          out <- translate(
+            new_rhs,
+            .data = .data,
+            new_vars = new_vars,
+            env = env,
+            caller = caller,
+            call_is_function = call_is_function,
+            expr_uses_col = expr_uses_col
+          )
+          return(out)
         }
       )
 
@@ -585,6 +611,7 @@ translate <- function(
         "+", "-", "*", "/", "^", "**", ">", ">=", "<", "<=", "==", "!=", "&",
         "|", "!", "%%", "%/%"
       )
+
       fn_names <- add_pkg_suffix(name, known_ops, user_defined)
       name <- fn_names$name_to_eval
       is_known <- is_function_known(name)
