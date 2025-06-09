@@ -576,6 +576,53 @@ translate <- function(
           }
           attr(out, "case_insensitive") <- case_insensitive
           return(out)
+        },
+
+        "%>%" = {
+          lhs <- expr[[2]]
+          rhs <- expr[[3]]
+          replace_dot <- function(expr, replacement) {
+            if (is.symbol(expr) && identical(expr, sym("."))) {
+              return(replacement)
+            } else if (is.call(expr)) {
+              as.call(lapply(expr, replace_dot, replacement = replacement))
+            } else {
+              return(expr)
+            }
+          }
+
+          has_dot <- any(vapply(
+            rhs,
+            function(x) is.symbol(x) && identical(x, sym(".")),
+            FUN.VALUE = logical(1)
+          ))
+
+          if (has_dot) {
+            new_rhs <- replace_dot(rhs, lhs)
+          } else {
+            ### I want to insert `lhs` as first arg so first I remove all args
+            ### in the original call (after saving them), and then I insert the
+            ### new args with `lhs` first.
+            existing_args <- call_args(rhs)
+            remove_args <- rep_named(names(existing_args), list(zap()))
+            new_args <- append(list(lhs), existing_args)
+            new_rhs <- rhs
+            if (length(remove_args) > 0) {
+              new_rhs <- call_modify(new_rhs, !!!remove_args)
+            }
+            new_rhs <- call_modify(new_rhs, !!!new_args)
+          }
+
+          out <- translate(
+            new_rhs,
+            .data = .data,
+            new_vars = new_vars,
+            env = env,
+            caller = caller,
+            call_is_function = call_is_function,
+            expr_uses_col = expr_uses_col
+          )
+          return(out)
         }
       )
 
