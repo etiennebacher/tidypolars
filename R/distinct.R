@@ -34,7 +34,9 @@ distinct.RPolarsDataFrame <- function(
   maintain_order = TRUE
 ) {
   vars <- tidyselect_dots(.data, ...)
-  if (length(vars) == 0) vars <- names(.data)
+  if (length(vars) == 0) {
+    vars <- names(.data)
+  }
   out <- .data$unique(
     subset = vars,
     keep = keep,
@@ -52,7 +54,9 @@ distinct.RPolarsLazyFrame <- distinct.RPolarsDataFrame
 
 duplicated_rows <- function(.data, ...) {
   vars <- tidyselect_dots(.data, ...)
-  if (length(vars) == 0) vars <- names(.data)
+  if (length(vars) == 0) {
+    vars <- names(.data)
+  }
   out <- .data$filter(pl$struct(vars)$is_duplicated())
   add_tidypolars_class(out)
 }

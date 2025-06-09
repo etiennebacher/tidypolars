@@ -55,7 +55,9 @@ relocate.RPolarsDataFrame <- function(
   }
 
   vars <- tidyselect_dots(.data, ...)
-  if (length(vars) == 0) return(add_tidypolars_class(.data))
+  if (length(vars) == 0) {
+    return(add_tidypolars_class(.data))
+  }
 
   not_moving <- setdiff(names_data, vars)
 
