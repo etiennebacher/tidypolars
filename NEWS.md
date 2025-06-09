@@ -47,11 +47,13 @@
 * Error messages due to untranslated functions now suggest opening an issue to
   ask for their translation (#197).
 
+* Add support for `%>%` in expressions (#200).
+
 ## Bug fixes
 
 * Fix behavior of `mutate()` and `summarize()` when they don't contain any
   expression (#191).
-  
+
 * Fix error in `count()` when it includes grouping variables (#193).
 
 # tidypolars 0.13.0
