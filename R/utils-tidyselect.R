@@ -20,7 +20,9 @@ tidyselect_named_arg <- function(.data, cols) {
   out <- names(
     tidyselect::eval_select(cols, data = data, error_call = caller_env())
   )
-  if (length(out) == 0) return(NULL)
+  if (length(out) == 0) {
+    return(NULL)
+  }
   out
 }
 
@@ -70,7 +72,9 @@ check_where_arg <- function(...) {
   exprs <- get_dots(...)
   for (i in seq_along(exprs)) {
     tmp <- safe_deparse(exprs[[i]])
-    if (!startsWith(tmp, "where(")) next
+    if (!startsWith(tmp, "where(")) {
+      next
+    }
     tmp <- gsub("^where\\(", "", tmp)
     tmp <- gsub("\\)$", "", tmp)
     if (!startsWith(tmp, "is.")) {

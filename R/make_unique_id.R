@@ -21,7 +21,9 @@ make_unique_id <- function(.data, ..., new_col = "hash") {
     )
   }
   vars <- tidyselect_dots(.data, ...)
-  if (length(vars) == 0) vars <- names(.data)
+  if (length(vars) == 0) {
+    vars <- names(.data)
+  }
   out <- .data$with_columns(
     pl$struct(vars)$hash()$alias(new_col)
   )
