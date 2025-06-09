@@ -476,7 +476,8 @@ translate <- function(
                 caller = caller,
                 call_is_function = call_is_function,
                 expr_uses_col = expr_uses_col
-              )
+              ) |>
+                as_polars_expr(as_lit = TRUE)
               rhs <- translate(
                 expr[[3]],
                 .data = .data,
@@ -485,7 +486,8 @@ translate <- function(
                 caller = caller,
                 call_is_function = call_is_function,
                 expr_uses_col = expr_uses_col
-              )
+              ) |>
+                as_polars_expr(as_lit = TRUE)
               if (is.list(rhs)) {
                 rhs <- unlist(rhs)
               }
@@ -695,7 +697,7 @@ translate <- function(
           suppressWarnings({
             tr <- try(do.call(fn, list(args)), silent = TRUE)
           })
-          if (inherits(tr, "RPolarsExpr")) {
+          if (is_polars_expr(tr)) {
             return(tr)
           } else {
             abort(
@@ -1052,7 +1054,7 @@ check_rowwise <- function(x = NULL, ...) {
   dots <- get_dots(...)
   is_rowwise <- dots[["__tidypolars__env"]]$is_rowwise
   if (is.list(x) && isTRUE(is_rowwise)) {
-    out <- pl$concat_list(x)
+    out <- pl$concat_list(!!!x)
   } else {
     out <- x
   }
@@ -1069,7 +1071,7 @@ check_rowwise_dots <- function(...) {
   dots[["__tidypolars__caller"]] <- NULL
   dots <- unlist(dots)
   if (isTRUE(is_rowwise)) {
-    out <- pl$concat_list(dots)
+    out <- pl$concat_list(!!!dots)
   } else {
     if (is.list(dots)) {
       out <- dots[[1]]
@@ -1096,10 +1098,10 @@ check_pattern <- function(x) {
 }
 
 polars_expr_to_r <- function(x) {
-  if (inherits(x, "RPolarsExpr")) {
+  if (is_polars_expr(x)) {
     is_col <- length(x$meta$root_names()) > 0
     if (!is_col) {
-      x <- x$to_r()
+      x <- pl$select(x)$to_series()$to_r_vector()
     }
   }
   x
@@ -1117,7 +1119,7 @@ check_timezone <- function(tz, empty_allowed = FALSE) {
 
   # This happens when one passes an existing column as the timezone,
   # polars_expr_to_r() doesn't return an R object in this case.
-  if (inherits(tz, "RPolarsExpr")) {
+  if (is_polars_expr(tz)) {
     rlang::abort("`tidypolars` cannot pass a variable of the data as timezone.")
   }
 

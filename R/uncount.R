@@ -13,7 +13,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' test <- polars::pl$DataFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
+#' test <- neopolars::pl$DataFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
 #' test
 #'
 #' uncount(test, n)
@@ -25,7 +25,7 @@
 #'
 #' # using expressions
 #' uncount(test, 2 / n)
-uncount.RPolarsDataFrame <- function(
+uncount.polars_data_frame <- function(
   data,
   weights,
   ...,
@@ -51,13 +51,13 @@ uncount.RPolarsDataFrame <- function(
 
   if (!is.null(.id)) {
     out <- out$with_columns(
-      (pl$col(names(out)[1])$cum_count()$over(names(out)))$alias(.id)
+      (pl$col(names(out)[1])$cum_count()$over(!!!names(out)))$alias(.id)
     )
   }
 
   add_tidypolars_class(out)
 }
 
-#' @rdname uncount.RPolarsDataFrame
+#' @rdname uncount.polars_data_frame
 #' @export
-uncount.RPolarsLazyFrame <- uncount.RPolarsDataFrame
+uncount.polars_lazy_frame <- uncount.polars_data_frame

@@ -3,20 +3,18 @@
     Code
       current$collect()
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	conversion from `str` to `f64` failed in column 'literal' for 1 out of 1 values: ["a"]
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! Invalid operation: conversion from `str` to `f64` failed in column 'literal' for 1 out of 1 values: ["a"]
 
 ---
 
     Code
       current$collect()
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	conversion from `str` to `f64` failed in column 'literal' for 1 out of 1 values: ["unknown"]
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! Invalid operation: conversion from `str` to `f64` failed in column 'literal' for 1 out of 1 values: ["unknown"]
 

@@ -18,12 +18,12 @@ test_that("basic behavior works", {
 
   expect_colnames(
     make_unique_id(test, am, gear),
-    c(test$columns, "hash")
+    c(names(test), "hash")
   )
 
   expect_colnames(
     make_unique_id(test, am, gear, new_col = "foo"),
-    c(test$columns, "foo")
+    c(names(test), "foo")
   )
 
   expect_equal_lazy(
