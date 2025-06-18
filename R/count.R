@@ -4,6 +4,7 @@
 #' @inheritParams fill.RPolarsDataFrame
 #' @param sort If `TRUE`, will show the largest groups at the top.
 #' @param name Name of the new column.
+#' @param wt Not supported by tidypolars.
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -15,7 +16,16 @@
 #' count(test, cyl, am, sort = TRUE, name = "count")
 #'
 #' add_count(test, cyl, am, sort = TRUE, name = "count")
-count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
+count.RPolarsDataFrame <- function(
+  x,
+  ...,
+  wt = NULL,
+  sort = FALSE,
+  name = "n"
+) {
+  if (!missing(wt)) {
+    check_unsupported_arg(wt = quo_text(enquo(wt)))
+  }
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order
   is_grouped <- !is.null(grps)
@@ -40,7 +50,16 @@ count.RPolarsLazyFrame <- count.RPolarsDataFrame
 #' @rdname count.RPolarsDataFrame
 #' @export
 
-add_count.RPolarsDataFrame <- function(x, ..., sort = FALSE, name = "n") {
+add_count.RPolarsDataFrame <- function(
+  x,
+  ...,
+  wt = NULL,
+  sort = FALSE,
+  name = "n"
+) {
+  if (!missing(wt)) {
+    check_unsupported_arg(wt = quo_text(enquo(wt)))
+  }
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order
   is_grouped <- !is.null(grps)
