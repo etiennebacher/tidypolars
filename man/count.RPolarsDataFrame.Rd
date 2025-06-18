@@ -9,23 +9,25 @@
 \alias{add_count.RPolarsLazyFrame}
 \title{Count the observations in each group}
 \usage{
-\method{count}{RPolarsDataFrame}(x, ..., sort = FALSE, name = "n")
+\method{count}{RPolarsDataFrame}(x, ..., wt = NULL, sort = FALSE, name = "n")
 
 \method{tally}{RPolarsDataFrame}(x, sort = FALSE, name = "n")
 
-\method{count}{RPolarsLazyFrame}(x, ..., sort = FALSE, name = "n")
+\method{count}{RPolarsLazyFrame}(x, ..., wt = NULL, sort = FALSE, name = "n")
 
 \method{tally}{RPolarsLazyFrame}(x, sort = FALSE, name = "n")
 
-\method{add_count}{RPolarsDataFrame}(x, ..., sort = FALSE, name = "n")
+\method{add_count}{RPolarsDataFrame}(x, ..., wt = NULL, sort = FALSE, name = "n")
 
-\method{add_count}{RPolarsLazyFrame}(x, ..., sort = FALSE, name = "n")
+\method{add_count}{RPolarsLazyFrame}(x, ..., wt = NULL, sort = FALSE, name = "n")
 }
 \arguments{
 \item{x}{A Polars Data/LazyFrame}
 
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}
+
+\item{wt}{Not supported by tidypolars.}
 
 \item{sort}{If \code{TRUE}, will show the largest groups at the top.}
 

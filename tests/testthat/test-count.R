@@ -159,3 +159,27 @@ test_that("count() on grouping variables", {
   expect_equal(group_vars(test), c("year", "state"))
   expect_false(attr(test, "maintain_grp_order"))
 })
+
+test_that("count() and add_count() explicitly do not support 'wt'", {
+  expect_warning(
+    mtcars |> as_polars_df() |> count(wt = drat),
+    "Argument `wt` is not supported by tidypolars"
+  )
+  expect_warning(
+    mtcars |> as_polars_df() |> add_count(wt = drat),
+    "Argument `wt` is not supported by tidypolars"
+  )
+  withr::with_options(
+    list("tidypolars_unknown_args" = "error"),
+    {
+      expect_error(
+        mtcars |> as_polars_df() |> count(wt = drat),
+        "Argument `wt` is not supported by tidypolars"
+      )
+      expect_error(
+        mtcars |> as_polars_df() |> add_count(wt = drat),
+        "Argument `wt` is not supported by tidypolars"
+      )
+    }
+  )
+})
