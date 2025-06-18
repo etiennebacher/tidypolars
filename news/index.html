@@ -77,6 +77,7 @@
 <li><p>Add support for <code><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date()</a></code> for character columns (<a href="https://github.com/etiennebacher/tidypolars/issues/190" class="external-link">#190</a>).</p></li>
 <li><p>Error messages due to untranslated functions now suggest opening an issue to ask for their translation (<a href="https://github.com/etiennebacher/tidypolars/issues/197" class="external-link">#197</a>).</p></li>
 <li><p>Add support for <code>%&gt;%</code> in expressions (<a href="https://github.com/etiennebacher/tidypolars/issues/200" class="external-link">#200</a>).</p></li>
+<li><p><code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">add_count()</a></code> now warn or error when argument <code>wt</code> is used since it is not supported. The behavior depends on the global option <code>tidypolars_unknown_args</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/204" class="external-link">#204</a>).</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
