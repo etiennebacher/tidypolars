@@ -11,11 +11,11 @@
 \usage{
 \method{count}{RPolarsDataFrame}(x, ..., wt = NULL, sort = FALSE, name = "n")
 
-\method{tally}{RPolarsDataFrame}(x, sort = FALSE, name = "n")
+\method{tally}{RPolarsDataFrame}(x, wt = NULL, sort = FALSE, name = "n")
 
 \method{count}{RPolarsLazyFrame}(x, ..., wt = NULL, sort = FALSE, name = "n")
 
-\method{tally}{RPolarsLazyFrame}(x, sort = FALSE, name = "n")
+\method{tally}{RPolarsLazyFrame}(x, wt = NULL, sort = FALSE, name = "n")
 
 \method{add_count}{RPolarsDataFrame}(x, ..., wt = NULL, sort = FALSE, name = "n")
 
