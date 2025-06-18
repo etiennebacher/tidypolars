@@ -116,3 +116,19 @@ test_that("message if overwriting variable", {
   #     pull(n)
   # )
 })
+
+test_that("tally() explicitly does not support 'wt'", {
+  expect_warning(
+    mtcars |> as_polars_df() |> tally(wt = drat),
+    "Argument `wt` is not supported by tidypolars"
+  )
+  withr::with_options(
+    list("tidypolars_unknown_args" = "error"),
+    {
+      expect_error(
+        mtcars |> as_polars_df() |> tally(wt = drat),
+        "Argument `wt` is not supported by tidypolars"
+      )
+    }
+  )
+})

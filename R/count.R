@@ -54,7 +54,10 @@ count.RPolarsDataFrame <- function(
 
 #' @rdname count.RPolarsDataFrame
 #' @export
-tally.RPolarsDataFrame <- function(x, sort = FALSE, name = "n") {
+tally.RPolarsDataFrame <- function(x, wt = NULL, sort = FALSE, name = "n") {
+  if (!missing(wt)) {
+    check_unsupported_arg(wt = quo_text(enquo(wt)))
+  }
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order
   is_grouped <- !is.null(grps)
