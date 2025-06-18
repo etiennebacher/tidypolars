@@ -2,14 +2,20 @@
 % Please edit documentation in R/count.R
 \name{count.RPolarsDataFrame}
 \alias{count.RPolarsDataFrame}
+\alias{tally.RPolarsDataFrame}
 \alias{count.RPolarsLazyFrame}
+\alias{tally.RPolarsLazyFrame}
 \alias{add_count.RPolarsDataFrame}
 \alias{add_count.RPolarsLazyFrame}
 \title{Count the observations in each group}
 \usage{
 \method{count}{RPolarsDataFrame}(x, ..., sort = FALSE, name = "n")
 
+\method{tally}{RPolarsDataFrame}(x, sort = FALSE, name = "n")
+
 \method{count}{RPolarsLazyFrame}(x, ..., sort = FALSE, name = "n")
+
+\method{tally}{RPolarsLazyFrame}(x, sort = FALSE, name = "n")
 
 \method{add_count}{RPolarsDataFrame}(x, ..., sort = FALSE, name = "n")
 
@@ -31,12 +37,21 @@ Count the observations in each group
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 test <- polars::as_polars_df(mtcars)
+
+# grouping variables must be specified in count() and add_count()
 count(test, cyl)
-
 count(test, cyl, am)
-
 count(test, cyl, am, sort = TRUE, name = "count")
 
 add_count(test, cyl, am, sort = TRUE, name = "count")
+
+# tally() directly uses grouping variables of the input
+test |>
+  group_by(cyl) |>
+  tally()
+
+test |>
+  group_by(cyl, am) |>
+  tally(sort = TRUE, name = "count")
 \dontshow{\}) # examplesIf}
 }

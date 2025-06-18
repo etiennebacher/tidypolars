@@ -49,6 +49,8 @@
 
 * Add support for `%>%` in expressions (#200).
 
+* Add support for `dplyr::tally()` (#203).
+
 ## Bug fixes
 
 * Fix behavior of `mutate()` and `summarize()` when they don't contain any
