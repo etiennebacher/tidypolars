@@ -49,6 +49,8 @@
 
 * Add support for `%>%` in expressions (#200).
 
+* Add support for `dplyr::tally()` (#203).
+
 * `count()` and `add_count()` now warn or error when argument `wt` is used
   since it is not supported. The behavior depends on the global option
   `tidypolars_unknown_args` (#204).

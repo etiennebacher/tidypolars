@@ -9,13 +9,22 @@
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' test <- polars::as_polars_df(mtcars)
+#'
+#' # grouping variables must be specified in count() and add_count()
 #' count(test, cyl)
-#'
 #' count(test, cyl, am)
-#'
 #' count(test, cyl, am, sort = TRUE, name = "count")
 #'
 #' add_count(test, cyl, am, sort = TRUE, name = "count")
+#'
+#' # tally() directly uses grouping variables of the input
+#' test |>
+#'   group_by(cyl) |>
+#'   tally()
+#'
+#' test |>
+#'   group_by(cyl, am) |>
+#'   tally(sort = TRUE, name = "count")
 count.RPolarsDataFrame <- function(
   x,
   ...,
@@ -45,11 +54,33 @@ count.RPolarsDataFrame <- function(
 
 #' @rdname count.RPolarsDataFrame
 #' @export
+tally.RPolarsDataFrame <- function(x, wt = NULL, sort = FALSE, name = "n") {
+  if (!missing(wt)) {
+    check_unsupported_arg(wt = quo_text(enquo(wt)))
+  }
+  grps <- attributes(x)$pl_grps
+  mo <- attributes(x)$maintain_grp_order
+  is_grouped <- !is.null(grps)
+  out <- count_(x, grps, sort = sort, name = name, new_col = FALSE)
+
+  if (length(grps) > 1) {
+    grps <- grps[-length(grps)]
+    out <- group_by(out, all_of(grps), maintain_order = mo)
+  }
+
+  add_tidypolars_class(out)
+}
+
+#' @rdname count.RPolarsDataFrame
+#' @export
 count.RPolarsLazyFrame <- count.RPolarsDataFrame
 
 #' @rdname count.RPolarsDataFrame
 #' @export
+tally.RPolarsLazyFrame <- tally.RPolarsDataFrame
 
+#' @rdname count.RPolarsDataFrame
+#' @export
 add_count.RPolarsDataFrame <- function(
   x,
   ...,
