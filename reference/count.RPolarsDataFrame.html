@@ -47,8 +47,14 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'RPolarsDataFrame'</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, wt <span class="op">=</span> <span class="cn">NULL</span>, sort <span class="op">=</span> <span class="cn">FALSE</span>, name <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># S3 method for class 'RPolarsDataFrame'</span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally</a></span><span class="op">(</span><span class="va">x</span>, wt <span class="op">=</span> <span class="cn">NULL</span>, sort <span class="op">=</span> <span class="cn">FALSE</span>, name <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># S3 method for class 'RPolarsLazyFrame'</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, wt <span class="op">=</span> <span class="cn">NULL</span>, sort <span class="op">=</span> <span class="cn">FALSE</span>, name <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'RPolarsLazyFrame'</span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally</a></span><span class="op">(</span><span class="va">x</span>, wt <span class="op">=</span> <span class="cn">NULL</span>, sort <span class="op">=</span> <span class="cn">FALSE</span>, name <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'RPolarsDataFrame'</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">add_count</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, wt <span class="op">=</span> <span class="cn">NULL</span>, sort <span class="op">=</span> <span class="cn">FALSE</span>, name <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span>
@@ -86,6 +92,8 @@ column numbers, select helpers, etc.</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># grouping variables must be specified in count() and add_count()</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">test</span>, <span class="va">cyl</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 2)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┐</span>
@@ -97,7 +105,6 @@ column numbers, select helpers, etc.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 7   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 14  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┘</span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">test</span>, <span class="va">cyl</span>, <span class="va">am</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (6, 3)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┬─────┐</span>
@@ -112,7 +119,6 @@ column numbers, select helpers, etc.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 0.0 ┆ 12  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 1.0 ┆ 2   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴─────┘</span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">test</span>, <span class="va">cyl</span>, <span class="va">am</span>, sort <span class="op">=</span> <span class="cn">TRUE</span>, name <span class="op">=</span> <span class="st">"count"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (6, 3)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┬───────┐</span>
@@ -147,6 +153,40 @@ column numbers, select helpers, etc.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ 2     │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ 2     │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────┘</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># tally() directly uses grouping variables of the input</span></span></span>
+<span class="r-in"><span><span class="va">test</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ cyl ┆ n   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ u32 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 11  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 7   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 14  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┘</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">test</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">am</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally</a></span><span class="op">(</span>sort <span class="op">=</span> <span class="cn">TRUE</span>, name <span class="op">=</span> <span class="st">"count"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (6, 3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┬───────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ cyl ┆ am  ┆ count │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ ---   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64 ┆ u32   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═══════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 0.0 ┆ 12    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 1.0 ┆ 8     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 0.0 ┆ 4     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 1.0 ┆ 3     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 0.0 ┆ 3     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 1.0 ┆ 2     │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┴───────┘</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Groups [3]: cyl</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Maintain order: FALSE</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
