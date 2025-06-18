@@ -36,6 +36,24 @@ test_that("arguments name and sort work", {
   )
 })
 
+test_that("tally() drops one grouping level", {
+  test <- polars::as_polars_df(mtcars)
+  expect_equal(
+    test |>
+      group_by(cyl) |>
+      tally() |>
+      group_vars(),
+    character(0)
+  )
+  expect_equal(
+    test |>
+      group_by(cyl, am) |>
+      tally() |>
+      group_vars(),
+    "cyl"
+  )
+})
+
 # TODO: uncomment if add_tally() becomes generic, #202
 # test_that("add_tally works", {
 #   test <- polars::as_polars_df(mtcars)
