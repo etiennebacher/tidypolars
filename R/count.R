@@ -4,18 +4,37 @@
 #' @inheritParams fill.polars_data_frame
 #' @param sort If `TRUE`, will show the largest groups at the top.
 #' @param name Name of the new column.
+#' @param wt Not supported by tidypolars.
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' test <- neopolars::as_polars_df(mtcars)
+#'
+#' # grouping variables must be specified in count() and add_count()
 #' count(test, cyl)
-#'
 #' count(test, cyl, am)
-#'
 #' count(test, cyl, am, sort = TRUE, name = "count")
 #'
 #' add_count(test, cyl, am, sort = TRUE, name = "count")
-count.polars_data_frame <- function(x, ..., sort = FALSE, name = "n") {
+#'
+#' # tally() directly uses grouping variables of the input
+#' test |>
+#'   group_by(cyl) |>
+#'   tally()
+#'
+#' test |>
+#'   group_by(cyl, am) |>
+#'   tally(sort = TRUE, name = "count")
+count.polars_data_frame <- function(
+    x,
+    ...,
+    wt = NULL,
+    sort = FALSE,
+    name = "n"
+) {
+  if (!missing(wt)) {
+    check_unsupported_arg(wt = quo_text(enquo(wt)))
+  }
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order
   is_grouped <- !is.null(grps)
@@ -35,12 +54,43 @@ count.polars_data_frame <- function(x, ..., sort = FALSE, name = "n") {
 
 #' @rdname count.polars_data_frame
 #' @export
+tally.polars_data_frame <- function(x, wt = NULL, sort = FALSE, name = "n") {
+  if (!missing(wt)) {
+    check_unsupported_arg(wt = quo_text(enquo(wt)))
+  }
+  grps <- attributes(x)$pl_grps
+  mo <- attributes(x)$maintain_grp_order
+  is_grouped <- !is.null(grps)
+  out <- count_(x, grps, sort = sort, name = name, new_col = FALSE)
+
+  if (length(grps) > 1) {
+    grps <- grps[-length(grps)]
+    out <- group_by(out, all_of(grps), maintain_order = mo)
+  }
+
+  add_tidypolars_class(out)
+}
+
+#' @rdname count.polars_data_frame
+#' @export
 count.polars_lazy_frame <- count.polars_data_frame
 
 #' @rdname count.polars_data_frame
 #' @export
+tally.polars_lazy_frame <- tally.polars_data_frame
 
-add_count.polars_data_frame <- function(x, ..., sort = FALSE, name = "n") {
+#' @rdname count.polars_data_frame
+#' @export
+add_count.polars_data_frame <- function(
+    x,
+    ...,
+    wt = NULL,
+    sort = FALSE,
+    name = "n"
+) {
+  if (!missing(wt)) {
+    check_unsupported_arg(wt = quo_text(enquo(wt)))
+  }
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order
   is_grouped <- !is.null(grps)
