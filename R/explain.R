@@ -11,7 +11,7 @@
 #' @param x A Polars LazyFrame.
 #' @param optimized Logical. If `TRUE` (default), show the query optimized by
 #' Polars. Otherwise, show the initial query.
-#' @inheritParams summary.RPolarsDataFrame
+#' @inheritParams summary.polars_data_frame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -31,7 +31,7 @@
 #' # optimized query run by polars
 #' cat(explain(query))
 # nocov start
-explain.RPolarsLazyFrame <- function(x, optimized = TRUE, ...) {
+explain.polars_lazy_frame <- function(x, optimized = TRUE, ...) {
   x$explain(optimized = optimized)
 }
 # nocov end

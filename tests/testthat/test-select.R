@@ -1,5 +1,5 @@
 test_that("basic behavior works", {
-  pl_iris <- polars::as_polars_df(iris)
+  pl_iris <- neopolars::as_polars_df(iris)
 
   expect_is_tidypolars(select(pl_iris, c("Sepal.Length", "Sepal.Width")))
 
@@ -25,7 +25,7 @@ test_that("basic behavior works", {
 })
 
 test_that("select helpers work", {
-  pl_iris <- polars::as_polars_df(iris)
+  pl_iris <- neopolars::as_polars_df(iris)
   expect_colnames(
     select(pl_iris, starts_with("Sepal")),
     c("Sepal.Length", "Sepal.Width")
@@ -90,7 +90,7 @@ test_that("select helpers work", {
     c("Sepal.Length", "Sepal.Width")
   )
 
-  test <- polars::pl$DataFrame(
+  test <- neopolars::pl$DataFrame(
     x1 = "a",
     x2 = 1,
     x3 = "b",
@@ -112,7 +112,7 @@ test_that("select helpers work", {
 })
 
 test_that("renaming in select works", {
-  test <- polars::as_polars_df(iris)
+  test <- neopolars::as_polars_df(iris)
 
   expect_equal(
     select(test, foo = Sepal.Length, foo2 = Species),
