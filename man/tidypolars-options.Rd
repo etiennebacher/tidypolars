@@ -4,13 +4,24 @@
 \alias{tidypolars-options}
 \title{\code{tidypolars} global options}
 \description{
-Currently, \code{tidypolars} has only one global option:
+\code{tidypolars} has the following global options:
 \itemize{
 \item \code{tidypolars_unknown_args} controls what happens when some arguments passed
 in an expression are unknown, e.g the argument \code{prob} in \code{sample()}. The
 default (\code{"warn"}) only warns the user that some arguments are ignored by
 \code{tidypolars}. The only other accepted value is \code{"error"} to throw an
 error when this happens.
+\item \code{tidypolars_fallback_to_r} controls what happens when an unknown function
+(that isn't translated to use polars syntax) is passed in an expression.
+The default is \code{FALSE}, meaning that unknown functions will trigger an
+error. Setting this option to \code{TRUE} will convert the data to R, apply the
+unknown function, and convert the output back to polars.
+\strong{Using the fallback to R has several drawbacks:}
+\itemize{
+\item it loses some of polars built-in parallelism and other optimizations;
+\item the session may crash or experience a severe slowdown when the data is
+converted to R (especially if the input is a LazyFrame).
+}
 }
 
 The package \code{polars} also contains several global options that may be useful,

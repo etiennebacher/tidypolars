@@ -707,6 +707,11 @@ translate <- function(
             )
           }
         } else {
+          if (isTRUE(getOption("tidypolars_fallback_to_r", FALSE))) {
+            data_df <- as.data.frame(.data)
+            out <- eval_tidy(expr, data = data_df)
+            return(pl$lit(out))
+          }
           if (!is.null(fn_names$pkg)) {
             msg <- paste0(
               "`tidypolars` doesn't know how to translate this function: `",
