@@ -59,7 +59,7 @@
   internally translated to polars syntax. The default behavior is still to
   error, but the user can now set `options(tidypolars_fallback_to_r = TRUE)`
   to handle those unknown functions. See `?tidypolars_options` for
-  details on the drawbacks of this approach (#203).
+  details on the drawbacks of this approach (#205).
 
 ## Bug fixes
 
