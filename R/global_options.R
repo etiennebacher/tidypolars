@@ -23,9 +23,11 @@
 #' such as changing the default behavior when converting Int64 values to R:
 #' <https://pola-rs.github.io/r-polars/man/polars_options.html>.
 #'
-#' @name tidypolars-options
+#' @name tidypolars_options
 #'
 #' @examplesIf require("dplyr", quietly = TRUE)
+#' ##### Unknown arguments
+#'
 #' options(tidypolars_unknown_args = "warn")
 #' test <- polars::pl$DataFrame(x = c(2, 1, 5, 3, 1))
 #'
@@ -37,4 +39,19 @@
 #' try(mutate(test, x2 = sample(x, prob = 0.5)))
 #'
 #' options(tidypolars_unknown_args = "warn")
+#'
+#' ##### Fallback to R
+#'
+#' test <- polars::pl$DataFrame(x = c(2, 1, 5, 3, 1))
+#'
+#' # The default is to error because mad() isn't translated internally
+#' try(mutate(test, x2 = mad(x)))
+#'
+#' # But one can allow fallback to R to apply this function and then convert
+#' # the output back to polars (see drawbacks in the "description" section
+#' # above)
+#' options(tidypolars_fallback_to_r = TRUE)
+#' mutate(test, x2 = mad(x))
+#'
+#' options(tidypolars_fallback_to_r = FALSE)
 NULL
