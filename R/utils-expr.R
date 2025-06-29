@@ -735,7 +735,10 @@ translate <- function(
               i = "You can ask for it to be translated here: <https://github.com/etiennebacher/tidypolars/issues>."
             )
           }
-          msg <- c(msg, i = "See `?tidypolars_options` to set automatic fallback to R to handle unknown functions.")
+          msg <- c(
+            msg,
+            i = "See `?tidypolars_options` to set automatic fallback to R to handle unknown functions."
+          )
           abort(msg, call = env)
         }
       }
