@@ -55,7 +55,7 @@
   since it is not supported. The behavior depends on the global option
   `tidypolars_unknown_args` (#204).
   
-* `tidypolars` has very basic support to fallback to R when a function is not
+* `tidypolars` has experimental support to fallback to R when a function is not
   internally translated to polars syntax. The default behavior is still to
   error, but the user can now set `options(tidypolars_fallback_to_r = TRUE)`
   to handle those unknown functions. See `?tidypolars_options` for
