@@ -86,7 +86,7 @@ reference:
     contents:
       - as_tibble.tidypolars
       - summary.RPolarsDataFrame
-      - tidypolars-options
+      - tidypolars_options
 
   - title: Other Polars functions
     desc: Other Polars-specific functions (most are deprecated).

@@ -54,6 +54,12 @@
 * `count()` and `add_count()` now warn or error when argument `wt` is used
   since it is not supported. The behavior depends on the global option
   `tidypolars_unknown_args` (#204).
+  
+* `tidypolars` has experimental support for fallback to R when a function is not
+  internally translated to polars syntax. The default behavior is still to
+  error, but the user can now set `options(tidypolars_fallback_to_r = TRUE)`
+  to handle those unknown functions. See `?tidypolars_options` for
+  details on the drawbacks of this approach (#205).
 
 ## Bug fixes
 
