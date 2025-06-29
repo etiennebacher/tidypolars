@@ -55,8 +55,8 @@
 <url><loc>https://tidypolars.etiennebacher.com/reference/slice_tail.RPolarsDataFrame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/summarize.RPolarsDataFrame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/summary.RPolarsDataFrame.html</loc></url>
-<url><loc>https://tidypolars.etiennebacher.com/reference/tidypolars-options.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/tidypolars-package.html</loc></url>
+<url><loc>https://tidypolars.etiennebacher.com/reference/tidypolars_options.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/uncount.RPolarsDataFrame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/unite.RPolarsDataFrame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/write_csv_polars.html</loc></url>
