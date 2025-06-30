@@ -4,7 +4,7 @@
 \name{tidypolars-package}
 \alias{tidypolars}
 \alias{tidypolars-package}
-\title{tidypolars: Get the Power of Polars with the Syntax of the Tidyverse}
+\title{tidypolars: More Efficient Tidyverse Code, Using Polars in the Background}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 

@@ -20,7 +20,6 @@
 #' (`filter()`, `mutate()` or `summarize()`).
 #' @param caller User environment in which the function is called.
 #'
-#' @import rlang
 #' @noRd
 #'
 #' @return A list of polars expressions. If some expressions depend on newly
