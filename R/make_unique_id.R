@@ -12,7 +12,7 @@
 make_unique_id <- function(.data, ..., new_col = "hash") {
   check_polars_data(.data)
   if (new_col %in% names(.data)) {
-    rlang::abort(
+    cli_abort(
       paste0(
         'Column "',
         new_col,

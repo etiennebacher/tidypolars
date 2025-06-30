@@ -25,7 +25,7 @@
 #'  mutate(min = min(c(x, y)), max = max(c(x, y)))
 rowwise.RPolarsDataFrame <- function(data, ...) {
   if (!is.null(attributes(data)$pl_grps)) {
-    rlang::abort("Cannot use `rowwise()` on grouped data.")
+    cli_abort("Cannot use `rowwise()` on grouped data.")
   }
 
   vars <- tidyselect_dots(data, ...)

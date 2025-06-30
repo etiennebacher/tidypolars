@@ -302,7 +302,7 @@ translate <- function(
           out <- tryCatch(
             eval_tidy(expr, env = caller),
             error = function(e) {
-              rlang::abort(e$message, call = env)
+              cli_abort(e$message, call = env)
             }
           )
           out <- translate(
@@ -332,14 +332,14 @@ translate <- function(
             out <- tryCatch(
               eval_tidy(sym(expr[[3]]), env = caller),
               error = function(e) {
-                rlang::abort(e$message, call = env)
+                cli_abort(e$message, call = env)
               }
             )
           } else {
             out <- tryCatch(
               eval_tidy(expr, env = caller),
               error = function(e) {
-                rlang::abort(e$message, call = env)
+                cli_abort(e$message, call = env)
               }
             )
             out <- translate(
@@ -369,14 +369,14 @@ translate <- function(
             out <- tryCatch(
               eval_tidy(expr[[3]], env = caller),
               error = function(e) {
-                rlang::abort(e$message, call = env)
+                cli_abort(e$message, call = env)
               }
             )
           } else {
             out <- tryCatch(
               eval_tidy(expr, env = caller),
               error = function(e) {
-                rlang::abort(e$message, call = env)
+                cli_abort(e$message, call = env)
               }
             )
             out <- translate(
@@ -698,7 +698,7 @@ translate <- function(
           if (inherits(tr, "RPolarsExpr")) {
             return(tr)
           } else {
-            abort(
+            cli_abort(
               c(
                 "Could not evaluate an anonymous function in `across()`.",
                 "i" = "Are you sure the anonymous function returns a Polars expression?"
@@ -714,7 +714,7 @@ translate <- function(
           }
           if (!is.null(fn_names$pkg)) {
             msg <- paste0(
-              "`tidypolars` doesn't know how to translate this function: `",
+              "{.pkg tidypolars} doesn't know how to translate this function: `",
               fn_names$orig_name,
               "()` (from package `",
               fn_names$pkg,
@@ -722,7 +722,7 @@ translate <- function(
             )
           } else {
             msg <- paste0(
-              "`tidypolars` doesn't know how to translate this function: `",
+              "{.pkg tidypolars} doesn't know how to translate this function: `",
               fn_names$orig_name,
               "()`."
             )
@@ -739,7 +739,7 @@ translate <- function(
             msg,
             i = "See `?tidypolars_options` to set automatic fallback to R to handle unknown functions."
           )
-          abort(msg, call = env)
+          cli_abort(msg, call = env)
         }
       }
 
@@ -771,7 +771,7 @@ translate <- function(
         error = function(e) {
           if (!inherits(e, "tidypolars_error")) {
             orig_name <- gsub("^pl_", "", name)
-            abort(
+            cli_abort(
               c(
                 paste0(
                   "Error while running function `",
@@ -783,12 +783,12 @@ translate <- function(
               call = env
             )
           } else {
-            abort(e$message, call = env)
+            cli_abort(e$message, call = env)
           }
         }
       )
     },
-    abort(
+    cli_abort(
       paste("Internal: Unknown type", typeof(expr)),
       call = env
     )
@@ -842,7 +842,7 @@ check_empty_dots <- function(...) {
       )
     )
   } else if (rlang_action == "error") {
-    rlang::abort(
+    cli_abort(
       c(
         paste0(
           "Package tidypolars doesn't know how to use some arguments of `",
@@ -856,7 +856,7 @@ check_empty_dots <- function(...) {
       call = env
     )
   } else {
-    abort(
+    cli_abort(
       "The global option `tidypolars_unknown_args` only accepts \"warn\" and \"error\"."
     )
   }
@@ -1127,18 +1127,20 @@ check_timezone <- function(tz, empty_allowed = FALSE) {
   # This happens when one passes an existing column as the timezone,
   # polars_expr_to_r() doesn't return an R object in this case.
   if (inherits(tz, "RPolarsExpr")) {
-    rlang::abort("`tidypolars` cannot pass a variable of the data as timezone.")
+    cli_abort(
+      "{.pkg tidypolars} cannot pass a variable of the data as timezone."
+    )
   }
 
   if (length(tz) > 1) {
-    rlang::abort(
-      "`tidypolars` cannot use several timezones in a single column."
+    cli_abort(
+      "{.pkg tidypolars} cannot use several timezones in a single column."
     )
   }
 
   if (is.na(tz)) {
-    rlang::abort(
-      "This expression in `tidypolars` doesn't support `NA` timezone."
+    cli_abort(
+      "This expression in {.pkg tidypolars} doesn't support `NA` timezone."
     )
   }
 
@@ -1146,15 +1148,15 @@ check_timezone <- function(tz, empty_allowed = FALSE) {
     if (empty_allowed) {
       return(NULL)
     } else {
-      rlang::abort(
-        "This expression in `tidypolars` doesn't support empty timezone."
+      cli_abort(
+        "This expression in {.pkg tidypolars} doesn't support empty timezone."
       )
     }
   }
 
   # TODO: remove this once we have cleaner error messages in r-polars
   if (!tz %in% OlsonNames()) {
-    rlang::abort(sprintf("Unrecognized time zone: '%s'", tz))
+    cli_abort(sprintf("Unrecognized time zone: '%s'", tz))
   }
 
   tz
@@ -1166,7 +1168,7 @@ check_allowed_rowwise <- function(name, env) {
     "!"
   )
   if (!name %in% shortlist) {
-    rlang::abort(
+    cli_abort(
       c(
         "x" = paste0(
           "Can't use function `",

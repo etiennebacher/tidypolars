@@ -65,7 +65,7 @@ pivot_longer.RPolarsDataFrame <- function(
 
   if (!is.null(names_prefix)) {
     if (length(names_prefix) > 1) {
-      rlang::abort(
+      cli_abort(
         "`names_prefix` must be of length 1."
       )
     }

@@ -90,7 +90,7 @@ check_where_arg <- function(...) {
     tmp <- gsub("^where\\(", "", tmp)
     tmp <- gsub("\\)$", "", tmp)
     if (!startsWith(tmp, "is.")) {
-      rlang::abort(
+      cli_abort(
         "`where()` can only take `is.*` functions (like `is.numeric`).",
         call = caller_env(2)
       )

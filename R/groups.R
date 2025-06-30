@@ -34,7 +34,7 @@ group_by.RPolarsDataFrame <- function(
   .add = FALSE
 ) {
   if (isTRUE(attributes(.data)$grp_type == "rowwise")) {
-    rlang::abort(
+    cli_abort(
       c(
         "Cannot use `group_by()` if `rowwise()` is also used.",
         "i" = "Use `ungroup()` first, and then `group_by()`."

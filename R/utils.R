@@ -41,7 +41,7 @@ get_grps <- function(.data, .by, env) {
   inline_grps <- tidyselect_named_arg(.data, .by)
   if (length(inline_grps) > 0) {
     if (!is.null(grps)) {
-      abort(
+      cli_abort(
         "Can't supply `.by` when `.data` is a grouped DataFrame or LazyFrame.",
         call = env
       )
@@ -118,7 +118,7 @@ check_dots_empty_ignore <- function(..., .unsupported = NULL) {
     if (rlang_action == "warn") {
       warn(msg, call = caller_env())
     } else if (rlang_action == "error") {
-      abort(
+      cli_abort(
         c(
           msg,
           "i" = "Use `options(tidypolars_unknown_args = \"warn\")` to warn when this happens instead of throwing an error."
@@ -132,7 +132,7 @@ check_dots_empty_ignore <- function(..., .unsupported = NULL) {
   }
 
   if (length(dots) > 0) {
-    abort(
+    cli_abort(
       c(
         "`...` must be empty."
         # "i" = paste("Unknown args:", dots))
@@ -171,7 +171,7 @@ check_unsupported_arg <- function(...) {
   if (rlang_action == "warn") {
     warn(msg, call = caller_env())
   } else if (rlang_action == "error") {
-    abort(
+    cli_abort(
       c(
         msg,
         "i" = "Use `options(tidypolars_unknown_args = \"warn\")` to warn when this happens instead of throwing an error."
@@ -187,6 +187,6 @@ check_integerish <- function(x, name, allow_na = TRUE) {
     return(invisible())
   }
   if (!rlang::is_integerish(x)) {
-    abort(paste0("`", name, "` must be integerish."))
+    cli_abort(paste0("`", name, "` must be integerish."))
   }
 }

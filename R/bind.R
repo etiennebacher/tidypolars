@@ -85,8 +85,8 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
   )
 
   if (!(all_df || all_lf)) {
-    rlang::abort(
-      "All elements in `...` must be of the same class (either all Polars DataFrames or all Polars LazyFrames).",
+    cli_abort(
+      "All elements in {.code ...} must be of the same class (either all Polars DataFrames or all Polars LazyFrames).",
       call = caller_env()
     )
   }
@@ -115,19 +115,19 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
 
         if (.name_repair == "check_unique") {
           msg <- make_dupes_msg(dupes)
-          rlang::abort(
+          cli_abort(
             c(
               "Names must be unique.",
-              "x" = "These names are duplicated (`variable` (locations)):",
+              "x" = "These names are duplicated ({.code variable} (locations)):",
               " " = msg
             ),
             call = caller_env()
           )
         } else if (.name_repair == "minimal") {
-          rlang::abort(
+          cli_abort(
             c(
-              "Argument `.name_repair = \"minimal\"` doesn't work on Polars Data/LazyFrames.",
-              "i" = "Either provide unique names or use `.name_repair = \"universal\"`."
+              "Argument {.code .name_repair = \"minimal\"} doesn't work on Polars Data/LazyFrames.",
+              "i" = "Either provide unique names or use {.code .name_repair = \"universal\"}."
             ),
             call = caller_env()
           )
@@ -160,8 +160,8 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
         pl$concat(dots, how = how)
       } else {
         if (length(dots) > 2) {
-          rlang::abort(
-            "`bind_cols_polars()` doesn't work with more than two LazyFrames.",
+          cli_abort(
+            "{.code bind_cols_polars()} doesn't work with more than two LazyFrames.",
             call = caller_env()
           )
         }

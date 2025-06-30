@@ -379,14 +379,14 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
     )
 
   if (!all_df_or_lf) {
-    rlang::abort(
+    cli_abort(
       "`x` and `y` must be either two DataFrames or two LazyFrames.",
       call = caller_env()
     )
   }
 
   if (!is.null(suffix) && length(suffix) != 2) {
-    rlang::abort(
+    cli_abort(
       "`suffix` must be of length 2.",
       call = caller_env()
     )
@@ -399,7 +399,7 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
       "one-to-one" = "1:1",
       "many-to-one" = "m:1",
       "one-to-many" = "1:m",
-      abort(
+      cli_abort(
         paste0(
           "`relationship` must be one of \"one-to-one\", \"one-to-many\", \"many-to-one\", or \"many-to-many\", not \"",
           relationship,
@@ -419,7 +419,7 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
       na_matches,
       "na" = TRUE,
       "never" = FALSE,
-      abort(
+      cli_abort(
         paste0(
           "`relationship` must be one of \"na\" or \"never\", not \"",
           na_matches,
@@ -433,7 +433,7 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
   if (is.null(by) && how != "cross") {
     by <- intersect(names(x), names(y))
     if (length(by) == 0) {
-      rlang::abort(
+      cli_abort(
         c(
           "`by` must be supplied when `x` and `y` have no common variables.",
           "i" = "Use `cross_join()` to perform a cross-join."
@@ -518,7 +518,7 @@ is_inequality_join <- function(by) {
 
 eval_inequality_join <- function(x, y, how, by, suffix) {
   if (how != "inner") {
-    abort(
+    cli_abort(
       "Inequality joins are only supported in `inner_join()` for now.",
       call = caller_env(2)
     )
