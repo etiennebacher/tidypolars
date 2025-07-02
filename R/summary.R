@@ -14,7 +14,7 @@
 summary.RPolarsDataFrame <- function(object, percentiles = c(0.25, 0.75), ...) {
   between_zero_one <- percentiles >= 0 & percentiles <= 1
   if (anyNA(between_zero_one) || !all(between_zero_one)) {
-    abort("All values of `percentiles` must be between 0 and 1.")
+    cli_abort("All values of {.code percentiles} must be between 0 and 1.")
   }
   out <- object$describe(percentiles)
   add_tidypolars_class(out)

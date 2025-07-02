@@ -276,7 +276,10 @@ pl_wday_lubridate <- function(
   check_empty_dots(...)
   env <- env_from_dots(...)
   if (week_start != 7) {
-    abort("Currently, tidypolars only works if `week_start` is 7.", call = env)
+    cli_abort(
+      "Currently, {.pkg tidypolars} only works if {.code week_start} is 7.",
+      call = env
+    )
   }
   if (isTRUE(label)) {
     if (isTRUE(abbr)) {

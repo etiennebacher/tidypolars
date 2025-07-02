@@ -7,6 +7,7 @@
 #' @import dplyr
 #' @import tidyr
 #' @import rlang
+#' @import cli
 ## usethis namespace: end
 NULL
 

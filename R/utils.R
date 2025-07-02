@@ -14,11 +14,6 @@ safe_deparse <- function(x, ...) {
   )
 }
 
-toupper_first <- function(x) {
-  substr(x, 1, 1) <- toupper(substr(x, 1, 1))
-  x
-}
-
 # sort of equivalent of purrr::compact()
 # takes a list, returns a list
 compact <- function(x) {
@@ -41,8 +36,8 @@ get_grps <- function(.data, .by, env) {
   inline_grps <- tidyselect_named_arg(.data, .by)
   if (length(inline_grps) > 0) {
     if (!is.null(grps)) {
-      abort(
-        "Can't supply `.by` when `.data` is a grouped DataFrame or LazyFrame.",
+      cli_abort(
+        "Can't supply {.code .by} when {.code .data} is a grouped DataFrame or LazyFrame.",
         call = env
       )
     } else {
@@ -102,43 +97,27 @@ check_dots_empty_ignore <- function(..., .unsupported = NULL) {
   unsupported_dots <- unsupported_dots[!is.na(unsupported_dots)]
 
   if (length(unsupported_dots) > 0) {
-    if (length(unsupported_dots) == 1) {
-      msg <- paste0(
-        "Argument `",
-        unsupported_dots,
-        "` is not supported by tidypolars."
-      )
-    } else {
-      msg <- paste(
-        "Arguments",
-        toString(paste0("`", unsupported_dots, "`")),
-        "are not supported by tidypolars."
-      )
-    }
+    msg <- "{qty(unsupported_dots)} Argument{?s} {.code {unsupported_dots}} {?is/are} not supported by {.pkg tidypolars}."
+
     if (rlang_action == "warn") {
-      warn(msg, call = caller_env())
+      cli_warn(msg, call = caller_env())
     } else if (rlang_action == "error") {
-      abort(
+      cli_abort(
         c(
           msg,
-          "i" = "Use `options(tidypolars_unknown_args = \"warn\")` to warn when this happens instead of throwing an error."
+          "i" = "Use {.code options(tidypolars_unknown_args = \"warn\")} to warn when this happens instead of throwing an error."
         ),
         call = caller_env()
       )
     }
-  }
-  for (i in .unsupported) {
-    dots[[i]] <- NULL
+
+    for (i in .unsupported) {
+      dots[[i]] <- NULL
+    }
   }
 
   if (length(dots) > 0) {
-    abort(
-      c(
-        "`...` must be empty."
-        # "i" = paste("Unknown args:", dots))
-      ),
-      call = caller_env()
-    )
+    cli_abort("{.code ...} must be empty.", call = caller_env())
   }
 }
 
@@ -155,26 +134,15 @@ check_unsupported_arg <- function(...) {
     return(invisible())
   }
 
-  if (length(unsupported_args) == 1) {
-    msg <- paste0(
-      "Argument `",
-      unsupported_args,
-      "` is not supported by tidypolars."
-    )
-  } else {
-    msg <- paste(
-      "Arguments",
-      toString(paste0("`", unsupported_args, "`")),
-      "are not supported by tidypolars."
-    )
-  }
+  msg <- "{qty(unsupported_args)} Argument{?s} {.code {unsupported_args}} {?is/are} not supported by {.pkg tidypolars}."
+
   if (rlang_action == "warn") {
-    warn(msg, call = caller_env())
+    cli_warn(msg, call = caller_env())
   } else if (rlang_action == "error") {
-    abort(
+    cli_abort(
       c(
         msg,
-        "i" = "Use `options(tidypolars_unknown_args = \"warn\")` to warn when this happens instead of throwing an error."
+        "i" = "Use {.code options(tidypolars_unknown_args = \"warn\")} to warn when this happens instead of throwing an error."
       ),
       call = caller_env()
     )
@@ -187,6 +155,6 @@ check_integerish <- function(x, name, allow_na = TRUE) {
     return(invisible())
   }
   if (!rlang::is_integerish(x)) {
-    abort(paste0("`", name, "` must be integerish."))
+    cli_abort("{.code {name}} must be integerish.")
   }
 }

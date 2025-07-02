@@ -21,7 +21,7 @@ pl_as.Date <- function(x, format, ...) {
     format <- polars_expr_to_r(format)
   }
   if (length(format) > 1) {
-    abort("`tidypolars` only supports `format` of length 1.")
+    cli_abort("{.pkg tidypolars} only supports `format` of length 1.")
   }
   # TODO: shouldn't be needed
   if (is.character(x)) {

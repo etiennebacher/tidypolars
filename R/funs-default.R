@@ -10,8 +10,8 @@ pl_all <- function(..., na.rm = FALSE) {
   env <- env_from_dots(...)
   x <- check_rowwise(...)
   if (length(dots) == 0) {
-    abort(
-      "`...` is absent, but must be supplied.",
+    cli_abort(
+      "{.code ...} is absent, but must be supplied.",
       call = env
     )
   }
@@ -21,8 +21,8 @@ pl_all <- function(..., na.rm = FALSE) {
   if (length(dots) == 1) {
     dots[[1]]$all(ignore_nulls = na.rm)
   } else {
-    abort(
-      "`all()` only works with one element in `...`",
+    cli_abort(
+      "{.code all()} only works with one element in {.code ...}",
       call = env
     )
   }
@@ -33,8 +33,8 @@ pl_any <- function(..., na.rm = FALSE) {
   env <- env_from_dots(...)
   x <- check_rowwise(...)
   if (length(dots) == 0) {
-    abort(
-      "`...` is absent, but must be supplied.",
+    cli_abort(
+      "{.code ...} is absent, but must be supplied.",
       call = env
     )
   }
@@ -44,8 +44,8 @@ pl_any <- function(..., na.rm = FALSE) {
   if (length(dots) == 1) {
     dots[[1]]$any(ignore_nulls = na.rm)
   } else {
-    abort(
-      "`any()` only works with one element in `...`",
+    cli_abort(
+      "`any()` only works with one element in {.code ...}",
       call = env
     )
   }
@@ -338,8 +338,8 @@ pl_consecutive_id_dplyr <- function(...) {
   dots <- clean_dots(...)
   env <- env_from_dots(...)
   if (length(dots) == 0) {
-    abort(
-      "`...` is absent, but must be supplied.",
+    cli_abort(
+      "{.code ...} is absent, but must be supplied.",
       call = env
     )
   }
@@ -384,8 +384,8 @@ pl_dense_rank_dplyr <- function(x) {
 pl_diff <- function(x, lag = 1, differences = 1, ...) {
   check_empty_dots(...)
   if (!is.null(differences) && length(differences) == 1 && differences != 1) {
-    rlang::abort(
-      "polars doesn't support `diff()` if argument `differences` is not equal to 1.",
+    cli_abort(
+      "polars doesn't support {.code diff()} if argument `differences` is not equal to 1.",
       call = env_from_dots(...)
     )
   }
@@ -551,8 +551,8 @@ pl_na_if_dplyr <- function(x, y) {
 pl_n_distinct_dplyr <- function(..., na.rm = FALSE) {
   dots <- clean_dots(...)
   if (length(dots) == 0) {
-    abort(
-      "`...` is absent, but must be supplied.",
+    cli_abort(
+      "{.code ...} is absent, but must be supplied.",
       call = env_from_dots(...)
     )
   }
@@ -569,22 +569,16 @@ pl_n_distinct_dplyr <- function(..., na.rm = FALSE) {
 
 pl_nth_dplyr <- function(x, n, ...) {
   if (length(n) > 1) {
-    abort(
-      paste0("`n` must have size 1, not size ", length(n), "."),
+    cli_abort(
+      paste0("{.code n} must have size 1, not size {length(n)}."),
       call = env_from_dots(...)
     )
   }
   if (is.na(n)) {
-    abort(
-      "`n` can't be `NA`.",
-      call = env_from_dots(...)
-    )
+    cli_abort("{.code n} cannot be {.code NA}.", call = env_from_dots(...))
   }
   if (as.integer(n) != n) {
-    abort(
-      "`n` must be an integer.",
-      call = env_from_dots(...)
-    )
+    cli_abort("{.code n} must be an integer.", call = env_from_dots(...))
   }
   # 0-indexed
   if (n > 0) {
@@ -635,7 +629,7 @@ pl_seq <- function(from = 1, to = 1, by = NULL, ...) {
 pl_seq_len <- function(length.out) {
   length.out <- polars_expr_to_r(length.out)
   if (length.out < 0) {
-    abort("`length.out` must be a non-negative integer.")
+    cli_abort("{.code length.out} must be a non-negative integer.")
   }
   pl$int_range(start = 1, end = length.out + 1, step = 1)
 }

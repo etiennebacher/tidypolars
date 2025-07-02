@@ -96,11 +96,11 @@ pivot_wider.RPolarsDataFrame <- function(
   id_vars <- id_cols %||% data_names[!data_names %in% c(value_vars, names_vars)]
 
   if (length(value_vars) == 0) {
-    rlang::abort("Must select at least one variable in `values_from`.")
+    cli_abort("Must select at least one variable in {.code values_from}.")
   }
 
   if (length(names_vars) == 0) {
-    rlang::abort("Must select at least one variable in `names_from`.")
+    cli_abort("Must select at least one variable in {.code names_from}.")
   }
 
   new_data <- data$pivot(
@@ -132,7 +132,7 @@ pivot_wider.RPolarsDataFrame <- function(
 
   if (!is.null(names_prefix)) {
     if (length(names_prefix) > 1) {
-      rlang::abort("`names_prefix` must be of length 1.")
+      cli_abort("{.code names_prefix} must be of length 1.")
     }
     names(new_cols) <- paste0(names_prefix, final_cols)
   }

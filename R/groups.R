@@ -34,10 +34,10 @@ group_by.RPolarsDataFrame <- function(
   .add = FALSE
 ) {
   if (isTRUE(attributes(.data)$grp_type == "rowwise")) {
-    rlang::abort(
+    cli_abort(
       c(
-        "Cannot use `group_by()` if `rowwise()` is also used.",
-        "i" = "Use `ungroup()` first, and then `group_by()`."
+        "Cannot use {.fn group_by} if {.fn rowwise} is also used.",
+        "i" = "Use {.fn ungroup} first, and then {.fn group_by}."
       )
     )
   }
@@ -148,7 +148,9 @@ group_split.RPolarsDataFrame <- function(.tbl, ..., .keep = TRUE) {
   dots <- tidyselect_dots(.tbl, ...)
 
   if (length(grps) > 0 && length(dots) > 0) {
-    warn("`.tbl` is already grouped so variables in `...` are ignored.")
+    cli_warn(
+      "{.code .tbl} is already grouped so variables in {.code ...} are ignored."
+    )
   }
 
   grps <- grps %||% dots

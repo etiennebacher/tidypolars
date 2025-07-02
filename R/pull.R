@@ -15,12 +15,8 @@
 pull.RPolarsDataFrame <- function(.data, var, ...) {
   var <- tidyselect_named_arg(.data, rlang::enquo(var))
   if (length(var) > 1) {
-    rlang::abort(
-      paste0(
-        "`pull` can only extract one column. You tried to extract ",
-        length(var),
-        "."
-      )
+    cli_abort(
+      "{.fn pull} can only extract one column. You tried to extract {length(var)}."
     )
   }
 

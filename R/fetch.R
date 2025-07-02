@@ -46,7 +46,7 @@ fetch <- function(
   streaming = FALSE
 ) {
   if (!inherits(.data, "RPolarsLazyFrame")) {
-    rlang::abort("`fetch()` can only be used on a LazyFrame.")
+    cli_abort("{.code fetch()} can only be used on a LazyFrame.")
   }
   out <- .data$fetch(
     n_rows = n_rows,

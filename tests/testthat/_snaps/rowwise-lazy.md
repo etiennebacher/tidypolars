@@ -4,7 +4,7 @@
       current$collect()
     Condition
       Error in `mutate()`:
-      ! x Can't use function `pl_range()` in rowwise mode.
+      x Can't use function `pl_range()` in rowwise mode.
       i For now, `rowwise()` only works on the following functions:
       i `mean()`, `median()`, `min()`, `max()`, `sum()`, `all()`, `any()`
 

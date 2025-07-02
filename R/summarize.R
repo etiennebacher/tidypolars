@@ -48,7 +48,9 @@ summarize.RPolarsDataFrame <- function(
     values = c("drop_last", "drop", "keep", "rowwise")
   )
   if (.groups == "rowwise") {
-    abort("`tidypolars` doesn't support `.groups = \"rowwise\"` for now.")
+    cli_abort(
+      "{.pkg tidypolars} doesn't support {.code .groups = \"rowwise\"} for now."
+    )
   }
 
   # Do not take the groups into account, especially useful when applying across()
@@ -97,7 +99,7 @@ summarize.RPolarsDataFrame <- function(
       "drop_last" = grps[-length(grps)],
       "drop" = character(0),
       "keep" = grps,
-      abort("Unreachable")
+      cli_abort("Unreachable")
     )
     if (length(grps) == 0) {
       return(.data)

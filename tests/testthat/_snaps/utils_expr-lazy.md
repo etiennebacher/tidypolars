@@ -5,7 +5,7 @@
     Condition
       Error in `mutate()`:
       ! Error while running function `min_rank()` in Polars.
-      x Argument "x" is missing, with no default
+      x argument "x" is missing, with no default
 
 ---
 
@@ -14,5 +14,5 @@
     Condition
       Error in `mutate()`:
       ! Error while running function `dplyr::min_rank()` in Polars.
-      x Argument "x" is missing, with no default
+      x argument "x" is missing, with no default
 

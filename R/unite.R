@@ -40,7 +40,7 @@ unite.RPolarsDataFrame <- function(
   na.rm = FALSE
 ) {
   if (missing(col)) {
-    rlang::abort("`col` is absent but must be supplied.")
+    cli_abort("{.code col} is absent but must be supplied.")
   }
   vars <- tidyselect_dots(data, ...)
   if (length(vars) == 0) {
