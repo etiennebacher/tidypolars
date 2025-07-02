@@ -3,7 +3,6 @@
 
 ## usethis namespace: start
 #' @importFrom lifecycle deprecated
-#' @importFrom stats setNames
 #' @import polars
 #' @import dplyr
 #' @import tidyr

@@ -74,7 +74,7 @@ build_data_context <- function(.data, ...) {
   )
 
   if (!any_is_where) {
-    out <- setNames(
+    out <- rlang::set_names(
       data.frame(matrix(ncol = length(names(.data)), nrow = 0)),
       names(.data)
     )
