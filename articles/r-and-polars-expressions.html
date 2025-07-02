@@ -156,9 +156,8 @@ this argument and warns the user:</p>
 <span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">mpg</span>, trim <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: </span></span>
-<span><span class="co">#&gt; Package tidypolars doesn't know how to use some arguments of `mean()`.</span></span>
-<span><span class="co">#&gt; The following argument(s) will be ignored: `trim`.</span></span>
+<span><span class="co">#&gt; Warning: <span style="color: #0000BB;">tidypolars</span> doesn't know how to use some arguments of `mean()`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The following argument(s) will be ignored: <span style="color: #0000BB;">"trim"</span>.</span></span>
 <span><span class="co">#&gt; shape: (32, 12)</span></span>
 <span><span class="co">#&gt; ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────────┐</span></span>
 <span><span class="co">#&gt; │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ x         │</span></span>
@@ -278,7 +277,7 @@ return a Polars expression:</p>
 <span>  <span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `mutate()`:</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Could not evaluate an anonymous function in `across()`.</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">ℹ</span> Are you sure the anonymous function returns a Polars expression?</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Are you sure the anonymous function returns a Polars expression?</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="non-translated-functions">Non-translated functions<a class="anchor" aria-label="anchor" href="#non-translated-functions"></a>
@@ -293,9 +292,12 @@ only know that it is not translated by <code>tidypolars</code>):</p>
 <span><span class="va">dat</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">foo</span> <span class="op">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/agrep.html" class="external-link">agrep</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="va">a</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `filter()`:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> `tidypolars` doesn't know how to translate this function: `agrep()` (from package `base`).</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">ℹ</span> You can ask for it to be translated here: &lt;https://github.com/etiennebacher/tidypolars/issues&gt;.</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">ℹ</span> See `?tidypolars_options` to set automatic fallback to R to handle unknown functions.</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> <span style="color: #0000BB;">tidypolars</span> doesn't know how to translate this function: `agrep()`</span></span>
+<span><span class="co">#&gt;   (from package <span style="color: #0000BB;">base</span>).</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> You can ask for it to be translated here:</span></span>
+<span><span class="co">#&gt;   <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/etiennebacher/tidypolars/issues&gt;</span>.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> See `?tidypolars_options` to set automatic fallback to R to handle unknown</span></span>
+<span><span class="co">#&gt;   functions.</span></span></code></pre></div>
 <p>This is because <code>foo &gt;= agrep("a", a)</code> uses the values
 from the columns <code>a</code> and <code>foo</code>, which are stored
 in the <code>polars</code> DataFrame. Therefore, <code>polars</code>

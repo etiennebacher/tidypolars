@@ -109,19 +109,18 @@ such as changing the default behavior when converting Int64 values to R:
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># The default is to warn the user</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">test</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">x</span>, prob <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Package tidypolars doesn't know how to use some arguments of `sample()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> The following argument(s) will be ignored: `prob`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span><span style="color: #0000BB;">tidypolars</span> doesn't know how to use some arguments of `sample()`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> The following argument(s) will be ignored: <span style="color: #0000BB;">"prob"</span>.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (5, 2)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┐</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ x2  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2.0 ┆ 2.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 1.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.0 ┆ 5.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 3.0 ┆ 3.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2.0 ┆ 3.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 5.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.0 ┆ 2.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 3.0 ┆ 1.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 1.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┘</span>
 <span class="r-in"><span></span></span>
@@ -130,8 +129,9 @@ such as changing the default behavior when converting Int64 values to R:
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">test</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">x</span>, prob <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error in mutate(test, x2 = sample(x, prob = 0.5)) : </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Error while running function `sample()` in Polars.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> Package tidypolars doesn't know how to use some arguments of `sample()`: `prob`.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">ℹ</span> Use `options(tidypolars_unknown_args = "warn")` to warn when this happens instead of throwing an error.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">tidypolars</span> doesn't know how to use some arguments of `sample()`: <span style="color: #0000BB;">"prob"</span>.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Use `options(tidypolars_unknown_args = "warn")` to warn when this happens</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   instead of throwing an error.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>tidypolars_unknown_args <span class="op">=</span> <span class="st">"warn"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -142,9 +142,12 @@ such as changing the default behavior when converting Int64 values to R:
 <span class="r-in"><span><span class="co"># The default is to error because mad() isn't translated internally</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">test</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/mad.html" class="external-link">mad</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error in mutate(test, x2 = mad(x)) : </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   `tidypolars` doesn't know how to translate this function: `mad()` (from package `stats`).</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">ℹ</span> You can ask for it to be translated here: &lt;https://github.com/etiennebacher/tidypolars/issues&gt;.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">ℹ</span> See `?tidypolars_options` to set automatic fallback to R to handle unknown functions.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">tidypolars</span> doesn't know how to translate this function: `mad()` (from</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> package <span style="color: #0000BB;">stats</span>).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> You can ask for it to be translated here:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/etiennebacher/tidypolars/issues&gt;</span>.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> See `?tidypolars_options` to set automatic fallback to R to handle unknown</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   functions.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># But one can allow fallback to R to apply this function and then convert</span></span></span>
 <span class="r-in"><span><span class="co"># the output back to polars (see drawbacks in the "description" section</span></span></span>
