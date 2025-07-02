@@ -125,13 +125,18 @@ translate_dots <- function(.data, ..., env, caller) {
 #' @noRd
 
 translate_expr <- function(
-  .data,
-  quo,
-  new_vars = NULL,
-  env,
-  caller = rlang::caller_env(2),
-  expr_uses_col = NULL
+    .data,
+    quo,
+    new_vars = NULL,
+    env,
+    caller = rlang::caller_env(2),
+    expr_uses_col = NULL
 ) {
+  # Setting this and then grabbing the attribute when needed is much more
+  # efficient than calling names() when there are lots of expressions to
+  # evaluate.
+  attr(.data, "colnames") <- names(.data)
+
   if (is.null(expr_uses_col)) {
     expr_uses_col <- new.env()
     assign("id", FALSE, envir = expr_uses_col)
@@ -213,22 +218,22 @@ translate_expr <- function(
 #' @noRd
 
 translate <- function(
-  expr,
-  .data,
-  new_vars,
-  env,
-  caller = NULL,
-  call_is_function = NULL,
-  expr_uses_col
+    expr,
+    .data,
+    new_vars,
+    env,
+    caller = NULL,
+    call_is_function = NULL,
+    expr_uses_col
 ) {
-  names_data <- names(.data)
+  names_data <- attr(.data, "colnames")
 
   # prepare function and arg if the user provided an anonymous function in
   # across()
   if (
     length(expr) == 1 &&
-      is.character(expr) &&
-      startsWith(expr, ".__tidypolars__across_fn")
+    is.character(expr) &&
+    startsWith(expr, ".__tidypolars__across_fn")
   ) {
     col_name <- gsub(".__tidypolars__across_fn.*---", "", expr)
     expr <- gsub("---.*", "", expr)
@@ -428,8 +433,8 @@ translate <- function(
           if (
             # we may pass a named vector in str_replace_all() for instance
             !is.null(names(expr)) |
-              # we may pass a vector of column names
-              any(vapply(expr, is.symbol, FUN.VALUE = logical(1L)))
+            # we may pass a vector of column names
+            any(vapply(expr, is.symbol, FUN.VALUE = logical(1L)))
           ) {
             return(
               lapply(
@@ -648,8 +653,8 @@ translate <- function(
       obj_name <- quo_name(expr)
       if (
         !is_known &&
-          !(name %in% c(known_ops, user_defined)) &&
-          !startsWith(obj_name, ".__tidypolars__across_fn")
+        !(name %in% c(known_ops, user_defined)) &&
+        !startsWith(obj_name, ".__tidypolars__across_fn")
       ) {
         args <- lapply(
           as.list(expr[-1]),
@@ -875,7 +880,7 @@ clean_dots <- function(...) {
   dots <- lapply(dots, function(x) {
     if (
       called_from_pl_paste &&
-        inherits(x, c("character", "logical", "double", "integer", "complex"))
+      inherits(x, c("character", "logical", "double", "integer", "complex"))
     ) {
       pl$lit(x)
     } else {

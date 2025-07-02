@@ -1,6 +1,6 @@
 tidyselect_dots <- function(.data, ..., with_renaming = FALSE) {
-  data <- build_data_context(.data)
   check_where_arg(...)
+  data <- build_data_context(.data, ...)
   out <- tidyselect::eval_select(
     rlang::expr(c(...)),
     data,
@@ -57,23 +57,38 @@ tidyselect_new_vars <- function(.cols, new_vars) {
   NULL
 }
 
-# Rather than collecting a 1-row slice, it is faster to use the schema of the
-# data to recreate an empty DataFrame and convert it to R
-build_data_context <- function(.data) {
-  schema <- .data$schema
-  dat <- rep(list(NA), length(schema))
-  names(dat) <- names(schema)
-  # TODO: use $to_data_frame() and remove the call to tibble when
-  # https://github.com/pola-rs/r-polars/issues/1216 is resolved
-  out <- pl$DataFrame(dat, schema = schema)$to_list()
-  out <- lapply(out, function(x) {
-    if (is.null(x)) {
-      NA
+# When where() is in the dots, then we need to know the type of each variable.
+# This is done by creating a one-row DataFrame with the existing schema and
+# convert it to a tibble.
+#
+# This is very expensive when there are hundreds or thousands of columns, so
+# we only do it when there's a where() call.
+build_data_context <- function(.data, ...) {
+  dots <- enexprs(...)
+  any_is_where <- any(
+    vapply(
+      dots,
+      function(x) is_call(x) && call_name(x) == "where",
+      FUN.VALUE = logical(1)
+    )
+  )
+
+  if (!any_is_where) {
+    out <- setNames(
+      data.frame(matrix(ncol = length(names(.data)), nrow = 0)),
+      names(.data)
+    )
+    return(out)
+  } else {
+    if (ncol(.data) > 1000) {
+      return(.data$head(1)$collect()$to_data_frame())
     } else {
-      x
+      schema <- .data$schema
+      dat <- rep(list(NA), length(schema))
+      names(dat) <- names(schema)
+      return(pl$DataFrame(dat)$cast(as.list(schema))$to_data_frame())
     }
-  })
-  dplyr::tibble(!!!out)
+  }
 }
 
 #' Because the data used in selection is an empty DataFrame, where() can only
