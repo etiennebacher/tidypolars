@@ -15,5 +15,5 @@
       current$collect()
     Condition
       Error in `select()`:
-      ! `where()` can only take `is.*` functions (like `is.numeric`).
+      ! `where()` can only take `is.*()` functions (like `is.numeric()`).
 

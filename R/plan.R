@@ -14,7 +14,7 @@
 # nocov start
 describe_plan <- function(.data) {
   if (!inherits(.data, "RPolarsLazyFrame")) {
-    cli_abort("`describe_plan()` only works on a LazyFrame.")
+    cli_abort("{.fn describe_plan} only works on a LazyFrame.")
   }
   lifecycle::deprecate_warn(
     when = "0.10.0",
@@ -29,7 +29,7 @@ describe_plan <- function(.data) {
 
 describe_optimized_plan <- function(.data) {
   if (!inherits(.data, "RPolarsLazyFrame")) {
-    cli_abort("`describe_optimized_plan()` only works on a LazyFrame.")
+    cli_abort("{.fn describe_optimized_plan} only works on a LazyFrame.")
   }
   lifecycle::deprecate_warn(
     when = "0.10.0",

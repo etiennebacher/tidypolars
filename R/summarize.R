@@ -49,7 +49,7 @@ summarize.RPolarsDataFrame <- function(
   )
   if (.groups == "rowwise") {
     cli_abort(
-      "{.pkg tidypolars} doesn't support `.groups = \"rowwise\"` for now."
+      "{.pkg tidypolars} doesn't support {.code .groups = \"rowwise\"} for now."
     )
   }
 

@@ -34,7 +34,7 @@
     Condition
       Error in `summarize()`:
       ! Error while running function `nth()` in Polars.
-      x `n` can't be `NA`.
+      x `n` cannot be `NA`.
 
 ---
 

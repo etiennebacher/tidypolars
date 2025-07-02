@@ -120,7 +120,7 @@ pl_str_pad_stringr <- function(
 
   if (isFALSE(use_width)) {
     cli_abort(
-      "{.fn str_pad} doesn't work in a Polars DataFrame when `use_width = FALSE`",
+      "{.fn str_pad} doesn't work in a Polars DataFrame when {.code use_width = FALSE}",
       class = "tidypolars_error"
     )
   }
@@ -439,7 +439,7 @@ pl_str_split_stringr <- function(string, pattern, ...) {
 pl_str_split_i_stringr <- function(string, pattern, i, ...) {
   check_empty_dots(...)
   if (i == 0) {
-    cli_abort("`i` must not be 0.", call = env_from_dots(...))
+    cli_abort("{.code i} must not be 0.", call = env_from_dots(...))
   } else if (i >= 1) {
     i <- i - 1
   }
@@ -455,7 +455,7 @@ pl_str_replace_na_stringr <- function(string, replacement = "NA", ...) {
     length(replacement) > 1 || is.na(replacement) || !is.character(replacement)
   ) {
     cli_abort(
-      "`replacement` must be a single string.",
+      "{.code replacement} must be a single string.",
       call = env_from_dots(...)
     )
   }
@@ -511,11 +511,7 @@ pl_str_trunc_stringr <- function(
   if (width < nchar(ellipsis)) {
     cli_abort(
       paste0(
-        "`width` (",
-        width,
-        ") is shorter than `ellipsis` (",
-        nchar(ellipsis),
-        ")."
+        "{.code width} ({width}) is shorter than {.code ellipsis} ({nchar(ellipsis)})."
       )
     )
   }
@@ -529,8 +525,8 @@ pl_str_trunc_stringr <- function(
       string$str$head(width - nchar(ellipsis)),
       pl$lit(ellipsis)
     ),
-    "center" = cli_abort("`side = \"center\" is not supported.`"),
-    cli_abort("`side` must be either \"left\" or \"right\".")
+    "center" = cli_abort("{.code side = \"center\"} is not supported."),
+    cli_abort("{.code side} must be either \"left\" or \"right\".")
   )
 }
 

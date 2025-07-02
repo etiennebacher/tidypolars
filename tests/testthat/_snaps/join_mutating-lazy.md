@@ -125,7 +125,7 @@
       current$collect()
     Condition
       Error in `left_join()`:
-      ! `relationship` must be one of "na" or "never", not "foo".
+      ! `na_matches` must be one of "na" or "never", not "foo".
 
 # error if two inputs don't have the same class
 

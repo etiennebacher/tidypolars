@@ -27,7 +27,7 @@
     Condition
       Error in `mutate()`:
       ! Error while running function `foo()` in Polars.
-      x Non-numeric argument to mathematical function
+      x non-numeric argument to mathematical function
 
 # argument .keep works
 

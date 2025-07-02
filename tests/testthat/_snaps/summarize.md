@@ -4,7 +4,7 @@
       summarise(group_by(pl_mtcars, am, cyl, vs), cyl_n = n(), .groups = "rowwise")
     Condition
       Error in `summarise()`:
-      ! `tidypolars` doesn't support `.groups = "rowwise"` for now.
+      ! tidypolars doesn't support `.groups = "rowwise"` for now.
 
 ---
 

@@ -4,7 +4,7 @@
       current$collect()
     Condition
       Error in `pull()`:
-      ! `pull` can only extract one column. You tried to extract 2.
+      ! `pull()` can only extract one column. You tried to extract 2.
 
 ---
 

@@ -21,7 +21,7 @@ test_that("tidypolars_fallback_to_r: basic behavior works", {
 
   expect_error(
     test |> mutate(x2 = mad(x)),
-    "`tidypolars` doesn't know how"
+    "doesn't know how to translate this function"
   )
 
   withr::with_options(

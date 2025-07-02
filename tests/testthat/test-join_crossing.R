@@ -34,12 +34,12 @@ test_that("unsupported args throw warning", {
   )
   expect_warning(
     cross_join(test, test2, copy = TRUE),
-    "Argument `copy` is not supported by tidypolars"
+    "Argument `copy` is not supported by"
   )
   withr::with_options(
     list(tidypolars_unknown_args = "error"),
     expect_snapshot(
-      cross_join(test, test2, keep = TRUE),
+      cross_join(test, test2, copy = TRUE),
       error = TRUE
     )
   )

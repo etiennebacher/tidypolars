@@ -675,12 +675,12 @@ test_that("force_tz() works", {
   expect_error(
     test |>
       mutate(t = force_tz(dt_utc, "bla")),
-    "Unrecognized time zone: 'bla'"
+    "Unrecognized time zone: \"bla\""
   )
   expect_error(
     test |>
       mutate(t = force_tz(dt_utc, NULL)),
-    "Unrecognized time zone: 'NULL'"
+    "Unrecognized time zone: NULL"
   )
   expect_error(
     test |>
@@ -720,7 +720,7 @@ test_that("with_tz() works", {
   expect_error(
     test |>
       mutate(t = with_tz(dt_utc, "bla")),
-    "Unrecognized time zone: 'bla'"
+    "Unrecognized time zone: \"bla\""
   )
   expect_error(
     test |>
@@ -735,7 +735,7 @@ test_that("with_tz() works", {
   expect_error(
     test |>
       mutate(t = with_tz(dt_utc, NULL)),
-    "Unrecognized time zone: 'NULL'"
+    "Unrecognized time zone: NULL"
   )
 })
 
@@ -777,7 +777,7 @@ test_that("check_timezone() throws expected errors", {
       mutate(
         dt_utc = with_tz(dt_utc, "")
       ),
-    "This expression in `tidypolars` doesn't support empty timezone."
+    "doesn't support empty timezone."
   )
 
   # NA timezone
@@ -786,7 +786,7 @@ test_that("check_timezone() throws expected errors", {
       mutate(
         dt_utc = with_tz(dt_utc, NA)
       ),
-    "This expression in `tidypolars` doesn't support `NA` timezone."
+    "doesn't support `NA` timezone."
   )
 
   # Column as a timezone
@@ -796,7 +796,7 @@ test_that("check_timezone() throws expected errors", {
         tzone = "Pacific/Auckland",
         dt_utc = with_tz(dt_utc, tzone)
       ),
-    "`tidypolars` cannot pass a variable of the data as timezone."
+    "tidypolars cannot pass a variable of the data as timezone."
   )
 })
 

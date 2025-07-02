@@ -575,7 +575,7 @@ pl_nth_dplyr <- function(x, n, ...) {
     )
   }
   if (is.na(n)) {
-    cli_abort("{.code n} cannot be `NA`.", call = env_from_dots(...))
+    cli_abort("{.code n} cannot be {.code NA}.", call = env_from_dots(...))
   }
   if (as.integer(n) != n) {
     cli_abort("{.code n} must be an integer.", call = env_from_dots(...))

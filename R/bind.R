@@ -146,7 +146,7 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
           tmp <- mapping[!names(mapping) %in% all_names]
           msg <- paste0("`", tmp, "`", " -> ", "`", names(tmp), "`")
           names(msg) <- rep("*", length(msg))
-          rlang::inform(msg)
+          cli_inform(msg)
 
           for (i in seq_along(dots)) {
             n_names <- ncol(dots[[i]])

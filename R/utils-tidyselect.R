@@ -42,11 +42,11 @@ tidyselect_new_vars <- function(.cols, new_vars) {
       "ends_with" = grep(paste0(.cols[[2]], "$"), new_vars, value = TRUE),
       "everything" = new_vars,
       {
-        warn(
+        cli_warn(
           paste0(
-            "In `across()`, the argument `.cols = ",
+            "In {.fn across}, the argument `.cols = ",
             safe_deparse(.cols),
-            "` will not take into account \nvariables created in the same `mutate()`/`summarize()` call."
+            "` will not take into account \nvariables created in the same {.fn mutate} / {.fn summarize} call."
           )
         )
         NULL
@@ -111,7 +111,7 @@ check_where_arg <- function(...) {
     tmp <- gsub("\\)$", "", tmp)
     if (!startsWith(tmp, "is.")) {
       cli_abort(
-        "`where()` can only take `is.*` functions (like `is.numeric`).",
+        "{.fn where} can only take {.fn is.*} functions (like {.fn is.numeric}).",
         call = caller_env(2)
       )
     }

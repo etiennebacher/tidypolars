@@ -704,7 +704,7 @@ translate <- function(
           } else {
             cli_abort(
               c(
-                "Could not evaluate an anonymous function in `across()`.",
+                "Could not evaluate an anonymous function in {.fn across}.",
                 "i" = "Are you sure the anonymous function returns a Polars expression?"
               ),
               call = env
@@ -717,31 +717,21 @@ translate <- function(
             return(pl$lit(out))
           }
           if (!is.null(fn_names$pkg)) {
-            msg <- paste0(
-              "{.pkg tidypolars} doesn't know how to translate this function: `",
-              fn_names$orig_name,
-              "()` (from package `",
-              fn_names$pkg,
-              "`)."
-            )
+            msg <- "{.pkg tidypolars} doesn't know how to translate this function: {.fn {fn_names$orig_name}} (from package {.pkg {fn_names$pkg}})."
           } else {
-            msg <- paste0(
-              "{.pkg tidypolars} doesn't know how to translate this function: `",
-              fn_names$orig_name,
-              "()`."
-            )
+            msg <- "{.pkg tidypolars} doesn't know how to translate this function: {.fn {fn_names$orig_name}}."
           }
           # Only suggest opening an issue for functions coming from other pkgs,
           # not for custom functions.
           if (!is.null(fn_names$pkg) || grepl("::", fn_names$orig_name)) {
             msg <- c(
               msg,
-              i = "You can ask for it to be translated here: <https://github.com/etiennebacher/tidypolars/issues>."
+              i = "You can ask for it to be translated here: {.url https://github.com/etiennebacher/tidypolars/issues}."
             )
           }
           msg <- c(
             msg,
-            i = "See `?tidypolars_options` to set automatic fallback to R to handle unknown functions."
+            i = "See {.code ?tidypolars_options} to set automatic fallback to R to handle unknown functions."
           )
           cli_abort(msg, call = env)
         }
@@ -777,12 +767,9 @@ translate <- function(
             orig_name <- gsub("^pl_", "", name)
             cli_abort(
               c(
-                paste0(
-                  "Error while running function `",
-                  fn_names$orig_name,
-                  "()` in Polars."
-                ),
-                "x" = toupper_first(conditionMessage(e))
+                "Error while running function {.fn {fn_names$orig_name}} in Polars.",
+                x = e$message,
+                e$body
               ),
               call = env
             )
@@ -830,38 +817,29 @@ check_empty_dots <- function(...) {
     return(invisible())
   }
 
-  fn <- deparse(match.call(call = sys.call(sys.parent()))[1])
+  fn <- call_match(sys.call(sys.parent()), sys.function(sys.parent())) |>
+    call_name()
   fn <- gsub("^pl\\_", "", fn)
 
   rlang_action <- getOption("tidypolars_unknown_args", "warn")
   if (rlang_action == "warn") {
-    rlang::warn(
-      paste0(
-        "\nPackage tidypolars doesn't know how to use some arguments of `",
-        fn,
-        "`.\n",
-        "The following argument(s) will be ignored: ",
-        toString(paste0("`", names(dots), "`")),
-        "."
+    cli_warn(
+      c(
+        "{.pkg tidypolars} doesn't know how to use some arguments of {.fn {fn}}.",
+        "i" = "The following argument(s) will be ignored: {.val {names(dots)}}."
       )
     )
   } else if (rlang_action == "error") {
     cli_abort(
       c(
-        paste0(
-          "Package tidypolars doesn't know how to use some arguments of `",
-          fn,
-          "`: ",
-          toString(paste0("`", names(dots), "`")),
-          "."
-        ),
-        "i" = "Use `options(tidypolars_unknown_args = \"warn\")` to warn when this happens instead of throwing an error."
+        "{.pkg tidypolars} doesn't know how to use some arguments of {.fn {fn}}: {.val {names(dots)}}.",
+        i = "Use {.code options(tidypolars_unknown_args = \"warn\")} to warn when this happens instead of throwing an error."
       ),
       call = env
     )
   } else {
     cli_abort(
-      "The global option `tidypolars_unknown_args` only accepts \"warn\" and \"error\"."
+      "The global option {.code tidypolars_unknown_args} only accepts \"warn\" and \"error\"."
     )
   }
 }
@@ -1160,7 +1138,7 @@ check_timezone <- function(tz, empty_allowed = FALSE) {
 
   # TODO: remove this once we have cleaner error messages in r-polars
   if (!tz %in% OlsonNames()) {
-    cli_abort(sprintf("Unrecognized time zone: '%s'", tz))
+    cli_abort("Unrecognized time zone: {.val {tz}}", )
   }
 
   tz
@@ -1174,13 +1152,9 @@ check_allowed_rowwise <- function(name, env) {
   if (!name %in% shortlist) {
     cli_abort(
       c(
-        "x" = paste0(
-          "Can't use function `",
-          name,
-          "()` in rowwise mode."
-        ),
-        "i" = "For now, `rowwise()` only works on the following functions:",
-        "i" = "`mean()`, `median()`, `min()`, `max()`, `sum()`, `all()`, `any()`"
+        "x" = "Can't use function {.fn {name}} in rowwise mode.",
+        "i" = "For now, {.fn rowwise} only works on the following functions:",
+        "i" = "{.fn mean}, {.fn median}, {.fn min}, {.fn max}, {.fn sum}, {.fn all}, {.fn any}"
       ),
       call = env
     )

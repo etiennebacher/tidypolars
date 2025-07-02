@@ -66,7 +66,7 @@ pivot_longer.RPolarsDataFrame <- function(
   if (!is.null(names_prefix)) {
     if (length(names_prefix) > 1) {
       cli_abort(
-        "`names_prefix` must be of length 1."
+        "{.code names_prefix} must be of length 1."
       )
     }
     out <- out$with_columns(
