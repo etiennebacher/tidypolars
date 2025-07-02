@@ -16,7 +16,7 @@ tidyselect_dots <- function(.data, ..., with_renaming = FALSE) {
 }
 
 tidyselect_named_arg <- function(.data, cols) {
-  data <- build_data_context(.data)
+  data <- build_data_context(.data, cols = cols)
   out <- names(
     tidyselect::eval_select(cols, data = data, error_call = caller_env())
   )
@@ -46,7 +46,7 @@ tidyselect_new_vars <- function(.cols, new_vars) {
           paste0(
             "In `across()`, the argument `.cols = ",
             safe_deparse(.cols),
-            "` will not take into account \nvariables created in the same `mutate()`/`summarize` call."
+            "` will not take into account \nvariables created in the same `mutate()`/`summarize()` call."
           )
         )
         NULL
@@ -63,12 +63,17 @@ tidyselect_new_vars <- function(.cols, new_vars) {
 #
 # This is very expensive when there are hundreds or thousands of columns, so
 # we only do it when there's a where() call.
-build_data_context <- function(.data, ...) {
+build_data_context <- function(.data, ..., cols = NULL) {
   dots <- enexprs(...)
+
+  # This is hit from expand_across().
+  if (!is.null(cols) && !is.null(quo_get_expr(cols))) {
+    dots <- append(dots, quo_get_expr(cols))
+  }
   any_is_where <- any(
     vapply(
       dots,
-      function(x) is_call(x) && call_name(x) == "where",
+      function(x) is_call(x, "where"),
       FUN.VALUE = logical(1)
     )
   )

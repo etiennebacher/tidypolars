@@ -135,7 +135,7 @@ translate_expr <- function(
   # Setting this and then grabbing the attribute when needed is much more
   # efficient than calling names() when there are lots of expressions to
   # evaluate.
-  attr(.data, "colnames") <- names(.data)
+  attr(.data, "colnames") <- c(names(.data), new_vars)
 
   if (is.null(expr_uses_col)) {
     expr_uses_col <- new.env()
