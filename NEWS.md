@@ -60,6 +60,9 @@
   error, but the user can now set `options(tidypolars_fallback_to_r = TRUE)`
   to handle those unknown functions. See `?tidypolars_options` for
   details on the drawbacks of this approach (#205).
+  
+* Large performance improvement when using selection helpers (such as 
+  `contains()`) on data with many columns (#211).
 
 ## Bug fixes
 

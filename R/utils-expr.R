@@ -132,6 +132,11 @@ translate_expr <- function(
   caller = rlang::caller_env(2),
   expr_uses_col = NULL
 ) {
+  # Setting this and then grabbing the attribute when needed is much more
+  # efficient than calling names() when there are lots of expressions to
+  # evaluate.
+  attr(.data, "colnames") <- c(names(.data), new_vars)
+
   if (is.null(expr_uses_col)) {
     expr_uses_col <- new.env()
     assign("id", FALSE, envir = expr_uses_col)
@@ -221,7 +226,7 @@ translate <- function(
   call_is_function = NULL,
   expr_uses_col
 ) {
-  names_data <- names(.data)
+  names_data <- attr(.data, "colnames")
 
   # prepare function and arg if the user provided an anonymous function in
   # across()
