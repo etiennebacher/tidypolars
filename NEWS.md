@@ -63,6 +63,11 @@
   
 * Large performance improvement when using selection helpers (such as 
   `contains()`) on data with many columns (#211).
+  
+* `tidypolars` now exports rules to be used with `flir` for detecting deprecated
+  functions `describe_plan()` and `describe_optimized_plan()`. Those can be
+  used in your project by following [this article](https://flir.etiennebacher.com/articles/sharing_rules#for-users).
+  Note that this requires `flir` 0.5.9000 or higher (#214).
 
 ## Bug fixes
 
