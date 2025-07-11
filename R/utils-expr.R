@@ -702,6 +702,44 @@ translate <- function(
           if (inherits(tr, "RPolarsExpr")) {
             return(tr)
           } else {
+            prefix_call_names <- function(expr, prefix = "pl_") {
+              if (is.call(expr)) {
+                fn <- expr[[1]]
+
+                # Only rewrite if it's a symbol (not already a function object or namespaced call)
+                if (is.symbol(fn)) {
+                  fn_name <- as.character(fn)
+                  if (!fn_name %in% c("{", "<-", known_ops)) {
+                    new_fn <- as.symbol(paste0(prefix, as.character(fn)))
+                    expr[[1]] <- new_fn
+                  }
+                }
+
+                # Recurse into arguments
+                for (i in seq_along(expr)) {
+                  expr[[i]] <- prefix_call_names(expr[[i]], prefix)
+                }
+
+                return(expr)
+
+              } else if (is.recursive(expr)) {
+                # Recurse into other language objects
+                expr_list <- as.list(expr)
+                for (i in seq_along(expr_list)) {
+                  expr_list[[i]] <- prefix_call_names(expr_list[[i]], prefix)
+                }
+                return(as.call(expr_list))
+
+              } else {
+                return(expr)
+              }
+            }
+
+            browser()
+
+            prefix_call_names(body(fn))
+
+
             cli_abort(
               c(
                 "Could not evaluate an anonymous function in {.fn across}.",
