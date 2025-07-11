@@ -1,0 +1,20 @@
+# Details on how to fill this template: https://flir.etiennebacher.com/articles/adding_rules
+# More advanced: https://ast-grep.github.io/guide/rule-config/atomic-rule.html
+
+id: describe_plan-1
+language: r
+severity: warning
+rule:
+  pattern: describe_plan($DATA)
+fix: explain(~~DATA~~, optimized = FALSE)
+message: `describe_plan()` is deprecated, use `explain(optimized = FALSE)` instead.
+
+---
+
+id: describe_plan-2
+language: r
+severity: warning
+rule:
+  pattern: describe_optimized_plan($DATA)
+fix: explain(~~DATA~~)
+message: `describe_optimized_plan()` is deprecated, use `explain()` instead.
