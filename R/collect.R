@@ -37,7 +37,8 @@
 #' - `"auto"` (default): Select the engine automatically. The `"in-memory"`
 #'   engine will be selected for most cases.
 #' - `"in-memory"`: Use the in-memory engine.
-#' - `"streaming"`: [Experimental] Use the (new) streaming engine.
+#' - `"streaming"`: Use the streaming engine, usually faster and can handle
+#'   larger-than-memory data.
 #' @inheritParams slice_tail.polars_data_frame
 #' @param streaming `r lifecycle::badge("deprecated")` Deprecated, use `engine`
 #' instead.

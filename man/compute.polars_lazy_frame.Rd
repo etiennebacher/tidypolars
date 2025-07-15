@@ -77,7 +77,8 @@ followings:
 \item \code{"auto"} (default): Select the engine automatically. The \code{"in-memory"}
 engine will be selected for most cases.
 \item \code{"in-memory"}: Use the in-memory engine.
-\item \code{"streaming"}: \link{Experimental} Use the (new) streaming engine.
+\item \code{"streaming"}: Use the streaming engine, usually faster and can handle
+larger-than-memory data.
 }}
 
 \item{streaming}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use \code{engine}
