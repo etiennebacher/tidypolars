@@ -84,7 +84,6 @@ reference:
     desc: |
       Other functions or S3 methods.
     contents:
-      - as_tibble.tidypolars
       - summary.polars_data_frame
       - tidypolars_options
 
