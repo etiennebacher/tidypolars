@@ -97,7 +97,7 @@ sink_parquet <- function(
   check_dots_empty()
 
   if (!is_polars_lf(.data)) {
-    rlang::abort("`sink_parquet()` can only be used on a Polars LazyFrame.")
+    cli_abort("{.fn sink_parquet} can only be used on a Polars LazyFrame.")
   }
 
   .data$sink_parquet(
@@ -210,7 +210,7 @@ sink_csv <- function(
 ) {
   check_dots_empty()
   if (!is_polars_lf(.data)) {
-    rlang::abort("`sink_csv()` can only be used on a Polars LazyFrame.")
+    cli_abort("{.fn sink_csv} can only be used on a Polars LazyFrame.")
   }
 
   rlang::arg_match0(
@@ -294,7 +294,7 @@ sink_ipc <- function(
 ) {
   check_dots_empty()
   if (!is_polars_lf(.data)) {
-    rlang::abort("`sink_ipc()` can only be used on a Polars LazyFrame.")
+    cli_abort("{.fn sink_ipc} can only be used on a Polars LazyFrame.")
   }
 
   rlang::arg_match0(compression, values = c("zstd", "lz4", "uncompressed"))
@@ -340,7 +340,7 @@ sink_ndjson <- function(
 ) {
   check_dots_empty()
   if (!is_polars_lf(.data)) {
-    rlang::abort("`sink_ndjson()` can only be used on a Polars LazyFrame.")
+    cli_abort("{.fn sink_ndjson} can only be used on a Polars LazyFrame.")
   }
 
   .data$sink_ndjson(

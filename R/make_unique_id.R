@@ -12,12 +12,8 @@
 make_unique_id <- function(.data, ..., new_col = "hash") {
   check_polars_data(.data)
   if (new_col %in% names(.data)) {
-    rlang::abort(
-      paste0(
-        'Column "',
-        new_col,
-        '" already exists. Use a new name with the argument `new_col`.'
-      )
+    cli_abort(
+      'Column {.val {new_col}} already exists. Use a new name with the argument {.code new_col}.'
     )
   }
   vars <- tidyselect_dots(.data, ...)

@@ -97,7 +97,7 @@ slice_sample.polars_data_frame <- function(
 
   # arguments don't have the same name in polars so I check inputs here
   if (!is.null(n) && !is.null(prop)) {
-    abort("You must provide either `n` or `prop`, not both.")
+    cli_abort("You must provide either {.code n} or {.code prop}, not both.")
   }
   if (is.null(n) && is.null(prop)) {
     n <- 1
@@ -107,8 +107,8 @@ slice_sample.polars_data_frame <- function(
       ((!is.null(n) && n > nrow(.data)) ||
         (!is.null(prop) && prop > 1))
   ) {
-    abort(
-      "Cannot take more rows than the total number of rows when `replace = FALSE`."
+    cli_abort(
+      "Cannot take more rows than the total number of rows when {.code replace = FALSE}."
     )
   }
 

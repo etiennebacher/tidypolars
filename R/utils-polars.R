@@ -1,6 +1,6 @@
 check_polars_data <- function(x, env = caller_env()) {
   if (!is_polars_df(x) && !is_polars_lf(x)) {
-    rlang::abort(
+    cli_abort(
       "The data must be a Polars DataFrame or LazyFrame.",
       call = env
     )

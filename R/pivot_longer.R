@@ -65,8 +65,8 @@ pivot_longer.polars_data_frame <- function(
 
   if (!is.null(names_prefix)) {
     if (length(names_prefix) > 1) {
-      rlang::abort(
-        "`names_prefix` must be of length 1."
+      cli_abort(
+        "{.code names_prefix} must be of length 1."
       )
     }
     out <- out$with_columns(

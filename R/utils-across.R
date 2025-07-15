@@ -102,8 +102,8 @@ get_arg <- function(name, position, expr, env) {
   }
 
   if (is.null(out) && name == ".cols") {
-    rlang::abort(
-      "You must supply the argument `.cols` in `across()`.",
+    cli_abort(
+      "You must supply the argument {.code .cols} in {.fn across}.",
       call = env
     )
   }
@@ -122,10 +122,10 @@ check_fns_is_list <- function(fns, caller) {
   if (!is.list(tr)) {
     return(fns)
   }
-  abort(
+  cli_abort(
     c(
-      "When using `across()` in tidypolars, `.fns` doesn't accept an external list of functions or formulas.",
-      "i" = "Instead of `across(.fns = <external_list>)`, do `across(.fns = list(fun1 = ..., fun2 = ...))`"
+      "When using {.fn across} in tidypolars, {.code .fns} doesn't accept an external list of functions or formulas.",
+      "i" = "Instead of {.code across(.fns = <external_list>)}, do {.code across(.fns = list(fun1 = ..., fun2 = ...))}."
     ),
     call = caller
   )

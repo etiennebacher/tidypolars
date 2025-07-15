@@ -1,10 +1,11 @@
 # unsupported args throw warning
 
     Code
-      cross_join(test, test2, keep = TRUE)
+      cross_join(test, test2, copy = TRUE)
     Condition
       Error in `cross_join()`:
-      ! `...` must be empty.
+      ! Argument `copy` is not supported by tidypolars.
+      i Use `options(tidypolars_unknown_args = "warn")` to warn when this happens instead of throwing an error.
 
 # dots must be empty
 

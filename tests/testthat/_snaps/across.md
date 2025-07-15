@@ -22,5 +22,5 @@
     Condition
       Error:
       ! When using `across()` in tidypolars, `.fns` doesn't accept an external list of functions or formulas.
-      i Instead of `across(.fns = <external_list>)`, do `across(.fns = list(fun1 = ..., fun2 = ...))`
+      i Instead of `across(.fns = <external_list>)`, do `across(.fns = list(fun1 = ..., fun2 = ...))`.
 

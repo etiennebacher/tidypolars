@@ -62,7 +62,7 @@ filter.polars_data_frame <- function(.data, ..., .by = NULL) {
       out <- .data$filter(polars_exprs)
     },
     error = function(e) {
-      rlang::abort(e$message, call = caller_env(4))
+      cli_abort(e$message, call = caller_env(4))
     }
   )
   out <- if (is_grouped && missing(.by)) {

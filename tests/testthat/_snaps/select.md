@@ -15,5 +15,5 @@
       select(pl_iris, where(~ mean(.x) > 3.5))
     Condition
       Error in `select()`:
-      ! `where()` can only take `is.*` functions (like `is.numeric`).
+      ! `where()` can only take `is.*()` functions (like `is.numeric()`).
 

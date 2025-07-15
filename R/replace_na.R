@@ -54,7 +54,7 @@ replace_na.polars_data_frame <- function(data, replace, ...) {
   out <- tryCatch(
     data$with_columns(!!!exprs),
     error = function(e) {
-      rlang::abort(e$message, call = caller_env(4), parent = e)
+      cli_abort(e$message, call = caller_env(4), parent = e)
     }
   )
 

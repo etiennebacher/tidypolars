@@ -119,15 +119,15 @@ pl_str_pad_stringr <- function(
   pad <- polars_expr_to_r(pad)
 
   if (isFALSE(use_width)) {
-    abort(
-      "`str_pad()` doesn't work in a Polars DataFrame when `use_width = FALSE`",
+    cli_abort(
+      "{.fn str_pad} doesn't work in a Polars DataFrame when {.code use_width = FALSE}",
       class = "tidypolars_error"
     )
   }
 
   if (length(width) > 1) {
-    abort(
-      "`str_pad()` doesn't work in a Polars DataFrame when `width` has a length greater than 1.",
+    cli_abort(
+      "{.fn str_pad} doesn't work in a Polars DataFrame when `width` has a length greater than 1.",
       class = "tidypolars_error"
     )
   }
@@ -142,8 +142,8 @@ pl_str_pad_stringr <- function(
 
   switch(
     side,
-    "both" = abort(
-      '`str_pad()` doesn\'t work in a Polars DataFrame when `side = "both"`',
+    "both" = cli_abort(
+      '{.fn str_pad} doesn\'t work in a Polars DataFrame when {.code side = "both"}',
       class = "tidypolars_error"
     ),
     # polars and dplyr have the opposite understanding for "side"
@@ -439,7 +439,7 @@ pl_str_split_stringr <- function(string, pattern, ...) {
 pl_str_split_i_stringr <- function(string, pattern, i, ...) {
   check_empty_dots(...)
   if (i == 0) {
-    abort("`i` must not be 0.", call = env_from_dots(...))
+    cli_abort("{.code i} must not be 0.", call = env_from_dots(...))
   } else if (i >= 1) {
     i <- i - 1
   }
@@ -454,7 +454,10 @@ pl_str_replace_na_stringr <- function(string, replacement = "NA", ...) {
   if (
     length(replacement) > 1 || is.na(replacement) || !is.character(replacement)
   ) {
-    abort("`replacement` must be a single string.", call = env_from_dots(...))
+    cli_abort(
+      "{.code replacement} must be a single string.",
+      call = env_from_dots(...)
+    )
   }
   string$replace_strict(
     old = NA,
@@ -506,13 +509,9 @@ pl_str_trunc_stringr <- function(
   ellipsis = "..."
 ) {
   if (width < nchar(ellipsis)) {
-    abort(
+    cli_abort(
       paste0(
-        "`width` (",
-        width,
-        ") is shorter than `ellipsis` (",
-        nchar(ellipsis),
-        ")."
+        "{.code width} ({width}) is shorter than {.code ellipsis} ({nchar(ellipsis)})."
       )
     )
   }
@@ -526,8 +525,8 @@ pl_str_trunc_stringr <- function(
       string$str$head(width - nchar(ellipsis)),
       pl$lit(ellipsis)
     ),
-    "center" = abort("`side = \"center\" is not supported.`"),
-    abort("`side` must be either \"left\" or \"right\".")
+    "center" = cli_abort("{.code side = \"center\"} is not supported."),
+    cli_abort("{.code side} must be either \"left\" or \"right\".")
   )
 }
 

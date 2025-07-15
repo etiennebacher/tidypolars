@@ -38,7 +38,9 @@ relocate.polars_data_frame <- function(
   .after = NULL
 ) {
   if (!missing(.before) && !missing(.after)) {
-    rlang::abort("You can specify either `.before` or `.after` but not both.")
+    cli_abort(
+      "You can specify either {.code .before} or {.code .after} but not both."
+    )
   }
 
   names_data <- names(.data)

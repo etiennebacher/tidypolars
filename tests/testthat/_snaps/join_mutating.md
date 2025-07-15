@@ -133,7 +133,7 @@
       left_join(pdf1, pdf2, na_matches = "foo")
     Condition
       Error in `left_join()`:
-      ! `relationship` must be one of "na" or "never", not "foo".
+      ! `na_matches` must be one of "na" or "never", not "foo".
 
 # error if two inputs don't have the same class
 

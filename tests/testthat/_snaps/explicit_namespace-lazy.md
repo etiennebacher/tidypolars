@@ -4,8 +4,9 @@
       current$collect()
     Condition
       Error in `mutate()`:
-      ! `tidypolars` doesn't know how to translate this function: `data.table::shift()`.
+      ! tidypolars doesn't know how to translate this function: `data.table::shift()`.
       i You can ask for it to be translated here: <https://github.com/etiennebacher/tidypolars/issues>.
+      i See `?tidypolars_options` to set automatic fallback to R to handle unknown functions.
 
 ---
 
@@ -13,8 +14,9 @@
       current$collect()
     Condition
       Error in `mutate()`:
-      ! `tidypolars` doesn't know how to translate this function: `year()` (from package `data.table`).
+      ! tidypolars doesn't know how to translate this function: `year()` (from package data.table).
       i You can ask for it to be translated here: <https://github.com/etiennebacher/tidypolars/issues>.
+      i See `?tidypolars_options` to set automatic fallback to R to handle unknown functions.
 
 # error message when function doesn't exist in environment
 
@@ -22,5 +24,6 @@
       current$collect()
     Condition
       Error in `mutate()`:
-      ! `tidypolars` doesn't know how to translate this function: `foobar()`.
+      ! tidypolars doesn't know how to translate this function: `foobar()`.
+      i See `?tidypolars_options` to set automatic fallback to R to handle unknown functions.
 

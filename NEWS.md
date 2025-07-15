@@ -83,6 +83,20 @@
 * `count()` and `add_count()` now warn or error when argument `wt` is used
   since it is not supported. The behavior depends on the global option
   `tidypolars_unknown_args` (#204).
+  
+* `tidypolars` has experimental support for fallback to R when a function is not
+  internally translated to polars syntax. The default behavior is still to
+  error, but the user can now set `options(tidypolars_fallback_to_r = TRUE)`
+  to handle those unknown functions. See `?tidypolars_options` for
+  details on the drawbacks of this approach (#205).
+  
+* Large performance improvement when using selection helpers (such as 
+  `contains()`) on data with many columns (#211).
+  
+* `tidypolars` now exports rules to be used with `flir` for detecting deprecated
+  functions `describe_plan()` and `describe_optimized_plan()`. Those can be
+  used in your project by following [this article](https://flir.etiennebacher.com/articles/sharing_rules#for-users).
+  Note that this requires `flir` 0.5.9000 or higher (#214).
 
 ## Bug fixes
 

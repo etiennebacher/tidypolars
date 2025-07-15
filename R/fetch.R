@@ -47,7 +47,7 @@ fetch <- function(
   streaming = FALSE
 ) {
   if (!is_polars_lf(.data)) {
-    rlang::abort("`fetch()` can only be used on a LazyFrame.")
+    cli_abort("{.code fetch()} can only be used on a LazyFrame.")
   }
 
   if (!missing(streaming)) {

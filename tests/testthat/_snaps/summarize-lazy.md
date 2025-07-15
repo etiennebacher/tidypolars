@@ -4,7 +4,7 @@
       current$collect()
     Condition
       Error in `summarise()`:
-      ! `tidypolars` doesn't support `.groups = "rowwise"` for now.
+      ! tidypolars doesn't support `.groups = "rowwise"` for now.
 
 ---
 

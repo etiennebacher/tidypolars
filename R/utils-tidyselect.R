@@ -1,6 +1,6 @@
 tidyselect_dots <- function(.data, ..., with_renaming = FALSE) {
-  data <- build_data_context(.data)
   check_where_arg(...)
+  data <- build_data_context(.data, ...)
   out <- tidyselect::eval_select(
     rlang::expr(c(...)),
     data,
@@ -16,7 +16,7 @@ tidyselect_dots <- function(.data, ..., with_renaming = FALSE) {
 }
 
 tidyselect_named_arg <- function(.data, cols) {
-  data <- build_data_context(.data)
+  data <- build_data_context(.data, cols = cols)
   out <- names(
     tidyselect::eval_select(cols, data = data, error_call = caller_env())
   )
@@ -42,11 +42,11 @@ tidyselect_new_vars <- function(.cols, new_vars) {
       "ends_with" = grep(paste0(.cols[[2]], "$"), new_vars, value = TRUE),
       "everything" = new_vars,
       {
-        warn(
+        cli_warn(
           paste0(
-            "In `across()`, the argument `.cols = ",
+            "In {.fn across}, the argument `.cols = ",
             safe_deparse(.cols),
-            "` will not take into account \nvariables created in the same `mutate()`/`summarize` call."
+            "` will not take into account \nvariables created in the same {.fn mutate} / {.fn summarize} call."
           )
         )
         NULL
@@ -57,11 +57,37 @@ tidyselect_new_vars <- function(.cols, new_vars) {
   NULL
 }
 
-# Rather than collecting a 1-row slice, it is faster to use the schema of the
-# data to recreate an empty DataFrame and convert it to R
-build_data_context <- function(.data) {
-  .data$slice(offset = 0, length = 0) |>
-    as_tibble()
+# When where() is in the dots, then we need to know the type of each variable.
+# This is done by creating a one-row DataFrame with the existing schema and
+# convert it to a tibble.
+#
+# This is very expensive when there are hundreds or thousands of columns, so
+# we only do it when there's a where() call.
+build_data_context <- function(.data, ..., cols = NULL) {
+  dots <- enexprs(...)
+
+  # This is hit from expand_across().
+  if (!is.null(cols) && !is.null(quo_get_expr(cols))) {
+    dots <- append(dots, quo_get_expr(cols))
+  }
+  any_is_where <- any(
+    vapply(
+      dots,
+      function(x) is_call(x, "where"),
+      FUN.VALUE = logical(1)
+    )
+  )
+
+  if (!any_is_where) {
+    out <- rlang::set_names(
+      data.frame(matrix(ncol = length(names(.data)), nrow = 0)),
+      names(.data)
+    )
+    return(out)
+  } else {
+    .data$slice(offset = 0, length = 0) |>
+      as_tibble()
+  }
 }
 
 #' Because the data used in selection is an empty DataFrame, where() can only
@@ -78,8 +104,8 @@ check_where_arg <- function(...) {
     tmp <- gsub("^where\\(", "", tmp)
     tmp <- gsub("\\)$", "", tmp)
     if (!startsWith(tmp, "is.")) {
-      rlang::abort(
-        "`where()` can only take `is.*` functions (like `is.numeric`).",
+      cli_abort(
+        "{.fn where} can only take {.fn is.*} functions (like {.fn is.numeric}).",
         call = caller_env(2)
       )
     }

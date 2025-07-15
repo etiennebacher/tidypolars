@@ -161,14 +161,10 @@ check_name <- function(x, vars, name, missing_name) {
       new_name <- paste0(new_name, "n")
     }
     if (new_name != name) {
-      rlang::inform(
+      cli_inform(
         c(
-          paste0(
-            "Storing counts in `",
-            new_name,
-            "`, as `n` already present in input."
-          ),
-          "i" = "Use `name = \"new_name\"` to pick a new name."
+          "Storing counts in {.code {new_name}}, as {.code n} already present in input.",
+          "i" = "Use {.code name = \"new_name\"} to pick a new name."
         )
       )
     }
@@ -177,14 +173,10 @@ check_name <- function(x, vars, name, missing_name) {
       new_name <- paste0(new_name, "n")
     }
     if (new_name != name) {
-      rlang::inform(
+      cli_inform(
         c(
-          paste0(
-            "Storing counts in `",
-            new_name,
-            "`, as `n` already present in input."
-          ),
-          "i" = "Use `name = \"new_name\"` to pick a new name."
+          "Storing counts in {.code {new_name}}, as {.code n} already present in input.",
+          "i" = "Use {.code name = \"new_name\"} to pick a new name."
         )
       )
     }

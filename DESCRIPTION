@@ -1,6 +1,6 @@
 Package: tidypolars
 Type: Package
-Title: Get the Power of Polars with the Syntax of the Tidyverse
+Title: More Efficient Tidyverse Code, Using Polars in the Background
 Version: 0.13.0.9000
 Authors@R:
     c(person(given = "Etienne",
@@ -25,6 +25,7 @@ URL: https://tidypolars.etiennebacher.com, https://etiennebacher.r-universe.dev/
 BugReports: https://github.com/etiennebacher/tidypolars/issues
 Depends: R (>= 4.1.0)
 Imports:
+    cli,
     dplyr,
     glue,
     lifecycle,
