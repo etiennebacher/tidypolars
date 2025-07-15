@@ -633,7 +633,11 @@ pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
 pl_seq <- function(from = 1, to = 1, by = NULL, ...) {
   check_empty_dots(...)
   by <- by %||% 1
-  pl$int_range(start = from, end = to + 1, step = by)
+  out <- pl$int_range(start = from, end = to + 1, step = by)
+  if ((to - from) == 1) {
+    out <- out$first()
+  }
+  out
 }
 
 pl_seq_len <- function(length.out) {
@@ -641,7 +645,11 @@ pl_seq_len <- function(length.out) {
   if (length.out < 0) {
     cli_abort("{.code length.out} must be a non-negative integer.")
   }
-  pl$int_range(start = 1, end = length.out + 1, step = 1)
+  out <- pl$int_range(start = 1, end = length.out + 1, step = 1)
+  if (length.out == 1) {
+    out <- out$first()
+  }
+  out
 }
 
 pl_sign <- function(x, ...) {
