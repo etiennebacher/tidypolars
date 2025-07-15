@@ -38,7 +38,6 @@
 #'   engine will be selected for most cases.
 #' - `"in-memory"`: Use the in-memory engine.
 #' - `"streaming"`: [Experimental] Use the (new) streaming engine.
-#' - `"old-streaming"`: [Superseded] Use the old streaming engine.
 #' @inheritParams slice_tail.polars_data_frame
 #' @param streaming `r lifecycle::badge("deprecated")` Deprecated, use `engine`
 #' instead.
@@ -74,7 +73,7 @@ compute.polars_lazy_frame <- function(
   comm_subexpr_elim = TRUE,
   cluster_with_columns = TRUE,
   no_optimization = FALSE,
-  engine = c("auto", "in-memory", "streaming", "old-streaming"),
+  engine = c("auto", "in-memory", "streaming"),
   streaming = FALSE
 ) {
   check_dots_empty()
@@ -87,13 +86,12 @@ compute.polars_lazy_frame <- function(
       when = "0.14.0",
       what = "compute(streaming)",
       details = c(
-        i = "Use `engine = \"old-streaming\"` for traditional streaming mode.",
         i = "Use `engine = \"streaming\"` for the new streaming mode.",
         i = "Use `engine = \"in-memory\"` for non-streaming mode."
       ),
     )
     if (isTRUE(streaming)) {
-      engine <- "old-streaming"
+      engine <- "streaming"
     }
     if (isFALSE(streaming)) engine <- "in-memory"
   }
@@ -135,7 +133,7 @@ collect.polars_lazy_frame <- function(
   comm_subexpr_elim = TRUE,
   cluster_with_columns = TRUE,
   no_optimization = FALSE,
-  engine = c("auto", "in-memory", "streaming", "old-streaming"),
+  engine = c("auto", "in-memory", "streaming"),
   streaming = FALSE
 ) {
   check_dots_empty()
@@ -145,13 +143,12 @@ collect.polars_lazy_frame <- function(
       when = "0.14.0",
       what = "collect(streaming)",
       details = c(
-        i = "Use `engine = \"old-streaming\"` for traditional streaming mode.",
         i = "Use `engine = \"streaming\"` for the new streaming mode.",
         i = "Use `engine = \"in-memory\"` for non-streaming mode."
       ),
     )
     if (isTRUE(streaming)) {
-      engine <- "old-streaming"
+      engine <- "streaming"
     }
     if (isFALSE(streaming)) engine <- "in-memory"
   }
