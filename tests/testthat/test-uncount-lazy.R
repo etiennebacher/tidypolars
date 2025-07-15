@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- neopolars::pl$LazyFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
+  test <- polars::pl$LazyFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
 
   expect_is_tidypolars(uncount(test, n))
 
@@ -24,7 +24,7 @@ test_that("basic behavior works", {
 })
 
 test_that("works with constant", {
-  test <- neopolars::pl$LazyFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
+  test <- polars::pl$LazyFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
 
   expect_equal_lazy(
     uncount(test, 2),
@@ -37,7 +37,7 @@ test_that("works with constant", {
 })
 
 test_that("works with expression", {
-  test <- neopolars::pl$LazyFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
+  test <- polars::pl$LazyFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
 
   expect_equal_lazy(
     uncount(test, 2 / n),

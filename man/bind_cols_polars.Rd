@@ -20,11 +20,11 @@ Append multiple Data/LazyFrames next to each other
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-p1 <- neopolars::pl$DataFrame(
+p1 <- polars::pl$DataFrame(
   x = sample(letters, 20),
   y = sample(1:100, 20)
 )
-p2 <- neopolars::pl$DataFrame(
+p2 <- polars::pl$DataFrame(
   z = sample(letters, 20),
   w = sample(1:100, 20)
 )

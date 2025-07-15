@@ -10,7 +10,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' library(neopolars)
+#' library(polars)
 #' p1 <- pl$DataFrame(
 #'   x = c("a", "b"),
 #'   y = 1:2
@@ -46,11 +46,11 @@ bind_rows_polars <- function(..., .id = NULL) {
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' p1 <- neopolars::pl$DataFrame(
+#' p1 <- polars::pl$DataFrame(
 #'   x = sample(letters, 20),
 #'   y = sample(1:100, 20)
 #' )
-#' p2 <- neopolars::pl$DataFrame(
+#' p2 <- polars::pl$DataFrame(
 #'   z = sample(letters, 20),
 #'   w = sample(1:100, 20)
 #' )

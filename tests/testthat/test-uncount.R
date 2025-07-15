@@ -1,5 +1,5 @@
 test_that("basic behavior works", {
-  test <- neopolars::pl$DataFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
+  test <- polars::pl$DataFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
 
   expect_is_tidypolars(uncount(test, n))
 
@@ -20,7 +20,7 @@ test_that("basic behavior works", {
 })
 
 test_that("works with constant", {
-  test <- neopolars::pl$DataFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
+  test <- polars::pl$DataFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
 
   expect_equal(
     uncount(test, 2),
@@ -33,7 +33,7 @@ test_that("works with constant", {
 })
 
 test_that("works with expression", {
-  test <- neopolars::pl$DataFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
+  test <- polars::pl$DataFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
 
   expect_equal(
     uncount(test, 2 / n),

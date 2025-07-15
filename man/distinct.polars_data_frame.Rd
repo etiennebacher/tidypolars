@@ -34,7 +34,7 @@ remove all duplicates.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pl_test <- neopolars::pl$DataFrame(
+pl_test <- polars::pl$DataFrame(
   iso_o = c(rep(c("AA", "AB"), each = 2), "AC", "DC"),
   iso_d = rep(c("BA", "BB", "BC"), each = 2),
   value = c(2, 2, 3, 4, 5, 6)

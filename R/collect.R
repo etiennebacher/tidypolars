@@ -2,7 +2,7 @@
 #'
 #' @description
 #' `compute()` checks the query, optimizes it in the background, and runs it.
-#' The output is a [Polars DataFrame][neopolars::pl__DataFrame]. `collect()` is
+#' The output is a [Polars DataFrame][polars::pl__DataFrame]. `collect()` is
 #' similar to `compute()` but converts the output to an R [data.frame], which
 #' consumes more memory.
 #'
@@ -46,7 +46,7 @@
 #' @export
 #' @seealso [fetch()] for applying a lazy query on a subset of the data.
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' dat_lazy <- neopolars::as_polars_df(iris)$lazy()
+#' dat_lazy <- polars::as_polars_df(iris)$lazy()
 #'
 #' compute(dat_lazy)
 #'
@@ -92,7 +92,9 @@ compute.polars_lazy_frame <- function(
         i = "Use `engine = \"in-memory\"` for non-streaming mode."
       ),
     )
-    if (isTRUE(streaming)) engine <- "old-streaming"
+    if (isTRUE(streaming)) {
+      engine <- "old-streaming"
+    }
     if (isFALSE(streaming)) engine <- "in-memory"
   }
 
@@ -148,7 +150,9 @@ collect.polars_lazy_frame <- function(
         i = "Use `engine = \"in-memory\"` for non-streaming mode."
       ),
     )
-    if (isTRUE(streaming)) engine <- "old-streaming"
+    if (isTRUE(streaming)) {
+      engine <- "old-streaming"
+    }
     if (isFALSE(streaming)) engine <- "in-memory"
   }
 

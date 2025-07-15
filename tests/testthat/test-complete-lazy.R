@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- neopolars::pl$LazyFrame(
+  test <- polars::pl$LazyFrame(
     country = c("France", "France", "UK", "UK", "Spain"),
     year = c(2020, 2021, 2019, 2020, 2022),
     value = c(1, 2, 3, 4, 5)

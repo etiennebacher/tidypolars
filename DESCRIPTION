@@ -28,7 +28,7 @@ Imports:
     dplyr,
     glue,
     lifecycle,
-    neopolars,
+    polars,
     rlang,
     tidyr,
     tidyselect,

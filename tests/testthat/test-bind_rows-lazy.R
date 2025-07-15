@@ -4,11 +4,11 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
   l <- list(
-    neopolars::pl$LazyFrame(
+    polars::pl$LazyFrame(
       x = sample(letters, 20),
       y = sample.int(100, 20)
     ),
-    neopolars::pl$LazyFrame(
+    polars::pl$LazyFrame(
       x = sample(letters, 20),
       y = sample.int(100, 20)
     )
@@ -40,11 +40,11 @@ test_that("dots and list are equivalent", {
 
 test_that("different dtypes work", {
   l <- list(
-    neopolars::pl$LazyFrame(
+    polars::pl$LazyFrame(
       x = c("a", "b"),
       y = 1:2
     ),
-    neopolars::pl$LazyFrame(
+    polars::pl$LazyFrame(
       y = 3:4,
       z = c("c", "d")
     )$with_columns(pl$col("y")$cast(pl$Int16))

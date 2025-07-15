@@ -2,13 +2,13 @@ test_that("error if no common variables and and `by` no provided", {
   skip_if_not_installed("withr")
   withr::local_options(list(rlib_message_verbosity = "quiet"))
 
-  test <- neopolars::pl$DataFrame(
+  test <- polars::pl$DataFrame(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
   expect_snapshot(
-    left_join(test, neopolars::as_polars_df(iris)),
+    left_join(test, polars::as_polars_df(iris)),
     error = TRUE
   )
 })
@@ -16,12 +16,12 @@ test_that("error if no common variables and and `by` no provided", {
 test_that("basic behavior works", {
   skip_if_not_installed("withr")
   withr::local_options(list(rlib_message_verbosity = "quiet"))
-  test <- neopolars::pl$DataFrame(
+  test <- polars::pl$DataFrame(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- neopolars::pl$DataFrame(
+  test2 <- polars::pl$DataFrame(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z2 = c(4, 5, 7)
@@ -74,12 +74,12 @@ test_that("basic behavior works", {
 })
 
 test_that("works if join by different variable names", {
-  test <- neopolars::pl$DataFrame(
+  test <- polars::pl$DataFrame(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- neopolars::pl$DataFrame(
+  test2 <- polars::pl$DataFrame(
     x2 = c(1, 2, 4),
     y2 = c(1, 2, 4),
     z3 = c(4, 5, 7)
@@ -107,12 +107,12 @@ test_that("works if join by different variable names", {
 })
 
 test_that("argument suffix works", {
-  test <- neopolars::pl$DataFrame(
+  test <- polars::pl$DataFrame(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- neopolars::pl$DataFrame(
+  test2 <- polars::pl$DataFrame(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z = c(4, 5, 7)
@@ -135,12 +135,12 @@ test_that("argument suffix works", {
 })
 
 test_that("suffix + join_by works", {
-  test <- neopolars::pl$DataFrame(
+  test <- polars::pl$DataFrame(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- neopolars::pl$DataFrame(
+  test2 <- polars::pl$DataFrame(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z = c(4, 5, 7)
@@ -162,12 +162,12 @@ test_that("suffix + join_by works", {
 })
 
 test_that("argument relationship works", {
-  test <- neopolars::pl$DataFrame(
+  test <- polars::pl$DataFrame(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- neopolars::pl$DataFrame(
+  test2 <- polars::pl$DataFrame(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z = c(4, 5, 7)
@@ -178,12 +178,12 @@ test_that("argument relationship works", {
     error = TRUE
   )
 
-  country <- neopolars::pl$DataFrame(
+  country <- polars::pl$DataFrame(
     iso = c("FRA", "DEU"),
     value = 1:2
   )
 
-  country_year <- neopolars::pl$DataFrame(
+  country_year <- polars::pl$DataFrame(
     iso = rep(c("FRA", "DEU"), each = 2),
     year = rep(2019:2020, 2),
     value2 = 3:6
@@ -296,12 +296,12 @@ test_that("argument na_matches works", {
 test_that("error if two inputs don't have the same class", {
   skip_if_not_installed("withr")
   withr::local_options(list(rlib_message_verbosity = "quiet"))
-  test <- neopolars::pl$DataFrame(
+  test <- polars::pl$DataFrame(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- neopolars::pl$DataFrame(
+  test2 <- polars::pl$DataFrame(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z = c(4, 5, 7)
@@ -323,11 +323,11 @@ test_that("error if two inputs don't have the same class", {
 })
 
 test_that("unsupported args throw warning", {
-  test <- neopolars::pl$DataFrame(
+  test <- polars::pl$DataFrame(
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-  test2 <- neopolars::pl$DataFrame(
+  test2 <- polars::pl$DataFrame(
     country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )
@@ -349,11 +349,11 @@ test_that("unsupported args throw warning", {
 })
 
 test_that("dots must be empty", {
-  test <- neopolars::pl$DataFrame(
+  test <- polars::pl$DataFrame(
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-  test2 <- neopolars::pl$DataFrame(
+  test2 <- polars::pl$DataFrame(
     country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )

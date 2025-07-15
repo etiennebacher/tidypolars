@@ -12,7 +12,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_test <- neopolars::as_polars_df(iris)
+#' pl_test <- polars::as_polars_df(iris)
 #' slice_head(pl_test, n = 3)
 #' slice_tail(pl_test, n = 3)
 #' slice_sample(pl_test, n = 5)

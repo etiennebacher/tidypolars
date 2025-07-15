@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  pl_test <- neopolars::pl$LazyFrame(x = c(NA, 1), y = c(2L, NA_integer_))
+  pl_test <- polars::pl$LazyFrame(x = c(NA, 1), y = c(2L, NA_integer_))
 
   expect_is_tidypolars(replace_na(pl_test, 0))
 
@@ -25,7 +25,7 @@ test_that("basic behavior works", {
 })
 
 test_that("error if original values and replacement have no supertype", {
-  pl_test <- neopolars::pl$LazyFrame(x = c(NA, 1), y = c(2, NA))
+  pl_test <- polars::pl$LazyFrame(x = c(NA, 1), y = c(2, NA))
   expect_snapshot_lazy(
     replace_na(pl_test, "a"),
     error = TRUE
@@ -37,7 +37,7 @@ test_that("error if original values and replacement have no supertype", {
 })
 
 test_that("works if original values and replacement have a supertype", {
-  pl_test <- neopolars::pl$LazyFrame(x = c(NA, 1), y = c(2L, NA_integer_))
+  pl_test <- polars::pl$LazyFrame(x = c(NA, 1), y = c(2L, NA_integer_))
 
   expect_equal_lazy(
     replace_na(pl_test, 1.5),

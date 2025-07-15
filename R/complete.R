@@ -19,7 +19,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' df <- neopolars::pl$DataFrame(
+#' df <- polars::pl$DataFrame(
 #'   group = c(1:2, 1, 2),
 #'   item_id = c(1:2, 2, 3),
 #'   item_name = c("a", "a", "b", "b"),

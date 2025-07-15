@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- neopolars::pl$LazyFrame(
+  test <- polars::pl$LazyFrame(
     a = c(1, NA, NA, NA),
     b = c(1, 2, NA, NA),
     c = c(5, NA, 3, NA)
@@ -21,7 +21,7 @@ test_that("basic behavior works", {
 })
 
 test_that("convert all new column to supertype", {
-  test <- neopolars::pl$LazyFrame(
+  test <- polars::pl$LazyFrame(
     a = c(1, NA, NA, NA),
     b = c("1", "2", NA, NA),
     c = c(5, NA, 3, NA)

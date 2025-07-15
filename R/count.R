@@ -8,7 +8,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' test <- neopolars::as_polars_df(mtcars)
+#' test <- polars::as_polars_df(mtcars)
 #'
 #' # grouping variables must be specified in count() and add_count()
 #' count(test, cyl)
@@ -26,11 +26,11 @@
 #'   group_by(cyl, am) |>
 #'   tally(sort = TRUE, name = "count")
 count.polars_data_frame <- function(
-    x,
-    ...,
-    wt = NULL,
-    sort = FALSE,
-    name = "n"
+  x,
+  ...,
+  wt = NULL,
+  sort = FALSE,
+  name = "n"
 ) {
   if (!missing(wt)) {
     check_unsupported_arg(wt = quo_text(enquo(wt)))
@@ -82,11 +82,11 @@ tally.polars_lazy_frame <- tally.polars_data_frame
 #' @rdname count.polars_data_frame
 #' @export
 add_count.polars_data_frame <- function(
-    x,
-    ...,
-    wt = NULL,
-    sort = FALSE,
-    name = "n"
+  x,
+  ...,
+  wt = NULL,
+  sort = FALSE,
+  name = "n"
 ) {
   if (!missing(wt)) {
     check_unsupported_arg(wt = quo_text(enquo(wt)))

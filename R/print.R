@@ -14,9 +14,9 @@ print.tidypolars <- function(x, ...) {
   rowwise <- attributes(x)$grp_type == "rowwise"
 
   if (is_polars_df(x)) {
-    neopolars:::print.polars_data_frame(x)
+    polars:::print.polars_data_frame(x)
   } else if (is_polars_lf(x)) {
-    neopolars:::print.polars_lazy_frame(x)
+    polars:::print.polars_lazy_frame(x)
   }
 
   if (is_grouped && is_polars_df(x)) {

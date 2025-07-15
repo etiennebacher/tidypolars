@@ -44,6 +44,8 @@ for scanning cloud locations, see the \code{storage_options} parameter.}
 inference. If \code{NULL}, the full data may be scanned (this is slow). Set
 \code{infer_schema = FALSE} to read all columns as \code{pl$String}.}
 
+\item{batch_size}{Number of rows that will be processed per thread.}
+
 \item{n_rows}{Stop reading from parquet file after reading \code{n_rows}.}
 
 \item{low_memory}{Reduce memory pressure at the expense of performance}

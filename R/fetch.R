@@ -21,7 +21,7 @@
 #' @export
 #' @seealso [collect()] for applying a lazy query on the full data.
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' dat_lazy <- neopolars::as_polars_df(iris)$lazy()
+#' dat_lazy <- polars::as_polars_df(iris)$lazy()
 #'
 #' # this will return 30 rows
 #' fetch(dat_lazy, 30)
@@ -60,7 +60,9 @@ fetch <- function(
         i = "Use `engine = \"in-memory\"` for non-streaming mode."
       ),
     )
-    if (isTRUE(streaming)) engine <- "old-streaming"
+    if (isTRUE(streaming)) {
+      engine <- "old-streaming"
+    }
     if (isFALSE(streaming)) engine <- "in-memory"
   }
   out <- .data$head(n_rows)$collect(

@@ -27,13 +27,13 @@ meaning that it won't fill across group boundaries.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pl_test <- neopolars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
+pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 
 fill(pl_test, everything(), .direction = "down")
 fill(pl_test, everything(), .direction = "up")
 
 # with grouped data, it doesn't use values from other groups
-pl_grouped <- neopolars::pl$DataFrame(
+pl_grouped <- polars::pl$DataFrame(
   grp = rep(c("A", "B"), each = 3),
   x = c(1, NA, NA, NA, 2, NA),
   y = c(3, NA, 4, NA, 3, 1)

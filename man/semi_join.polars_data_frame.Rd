@@ -70,13 +70,13 @@ specified. To change this behavior to error instead, use
 
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-test <- neopolars::pl$DataFrame(
+test <- polars::pl$DataFrame(
   x = c(1, 2, 3),
   y = c(1, 2, 3),
   z = c(1, 2, 3)
 )
 
-test2 <- neopolars::pl$DataFrame(
+test2 <- polars::pl$DataFrame(
   x = c(1, 2, 4),
   y = c(1, 2, 4),
   z2 = c(1, 2, 4)

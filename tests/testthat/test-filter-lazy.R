@@ -152,7 +152,7 @@ test_that("between() works", {
 })
 
 test_that("works with grouped data", {
-  by_cyl <- neopolars::as_polars_lf(mtcars) |>
+  by_cyl <- polars::as_polars_lf(mtcars) |>
     group_by(cyl, maintain_order = TRUE)
 
   expect_equal_lazy(
@@ -259,7 +259,7 @@ test_that("works with a local variable defined in a function", {
     x |> filter(chars == local_var)
   }
 
-  test <- neopolars::pl$LazyFrame(chars = letters[1:3])
+  test <- polars::pl$LazyFrame(chars = letters[1:3])
 
   expect_equal_lazy(
     foobar(test),
@@ -268,7 +268,7 @@ test_that("works with a local variable defined in a function", {
 })
 
 test_that("error message when using =", {
-  test <- neopolars::pl$LazyFrame(chars = letters[1:3])
+  test <- polars::pl$LazyFrame(chars = letters[1:3])
 
   expect_snapshot_lazy(
     test |> filter(chars = "a"),
@@ -277,7 +277,7 @@ test_that("error message when using =", {
 })
 
 test_that("works with non-latin and weird characters", {
-  test <- neopolars::pl$LazyFrame(x = c(letters, "<other>$", "生脉胶囊"))
+  test <- polars::pl$LazyFrame(x = c(letters, "<other>$", "生脉胶囊"))
 
   expect_dim(
     test |> filter(x %in% c("<other>$", "生脉胶囊")),
@@ -291,7 +291,7 @@ test_that("works with non-latin and weird characters", {
 })
 
 test_that("works with external data.frame/list elements", {
-  test <- neopolars::pl$LazyFrame(x = 1:3)
+  test <- polars::pl$LazyFrame(x = 1:3)
   test_df <- data.frame(x = 1:2)
 
   expect_dim(
@@ -308,7 +308,7 @@ test_that("works with external data.frame/list elements", {
 })
 
 test_that("works when using [] on external objects", {
-  test <- neopolars::pl$LazyFrame(x = 1:3)
+  test <- polars::pl$LazyFrame(x = 1:3)
   obj <- 1:3
 
   expect_dim(

@@ -37,7 +37,7 @@ test_that("basic behavior works", {
 })
 
 test_that("error if variable doesn't exist", {
-  pl_tmp <- neopolars::as_polars_lf(mtcars)
+  pl_tmp <- polars::as_polars_lf(mtcars)
   expect_snapshot_lazy(
     drop_na(pl_tmp, foo),
     error = TRUE

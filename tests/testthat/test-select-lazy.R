@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  pl_iris <- neopolars::as_polars_lf(iris)
+  pl_iris <- polars::as_polars_lf(iris)
 
   expect_is_tidypolars(select(pl_iris, c("Sepal.Length", "Sepal.Width")))
 
@@ -29,7 +29,7 @@ test_that("basic behavior works", {
 })
 
 test_that("select helpers work", {
-  pl_iris <- neopolars::as_polars_lf(iris)
+  pl_iris <- polars::as_polars_lf(iris)
   expect_colnames(
     select(pl_iris, starts_with("Sepal")),
     c("Sepal.Length", "Sepal.Width")
@@ -94,7 +94,7 @@ test_that("select helpers work", {
     c("Sepal.Length", "Sepal.Width")
   )
 
-  test <- neopolars::pl$LazyFrame(
+  test <- polars::pl$LazyFrame(
     x1 = "a",
     x2 = 1,
     x3 = "b",
@@ -116,7 +116,7 @@ test_that("select helpers work", {
 })
 
 test_that("renaming in select works", {
-  test <- neopolars::as_polars_lf(iris)
+  test <- polars::as_polars_lf(iris)
 
   expect_equal_lazy(
     select(test, foo = Sepal.Length, foo2 = Species),

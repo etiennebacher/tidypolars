@@ -61,7 +61,7 @@ expressions to know how to write custom functions that are accepted by
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pl_iris <- neopolars::as_polars_df(iris)
+pl_iris <- polars::as_polars_df(iris)
 
 # classic operation
 mutate(pl_iris, x = Sepal.Width + Sepal.Length)

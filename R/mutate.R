@@ -45,7 +45,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_iris <- neopolars::as_polars_df(iris)
+#' pl_iris <- polars::as_polars_df(iris)
 #'
 #' # classic operation
 #' mutate(pl_iris, x = Sepal.Width + Sepal.Length)

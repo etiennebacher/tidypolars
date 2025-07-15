@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- neopolars::pl$LazyFrame(
+  test <- polars::pl$LazyFrame(
     year = 2009:2011,
     month = 10:12,
     day = c(11L, 22L, 28L),
@@ -23,7 +23,7 @@ test_that("basic behavior works", {
 })
 
 test_that("argument remove works", {
-  test <- neopolars::pl$LazyFrame(
+  test <- polars::pl$LazyFrame(
     year = 2009:2011,
     month = 10:12,
     day = c(11L, 22L, 28L),
@@ -43,7 +43,7 @@ test_that("argument remove works", {
 })
 
 test_that("tidy selection works", {
-  test <- neopolars::pl$LazyFrame(
+  test <- polars::pl$LazyFrame(
     name = c("John", "Jack", "Thomas"),
     middlename = c("T.", NA, "F."),
     surname = c("Smith", "Thompson", "Jones")
@@ -57,7 +57,7 @@ test_that("tidy selection works", {
 })
 
 test_that("name of output column must be provided", {
-  test <- neopolars::pl$LazyFrame(
+  test <- polars::pl$LazyFrame(
     year = 2009:2011,
     month = 10:12,
     day = c(11L, 22L, 28L),
@@ -70,7 +70,7 @@ test_that("name of output column must be provided", {
 })
 
 test_that("no selection selects all columns", {
-  test <- neopolars::pl$LazyFrame(
+  test <- polars::pl$LazyFrame(
     year = 2009:2011,
     month = 10:12,
     day = c(11L, 22L, 28L),

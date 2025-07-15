@@ -86,7 +86,7 @@ instead.}
 }
 \description{
 \code{compute()} checks the query, optimizes it in the background, and runs it.
-The output is a \link[neopolars:pl__DataFrame]{Polars DataFrame}. \code{collect()} is
+The output is a \link[polars:pl__DataFrame]{Polars DataFrame}. \code{collect()} is
 similar to \code{compute()} but converts the output to an R \link{data.frame}, which
 consumes more memory.
 
@@ -97,7 +97,7 @@ now but will change in 0.8.0 to automatically convert a DataFrame to a
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-dat_lazy <- neopolars::as_polars_df(iris)$lazy()
+dat_lazy <- polars::as_polars_df(iris)$lazy()
 
 compute(dat_lazy)
 

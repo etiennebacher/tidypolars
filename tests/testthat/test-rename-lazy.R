@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  pl_test <- neopolars::as_polars_lf(mtcars)
+  pl_test <- polars::as_polars_lf(mtcars)
 
   expect_is_tidypolars(rename(pl_test, miles_per_gallon = "mpg"))
 
@@ -25,7 +25,7 @@ test_that("basic behavior works", {
 })
 
 test_that("rename_with works with builtin function", {
-  pl_test <- neopolars::as_polars_lf(mtcars)
+  pl_test <- polars::as_polars_lf(mtcars)
   test <- rename_with(pl_test, toupper, c(mpg, cyl)) |>
     names()
 
@@ -52,7 +52,7 @@ test_that("rename_with works with builtin function", {
 })
 
 test_that("rename_with works with custom function", {
-  pl_test <- neopolars::as_polars_lf(iris)
+  pl_test <- polars::as_polars_lf(iris)
 
   test <- rename_with(
     pl_test,

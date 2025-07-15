@@ -21,7 +21,7 @@ Stack multiple Data/LazyFrames on top of each other
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-library(neopolars)
+library(polars)
 p1 <- pl$DataFrame(
   x = c("a", "b"),
   y = 1:2

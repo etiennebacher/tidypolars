@@ -20,7 +20,7 @@ variables. \code{group_keys()} returns a data frame with one row per group.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pl_g <- neopolars::as_polars_df(iris) |>
+pl_g <- polars::as_polars_df(iris) |>
   group_by(Species)
 
 group_split(pl_g)

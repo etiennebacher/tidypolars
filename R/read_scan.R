@@ -5,7 +5,7 @@
 #'
 #' `scan_parquet_polars()` imports the data as a Polars LazyFrame.
 #'
-#' @inherit neopolars::pl__scan_parquet params details
+#' @inherit polars::pl__scan_parquet params details
 #'
 #' @rdname from_parquet
 #' @name from_parquet
@@ -107,7 +107,7 @@ scan_parquet_polars <- function(
 #'
 #' `scan_csv_polars()` imports the data as a Polars LazyFrame.
 #'
-#' @inherit neopolars::pl__scan_csv params details
+#' @inherit polars::pl__scan_csv params details
 #' @param dtypes `r lifecycle::badge("deprecated")` Deprecated,
 #' use `schema_overrides` instead.
 #' @param reuse_downloaded `r lifecycle::badge("deprecated")`
@@ -279,7 +279,7 @@ scan_csv_polars <- function(
 #'
 #' `scan_ndjson_polars()` imports the data as a Polars LazyFrame.
 #'
-#' @inherit neopolars::pl__scan_ndjson params details
+#' @inherit polars::pl__scan_ndjson params details
 #' @param reuse_downloaded `r lifecycle::badge("deprecated")`
 #' Deprecated with no replacement.
 #'
@@ -368,7 +368,7 @@ scan_ndjson_polars <- function(
 #'
 #' `scan_ipc_polars()` imports the data as a Polars LazyFrame.
 #'
-#' @inherit neopolars::pl__scan_ipc params details
+#' @inherit polars::pl__scan_ipc params details
 #' @param memory_map `r lifecycle::badge("deprecated")` Deprecated
 #' with no replacement.
 #'

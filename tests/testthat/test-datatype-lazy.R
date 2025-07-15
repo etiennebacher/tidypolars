@@ -2,9 +2,9 @@
 
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
-# TODO: what's the replacement in neopolars?
+# TODO: what's the replacement in polars?
 # test_that("datatype NULL is correctly handled internally", {
-#   test <- neopolars::pl$LazyFrame(x = NULL)
+#   test <- polars::pl$LazyFrame(x = NULL)
 #   expect_dim(test |> select(x), c(1, 1))
 # })
 

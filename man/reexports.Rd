@@ -15,6 +15,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{neopolars}{\code{\link[neopolars]{as_polars_df}}, \code{\link[neopolars]{as_polars_lf}}, \code{\link[neopolars:check_polars]{is_polars_df}}, \code{\link[neopolars:check_polars]{is_polars_expr}}, \code{\link[neopolars:check_polars]{is_polars_lf}}}
+  \item{polars}{\code{\link[polars]{as_polars_df}}, \code{\link[polars]{as_polars_lf}}, \code{\link[polars:check_polars]{is_polars_df}}, \code{\link[polars:check_polars]{is_polars_expr}}, \code{\link[polars:check_polars]{is_polars_lf}}}
 }}
 

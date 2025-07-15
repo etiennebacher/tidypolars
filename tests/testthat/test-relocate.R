@@ -1,5 +1,5 @@
 test_that("basic behavior works", {
-  test <- neopolars::as_polars_df(mtcars)
+  test <- polars::as_polars_df(mtcars)
 
   expect_is_tidypolars(relocate(test))
   expect_is_tidypolars(relocate(test, hp, .before = cyl))
@@ -28,7 +28,7 @@ test_that("basic behavior works", {
 })
 
 test_that("moved to first positions if no .before or .after", {
-  test <- neopolars::as_polars_df(mtcars)
+  test <- polars::as_polars_df(mtcars)
 
   expect_colnames(
     test |> relocate(hp, vs),
@@ -49,7 +49,7 @@ test_that("moved to first positions if no .before or .after", {
 })
 
 test_that(".before and .after can be quoted or unquoted", {
-  test <- neopolars::as_polars_df(mtcars)
+  test <- polars::as_polars_df(mtcars)
 
   expect_colnames(
     test |> relocate(hp, vs, .after = "gear"),
@@ -70,7 +70,7 @@ test_that(".before and .after can be quoted or unquoted", {
 })
 
 test_that("select helpers are also available", {
-  test <- neopolars::as_polars_df(mtcars)
+  test <- polars::as_polars_df(mtcars)
 
   expect_colnames(
     test |> relocate(matches("[aeiouy]")),
@@ -125,7 +125,7 @@ test_that("select helpers are also available", {
 })
 
 test_that("error cases work", {
-  test <- neopolars::as_polars_df(mtcars)
+  test <- polars::as_polars_df(mtcars)
 
   expect_snapshot(
     test |> relocate(mpg, .before = cyl, .after = drat),

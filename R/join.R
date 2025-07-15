@@ -58,13 +58,13 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' test <- neopolars::pl$DataFrame(
+#' test <- polars::pl$DataFrame(
 #'   x = c(1, 2, 3),
 #'   y1 = c(1, 2, 3),
 #'   z = c(1, 2, 3)
 #' )
 #'
-#' test2 <- neopolars::pl$DataFrame(
+#' test2 <- polars::pl$DataFrame(
 #'   x = c(1, 2, 4),
 #'   y2 = c(1, 2, 4),
 #'   z2 = c(4, 5, 7)
@@ -84,7 +84,7 @@
 #' left_join(test, test2, by = c("x", "y1" = "y2"))
 #'
 #' # we can customize the suffix of common column names not used to join
-#' test2 <- neopolars::pl$DataFrame(
+#' test2 <- polars::pl$DataFrame(
 #'   x = c(1, 2, 4),
 #'   y1 = c(1, 2, 4),
 #'   z = c(4, 5, 7)
@@ -93,13 +93,13 @@
 #' left_join(test, test2, by = "x", suffix = c("_left", "_right"))
 #'
 #' # the argument "relationship" ensures the join matches the expectation
-#' country <- neopolars::pl$DataFrame(
+#' country <- polars::pl$DataFrame(
 #'   iso = c("FRA", "DEU"),
 #'   value = 1:2
 #' )
 #' country
 #'
-#' country_year <- neopolars::pl$DataFrame(
+#' country_year <- polars::pl$DataFrame(
 #'   iso = rep(c("FRA", "DEU"), each = 2),
 #'   year = rep(2019:2020, 2),
 #'   value2 = 3:6
@@ -247,13 +247,13 @@ inner_join.polars_lazy_frame <- inner_join.polars_data_frame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' test <- neopolars::pl$DataFrame(
+#' test <- polars::pl$DataFrame(
 #'   x = c(1, 2, 3),
 #'   y = c(1, 2, 3),
 #'   z = c(1, 2, 3)
 #' )
 #'
-#' test2 <- neopolars::pl$DataFrame(
+#' test2 <- polars::pl$DataFrame(
 #'   x = c(1, 2, 4),
 #'   y = c(1, 2, 4),
 #'   z2 = c(1, 2, 4)
@@ -328,12 +328,12 @@ anti_join.polars_lazy_frame <- anti_join.polars_data_frame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' test <- neopolars::pl$DataFrame(
+#' test <- polars::pl$DataFrame(
 #'   origin = c("ALG", "FRA", "GER"),
 #'   year = c(2020, 2020, 2021)
 #' )
 #'
-#' test2 <- neopolars::pl$DataFrame(
+#' test2 <- polars::pl$DataFrame(
 #'   destination = c("USA", "JPN", "BRA"),
 #'   language = c("english", "japanese", "portuguese")
 #' )

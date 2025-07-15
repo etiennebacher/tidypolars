@@ -33,7 +33,7 @@ for completing missing combinations of data.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-df <- neopolars::pl$DataFrame(
+df <- polars::pl$DataFrame(
   group = c(1:2, 1, 2),
   item_id = c(1:2, 2, 3),
   item_name = c("a", "a", "b", "b"),

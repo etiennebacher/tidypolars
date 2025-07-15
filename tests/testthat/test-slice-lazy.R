@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  pl_iris <- neopolars::as_polars_lf(iris)
+  pl_iris <- polars::as_polars_lf(iris)
 
   expect_is_tidypolars(slice_head(pl_iris, n = 1))
   expect_is_tidypolars(slice_tail(pl_iris, n = 1))
@@ -23,7 +23,7 @@ test_that("basic behavior works", {
 })
 
 test_that("slice_head works with grouped data", {
-  pl_iris <- neopolars::as_polars_lf(iris)
+  pl_iris <- polars::as_polars_lf(iris)
   pl_iris_g <- pl_iris |>
     group_by(Species, maintain_order = TRUE)
 
@@ -58,7 +58,7 @@ test_that("slice_head works with grouped data", {
 })
 
 test_that("slice_tail works on grouped data", {
-  pl_iris <- neopolars::as_polars_lf(iris)
+  pl_iris <- polars::as_polars_lf(iris)
   pl_iris_g <- pl_iris |>
     group_by(Species, maintain_order = TRUE)
   tl <- slice_tail(pl_iris_g, n = 2)
@@ -92,7 +92,7 @@ test_that("slice_tail works on grouped data", {
 })
 
 test_that("basic slice_sample works", {
-  pl_iris <- neopolars::as_polars_lf(iris)
+  pl_iris <- polars::as_polars_lf(iris)
   skip_if_not(is_polars_df(pl_iris))
 
   expect_is_tidypolars(slice_sample(pl_iris, prop = 0.1))
@@ -154,7 +154,7 @@ test_that("basic slice_sample works", {
 })
 
 test_that("slice_sample works with grouped data", {
-  pl_iris <- neopolars::as_polars_lf(iris)
+  pl_iris <- polars::as_polars_lf(iris)
   skip_if_not(is_polars_df(pl_iris))
 
   expect_equal_lazy(

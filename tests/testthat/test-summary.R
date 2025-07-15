@@ -1,4 +1,4 @@
-# TODO: uncomment when fixed in neopolars
+# TODO: uncomment when fixed in polars
 # test_that("basic behavior works", {
 #   test <- as_polars_df(mtcars)
 #

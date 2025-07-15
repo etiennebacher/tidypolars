@@ -19,7 +19,7 @@ Order rows using column values
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pl_test <- neopolars::pl$DataFrame(
+pl_test <- polars::pl$DataFrame(
   x1 = c("a", "a", "b", "a", "c"),
   x2 = c(2, 1, 5, 3, 1),
   value = sample(1:5)

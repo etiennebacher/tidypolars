@@ -12,7 +12,7 @@
 #' @export
 #' @return A Polars Data/LazyFrame.
 #' @examplesIf require("dplyr", quietly = TRUE)
-#' df <- neopolars::pl$DataFrame(x = c(1, 3, 4), y = c(2, 1, 5), z = c(2, 3, 1))
+#' df <- polars::pl$DataFrame(x = c(1, 3, 4), y = c(2, 1, 5), z = c(2, 3, 1))
 #'
 #' # Compute the mean of x, y, z in each row
 #' df |>

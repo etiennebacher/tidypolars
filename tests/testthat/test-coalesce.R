@@ -1,5 +1,5 @@
 test_that("basic behavior works", {
-  test <- neopolars::pl$DataFrame(
+  test <- polars::pl$DataFrame(
     a = c(1, NA, NA, NA),
     b = c(1, 2, NA, NA),
     c = c(5, NA, 3, NA)
@@ -17,7 +17,7 @@ test_that("basic behavior works", {
 })
 
 test_that("convert all new column to supertype", {
-  test <- neopolars::pl$DataFrame(
+  test <- polars::pl$DataFrame(
     a = c(1, NA, NA, NA),
     b = c("1", "2", NA, NA),
     c = c(5, NA, 3, NA)
