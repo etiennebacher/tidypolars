@@ -17,11 +17,6 @@
       ! Evaluation failed in `$collect()`.
       Caused by error:
       ! Column(s) not found: bar
-      
-      Resolved plan until failure:
-      
-      	---> FAILED HERE RESOLVING 'sink' <---
-      DF ["x", "y", "z"]; PROJECT */3 COLUMNS
 
 # using [[ sign works
 
@@ -42,9 +37,4 @@
       ! Evaluation failed in `$collect()`.
       Caused by error:
       ! Column(s) not found: bar
-      
-      Resolved plan until failure:
-      
-      	---> FAILED HERE RESOLVING 'sink' <---
-      DF ["x", "y", "z"]; PROJECT */3 COLUMNS
 

@@ -5,7 +5,6 @@
     Condition
       Warning:
       The `streaming` argument of `compute()` is deprecated as of tidypolars 0.14.0.
-      i Use `engine = "old-streaming"` for traditional streaming mode.
       i Use `engine = "streaming"` for the new streaming mode.
       i Use `engine = "in-memory"` for non-streaming mode.
 
