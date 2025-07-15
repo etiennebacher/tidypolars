@@ -60,10 +60,10 @@ jobs:
       - name: Install r-polars
         run: |
           Sys.setenv(NOT_CRAN = "true") # Enable installation with pre-built Rust library binary, or enable Rust caching
-          install.packages("polars", repos = "https://community.r-multiverse.org")
+          # TODO: use the community multiverse once polars 1.0.0 is released
+          # install.packages("polars", repos = "https://community.r-multiverse.org")
+          install.packages("polars", repos = c("https://rpolars.r-universe.dev", getOption("repos")))
 
-          ### TODO: remove this
-          install.packages("polars", repos = "https://eitsupi.r-universe.org")
         shell: Rscript {0}
 
       - name: Dependencies
