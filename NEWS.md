@@ -115,6 +115,7 @@
 
 * Fix error in `count()` when it includes grouping variables (#193).
 
+* Passing `.` in an anonymous function in `across()` now works (#216).
 
 # tidypolars 0.13.0
 
