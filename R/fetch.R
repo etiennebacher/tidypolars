@@ -1,10 +1,9 @@
 #' Fetch `n` rows of a LazyFrame
 #'
-#' Fetch is a way to collect only the first `n` rows of a LazyFrame. It is
-#' mainly used to test that a query runs as expected on a subset of the data
-#' before using `collect()` on the full query. Note that fetching `n` rows
-#' doesn't mean that the output will actually contain `n` rows, see the section
-#' 'Details' for more information.
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Use `head()` before `collect()` to only get a subset of the data.
 #'
 #' @param .data A Polars LazyFrame
 #' @param n_rows Number of rows to fetch.
@@ -20,17 +19,6 @@
 #'
 #' @export
 #' @seealso [collect()] for applying a lazy query on the full data.
-#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' dat_lazy <- polars::as_polars_df(iris)$lazy()
-#'
-#' # this will return 30 rows
-#' fetch(dat_lazy, 30)
-#'
-#' # this will return less than 30 rows because there are less than 30 matches
-#' # for this filter in the whole dataset
-#' dat_lazy |>
-#'   filter(Sepal.Length > 7.0) |>
-#'   fetch(30)
 fetch <- function(
   .data,
   n_rows = 500,
@@ -50,19 +38,19 @@ fetch <- function(
     cli_abort("{.code fetch()} can only be used on a LazyFrame.")
   }
 
+  lifecycle::deprecate_warn(
+    when = "0.14.0",
+    what = "fetch()",
+    details = "Please use `head()` before `collect()` instead."
+  )
+
   if (!missing(streaming)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "fetch(streaming)",
-      details = c(
-        i = "Use `engine = \"streaming\"` for the new streaming mode.",
-        i = "Use `engine = \"in-memory\"` for non-streaming mode."
-      ),
-    )
     if (isTRUE(streaming)) {
       engine <- "streaming"
     }
-    if (isFALSE(streaming)) engine <- "in-memory"
+    if (isFALSE(streaming)) {
+      engine <- "in-memory"
+    }
   }
   out <- .data$head(n_rows)$collect(
     type_coercion = type_coercion,

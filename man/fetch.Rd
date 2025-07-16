@@ -68,11 +68,9 @@ larger-than-memory data.
 instead.}
 }
 \description{
-Fetch is a way to collect only the first \code{n} rows of a LazyFrame. It is
-mainly used to test that a query runs as expected on a subset of the data
-before using \code{collect()} on the full query. Note that fetching \code{n} rows
-doesn't mean that the output will actually contain \code{n} rows, see the section
-'Details' for more information.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+Use \code{head()} before \code{collect()} to only get a subset of the data.
 }
 \details{
 The parameter \code{n_rows} indicates how many rows from the LazyFrame should be
@@ -81,20 +79,6 @@ be returned. For example, if the query contains a filter or join operations
 with other datasets, then the final number of rows can be lower than \code{n_rows}.
 On the other hand, appending some rows during the query can lead to an output
 that has more rows than \code{n_rows}.
-}
-\examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-dat_lazy <- polars::as_polars_df(iris)$lazy()
-
-# this will return 30 rows
-fetch(dat_lazy, 30)
-
-# this will return less than 30 rows because there are less than 30 matches
-# for this filter in the whole dataset
-dat_lazy |>
-  filter(Sepal.Length > 7.0) |>
-  fetch(30)
-\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=collect]{collect()}} for applying a lazy query on the full data.

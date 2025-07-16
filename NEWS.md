@@ -27,6 +27,8 @@
     * `row_oriented` -> no replacement
   - in `write_ipc_polars()`:
     * `future` -> `compat_level`
+    
+* `fetch()` is deprecated, use `head()` before `collect()` instead (#194).
 
 * `group_keys()` now returns a `tibble` and not a `data.frame` anymore (#194).
 
