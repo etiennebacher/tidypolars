@@ -10,7 +10,7 @@
 #'
 #' @export
 
-describe <- function(.data, percentiles = c(0.25, 0.75)) {
+describe <- function(.data, percentiles = c(0.25, 0.5, 0.75)) {
   if (!is_polars_df(.data)) {
     cli_abort("{.code describe()} can only be used on a DataFrame.")
   }

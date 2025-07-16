@@ -36,6 +36,8 @@
   now error if some components go over their expected range, e.g. `month = 20`
   or `hour = 25`. Before, those functions were returning `NA` in this situation
   (#194).
+  
+* `summary()` returns an additional row for the 50% percentile (#194).
 
 ## New features
 

@@ -13,7 +13,7 @@
 
 summary.polars_data_frame <- function(
   object,
-  percentiles = c(0.25, 0.75),
+  percentiles = c(0.25, 0.5, 0.75),
   ...
 ) {
   between_zero_one <- percentiles >= 0 & percentiles <= 1

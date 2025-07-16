@@ -4,7 +4,7 @@
 \alias{summary.polars_data_frame}
 \title{Summary statistics for a Polars DataFrame}
 \usage{
-\method{summary}{polars_data_frame}(object, percentiles = c(0.25, 0.75), ...)
+\method{summary}{polars_data_frame}(object, percentiles = c(0.25, 0.5, 0.75), ...)
 }
 \arguments{
 \item{object}{A Polars DataFrame.}
