@@ -87,7 +87,9 @@ build_separate_calls <- function(.cols, .fns, .names, .data) {
       }
 
       arg <- sym(.cols[i])
-      list_calls[[nm]] <- expr_substitute(.fns[[j]], quote(.x), arg)
+      list_calls[[nm]] <- .fns[[j]] |>
+        expr_substitute(quote(.x), arg) |>
+        expr_substitute(quote(.), arg)
     }
   }
   unlist(list_calls)
