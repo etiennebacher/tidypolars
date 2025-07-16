@@ -40,6 +40,22 @@ test_that("purrr-style function work", {
       cyl = cyl + 1
     )
   )
+
+  expect_equal_lazy(
+    mutate(
+      test,
+      across(.cols = contains("a"), ~ mean(.)),
+      cyl = cyl + 1
+    ),
+    mutate(
+      test,
+      drat = mean(drat),
+      am = mean(am),
+      gear = mean(gear),
+      carb = mean(carb),
+      cyl = cyl + 1
+    )
+  )
 })
 
 test_that("anonymous functions has to return a Polars expression", {
