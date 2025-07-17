@@ -13,11 +13,7 @@ print.tidypolars <- function(x, ...) {
   mo <- attributes(x)$maintain_grp_order %||% FALSE
   rowwise <- attributes(x)$grp_type == "rowwise"
 
-  if (is_polars_df(x)) {
-    polars:::print.polars_data_frame(x)
-  } else if (is_polars_lf(x)) {
-    polars:::print.polars_lazy_frame(x)
-  }
+  NextMethod("print", x)
 
   if (is_grouped && is_polars_df(x)) {
     n_groups <- x$group_by(grps)$agg(pl$lit(1))$height
