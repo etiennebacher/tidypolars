@@ -34,7 +34,16 @@
   cluster_with_columns = TRUE,
   no_optimization = FALSE,
   engine = c("auto", "in-memory", "streaming"),
-  streaming = FALSE
+  streaming = FALSE,
+  .name_repair = "check_unique",
+  uint8 = "integer",
+  int64 = "double",
+  date = "Date",
+  time = "hms",
+  decimal = "double",
+  as_clock_class = FALSE,
+  ambiguous = "raise",
+  non_existent = "raise"
 )
 }
 \arguments{
@@ -83,6 +92,10 @@ larger-than-memory data.
 
 \item{streaming}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use \code{engine}
 instead.}
+
+\item{.name_repair, uint8, int64, date, time, decimal, as_clock_class, ambiguous, non_existent}{Parameters to control the conversion from polars types to R. See
+\code{?polars:::as.data.frame.polars_lazy_frame} for explanations and accepted
+values.}
 }
 \description{
 \code{compute()} checks the query, optimizes it in the background, and runs it.

@@ -45,3 +45,11 @@ test_that("error on unknown args", {
     error = TRUE
   )
 })
+
+test_that("conversion arguments are used", {
+  dat <- pl$LazyFrame(x = 1, y = 2)$cast(x = pl$UInt8, y = pl$Int64)
+  expect_equal(
+    collect(dat, uint8 = "raw", int64 = "character"),
+    data.frame(x = as.raw(1), y = "2")
+  )
+})

@@ -44,20 +44,19 @@ for scanning cloud locations, see the \code{storage_options} parameter.}
 inference. If \code{NULL}, the full data may be scanned (this is slow). Set
 \code{infer_schema = FALSE} to read all columns as \code{pl$String}.}
 
-\item{batch_size}{Number of rows that will be processed per thread.}
+\item{batch_size}{Number of rows to read in each batch.}
 
-\item{n_rows}{Stop reading from parquet file after reading \code{n_rows}.}
+\item{n_rows}{Stop reading from the source after reading \code{n_rows}.}
 
-\item{low_memory}{Reduce memory pressure at the expense of performance}
+\item{low_memory}{Reduce memory pressure at the expense of performance.}
 
-\item{rechunk}{In case of reading multiple files via a glob pattern rechunk
-the final DataFrame into contiguous memory chunks.}
+\item{rechunk}{Reallocate to contiguous memory when all chunks/files are parsed.}
 
 \item{row_index_name}{If not \code{NULL}, this will insert a row index column with
-the given name into the DataFrame.}
+the given name.}
 
 \item{row_index_offset}{Offset to start the row index column (only used if
-the name is set).}
+the name is set by \code{row_index_name}).}
 
 \item{ignore_errors}{Keep reading the file even if some lines yield errors.
 You can also use \code{infer_schema = FALSE} to read all columns as UTF8 to
