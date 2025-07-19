@@ -409,9 +409,9 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
   }
 
   if (is.null(na_matches)) {
-    join_nulls <- FALSE
+    nulls_equal <- FALSE
   } else {
-    join_nulls <- switch(
+    nulls_equal <- switch(
       na_matches,
       "na" = TRUE,
       "never" = FALSE,
@@ -469,7 +469,7 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
       left_on = left_on,
       right_on = right_on,
       how = "left",
-      join_nulls = join_nulls,
+      nulls_equal = nulls_equal,
       validate = validate
     )
   } else {
@@ -478,7 +478,7 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
       left_on = left_on,
       right_on = right_on,
       how = how,
-      join_nulls = join_nulls,
+      nulls_equal = nulls_equal,
       validate = validate,
       coalesce = TRUE
     )

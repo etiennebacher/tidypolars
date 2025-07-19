@@ -124,7 +124,7 @@ complete.polars_data_frame <- function(
     if (chain_is_empty) {
       chain <- named_dots[[i]]
     } else {
-      chain <- chain$join(named_dots[[i]], how = "cross", join_nulls = TRUE)
+      chain <- chain$join(named_dots[[i]], how = "cross", nulls_equal = TRUE)
     }
   }
 
@@ -137,26 +137,26 @@ complete.polars_data_frame <- function(
         data,
         on = c(grps, all_dots),
         how = "inner",
-        join_nulls = TRUE
+        nulls_equal = TRUE
       )
       dont_already_exist <- chain$join(
         data,
         on = c(grps, all_dots),
         how = "anti",
-        join_nulls = TRUE
+        nulls_equal = TRUE
       )
     } else {
       already_exist <- chain$join(
         data,
         on = all_dots,
         how = "inner",
-        join_nulls = TRUE
+        nulls_equal = TRUE
       )
       dont_already_exist <- chain$join(
         data,
         on = all_dots,
         how = "anti",
-        join_nulls = TRUE
+        nulls_equal = TRUE
       )
     }
     other_unnamed_dots <- setdiff(
@@ -184,7 +184,7 @@ complete.polars_data_frame <- function(
         data,
         on = c(grps, all_dots),
         how = "full",
-        join_nulls = TRUE,
+        nulls_equal = TRUE,
         coalesce = TRUE
       )
     } else {
@@ -192,7 +192,7 @@ complete.polars_data_frame <- function(
         data,
         on = all_dots,
         how = "full",
-        join_nulls = TRUE,
+        nulls_equal = TRUE,
         coalesce = TRUE
       )
     }
