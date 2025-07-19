@@ -85,14 +85,8 @@ build_data_context <- function(.data, ..., cols = NULL) {
     )
     return(out)
   } else {
-    if (ncol(.data) > 1000) {
-      return(.data$head(1)$collect()$to_data_frame())
-    } else {
-      schema <- .data$schema
-      dat <- rep(list(NA), length(schema))
-      names(dat) <- names(schema)
-      return(pl$DataFrame(dat)$cast(as.list(schema))$to_data_frame())
-    }
+    .data$slice(offset = 0, length = 0) |>
+      as_tibble()
   }
 }
 

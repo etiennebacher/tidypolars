@@ -5,7 +5,7 @@
 #'
 #' `scan_parquet_polars()` imports the data as a Polars LazyFrame.
 #'
-#' @inherit polars::pl_scan_parquet params details
+#' @inherit polars::pl__scan_parquet params details
 #'
 #' @rdname from_parquet
 #' @name from_parquet
@@ -107,7 +107,11 @@ scan_parquet_polars <- function(
 #'
 #' `scan_csv_polars()` imports the data as a Polars LazyFrame.
 #'
-#' @inherit polars::pl_scan_csv params details
+#' @inherit polars::pl__scan_csv params details
+#' @param dtypes `r lifecycle::badge("deprecated")` Deprecated,
+#' use `schema_overrides` instead.
+#' @param reuse_downloaded `r lifecycle::badge("deprecated")`
+#' Deprecated with no replacement.
 #'
 #' @rdname from_csv
 #' @name from_csv
@@ -120,7 +124,8 @@ read_csv_polars <- function(
   comment_prefix = NULL,
   quote_char = "\"",
   skip_rows = 0,
-  dtypes = NULL,
+  schema = NULL,
+  schema_overrides = NULL,
   null_values = NULL,
   ignore_errors = FALSE,
   cache = FALSE,
@@ -136,11 +141,28 @@ read_csv_polars <- function(
   eol_char = "\n",
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
-  reuse_downloaded = TRUE,
-  include_file_paths = NULL
+  include_file_paths = NULL,
+  dtypes,
+  reuse_downloaded
 ) {
   rlang::arg_match0(encoding, values = c("utf8", "utf8-lossy"))
   rlang::check_dots_empty()
+
+  if (!missing(dtypes)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "read_csv_polars(dtypes)",
+      details = "Use `schema_overrides` instead.",
+    )
+    schema_overrides <- dtypes
+  }
+  if (!missing(reuse_downloaded)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "read_csv_polars(reuse_downloaded)",
+      details = "This argument has no replacement.",
+    )
+  }
 
   scan_csv_polars(
     source = source,
@@ -149,7 +171,8 @@ read_csv_polars <- function(
     comment_prefix = comment_prefix,
     quote_char = quote_char,
     skip_rows = skip_rows,
-    dtypes = dtypes,
+    schema = schema,
+    schema_overrides = schema_overrides,
     null_values = null_values,
     ignore_errors = ignore_errors,
     cache = cache,
@@ -165,7 +188,6 @@ read_csv_polars <- function(
     eol_char = eol_char,
     raise_if_empty = raise_if_empty,
     truncate_ragged_lines = truncate_ragged_lines,
-    reuse_downloaded = reuse_downloaded,
     include_file_paths = include_file_paths
   ) |>
     compute()
@@ -182,7 +204,8 @@ scan_csv_polars <- function(
   comment_prefix = NULL,
   quote_char = "\"",
   skip_rows = 0,
-  dtypes = NULL,
+  schema = NULL,
+  schema_overrides = NULL,
   null_values = NULL,
   ignore_errors = FALSE,
   cache = FALSE,
@@ -198,11 +221,28 @@ scan_csv_polars <- function(
   eol_char = "\n",
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
-  reuse_downloaded = TRUE,
-  include_file_paths = NULL
+  include_file_paths = NULL,
+  dtypes,
+  reuse_downloaded
 ) {
   rlang::arg_match0(encoding, values = c("utf8", "utf8-lossy"))
   rlang::check_dots_empty()
+
+  if (!missing(dtypes)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "scan_csv_polars(dtypes)",
+      details = "Use `schema_overrides` instead.",
+    )
+    schema_overrides <- dtypes
+  }
+  if (!missing(reuse_downloaded)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "scan_csv_polars(reuse_downloaded)",
+      details = "This argument has no replacement.",
+    )
+  }
 
   pl$scan_csv(
     source = source,
@@ -211,7 +251,8 @@ scan_csv_polars <- function(
     comment_prefix = comment_prefix,
     quote_char = quote_char,
     skip_rows = skip_rows,
-    dtypes = dtypes,
+    schema = schema,
+    schema_overrides = schema_overrides,
     null_values = null_values,
     ignore_errors = ignore_errors,
     cache = cache,
@@ -227,7 +268,6 @@ scan_csv_polars <- function(
     eol_char = eol_char,
     raise_if_empty = raise_if_empty,
     truncate_ragged_lines = truncate_ragged_lines,
-    reuse_downloaded = reuse_downloaded,
     include_file_paths = include_file_paths
   )
 }
@@ -239,7 +279,10 @@ scan_csv_polars <- function(
 #'
 #' `scan_ndjson_polars()` imports the data as a Polars LazyFrame.
 #'
-#' @inherit polars::pl_scan_ndjson params details
+#' @inherit polars::pl__scan_ndjson params details
+#' @param reuse_downloaded `r lifecycle::badge("deprecated")`
+#' Deprecated with no replacement.
+#'
 #'
 #' @rdname from_ndjson
 #' @name from_ndjson
@@ -254,10 +297,17 @@ read_ndjson_polars <- function(
   rechunk = FALSE,
   row_index_name = NULL,
   row_index_offset = 0,
-  reuse_downloaded = TRUE,
-  ignore_errors = FALSE
+  ignore_errors = FALSE,
+  reuse_downloaded
 ) {
   rlang::check_dots_empty()
+  if (!missing(reuse_downloaded)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "read_ndjson_polars(reuse_downloaded)",
+      details = "This argument has no replacement.",
+    )
+  }
 
   scan_ndjson_polars(
     source = source,
@@ -268,7 +318,6 @@ read_ndjson_polars <- function(
     rechunk = rechunk,
     row_index_name = row_index_name,
     row_index_offset = row_index_offset,
-    reuse_downloaded = reuse_downloaded,
     ignore_errors = ignore_errors
   ) |>
     compute()
@@ -287,10 +336,17 @@ scan_ndjson_polars <- function(
   rechunk = FALSE,
   row_index_name = NULL,
   row_index_offset = 0,
-  reuse_downloaded = TRUE,
-  ignore_errors = FALSE
+  ignore_errors = FALSE,
+  reuse_downloaded
 ) {
   rlang::check_dots_empty()
+  if (!missing(reuse_downloaded)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "scan_ndjson_polars(reuse_downloaded)",
+      details = "This argument has no replacement.",
+    )
+  }
 
   pl$scan_ndjson(
     source = source,
@@ -301,7 +357,6 @@ scan_ndjson_polars <- function(
     rechunk = rechunk,
     row_index_name = row_index_name,
     row_index_offset = row_index_offset,
-    reuse_downloaded = reuse_downloaded,
     ignore_errors = ignore_errors
   )
 }
@@ -313,7 +368,9 @@ scan_ndjson_polars <- function(
 #'
 #' `scan_ipc_polars()` imports the data as a Polars LazyFrame.
 #'
-#' @inherit polars::pl_scan_ipc params details
+#' @inherit polars::pl__scan_ipc params details
+#' @param memory_map `r lifecycle::badge("deprecated")` Deprecated
+#' with no replacement.
 #'
 #' @rdname from_ipc
 #' @name from_ipc
@@ -322,19 +379,25 @@ read_ipc_polars <- function(
   source,
   ...,
   n_rows = NULL,
-  memory_map = TRUE,
   row_index_name = NULL,
   row_index_offset = 0L,
   rechunk = FALSE,
   cache = TRUE,
-  include_file_paths = NULL
+  include_file_paths = NULL,
+  memory_map
 ) {
   rlang::check_dots_empty()
+  if (!missing(memory_map)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "read_ipc_polars(memory_map)",
+      details = "This argument has no replacement.",
+    )
+  }
 
   scan_ipc_polars(
     source = source,
     n_rows = n_rows,
-    memory_map = memory_map,
     row_index_name = row_index_name,
     row_index_offset = row_index_offset,
     rechunk = rechunk,
@@ -351,19 +414,25 @@ scan_ipc_polars <- function(
   source,
   ...,
   n_rows = NULL,
-  memory_map = TRUE,
   row_index_name = NULL,
   row_index_offset = 0L,
   rechunk = FALSE,
   cache = TRUE,
-  include_file_paths = NULL
+  include_file_paths = NULL,
+  memory_map
 ) {
   rlang::check_dots_empty()
+  if (!missing(memory_map)) {
+    lifecycle::deprecate_warn(
+      when = "0.14.0",
+      what = "scan_ipc_polars(memory_map)",
+      details = "This argument has no replacement.",
+    )
+  }
 
   pl$scan_ipc(
     source = source,
     n_rows = n_rows,
-    memory_map = memory_map,
     row_index_name = row_index_name,
     row_index_offset = row_index_offset,
     rechunk = rechunk,

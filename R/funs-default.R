@@ -243,7 +243,8 @@ pl_case_match <- function(x, ..., .data) {
         env = env,
         caller = caller,
         expr_uses_col = expr_uses_col
-      )
+      ) |>
+        as_polars_expr(as_lit = TRUE)
       out <- out$otherwise(otw)
       next
     }
@@ -254,7 +255,8 @@ pl_case_match <- function(x, ..., .data) {
       env = env,
       caller = caller,
       expr_uses_col = expr_uses_col
-    )
+    ) |>
+      as_polars_expr(as_lit = TRUE)
     rhs <- translate_expr(
       .data,
       dots[[y]][[3]],
@@ -262,7 +264,8 @@ pl_case_match <- function(x, ..., .data) {
       env = env,
       caller = caller,
       expr_uses_col = expr_uses_col
-    )
+    ) |>
+      as_polars_expr(as_lit = TRUE)
     if (is.null(out)) {
       out <- polars::pl$when(x$is_in(lhs))$then(rhs)
     } else {
@@ -294,7 +297,8 @@ pl_case_when <- function(..., .data) {
         env = env,
         caller = caller,
         expr_uses_col = expr_uses_col
-      )
+      ) |>
+        as_polars_expr(as_lit = TRUE)
       out <- out$otherwise(otw)
       next
     }
@@ -305,7 +309,8 @@ pl_case_when <- function(..., .data) {
       env = env,
       caller = caller,
       expr_uses_col = expr_uses_col
-    )
+    ) |>
+      as_polars_expr(as_lit = TRUE)
     rhs <- translate_expr(
       .data,
       dots[[y]][[3]],
@@ -313,7 +318,8 @@ pl_case_when <- function(..., .data) {
       env = env,
       caller = caller,
       expr_uses_col = expr_uses_col
-    )
+    ) |>
+      as_polars_expr(as_lit = TRUE)
 
     if (is.null(out)) {
       out <- polars::pl$when(lhs)$then(rhs)
@@ -343,7 +349,7 @@ pl_consecutive_id_dplyr <- function(...) {
       call = env
     )
   }
-  dots <- pl$struct(dots)
+  dots <- pl$struct(!!!dots)
   dots$rle_id() + 1
 }
 
@@ -541,7 +547,7 @@ pl_n_dplyr <- function(...) {
 }
 
 pl_na_if_dplyr <- function(x, y) {
-  if (length(y) == 1 && !inherits(y, "RPolarsExpr") && is.na(y)) {
+  if (length(y) == 1 && !is_polars_expr(y) && is.na(y)) {
     pl$when(x$is_null())$then(pl$lit(NA))$otherwise(x)
   } else {
     pl$when(x == y)$then(pl$lit(NA))$otherwise(x)
@@ -561,9 +567,9 @@ pl_n_distinct_dplyr <- function(..., na.rm = FALSE) {
     check_is_null <- lapply(dots, function(x) x$is_null())
     check_any_is_null <- call2(pl$any_horizontal, !!!check_is_null) |>
       eval_bare()
-    pl$struct(dots)$filter(check_any_is_null$not())$n_unique()
+    pl$struct(!!!dots)$filter(check_any_is_null$not())$n_unique()
   } else {
-    pl$struct(dots)$n_unique()
+    pl$struct(!!!dots)$n_unique()
   }
 }
 
@@ -617,13 +623,21 @@ pl_row_number_dplyr <- function(x = NULL) {
 pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
   check_empty_dots(...)
   # TODO: how should I handle seed, given that R sample() doesn't have this arg
-  x$sample(n = size, with_replacement = replace, shuffle = TRUE)
+  out <- x$sample(n = size, with_replacement = replace, shuffle = TRUE)
+  if (is.null(size) || size == 1) {
+    out <- out$first()
+  }
+  out
 }
 
 pl_seq <- function(from = 1, to = 1, by = NULL, ...) {
   check_empty_dots(...)
   by <- by %||% 1
-  pl$int_range(start = from, end = to + 1, step = by)
+  out <- pl$int_range(start = from, end = to + 1, step = by)
+  if ((to - from) == 1) {
+    out <- out$first()
+  }
+  out
 }
 
 pl_seq_len <- function(length.out) {
@@ -631,7 +645,11 @@ pl_seq_len <- function(length.out) {
   if (length.out < 0) {
     cli_abort("{.code length.out} must be a non-negative integer.")
   }
-  pl$int_range(start = 1, end = length.out + 1, step = 1)
+  out <- pl$int_range(start = 1, end = length.out + 1, step = 1)
+  if (length.out == 1) {
+    out <- out$first()
+  }
+  out
 }
 
 pl_sign <- function(x, ...) {

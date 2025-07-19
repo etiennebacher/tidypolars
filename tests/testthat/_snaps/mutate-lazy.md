@@ -3,22 +3,20 @@
     Code
       current$collect()
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	lengths don't match: unable to add a column of length 2 to a DataFrame of height 150
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! lengths don't match: unable to add a column of length 2 to a DataFrame of height 150
 
 ---
 
     Code
       current$collect()
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $collect():
-         1: Encountered the following error in Rust-Polars:
-            	lengths don't match: unable to add a column of length 2 to a DataFrame of height 150
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! lengths don't match: unable to add a column of length 2 to a DataFrame of height 150
 
 # custom function that doesn't return Polars expression
 

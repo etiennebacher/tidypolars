@@ -8,7 +8,7 @@
 #'   is not maintained, use `group_by()` if you want more control over it.
 #' @inheritParams rlang::check_dots_empty0
 #'
-#' @inheritSection left_join.RPolarsDataFrame Unknown arguments
+#' @inheritSection left_join.polars_data_frame Unknown arguments
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -17,14 +17,14 @@
 #' slice_tail(pl_test, n = 3)
 #' slice_sample(pl_test, n = 5)
 #' slice_sample(pl_test, prop = 0.1)
-slice_tail.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
+slice_tail.polars_data_frame <- function(.data, ..., n, by = NULL) {
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
-  mo <- attributes(.data)$maintain_grp_order
+  mo <- attributes(.data)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
 
   if (is_grouped) {
     non_grps <- setdiff(names(.data), grps)
-    out <- .data$group_by(grps, maintain_order = mo)$agg(
+    out <- .data$group_by(grps, .maintain_order = mo)$agg(
       pl$all()$tail(n)
     )$explode(non_grps)
   } else {
@@ -40,21 +40,21 @@ slice_tail.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
   add_tidypolars_class(out)
 }
 
-#' @rdname slice_tail.RPolarsDataFrame
+#' @rdname slice_tail.polars_data_frame
 #' @export
-slice_tail.RPolarsLazyFrame <- slice_tail.RPolarsDataFrame
+slice_tail.polars_lazy_frame <- slice_tail.polars_data_frame
 
-#' @rdname slice_tail.RPolarsDataFrame
+#' @rdname slice_tail.polars_data_frame
 #' @export
 
-slice_head.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
+slice_head.polars_data_frame <- function(.data, ..., n, by = NULL) {
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
-  mo <- attributes(.data)$maintain_grp_order
+  mo <- attributes(.data)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
 
   if (is_grouped) {
     non_grps <- setdiff(names(.data), grps)
-    out <- .data$group_by(grps, maintain_order = mo)$agg(
+    out <- .data$group_by(grps, .maintain_order = mo)$agg(
       pl$all()$head(n)
     )$explode(non_grps)
   } else {
@@ -70,18 +70,18 @@ slice_head.RPolarsDataFrame <- function(.data, ..., n, by = NULL) {
   add_tidypolars_class(out)
 }
 
-#' @rdname slice_tail.RPolarsDataFrame
+#' @rdname slice_tail.polars_data_frame
 #' @export
-slice_head.RPolarsLazyFrame <- slice_head.RPolarsDataFrame
+slice_head.polars_lazy_frame <- slice_head.polars_data_frame
 
 #' @param prop Proportion of rows to select. Cannot be used with `n`.
 #' @param replace Perform the sampling with replacement (`TRUE`) or without
 #' (`FALSE`).
 #'
-#' @rdname slice_tail.RPolarsDataFrame
+#' @rdname slice_tail.polars_data_frame
 #' @export
 
-slice_sample.RPolarsDataFrame <- function(
+slice_sample.polars_data_frame <- function(
   .data,
   ...,
   n = NULL,
@@ -92,7 +92,7 @@ slice_sample.RPolarsDataFrame <- function(
   check_dots_empty_ignore(..., .unsupported = "weight_by")
 
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
-  mo <- attributes(.data)$maintain_grp_order
+  mo <- attributes(.data)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
 
   # arguments don't have the same name in polars so I check inputs here
@@ -114,7 +114,7 @@ slice_sample.RPolarsDataFrame <- function(
 
   if (is_grouped) {
     non_grps <- setdiff(names(.data), grps)
-    out <- .data$group_by(grps, maintain_order = mo)$agg(
+    out <- .data$group_by(grps, .maintain_order = mo)$agg(
       pl$all()$sample(n = n, fraction = prop, with_replacement = replace)
     )$explode(non_grps)
   } else {

@@ -1,5 +1,44 @@
 # tidypolars (development version)
 
+* `tidypolars` requires `polars` >= 1.0.0. This release of `polars` contains
+  many breaking changes. Those should be invisible to `tidypolars` users, with
+  the exception of deprecation messages (see below). However, if your code
+  contains user-defined functions that use `polars` syntax, you may need to
+  revise those (#194).
+
+## Deprecations and breaking changes
+
+* The following arguments are deprecated and will be removed in a future
+  version. The recommended replacement is indicated on the right of the arrow
+  (#194):
+  - in `compute()` and `collect()`: `streaming` -> `engine`;
+  - in `read_csv_polars()` and `scan_csv_polars()`:
+    * `dtypes` -> `schema_overrides`
+    * `reuse_downloaded` -> no replacement
+  - in `read_ndjson_polars` and `scan_ndjson_polars()`:
+    * `reuse_downloaded` -> no replacement
+  - in `read_ipc_polars` and `scan_ipc_polars()`:
+    * `memory_map` -> no replacement
+  - in `write_csv_polars()` and `sink_csv()`:
+    * `null_values` -> `null_value`
+    * `quote` -> `quote_char`
+  - in `write_ndjson_polars()`:
+    * `pretty` -> no replacement
+    * `row_oriented` -> no replacement
+  - in `write_ipc_polars()`:
+    * `future` -> `compat_level`
+    
+* `fetch()` is deprecated, use `head()` before `collect()` instead (#194).
+
+* `group_keys()` now returns a `tibble` and not a `data.frame` anymore (#194).
+
+* `lubridate::make_date()`, `lubridate::make_datetime()`, and `ISOdatetime()`
+  now error if some components go over their expected range, e.g. `month = 20`
+  or `hour = 25`. Before, those functions were returning `NA` in this situation
+  (#194).
+  
+* `summary()` returns an additional row for the 50% percentile (#194).
+
 ## New features
 
 * Added support for various `lubridate` functions:

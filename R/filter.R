@@ -10,7 +10,7 @@
 #' of the variables in the data. If multiple expressions are included, they
 #' will be combined with the & operator. Only rows for which all conditions
 #' evaluate to `TRUE` are kept.
-#' @inheritParams mutate.RPolarsDataFrame
+#' @inheritParams mutate.polars_data_frame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -37,7 +37,7 @@
 #' # an alternative syntax for grouping is to use `.by`
 #' pl_iris |>
 #'   filter(Sepal.Length == max(Sepal.Length), .by = Species)
-filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
+filter.polars_data_frame <- function(.data, ..., .by = NULL) {
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
@@ -50,7 +50,7 @@ filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
   )
 
   if (is_grouped) {
-    polars_exprs <- lapply(polars_exprs, \(x) x$over(grps))
+    polars_exprs <- lapply(polars_exprs, \(x) x$over(!!!grps))
   }
 
   # this is only applied between expressions that were separated by a comma
@@ -74,6 +74,6 @@ filter.RPolarsDataFrame <- function(.data, ..., .by = NULL) {
   add_tidypolars_class(out)
 }
 
-#' @rdname filter.RPolarsDataFrame
+#' @rdname filter.polars_data_frame
 #' @export
-filter.RPolarsLazyFrame <- filter.RPolarsDataFrame
+filter.polars_lazy_frame <- filter.polars_data_frame

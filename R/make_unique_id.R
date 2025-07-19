@@ -1,6 +1,6 @@
 #' Create a column with unique id per row values
 #'
-#' @inheritParams fill.RPolarsDataFrame
+#' @inheritParams fill.polars_data_frame
 #' @param new_col Name of the new column
 #'
 #' @export

@@ -78,13 +78,9 @@ pl_second_lubridate <- function(x, ...) {
 }
 
 # Date-time helpers --------------------------------------
-# TODO: simplify when $dt$date() is in r-polars
 pl_date_lubridate <- function(x, ...) {
   check_empty_dots(...)
-  year <- x$dt$year()
-  month <- x$dt$month()
-  day <- x$dt$day()
-  pl$date(year = year, month = month, day = day)
+  x$dt$date()
 }
 
 pl_now_lubridate <- function(tzone = "") {

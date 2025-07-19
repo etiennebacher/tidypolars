@@ -100,7 +100,7 @@
 #' # Embracing an external variable works
 #' some_value <- 1
 #' mutate(pl_iris, x = {{ some_value }})
-mutate.RPolarsDataFrame <- function(
+mutate.polars_data_frame <- function(
   .data,
   ...,
   .by = NULL,
@@ -141,13 +141,16 @@ mutate.RPolarsDataFrame <- function(
         sub <- lapply(sub, \(x) {
           order_by <- attributes(x)[["order_by"]]
           if (!is.null(order_by)) {
-            x$over(grps, order_by = order_by)
+            if (!is.list(order_by)) {
+              order_by <- list(order_by)
+            }
+            x$over(!!!grps, order_by = order_by)
           } else {
-            x$over(grps)
+            x$over(!!!grps)
           }
         })
       }
-      .data <- .data$with_columns(sub)
+      .data <- .data$with_columns(!!!sub)
     }
 
     if (length(to_drop) > 0) {
@@ -179,6 +182,6 @@ mutate.RPolarsDataFrame <- function(
   add_tidypolars_class(out)
 }
 
-#' @rdname mutate.RPolarsDataFrame
+#' @rdname mutate.polars_data_frame
 #' @export
-mutate.RPolarsLazyFrame <- mutate.RPolarsDataFrame
+mutate.polars_lazy_frame <- mutate.polars_data_frame

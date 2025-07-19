@@ -6,7 +6,7 @@
 #' and one column for each of the summary statistics that you have specified.
 #'
 #' @param .data A Polars Data/LazyFrame
-#' @inheritParams mutate.RPolarsDataFrame
+#' @inheritParams mutate.polars_data_frame
 #' @param .groups Grouping structure of the result. Must be one of:
 #' * `"drop_last"` (default): drop the last level of grouping;
 #' * `"drop"`: all levels of grouping are dropped;
@@ -29,7 +29,7 @@
 #' mtcars |>
 #'   as_polars_df() |>
 #'   summarize(m_gear = mean(gear), sd_gear = sd(gear), .by = cyl)
-summarize.RPolarsDataFrame <- function(
+summarize.polars_data_frame <- function(
   .data,
   ...,
   .by = NULL,
@@ -71,7 +71,7 @@ summarize.RPolarsDataFrame <- function(
         return(pl$LazyFrame())
       }
     } else {
-      return(.data$group_by(grps, maintain_order = mo)$agg())
+      return(.data$group_by(grps, .maintain_order = mo)$agg())
     }
   }
 
@@ -82,9 +82,9 @@ summarize.RPolarsDataFrame <- function(
 
     if (length(sub) > 0) {
       if (is_grouped) {
-        .data <- .data$group_by(grps, maintain_order = mo)$agg(sub)
+        .data <- .data$group_by(grps, .maintain_order = mo)$agg(!!!sub)
       } else {
-        .data <- .data$select(sub)
+        .data <- .data$select(!!!sub)
       }
     }
 
@@ -114,14 +114,14 @@ summarize.RPolarsDataFrame <- function(
   add_tidypolars_class(out)
 }
 
-#' @rdname summarize.RPolarsDataFrame
+#' @rdname summarize.polars_data_frame
 #' @export
-summarise.RPolarsDataFrame <- summarize.RPolarsDataFrame
+summarise.polars_data_frame <- summarize.polars_data_frame
 
-#' @rdname summarize.RPolarsDataFrame
+#' @rdname summarize.polars_data_frame
 #' @export
-summarize.RPolarsLazyFrame <- summarize.RPolarsDataFrame
+summarize.polars_lazy_frame <- summarize.polars_data_frame
 
-#' @rdname summarize.RPolarsDataFrame
+#' @rdname summarize.polars_data_frame
 #' @export
-summarise.RPolarsLazyFrame <- summarize.RPolarsDataFrame
+summarise.polars_lazy_frame <- summarize.polars_data_frame

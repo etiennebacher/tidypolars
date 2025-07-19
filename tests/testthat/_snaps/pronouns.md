@@ -11,16 +11,12 @@
     Code
       mutate(test, foo = x * .data$bar)
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $with_columns()
-         1: Encountered the following error in Rust-Polars:
-            	not found: bar
-      
-            Resolved plan until failure:
-      
-            	---> FAILED HERE RESOLVING 'with_columns' <---
-            DF ["x", "y", "z"]; PROJECT */3 COLUMNS; SELECTION: None
+      Error in `.data$with_columns()`:
+      ! Evaluation failed in `$with_columns()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! Column(s) not found: bar
 
 # using [[ sign works
 
@@ -35,14 +31,10 @@
     Code
       mutate(test, foo = x * .data[["bar"]])
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $with_columns()
-         1: Encountered the following error in Rust-Polars:
-            	not found: bar
-      
-            Resolved plan until failure:
-      
-            	---> FAILED HERE RESOLVING 'with_columns' <---
-            DF ["x", "y", "z"]; PROJECT */3 COLUMNS; SELECTION: None
+      Error in `.data$with_columns()`:
+      ! Evaluation failed in `$with_columns()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! Column(s) not found: bar
 

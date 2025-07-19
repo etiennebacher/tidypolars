@@ -17,7 +17,7 @@ test_that("works with ungrouped data", {
 
   expect_equal(
     group_keys(test),
-    data.frame()
+    tibble()
   )
 })
 
@@ -32,7 +32,7 @@ test_that("works with grouped data", {
 
   expect_equal(
     group_keys(test2),
-    data.frame(cyl = rep(c(4, 6, 8), each = 2L), am = rep(c(0, 1), 3))
+    tibble(cyl = rep(c(4, 6, 8), each = 2L), am = rep(c(0, 1), 3))
   )
 })
 

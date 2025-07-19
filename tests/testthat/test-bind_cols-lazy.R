@@ -156,8 +156,8 @@ test_that("arg .name_repair works", {
   withr::local_options(rlib_message_verbosity = "quiet")
 
   l <- list(
-    pl$LazyFrame(x = 1)$rename(list(x = " ")),
-    pl$LazyFrame(x = 1)$rename(list(x = " "))
+    pl$LazyFrame(x = 1)$rename(x = " "),
+    pl$LazyFrame(x = 1)$rename(x = " ")
   )
 
   expect_named(bind_cols_polars(l), c(" ...1", " ...2"))

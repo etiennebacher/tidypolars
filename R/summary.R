@@ -11,7 +11,11 @@
 #'   as_polars_df() |>
 #'   summary(percentiles = c(0.2, 0.4, 0.6, 0.8))
 
-summary.RPolarsDataFrame <- function(object, percentiles = c(0.25, 0.75), ...) {
+summary.polars_data_frame <- function(
+  object,
+  percentiles = c(0.25, 0.5, 0.75),
+  ...
+) {
   between_zero_one <- percentiles >= 0 & percentiles <= 1
   if (anyNA(between_zero_one) || !all(between_zero_one)) {
     cli_abort("All values of {.code percentiles} must be between 0 and 1.")

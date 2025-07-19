@@ -11,17 +11,17 @@
 #'  data stored in cell values.
 #' @inheritParams rlang::check_dots_empty0
 #'
-#' @inheritSection left_join.RPolarsDataFrame Unknown arguments
+#' @inheritSection left_join.polars_data_frame Unknown arguments
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_relig_income <- polars::pl$DataFrame(tidyr::relig_income)
+#' pl_relig_income <- as_polars_df(tidyr::relig_income)
 #' pl_relig_income
 #'
 #' pl_relig_income |>
 #'   pivot_longer(!religion, names_to = "income", values_to = "count")
 #'
-#' pl_billboard <- polars::pl$DataFrame(tidyr::billboard)
+#' pl_billboard <- as_polars_df(tidyr::billboard)
 #' pl_billboard
 #'
 #' pl_billboard |>
@@ -31,7 +31,7 @@
 #'     names_prefix = "wk",
 #'     values_to = "rank",
 #'   )
-pivot_longer.RPolarsDataFrame <- function(
+pivot_longer.polars_data_frame <- function(
   data,
   cols,
   ...,
@@ -70,13 +70,13 @@ pivot_longer.RPolarsDataFrame <- function(
       )
     }
     out <- out$with_columns(
-      pl$col(names_to)$str$replace(paste0("^", names_prefix), "")
+      pl$col(!!!names_to)$str$replace(paste0("^", names_prefix), "")
     )
   }
 
   add_tidypolars_class(out)
 }
 
-#' @rdname pivot_longer.RPolarsDataFrame
+#' @rdname pivot_longer.polars_data_frame
 #' @export
-pivot_longer.RPolarsLazyFrame <- pivot_longer.RPolarsDataFrame
+pivot_longer.polars_lazy_frame <- pivot_longer.polars_data_frame

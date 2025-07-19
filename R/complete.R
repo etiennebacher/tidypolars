@@ -50,7 +50,7 @@
 #' df |>
 #'   group_by(group, maintain_order = TRUE) |>
 #'   complete(item_id, item_name)
-complete.RPolarsDataFrame <- function(
+complete.polars_data_frame <- function(
   data,
   ...,
   fill = list(),
@@ -108,11 +108,11 @@ complete.RPolarsDataFrame <- function(
     chain_is_empty <- TRUE
   } else {
     if (isTRUE(is_grouped)) {
-      chain <- data$group_by(grps, maintain_order = mo)$agg(
-        pl$col(unnamed_dots)$unique()$sort()
+      chain <- data$group_by(grps, .maintain_order = mo)$agg(
+        pl$col(!!!unnamed_dots)$unique()$sort()
       )
     } else {
-      chain <- data$select(pl$col(unnamed_dots)$unique()$sort()$implode())
+      chain <- data$select(pl$col(!!!unnamed_dots)$unique()$sort()$implode())
     }
   }
 
@@ -124,7 +124,7 @@ complete.RPolarsDataFrame <- function(
     if (chain_is_empty) {
       chain <- named_dots[[i]]
     } else {
-      chain <- chain$join(named_dots[[i]], how = "cross", join_nulls = TRUE)
+      chain <- chain$join(named_dots[[i]], how = "cross", nulls_equal = TRUE)
     }
   }
 
@@ -137,33 +137,33 @@ complete.RPolarsDataFrame <- function(
         data,
         on = c(grps, all_dots),
         how = "inner",
-        join_nulls = TRUE
+        nulls_equal = TRUE
       )
       dont_already_exist <- chain$join(
         data,
         on = c(grps, all_dots),
         how = "anti",
-        join_nulls = TRUE
+        nulls_equal = TRUE
       )
     } else {
       already_exist <- chain$join(
         data,
         on = all_dots,
         how = "inner",
-        join_nulls = TRUE
+        nulls_equal = TRUE
       )
       dont_already_exist <- chain$join(
         data,
         on = all_dots,
         how = "anti",
-        join_nulls = TRUE
+        nulls_equal = TRUE
       )
     }
     other_unnamed_dots <- setdiff(
       names(already_exist),
       names(dont_already_exist)
     )
-    schema <- already_exist$schema
+    schema <- already_exist$collect_schema()
     for (i in other_unnamed_dots) {
       dont_already_exist <- dont_already_exist$with_columns(
         pl$lit(NA)$cast(schema[[i]])$alias(i)
@@ -184,7 +184,7 @@ complete.RPolarsDataFrame <- function(
         data,
         on = c(grps, all_dots),
         how = "full",
-        join_nulls = TRUE,
+        nulls_equal = TRUE,
         coalesce = TRUE
       )
     } else {
@@ -192,7 +192,7 @@ complete.RPolarsDataFrame <- function(
         data,
         on = all_dots,
         how = "full",
-        join_nulls = TRUE,
+        nulls_equal = TRUE,
         coalesce = TRUE
       )
     }
@@ -212,6 +212,6 @@ complete.RPolarsDataFrame <- function(
   add_tidypolars_class(out)
 }
 
-#' @rdname complete.RPolarsDataFrame
+#' @rdname complete.polars_data_frame
 #' @export
-complete.RPolarsLazyFrame <- complete.RPolarsDataFrame
+complete.polars_lazy_frame <- complete.polars_data_frame
