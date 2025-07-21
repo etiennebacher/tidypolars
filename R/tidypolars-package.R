@@ -3,7 +3,7 @@
 
 ## usethis namespace: start
 #' @importFrom lifecycle deprecated
-#' @import polars
+#' @import polars0
 #' @import dplyr
 #' @import tidyr
 #' @import rlang

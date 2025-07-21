@@ -15,7 +15,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_test <- polars::pl$DataFrame(
+#' pl_test <- polars0::pl$DataFrame(
 #'   iso_o = c(rep(c("AA", "AB"), each = 2), "AC", "DC"),
 #'   iso_d = rep(c("BA", "BB", "BC"), each = 2),
 #'   value = c(2, 2, 3, 4, 5, 6)

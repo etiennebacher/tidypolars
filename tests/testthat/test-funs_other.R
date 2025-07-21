@@ -29,7 +29,7 @@ test_that("which.min() and which.max() work", {
 })
 
 test_that("n_distinct() works", {
-  test <- polars::pl$DataFrame(x = c("a", "a", "b", "b"), y = c(1:3, NA))
+  test <- polars0::pl$DataFrame(x = c("a", "a", "b", "b"), y = c(1:3, NA))
 
   expect_snapshot(
     test |> summarize(foo = n_distinct()),
@@ -81,7 +81,7 @@ test_that("n_distinct() works", {
 })
 
 test_that("length() works", {
-  test <- polars::pl$DataFrame(x = c("a", "a", "a", "b", "b"), y = c(1:4, NA))
+  test <- polars0::pl$DataFrame(x = c("a", "a", "a", "b", "b"), y = c(1:4, NA))
 
   expect_equal(
     test |>
@@ -106,7 +106,7 @@ test_that("length() works", {
 })
 
 test_that("unique() works", {
-  test <- polars::pl$DataFrame(
+  test <- polars0::pl$DataFrame(
     x = c("a", "a", "a", "b", "b"),
     y = c(2, 2, 3, 4, NA)
   )
@@ -139,7 +139,7 @@ test_that("unique() works", {
 })
 
 test_that("rev() works", {
-  test <- polars::pl$DataFrame(
+  test <- polars0::pl$DataFrame(
     x = c("a", "a", "a", "b", "b"),
     y = c(2, 2, 3, 4, NA)
   )
@@ -181,7 +181,7 @@ test_that("rev() works", {
 })
 
 test_that("all() works", {
-  test <- polars::pl$DataFrame(x = c(TRUE, FALSE, NA), y = c(TRUE, TRUE, NA))
+  test <- polars0::pl$DataFrame(x = c(TRUE, FALSE, NA), y = c(TRUE, TRUE, NA))
 
   expect_equal(
     test |>
@@ -207,7 +207,7 @@ test_that("all() works", {
 })
 
 test_that("any() works", {
-  test <- polars::pl$DataFrame(x = c(FALSE, FALSE, NA), y = c(TRUE, TRUE, NA))
+  test <- polars0::pl$DataFrame(x = c(FALSE, FALSE, NA), y = c(TRUE, TRUE, NA))
 
   expect_equal(
     test |>
@@ -225,7 +225,7 @@ test_that("any() works", {
 })
 
 test_that("round() works", {
-  test <- polars::pl$DataFrame(x = c(0.33, 0.5212))
+  test <- polars0::pl$DataFrame(x = c(0.33, 0.5212))
 
   expect_equal(
     test |>
@@ -250,7 +250,7 @@ test_that("round() works", {
 })
 
 test_that("consecutive_id() works", {
-  test <- polars::pl$DataFrame(
+  test <- polars0::pl$DataFrame(
     x = c(3, 1, 2, 2, NA),
     y = c(2, 2, 4, 4, 4),
     grp = c("A", "A", "A", "B", "B")
@@ -279,7 +279,7 @@ test_that("consecutive_id() works", {
 })
 
 test_that("first() works", {
-  test <- polars::pl$DataFrame(
+  test <- polars0::pl$DataFrame(
     x = c(3, 1, 2, 2, NA),
     grp = c("A", "A", "A", "B", "B")
   )
@@ -307,7 +307,7 @@ test_that("first() works", {
 })
 
 test_that("last() works", {
-  test <- polars::pl$DataFrame(
+  test <- polars0::pl$DataFrame(
     x = c(3, 1, 2, 2, NA),
     grp = c("A", "A", "A", "B", "B")
   )
@@ -335,7 +335,7 @@ test_that("last() works", {
 })
 
 test_that("nth() work", {
-  test <- polars::pl$DataFrame(
+  test <- polars0::pl$DataFrame(
     x = c(3, 1, 2, 2, NA),
     idx = 1:5,
     grp = c("A", "A", "A", "B", "B")
@@ -379,7 +379,7 @@ test_that("nth() work", {
 })
 
 test_that("na_if() works", {
-  test <- polars::pl$DataFrame(
+  test <- polars0::pl$DataFrame(
     x = c(3, 1, 2, 2, 3),
     grp = c("A", "A", "A", "B", "")
   )
@@ -433,7 +433,7 @@ test_that("na_if() works", {
 })
 
 test_that("min_rank() works", {
-  test <- polars::pl$DataFrame(x = c(5, 1, 3, 2, 2, NA), y = c(rep(NA, 5), 1))
+  test <- polars0::pl$DataFrame(x = c(5, 1, 3, 2, 2, NA), y = c(rep(NA, 5), 1))
 
   expect_equal(
     test |>
@@ -451,7 +451,7 @@ test_that("min_rank() works", {
 })
 
 test_that("dense_rank() works", {
-  test <- polars::pl$DataFrame(x = c(5, 1, 3, 2, 2, NA), y = c(rep(NA, 5), 1))
+  test <- polars0::pl$DataFrame(x = c(5, 1, 3, 2, 2, NA), y = c(rep(NA, 5), 1))
 
   expect_equal(
     test |>
@@ -467,7 +467,7 @@ test_that("dense_rank() works", {
     c(rep(NA, 5), 1)
   )
 
-  test2 <- polars::pl$DataFrame(x = numeric(0), y = numeric(0))
+  test2 <- polars0::pl$DataFrame(x = numeric(0), y = numeric(0))
 
   expect_dim(
     test2 |> mutate(foo = dense_rank(x)),
@@ -476,7 +476,7 @@ test_that("dense_rank() works", {
 })
 
 test_that("row_number() works", {
-  test <- polars::pl$DataFrame(x = c(5, 1, 3, 2, 2, NA), y = c(rep(NA, 5), 1))
+  test <- polars0::pl$DataFrame(x = c(5, 1, 3, 2, 2, NA), y = c(rep(NA, 5), 1))
 
   expect_equal(
     test |>
@@ -499,7 +499,7 @@ test_that("row_number() works", {
     1:6
   )
 
-  test2 <- polars::pl$DataFrame(
+  test2 <- polars0::pl$DataFrame(
     grp = c(1, 1, 1, 2, 2, 2, 3, 3, 3),
     x = c(3, 2, 1, 1, 2, 2, 1, 1, 1)
   )
@@ -528,7 +528,7 @@ test_that("row_number() works", {
     rep(1:3, 3)
   )
 
-  test3 <- polars::pl$DataFrame(x = numeric(0), y = numeric(0))
+  test3 <- polars0::pl$DataFrame(x = numeric(0), y = numeric(0))
 
   expect_dim(
     test3 |> mutate(foo = row_number()),
@@ -538,7 +538,7 @@ test_that("row_number() works", {
   # row_number with random values and aggregation based on row index just to be sure
 
   set.seed(123)
-  test4 <- polars::pl$DataFrame(
+  test4 <- polars0::pl$DataFrame(
     grp = sample.int(5, 10, replace = TRUE),
     val = 1:10
   )

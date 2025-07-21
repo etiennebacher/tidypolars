@@ -213,7 +213,7 @@
   * `<format>` can be "csv", "ipc", "json", "parquet".
 
   Those can replace functions from `polars`. For example,
-  `polars::pl$read_parquet(...)` can be replaced by
+  `polars0::pl$read_parquet(...)` can be replaced by
   `read_parquet_polars(...)`.
 
 * New functions to write Polars DataFrames to external files:

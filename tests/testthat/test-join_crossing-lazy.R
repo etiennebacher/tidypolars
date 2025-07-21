@@ -3,12 +3,12 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- polars::pl$LazyFrame(
+  test <- polars0::pl$LazyFrame(
     origin = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
 
-  test2 <- polars::pl$LazyFrame(
+  test2 <- polars0::pl$LazyFrame(
     destination = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )
@@ -28,11 +28,11 @@ test_that("basic behavior works", {
 })
 
 test_that("unsupported args throw warning", {
-  test <- polars::pl$LazyFrame(
+  test <- polars0::pl$LazyFrame(
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- polars0::pl$LazyFrame(
     country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )
@@ -50,11 +50,11 @@ test_that("unsupported args throw warning", {
 })
 
 test_that("dots must be empty", {
-  test <- polars::pl$LazyFrame(
+  test <- polars0::pl$LazyFrame(
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- polars0::pl$LazyFrame(
     country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )

@@ -1,7 +1,7 @@
 # error if no common variables and and `by` no provided
 
     Code
-      left_join(test, polars::as_polars_df(iris))
+      left_join(test, polars0::as_polars_df(iris))
     Condition
       Error in `left_join()`:
       ! `by` must be supplied when `x` and `y` have no common variables.

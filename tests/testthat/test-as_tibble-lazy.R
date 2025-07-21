@@ -6,7 +6,7 @@ test_that("as_tibble() works", {
   test <- pl$LazyFrame(
     x1 = c("a", "a", "b"),
     x2 = 1:3,
-    schema = list(x2 = polars::pl$Int64)
+    schema = list(x2 = polars0::pl$Int64)
   )
 
   expect_equal_lazy(

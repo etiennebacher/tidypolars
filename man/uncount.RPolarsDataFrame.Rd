@@ -28,7 +28,7 @@ is the opposite of \code{count()}.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-test <- polars::pl$DataFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
+test <- polars0::pl$DataFrame(x = c("a", "b"), y = 100:101, n = c(1, 2))
 test
 
 uncount(test, n)

@@ -87,7 +87,7 @@ ungroup.RPolarsLazyFrame <- ungroup.RPolarsDataFrame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE)
-#' pl_g <- polars::as_polars_df(mtcars) |>
+#' pl_g <- polars0::as_polars_df(mtcars) |>
 #'   group_by(cyl, am)
 #'
 #' group_vars(pl_g)
@@ -139,7 +139,7 @@ group_keys.RPolarsLazyFrame <- group_keys.RPolarsDataFrame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE)
-#' pl_g <- polars::as_polars_df(iris) |>
+#' pl_g <- polars0::as_polars_df(iris) |>
 #'   group_by(Species)
 #'
 #' group_split(pl_g)

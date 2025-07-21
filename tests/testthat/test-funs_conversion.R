@@ -1,5 +1,5 @@
 test_that("basic behavior works", {
-  test_df <- polars::pl$DataFrame(
+  test_df <- polars0::pl$DataFrame(
     char1 = c("a", "a", "b"),
     char2 = c("1", "2", "3.5"),
     num1 = 1:3,

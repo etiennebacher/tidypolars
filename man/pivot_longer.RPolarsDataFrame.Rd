@@ -54,13 +54,13 @@ specified. To change this behavior to error instead, use
 
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pl_relig_income <- polars::pl$DataFrame(tidyr::relig_income)
+pl_relig_income <- polars0::pl$DataFrame(tidyr::relig_income)
 pl_relig_income
 
 pl_relig_income |>
   pivot_longer(!religion, names_to = "income", values_to = "count")
 
-pl_billboard <- polars::pl$DataFrame(tidyr::billboard)
+pl_billboard <- polars0::pl$DataFrame(tidyr::billboard)
 pl_billboard
 
 pl_billboard |>

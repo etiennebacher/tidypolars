@@ -10,7 +10,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' test <- polars::pl$DataFrame(
+#' test <- polars0::pl$DataFrame(
 #'   year = 2009:2011,
 #'   month = 10:12,
 #'   day = c(11L, 22L, 28L),
@@ -21,7 +21,7 @@
 #' unite(test, col = "full_date", year, month, day, sep = "-")
 #' unite(test, col = "full_date", year, month, day, sep = "-", remove = FALSE)
 #'
-#' test2 <- polars::pl$DataFrame(
+#' test2 <- polars0::pl$DataFrame(
 #'   name = c("John", "Jack", "Thomas"),
 #'   middlename = c("T.", NA, "F."),
 #'   surname = c("Smith", "Thompson", "Jones")

@@ -1,5 +1,5 @@
 test_that("basic behavior works", {
-  test <- polars::as_polars_df(mtcars)
+  test <- polars0::as_polars_df(mtcars)
 
   expect_equal(
     pull(test, mpg),
@@ -18,7 +18,7 @@ test_that("basic behavior works", {
 })
 
 test_that("error cases work", {
-  test <- polars::as_polars_df(mtcars)
+  test <- polars0::as_polars_df(mtcars)
 
   expect_snapshot(
     pull(test, dplyr::all_of(c("mpg", "drat"))),

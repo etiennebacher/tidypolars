@@ -33,7 +33,7 @@ such as changing the default behavior when converting Int64 values to R:
 ##### Unknown arguments
 
 options(tidypolars_unknown_args = "warn")
-test <- polars::pl$DataFrame(x = c(2, 1, 5, 3, 1))
+test <- polars0::pl$DataFrame(x = c(2, 1, 5, 3, 1))
 
 # The default is to warn the user
 mutate(test, x2 = sample(x, prob = 0.5))
@@ -46,7 +46,7 @@ options(tidypolars_unknown_args = "warn")
 
 ##### Fallback to R
 
-test <- polars::pl$DataFrame(x = c(2, 1, 5, 3, 1))
+test <- polars0::pl$DataFrame(x = c(2, 1, 5, 3, 1))
 
 # The default is to error because mad() isn't translated internally
 try(mutate(test, x2 = mad(x)))

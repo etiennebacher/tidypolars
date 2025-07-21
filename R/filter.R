@@ -14,7 +14,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_iris <- polars::as_polars_df(iris)
+#' pl_iris <- polars0::as_polars_df(iris)
 #'
 #' filter(pl_iris, Sepal.Length < 5, Species == "setosa")
 #'

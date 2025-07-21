@@ -33,7 +33,7 @@ test_that("basic behavior works", {
 })
 
 test_that("error if variable doesn't exist", {
-  pl_tmp <- polars::as_polars_df(mtcars)
+  pl_tmp <- polars0::as_polars_df(mtcars)
   expect_snapshot(
     drop_na(pl_tmp, foo),
     error = TRUE

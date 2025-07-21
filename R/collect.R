@@ -2,7 +2,7 @@
 #'
 #' @description
 #' `compute()` checks the query, optimizes it in the background, and runs it.
-#' The output is a [Polars DataFrame][polars::DataFrame_class]. `collect()` is
+#' The output is a [Polars DataFrame][polars0::DataFrame_class]. `collect()` is
 #' similar to `compute()` but converts the output to an R [data.frame], which
 #' consumes more memory.
 #'
@@ -43,7 +43,7 @@
 #' @export
 #' @seealso [fetch()] for applying a lazy query on a subset of the data.
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' dat_lazy <- polars::as_polars_df(iris)$lazy()
+#' dat_lazy <- polars0::as_polars_df(iris)$lazy()
 #'
 #' compute(dat_lazy)
 #'

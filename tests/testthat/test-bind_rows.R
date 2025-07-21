@@ -1,10 +1,10 @@
 test_that("basic behavior works", {
   l <- list(
-    polars::pl$DataFrame(
+    polars0::pl$DataFrame(
       x = sample(letters, 20),
       y = sample.int(100, 20)
     ),
-    polars::pl$DataFrame(
+    polars0::pl$DataFrame(
       x = sample(letters, 20),
       y = sample.int(100, 20)
     )
@@ -36,11 +36,11 @@ test_that("dots and list are equivalent", {
 
 test_that("different dtypes work", {
   l <- list(
-    polars::pl$DataFrame(
+    polars0::pl$DataFrame(
       x = c("a", "b"),
       y = 1:2
     ),
-    polars::pl$DataFrame(
+    polars0::pl$DataFrame(
       y = 3:4,
       z = c("c", "d")
     )$with_columns(pl$col("y")$cast(pl$Int16))

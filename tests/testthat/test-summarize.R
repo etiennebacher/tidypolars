@@ -1,5 +1,5 @@
 test_that("basic behavior works", {
-  pl_iris <- polars::as_polars_df(iris)
+  pl_iris <- polars0::as_polars_df(iris)
   pl_iris_g <- pl_iris |>
     group_by(Species, maintain_order = TRUE)
 
@@ -43,7 +43,7 @@ test_that("basic behavior works", {
 })
 
 test_that("correctly handles attributes", {
-  pl_mtcars <- polars::as_polars_df(mtcars)
+  pl_mtcars <- polars0::as_polars_df(mtcars)
   pl_mtcars_g <- pl_mtcars |>
     group_by(cyl, am, maintain_order = TRUE)
 
@@ -74,7 +74,7 @@ test_that("correctly handles attributes", {
 })
 
 test_that("works with a local variable defined in a function", {
-  pl_iris <- polars::as_polars_df(iris)
+  pl_iris <- polars0::as_polars_df(iris)
   pl_iris_g <- pl_iris |>
     group_by(Species, maintain_order = TRUE)
 
@@ -83,7 +83,7 @@ test_that("works with a local variable defined in a function", {
     x |> summarize(foo = local_var)
   }
 
-  test <- polars::pl$DataFrame(chars = letters[1:3])
+  test <- polars0::pl$DataFrame(chars = letters[1:3])
 
   expect_equal(
     foobar(test),
@@ -92,7 +92,7 @@ test_that("works with a local variable defined in a function", {
 })
 
 test_that("check .add argument of group_by works", {
-  test <- polars::as_polars_df(mtcars)
+  test <- polars0::as_polars_df(mtcars)
 
   expect_equal(
     test |>

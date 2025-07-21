@@ -1,7 +1,7 @@
 #' @export
-#' @importFrom polars as_polars_df
-polars::as_polars_df
+#' @importFrom polars0 as_polars_df
+polars0::as_polars_df
 
 #' @export
-#' @importFrom polars as_polars_lf
-polars::as_polars_lf
+#' @importFrom polars0 as_polars_lf
+polars0::as_polars_lf

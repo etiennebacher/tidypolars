@@ -7,7 +7,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_test <- polars::pl$DataFrame(
+#' pl_test <- polars0::pl$DataFrame(
 #'   x1 = c("a", "a", "b", "a", "c"),
 #'   x2 = c(2, 1, 5, 3, 1),
 #'   value = sample(1:5)

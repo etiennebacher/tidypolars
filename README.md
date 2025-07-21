@@ -49,16 +49,30 @@ thorough, representative benchmarks about `polars`, take a look at
 [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/) instead.
 
 ``` r
-library(collapse, warn.conflicts = FALSE)
-#> collapse 2.1.1, see ?`collapse-package` or ?`collapse-documentation`
-library(dplyr, warn.conflicts = FALSE)
-library(dtplyr)
-library(polars)
-library(tidypolars)
+suppressPackageStartupMessages({
+  library(collapse, warn.conflicts = FALSE)
+  library(dplyr, warn.conflicts = FALSE)
+  library(dtplyr)
+  library(duckplyr)
+  library(polars)
+  library(tidypolars)
+})
+#> Warning: package 'collapse' was built under R version 4.4.3
+#> Warning: package 'dplyr' was built under R version 4.4.3
+#> Warning: package 'dtplyr' was built under R version 4.4.3
+#> Warning: package 'duckplyr' was built under R version 4.4.3
+#> Warning: package 'polars' was built under R version 4.4.3
 
-large_iris <- data.table::rbindlist(rep(list(iris), 100000))
+duckplyr::methods_restore()
+#> ℹ Restoring dplyr methods.
+
+# as_duckdb_tibble() cannot convert factor variables
+large_iris <- data.table::rbindlist(rep(list(iris), 100000)) |> 
+  mutate(Species = as.character(Species))
+
 large_iris_pl <- as_polars_lf(large_iris)
 large_iris_dt <- lazy_dt(large_iris)
+large_iris_duck <- as_duckdb_tibble(large_iris)
 
 format(nrow(large_iris), big.mark = ",")
 #> [1] "15,000,000"
@@ -75,22 +89,23 @@ bench::mark(
           alias("petal_type")
       )$
       filter(pl$col("Sepal.Length")$is_between(4.5, 5.5))$
-      collect()
+      collect() |> 
+      as.data.frame()
   },
   tidypolars = {
     large_iris_pl |>
       select(starts_with(c("Sep", "Pet"))) |>
       mutate(
-        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+        petal_type = if_else((Petal.Length / Petal.Width) > 3, "long", "large")
       ) |> 
       filter(between(Sepal.Length, 4.5, 5.5)) |> 
-      compute()
+      collect()
   },
   dplyr = {
     large_iris |>
       select(starts_with(c("Sep", "Pet"))) |>
       mutate(
-        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+        petal_type = if_else((Petal.Length / Petal.Width) > 3, "long", "large")
       ) |>
       filter(between(Sepal.Length, 4.5, 5.5))
   },
@@ -98,10 +113,19 @@ bench::mark(
     large_iris_dt |>
       select(starts_with(c("Sep", "Pet"))) |>
       mutate(
-        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+        petal_type = if_else((Petal.Length / Petal.Width) > 3, "long", "large")
       ) |>
       filter(between(Sepal.Length, 4.5, 5.5)) |> 
       as.data.frame()
+  },
+  duckplyr = {
+    large_iris_duck |>
+      select(starts_with(c("Sep", "Pet"))) |>
+      mutate(
+        petal_type = if_else((Petal.Length / Petal.Width) > 3, "long", "large")
+      ) |>
+      filter(Sepal.Length >= 4.5 & Sepal.Length <= 5.5) |> 
+      collect()
   },
   collapse = {
     large_iris |>
@@ -116,14 +140,15 @@ bench::mark(
 )
 #> Warning: Some expressions had a GC in every iteration; so filtering is
 #> disabled.
-#> # A tibble: 5 × 6
+#> # A tibble: 6 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars      91.75ms 101.63ms     8.67     2.03MB    0.217
-#> 2 tidypolars 128.61ms 269.19ms     3.37     1.49MB    1.01 
-#> 3 dplyr         3.21s    4.42s     0.235    1.79GB    0.611
-#> 4 dtplyr     916.43ms 964.62ms     1.02     1.72GB    2.25 
-#> 5 collapse   372.23ms 454.87ms     2.13   745.96MB    2.19
+#> 1 polars     343.16ms 505.19ms     1.87   211.95MB   0.608 
+#> 2 tidypolars 488.82ms 630.83ms     1.36   211.56MB   0.272 
+#> 3 dplyr         1.34s    1.58s     0.633    1.68GB   1.77  
+#> 4 dtplyr      911.8ms    1.22s     0.862    1.72GB   1.81  
+#> 5 duckplyr   396.66ms 744.03ms     1.49     1.21MB   0.0745
+#> 6 collapse   325.75ms 440.17ms     2.16   745.96MB   2.22
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling

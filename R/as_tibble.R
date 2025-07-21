@@ -7,8 +7,8 @@
 #' @inheritParams count.RPolarsDataFrame
 #' @param int64_conversion How should Int64 values be handled when converting a
 #'   polars object to R? See the documentation in
-#'   [`polars::as.data.frame.RPolarsDataFrame`].
-#' @param ... Options passed to [`polars::as.data.frame.RPolarsDataFrame`].
+#'   [`polars0::as.data.frame.RPolarsDataFrame`].
+#' @param ... Options passed to [`polars0::as.data.frame.RPolarsDataFrame`].
 #'
 #' @section About int64: Int64 is a format accepted in Polars but not natively
 #'   in R (the package `bit64` helps with that).
@@ -28,7 +28,7 @@
 #'   as_tibble()
 as_tibble.tidypolars <- function(
   x,
-  int64_conversion = polars::polars_options()$int64_conversion,
+  int64_conversion = polars0::polars_options()$int64_conversion,
   ...
 ) {
   dplyr::as_tibble(as.data.frame(x, int64_conversion = int64_conversion, ...))

@@ -12,6 +12,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{polars}{\code{\link[polars]{as_polars_df}}, \code{\link[polars]{as_polars_lf}}}
+  \item{polars0}{\code{\link[polars0]{as_polars_df}}, \code{\link[polars0]{as_polars_lf}}}
 }}
 

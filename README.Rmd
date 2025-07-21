@@ -54,15 +54,24 @@ close and to give an idea of the performance. For more thorough, representative
 benchmarks about `polars`, take a look at [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/) instead.
 
 ```{r}
-library(collapse, warn.conflicts = FALSE)
-library(dplyr, warn.conflicts = FALSE)
-library(dtplyr)
-library(polars)
-library(tidypolars)
+suppressPackageStartupMessages({
+  library(collapse, warn.conflicts = FALSE)
+  library(dplyr, warn.conflicts = FALSE)
+  library(dtplyr)
+  library(duckplyr)
+  library(polars)
+  library(tidypolars)
+})
 
-large_iris <- data.table::rbindlist(rep(list(iris), 100000))
+duckplyr::methods_restore()
+
+# as_duckdb_tibble() cannot convert factor variables
+large_iris <- data.table::rbindlist(rep(list(iris), 100000)) |> 
+  mutate(Species = as.character(Species))
+
 large_iris_pl <- as_polars_lf(large_iris)
 large_iris_dt <- lazy_dt(large_iris)
+large_iris_duck <- as_duckdb_tibble(large_iris)
 
 format(nrow(large_iris), big.mark = ",")
 
@@ -84,7 +93,7 @@ bench::mark(
     large_iris_pl |>
       select(starts_with(c("Sep", "Pet"))) |>
       mutate(
-        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+        petal_type = if_else((Petal.Length / Petal.Width) > 3, "long", "large")
       ) |> 
       filter(between(Sepal.Length, 4.5, 5.5)) |> 
       compute()
@@ -93,7 +102,7 @@ bench::mark(
     large_iris |>
       select(starts_with(c("Sep", "Pet"))) |>
       mutate(
-        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+        petal_type = if_else((Petal.Length / Petal.Width) > 3, "long", "large")
       ) |>
       filter(between(Sepal.Length, 4.5, 5.5))
   },
@@ -101,10 +110,19 @@ bench::mark(
     large_iris_dt |>
       select(starts_with(c("Sep", "Pet"))) |>
       mutate(
-        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+        petal_type = if_else((Petal.Length / Petal.Width) > 3, "long", "large")
       ) |>
       filter(between(Sepal.Length, 4.5, 5.5)) |> 
       as.data.frame()
+  },
+  duckplyr = {
+    large_iris_duck |>
+      select(starts_with(c("Sep", "Pet"))) |>
+      mutate(
+        petal_type = if_else((Petal.Length / Petal.Width) > 3, "long", "large")
+      ) |>
+      filter(Sepal.Length >= 4.5 & Sepal.Length <= 5.5) |> 
+      collect()
   },
   collapse = {
     large_iris |>

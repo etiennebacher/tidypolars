@@ -6,13 +6,13 @@ test_that("error if no common variables and and `by` no provided", {
   skip_if_not_installed("withr")
   withr::local_options(list(rlib_message_verbosity = "quiet"))
 
-  test <- polars::pl$LazyFrame(
+  test <- polars0::pl$LazyFrame(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
   expect_snapshot_lazy(
-    left_join(test, polars::as_polars_lf(iris)),
+    left_join(test, polars0::as_polars_lf(iris)),
     error = TRUE
   )
 })
@@ -20,12 +20,12 @@ test_that("error if no common variables and and `by` no provided", {
 test_that("basic behavior works", {
   skip_if_not_installed("withr")
   withr::local_options(list(rlib_message_verbosity = "quiet"))
-  test <- polars::pl$LazyFrame(
+  test <- polars0::pl$LazyFrame(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- polars0::pl$LazyFrame(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z2 = c(4, 5, 7)
@@ -78,12 +78,12 @@ test_that("basic behavior works", {
 })
 
 test_that("works if join by different variable names", {
-  test <- polars::pl$LazyFrame(
+  test <- polars0::pl$LazyFrame(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- polars0::pl$LazyFrame(
     x2 = c(1, 2, 4),
     y2 = c(1, 2, 4),
     z3 = c(4, 5, 7)
@@ -111,12 +111,12 @@ test_that("works if join by different variable names", {
 })
 
 test_that("argument suffix works", {
-  test <- polars::pl$LazyFrame(
+  test <- polars0::pl$LazyFrame(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- polars0::pl$LazyFrame(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z = c(4, 5, 7)
@@ -139,12 +139,12 @@ test_that("argument suffix works", {
 })
 
 test_that("suffix + join_by works", {
-  test <- polars::pl$LazyFrame(
+  test <- polars0::pl$LazyFrame(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- polars0::pl$LazyFrame(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z = c(4, 5, 7)
@@ -166,12 +166,12 @@ test_that("suffix + join_by works", {
 })
 
 test_that("argument relationship works", {
-  test <- polars::pl$LazyFrame(
+  test <- polars0::pl$LazyFrame(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- polars0::pl$LazyFrame(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z = c(4, 5, 7)
@@ -182,12 +182,12 @@ test_that("argument relationship works", {
     error = TRUE
   )
 
-  country <- polars::pl$LazyFrame(
+  country <- polars0::pl$LazyFrame(
     iso = c("FRA", "DEU"),
     value = 1:2
   )
 
-  country_year <- polars::pl$LazyFrame(
+  country_year <- polars0::pl$LazyFrame(
     iso = rep(c("FRA", "DEU"), each = 2),
     year = rep(2019:2020, 2),
     value2 = 3:6
@@ -300,12 +300,12 @@ test_that("argument na_matches works", {
 test_that("error if two inputs don't have the same class", {
   skip_if_not_installed("withr")
   withr::local_options(list(rlib_message_verbosity = "quiet"))
-  test <- polars::pl$LazyFrame(
+  test <- polars0::pl$LazyFrame(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- polars0::pl$LazyFrame(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z = c(4, 5, 7)
@@ -327,11 +327,11 @@ test_that("error if two inputs don't have the same class", {
 })
 
 test_that("unsupported args throw warning", {
-  test <- polars::pl$LazyFrame(
+  test <- polars0::pl$LazyFrame(
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- polars0::pl$LazyFrame(
     country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )
@@ -353,11 +353,11 @@ test_that("unsupported args throw warning", {
 })
 
 test_that("dots must be empty", {
-  test <- polars::pl$LazyFrame(
+  test <- polars0::pl$LazyFrame(
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2 <- polars0::pl$LazyFrame(
     country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )

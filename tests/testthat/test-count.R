@@ -1,5 +1,5 @@
 test_that("count works", {
-  test <- polars::as_polars_df(mtcars)
+  test <- polars0::as_polars_df(mtcars)
 
   expect_is_tidypolars(count(test))
 
@@ -20,7 +20,7 @@ test_that("count works", {
 })
 
 test_that("arguments name and sort work", {
-  test <- polars::as_polars_df(mtcars)
+  test <- polars0::as_polars_df(mtcars)
 
   expect_equal(
     count(test, cyl, am, sort = TRUE, name = "count") |> pull(count),
@@ -34,7 +34,7 @@ test_that("arguments name and sort work", {
 })
 
 test_that("count works on grouped data", {
-  test <- polars::as_polars_df(mtcars)
+  test <- polars0::as_polars_df(mtcars)
   test_grp <- group_by(test, am)
 
   expect_equal(
@@ -49,7 +49,7 @@ test_that("count works on grouped data", {
 })
 
 test_that("add_count works", {
-  test <- polars::as_polars_df(mtcars)
+  test <- polars0::as_polars_df(mtcars)
 
   expect_colnames(
     add_count(test, cyl),
@@ -58,7 +58,7 @@ test_that("add_count works", {
 })
 
 test_that("arguments name and sort work", {
-  test <- polars::as_polars_df(mtcars)
+  test <- polars0::as_polars_df(mtcars)
 
   expect_colnames(
     add_count(test, cyl, am, sort = TRUE, name = "count"),
@@ -77,7 +77,7 @@ test_that("arguments name and sort work", {
 })
 
 test_that("add_count works on grouped data", {
-  test <- polars::as_polars_df(mtcars)
+  test <- polars0::as_polars_df(mtcars)
   test_grp <- group_by(test, am, maintain_order = TRUE)
 
   expect_equal(
@@ -96,7 +96,7 @@ test_that("add_count works on grouped data", {
 })
 
 test_that("message if overwriting variable", {
-  test <- polars::as_polars_df(mtcars)
+  test <- polars0::as_polars_df(mtcars)
 
   test2 <- test |>
     mutate(n = 1)

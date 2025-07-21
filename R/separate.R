@@ -14,7 +14,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' test <- polars::pl$DataFrame(
+#' test <- polars0::pl$DataFrame(
 #'   x = c(NA, "x.y", "x.z", "y.z")
 #' )
 #' separate(test, x, into = c("foo", "foo2"), sep = ".")

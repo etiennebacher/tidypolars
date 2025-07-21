@@ -227,7 +227,7 @@ pl_case_match <- function(x, ..., .data) {
   caller <- caller_from_dots(...)
   dots <- clean_dots(...)
 
-  x <- polars::pl$col(deparse(substitute(x)))
+  x <- polars0::pl$col(deparse(substitute(x)))
 
   if (!".default" %in% names(dots)) {
     dots[[length(dots) + 1]] <- c(".default" = NA)
@@ -264,7 +264,7 @@ pl_case_match <- function(x, ..., .data) {
       expr_uses_col = expr_uses_col
     )
     if (is.null(out)) {
-      out <- polars::pl$when(x$is_in(lhs))$then(rhs)
+      out <- polars0::pl$when(x$is_in(lhs))$then(rhs)
     } else {
       out <- out$when(x$is_in(lhs))$then(rhs)
     }
@@ -316,7 +316,7 @@ pl_case_when <- function(..., .data) {
     )
 
     if (is.null(out)) {
-      out <- polars::pl$when(lhs)$then(rhs)
+      out <- polars0::pl$when(lhs)$then(rhs)
     } else {
       out <- out$when(lhs)$then(rhs)
     }

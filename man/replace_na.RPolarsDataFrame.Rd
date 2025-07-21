@@ -23,7 +23,7 @@ Replace NAs with specified values
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
+pl_test <- polars0::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 
 # replace all NA with 0
 replace_na(pl_test, 0)

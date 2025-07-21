@@ -46,11 +46,11 @@ bind_rows_polars <- function(..., .id = NULL) {
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' p1 <- polars::pl$DataFrame(
+#' p1 <- polars0::pl$DataFrame(
 #'   x = sample(letters, 20),
 #'   y = sample(1:100, 20)
 #' )
-#' p2 <- polars::pl$DataFrame(
+#' p2 <- polars0::pl$DataFrame(
 #'   z = sample(letters, 20),
 #'   w = sample(1:100, 20)
 #' )

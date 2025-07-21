@@ -1,5 +1,5 @@
 test_that("basic behavior works", {
-  test <- polars::pl$DataFrame(
+  test <- polars0::pl$DataFrame(
     year = 2009:2011,
     month = 10:12,
     day = c(11L, 22L, 28L),
@@ -19,7 +19,7 @@ test_that("basic behavior works", {
 })
 
 test_that("argument remove works", {
-  test <- polars::pl$DataFrame(
+  test <- polars0::pl$DataFrame(
     year = 2009:2011,
     month = 10:12,
     day = c(11L, 22L, 28L),
@@ -39,7 +39,7 @@ test_that("argument remove works", {
 })
 
 test_that("tidy selection works", {
-  test <- polars::pl$DataFrame(
+  test <- polars0::pl$DataFrame(
     name = c("John", "Jack", "Thomas"),
     middlename = c("T.", NA, "F."),
     surname = c("Smith", "Thompson", "Jones")
@@ -53,7 +53,7 @@ test_that("tidy selection works", {
 })
 
 test_that("name of output column must be provided", {
-  test <- polars::pl$DataFrame(
+  test <- polars0::pl$DataFrame(
     year = 2009:2011,
     month = 10:12,
     day = c(11L, 22L, 28L),
@@ -66,7 +66,7 @@ test_that("name of output column must be provided", {
 })
 
 test_that("no selection selects all columns", {
-  test <- polars::pl$DataFrame(
+  test <- polars0::pl$DataFrame(
     year = 2009:2011,
     month = 10:12,
     day = c(11L, 22L, 28L),

@@ -1,5 +1,5 @@
 test_that("tidypolars_unknown_args: basic behavior works", {
-  test <- polars::pl$DataFrame(x = c(2, 1, 5, 3, 1))
+  test <- polars0::pl$DataFrame(x = c(2, 1, 5, 3, 1))
 
   expect_warning(
     test |> mutate(x2 = sample(x, prob = 0.5)),
@@ -17,7 +17,7 @@ test_that("tidypolars_unknown_args: basic behavior works", {
 })
 
 test_that("tidypolars_fallback_to_r: basic behavior works", {
-  test <- polars::pl$DataFrame(x = c(2, 1, 5, 3, 1))
+  test <- polars0::pl$DataFrame(x = c(2, 1, 5, 3, 1))
 
   expect_error(
     test |> mutate(x2 = mad(x)),

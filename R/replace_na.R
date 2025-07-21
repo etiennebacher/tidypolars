@@ -8,7 +8,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
+#' pl_test <- polars0::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 #'
 #' # replace all NA with 0
 #' replace_na(pl_test, 0)
@@ -37,12 +37,12 @@ replace_na.RPolarsDataFrame <- function(data, replace, ...) {
     exprs <- list()
     for (i in seq_along(replace)) {
       if (is.character(replace[[i]])) {
-        exprs[[i]] <- polars::pl$col(names(replace)[i])$replace(
+        exprs[[i]] <- polars0::pl$col(names(replace)[i])$replace(
           NA,
           replace[[i]]
         )
       } else {
-        exprs[[i]] <- polars::pl$col(names(replace)[i])$fill_null(replace[[i]])
+        exprs[[i]] <- polars0::pl$col(names(replace)[i])$fill_null(replace[[i]])
       }
     }
   }

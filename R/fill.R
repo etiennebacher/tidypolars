@@ -16,13 +16,13 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
+#' pl_test <- polars0::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 #'
 #' fill(pl_test, everything(), .direction = "down")
 #' fill(pl_test, everything(), .direction = "up")
 #'
 #' # with grouped data, it doesn't use values from other groups
-#' pl_grouped <- polars::pl$DataFrame(
+#' pl_grouped <- polars0::pl$DataFrame(
 #'   grp = rep(c("A", "B"), each = 3),
 #'   x = c(1, NA, NA, NA, 2, NA),
 #'   y = c(3, NA, 4, NA, 3, 1)
@@ -46,7 +46,7 @@ fill.RPolarsDataFrame <- function(
   is_grouped <- !is.null(grps)
   mo <- attributes(data)$maintain_grp_order
 
-  expr <- polars::pl$col(vars)
+  expr <- polars0::pl$col(vars)
   expr <- switch(
     .direction,
     "down" = expr$fill_null(strategy = 'forward'),

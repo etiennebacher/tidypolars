@@ -1,5 +1,5 @@
 test_that("tally works", {
-  test <- polars::as_polars_df(mtcars)
+  test <- polars0::as_polars_df(mtcars)
 
   expect_is_tidypolars(tally(test))
 
@@ -20,7 +20,7 @@ test_that("tally works", {
 })
 
 test_that("arguments name and sort work", {
-  test <- polars::as_polars_df(mtcars)
+  test <- polars0::as_polars_df(mtcars)
 
   expect_equal(
     test |>
@@ -37,7 +37,7 @@ test_that("arguments name and sort work", {
 })
 
 test_that("tally() drops one grouping level", {
-  test <- polars::as_polars_df(mtcars)
+  test <- polars0::as_polars_df(mtcars)
   expect_equal(
     test |>
       group_by(cyl) |>
@@ -56,7 +56,7 @@ test_that("tally() drops one grouping level", {
 
 # TODO: uncomment if add_tally() becomes generic, #202
 # test_that("add_tally works", {
-#   test <- polars::as_polars_df(mtcars)
+#   test <- polars0::as_polars_df(mtcars)
 
 #   expect_colnames(
 #     test |> group_by(cyl) |> add_tally(),
@@ -65,7 +65,7 @@ test_that("tally() drops one grouping level", {
 # })
 
 # test_that("arguments name and sort work", {
-#   test <- polars::as_polars_df(mtcars)
+#   test <- polars0::as_polars_df(mtcars)
 
 #   expect_colnames(
 #     add_tally(test, cyl, am, sort = TRUE, name = "tally"),
@@ -84,7 +84,7 @@ test_that("tally() drops one grouping level", {
 # })
 
 test_that("message if overwriting variable", {
-  test <- polars::as_polars_df(mtcars)
+  test <- polars0::as_polars_df(mtcars)
 
   test2 <- test |>
     mutate(n = 1)

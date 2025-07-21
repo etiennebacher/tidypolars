@@ -25,7 +25,7 @@ variables will be considered.
 tmp <- mtcars
 tmp[1:3, "mpg"] <- NA
 tmp[4, "hp"] <- NA
-pl_tmp <- polars::pl$DataFrame(tmp)
+pl_tmp <- polars0::pl$DataFrame(tmp)
 
 drop_na(pl_tmp)
 drop_na(pl_tmp, hp, mpg)

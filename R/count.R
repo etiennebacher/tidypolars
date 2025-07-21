@@ -8,7 +8,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' test <- polars::as_polars_df(mtcars)
+#' test <- polars0::as_polars_df(mtcars)
 #'
 #' # grouping variables must be specified in count() and add_count()
 #' count(test, cyl)

@@ -12,7 +12,7 @@
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' pl_test <- polars::as_polars_df(mtcars)
+#' pl_test <- polars0::as_polars_df(mtcars)
 #'
 #' rename(pl_test, miles_per_gallon = mpg, horsepower = "hp")
 #'
@@ -20,7 +20,7 @@
 #'
 #' rename_with(pl_test, toupper, .cols = contains("p"))
 #'
-#' pl_test_2 <- polars::as_polars_df(iris)
+#' pl_test_2 <- polars0::as_polars_df(iris)
 #'
 #' rename_with(pl_test_2, function(x) tolower(gsub(".", "_", x, fixed = TRUE)))
 #'

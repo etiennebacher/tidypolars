@@ -4,16 +4,20 @@
 \alias{as_tibble.tidypolars}
 \title{Convert a Polars DataFrame to an R data.frame or to a tibble}
 \usage{
-\method{as_tibble}{tidypolars}(x, int64_conversion = polars::polars_options()$int64_conversion, ...)
+\method{as_tibble}{tidypolars}(
+  x,
+  int64_conversion = polars0::polars_options()$int64_conversion,
+  ...
+)
 }
 \arguments{
 \item{x}{A Polars Data/LazyFrame}
 
 \item{int64_conversion}{How should Int64 values be handled when converting a
 polars object to R? See the documentation in
-\code{\link[polars:S3_as.data.frame]{polars::as.data.frame.RPolarsDataFrame}}.}
+\code{\link[polars0:S3_as.data.frame]{polars0::as.data.frame.RPolarsDataFrame}}.}
 
-\item{...}{Options passed to \code{\link[polars:S3_as.data.frame]{polars::as.data.frame.RPolarsDataFrame}}.}
+\item{...}{Options passed to \code{\link[polars0:S3_as.data.frame]{polars0::as.data.frame.RPolarsDataFrame}}.}
 }
 \description{
 This makes it easier to convert a polars \link[=DataFrame_class]{DataFrame} or

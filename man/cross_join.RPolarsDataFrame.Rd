@@ -33,12 +33,12 @@ specified. To change this behavior to error instead, use
 
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-test <- polars::pl$DataFrame(
+test <- polars0::pl$DataFrame(
   origin = c("ALG", "FRA", "GER"),
   year = c(2020, 2020, 2021)
 )
 
-test2 <- polars::pl$DataFrame(
+test2 <- polars0::pl$DataFrame(
   destination = c("USA", "JPN", "BRA"),
   language = c("english", "japanese", "portuguese")
 )

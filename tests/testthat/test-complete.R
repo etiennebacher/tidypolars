@@ -1,5 +1,5 @@
 test_that("basic behavior works", {
-  test <- polars::pl$DataFrame(
+  test <- polars0::pl$DataFrame(
     country = c("France", "France", "UK", "UK", "Spain"),
     year = c(2020, 2021, 2019, 2020, 2022),
     value = c(1, 2, 3, 4, 5)

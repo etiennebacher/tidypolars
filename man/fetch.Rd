@@ -73,7 +73,7 @@ that has more rows than \code{n_rows}.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-dat_lazy <- polars::as_polars_df(iris)$lazy()
+dat_lazy <- polars0::as_polars_df(iris)$lazy()
 
 # this will return 30 rows
 fetch(dat_lazy, 30)

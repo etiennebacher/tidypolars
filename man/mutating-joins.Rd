@@ -175,13 +175,13 @@ specified. To change this behavior to error instead, use
 
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-test <- polars::pl$DataFrame(
+test <- polars0::pl$DataFrame(
   x = c(1, 2, 3),
   y1 = c(1, 2, 3),
   z = c(1, 2, 3)
 )
 
-test2 <- polars::pl$DataFrame(
+test2 <- polars0::pl$DataFrame(
   x = c(1, 2, 4),
   y2 = c(1, 2, 4),
   z2 = c(4, 5, 7)
@@ -201,7 +201,7 @@ left_join(test, test2, by = join_by(x, y1 == y2))
 left_join(test, test2, by = c("x", "y1" = "y2"))
 
 # we can customize the suffix of common column names not used to join
-test2 <- polars::pl$DataFrame(
+test2 <- polars0::pl$DataFrame(
   x = c(1, 2, 4),
   y1 = c(1, 2, 4),
   z = c(4, 5, 7)
@@ -210,13 +210,13 @@ test2 <- polars::pl$DataFrame(
 left_join(test, test2, by = "x", suffix = c("_left", "_right"))
 
 # the argument "relationship" ensures the join matches the expectation
-country <- polars::pl$DataFrame(
+country <- polars0::pl$DataFrame(
   iso = c("FRA", "DEU"),
   value = 1:2
 )
 country
 
-country_year <- polars::pl$DataFrame(
+country_year <- polars0::pl$DataFrame(
   iso = rep(c("FRA", "DEU"), each = 2),
   year = rep(2019:2020, 2),
   value2 = 3:6
