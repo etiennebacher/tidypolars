@@ -52,14 +52,16 @@
 <span>  include_header <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  separator <span class="op">=</span> <span class="st">","</span>,</span>
 <span>  line_terminator <span class="op">=</span> <span class="st">"\n"</span>,</span>
-<span>  quote <span class="op">=</span> <span class="st">"\""</span>,</span>
+<span>  quote_char <span class="op">=</span> <span class="st">"\""</span>,</span>
 <span>  batch_size <span class="op">=</span> <span class="fl">1024</span>,</span>
 <span>  datetime_format <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  date_format <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  time_format <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  float_precision <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  null_values <span class="op">=</span> <span class="st">""</span>,</span>
-<span>  quote_style <span class="op">=</span> <span class="st">"necessary"</span></span>
+<span>  null_value <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  quote_style <span class="op">=</span> <span class="st">"necessary"</span>,</span>
+<span>  <span class="va">quote</span>,</span>
+<span>  <span class="va">null_values</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -96,7 +98,7 @@ output.</p></dd>
 <dd><p>String used to end each row.</p></dd>
 
 
-<dt id="arg-quote">quote<a class="anchor" aria-label="anchor" href="#arg-quote"></a></dt>
+<dt id="arg-quote-char">quote_char<a class="anchor" aria-label="anchor" href="#arg-quote-char"></a></dt>
 <dd><p>Byte to use as quoting character.</p></dd>
 
 
@@ -126,7 +128,7 @@ Rust crate.</p></dd>
 Float32 and Float64 datatypes.</p></dd>
 
 
-<dt id="arg-null-values">null_values<a class="anchor" aria-label="anchor" href="#arg-null-values"></a></dt>
+<dt id="arg-null-value">null_value<a class="anchor" aria-label="anchor" href="#arg-null-value"></a></dt>
 <dd><p>A string representing null values (defaulting to the empty
 string).</p></dd>
 
@@ -144,6 +146,16 @@ then quotes will be used even if they aren`t strictly necessary.</p></li>
 <li><p><code>"never"</code>: This never puts quotes around fields, even if that results in
 invalid CSV data (e.g. by not quoting strings containing the separator).</p></li>
 </ul></dd>
+
+
+<dt id="arg-quote">quote<a class="anchor" aria-label="anchor" href="#arg-quote"></a></dt>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Deprecated, use <code>quote_char</code>
+instead.</p></dd>
+
+
+<dt id="arg-null-values">null_values<a class="anchor" aria-label="anchor" href="#arg-null-values"></a></dt>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Deprecated, use
+<code>null_value</code> instead.</p></dd>
 
 </dl></div>
     <div class="section level2">

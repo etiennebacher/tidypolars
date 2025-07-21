@@ -39,6 +39,53 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
+<ul><li>
+<code>tidypolars</code> requires <code>polars</code> &gt;= 1.0.0. This release of <code>polars</code> contains many breaking changes. Those should be invisible to <code>tidypolars</code> users, with the exception of deprecation messages (see below). However, if your code contains user-defined functions that use <code>polars</code> syntax, you may need to revise those (<a href="https://github.com/etiennebacher/tidypolars/issues/194" class="external-link">#194</a>).</li>
+</ul><div class="section level3">
+<h3 id="deprecations-and-breaking-changes-development-version">Deprecations and breaking changes<a class="anchor" aria-label="anchor" href="#deprecations-and-breaking-changes-development-version"></a></h3>
+<ul><li>
+<p>The following arguments are deprecated and will be removed in a future version. The recommended replacement is indicated on the right of the arrow (<a href="https://github.com/etiennebacher/tidypolars/issues/194" class="external-link">#194</a>):</p>
+<ul><li>in <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code>: <code>streaming</code> -&gt; <code>engine</code>;</li>
+<li>in <code><a href="../reference/from_csv.html">read_csv_polars()</a></code> and <code><a href="../reference/from_csv.html">scan_csv_polars()</a></code>:
+<ul><li>
+<code>dtypes</code> -&gt; <code>schema_overrides</code>
+</li>
+<li>
+<code>reuse_downloaded</code> -&gt; no replacement</li>
+</ul></li>
+<li>in <code>read_ndjson_polars</code> and <code><a href="../reference/from_ndjson.html">scan_ndjson_polars()</a></code>:
+<ul><li>
+<code>reuse_downloaded</code> -&gt; no replacement</li>
+</ul></li>
+<li>in <code>read_ipc_polars</code> and <code><a href="../reference/from_ipc.html">scan_ipc_polars()</a></code>:
+<ul><li>
+<code>memory_map</code> -&gt; no replacement</li>
+</ul></li>
+<li>in <code><a href="../reference/write_csv_polars.html">write_csv_polars()</a></code> and <code><a href="../reference/sink_csv.html">sink_csv()</a></code>:
+<ul><li>
+<code>null_values</code> -&gt; <code>null_value</code>
+</li>
+<li>
+<code>quote</code> -&gt; <code>quote_char</code>
+</li>
+</ul></li>
+<li>in <code><a href="../reference/write_ndjson_polars.html">write_ndjson_polars()</a></code>:
+<ul><li>
+<code>pretty</code> -&gt; no replacement</li>
+<li>
+<code>row_oriented</code> -&gt; no replacement</li>
+</ul></li>
+<li>in <code><a href="../reference/write_ipc_polars.html">write_ipc_polars()</a></code>:
+<ul><li>
+<code>future</code> -&gt; <code>compat_level</code>
+</li>
+</ul></li>
+</ul></li>
+<li><p><code><a href="../reference/fetch.html">fetch()</a></code> is deprecated, use <code><a href="https://rdrr.io/r/utils/head.html" class="external-link">head()</a></code> before <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code> instead (<a href="https://github.com/etiennebacher/tidypolars/issues/194" class="external-link">#194</a>).</p></li>
+<li><p><code><a href="https://dplyr.tidyverse.org/reference/group_data.html" class="external-link">group_keys()</a></code> now returns a <code>tibble</code> and not a <code>data.frame</code> anymore (<a href="https://github.com/etiennebacher/tidypolars/issues/194" class="external-link">#194</a>).</p></li>
+<li><p><code><a href="https://lubridate.tidyverse.org/reference/make_datetime.html" class="external-link">lubridate::make_date()</a></code>, <code><a href="https://lubridate.tidyverse.org/reference/make_datetime.html" class="external-link">lubridate::make_datetime()</a></code>, and <code><a href="https://rdrr.io/r/base/ISOdatetime.html" class="external-link">ISOdatetime()</a></code> now error if some components go over their expected range, e.g. <code>month = 20</code> or <code>hour = 25</code>. Before, those functions were returning <code>NA</code> in this situation (<a href="https://github.com/etiennebacher/tidypolars/issues/194" class="external-link">#194</a>).</p></li>
+<li><p><code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> returns an additional row for the 50% percentile (<a href="https://github.com/etiennebacher/tidypolars/issues/194" class="external-link">#194</a>).</p></li>
+</ul></div>
 <div class="section level3">
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
 <ul><li>
@@ -412,7 +459,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="new-features-0-3-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-0"></a></h3>
-<ul><li><p>New function <code><a href="../reference/distinct.RPolarsDataFrame.html">duplicated_rows()</a></code> that is the opposite of <code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/50" class="external-link">#50</a>).</p></li>
+<ul><li><p>New function <code><a href="../reference/distinct.polars_data_frame.html">duplicated_rows()</a></code> that is the opposite of <code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/50" class="external-link">#50</a>).</p></li>
 <li><p>New argument <code>.id</code> in <code><a href="../reference/bind_rows_polars.html">bind_rows_polars()</a></code>.</p></li>
 <li><p><code><a href="../reference/bind_rows_polars.html">bind_rows_polars()</a></code> can now bind Data/LazyFrames that don’t have the same schema. Columns will be upcast to common types if necessary. Unknown columns will be filled with <code>NA</code>.</p></li>
 </ul></div>

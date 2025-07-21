@@ -91,50 +91,59 @@ scan_parquet_polars() imports the data as a Polars LazyFrame."><meta property="o
 
 
 <dl><dt id="arg-source">source<a class="anchor" aria-label="anchor" href="#arg-source"></a></dt>
-<dd><p>Path to a file. You can use globbing with <code>*</code> to scan/read multiple
-files in the same directory (see examples).</p></dd>
+<dd><p>Path(s) to a file or directory. When needing to authenticate
+for scanning cloud locations, see the <code>storage_options</code> parameter.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Ignored.</p></dd>
+<dd><p>These dots are for future extensions and must be empty.</p></dd>
 
 
 <dt id="arg-n-rows">n_rows<a class="anchor" aria-label="anchor" href="#arg-n-rows"></a></dt>
-<dd><p>Maximum number of rows to read.</p></dd>
+<dd><p>Stop reading from the source after reading <code>n_rows</code>.</p></dd>
 
 
 <dt id="arg-row-index-name">row_index_name<a class="anchor" aria-label="anchor" href="#arg-row-index-name"></a></dt>
 <dd><p>If not <code>NULL</code>, this will insert a row index column with
-the given name into the DataFrame.</p></dd>
+the given name.</p></dd>
 
 
 <dt id="arg-row-index-offset">row_index_offset<a class="anchor" aria-label="anchor" href="#arg-row-index-offset"></a></dt>
 <dd><p>Offset to start the row index column (only used if
-the name is set).</p></dd>
+the name is set by <code>row_index_name</code>).</p></dd>
 
 
 <dt id="arg-parallel">parallel<a class="anchor" aria-label="anchor" href="#arg-parallel"></a></dt>
-<dd><p>This determines the direction of parallelism. <code>"auto"</code> will
-try to determine the optimal direction. Can be <code>"auto"</code>, <code>"columns"</code>,
-<code>"row_groups"</code>, <code>"prefiltered"</code>, or <code>"none"</code>. See 'Details'.</p></dd>
+<dd><p>This determines the direction and strategy of parallelism.</p><ul><li><p><code>"auto"</code> (default): Will try to determine the optimal direction.</p></li>
+<li><p><code>"prefiltered"</code>: <a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+Strategy first evaluates the pushed-down predicates in parallel and
+determines a mask of which rows to read. Then, it parallelizes over both the
+columns and the row groups while filtering out rows that do not need to be
+read. This can provide significant speedups for large files (i.e. many
+row-groups) with a predicate that filters clustered rows or filters heavily.
+In other cases, prefiltered may slow down the scan compared other strategies.
+Falls back to <code>"auto"</code> if no predicate is given.</p></li>
+<li><p><code>"columns"</code>, <code>"row_groups"</code>: Use the specified direction.</p></li>
+<li><p><code>"none"</code>: No parallelism.</p></li>
+</ul></dd>
 
 
 <dt id="arg-hive-partitioning">hive_partitioning<a class="anchor" aria-label="anchor" href="#arg-hive-partitioning"></a></dt>
-<dd><p>Infer statistics and schema from Hive partitioned URL
-and use them to prune reads. If <code>NULL</code> (default), it is automatically
+<dd><p>Infer statistics and schema from Hive partitioned
+sources and use them to prune reads. If <code>NULL</code> (default), it is automatically
 enabled when a single directory is passed, and otherwise disabled.</p></dd>
 
 
 <dt id="arg-hive-schema">hive_schema<a class="anchor" aria-label="anchor" href="#arg-hive-schema"></a></dt>
-<dd><p>A list containing the column names and data types of the
-columns by which the data is partitioned, e.g.
-<code>list(a = pl$String, b = pl$Float32)</code>. If <code>NULL</code> (default), the schema of
-the Hive partitions is inferred.</p></dd>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+A list containing the column names and data types of the columns by
+which the data is partitioned, e.g. <code>list(a = pl$String, b = pl$Float32)</code>.
+If <code>NULL</code> (default), the schema of the Hive partitions is inferred.</p></dd>
 
 
 <dt id="arg-try-parse-hive-dates">try_parse_hive_dates<a class="anchor" aria-label="anchor" href="#arg-try-parse-hive-dates"></a></dt>
-<dd><p>Whether to try parsing hive values as date/datetime
-types.</p></dd>
+<dd><p>Whether to try parsing hive values as date /
+datetime types.</p></dd>
 
 
 <dt id="arg-glob">glob<a class="anchor" aria-label="anchor" href="#arg-glob"></a></dt>
@@ -142,22 +151,29 @@ types.</p></dd>
 
 
 <dt id="arg-rechunk">rechunk<a class="anchor" aria-label="anchor" href="#arg-rechunk"></a></dt>
-<dd><p>In case of reading multiple files via a glob pattern, rechunk
-the final DataFrame into contiguous memory chunks.</p></dd>
+<dd><p>Reallocate to contiguous memory when all chunks/files are parsed.</p></dd>
 
 
 <dt id="arg-low-memory">low_memory<a class="anchor" aria-label="anchor" href="#arg-low-memory"></a></dt>
-<dd><p>Reduce memory usage (will yield a lower performance).</p></dd>
+<dd><p>Reduce memory pressure at the expense of performance</p></dd>
 
 
 <dt id="arg-storage-options">storage_options<a class="anchor" aria-label="anchor" href="#arg-storage-options"></a></dt>
-<dd><p>Experimental. List of options necessary to scan
-parquet files from different cloud storage providers (GCP, AWS, Azure,
-HuggingFace). See the 'Details' section.</p></dd>
+<dd><p>Named vector containing options that indicate how to
+connect to a cloud provider. The cloud providers currently supported are
+AWS, GCP, and Azure.
+See supported keys here:</p><ul><li><p><a href="https://docs.rs/object_store/latest/object_store/aws/enum.AmazonS3ConfigKey.html" class="external-link">aws</a></p></li>
+<li><p><a href="https://docs.rs/object_store/latest/object_store/gcp/enum.GoogleConfigKey.html" class="external-link">gcp</a></p></li>
+<li><p><a href="https://docs.rs/object_store/latest/object_store/azure/enum.AzureConfigKey.html" class="external-link">azure</a></p></li>
+<li><p>Hugging Face (<code>hf://</code>): Accepts an API key under the token parameter
+<code>c(token = YOUR_TOKEN)</code> or by setting the <code>HF_TOKEN</code> environment
+variable.</p></li>
+</ul><p>If <code>storage_options</code> is not provided, Polars will try to infer the
+information from environment variables.</p></dd>
 
 
 <dt id="arg-use-statistics">use_statistics<a class="anchor" aria-label="anchor" href="#arg-use-statistics"></a></dt>
-<dd><p>Use statistics in the parquet file to determine if pages
+<dd><p>Use statistics in the parquet to determine if pages
 can be skipped from reading.</p></dd>
 
 
@@ -170,60 +186,6 @@ can be skipped from reading.</p></dd>
 with this name.</p></dd>
 
 </dl></div>
-    <div class="section level2">
-    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-
-<div class="section">
-<h3 id="on-parallel-strategies">On parallel strategies<a class="anchor" aria-label="anchor" href="#on-parallel-strategies"></a></h3>
-
-
-<p>The prefiltered strategy first evaluates the pushed-down predicates in
-parallel and determines a mask of which rows to read. Then, it parallelizes
-over both the columns and the row groups while filtering out rows that do not
-need to be read. This can provide significant speedups for large files (i.e.
-many row-groups) with a predicate that filters clustered rows or filters
-heavily. In other cases, prefiltered may slow down the scan compared other
-strategies.</p>
-<p>The prefiltered settings falls back to auto if no predicate is given.</p>
-</div>
-
-<div class="section">
-<h3 id="connecting-to-cloud-providers">Connecting to cloud providers<a class="anchor" aria-label="anchor" href="#connecting-to-cloud-providers"></a></h3>
-
-
-<p>Polars supports scanning parquet files from different cloud providers.
-The cloud providers currently supported are AWS, GCP, and Azure.
-The supported keys to pass to the <code>storage_options</code> argument can be found
-here:</p><ul><li><p><a href="https://docs.rs/object_store/latest/object_store/aws/enum.AmazonS3ConfigKey.html" class="external-link">aws</a></p></li>
-<li><p><a href="https://docs.rs/object_store/latest/object_store/gcp/enum.GoogleConfigKey.html" class="external-link">gcp</a></p></li>
-<li><p><a href="https://docs.rs/object_store/latest/object_store/azure/enum.AzureConfigKey.html" class="external-link">azure</a></p></li>
-</ul><p>Currently it is impossible to scan public parquet files from GCP without
-a valid service account. Be sure to always include a service account in the
-<code>storage_options</code> argument.</p>
-</div>
-
-<div class="section">
-<h3 id="scanning-from-huggingface">Scanning from HuggingFace<a class="anchor" aria-label="anchor" href="#scanning-from-huggingface"></a></h3>
-
-
-<p>It is possible to scan data stored on HuggingFace using a path starting with
-<code>hf://</code>. The <code>hf://</code> path format is defined as
-<code>hf://BUCKET/REPOSITORY@REVISION/PATH</code>, where:</p><ul><li><p>BUCKET is one of datasets or spaces</p></li>
-<li><p>REPOSITORY is the location of the repository. this is usually in the
-format of username/repo_name. A branch can also be optionally specified by
-appending <code>@branch</code>.</p></li>
-<li><p>REVISION is the name of the branch (or commit) to use. This is optional
-and defaults to main if not given.</p></li>
-<li><p>PATH is a file or directory path, or a glob pattern from the repository
-root.</p></li>
-</ul><p>A Hugging Face API key can be passed to access private locations using
-either of the following methods:</p><ul><li><p>Passing a token in storage_options to the scan function, e.g.
-<code>scan_parquet(..., storage_options = list(token = &lt;your HF token&gt;))</code></p></li>
-<li><p>Setting the HF_TOKEN environment variable, e.g.
-<code>Sys.setenv(HF_TOKEN = &lt;your HF token&gt;)</code>.</p></li>
-</ul></div>
-
-    </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

@@ -105,7 +105,7 @@ such as changing the default behavior when converting Int64 values to R:
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">##### Unknown arguments</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>tidypolars_unknown_args <span class="op">=</span> <span class="st">"warn"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://pola-rs.github.io/r-polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://pola-rs.github.io/r-polars/man/pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># The default is to warn the user</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">test</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">x</span>, prob <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -117,11 +117,11 @@ such as changing the default behavior when converting Int64 values to R:
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2.0 ┆ 2.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2.0 ┆ 3.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 3.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.0 ┆ 5.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 3.0 ┆ 1.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.0 ┆ 3.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 3.0 ┆ 3.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 3.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┘</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># But one can make this stricter and throw an error when this happens</span></span></span>
@@ -137,7 +137,7 @@ such as changing the default behavior when converting Int64 values to R:
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">##### Fallback to R</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://pola-rs.github.io/r-polars/man/pl_pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://pola-rs.github.io/r-polars/man/pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># The default is to error because mad() isn't translated internally</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">test</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/mad.html" class="external-link">mad</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -154,6 +154,8 @@ such as changing the default behavior when converting Int64 values to R:
 <span class="r-in"><span><span class="co"># above)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>tidypolars_fallback_to_r <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">test</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/mad.html" class="external-link">mad</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> The `blob` package is not installed.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> The blob class vector will not be printed correctly.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (5, 2)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬────────┐</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ x2     │</span>

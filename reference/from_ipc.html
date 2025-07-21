@@ -51,24 +51,24 @@ scan_ipc_polars() imports the data as a Polars LazyFrame."><meta property="og:im
 <span>  <span class="va">source</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  n_rows <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  memory_map <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  row_index_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_index_offset <span class="op">=</span> <span class="fl">0L</span>,</span>
 <span>  rechunk <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  include_file_paths <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  include_file_paths <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">memory_map</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">scan_ipc_polars</span><span class="op">(</span></span>
 <span>  <span class="va">source</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  n_rows <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  memory_map <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  row_index_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_index_offset <span class="op">=</span> <span class="fl">0L</span>,</span>
 <span>  rechunk <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  include_file_paths <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  include_file_paths <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">memory_map</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -77,37 +77,30 @@ scan_ipc_polars() imports the data as a Polars LazyFrame."><meta property="og:im
 
 
 <dl><dt id="arg-source">source<a class="anchor" aria-label="anchor" href="#arg-source"></a></dt>
-<dd><p>Path to a file. You can use globbing with <code>*</code> to scan/read multiple
-files in the same directory (see examples).</p></dd>
+<dd><p>Path(s) to a file or directory. When needing to authenticate
+for scanning cloud locations, see the <code>storage_options</code> parameter.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Ignored.</p></dd>
+<dd><p>These dots are for future extensions and must be empty.</p></dd>
 
 
 <dt id="arg-n-rows">n_rows<a class="anchor" aria-label="anchor" href="#arg-n-rows"></a></dt>
-<dd><p>Maximum number of rows to read.</p></dd>
-
-
-<dt id="arg-memory-map">memory_map<a class="anchor" aria-label="anchor" href="#arg-memory-map"></a></dt>
-<dd><p>A logical. If <code>TRUE</code>, try to memory map the file.
-This can greatly improve performance on repeated queries as the OS may cache pages.
-Only uncompressed Arrow IPC files can be memory mapped.</p></dd>
+<dd><p>Stop reading from the source after reading <code>n_rows</code>.</p></dd>
 
 
 <dt id="arg-row-index-name">row_index_name<a class="anchor" aria-label="anchor" href="#arg-row-index-name"></a></dt>
 <dd><p>If not <code>NULL</code>, this will insert a row index column with
-the given name into the DataFrame.</p></dd>
+the given name.</p></dd>
 
 
 <dt id="arg-row-index-offset">row_index_offset<a class="anchor" aria-label="anchor" href="#arg-row-index-offset"></a></dt>
 <dd><p>Offset to start the row index column (only used if
-the name is set).</p></dd>
+the name is set by <code>row_index_name</code>).</p></dd>
 
 
 <dt id="arg-rechunk">rechunk<a class="anchor" aria-label="anchor" href="#arg-rechunk"></a></dt>
-<dd><p>In case of reading multiple files via a glob pattern, rechunk
-the final DataFrame into contiguous memory chunks.</p></dd>
+<dd><p>Reallocate to contiguous memory when all chunks/files are parsed.</p></dd>
 
 
 <dt id="arg-cache">cache<a class="anchor" aria-label="anchor" href="#arg-cache"></a></dt>
@@ -115,14 +108,15 @@ the final DataFrame into contiguous memory chunks.</p></dd>
 
 
 <dt id="arg-include-file-paths">include_file_paths<a class="anchor" aria-label="anchor" href="#arg-include-file-paths"></a></dt>
-<dd><p>Character value indicating the column name that will
-include the path of the source file(s).</p></dd>
+<dd><p>Include the path of the source file(s) as a column
+with this name.</p></dd>
+
+
+<dt id="arg-memory-map">memory_map<a class="anchor" aria-label="anchor" href="#arg-memory-map"></a></dt>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Deprecated
+with no replacement.</p></dd>
 
 </dl></div>
-    <div class="section level2">
-    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Hive-style partitioning is not supported yet.</p>
-    </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

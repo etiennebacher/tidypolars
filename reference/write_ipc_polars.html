@@ -49,7 +49,8 @@
 <span>  <span class="va">file</span>,</span>
 <span>  compression <span class="op">=</span> <span class="st">"uncompressed"</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  future <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  compat_level <span class="op">=</span> <span class="st">"newest"</span>,</span>
+<span>  <span class="va">future</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -76,9 +77,20 @@ for fast compression/decompression.</p></dd>
 <dd><p>Ignored.</p></dd>
 
 
+<dt id="arg-compat-level">compat_level<a class="anchor" aria-label="anchor" href="#arg-compat-level"></a></dt>
+<dd><p>Determines the compatibility level when exporting Polars'
+internal data structures. When specifying a new compatibility level, Polars
+exports its internal data structures that might not be interpretable by other
+Arrow implementations. The level can be specified as the name (e.g.,
+<code>"newest"</code>) or as a scalar integer (currently, 0 or 1 is supported).</p><ul><li><p><code>"newest"</code> (default): Use the highest level, currently same as 1 (Low
+compatibility).</p></li>
+<li><p><code>"oldest"</code>: Same as 0 (High compatibility).</p></li>
+</ul></dd>
+
+
 <dt id="arg-future">future<a class="anchor" aria-label="anchor" href="#arg-future"></a></dt>
-<dd><p>Setting this to <code>TRUE</code> will write Polars' internal data
-structures that might not be available by other Arrow implementations.</p></dd>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Deprecated, use
+<code>compat_level</code> instead.</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -198,7 +198,7 @@ returns a Polars expression, you have to provide a <code>pl$col()</code>
 call:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pl_standardize</span><span class="op">(</span><span class="va">pl</span><span class="op">$</span><span class="fu">col</span><span class="op">(</span><span class="st">"mpg"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; polars Expr: [([(col("mpg")) - (col("mpg").mean())]) // (col("mpg").std())]</span></span></code></pre></div>
+<span><span class="co">#&gt; [([(col("mpg")) - (col("mpg").mean())]) / (col("mpg").std())]</span></span></code></pre></div>
 <p>This function correctly returns a Polars expression, so we can now
 use it like any other function:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -357,9 +357,9 @@ actual computation performed by <code>polars</code>.</p>
 </h3>
 <table class="table">
 <colgroup>
-<col width="5%">
+<col width="4%">
 <col width="7%">
-<col width="86%">
+<col width="87%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">Package</th>
@@ -485,7 +485,10 @@ actual computation performed by <code>polars</code>.</p>
 <tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>ISOdatetime</code></td>
-<td align="left"></td>
+<td align="left">In <code>base</code>, when there is an overflow in some
+of the components (for example <code>hours = 25</code> or
+<code>month = 15</code>), then it returns <code>NA</code>. In Polars,
+this errors.</td>
 </tr>
 <tr class="odd">
 <td align="left"><code>base</code></td>
@@ -788,15 +791,18 @@ a single column, while <code><a href="https://lubridate.tidyverse.org/reference/
 <tr class="even">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>make_date</code></td>
-<td align="left"></td>
+<td align="left">In <code>lubridate</code>, when there is an overflow in
+some of the components (for example <code>hours = 25</code> or
+<code>month = 15</code>), then it is automatically converted to the
+higher unit (for example 1 day and 1h). In Polars, this errors.</td>
 </tr>
 <tr class="odd">
 <td align="left"><code>lubridate</code></td>
 <td align="left"><code>make_datetime</code></td>
-<td align="left">In <code><a href="https://lubridate.tidyverse.org/reference/make_datetime.html" class="external-link">lubridate::make_datetime()</a></code>, when there
-is an overflow (for example <code>hours = 25</code>), then it is
-automatically converted to the higher unit (for example 1 day and 1h).
-In Polars, this returns <code>NA</code>.</td>
+<td align="left">In <code>lubridate</code>, when there is an overflow in
+some of the components (for example <code>hours = 25</code> or
+<code>month = 15</code>), then it is automatically converted to the
+higher unit (for example 1 day and 1h). In Polars, this errors.</td>
 </tr>
 <tr class="even">
 <td align="left"><code>lubridate</code></td>
