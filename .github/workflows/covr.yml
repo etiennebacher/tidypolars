@@ -46,9 +46,7 @@ jobs:
       - name: Package Dependencies
         run: |
           Sys.setenv(NOT_CRAN = "true") # Enable installation with pre-built Rust library binary, or enable Rust caching
-          # TODO: use the community multiverse once polars 1.0.0 is released
-          # remotes::install_deps(".", repos = c("https://community.r-multiverse.org", getOption("repos")), dependencies=TRUE, method = "libcurl")
-          remotes::install_deps(".", repos = c("https://rpolars.r-universe.dev", getOption("repos")), dependencies=TRUE, method = "libcurl")
+          remotes::install_deps(".", repos = c("https://community.r-multiverse.org", getOption("repos")), dependencies=TRUE, method = "libcurl")
         shell: Rscript {0}
 
       - name: Test coverage
