@@ -25,24 +25,24 @@
 #' rename_with(pl_test_2, function(x) tolower(gsub(".", "_", x, fixed = TRUE)))
 #'
 #' rename_with(pl_test_2, \(x) tolower(gsub(".", "_", x, fixed = TRUE)))
-rename.RPolarsDataFrame <- function(.data, ...) {
+rename.polars_data_frame <- function(.data, ...) {
   dots <- get_dots(...)
   dots <- lapply(dots, rlang::as_name)
   # polars wants a list with old names as names and new names as values
   new_names <- as.list(names(dots))
   names(new_names) <- dots
-  out <- .data$rename(new_names)
+  out <- .data$rename(!!!new_names)
   add_tidypolars_class(out)
 }
 
-#' @rdname rename.RPolarsDataFrame
+#' @rdname rename.polars_data_frame
 #' @export
-rename.RPolarsLazyFrame <- rename.RPolarsDataFrame
+rename.polars_lazy_frame <- rename.polars_data_frame
 
-#' @rdname rename.RPolarsDataFrame
+#' @rdname rename.polars_data_frame
 #' @export
 
-rename_with.RPolarsDataFrame <- function(
+rename_with.polars_data_frame <- function(
   .data,
   .fn,
   .cols = tidyselect::everything(),
@@ -53,10 +53,10 @@ rename_with.RPolarsDataFrame <- function(
   # polars wants a list with old names as names and new names as values
   mapping <- as.list(new)
   names(mapping) <- to_replace
-  out <- .data$rename(mapping)
+  out <- .data$rename(!!!mapping)
   add_tidypolars_class(out)
 }
 
-#' @rdname rename.RPolarsDataFrame
+#' @rdname rename.polars_data_frame
 #' @export
-rename_with.RPolarsLazyFrame <- rename_with.RPolarsDataFrame
+rename_with.polars_lazy_frame <- rename_with.polars_data_frame

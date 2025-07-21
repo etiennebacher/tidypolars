@@ -4,7 +4,7 @@
 \alias{describe}
 \title{Summary statistics for a Polars DataFrame}
 \usage{
-describe(.data, percentiles = c(0.25, 0.75))
+describe(.data, percentiles = c(0.25, 0.5, 0.75))
 }
 \arguments{
 \item{.data}{A Polars DataFrame.}

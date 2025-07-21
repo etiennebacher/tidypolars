@@ -16,8 +16,8 @@ read_ndjson_polars(
   rechunk = FALSE,
   row_index_name = NULL,
   row_index_offset = 0,
-  reuse_downloaded = TRUE,
-  ignore_errors = FALSE
+  ignore_errors = FALSE,
+  reuse_downloaded
 )
 
 scan_ndjson_polars(
@@ -30,42 +30,40 @@ scan_ndjson_polars(
   rechunk = FALSE,
   row_index_name = NULL,
   row_index_offset = 0,
-  reuse_downloaded = TRUE,
-  ignore_errors = FALSE
+  ignore_errors = FALSE,
+  reuse_downloaded
 )
 }
 \arguments{
-\item{source}{Path to a file or URL. It is possible to provide multiple paths
-provided that all NDJSON files have the same schema. It is not possible to
-provide several URLs.}
+\item{source}{Path(s) to a file or directory. When needing to authenticate
+for scanning cloud locations, see the \code{storage_options} parameter.}
 
-\item{...}{Ignored.}
+\item{...}{These dots are for future extensions and must be empty.}
 
-\item{infer_schema_length}{Maximum number of rows to read to infer the column
-types. If set to 0, all columns will be read as UTF-8. If \code{NULL}, a full
-table scan will be done (slow).}
+\item{infer_schema_length}{The maximum number of rows to scan for schema
+inference. If \code{NULL}, the full data may be scanned (this is slow). Set
+\code{infer_schema = FALSE} to read all columns as \code{pl$String}.}
 
-\item{batch_size}{Number of rows that will be processed per thread.}
+\item{batch_size}{Number of rows to read in each batch.}
 
-\item{n_rows}{Maximum number of rows to read.}
+\item{n_rows}{Stop reading from the source after reading \code{n_rows}.}
 
-\item{low_memory}{Reduce memory usage (will yield a lower performance).}
+\item{low_memory}{Reduce memory pressure at the expense of performance.}
 
-\item{rechunk}{Reallocate to contiguous memory when all chunks / files are
-parsed.}
+\item{rechunk}{Reallocate to contiguous memory when all chunks/files are parsed.}
 
 \item{row_index_name}{If not \code{NULL}, this will insert a row index column with
-the given name into the DataFrame.}
+the given name.}
 
 \item{row_index_offset}{Offset to start the row index column (only used if
-the name is set).}
-
-\item{reuse_downloaded}{If \code{TRUE}(default) and a URL was provided, cache the
-downloaded files in session for an easy reuse.}
+the name is set by \code{row_index_name}).}
 
 \item{ignore_errors}{Keep reading the file even if some lines yield errors.
-You can also use \code{infer_schema_length = 0} to read all columns as UTF8 to
+You can also use \code{infer_schema = FALSE} to read all columns as UTF8 to
 check which values might cause an issue.}
+
+\item{reuse_downloaded}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+Deprecated with no replacement.}
 }
 \description{
 \code{read_ndjson_polars()} imports the data as a Polars DataFrame.

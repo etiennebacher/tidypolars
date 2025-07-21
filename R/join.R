@@ -30,7 +30,7 @@
 #' @param suffix If there are non-joined duplicate variables in `x` and `y`,
 #' these suffixes will be added to the output to disambiguate them. Should be a
 #' character vector of length 2.
-#' @inheritParams slice_tail.RPolarsDataFrame
+#' @inheritParams slice_tail.polars_data_frame
 #' @param na_matches Should two `NA` values match?
 #' * `"na"`, the default, treats two `NA` values as equal.
 #' * `"never"` treats two `NA` values as different and will never match them
@@ -115,7 +115,7 @@
 #'
 #' # A correct expectation would be "one-to-many":
 #' left_join(country, country_year, join_by(iso), relationship = "one-to-many")
-left_join.RPolarsDataFrame <- function(
+left_join.polars_data_frame <- function(
   x,
   y,
   by = NULL,
@@ -141,7 +141,7 @@ left_join.RPolarsDataFrame <- function(
 
 #' @rdname mutating-joins
 #' @export
-right_join.RPolarsDataFrame <- function(
+right_join.polars_data_frame <- function(
   x,
   y,
   by = NULL,
@@ -167,7 +167,7 @@ right_join.RPolarsDataFrame <- function(
 
 #' @rdname mutating-joins
 #' @export
-full_join.RPolarsDataFrame <- function(
+full_join.polars_data_frame <- function(
   x,
   y,
   by = NULL,
@@ -193,7 +193,7 @@ full_join.RPolarsDataFrame <- function(
 
 #' @rdname mutating-joins
 #' @export
-inner_join.RPolarsDataFrame <- function(
+inner_join.polars_data_frame <- function(
   x,
   y,
   by = NULL,
@@ -219,19 +219,19 @@ inner_join.RPolarsDataFrame <- function(
 
 #' @rdname mutating-joins
 #' @export
-left_join.RPolarsLazyFrame <- left_join.RPolarsDataFrame
+left_join.polars_lazy_frame <- left_join.polars_data_frame
 
 #' @rdname mutating-joins
 #' @export
-right_join.RPolarsLazyFrame <- right_join.RPolarsDataFrame
+right_join.polars_lazy_frame <- right_join.polars_data_frame
 
 #' @rdname mutating-joins
 #' @export
-full_join.RPolarsLazyFrame <- full_join.RPolarsDataFrame
+full_join.polars_lazy_frame <- full_join.polars_data_frame
 
 #' @rdname mutating-joins
 #' @export
-inner_join.RPolarsLazyFrame <- inner_join.RPolarsDataFrame
+inner_join.polars_lazy_frame <- inner_join.polars_data_frame
 
 #' Filtering joins
 #'
@@ -241,9 +241,9 @@ inner_join.RPolarsLazyFrame <- inner_join.RPolarsDataFrame
 #' * `anti_join()` return all rows from `x` without a match in `y`.
 #'
 #' @param x,y Two Polars Data/LazyFrames
-#' @inheritParams left_join.RPolarsDataFrame
+#' @inheritParams left_join.polars_data_frame
 #'
-#' @inheritSection left_join.RPolarsDataFrame Unknown arguments
+#' @inheritSection left_join.polars_data_frame Unknown arguments
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -268,7 +268,7 @@ inner_join.RPolarsLazyFrame <- inner_join.RPolarsDataFrame
 #'
 #' # only keep the rows of `test` that don't have matching keys in `test2`
 #' anti_join(test, test2, by = c("x", "y"))
-semi_join.RPolarsDataFrame <- function(
+semi_join.polars_data_frame <- function(
   x,
   y,
   by = NULL,
@@ -287,10 +287,10 @@ semi_join.RPolarsDataFrame <- function(
   )
 }
 
-#' @rdname semi_join.RPolarsDataFrame
+#' @rdname semi_join.polars_data_frame
 #' @export
 
-anti_join.RPolarsDataFrame <- function(
+anti_join.polars_data_frame <- function(
   x,
   y,
   by = NULL,
@@ -309,22 +309,22 @@ anti_join.RPolarsDataFrame <- function(
   )
 }
 
-#' @rdname semi_join.RPolarsDataFrame
+#' @rdname semi_join.polars_data_frame
 #' @export
-semi_join.RPolarsLazyFrame <- semi_join.RPolarsDataFrame
+semi_join.polars_lazy_frame <- semi_join.polars_data_frame
 
-#' @rdname semi_join.RPolarsDataFrame
+#' @rdname semi_join.polars_data_frame
 #' @export
-anti_join.RPolarsLazyFrame <- anti_join.RPolarsDataFrame
+anti_join.polars_lazy_frame <- anti_join.polars_data_frame
 
 #' Cross join
 #'
 #' Cross joins match each row in `x` to every row in `y`, resulting in a dataset
 #' with `nrow(x) * nrow(y)` rows.
 #'
-#' @inheritParams left_join.RPolarsDataFrame
+#' @inheritParams left_join.polars_data_frame
 #'
-#' @inheritSection left_join.RPolarsDataFrame Unknown arguments
+#' @inheritSection left_join.polars_data_frame Unknown arguments
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -343,7 +343,7 @@ anti_join.RPolarsLazyFrame <- anti_join.RPolarsDataFrame
 #' test2
 #'
 #' cross_join(test, test2)
-cross_join.RPolarsDataFrame <- function(x, y, ..., suffix = c(".x", ".y")) {
+cross_join.polars_data_frame <- function(x, y, ..., suffix = c(".x", ".y")) {
   check_dots_empty_ignore(..., .unsupported = "copy")
   join_(
     x = x,
@@ -356,16 +356,16 @@ cross_join.RPolarsDataFrame <- function(x, y, ..., suffix = c(".x", ".y")) {
   )
 }
 
-#' @rdname cross_join.RPolarsDataFrame
+#' @rdname cross_join.polars_data_frame
 #' @export
-cross_join.RPolarsLazyFrame <- cross_join.RPolarsDataFrame
+cross_join.polars_lazy_frame <- cross_join.polars_data_frame
 
 join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
   all_df_or_lf <- all(
     vapply(
       list(x, y),
       inherits,
-      what = "RPolarsDataFrame",
+      what = "polars_data_frame",
       FUN.VALUE = logical(1L)
     )
   ) ||
@@ -373,7 +373,7 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
       vapply(
         list(x, y),
         inherits,
-        what = "RPolarsLazyFrame",
+        what = "polars_lazy_frame",
         FUN.VALUE = logical(1L)
       )
     )
@@ -409,9 +409,9 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
   }
 
   if (is.null(na_matches)) {
-    join_nulls <- FALSE
+    nulls_equal <- FALSE
   } else {
-    join_nulls <- switch(
+    nulls_equal <- switch(
       na_matches,
       "na" = TRUE,
       "never" = FALSE,
@@ -469,7 +469,7 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
       left_on = left_on,
       right_on = right_on,
       how = "left",
-      join_nulls = join_nulls,
+      nulls_equal = nulls_equal,
       validate = validate
     )
   } else {
@@ -478,7 +478,7 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
       left_on = left_on,
       right_on = right_on,
       how = how,
-      join_nulls = join_nulls,
+      nulls_equal = nulls_equal,
       validate = validate,
       coalesce = TRUE
     )
@@ -487,7 +487,7 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
   out <- if (length(dupes) > 0) {
     mapping <- as.list(c(paste0(dupes, suffix[1]), paste0(dupes, suffix[2])))
     names(mapping) <- c(dupes, paste0(dupes, "_right"))
-    out$rename(mapping)
+    out$rename(!!!mapping)
   } else {
     out
   }
@@ -531,21 +531,31 @@ eval_inequality_join <- function(x, y, how, by, suffix) {
     }
   })
 
+  # TODO: either remove the comment or use the arg "coalesce" if implemented
+  # https://github.com/pola-rs/polars/issues/22819
+  to_drop <- list()
+
   by3 <- lapply(seq_along(by$condition), function(i) {
     if (by$condition[i] == "==") {
+      # flir-ignore
+      to_drop <<- append(to_drop, by2$y[[i]])
       by2$x[[i]]$eq(by2$y[[i]])
     } else if (by$condition[i] == ">") {
       by2$x[[i]]$gt(by2$y[[i]])
     } else if (by$condition[i] == ">=") {
-      by2$x[[i]]$gt_eq(by2$y[[i]])
+      by2$x[[i]]$ge(by2$y[[i]])
     } else if (by$condition[i] == "<") {
       by2$x[[i]]$lt(by2$y[[i]])
     } else if (by$condition[i] == "<=") {
-      by2$x[[i]]$lt_eq(by2$y[[i]])
+      by2$x[[i]]$le(by2$y[[i]])
     }
   })
 
-  res <- x$join_where(y, by3, suffix = suffix[2])
+  res <- x$join_where(y, !!!by3, suffix = suffix[2])
+  # Same todo as above
+  if (length(to_drop) > 0) {
+    res <- res$drop(!!!to_drop)
+  }
   if (length(common_cols) > 0) {
     # Only keep common columns that were involved in inequality joins, otherwise
     # they just don't have a duplicate in the output
@@ -555,7 +565,7 @@ eval_inequality_join <- function(x, y, how, by, suffix) {
     )
     new_cols <- as.list(paste0(common_cols, suffix[1]))
     names(new_cols) <- common_cols
-    res <- res$rename(new_cols)
+    res <- res$rename(!!!new_cols)
   }
   res
 }

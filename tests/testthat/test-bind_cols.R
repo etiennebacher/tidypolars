@@ -152,8 +152,8 @@ test_that("arg .name_repair works", {
   withr::local_options(rlib_message_verbosity = "quiet")
 
   l <- list(
-    pl$DataFrame(x = 1)$rename(list(x = " ")),
-    pl$DataFrame(x = 1)$rename(list(x = " "))
+    pl$DataFrame(x = 1)$rename(x = " "),
+    pl$DataFrame(x = 1)$rename(x = " ")
   )
 
   expect_named(bind_cols_polars(l), c(" ...1", " ...2"))

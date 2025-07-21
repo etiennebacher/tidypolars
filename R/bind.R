@@ -78,10 +78,10 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
   }
 
   all_df <- all(
-    vapply(dots, inherits, "RPolarsDataFrame", FUN.VALUE = logical(1L))
+    vapply(dots, inherits, "polars_data_frame", FUN.VALUE = logical(1L))
   )
   all_lf <- all(
-    vapply(dots, inherits, "RPolarsLazyFrame", FUN.VALUE = logical(1L))
+    vapply(dots, inherits, "polars_lazy_frame", FUN.VALUE = logical(1L))
   )
 
   if (!(all_df || all_lf)) {
@@ -150,26 +150,27 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
 
           for (i in seq_along(dots)) {
             n_names <- ncol(dots[[i]])
-            dots[[i]] <- dots[[i]]$rename(mapping[1:n_names])
+            dots[[i]] <- dots[[i]]$rename(!!!mapping[1:n_names])
             mapping <- mapping[-(1:n_names)]
           }
         }
       }
 
-      if (inherits(dots[[1]], "RPolarsDataFrame")) {
-        pl$concat(dots, how = how)
+      if (is_polars_df(dots[[1]])) {
+        pl$concat(!!!dots, how = how)
       } else {
+        # TODO: remove this limitation
         if (length(dots) > 2) {
           cli_abort(
             "{.code bind_cols_polars()} doesn't work with more than two LazyFrames.",
             call = caller_env()
           )
         }
-        dots[[1]]$with_context(dots[[2]])$select(pl$all())
+        pl$concat(dots[[1]], dots[[2]], how = "horizontal")
       }
     },
     # default
-    pl$concat(dots, how = how)
+    pl$concat(!!!dots, how = how)
   )
   add_tidypolars_class(out)
 }

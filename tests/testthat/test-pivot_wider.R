@@ -64,18 +64,23 @@ test_that("names_prefix works", {
 })
 
 test_that("names_sep works", {
-  pl_us_rent_income <- as_polars_df(tidyr::us_rent_income)
-
-  sep <- pl_us_rent_income |>
-    pivot_wider(
-      names_from = variable,
-      names_sep = ".",
-      values_from = c(estimate, moe)
-    )
+  us_rent_income <- tidyr::us_rent_income
+  pl_us_rent_income <- as_polars_df(us_rent_income)
 
   expect_equal(
-    names(sep)[3:6],
-    c("estimate.income", "estimate.rent", "moe.income", "moe.rent")
+    us_rent_income |>
+      pivot_wider(
+        names_from = variable,
+        names_sep = ".",
+        values_from = c(estimate, moe)
+      ) |>
+      as.data.frame(),
+    pl_us_rent_income |>
+      pivot_wider(
+        names_from = variable,
+        names_sep = ".",
+        values_from = c(estimate, moe)
+      )
   )
 })
 

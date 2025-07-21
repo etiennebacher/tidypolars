@@ -4,7 +4,7 @@
 #'
 #' @param .data A Polars Data/LazyFrame
 #' @param var A quoted or unquoted variable name, or a variable index.
-#' @inheritParams slice_tail.RPolarsDataFrame
+#' @inheritParams slice_tail.polars_data_frame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE)
@@ -12,7 +12,7 @@
 #' pull(pl_test, Sepal.Length)
 #' pull(pl_test, "Sepal.Length")
 
-pull.RPolarsDataFrame <- function(.data, var, ...) {
+pull.polars_data_frame <- function(.data, var, ...) {
   var <- tidyselect_named_arg(.data, rlang::enquo(var))
   if (length(var) > 1) {
     cli_abort(
@@ -21,12 +21,12 @@ pull.RPolarsDataFrame <- function(.data, var, ...) {
   }
 
   out <- add_tidypolars_class(.data)
-  if (inherits(.data, "RPolarsLazyFrame")) {
+  if (is_polars_lf(.data)) {
     out <- out$collect()
   }
   as.data.frame(out$select(pl$col(var)))[[1]]
 }
 
-#' @rdname pull.RPolarsDataFrame
+#' @rdname pull.polars_data_frame
 #' @export
-pull.RPolarsLazyFrame <- pull.RPolarsDataFrame
+pull.polars_lazy_frame <- pull.polars_data_frame

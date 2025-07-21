@@ -16,6 +16,7 @@ fetch(
   comm_subexpr_elim = TRUE,
   cluster_with_columns = TRUE,
   no_optimization = FALSE,
+  engine = c("auto", "in-memory", "streaming"),
   streaming = FALSE
 )
 }
@@ -53,15 +54,23 @@ unions (default is \code{TRUE}).}
 \code{predicate_pushdown}, \code{projection_pushdown},  \code{slice_pushdown},
 \code{simplify_expression}. Default is \code{FALSE}.}
 
-\item{streaming}{Run parts of the query in a streaming fashion (this is in
-an alpha state). Default is \code{FALSE}.}
+\item{engine}{The engine name to use for processing the query. One of the
+followings:
+\itemize{
+\item \code{"auto"} (default): Select the engine automatically. The \code{"in-memory"}
+engine will be selected for most cases.
+\item \code{"in-memory"}: Use the in-memory engine.
+\item \code{"streaming"}: Use the streaming engine, usually faster and can handle
+larger-than-memory data.
+}}
+
+\item{streaming}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use \code{engine}
+instead.}
 }
 \description{
-Fetch is a way to collect only the first \code{n} rows of a LazyFrame. It is
-mainly used to test that a query runs as expected on a subset of the data
-before using \code{collect()} on the full query. Note that fetching \code{n} rows
-doesn't mean that the output will actually contain \code{n} rows, see the section
-'Details' for more information.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+Use \code{head()} before \code{collect()} to only get a subset of the data.
 }
 \details{
 The parameter \code{n_rows} indicates how many rows from the LazyFrame should be
@@ -70,20 +79,6 @@ be returned. For example, if the query contains a filter or join operations
 with other datasets, then the final number of rows can be lower than \code{n_rows}.
 On the other hand, appending some rows during the query can lead to an output
 that has more rows than \code{n_rows}.
-}
-\examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-dat_lazy <- polars::as_polars_df(iris)$lazy()
-
-# this will return 30 rows
-fetch(dat_lazy, 30)
-
-# this will return less than 30 rows because there are less than 30 matches
-# for this filter in the whole dataset
-dat_lazy |>
-  filter(Sepal.Length > 7.0) |>
-  fetch(30)
-\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=collect]{collect()}} for applying a lazy query on the full data.

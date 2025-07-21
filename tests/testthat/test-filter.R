@@ -264,7 +264,6 @@ test_that("works with a local variable defined in a function", {
 })
 
 test_that("error message when using =", {
-  withr::local_options(polars.do_not_repeat_call = TRUE)
   test <- polars::pl$DataFrame(chars = letters[1:3])
 
   expect_snapshot(

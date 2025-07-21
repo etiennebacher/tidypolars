@@ -1,4 +1,4 @@
-#' @inherit summary.RPolarsDataFrame title params
+#' @inherit summary.polars_data_frame title params
 #'
 #' @param .data A Polars DataFrame.
 #'
@@ -10,8 +10,8 @@
 #'
 #' @export
 
-describe <- function(.data, percentiles = c(0.25, 0.75)) {
-  if (!inherits(.data, "RPolarsDataFrame")) {
+describe <- function(.data, percentiles = c(0.25, 0.5, 0.75)) {
+  if (!is_polars_df(.data)) {
     cli_abort("{.code describe()} can only be used on a DataFrame.")
   }
   lifecycle::deprecate_warn(

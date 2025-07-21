@@ -3,22 +3,24 @@
     Code
       mutate(pl_iris, Sepal.Width = 1:2)
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $with_columns()
-         1: Encountered the following error in Rust-Polars:
-            	lengths don't match: unable to add a column of length 2 to a DataFrame of height 150
+      Error in `.data$with_columns()`:
+      ! Evaluation failed in `$with_columns()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! lengths don't match: unable to add a column of length 2 to a DataFrame of height 150
 
 ---
 
     Code
       mutate(pl_iris, Sepal.Width = letters[1:2])
     Condition
-      Error:
-      ! Execution halted with the following contexts
-         0: In R: in $with_columns()
-         1: Encountered the following error in Rust-Polars:
-            	lengths don't match: unable to add a column of length 2 to a DataFrame of height 150
+      Error in `.data$with_columns()`:
+      ! Evaluation failed in `$with_columns()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! lengths don't match: unable to add a column of length 2 to a DataFrame of height 150
 
 # custom function that doesn't return Polars expression
 

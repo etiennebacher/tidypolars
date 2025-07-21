@@ -31,7 +31,7 @@
 #'
 #' fill(pl_grouped, x, y, .direction = "down")
 
-fill.RPolarsDataFrame <- function(
+fill.polars_data_frame <- function(
   data,
   ...,
   .direction = c("down", "up", "downup", "updown")
@@ -46,7 +46,7 @@ fill.RPolarsDataFrame <- function(
   is_grouped <- !is.null(grps)
   mo <- attributes(data)$maintain_grp_order
 
-  expr <- polars::pl$col(vars)
+  expr <- polars::pl$col(!!!vars)
   expr <- switch(
     .direction,
     "down" = expr$fill_null(strategy = 'forward'),
@@ -60,7 +60,7 @@ fill.RPolarsDataFrame <- function(
   )
 
   if (is_grouped) {
-    expr <- expr$over(grps)
+    expr <- expr$over(!!!grps)
   }
 
   out <- if (is_grouped) {
@@ -74,4 +74,4 @@ fill.RPolarsDataFrame <- function(
 }
 
 #' @export
-fill.RPolarsLazyFrame <- fill.RPolarsDataFrame
+fill.polars_lazy_frame <- fill.polars_data_frame

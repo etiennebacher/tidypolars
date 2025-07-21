@@ -9,6 +9,7 @@ sink_ipc(
   path,
   ...,
   compression = "zstd",
+  compat_level = "newest",
   maintain_order = TRUE,
   type_coercion = TRUE,
   predicate_pushdown = TRUE,
@@ -29,6 +30,17 @@ sink_ipc(
 \code{"uncompressed"} or "lz4" or "zstd". \code{NULL} is equivalent to \code{"uncompressed"}.
 Choose "zstd" for good compression performance. Choose "lz4"
 for fast compression/decompression.}
+
+\item{compat_level}{Determines the compatibility level when exporting Polars'
+internal data structures. When specifying a new compatibility level, Polars
+exports its internal data structures that might not be interpretable by other
+Arrow implementations. The level can be specified as the name (e.g.,
+\code{"newest"}) or as a scalar integer (currently, 0 or 1 is supported).
+\itemize{
+\item \code{"newest"} (default): Use the highest level, currently same as 1 (Low
+compatibility).
+\item \code{"oldest"}: Same as 0 (High compatibility).
+}}
 
 \item{maintain_order}{Whether maintain the order the data was processed
 (default is \code{TRUE}). Setting this to \code{FALSE} will be slightly faster.}

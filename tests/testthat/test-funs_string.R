@@ -28,7 +28,7 @@ test_that("case functions work", {
     expect_equal(pol, res, info = i)
   }
 
-  if (polars::polars_info()$features$full_features) {
+  if (polars::polars_info()$features$nightly) {
     # in this case, the output when there's an apostrophe is different from stringr
     # and tools::toTitleCase()
     # https://github.com/pola-rs/polars/issues/18260
@@ -243,14 +243,16 @@ test_that("extract functions work", {
       test_df,
       foo = str_extract_all(x1, regex("[a-z]", ignore_case = TRUE))
     ) |>
-      pull(foo)
+      pull(foo),
+    ignore_attr = TRUE
   )
 
   expect_equal(
     mutate(test, foo = str_extract_all(x2, "[a-z]+")) |>
       pull(foo),
     mutate(test_df, foo = str_extract_all(x2, "[a-z]+")) |>
-      pull(foo)
+      pull(foo),
+    ignore_attr = TRUE
   )
 
   expect_warning(
@@ -1034,7 +1036,8 @@ test_that("split functions work", {
     mutate(test, foo = str_split(x8, "-")) |>
       pull(foo),
     mutate(test_df, foo = str_split(x8, "-")) |>
-      pull(foo)
+      pull(foo),
+    ignore_attr = TRUE
   )
 
   expect_warning(

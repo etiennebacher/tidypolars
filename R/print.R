@@ -13,9 +13,9 @@ print.tidypolars <- function(x, ...) {
   mo <- attributes(x)$maintain_grp_order %||% FALSE
   rowwise <- attributes(x)$grp_type == "rowwise"
 
-  x$print()
+  NextMethod("print", x)
 
-  if (is_grouped && inherits(x, "RPolarsDataFrame")) {
+  if (is_grouped && is_polars_df(x)) {
     n_groups <- x$group_by(grps)$agg(pl$lit(1))$height
     cat(
       paste0(

@@ -22,7 +22,7 @@
 #'   group_by(x1) |>
 #'   arrange(-x2, .by_group = TRUE)
 
-arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
+arrange.polars_data_frame <- function(.data, ..., .by_group = FALSE) {
   grps <- attributes(.data)$pl_grps
   mo <- attributes(data)$maintain_grp_order
   is_grouped <- !is.null(grps)
@@ -50,14 +50,14 @@ arrange.RPolarsDataFrame <- function(.data, ..., .by_group = FALSE) {
   }
 
   out <- if (is_grouped) {
-    .data$sort(polars_exprs, descending = descending, nulls_last = TRUE) |>
+    .data$sort(!!!polars_exprs, descending = descending, nulls_last = TRUE) |>
       group_by(all_of(grps), maintain_order = mo)
   } else {
-    .data$sort(polars_exprs, descending = descending, nulls_last = TRUE)
+    .data$sort(!!!polars_exprs, descending = descending, nulls_last = TRUE)
   }
 
   add_tidypolars_class(out)
 }
 
 #' @export
-arrange.RPolarsLazyFrame <- arrange.RPolarsDataFrame
+arrange.polars_lazy_frame <- arrange.polars_data_frame

@@ -1,7 +1,7 @@
 #' Count the observations in each group
 #'
 #' @param x A Polars Data/LazyFrame
-#' @inheritParams fill.RPolarsDataFrame
+#' @inheritParams fill.polars_data_frame
 #' @param sort If `TRUE`, will show the largest groups at the top.
 #' @param name Name of the new column.
 #' @param wt Not supported by tidypolars.
@@ -25,7 +25,7 @@
 #' test |>
 #'   group_by(cyl, am) |>
 #'   tally(sort = TRUE, name = "count")
-count.RPolarsDataFrame <- function(
+count.polars_data_frame <- function(
   x,
   ...,
   wt = NULL,
@@ -52,9 +52,9 @@ count.RPolarsDataFrame <- function(
   add_tidypolars_class(out)
 }
 
-#' @rdname count.RPolarsDataFrame
+#' @rdname count.polars_data_frame
 #' @export
-tally.RPolarsDataFrame <- function(x, wt = NULL, sort = FALSE, name = "n") {
+tally.polars_data_frame <- function(x, wt = NULL, sort = FALSE, name = "n") {
   if (!missing(wt)) {
     check_unsupported_arg(wt = quo_text(enquo(wt)))
   }
@@ -71,17 +71,17 @@ tally.RPolarsDataFrame <- function(x, wt = NULL, sort = FALSE, name = "n") {
   add_tidypolars_class(out)
 }
 
-#' @rdname count.RPolarsDataFrame
+#' @rdname count.polars_data_frame
 #' @export
-count.RPolarsLazyFrame <- count.RPolarsDataFrame
+count.polars_lazy_frame <- count.polars_data_frame
 
-#' @rdname count.RPolarsDataFrame
+#' @rdname count.polars_data_frame
 #' @export
-tally.RPolarsLazyFrame <- tally.RPolarsDataFrame
+tally.polars_lazy_frame <- tally.polars_data_frame
 
-#' @rdname count.RPolarsDataFrame
+#' @rdname count.polars_data_frame
 #' @export
-add_count.RPolarsDataFrame <- function(
+add_count.polars_data_frame <- function(
   x,
   ...,
   wt = NULL,
@@ -115,9 +115,9 @@ add_count.RPolarsDataFrame <- function(
   add_tidypolars_class(out)
 }
 
-#' @rdname count.RPolarsDataFrame
+#' @rdname count.polars_data_frame
 #' @export
-add_count.RPolarsLazyFrame <- add_count.RPolarsDataFrame
+add_count.polars_lazy_frame <- add_count.polars_data_frame
 
 count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
   name <- check_name(x, vars, name, missing_name)
@@ -128,7 +128,7 @@ count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
       )
     } else {
       out <- x$with_columns(
-        pl$len()$alias(name)$over(vars)
+        pl$len()$alias(name)$over(!!!vars)
       )
     }
   } else {
@@ -139,7 +139,7 @@ count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
     } else {
       # https://github.com/etiennebacher/tidypolars/issues/193
       vars <- unique(vars)
-      out <- x$group_by(vars, maintain_order = FALSE)$agg(
+      out <- x$group_by(vars, .maintain_order = FALSE)$agg(
         pl$len()$alias(name)
       )
     }

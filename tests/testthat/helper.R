@@ -37,35 +37,35 @@ expect_equal_or_both_error <- function(object, other, ...) {
 }
 
 expect_colnames <- function(x, y) {
-  if (inherits(x, "RPolarsLazyFrame")) {
+  if (is_polars_lf(x)) {
     x <- x$collect()
   }
   testthat::expect_equal(x$columns, y)
 }
 
 expect_dim <- function(x, y) {
-  if (inherits(x, "RPolarsLazyFrame")) {
+  if (is_polars_lf(x)) {
     x <- x$collect()
   }
   testthat::expect_equal(dim(x), y)
 }
 
 expect_equal <- function(x, y, ...) {
-  if (inherits(x, "RPolarsDataFrame")) {
-    x <- x$to_data_frame()
+  if (is_polars_df(x)) {
+    x <- as.data.frame(x)
   }
-  if (inherits(y, "RPolarsDataFrame")) {
-    y <- y$to_data_frame()
+  if (is_polars_df(y)) {
+    y <- as.data.frame(y)
   }
   testthat::expect_equal(x, y, ...)
 }
 
 expect_equal_lazy <- function(x, y, ...) {
-  if (inherits(x, "RPolarsLazyFrame")) {
-    x <- x$collect()$to_data_frame()
+  if (is_polars_lf(x)) {
+    x <- as.data.frame(x)
   }
-  if (inherits(y, "RPolarsLazyFrame")) {
-    y <- y$collect()$to_data_frame()
+  if (is_polars_lf(y)) {
+    y <- as.data.frame(y)
   }
   dots <- get_dots(...)
   if (isTRUE(dots$skip_for_lazy)) {
@@ -80,16 +80,10 @@ expect_error_lazy <- function(current, pattern = ".*", ...) {
 }
 
 expect_snapshot <- function(...) {
-  withr::with_options(
-    list(polars.do_not_repeat_call = TRUE),
-    testthat::expect_snapshot(...)
-  )
+  testthat::expect_snapshot(...)
 }
 expect_snapshot_lazy <- function(current, ...) {
-  withr::with_options(
-    list(polars.do_not_repeat_call = TRUE),
-    testthat::expect_snapshot(current$collect(), ...)
-  )
+  testthat::expect_snapshot(current$collect(), ...)
 }
 
 test_this_file <- function() {

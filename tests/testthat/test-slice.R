@@ -89,7 +89,7 @@ test_that("slice_tail works on grouped data", {
 
 test_that("basic slice_sample works", {
   pl_iris <- polars::as_polars_df(iris)
-  skip_if_not(inherits(pl_iris, "RPolarsDataFrame"))
+  skip_if_not(is_polars_df(pl_iris))
 
   expect_is_tidypolars(slice_sample(pl_iris, prop = 0.1))
 
@@ -151,7 +151,7 @@ test_that("basic slice_sample works", {
 
 test_that("slice_sample works with grouped data", {
   pl_iris <- polars::as_polars_df(iris)
-  skip_if_not(inherits(pl_iris, "RPolarsDataFrame"))
+  skip_if_not(is_polars_df(pl_iris))
 
   expect_equal(
     pl_iris |>
@@ -205,7 +205,7 @@ test_that("slice_sample works with grouped data", {
 
 test_that("unsupported args throw warning", {
   pl_mtcars <- as_polars_df(mtcars)
-  skip_if_not(inherits(pl_mtcars, "RPolarsDataFrame"))
+  skip_if_not(is_polars_df(pl_mtcars))
   expect_warning(
     slice_sample(pl_mtcars, weight_by = cyl > 5, n = 5)
   )
@@ -213,7 +213,7 @@ test_that("unsupported args throw warning", {
 
 test_that("dots must be empty", {
   pl_mtcars <- as_polars_df(mtcars)
-  skip_if_not(inherits(pl_mtcars, "RPolarsDataFrame"))
+  skip_if_not(is_polars_df(pl_mtcars))
   expect_snapshot(
     pl_mtcars |>
       slice_sample(foo = 1, n = 5),

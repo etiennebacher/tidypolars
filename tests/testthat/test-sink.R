@@ -14,6 +14,18 @@ test_that("basic behavior with CSV", {
   expect_equal(read.csv(dest), mtcars, ignore_attr = TRUE)
 })
 
+test_that("deprecated args in sink_csv()", {
+  dest <- tempfile(fileext = ".csv")
+  dat <- as_polars_lf(mtcars)
+
+  expect_snapshot({
+    x <- sink_csv(dat, dest, null_values = "a")
+  })
+  expect_snapshot({
+    x <- sink_csv(dat, dest, quote = "a")
+  })
+})
+
 test_that("basic behavior with parquet", {
   skip_if_not_installed("nanoparquet")
   dest <- tempfile(fileext = ".parquet")
@@ -25,7 +37,6 @@ test_that("basic behavior with parquet", {
 })
 
 test_that("basic behavior with IPC", {
-  skip_if_not_installed("arrow")
   dest <- tempfile(fileext = ".arrow")
   mtcars |>
     as_polars_lf() |>

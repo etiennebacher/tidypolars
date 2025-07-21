@@ -81,7 +81,10 @@ test_that("n_distinct() works", {
 })
 
 test_that("length() works", {
-  test <- polars::pl$DataFrame(x = c("a", "a", "a", "b", "b"), y = c(1:4, NA))
+  test <- polars::pl$DataFrame(
+    x = c("a", "a", "a", "b", "b"),
+    y = c(1:4, NA)
+  )
 
   expect_equal(
     test |>
@@ -207,7 +210,10 @@ test_that("all() works", {
 })
 
 test_that("any() works", {
-  test <- polars::pl$DataFrame(x = c(FALSE, FALSE, NA), y = c(TRUE, TRUE, NA))
+  test <- polars::pl$DataFrame(
+    x = c(FALSE, FALSE, NA),
+    y = c(TRUE, TRUE, NA)
+  )
 
   expect_equal(
     test |>
@@ -433,7 +439,10 @@ test_that("na_if() works", {
 })
 
 test_that("min_rank() works", {
-  test <- polars::pl$DataFrame(x = c(5, 1, 3, 2, 2, NA), y = c(rep(NA, 5), 1))
+  test <- polars::pl$DataFrame(
+    x = c(5, 1, 3, 2, 2, NA),
+    y = c(rep(NA, 5), 1)
+  )
 
   expect_equal(
     test |>
@@ -451,7 +460,10 @@ test_that("min_rank() works", {
 })
 
 test_that("dense_rank() works", {
-  test <- polars::pl$DataFrame(x = c(5, 1, 3, 2, 2, NA), y = c(rep(NA, 5), 1))
+  test <- polars::pl$DataFrame(
+    x = c(5, 1, 3, 2, 2, NA),
+    y = c(rep(NA, 5), 1)
+  )
 
   expect_equal(
     test |>
@@ -476,7 +488,10 @@ test_that("dense_rank() works", {
 })
 
 test_that("row_number() works", {
-  test <- polars::pl$DataFrame(x = c(5, 1, 3, 2, 2, NA), y = c(rep(NA, 5), 1))
+  test <- polars::pl$DataFrame(
+    x = c(5, 1, 3, 2, 2, NA),
+    y = c(rep(NA, 5), 1)
+  )
 
   expect_equal(
     test |>

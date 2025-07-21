@@ -21,6 +21,13 @@ test_that("basic behavior works", {
   )
 })
 
+test_that("deprecated arguments in collect()", {
+  test <- as_polars_lf(mtcars)
+  expect_snapshot({
+    x <- collect(test, streaming = TRUE)
+  })
+})
+
 test_that("can't collect non-LazyFrame object", {
   pl_iris <- as_polars_df(iris)
 
@@ -36,5 +43,13 @@ test_that("error on unknown args", {
   expect_snapshot(
     collect(pl_iris, foo = TRUE),
     error = TRUE
+  )
+})
+
+test_that("conversion arguments are used", {
+  dat <- pl$LazyFrame(x = 1, y = 2)$cast(x = pl$UInt8, y = pl$Int64)
+  expect_equal(
+    collect(dat, uint8 = "raw", int64 = "character"),
+    data.frame(x = as.raw(1), y = "2")
   )
 })
