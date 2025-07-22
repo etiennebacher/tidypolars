@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.13.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,106 +37,6 @@
       <small>Source: <a href="https://github.com/etiennebacher/tidypolars/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
-    <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
-<ul><li>
-<code>tidypolars</code> requires <code>polars</code> &gt;= 1.0.0. This release of <code>polars</code> contains many breaking changes. Those should be invisible to <code>tidypolars</code> users, with the exception of deprecation messages (see below). However, if your code contains user-defined functions that use <code>polars</code> syntax, you may need to revise those (<a href="https://github.com/etiennebacher/tidypolars/issues/194" class="external-link">#194</a>).</li>
-</ul><div class="section level3">
-<h3 id="deprecations-and-breaking-changes-development-version">Deprecations and breaking changes<a class="anchor" aria-label="anchor" href="#deprecations-and-breaking-changes-development-version"></a></h3>
-<ul><li>
-<p>The following arguments are deprecated and will be removed in a future version. The recommended replacement is indicated on the right of the arrow (<a href="https://github.com/etiennebacher/tidypolars/issues/194" class="external-link">#194</a>):</p>
-<ul><li>in <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code>: <code>streaming</code> -&gt; <code>engine</code>;</li>
-<li>in <code><a href="../reference/from_csv.html">read_csv_polars()</a></code> and <code><a href="../reference/from_csv.html">scan_csv_polars()</a></code>:
-<ul><li>
-<code>dtypes</code> -&gt; <code>schema_overrides</code>
-</li>
-<li>
-<code>reuse_downloaded</code> -&gt; no replacement</li>
-</ul></li>
-<li>in <code>read_ndjson_polars</code> and <code><a href="../reference/from_ndjson.html">scan_ndjson_polars()</a></code>:
-<ul><li>
-<code>reuse_downloaded</code> -&gt; no replacement</li>
-</ul></li>
-<li>in <code>read_ipc_polars</code> and <code><a href="../reference/from_ipc.html">scan_ipc_polars()</a></code>:
-<ul><li>
-<code>memory_map</code> -&gt; no replacement</li>
-</ul></li>
-<li>in <code><a href="../reference/write_csv_polars.html">write_csv_polars()</a></code> and <code><a href="../reference/sink_csv.html">sink_csv()</a></code>:
-<ul><li>
-<code>null_values</code> -&gt; <code>null_value</code>
-</li>
-<li>
-<code>quote</code> -&gt; <code>quote_char</code>
-</li>
-</ul></li>
-<li>in <code><a href="../reference/write_ndjson_polars.html">write_ndjson_polars()</a></code>:
-<ul><li>
-<code>pretty</code> -&gt; no replacement</li>
-<li>
-<code>row_oriented</code> -&gt; no replacement</li>
-</ul></li>
-<li>in <code><a href="../reference/write_ipc_polars.html">write_ipc_polars()</a></code>:
-<ul><li>
-<code>future</code> -&gt; <code>compat_level</code>
-</li>
-</ul></li>
-</ul></li>
-<li><p><code><a href="../reference/fetch.html">fetch()</a></code> is deprecated, use <code><a href="https://rdrr.io/r/utils/head.html" class="external-link">head()</a></code> before <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code> instead (<a href="https://github.com/etiennebacher/tidypolars/issues/194" class="external-link">#194</a>).</p></li>
-<li><p><code><a href="https://dplyr.tidyverse.org/reference/group_data.html" class="external-link">group_keys()</a></code> now returns a <code>tibble</code> and not a <code>data.frame</code> anymore (<a href="https://github.com/etiennebacher/tidypolars/issues/194" class="external-link">#194</a>).</p></li>
-<li><p><code><a href="https://lubridate.tidyverse.org/reference/make_datetime.html" class="external-link">lubridate::make_date()</a></code>, <code><a href="https://lubridate.tidyverse.org/reference/make_datetime.html" class="external-link">lubridate::make_datetime()</a></code>, and <code><a href="https://rdrr.io/r/base/ISOdatetime.html" class="external-link">ISOdatetime()</a></code> now error if some components go over their expected range, e.g. <code>month = 20</code> or <code>hour = 25</code>. Before, those functions were returning <code>NA</code> in this situation (<a href="https://github.com/etiennebacher/tidypolars/issues/194" class="external-link">#194</a>).</p></li>
-<li><p><code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> returns an additional row for the 50% percentile (<a href="https://github.com/etiennebacher/tidypolars/issues/194" class="external-link">#194</a>).</p></li>
-</ul></div>
-<div class="section level3">
-<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
-<ul><li>
-<p>Added support for various <code>lubridate</code> functions:</p>
-<ul><li>
-<code>force_tz()</code> and <code>with_tz()</code> (<a href="https://github.com/atsyplenkov" class="external-link">@atsyplenkov</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/170" class="external-link">#170</a>);</li>
-<li>
-<code><a href="https://rdrr.io/r/base/date.html" class="external-link">date()</a></code> (<a href="https://github.com/atsyplenkov" class="external-link">@atsyplenkov</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/181" class="external-link">#181</a>);</li>
-<li>
-<code>today()</code> and <code>now()</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/183" class="external-link">#183</a>);</li>
-<li>
-<code>weeks()</code>, <code>days()</code>, <code>hours()</code>, <code>minutes()</code>, <code>seconds()</code>, <code>milliseconds()</code>, <code>microseconds()</code>, <code>nanoseconds()</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/184" class="external-link">#184</a>).</li>
-</ul></li>
-<li>
-<p><code>tidypolars</code> can now use expressions that contain non-translated functions if those expressions do not use columns from the data.</p>
-<p>Example:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span>foo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d"</span>, <span class="st">"e"</span>, <span class="st">"f"</span><span class="op">)</span></span>
-<span><span class="va">dat</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">foo</span> <span class="op">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/agrep.html" class="external-link">agrep</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="va">a</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="https://rdrr.io/r/base/agrep.html" class="external-link">agrep()</a></code> is not a translated function so this used to error:</p>
-<pre><code>Error in `filter()`:
-! `tidypolars` doesn't know how to translate this function: `agrep()`.</code></pre>
-<p>However, we see that <code>agrep("a", a)</code> doesn’t use any column but instead an object in the environment so it can be evaluated without caring whether <code>tidypolars</code> knows this function or not:</p>
-<pre><code>shape: (1, 1)
-┌─────┐
-│ foo │
-│ --- │
-│ f64 │
-╞═════╡
-│ 2.0 │
-└─────┘</code></pre>
-<p>Note that this is evaluated before running <code>polars</code> in the background so this expression can’t benefit from <code>polars</code> parallel evaluation for instance. Thanks <a href="https://github.com/mgacc0" class="external-link">@mgacc0</a> for the suggestion.</p>
-</li>
-<li><p>Add support for <code><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date()</a></code> for character columns (<a href="https://github.com/etiennebacher/tidypolars/issues/190" class="external-link">#190</a>).</p></li>
-<li><p>Error messages due to untranslated functions now suggest opening an issue to ask for their translation (<a href="https://github.com/etiennebacher/tidypolars/issues/197" class="external-link">#197</a>).</p></li>
-<li><p>Add support for <code>%&gt;%</code> in expressions (<a href="https://github.com/etiennebacher/tidypolars/issues/200" class="external-link">#200</a>).</p></li>
-<li><p>Add support for <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">dplyr::tally()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/203" class="external-link">#203</a>).</p></li>
-<li><p><code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">add_count()</a></code> now warn or error when argument <code>wt</code> is used since it is not supported. The behavior depends on the global option <code>tidypolars_unknown_args</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/204" class="external-link">#204</a>).</p></li>
-<li><p><code>tidypolars</code> has experimental support for fallback to R when a function is not internally translated to polars syntax. The default behavior is still to error, but the user can now set <code>options(tidypolars_fallback_to_r = TRUE)</code> to handle those unknown functions. See <code><a href="../reference/tidypolars_options.html">?tidypolars_options</a></code> for details on the drawbacks of this approach (<a href="https://github.com/etiennebacher/tidypolars/issues/205" class="external-link">#205</a>).</p></li>
-<li><p>Large performance improvement when using selection helpers (such as <code><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains()</a></code>) on data with many columns (<a href="https://github.com/etiennebacher/tidypolars/issues/211" class="external-link">#211</a>).</p></li>
-<li><p><code>tidypolars</code> now exports rules to be used with <code>flir</code> for detecting deprecated functions <code><a href="../reference/describe_plan.html">describe_plan()</a></code> and <code><a href="../reference/describe_plan.html">describe_optimized_plan()</a></code>. Those can be used in your project by following <a href="https://flir.etiennebacher.com/articles/sharing_rules#for-users" class="external-link">this article</a>. Note that this requires <code>flir</code> 0.5.9000 or higher (<a href="https://github.com/etiennebacher/tidypolars/issues/214" class="external-link">#214</a>).</p></li>
-</ul></div>
-<div class="section level3">
-<h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
-<ul><li><p>Fix behavior of <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> when they don’t contain any expression (<a href="https://github.com/etiennebacher/tidypolars/issues/191" class="external-link">#191</a>).</p></li>
-<li><p>Fix error in <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code> when it includes grouping variables (<a href="https://github.com/etiennebacher/tidypolars/issues/193" class="external-link">#193</a>).</p></li>
-<li><p>Passing <code>.</code> in an anonymous function in <code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code> now works (<a href="https://github.com/etiennebacher/tidypolars/issues/216" class="external-link">#216</a>).</p></li>
-</ul></div>
-</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.13.0" id="tidypolars-0130">tidypolars 0.13.0<a class="anchor" aria-label="anchor" href="#tidypolars-0130"></a></h2>
 <div class="section level3">
