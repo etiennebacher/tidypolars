@@ -1,4 +1,4 @@
-# tidypolars (0.14.0)
+# tidypolars 0.14.0
 
 * `tidypolars` requires `polars` >= 1.0.0. This release of `polars` contains
   many breaking changes. Those should be invisible to `tidypolars` users, with
