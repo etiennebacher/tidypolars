@@ -1,4 +1,4 @@
-# tidypolars (development version)
+# tidypolars (0.14.0)
 
 * `tidypolars` requires `polars` >= 1.0.0. This release of `polars` contains
   many breaking changes. Those should be invisible to `tidypolars` users, with
@@ -106,7 +106,7 @@
 * `tidypolars` now exports rules to be used with `flir` for detecting deprecated
   functions `describe_plan()` and `describe_optimized_plan()`. Those can be
   used in your project by following [this article](https://flir.etiennebacher.com/articles/sharing_rules#for-users).
-  Note that this requires `flir` 0.5.9000 or higher (#214).
+  Note that this requires `flir` 0.5.0.9000 or higher (#214).
 
 ## Bug fixes
 
