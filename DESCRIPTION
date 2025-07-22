@@ -1,7 +1,7 @@
 Package: tidypolars
 Type: Package
 Title: More Efficient Tidyverse Code, Using Polars in the Background
-Version: 0.13.0.9000
+Version: 0.14.0
 Authors@R:
     c(person(given = "Etienne",
              family = "Bacher",
@@ -23,7 +23,7 @@ RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
 URL: https://tidypolars.etiennebacher.com, https://etiennebacher.r-universe.dev/tidypolars
 BugReports: https://github.com/etiennebacher/tidypolars/issues
-Depends: R (>= 4.1.0)
+Depends: R (>= 4.3.0)
 Imports:
     cli,
     dplyr,
