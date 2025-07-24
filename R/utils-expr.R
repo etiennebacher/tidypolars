@@ -789,7 +789,6 @@ translate <- function(
 }
 
 get_user_defined_functions <- function(caller) {
-  # browser()
   x <- ls(caller)
   list_fns <- list()
   for (i in x) {
@@ -798,7 +797,7 @@ get_user_defined_functions <- function(caller) {
       warning = function(w) invisible(),
       error = function(e) NULL
     )
-    if (!is.null(foo) && is.function(foo)) {
+    if (!missing(foo) && !is.null(foo) && is.function(foo)) {
       list_fns[[i]] <- i
     }
   }

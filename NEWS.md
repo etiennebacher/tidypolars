@@ -1,3 +1,10 @@
+# tidypolars (development version)
+
+## Bug fixes
+
+* Fix a corner case when `filter()` was used in a custom function with missing
+  arguments (#220).
+
 # tidypolars 0.14.0
 
 * `tidypolars` requires `polars` >= 1.0.0. This release of `polars` contains

@@ -68,4 +68,14 @@ test_that("error messages when error in known function is good", {
   )
 })
 
+test_that("doesn't error with missing variable in function call, #219", {
+  pl_iris <- pl$LazyFrame(x = 1)
+  # only errors with filter()
+  foobar <- function(x) {
+    pl_iris |> filter(x == 1)
+  }
+
+  expect_equal_lazy(foobar(), pl_iris)
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
