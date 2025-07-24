@@ -63,3 +63,13 @@ test_that("error messages when error in known function is good", {
     error = TRUE
   )
 })
+
+test_that("doesn't error with missing variable in function call, #219", {
+  pl_iris <- pl$DataFrame(x = 1)
+  # only errors with filter()
+  foobar <- function(x) {
+    pl_iris |> filter(x == 1)
+  }
+
+  expect_equal(foobar(), pl_iris)
+})
