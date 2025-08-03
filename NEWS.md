@@ -5,6 +5,9 @@
 * Fix a corner case when `filter()` was used in a custom function with missing
   arguments (#220).
 
+* In `grepl()`, the argument `fixed` is now used correctly (thanks @gernophil
+  for the report, #223).
+
 # tidypolars 0.14.0
 
 * `tidypolars` requires `polars` >= 1.0.0. This release of `polars` contains
@@ -34,7 +37,7 @@
     * `row_oriented` -> no replacement
   - in `write_ipc_polars()`:
     * `future` -> `compat_level`
-    
+
 * `fetch()` is deprecated, use `head()` before `collect()` instead (#194).
 
 * `group_keys()` now returns a `tibble` and not a `data.frame` anymore (#194).
@@ -43,7 +46,7 @@
   now error if some components go over their expected range, e.g. `month = 20`
   or `hour = 25`. Before, those functions were returning `NA` in this situation
   (#194).
-  
+
 * `summary()` returns an additional row for the 50% percentile (#194).
 
 ## New features
