@@ -46,6 +46,28 @@ test_that("basic behavior of if_else() works", {
   )
 })
 
+test_that("if_else() and ifelse() work with named args", {
+  test <- pl$LazyFrame(
+    x1 = c("a", "a", "b", "a", "c"),
+    x2 = c(2, 1, 5, 3, 1),
+    x3 = rep("hello", 5)
+  )
+
+  expect_equal_lazy(
+    test |>
+      mutate(y = ifelse(test = x1 == 'a', yes = "foo", no = "bar")) |>
+      pull(y),
+    c("foo", "foo", "bar", "foo", "bar")
+  )
+
+  expect_equal_lazy(
+    test |>
+      mutate(y = if_else(condition = x1 == 'a', true = x3, false = x1)) |>
+      pull(y),
+    c("hello", "hello", "b", "hello", "c")
+  )
+})
+
 test_that("error when different types", {
   test <- pl$LazyFrame(
     x1 = c("a", "a", "b", "a", "c"),
