@@ -413,16 +413,16 @@ pl_first_dplyr <- function(x, ...) {
   x$first()
 }
 
-pl_ifelse <- function(cond, yes, no, .data, ...) {
+pl_ifelse <- function(test, yes, no, .data, ...) {
   check_empty_dots(...)
   env <- env_from_dots(...)
   expr_uses_col <- expr_uses_col_from_dots(...)
   new_vars <- new_vars_from_dots(...)
   caller <- caller_from_dots(...)
 
-  cond <- translate_expr(
+  test <- translate_expr(
     .data,
-    enexpr(cond),
+    enexpr(test),
     new_vars = new_vars,
     env = env,
     caller = caller,
@@ -444,7 +444,7 @@ pl_ifelse <- function(cond, yes, no, .data, ...) {
     caller = caller,
     expr_uses_col = expr_uses_col
   )
-  pl$when(cond)$then(yes)$otherwise(no)
+  pl$when(test)$then(yes)$otherwise(no)
 }
 
 pl_infinite <- function(x, ...) {

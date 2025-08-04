@@ -509,6 +509,18 @@ translate <- function(
           args[["__tidypolars__env"]] <- env
           args[["__tidypolars__caller"]] <- caller
           args[["__tidypolars__expr_uses_col"]] <- expr_uses_col
+          if ("condition" %in% names(args)) {
+            idx <- which(names(args) == "condition")
+            names(args)[idx] <- "test"
+          }
+          if ("true" %in% names(args)) {
+            idx <- which(names(args) == "true")
+            names(args)[idx] <- "yes"
+          }
+          if ("false" %in% names(args)) {
+            idx <- which(names(args) == "false")
+            names(args)[idx] <- "no"
+          }
           return(do.call(pl_ifelse, args))
         },
         "is.na" = {
