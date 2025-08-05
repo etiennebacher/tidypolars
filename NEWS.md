@@ -1,4 +1,4 @@
-# tidypolars 0.14.1
+# tidypolars (development)
 
 * `tidypolars` requires `polars` >= 1.1.0 (#222).
 
@@ -9,7 +9,7 @@
 
 * In `grepl()`, the argument `fixed` is now used correctly (thanks @gernophil
   for the report, #223).
-  
+
 * `if_else()` and `ifelse()` now work when using named arguments (#224).
 
 # tidypolars 0.14.0
