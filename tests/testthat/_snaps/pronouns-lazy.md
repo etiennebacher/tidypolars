@@ -14,7 +14,7 @@
       Error in `current$collect()`:
       ! Evaluation failed in `$collect()`.
       Caused by error:
-      ! Column(s) not found: bar
+      ! Column(s) not found: unable to find column "bar"; valid columns: ["x", "y", "z"]
       
       Resolved plan until failure:
       
@@ -37,7 +37,7 @@
       Error in `current$collect()`:
       ! Evaluation failed in `$collect()`.
       Caused by error:
-      ! Column(s) not found: bar
+      ! Column(s) not found: unable to find column "bar"; valid columns: ["x", "y", "z"]
       
       Resolved plan until failure:
       

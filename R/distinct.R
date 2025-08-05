@@ -38,7 +38,7 @@ distinct.polars_data_frame <- function(
     vars <- names(.data)
   }
   out <- .data$unique(
-    subset = vars,
+    !!!vars,
     keep = keep,
     maintain_order = maintain_order
   )

@@ -16,7 +16,7 @@
       Caused by error:
       ! Evaluation failed in `$collect()`.
       Caused by error:
-      ! Column(s) not found: bar
+      ! Column(s) not found: unable to find column "bar"; valid columns: ["x", "y", "z"]
 
 # using [[ sign works
 
@@ -36,5 +36,5 @@
       Caused by error:
       ! Evaluation failed in `$collect()`.
       Caused by error:
-      ! Column(s) not found: bar
+      ! Column(s) not found: unable to find column "bar"; valid columns: ["x", "y", "z"]
 
