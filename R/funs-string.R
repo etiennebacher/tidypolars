@@ -1,6 +1,6 @@
 pl_grepl <- function(pattern, x, fixed = FALSE, ...) {
   if (isTRUE(fixed)) {
-    attr(x, "stringr_attr") <- "fixed"
+    attr(pattern, "stringr_attr") <- "fixed"
   }
   pl_str_detect_stringr(string = x, pattern = pattern, ...)
 }

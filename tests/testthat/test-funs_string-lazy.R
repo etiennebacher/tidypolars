@@ -863,6 +863,7 @@ test_that("detect functions work", {
     x8 = c("Jane-saw-a-cat", "Jane-sat-down"),
     x9 = c(" Some text    with ws   ", "and more     white   space  "),
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
+    x11 = c("abc", "a."),
     n = 1:2
   )
   test <- as_polars_lf(test_df)
@@ -910,9 +911,9 @@ test_that("detect functions work", {
   )
 
   expect_equal_lazy(
-    mutate(test, foo = grepl(".", x5, fixed = TRUE)) |>
+    mutate(test, foo = grepl(".", x11, fixed = TRUE)) |>
       pull(foo),
-    mutate(test_df, foo = grepl(".", x5, fixed = TRUE)) |>
+    mutate(test_df, foo = grepl(".", x11, fixed = TRUE)) |>
       pull(foo)
   )
 
