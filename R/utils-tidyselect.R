@@ -1,18 +1,55 @@
 tidyselect_dots <- function(.data, ..., with_renaming = FALSE) {
   check_where_arg(...)
-  data <- build_data_context(.data, ...)
-  out <- tidyselect::eval_select(
-    rlang::expr(c(...)),
-    data,
-    error_call = caller_env()
-  )
-  if (length(out) == 0) {
-    return(NULL)
-  }
-  if (isTRUE(with_renaming)) {
-    return(out)
-  }
-  names(out)
+
+  dots <- enquos(...)
+  dots2 <- lapply(dots, \(x) {
+    expr <- quo_get_expr(x)
+    if (quo_is_call(x)) {
+      if (is_call(expr, "all_of")) {
+        out <- do.call(cs$by_name, call_args(expr))
+      } else if (is_call(expr, "any_of")) {
+        out <- do.call(cs$by_name, append(call_args(expr), require_all = FALSE))
+      } else if (is_call(expr, "contains")) {
+        out <- do.call(cs$contains, call_args(expr))
+      } else if (is_call(expr, "ends_with")) {
+        out <- do.call(cs$ends_with, call_args(expr))
+      } else if (is_call(expr, "everything")) {
+        out <- cs$all()
+      } else if (is_call(expr, "matches")) {
+        out <- do.call(cs$matches, call_args(expr))
+      } else if (is_call(expr, "starts_with")) {
+        out <- do.call(cs$starts_with, call_args(expr))
+      }
+    } else {
+      if (is.numeric(expr)) {
+        out <- cs$by_index(expr - 1)
+      } else if (is_symbol(expr)) {
+        out <- cs$by_name(as_name(expr))
+      }
+    }
+    out
+  })
+
+  out <- Reduce(`|`, dots2)
+  # dots2
+  names(out) <- NULL
+  out
+
+  # print(dots2)
+  #
+  # data <- build_data_context(.data, ...)
+  # out <- tidyselect::eval_select(
+  #   rlang::expr(c(...)),
+  #   data,
+  #   error_call = caller_env()
+  # )
+  # if (length(out) == 0) {
+  #   return(NULL)
+  # }
+  # if (isTRUE(with_renaming)) {
+  #   return(out)
+  # }
+  # names(out)
 }
 
 tidyselect_named_arg <- function(.data, cols) {

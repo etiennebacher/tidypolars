@@ -23,13 +23,13 @@ select.polars_data_frame <- function(.data, ...) {
   vars <- tidyselect_dots(.data, ..., with_renaming = with_renaming)
 
   # named means that we allow renaming in dots
-  if (is_named(vars)) {
+  if (is.vector(vars) && is_named(vars)) {
     out <- .data[, unname(vars), drop = FALSE]
     ls <- as.list(names(vars))
     names(ls) <- names(out)
     out <- out$rename(!!!ls)
   } else {
-    out <- .data$select(!!!vars)
+    out <- .data$select(vars)
   }
   add_tidypolars_class(out)
 }
