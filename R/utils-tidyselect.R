@@ -19,20 +19,41 @@ tidyselect_dots <- function(.data, ..., with_renaming = FALSE) {
         out <- do.call(cs$matches, call_args(expr))
       } else if (is_call(expr, "starts_with")) {
         out <- do.call(cs$starts_with, call_args(expr))
+      } else {
+        out <- expr
       }
     } else {
       if (is.numeric(expr)) {
         out <- cs$by_index(expr - 1)
       } else if (is_symbol(expr)) {
         out <- cs$by_name(as_name(expr))
+      } else {
+        out <- expr
       }
     }
     out
   })
 
-  out <- Reduce(`|`, dots2)
-  # dots2
-  names(out) <- NULL
+  out_selectors_idx <- which(vapply(dots2, \(x) is_polars_selector(x), logical(1)))
+  out_non_selectors_idx <- which(vapply(dots2, \(x) !is_polars_selector(x), logical(1)))
+
+  out <- dots2
+
+  if (length(out_non_selectors_idx) > 0) {
+    out_non_selectors <- dots2[out_non_selectors_idx]
+    data <- build_data_context(.data, !!!out_non_selectors)
+    for (sel in seq_along(out_non_selectors_idx)) {
+      res <- tidyselect::eval_select(
+        rlang::expr(c(!!!out_non_selectors[sel])),
+        data,
+        error_call = caller_env()
+      )
+      out[out_non_selectors_idx[sel]] <- list(cs$by_name(!!!names(res)))
+    }
+
+  }
+
+  out <- Reduce(`|`, out)
   out
 
   # print(dots2)
