@@ -359,6 +359,7 @@ out <- tribble(
   "`stringr`", "`str_detect`",
   "`stringr`", "`str_dup`",
   "`stringr`", "`str_ends`",
+  "`stringr`", "`str_equal`",
   "`stringr`", "`str_extract`",
   "`stringr`", "`str_extract_all`",
   "`stringr`", "`str_length`",

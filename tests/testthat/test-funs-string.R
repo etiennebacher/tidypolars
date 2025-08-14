@@ -193,3 +193,25 @@ test_that("substr() works", {
     }
   )
 })
+
+test_that("str_equal() works", {
+  # need equal length of inputs
+  length <- sample(0:10, 1)
+
+  for_all(
+    tests = 40,
+    x = character_(any_na = TRUE, len = length),
+    y = character_(any_na = TRUE, len = length),
+    property = function(x, y) {
+      test_df <- data.frame(x = x, y = y)
+      test <- as_polars_df(test_df)
+
+      expect_equal_or_both_error(
+        mutate(test, foo = str_equal(x, y)) |>
+          pull(foo),
+        mutate(test_df, foo = str_equal(x, y)) |>
+          pull(foo)
+      )
+    }
+  )
+})

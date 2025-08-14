@@ -1,3 +1,9 @@
+# tidypolars (development)
+
+## New features
+
+* Add partial support for `stringr::str_equal()` (#228).
+
 # tidypolars 0.14.1
 
 * `tidypolars` requires `polars` >= 1.1.0 (#222).

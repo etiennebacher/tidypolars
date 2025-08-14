@@ -1228,3 +1228,30 @@ test_that("stringr::str_replace_na works", {
     error = TRUE
   )
 })
+
+test_that("str_equal() works", {
+  test_df <- data.frame(x = c("\u00e1", "\u2126"), y = c("a\u0301", "\u03A9"))
+  test <- as_polars_df(test_df)
+
+  expect_equal(
+    mutate(test, eq = str_equal(x, y)) |>
+      pull(eq),
+    mutate(test_df, eq = str_equal(x, y)) |>
+      pull(eq)
+  )
+
+  expect_warning(
+    mutate(test, eq = str_equal(x, y, ignore_case = TRUE)),
+    "doesn't know how to use some arguments"
+  )
+
+  test_df <- data.frame(x = character(), y = character())
+  test <- as_polars_df(test_df)
+
+  expect_equal(
+    mutate(test, eq = str_equal(x, y)) |>
+      pull(eq),
+    mutate(test_df, eq = str_equal(x, y)) |>
+      pull(eq)
+  )
+})

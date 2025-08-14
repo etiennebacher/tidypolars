@@ -57,11 +57,6 @@ pl_str_dup_stringr <- function(string, times) {
   )
 }
 
-# TODO: this requires https://github.com/pola-rs/polars/issues/11455
-# pl_str_equal_string <- function(x, y, ...) {
-#
-# }
-
 pl_str_ends_stringr <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
   pattern <- check_pattern(pattern)
@@ -75,6 +70,12 @@ pl_str_ends_stringr <- function(string, pattern, negate = FALSE, ...) {
   }
   out
 }
+
+pl_str_equal_stringr <- function(x, y, ...) {
+  check_empty_dots(...)
+  x$str$normalize("NFC") == y$str$normalize("NFC")
+}
+
 
 # group = 0 means the whole match
 pl_str_extract_stringr <- function(string, pattern, group = 0, ...) {
