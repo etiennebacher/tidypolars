@@ -31,8 +31,15 @@ group_by.polars_data_frame <- function(
   .data,
   ...,
   maintain_order = FALSE,
-  .add = FALSE
+  .add = FALSE,
+  .drop = TRUE
 ) {
+  if (isFALSE(.drop)) {
+    cli_abort(
+      "{.pkg tidypolars} doesn't support {.code .drop = FALSE} in {.fn group_by}.",
+    )
+  }
+
   if (isTRUE(attributes(.data)$grp_type == "rowwise")) {
     cli_abort(
       c(
