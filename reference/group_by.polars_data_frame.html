@@ -51,13 +51,13 @@ where operations are performed "by group". <code><a href="https://dplyr.tidyvers
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'polars_data_frame'</span></span>
-<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, maintain_order <span class="op">=</span> <span class="cn">FALSE</span>, .add <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, maintain_order <span class="op">=</span> <span class="cn">FALSE</span>, .add <span class="op">=</span> <span class="cn">FALSE</span>, .drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'polars_data_frame'</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'polars_lazy_frame'</span></span>
-<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, maintain_order <span class="op">=</span> <span class="cn">FALSE</span>, .add <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, maintain_order <span class="op">=</span> <span class="cn">FALSE</span>, .add <span class="op">=</span> <span class="cn">FALSE</span>, .drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'polars_lazy_frame'</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
@@ -85,6 +85,11 @@ large datasets and prevents the use of streaming.</p></dd>
 <dt id="arg--add">.add<a class="anchor" aria-label="anchor" href="#arg--add"></a></dt>
 <dd><p>When <code>FALSE</code> (default), <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code> will override existing
 groups. To add to the existing groups, use <code>.add = TRUE</code>.</p></dd>
+
+
+<dt id="arg--drop">.drop<a class="anchor" aria-label="anchor" href="#arg--drop"></a></dt>
+<dd><p>Unsupported. It is only present to provide a good error message
+if specified by the user.</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
@@ -130,8 +135,8 @@ groups. To add to the existing groups, use <code>.add = TRUE</code>.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ ---        ┆ ---        │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64        ┆ f64        │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪════════════╪════════════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 353.1      ┆ 209.214286 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 183.314286 ┆ 122.285714 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 353.1      ┆ 209.214286 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 105.136364 ┆ 82.636364  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴────────────┴────────────┘</span>
 <span class="r-in"><span><span class="va">by_cyl</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">disp</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span></span>
