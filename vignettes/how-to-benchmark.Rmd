@@ -1,0 +1,58 @@
+---
+title: "How to benchmark tidypolars"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{How to benchmark tidypolars}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tidypolars)
+```
+
+Several blog posts or Github repos try to benchmark packages for dataframe manipulation (`data.table`, `dplyr`, `duckplyr`, etc.). 
+When it comes to benchmarking `tidypolars`, I have seen several mistakes in the implementation that make the results quite unreliable.
+This is not to say that `tidypolars` will always be faster than alternatives, in fact there is rarely one tool that is better than the others on all aspects of dataframe manipulation. 
+The goal of this vignette is to give some advice on how best to benchmark `tidypolars`.
+
+
+## Do not include `as_polars_df()` or `as_polars_lf()` in the timing
+
+Some benchmarks do something like the following:
+
+```{r, eval=FALSE}
+my_function <- function(dat) {
+  dat <- as_polars_df(dat)
+  dat |> 
+    group_by() |> 
+    <some slow operation>
+}
+
+bench::mark(
+  my_function(iris)
+)
+```
+
+The issue with this approach is that `as_polars_df()` converts the R `data.frame` to a Polars DataFrame, which takes some time.
+In real-life, and as [highlighted in the "Getting started" vignette](), `as_polars_df()` and `as_polars_lf()` are convenience functions for demo and testing purposes. 
+The way `tidypolars` should be used is rather by using the dedicated readers (`scan_parquet_polars()`, `read_parquet_polars()`, etc.) to import the data directly as Polars DataFrame or LazyFrame.
+
+Using `as_polars_df()` and `as_polars_lf()` is fine to get the data ready to be benchmarked, but those operations should not be included in the timing.
+
+
+## Use lazy execution when possible
+
+Polars provides DataFrames and LazyFrames. 
+Operations on DataFrames are executed in "eager mode", meaning that there is no optimization happening behind the scenes, for instance to efficiently reordering operations.
+In real-life workflows, it is strongly recommended to use LazyFrames
+
+
+[talk about collecting to DataFrame or to tibble]
