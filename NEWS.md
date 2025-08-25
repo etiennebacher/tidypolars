@@ -6,7 +6,7 @@
 
 ## Bug fixes
 
-* Better error message in `group_by()` for unsupported arg `.drop` (#230).
+* Better error message in `group_by()` for unsupported argument `.drop` (#230).
 
 # tidypolars 0.14.1
 
