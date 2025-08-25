@@ -14,14 +14,43 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, include=FALSE}
 library(tidypolars)
 ```
 
-Several blog posts or Github repos try to benchmark packages for dataframe manipulation (`data.table`, `dplyr`, `duckplyr`, etc.). 
+Several blog posts or Github repos try to benchmark packages for dataframe manipulation (`data.table`, `dplyr`, `duckplyr`, etc.).
 When it comes to benchmarking `tidypolars`, I have seen several mistakes in the implementation that make the results quite unreliable.
-This is not to say that `tidypolars` will always be faster than alternatives, in fact there is rarely one tool that is better than the others on all aspects of dataframe manipulation. 
+This is not to say that `tidypolars` will always be faster than alternatives, in fact there is rarely one tool that is better than the others on all aspects of dataframe manipulation.
 The goal of this vignette is to give some advice on how best to benchmark `tidypolars`.
+
+**Summary:** instead of this code:
+```{r, eval=FALSE}
+my_function <- function(dat) {
+  my_polars_data <- as_polars_df(dat)
+  my_polars_data |>
+    <some slow operation>
+}
+
+bench::mark(
+  my_function(my_r_data_frame)
+)
+```
+
+use this code:
+
+```{r, eval=FALSE}
+my_polars_data <- as_polars_lf(my_r_data_frame)
+
+my_function <- function(dat) {
+  my_polars_data |>
+    <some slow operation> |>
+    compute() # or compute(engine = "streaming")
+}
+
+bench::mark(
+  my_function(my_polars_data)
+)
+```
 
 
 ## Do not include `as_polars_df()` or `as_polars_lf()` in the timing
@@ -31,18 +60,17 @@ Some benchmarks do something like the following:
 ```{r, eval=FALSE}
 my_function <- function(dat) {
   dat <- as_polars_df(dat)
-  dat |> 
-    group_by() |> 
+  dat |>
     <some slow operation>
 }
 
 bench::mark(
-  my_function(iris)
+  my_function(my_r_data_frame)
 )
 ```
 
 The issue with this approach is that `as_polars_df()` converts the R `data.frame` to a Polars DataFrame, which takes some time.
-In real-life, and as [highlighted in the "Getting started" vignette](), `as_polars_df()` and `as_polars_lf()` are convenience functions for demo and testing purposes. 
+As [highlighted](https://www.tidypolars.etiennebacher.com/articles/tidypolars#importing-data) in the "Getting started" vignette, `as_polars_df()` and `as_polars_lf()` are convenience functions for demo and testing purposes.
 The way `tidypolars` should be used is rather by using the dedicated readers (`scan_parquet_polars()`, `read_parquet_polars()`, etc.) to import the data directly as Polars DataFrame or LazyFrame.
 
 Using `as_polars_df()` and `as_polars_lf()` is fine to get the data ready to be benchmarked, but those operations should not be included in the timing.
@@ -50,9 +78,61 @@ Using `as_polars_df()` and `as_polars_lf()` is fine to get the data ready to be 
 
 ## Use lazy execution when possible
 
-Polars provides DataFrames and LazyFrames. 
-Operations on DataFrames are executed in "eager mode", meaning that there is no optimization happening behind the scenes, for instance to efficiently reordering operations.
-In real-life workflows, it is strongly recommended to use LazyFrames
+Polars provides DataFrames and LazyFrames.
+Operations on DataFrames are executed in "eager mode", meaning that there is no optimization happening behind the scenes, for instance to efficiently reorder operations.
+In real-life workflows, it is strongly recommended to use LazyFrames since they allow for a large number of optimizations.
 
+In benchmarks or demos, you should therefore prefer `as_polars_lf()` over `as_polars_df()`.
+Using LazyFrames means that you also need to collect results in order to trigger the computations.
+This can be done using `compute()` (to return a Polars DataFrame), `collect()` (to return an R `data.frame`), or `as_tibble()` (to return a `tibble`).
 
-[talk about collecting to DataFrame or to tibble]
+Depending on the objective of the benchmark, each of the three options can be valid.
+`compute()` will be faster because it doesn't go through the extra step of converting a Polars DataFrame to R, but it also means that one cannot pass the output of `compute()` directly to `ggplot2` to make a plot for instance.
+
+In summary, instead of doing:
+
+```{r, eval=FALSE}
+my_polars_data <- as_polars_df(my_r_data_frame)
+
+my_function <- function(dat) {
+  my_polars_data |>
+    <some slow operation>
+}
+
+bench::mark(
+  my_function(my_polars_data)
+)
+```
+
+you should do:
+
+```{r, eval=FALSE}
+my_polars_data <- as_polars_lf(my_r_data_frame) # Use as_polars_lf()
+
+my_function <- function(dat) {
+  my_polars_data |>
+    <some slow operation> |>
+    compute() # Or collect() or as_tibble()
+}
+
+bench::mark(
+  my_function(my_polars_data)
+)
+```
+
+## Use streaming mode when possible
+
+In addition to lazy execution, Polars comes with a streaming engine that is able to perform operations on larger-than-RAM data.
+It is also faster than the default engine in many cases, and not only on larger-than-RAM data.
+
+**Note:** as of August 2025, the streaming engine is not used by default yet but it should become the default one in the next few months.
+
+Using it is extremely simple: pass `engine = "streaming"` in `compute()`, `collect()` or `as_tibble()`.
+
+## Do not try to run tidypolars in parallel
+
+Some benchmarks take advantage of tools such as `future` or `mirai` to run code in parallel.
+However, `tidypolars` shouldn't be used in such tools.
+All `polars` code that is used internally is already optimized to run on all cores and isn't guaranteed to play well with other parallel frameworks.
+
+In [some cases](https://pola-rs.github.io/r-polars/vignettes/custom-functions.html#using-purrr), you may want to use those frameworks on Polars objects, but this should be the exception more than the norm.
