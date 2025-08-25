@@ -12,6 +12,8 @@
 #' large datasets and prevents the use of streaming.
 #' @param .add When `FALSE` (default), `group_by()` will override existing
 #' groups. To add to the existing groups, use `.add = TRUE`.
+#' @param .drop Unsupported. It is only present to provide a good error message
+#' if specified by the user.
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)

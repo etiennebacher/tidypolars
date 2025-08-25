@@ -7,11 +7,11 @@
 \alias{ungroup.polars_lazy_frame}
 \title{Group by one or more variables}
 \usage{
-\method{group_by}{polars_data_frame}(.data, ..., maintain_order = FALSE, .add = FALSE)
+\method{group_by}{polars_data_frame}(.data, ..., maintain_order = FALSE, .add = FALSE, .drop = TRUE)
 
 \method{ungroup}{polars_data_frame}(x, ...)
 
-\method{group_by}{polars_lazy_frame}(.data, ..., maintain_order = FALSE, .add = FALSE)
+\method{group_by}{polars_lazy_frame}(.data, ..., maintain_order = FALSE, .add = FALSE, .drop = TRUE)
 
 \method{ungroup}{polars_lazy_frame}(x, ...)
 }
@@ -27,6 +27,9 @@ large datasets and prevents the use of streaming.}
 
 \item{.add}{When \code{FALSE} (default), \code{group_by()} will override existing
 groups. To add to the existing groups, use \code{.add = TRUE}.}
+
+\item{.drop}{Unsupported. It is only present to provide a good error message
+if specified by the user.}
 
 \item{x}{A Polars Data/LazyFrame}
 }
