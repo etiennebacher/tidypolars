@@ -42,6 +42,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="articles/faq.html">FAQ</a></li>
+    <li><a class="dropdown-item" href="articles/how-to-benchmark.html">How to benchmark tidypolars</a></li>
     <li><a class="dropdown-item" href="articles/r-and-polars-expressions.html">R and Polars expressions</a></li>
   </ul>
 </li>
@@ -151,16 +152,16 @@ Click to see a small benchmark
 <span><span class="co">#&gt; # A tibble: 5 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars      91.75ms 101.63ms     8.67     2.03MB    0.217</span></span>
-<span><span class="co">#&gt; 2 tidypolars 128.61ms 269.19ms     3.37     1.49MB    1.01 </span></span>
-<span><span class="co">#&gt; 3 dplyr         3.21s    4.42s     0.235    1.79GB    0.611</span></span>
-<span><span class="co">#&gt; 4 dtplyr     916.43ms 964.62ms     1.02     1.72GB    2.25 </span></span>
-<span><span class="co">#&gt; 5 collapse   372.23ms 454.87ms     2.13   745.96MB    2.19</span></span>
+<span><span class="co">#&gt; 1 polars     103.47ms 121.17ms     7.30     2.29MB    0.183</span></span>
+<span><span class="co">#&gt; 2 tidypolars 109.71ms 140.55ms     6.03     2.19MB    0.754</span></span>
+<span><span class="co">#&gt; 3 dplyr         3.04s    3.25s     0.306    1.79GB    0.942</span></span>
+<span><span class="co">#&gt; 4 dtplyr     781.41ms 945.32ms     1.03     1.72GB    2.49 </span></span>
+<span><span class="co">#&gt; 5 collapse   323.83ms 469.67ms     2.02   745.96MB    1.36</span></span>
 <span></span>
 <span><span class="co"># NOTE: do NOT take the "mem_alloc" results into account.</span></span>
 <span><span class="co"># `bench::mark()` doesn't report the accurate memory usage for packages calling</span></span>
 <span><span class="co"># Rust code.</span></span></code></pre></div>
-</details>
+</details><p>If you want to do your own benchmarks, please take a look at <a href="https://tidypolars.etiennebacher.com/articles/how-to-benchmark">How to benchmark tidypolars</a> first for some best practices.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>

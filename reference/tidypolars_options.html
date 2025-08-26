@@ -59,6 +59,7 @@ https://pola-rs.github.io/r-polars/man/polars_options.html."><meta property="og:
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/faq.html">FAQ</a></li>
+    <li><a class="dropdown-item" href="../articles/how-to-benchmark.html">How to benchmark tidypolars</a></li>
     <li><a class="dropdown-item" href="../articles/r-and-polars-expressions.html">R and Polars expressions</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
@@ -117,11 +118,11 @@ such as changing the default behavior when converting Int64 values to R:
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2.0 ┆ 5.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 5.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.0 ┆ 5.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 3.0 ┆ 5.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 5.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2.0 ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.0 ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 3.0 ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 1.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┘</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># But one can make this stricter and throw an error when this happens</span></span></span>
