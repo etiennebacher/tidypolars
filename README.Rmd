@@ -124,6 +124,8 @@ bench::mark(
 ```
 </details>
 
+If you want to do your own benchmarks, please take a look at [How to benchmark tidypolars](https://tidypolars.etiennebacher.com/articles/how-to-benchmark) first for some best practices.
+
 
 ## Installation
 
