@@ -8,6 +8,10 @@
 
 * Better error message in `group_by()` for unsupported argument `.drop` (#230).
 
+## Other
+
+* New vignette "How to benchmark tidypolars" (#232).
+
 # tidypolars 0.14.1
 
 * `tidypolars` requires `polars` >= 1.1.0 (#222).
