@@ -50,13 +50,10 @@ thorough, representative benchmarks about `polars`, take a look at
 
 ``` r
 library(collapse, warn.conflicts = FALSE)
-#> Warning: package 'collapse' was built under R version 4.4.3
 #> collapse 2.1.1, see ?`collapse-package` or ?`collapse-documentation`
 library(dplyr, warn.conflicts = FALSE)
 library(dtplyr)
-#> Warning: package 'dtplyr' was built under R version 4.4.3
 library(polars)
-#> Warning: package 'polars' was built under R version 4.4.3
 library(tidypolars)
 
 large_iris <- data.table::rbindlist(rep(list(iris), 100000))
