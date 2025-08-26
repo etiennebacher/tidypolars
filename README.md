@@ -119,11 +119,11 @@ bench::mark(
 #> # A tibble: 5 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars      91.75ms 101.63ms     8.67     2.03MB    0.217
-#> 2 tidypolars 128.61ms 269.19ms     3.37     1.49MB    1.01 
-#> 3 dplyr         3.21s    4.42s     0.235    1.79GB    0.611
-#> 4 dtplyr     916.43ms 964.62ms     1.02     1.72GB    2.25 
-#> 5 collapse   372.23ms 454.87ms     2.13   745.96MB    2.19
+#> 1 polars     103.47ms 121.17ms     7.30     2.29MB    0.183
+#> 2 tidypolars 109.71ms 140.55ms     6.03     2.19MB    0.754
+#> 3 dplyr         3.04s    3.25s     0.306    1.79GB    0.942
+#> 4 dtplyr     781.41ms 945.32ms     1.03     1.72GB    2.49 
+#> 5 collapse   323.83ms 469.67ms     2.02   745.96MB    1.36
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
@@ -131,6 +131,11 @@ bench::mark(
 ```
 
 </details>
+
+If you want to do your own benchmarks, please take a look at [How to
+benchmark
+tidypolars](https://tidypolars.etiennebacher.com/articles/how-to-benchmark)
+first for some best practices.
 
 ## Installation
 
