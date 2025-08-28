@@ -286,7 +286,12 @@ translate <- function(
         pl$col(expr_char)
       } else {
         val <- eval_tidy(expr, env = caller)
-        pl$lit(val)
+        print(val)
+        if (is_polars_expr(val) || is_list_of_polars_expr(val)) {
+          val
+        } else {
+          pl$lit(val)
+        }
       }
     },
     language = {
@@ -687,7 +692,12 @@ translate <- function(
           # must be called only in summarize(), etc.
           out <- try(eval_bare(expr, env = caller), silent = TRUE)
           if (!inherits(out, "try-error")) {
-            return(pl$lit(out))
+            out <- if (is_polars_expr(out) || is_list_of_polars_expr(out)) {
+              out
+            } else {
+              pl$lit(out)
+            }
+            return(out)
           }
         }
       }

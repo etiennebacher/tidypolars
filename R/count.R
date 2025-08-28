@@ -139,7 +139,16 @@ count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
     } else {
       # https://github.com/etiennebacher/tidypolars/issues/193
       vars <- unique(vars)
-      out <- x$group_by(vars, .maintain_order = FALSE)$agg(
+      if (is.list(vars)) {
+        vars <- lapply(seq_along(vars), \(x) {
+          var <- vars[[x]]
+          if (is.list(var) && length(var) == 1 && is_polars_expr(var[[1]])) {
+            var[[1]] <- var[[1]]$alias(names(var))
+          }
+          var[[1]]
+        })
+      }
+      out <- x$group_by(!!!vars, .maintain_order = FALSE)$agg(
         pl$len()$alias(name)
       )
     }
@@ -148,7 +157,9 @@ count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
   if (isTRUE(sort)) {
     out$sort(name, descending = TRUE)
   } else if (length(vars) > 0) {
-    out$sort(vars)
+    new_vars <- lapply(vars, \(x) x$meta$output_name()) |>
+      unlist()
+    out$sort(!!!new_vars)
   } else {
     out
   }

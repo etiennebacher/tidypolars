@@ -158,3 +158,15 @@ check_integerish <- function(x, name, allow_na = TRUE) {
     cli_abort("{.code {name}} must be integerish.")
   }
 }
+
+is_list_of_polars_expr <- function(x, n = NULL) {
+  is_list_of_polars_expr_impl <- function(x) {
+    for (i in seq_along(x)) {
+      if (!is_polars_expr(x[[i]])) {
+        return(FALSE)
+      }
+    }
+    TRUE
+  }
+  is_list(x, n = n) && is_list_of_polars_expr_impl(x)
+}

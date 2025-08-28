@@ -16,13 +16,16 @@ print.tidypolars <- function(x, ...) {
   NextMethod("print", x)
 
   if (is_grouped && is_polars_df(x)) {
-    n_groups <- x$group_by(grps)$agg(pl$lit(1))$height
+    grps <- unlist(grps)
+    grps_names <- lapply(grps, \(x) x$meta$output_name()) |>
+      unlist()
+    n_groups <- x$group_by(!!!grps)$agg(pl$lit(1))$height
     cat(
       paste0(
         "Groups [",
         format(n_groups, big.mark = ","),
         "]: ",
-        toString(grps),
+        toString(grps_names),
         "\n"
       )
     )

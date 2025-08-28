@@ -51,7 +51,15 @@ group_by.polars_data_frame <- function(
     )
   }
 
-  vars <- tidyselect_dots(.data, ...)
+  vars <- translate_dots(
+    .data = .data,
+    ...,
+    env = rlang::current_env(),
+    caller = rlang::caller_env()
+  )
+  # .data$group_by(polars_exprs, .maintain_order = mo)$agg()
+
+  # vars <- tidyselect_dots(.data, ...)
 
   if (isTRUE(.add)) {
     existing_groups <- attributes(.data)$pl_grps
