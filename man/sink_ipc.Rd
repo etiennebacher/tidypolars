@@ -16,7 +16,8 @@ sink_ipc(
   projection_pushdown = TRUE,
   simplify_expression = TRUE,
   slice_pushdown = TRUE,
-  no_optimization = FALSE
+  no_optimization = FALSE,
+  mkdir = FALSE
 )
 }
 \arguments{
@@ -65,6 +66,8 @@ is \code{TRUE}).}
 \item{no_optimization}{Sets the following optimizations to \code{FALSE}:
 \code{predicate_pushdown}, \code{projection_pushdown},  \code{slice_pushdown},
 \code{simplify_expression}. Default is \code{FALSE}.}
+
+\item{mkdir}{Recursively create all the directories in the path.}
 }
 \value{
 The input LazyFrame.

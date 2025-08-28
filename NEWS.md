@@ -4,6 +4,9 @@
 
 * Add partial support for `stringr::str_equal()` (#228).
 
+* New argument `mkdir` in all `sink_*()` functions to recursively create the
+  folder(s) specified in the path(s) to files (#236).
+
 ## Bug fixes
 
 * Better error message in `group_by()` for unsupported argument `.drop` (#230).

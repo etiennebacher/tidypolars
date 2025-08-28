@@ -50,6 +50,7 @@
 #' @param no_optimization Sets the following optimizations to `FALSE`:
 #'   `predicate_pushdown`, `projection_pushdown`,  `slice_pushdown`,
 #'   `simplify_expression`. Default is `FALSE`.
+#' @param mkdir Recursively create all the directories in the path.
 #'
 #' @return The input LazyFrame.
 #' @export
@@ -92,7 +93,8 @@ sink_parquet <- function(
   projection_pushdown = TRUE,
   simplify_expression = TRUE,
   slice_pushdown = TRUE,
-  no_optimization = FALSE
+  no_optimization = FALSE,
+  mkdir = FALSE
 ) {
   check_dots_empty()
 
@@ -113,7 +115,8 @@ sink_parquet <- function(
     projection_pushdown = projection_pushdown,
     simplify_expression = simplify_expression,
     slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization
+    no_optimization = no_optimization,
+    mkdir = mkdir
   )
 }
 
@@ -205,6 +208,7 @@ sink_csv <- function(
   simplify_expression = TRUE,
   slice_pushdown = TRUE,
   no_optimization = FALSE,
+  mkdir = FALSE,
   quote,
   null_values
 ) {
@@ -256,7 +260,8 @@ sink_csv <- function(
     projection_pushdown = projection_pushdown,
     simplify_expression = simplify_expression,
     slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization
+    no_optimization = no_optimization,
+    mkdir = mkdir
   )
 }
 
@@ -290,7 +295,8 @@ sink_ipc <- function(
   projection_pushdown = TRUE,
   simplify_expression = TRUE,
   slice_pushdown = TRUE,
-  no_optimization = FALSE
+  no_optimization = FALSE,
+  mkdir = FALSE
 ) {
   check_dots_empty()
   if (!is_polars_lf(.data)) {
@@ -309,7 +315,8 @@ sink_ipc <- function(
     projection_pushdown = projection_pushdown,
     simplify_expression = simplify_expression,
     slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization
+    no_optimization = no_optimization,
+    mkdir = mkdir
   )
 }
 
@@ -336,7 +343,8 @@ sink_ndjson <- function(
   projection_pushdown = TRUE,
   simplify_expression = TRUE,
   slice_pushdown = TRUE,
-  no_optimization = FALSE
+  no_optimization = FALSE,
+  mkdir = FALSE
 ) {
   check_dots_empty()
   if (!is_polars_lf(.data)) {
@@ -351,6 +359,7 @@ sink_ndjson <- function(
     projection_pushdown = projection_pushdown,
     simplify_expression = simplify_expression,
     slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization
+    no_optimization = no_optimization,
+    mkdir = mkdir
   )
 }
