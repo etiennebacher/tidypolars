@@ -74,6 +74,7 @@ crashes because of too small memory.</p>
 <span>  simplify_expression <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  slice_pushdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  no_optimization <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  mkdir <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">quote</span>,</span>
 <span>  <span class="va">null_values</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -185,6 +186,10 @@ is <code>TRUE</code>).</p></dd>
 <dd><p>Sets the following optimizations to <code>FALSE</code>:
 <code>predicate_pushdown</code>, <code>projection_pushdown</code>,  <code>slice_pushdown</code>,
 <code>simplify_expression</code>. Default is <code>FALSE</code>.</p></dd>
+
+
+<dt id="arg-mkdir">mkdir<a class="anchor" aria-label="anchor" href="#arg-mkdir"></a></dt>
+<dd><p>Recursively create all the directories in the path.</p></dd>
 
 
 <dt id="arg-quote">quote<a class="anchor" aria-label="anchor" href="#arg-quote"></a></dt>
