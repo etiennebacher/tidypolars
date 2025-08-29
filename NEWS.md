@@ -6,6 +6,11 @@
 
 * New argument `mkdir` in all `sink_*()` functions to recursively create the
   folder(s) specified in the path(s) to files (#236).
+  
+* New functions `partition_by_key()` and `partition_by_max_size()` that can be
+  used in the `path` argument of `sink_*()` functions. Those enable writing a 
+  LazyFrame to several files as partitioned output. See more details in 
+  `?sink_parquet()` (#237).
 
 ## Bug fixes
 
