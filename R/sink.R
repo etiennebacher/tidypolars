@@ -66,15 +66,21 @@
 #'   the file.
 #' - by maximum number of rows: if the number of rows in a file reaches the
 #'   maximum number of rows, the file is closed and a new file is opened.
-#' - by "sorted partition": this is a specialized version of partitioning by
-#'   key. Whereas partitioning by key accepts data in any order, this scheme
-#'   expects the input data to be pre-grouped or pre-sorted. This scheme suffers
-#'   a lot less overhead, but may not be always applicable. Each new value of
-#'   the key expressions starts a new partition, therefore repeating the same
-#'   value multiple times may overwrite previous partitions.
+
+# TODO: add this back when https://github.com/pola-rs/r-polars/issues/1522 is
+# solved
+# - by "sorted partition": this is a specialized version of partitioning by
+#   key. Whereas partitioning by key accepts data in any order, this scheme
+#   expects the input data to be pre-grouped or pre-sorted. This scheme suffers
+#   a lot less overhead, but may not be always applicable. Each new value of
+#   the key expressions starts a new partition, therefore repeating the same
+#   value multiple times may overwrite previous partitions.
+# These partitioning schemes can be used with the functions `partition_by_key()`,
+# `partition_by_max_size()`, and `partition_parted()`. See Examples below.
+
 #'
-#' These partitioning schemes can be used with the functions `partition_by_key()`,
-#' `partition_by_max_size()`, and `partition_parted()`. See Examples below.
+#' These partitioning schemes can be used with the functions `partition_by_key()`
+#' and `partition_by_max_size()`. See Examples below.
 #'
 #' Writing a partitioned output usually requires setting `mkdir = TRUE` to
 #' automatically create the required subfolders.
@@ -109,20 +115,33 @@
 #' #----------------------------------------------
 #' # Write a LazyFrame to multiple files depending on various strategies.
 #' my_lf <- as_polars_lf(mtcars)
-#' tempdir_out <- tempdir()
-#' out_path <- fs::path(tempdir_out, "out")
 #'
 #' # Split the LazyFrame by key(s) and write each split to a different file:
+#' out_path <- withr::local_tempdir()
 #' sink_parquet(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
 #' fs::dir_tree(out_path)
 #'
 #' # Split the LazyFrame by max number of rows per file:
+#' out_path <- withr::local_tempdir()
 #' sink_parquet(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
 #' fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-#'
-#' # Split the LazyFrame by pre-sorted data:
-#' sink_parquet(my_lf, partition_parted(out_path, max_size = 5), mkdir = TRUE)
-#' fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
+
+# TODO: add this back when https://github.com/pola-rs/r-polars/issues/1522 is
+# solved
+#
+# # Split the LazyFrame by pre-sorted data:
+# out_path <- withr::local_tempdir()
+# my_lf |>
+#   arrange(am, cyl) |>
+#   sink_parquet(partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
+#
+# fs::dir_tree(out_path)
+#
+# # Careful when using partition_parted(): if the data is not presorted then
+# # the output files may be incorrect!
+# out_path <- withr::local_tempdir()
+# sink_parquet(my_lf, partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
+
 #' }
 sink_parquet <- function(
   .data,
@@ -172,8 +191,8 @@ sink_parquet <- function(
 #' to a `.csv` file without collecting it in the R session, thus preventing
 #' crashes because of too small memory.
 #'
+#' @inheritParams sink_parquet
 #' @param .data A Polars LazyFrame.
-#' @param path Output file (must be a `.csv` file).
 #' @param include_bom Whether to include UTF-8 BOM (byte order mark) in the CSV
 #' output.
 #' @param include_header Whether to include header in the CSV output.
@@ -203,9 +222,7 @@ sink_parquet <- function(
 #' @param null_values `r lifecycle::badge("deprecated")` Deprecated, use
 #' `null_value` instead.
 #'
-#' @inheritParams sink_parquet
-#'
-#' @inherit sink_parquet return
+#' @inherit sink_parquet params details return
 #' @export
 #'
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -230,6 +247,38 @@ sink_parquet <- function(
 #'     hp_gear_ratio = hp / gear
 #'   ) |>
 #'   sink_csv(path = file_csv2)
+#'
+#'
+#' #----------------------------------------------
+#' # Write a LazyFrame to multiple files depending on various strategies.
+#' my_lf <- as_polars_lf(mtcars)
+#'
+#' # Split the LazyFrame by key(s) and write each split to a different file:
+#' out_path <- withr::local_tempdir()
+#' sink_csv(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
+#' fs::dir_tree(out_path)
+#'
+#' # Split the LazyFrame by max number of rows per file:
+#' out_path <- withr::local_tempdir()
+#' sink_csv(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
+#' fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
+
+# TODO: add this back when https://github.com/pola-rs/r-polars/issues/1522 is
+# solved
+#
+# # Split the LazyFrame by pre-sorted data:
+# out_path <- withr::local_tempdir()
+# my_lf |>
+#   arrange(am, cyl) |>
+#   sink_csv(partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
+#
+# fs::dir_tree(out_path)
+#
+# # Careful when using partition_parted(): if the data is not presorted then
+# # the output files may be incorrect!
+# out_path <- withr::local_tempdir()
+# sink_csv(my_lf, partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
+
 #' }
 sink_csv <- function(
   .data,
@@ -317,7 +366,6 @@ sink_csv <- function(
 #' to an IPC file without collecting it in the R session, thus preventing
 #' crashes because of too small memory.
 #'
-#' @param path Output file.
 #' @param compression `NULL` or a character of the compression method,
 #' `"uncompressed"` or "lz4" or "zstd". `NULL` is equivalent to `"uncompressed"`.
 #' Choose "zstd" for good compression performance. Choose "lz4"
@@ -326,9 +374,63 @@ sink_csv <- function(
 #' @inheritParams sink_parquet
 #' @inheritParams write_ipc_polars
 #'
-#' @inherit sink_parquet return
+#' @inherit sink_parquet details return
 #' @export
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE) && require("arrow", quietly = TRUE)
+#' \dontrun{
+#' # This is an example workflow where sink_ipc() is not very useful because
+#' # the data would fit in memory. It simply is an example of using it at the
+#' # end of a piped workflow.
+#'
+#' # Create files for the IPC input and output:
+#' file_ipc <- tempfile(fileext = ".ipc")
+#' file_ipc2 <- tempfile(fileext = ".ipc")
+#'
+#' # Write some data in an IPC file
+#' fake_data <- do.call("rbind", rep(list(mtcars), 1000))
+#' arrow::write_ipc_file(fake_data, file_ipc)
+#'
+#' # In a new R session, we could read this file as a LazyFrame, do some operations,
+#' # and write it to another IPC file without ever collecting it in the R session:
+#' scan_ipc_polars(file_ipc) |>
+#'   filter(cyl %in% c(4, 6), mpg > 22) |>
+#'   mutate(
+#'     hp_gear_ratio = hp / gear
+#'   ) |>
+#'   sink_ipc(path = file_ipc2)
+#'
+#'
+#' #----------------------------------------------
+#' # Write a LazyFrame to multiple files depending on various strategies.
+#' my_lf <- as_polars_lf(mtcars)
+#'
+#' # Split the LazyFrame by key(s) and write each split to a different file:
+#' out_path <- withr::local_tempdir()
+#' sink_ipc(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
+#' fs::dir_tree(out_path)
+#'
+#' # Split the LazyFrame by max number of rows per file:
+#' out_path <- withr::local_tempdir()
+#' sink_ipc(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
+#' fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
 
+# TODO: add this back when https://github.com/pola-rs/r-polars/issues/1522 is
+# solved
+#
+# # Split the LazyFrame by pre-sorted data:
+# out_path <- withr::local_tempdir()
+# my_lf |>
+#   arrange(am, cyl) |>
+#   sink_ipc(partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
+#
+# fs::dir_tree(out_path)
+#
+# # Careful when using partition_parted(): if the data is not presorted then
+# # the output files may be incorrect!
+# out_path <- withr::local_tempdir()
+# sink_ipc(my_lf, partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
+
+#' }
 sink_ipc <- function(
   .data,
   path,
@@ -372,13 +474,63 @@ sink_ipc <- function(
 #' it in the R session first. This is useful if the output of the query is still
 #' larger than RAM as it would crash the R session if it was collected into R.
 #'
-#' @param path Output file.
-#'
-#' @inheritParams sink_parquet
-#'
-#' @inherit sink_parquet return
+#' @inherit sink_parquet params details return
 #' @export
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE) && require("yyjsonr", quietly = TRUE)
+#' \dontrun{
+#' # This is an example workflow where sink_ndjson() is not very useful because
+#' # the data would fit in memory. It simply is an example of using it at the
+#' # end of a piped workflow.
+#'
+#' # Create files for the NDJSON input and output:
+#' file_ndjson <- tempfile(fileext = ".ndjson")
+#' file_ndjson2 <- tempfile(fileext = ".ndjson")
+#'
+#' # Write some data in a CSV file
+#' fake_data <- do.call("rbind", rep(list(mtcars), 1000))
+#' yyjsonr::write_ndjson_file(fake_data, file_ndjson)
+#'
+#' # In a new R session, we could read this file as a LazyFrame, do some operations,
+#' # and write it to another NDJSON file without ever collecting it in the R session:
+#' scan_ndjson_polars(file_ndjson) |>
+#'   filter(cyl %in% c(4, 6), mpg > 22) |>
+#'   mutate(
+#'     hp_gear_ratio = hp / gear
+#'   ) |>
+#'   sink_ndjson(path = file_ndjson2)
+#'
+#'
+#' #----------------------------------------------
+#' # Write a LazyFrame to multiple files depending on various strategies.
+#' my_lf <- as_polars_lf(mtcars)
+#'
+#' # Split the LazyFrame by key(s) and write each split to a different file:
+#' out_path <- withr::local_tempdir()
+#' sink_ndjson(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
+#' fs::dir_tree(out_path)
+#'
+#' # Split the LazyFrame by max number of rows per file:
+#' out_path <- withr::local_tempdir()
+#' sink_ndjson(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
+#' fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
 
+# TODO: add this back when https://github.com/pola-rs/r-polars/issues/1522 is
+# solved
+#
+# # Split the LazyFrame by pre-sorted data:
+# out_path <- withr::local_tempdir()
+# my_lf |>
+#   arrange(am, cyl) |>
+#   sink_ndjson(partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
+#
+# fs::dir_tree(out_path)
+#
+# # Careful when using partition_parted(): if the data is not presorted then
+# # the output files may be incorrect!
+# out_path <- withr::local_tempdir()
+# sink_ndjson(my_lf, partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
+
+#' }
 sink_ndjson <- function(
   .data,
   path,
@@ -439,6 +591,25 @@ partition_by_max_size <- function(
   pl$PartitionMaxSize(
     base_path = base_path,
     max_size = max_size,
+    per_partition_sort_by = NULL
+  )
+}
+
+# TODO: add this back when https://github.com/pola-rs/r-polars/issues/1522 is
+# solved
+# @export
+partition_parted <- function(
+  base_path,
+  ...,
+  by,
+  include_key = TRUE,
+  per_partition_sort_by = NULL
+) {
+  check_dots_empty()
+  pl$PartitionParted(
+    base_path = base_path,
+    by = by,
+    include_key = TRUE,
     per_partition_sort_by = NULL
   )
 }
