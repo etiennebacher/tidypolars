@@ -5,7 +5,8 @@
 #' crashes because of too small memory.
 #'
 #' @param .data A Polars LazyFrame.
-#' @param path Output file (must be a `.parquet` file).
+#' @param path Output file. Can also be a `partition_*()` function to export the
+#' output to multiple files (see Details section below).
 #' @param ... Ignored.
 #' @param compression The compression method. One of :
 #'
@@ -52,6 +53,32 @@
 #'   `simplify_expression`. Default is `FALSE`.
 #' @param mkdir Recursively create all the directories in the path.
 #'
+#' @details
+#'
+#' ## Partitioned output
+#'
+#' It is possible to export a LazyFrame to multiple files, also called
+#' *partitioned output*. A partition can be determined in several ways:
+#'
+#' - by key(s): split by the values of keys. The amount of files that can be
+#'   written is not limited. However, when writing beyond a certain amount of
+#'   files, the data for the remaining partitions is buffered before writing to
+#'   the file.
+#' - by maximum number of rows: if the number of rows in a file reaches the
+#'   maximum number of rows, the file is closed and a new file is opened.
+#' - by "sorted partition": this is a specialized version of partitioning by
+#'   key. Whereas partitioning by key accepts data in any order, this scheme
+#'   expects the input data to be pre-grouped or pre-sorted. This scheme suffers
+#'   a lot less overhead, but may not be always applicable. Each new value of
+#'   the key expressions starts a new partition, therefore repeating the same
+#'   value multiple times may overwrite previous partitions.
+#'
+#' These partitioning schemes can be used with the functions `partition_by_key()`,
+#' `partition_by_max_size()`, and `partition_parted()`. See Examples below.
+#'
+#' Writing a partitioned output usually requires setting `mkdir = TRUE` to
+#' automatically create the required subfolders.
+#'
 #' @return The input LazyFrame.
 #' @export
 #'
@@ -77,6 +104,25 @@
 #'     hp_gear_ratio = hp / gear
 #'   ) |>
 #'   sink_parquet(path = file_parquet)
+#'
+#'
+#' #----------------------------------------------
+#' # Write a LazyFrame to multiple files depending on various strategies.
+#' my_lf <- as_polars_lf(mtcars)
+#' tempdir_out <- tempdir()
+#' out_path <- fs::path(tempdir_out, "out")
+#'
+#' # Split the LazyFrame by key(s) and write each split to a different file:
+#' sink_parquet(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
+#' fs::dir_tree(out_path)
+#'
+#' # Split the LazyFrame by max number of rows per file:
+#' sink_parquet(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
+#' fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
+#'
+#' # Split the LazyFrame by pre-sorted data:
+#' sink_parquet(my_lf, partition_parted(out_path, max_size = 5), mkdir = TRUE)
+#' fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
 #' }
 sink_parquet <- function(
   .data,
@@ -361,5 +407,38 @@ sink_ndjson <- function(
     slice_pushdown = slice_pushdown,
     no_optimization = no_optimization,
     mkdir = mkdir
+  )
+}
+
+
+#' @export
+partition_by_key <- function(
+  base_path,
+  ...,
+  by,
+  include_key = TRUE,
+  per_partition_sort_by = NULL
+) {
+  check_dots_empty()
+  pl$PartitionByKey(
+    base_path = base_path,
+    by = by,
+    include_key = TRUE,
+    per_partition_sort_by = NULL
+  )
+}
+
+#' @export
+partition_by_max_size <- function(
+  base_path,
+  ...,
+  max_size,
+  per_partition_sort_by = NULL
+) {
+  check_dots_empty()
+  pl$PartitionMaxSize(
+    base_path = base_path,
+    max_size = max_size,
+    per_partition_sort_by = NULL
   )
 }

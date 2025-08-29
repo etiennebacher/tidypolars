@@ -92,6 +92,12 @@ This function allows to stream a LazyFrame that is larger than RAM directly
 to a \code{.parquet} file without collecting it in the R session, thus preventing
 crashes because of too small memory.
 }
+\details{
+\subsection{Partitioned output:}{
+
+Hello there
+}
+}
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontrun{
