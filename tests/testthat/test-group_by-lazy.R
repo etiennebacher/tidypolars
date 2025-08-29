@@ -11,4 +11,14 @@ test_that("Arg `.drop` is not supported in group_by()", {
   )
 })
 
+test_that("group_by() doesn't support named expressions, #233", {
+  expect_snapshot_lazy(
+    iris |>
+      as_polars_lf() |>
+      group_by(is_present = !is.na(Sepal.Length)) |>
+      count(),
+    error = TRUE
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

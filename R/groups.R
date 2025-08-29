@@ -51,6 +51,7 @@ group_by.polars_data_frame <- function(
     )
   }
 
+  disallow_named_expressions(...)
   vars <- tidyselect_dots(.data, ...)
 
   if (isTRUE(.add)) {

@@ -16,6 +16,11 @@
 
 * Better error message in `group_by()` for unsupported argument `.drop` (#230).
 
+* Better error message in `group_by()` when passing named expressions in `...`.
+  `dplyr` supports those but it is more and more recommended to use the `.by` / 
+  `by` argument in individual functions rather than using `group_by()` and 
+  `ungroup()` (#238).
+  
 ## Other
 
 * New vignette "How to benchmark tidypolars" (#232).
