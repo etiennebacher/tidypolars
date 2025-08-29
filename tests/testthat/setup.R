@@ -15,6 +15,7 @@ exceptions <- c(
   "test-describe.R",
   "test-fetch.R",
   "test-group_split.R",
+  "test-partitioned_output.R",
   "test-pivot_wider.R",
   "test-read-write.R",
   "test-sink_csv.R",
