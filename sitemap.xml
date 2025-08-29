@@ -37,6 +37,7 @@
 <url><loc>https://tidypolars.etiennebacher.com/reference/make_unique_id.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/mutate.polars_data_frame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/mutating-joins.html</loc></url>
+<url><loc>https://tidypolars.etiennebacher.com/reference/partitioned_output.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/pivot_longer.polars_data_frame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/pivot_wider.polars_data_frame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/pull.polars_data_frame.html</loc></url>

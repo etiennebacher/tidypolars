@@ -80,7 +80,8 @@ crashes because of too small memory.</p>
 
 
 <dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
-<dd><p>Output file (must be a <code>.parquet</code> file).</p></dd>
+<dd><p>Output file. Can also be a <code>partition_*()</code> function to export the
+output to multiple files (see Details section below).</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -167,11 +168,31 @@ is <code>TRUE</code>).</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The input LazyFrame.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+
+<div class="section">
+<h3 id="partitioned-output">Partitioned output<a class="anchor" aria-label="anchor" href="#partitioned-output"></a></h3>
+
+
+<p>It is possible to export a LazyFrame to multiple files, also called
+<em>partitioned output</em>. A partition can be determined in several ways:</p><ul><li><p>by key(s): split by the values of keys. The amount of files that can be
+written is not limited. However, when writing beyond a certain amount of
+files, the data for the remaining partitions is buffered before writing to
+the file.</p></li>
+<li><p>by maximum number of rows: if the number of rows in a file reaches the
+maximum number of rows, the file is closed and a new file is opened.</p></li>
+</ul><p>These partitioning schemes can be used with the functions <code><a href="partitioned_output.html">partition_by_key()</a></code>
+and <code><a href="partitioned_output.html">partition_by_max_size()</a></code>. See Examples below.</p>
+<p>Writing a partitioned output usually requires setting <code>mkdir = TRUE</code> to
+automatically create the required subfolders.</p>
+</div>
+
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="co"># This is an example workflow where sink_parquet() is not very useful because</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># This is an example workflow where sink_parquet() is not very useful because</span></span></span>
 <span class="r-in"><span><span class="co"># the data would fit in memory. It simply is an example of using it at the</span></span></span>
 <span class="r-in"><span><span class="co"># end of a piped workflow.</span></span></span>
 <span class="r-in"><span></span></span>
@@ -191,7 +212,44 @@ is <code>TRUE</code>).</p></dd>
 <span class="r-in"><span>    hp_gear_ratio <span class="op">=</span> <span class="va">hp</span> <span class="op">/</span> <span class="va">gear</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">sink_parquet</span><span class="op">(</span>path <span class="op">=</span> <span class="va">file_parquet</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#----------------------------------------------</span></span></span>
+<span class="r-in"><span><span class="co"># Write a LazyFrame to multiple files depending on various strategies.</span></span></span>
+<span class="r-in"><span><span class="va">my_lf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_lf.html" class="external-link">as_polars_lf</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Split the LazyFrame by key(s) and write each split to a different file:</span></span></span>
+<span class="r-in"><span><span class="va">out_path</span> <span class="op">&lt;-</span> <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_tempfile.html" class="external-link">local_tempdir</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">sink_parquet</span><span class="op">(</span><span class="va">my_lf</span>, <span class="fu"><a href="partitioned_output.html">partition_by_key</a></span><span class="op">(</span><span class="va">out_path</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"am"</span>, <span class="st">"cyl"</span><span class="op">)</span><span class="op">)</span>, mkdir <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">out_path</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/var/folders/x7/ch5v91h56_zbvbd1y2f600dm0000gn/T//Rtmp5K4UWN/file192e59930b63</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ├── <span style="color: #0000BB; font-weight: bold;">am=0.0</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │   ├── <span style="color: #0000BB; font-weight: bold;">cyl=4.0</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │   │   └── 0.parquet</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │   ├── <span style="color: #0000BB; font-weight: bold;">cyl=6.0</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │   │   └── 0.parquet</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │   └── <span style="color: #0000BB; font-weight: bold;">cyl=8.0</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │       └── 0.parquet</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └── <span style="color: #0000BB; font-weight: bold;">am=1.0</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ├── <span style="color: #0000BB; font-weight: bold;">cyl=4.0</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     │   └── 0.parquet</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ├── <span style="color: #0000BB; font-weight: bold;">cyl=6.0</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     │   └── 0.parquet</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     └── <span style="color: #0000BB; font-weight: bold;">cyl=8.0</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         └── 0.parquet</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Split the LazyFrame by max number of rows per file:</span></span></span>
+<span class="r-in"><span><span class="va">out_path</span> <span class="op">&lt;-</span> <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_tempfile.html" class="external-link">local_tempdir</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">sink_parquet</span><span class="op">(</span><span class="va">my_lf</span>, <span class="fu"><a href="partitioned_output.html">partition_by_max_size</a></span><span class="op">(</span><span class="va">out_path</span>, max_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>, mkdir <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">out_path</span><span class="op">)</span> <span class="co"># mtcars has 32 rows so we have 7 output files</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/var/folders/x7/ch5v91h56_zbvbd1y2f600dm0000gn/T//Rtmp5K4UWN/file192e44d0be86</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000000.parquet</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000001.parquet</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000002.parquet</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000003.parquet</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000004.parquet</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000005.parquet</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └── 00000006.parquet</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
