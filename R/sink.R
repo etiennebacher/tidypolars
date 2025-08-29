@@ -580,7 +580,7 @@ sink_ndjson <- function(
 #' @param max_size An integer-ish value indicating the maximum number of rows in
 #' each of the generated files.
 #'
-#' @rdname partitioned_output
+#' @name partitioned_output
 #' @export
 partition_by_key <- function(
   base_path,
