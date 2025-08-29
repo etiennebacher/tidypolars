@@ -5,12 +5,14 @@ CMD
 Codecov
 DataFrame
 DataFrames
+Datetime
 Deprecations
 DuckDB
 GCP
 Github
 Hałun
 IPC
+JSON
 LazyFrame
 LazyFrames
 Lossy
@@ -31,6 +33,7 @@ brotli
 chrono
 csv
 datatypes
+datetime
 deprecations
 downup
 dplyr
@@ -39,7 +42,9 @@ equalities
 gcp
 globbing
 gzip
+interpretable
 ipc
+ish
 json
 lz
 lzo
@@ -49,10 +54,13 @@ ndjson
 nows
 occurence
 ofccurences
+parallelizes
 polars
 pre
 prefiltered
 regexes
+repos
+subfolders
 subplans
 tidyselect
 tidyverse
@@ -60,4 +68,5 @@ timeunit
 ungrouped
 upcast
 updown
+vectorised
 zstd

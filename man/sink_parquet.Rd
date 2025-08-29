@@ -26,7 +26,8 @@ sink_parquet(
 \arguments{
 \item{.data}{A Polars LazyFrame.}
 
-\item{path}{Output file (must be a \code{.parquet} file).}
+\item{path}{Output file. Can also be a \verb{partition_*()} function to export the
+output to multiple files (see Details section below).}
 
 \item{...}{Ignored.}
 
@@ -92,9 +93,29 @@ This function allows to stream a LazyFrame that is larger than RAM directly
 to a \code{.parquet} file without collecting it in the R session, thus preventing
 crashes because of too small memory.
 }
+\details{
+\subsection{Partitioned output}{
+
+It is possible to export a LazyFrame to multiple files, also called
+\emph{partitioned output}. A partition can be determined in several ways:
+\itemize{
+\item by key(s): split by the values of keys. The amount of files that can be
+written is not limited. However, when writing beyond a certain amount of
+files, the data for the remaining partitions is buffered before writing to
+the file.
+\item by maximum number of rows: if the number of rows in a file reaches the
+maximum number of rows, the file is closed and a new file is opened.
+}
+
+These partitioning schemes can be used with the functions \code{partition_by_key()}
+and \code{partition_by_max_size()}. See Examples below.
+
+Writing a partitioned output usually requires setting \code{mkdir = TRUE} to
+automatically create the required subfolders.
+}
+}
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-\dontrun{
 # This is an example workflow where sink_parquet() is not very useful because
 # the data would fit in memory. It simply is an example of using it at the
 # end of a piped workflow.
@@ -115,6 +136,20 @@ scan_csv_polars(file_csv) |>
     hp_gear_ratio = hp / gear
   ) |>
   sink_parquet(path = file_parquet)
-}
+
+
+#----------------------------------------------
+# Write a LazyFrame to multiple files depending on various strategies.
+my_lf <- as_polars_lf(mtcars)
+
+# Split the LazyFrame by key(s) and write each split to a different file:
+out_path <- withr::local_tempdir()
+sink_parquet(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
+fs::dir_tree(out_path)
+
+# Split the LazyFrame by max number of rows per file:
+out_path <- withr::local_tempdir()
+sink_parquet(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
+fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
 \dontshow{\}) # examplesIf}
 }
