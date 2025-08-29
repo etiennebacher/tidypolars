@@ -89,7 +89,6 @@
 #' @export
 #'
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' \dontrun{
 #' # This is an example workflow where sink_parquet() is not very useful because
 #' # the data would fit in memory. It simply is an example of using it at the
 #' # end of a piped workflow.
@@ -141,8 +140,6 @@
 # # the output files may be incorrect!
 # out_path <- withr::local_tempdir()
 # sink_parquet(my_lf, partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
-
-#' }
 sink_parquet <- function(
   .data,
   path,
@@ -226,7 +223,6 @@ sink_parquet <- function(
 #' @export
 #'
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' \dontrun{
 #' # This is an example workflow where sink_csv() is not very useful because
 #' # the data would fit in memory. It simply is an example of using it at the
 #' # end of a piped workflow.
@@ -278,8 +274,6 @@ sink_parquet <- function(
 # # the output files may be incorrect!
 # out_path <- withr::local_tempdir()
 # sink_csv(my_lf, partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
-
-#' }
 sink_csv <- function(
   .data,
   path,
@@ -371,13 +365,11 @@ sink_csv <- function(
 #' Choose "zstd" for good compression performance. Choose "lz4"
 #' for fast compression/decompression.
 #'
-#' @inheritParams sink_parquet
+#' @inherit sink_parquet params details return
 #' @inheritParams write_ipc_polars
 #'
-#' @inherit sink_parquet details return
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE) && require("arrow", quietly = TRUE)
-#' \dontrun{
 #' # This is an example workflow where sink_ipc() is not very useful because
 #' # the data would fit in memory. It simply is an example of using it at the
 #' # end of a piped workflow.
@@ -429,8 +421,6 @@ sink_csv <- function(
 # # the output files may be incorrect!
 # out_path <- withr::local_tempdir()
 # sink_ipc(my_lf, partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
-
-#' }
 sink_ipc <- function(
   .data,
   path,
@@ -477,7 +467,6 @@ sink_ipc <- function(
 #' @inherit sink_parquet params details return
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE) && require("yyjsonr", quietly = TRUE)
-#' \dontrun{
 #' # This is an example workflow where sink_ndjson() is not very useful because
 #' # the data would fit in memory. It simply is an example of using it at the
 #' # end of a piped workflow.
@@ -529,8 +518,6 @@ sink_ipc <- function(
 # # the output files may be incorrect!
 # out_path <- withr::local_tempdir()
 # sink_ndjson(my_lf, partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
-
-#' }
 sink_ndjson <- function(
   .data,
   path,

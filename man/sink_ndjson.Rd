@@ -83,7 +83,6 @@ automatically create the required subfolders.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE) && require("yyjsonr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-\dontrun{
 # This is an example workflow where sink_ndjson() is not very useful because
 # the data would fit in memory. It simply is an example of using it at the
 # end of a piped workflow.
@@ -119,6 +118,5 @@ fs::dir_tree(out_path)
 out_path <- withr::local_tempdir()
 sink_ndjson(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
 fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-}
 \dontshow{\}) # examplesIf}
 }
