@@ -20,6 +20,8 @@
   `dplyr` supports those but it is more and more recommended to use the `.by` / 
   `by` argument in individual functions rather than using `group_by()` and 
   `ungroup()` (#238).
+
+* Better error message in `count()` when passing named expressions in `...` (#239).
   
 ## Other
 

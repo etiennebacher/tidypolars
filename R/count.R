@@ -39,6 +39,7 @@ count.polars_data_frame <- function(
   mo <- attributes(x)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
+  disallow_named_expressions(...)
   vars <- tidyselect_dots(x, ...)
   vars <- c(grps, vars)
   out <- count_(x, vars, sort = sort, name = name, new_col = FALSE)

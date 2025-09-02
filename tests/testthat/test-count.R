@@ -183,3 +183,13 @@ test_that("count() and add_count() explicitly do not support 'wt'", {
     }
   )
 })
+
+test_that("group_by() doesn't support named expressions, #233", {
+  expect_snapshot(
+    iris |>
+      as_polars_df() |>
+      group_by(is_present = !is.na(Sepal.Length)) |>
+      count(),
+    error = TRUE
+  )
+})
