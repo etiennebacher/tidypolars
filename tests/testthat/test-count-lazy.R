@@ -188,4 +188,14 @@ test_that("count() and add_count() explicitly do not support 'wt'", {
   )
 })
 
+test_that("group_by() doesn't support named expressions, #233", {
+  expect_snapshot_lazy(
+    iris |>
+      as_polars_lf() |>
+      group_by(is_present = !is.na(Sepal.Length)) |>
+      count(),
+    error = TRUE
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
