@@ -1149,7 +1149,6 @@ check_timezone <- function(tz, empty_allowed = FALSE) {
     }
   }
 
-  # TODO: remove this once we have cleaner error messages in r-polars
   if (!tz %in% OlsonNames()) {
     cli_abort("Unrecognized time zone: {.val {tz}}", )
   }
