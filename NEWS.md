@@ -21,8 +21,7 @@
   `by` argument in individual functions rather than using `group_by()` and 
   `ungroup()` (#238).
 
-* Better error message in `count()` when passing named expressions in `...` 
-  (#239).
+* Better error message in `count()` when passing named expressions in `...` (#239).
   
 ## Other
 
