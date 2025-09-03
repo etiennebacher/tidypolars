@@ -23,9 +23,11 @@
 
 * Better error message in `count()` when passing named expressions in `...` (#239).
   
-## Other
+## Documentation
 
 * New vignette "How to benchmark tidypolars" (#232).
+
+* Better documentation for all `read_*()` and `scan_*()` functions (#241).
 
 # tidypolars 0.14.1
 

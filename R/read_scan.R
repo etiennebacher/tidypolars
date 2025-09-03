@@ -9,7 +9,69 @@
 #'
 #' @rdname from_parquet
 #' @name from_parquet
+#' @return The scan function returns a LazyFrame, the read function returns a DataFrame.
 #' @export
+#'
+#' @examplesIf require("dplyr", quietly = TRUE)
+#' ### Read or scan a single Parquet file ------------------------
+#'
+#' # Setup: create a Parquet file
+#' dest <- tempfile(fileext = ".parquet")
+#' dat <- as_polars_df(mtcars)
+#' write_parquet_polars(dat, dest)
+#'
+#' # Import this file as a DataFrame for eager evaluation
+#' read_parquet_polars(dest) |>
+#'   arrange(mpg)
+#'
+#' # Import this file as a LazyFrame for lazy evaluation
+#' scan_parquet_polars(dest) |>
+#'   arrange(mpg) |>
+#'   compute()
+#'
+#'
+#' ### Read or scan several all Parquet files in a folder ------------------------
+#'
+#' # Setup: create a folder "output" that contains two Parquet files
+#' dest_folder <- file.path(tempdir(), "output")
+#' dir.create(dest_folder, showWarnings = FALSE)
+#' dest1 <- file.path(dest_folder, "output_1.parquet")
+#' dest2 <- file.path(dest_folder, "output_2.parquet")
+#'
+#' write_parquet_polars(as_polars_df(mtcars[1:16, ]), dest1)
+#' write_parquet_polars(as_polars_df(mtcars[17:32, ]), dest2)
+#' list.files(dest_folder)
+#'
+#' # Import all files as a LazyFrame
+#' scan_parquet_polars(dest_folder) |>
+#'   arrange(mpg) |>
+#'   compute()
+#'
+#' # Include the file path to know where each row comes from
+#' scan_parquet_polars(dest_folder, include_file_paths = "file_path") |>
+#'   arrange(mpg) |>
+#'   compute()
+#'
+#'
+#' ### Read or scan all Parquet files that match a glob pattern ------------------------
+#'
+#' # Setup: create a folder "output" that contains three Parquet files,
+#' # two of which follow the pattern "output_XXX.parquet"
+#' dest_folder <- file.path(tempdir(), "output_glob")
+#' dir.create(dest_folder, showWarnings = FALSE)
+#' dest1 <- file.path(dest_folder, "output_1.parquet")
+#' dest2 <- file.path(dest_folder, "output_2.parquet")
+#' dest3 <- file.path(dest_folder, "other_output.parquet")
+#'
+#' write_parquet_polars(as_polars_df(mtcars[1:16, ]), dest1)
+#' write_parquet_polars(as_polars_df(mtcars[17:32, ]), dest2)
+#' write_parquet_polars(as_polars_df(iris), dest3)
+#' list.files(dest_folder)
+#'
+#' # Import only the files whose name match "output_XXX.parquet" as a LazyFrame
+#' scan_parquet_polars(paste0(dest_folder, "/output_*.parquet")) |>
+#'   arrange(mpg) |>
+#'   compute()
 read_parquet_polars <- function(
   source,
   ...,
@@ -116,6 +178,7 @@ scan_parquet_polars <- function(
 #' @rdname from_csv
 #' @name from_csv
 #' @export
+#' @inherit from_parquet return
 read_csv_polars <- function(
   source,
   ...,
@@ -287,6 +350,7 @@ scan_csv_polars <- function(
 #' @rdname from_ndjson
 #' @name from_ndjson
 #' @export
+#' @inherit from_parquet return
 read_ndjson_polars <- function(
   source,
   ...,
@@ -375,6 +439,7 @@ scan_ndjson_polars <- function(
 #' @rdname from_ipc
 #' @name from_ipc
 #' @export
+#' @inherit from_parquet return
 read_ipc_polars <- function(
   source,
   ...,

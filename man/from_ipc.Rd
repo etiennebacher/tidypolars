@@ -54,6 +54,9 @@ with this name.}
 \item{memory_map}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated
 with no replacement.}
 }
+\value{
+The scan function returns a LazyFrame, the read function returns a DataFrame.
+}
 \description{
 \code{read_ipc_polars()} imports the data as a Polars DataFrame.
 
