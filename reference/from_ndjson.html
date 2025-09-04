@@ -133,7 +133,122 @@ check which values might cause an issue.</p></dd>
 Deprecated with no replacement.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>The scan function returns a LazyFrame, the read function returns a DataFrame.</p>
+    </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">### Read or scan a single NDJSON file ------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Setup: create a NDJSON file</span></span></span>
+<span class="r-in"><span><span class="va">dest</span> <span class="op">&lt;-</span> <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_tempfile.html" class="external-link">local_tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".json"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/stream_in.html" class="external-link">stream_out</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">file</a></span><span class="op">(</span><span class="va">dest</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Import this file as a DataFrame for eager evaluation</span></span></span>
+<span class="r-in"><span><span class="fu">read_ndjson_polars</span><span class="op">(</span><span class="va">dest</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (32, 12)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────┬─────┬───────┬─────┬───┬─────┬──────┬──────┬─────────────────────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ mpg  ┆ cyl ┆ disp  ┆ hp  ┆ … ┆ am  ┆ gear ┆ carb ┆ _row                │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---  ┆ --- ┆ ---   ┆ --- ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---                 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64  ┆ i64 ┆ f64   ┆ i64 ┆   ┆ i64 ┆ i64  ┆ i64  ┆ str                 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞══════╪═════╪═══════╪═════╪═══╪═════╪══════╪══════╪═════════════════════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ Cadillac Fleetwood  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ Lincoln Continental │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ Camaro Z28          │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ Duster 360          │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ Chrysler Imperial   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …   ┆ …     ┆ …   ┆ … ┆ …   ┆ …    ┆ …    ┆ …                   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ Fiat X1-9           │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 4    ┆ 2    ┆ Honda Civic         │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 5    ┆ 2    ┆ Lotus Europa        │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ Fiat 128            │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ Toyota Corolla      │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └──────┴─────┴───────┴─────┴───┴─────┴──────┴──────┴─────────────────────┘</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Import this file as a LazyFrame for lazy evaluation</span></span></span>
+<span class="r-in"><span><span class="fu">scan_ndjson_polars</span><span class="op">(</span><span class="va">dest</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (32, 12)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────┬─────┬───────┬─────┬───┬─────┬──────┬──────┬─────────────────────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ mpg  ┆ cyl ┆ disp  ┆ hp  ┆ … ┆ am  ┆ gear ┆ carb ┆ _row                │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---  ┆ --- ┆ ---   ┆ --- ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---                 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64  ┆ i64 ┆ f64   ┆ i64 ┆   ┆ i64 ┆ i64  ┆ i64  ┆ str                 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞══════╪═════╪═══════╪═════╪═══╪═════╪══════╪══════╪═════════════════════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ Cadillac Fleetwood  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ Lincoln Continental │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ Camaro Z28          │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ Duster 360          │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ Chrysler Imperial   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …   ┆ …     ┆ …   ┆ … ┆ …   ┆ …    ┆ …    ┆ …                   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ Fiat X1-9           │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 4    ┆ 2    ┆ Honda Civic         │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 5    ┆ 2    ┆ Lotus Europa        │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ Fiat 128            │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ Toyota Corolla      │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └──────┴─────┴───────┴─────┴───┴─────┴──────┴──────┴─────────────────────┘</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">### Read or scan several all NDJSON files in a folder ------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Setup: create a folder "output" that contains two NDJSON files</span></span></span>
+<span class="r-in"><span><span class="va">dest_folder</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_tempfile.html" class="external-link">local_tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"output"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">dest_folder</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dest1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">dest_folder</span>, <span class="st">"output_1.json"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dest2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">dest_folder</span>, <span class="st">"output_2.json"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/stream_in.html" class="external-link">stream_out</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">16</span>, <span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">file</a></span><span class="op">(</span><span class="va">dest1</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open file '/var/folders/x7/ch5v91h56_zbvbd1y2f600dm0000gn/T//RtmpwABvka/filef33758eb5ce/output/output_1.json': No such file or directory</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in open.connection(con, "wb"):</span> cannot open the connection</span>
+<span class="r-in"><span><span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/stream_in.html" class="external-link">stream_out</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">17</span><span class="op">:</span><span class="fl">32</span>, <span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">file</a></span><span class="op">(</span><span class="va">dest2</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open file '/var/folders/x7/ch5v91h56_zbvbd1y2f600dm0000gn/T//RtmpwABvka/filef33758eb5ce/output/output_2.json': No such file or directory</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in open.connection(con, "wb"):</span> cannot open the connection</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">dest_folder</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Import all files as a LazyFrame</span></span></span>
+<span class="r-in"><span><span class="fu">scan_ndjson_polars</span><span class="op">(</span><span class="va">dest_folder</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in x$collect_schema():</span> Evaluation failed in `$collect_schema()`.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> No such file or directory (os error 2): /var/folders/x7/ch5v91h56_zbvbd1y2f600dm0000gn/T//RtmpwABvka/filef33758eb5ce/output: 'ndjson scan'</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">### Read or scan all NDJSON files that match a glob pattern ------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Setup: create a folder "output" that contains three NDJSON files,</span></span></span>
+<span class="r-in"><span><span class="co"># two of which follow the pattern "output_XXX.json"</span></span></span>
+<span class="r-in"><span><span class="va">dest_folder</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_tempfile.html" class="external-link">local_tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"output_glob"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">dest_folder</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dest1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">dest_folder</span>, <span class="st">"output_1.json"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dest2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">dest_folder</span>, <span class="st">"output_2.json"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dest3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">dest_folder</span>, <span class="st">"other_output.json"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/stream_in.html" class="external-link">stream_out</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">16</span>, <span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">file</a></span><span class="op">(</span><span class="va">dest1</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open file '/var/folders/x7/ch5v91h56_zbvbd1y2f600dm0000gn/T//RtmpwABvka/filef336c4223ad/output_glob/output_1.json': No such file or directory</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in open.connection(con, "wb"):</span> cannot open the connection</span>
+<span class="r-in"><span><span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/stream_in.html" class="external-link">stream_out</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">17</span><span class="op">:</span><span class="fl">32</span>, <span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">file</a></span><span class="op">(</span><span class="va">dest2</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open file '/var/folders/x7/ch5v91h56_zbvbd1y2f600dm0000gn/T//RtmpwABvka/filef336c4223ad/output_glob/output_2.json': No such file or directory</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in open.connection(con, "wb"):</span> cannot open the connection</span>
+<span class="r-in"><span><span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/stream_in.html" class="external-link">stream_out</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">file</a></span><span class="op">(</span><span class="va">dest3</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open file '/var/folders/x7/ch5v91h56_zbvbd1y2f600dm0000gn/T//RtmpwABvka/filef336c4223ad/output_glob/other_output.json': No such file or directory</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in open.connection(con, "wb"):</span> cannot open the connection</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">dest_folder</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Import only the files whose name match "output_XXX.json" as a LazyFrame</span></span></span>
+<span class="r-in"><span><span class="fu">scan_ndjson_polars</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">dest_folder</span>, <span class="st">"/output_*.json"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in x$collect_schema():</span> Evaluation failed in `$collect_schema()`.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> expected at least 1 source: 'ndjson scan'</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

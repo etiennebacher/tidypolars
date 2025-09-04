@@ -251,7 +251,158 @@ use <code>schema_overrides</code> instead.</p></dd>
 Deprecated with no replacement.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>The scan function returns a LazyFrame, the read function returns a DataFrame.</p>
+    </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">### Read or scan a single CSV file ------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Setup: create a CSV file</span></span></span>
+<span class="r-in"><span><span class="va">dest</span> <span class="op">&lt;-</span> <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_tempfile.html" class="external-link">local_tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".csv"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">dest</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Import this file as a DataFrame for eager evaluation</span></span></span>
+<span class="r-in"><span><span class="fu">read_csv_polars</span><span class="op">(</span><span class="va">dest</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (32, 11)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────┬─────┬───────┬─────┬───┬─────┬─────┬──────┬──────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ mpg  ┆ cyl ┆ disp  ┆ hp  ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---  ┆ --- ┆ ---   ┆ --- ┆   ┆ --- ┆ --- ┆ ---  ┆ ---  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64  ┆ i64 ┆ f64   ┆ i64 ┆   ┆ i64 ┆ i64 ┆ i64  ┆ i64  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞══════╪═════╪═══════╪═════╪═══╪═════╪═════╪══════╪══════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 0   ┆ 3    ┆ 4    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 0   ┆ 3    ┆ 4    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 0   ┆ 3    ┆ 4    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 0   ┆ 3    ┆ 4    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 0   ┆ 3    ┆ 4    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …   ┆ …     ┆ …   ┆ … ┆ …   ┆ …   ┆ …    ┆ …    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 1   ┆ 4    ┆ 1    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 1   ┆ 4    ┆ 2    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 1   ┆ 5    ┆ 2    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 1   ┆ 4    ┆ 1    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 1   ┆ 4    ┆ 1    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └──────┴─────┴───────┴─────┴───┴─────┴─────┴──────┴──────┘</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Import this file as a LazyFrame for lazy evaluation</span></span></span>
+<span class="r-in"><span><span class="fu">scan_csv_polars</span><span class="op">(</span><span class="va">dest</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (32, 11)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────┬─────┬───────┬─────┬───┬─────┬─────┬──────┬──────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ mpg  ┆ cyl ┆ disp  ┆ hp  ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---  ┆ --- ┆ ---   ┆ --- ┆   ┆ --- ┆ --- ┆ ---  ┆ ---  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64  ┆ i64 ┆ f64   ┆ i64 ┆   ┆ i64 ┆ i64 ┆ i64  ┆ i64  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞══════╪═════╪═══════╪═════╪═══╪═════╪═════╪══════╪══════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 0   ┆ 3    ┆ 4    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 0   ┆ 3    ┆ 4    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 0   ┆ 3    ┆ 4    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 0   ┆ 3    ┆ 4    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 0   ┆ 3    ┆ 4    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …   ┆ …     ┆ …   ┆ … ┆ …   ┆ …   ┆ …    ┆ …    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 1   ┆ 4    ┆ 1    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 1   ┆ 4    ┆ 2    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 1   ┆ 5    ┆ 2    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 1   ┆ 4    ┆ 1    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 1   ┆ 4    ┆ 1    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └──────┴─────┴───────┴─────┴───┴─────┴─────┴──────┴──────┘</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">### Change the datatype of some columns when reading the file ------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">scan_csv_polars</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">dest</span>,</span></span>
+<span class="r-in"><span>  schema_overrides <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>gear <span class="op">=</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://pola-rs.github.io/r-polars/man/pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="va">String</span>, carb <span class="op">=</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://pola-rs.github.io/r-polars/man/pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="va">Float32</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shape: (32, 11)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────┬─────┬───────┬─────┬───┬─────┬─────┬──────┬──────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ mpg  ┆ cyl ┆ disp  ┆ hp  ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---  ┆ --- ┆ ---   ┆ --- ┆   ┆ --- ┆ --- ┆ ---  ┆ ---  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ f64  ┆ i64 ┆ f64   ┆ i64 ┆   ┆ i64 ┆ i64 ┆ str  ┆ f32  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞══════╪═════╪═══════╪═════╪═══╪═════╪═════╪══════╪══════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 0   ┆ 3    ┆ 4.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 0   ┆ 3    ┆ 4.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 0   ┆ 3    ┆ 4.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 0   ┆ 3    ┆ 4.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 0   ┆ 3    ┆ 4.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …   ┆ …     ┆ …   ┆ … ┆ …   ┆ …   ┆ …    ┆ …    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 1   ┆ 4    ┆ 1.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 1   ┆ 4    ┆ 2.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 1   ┆ 5    ┆ 2.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 1   ┆ 4    ┆ 1.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 1   ┆ 4    ┆ 1.0  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └──────┴─────┴───────┴─────┴───┴─────┴─────┴──────┴──────┘</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">### Read or scan several all CSV files in a folder ------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Setup: create a folder "output" that contains two CSV files</span></span></span>
+<span class="r-in"><span><span class="va">dest_folder</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_tempfile.html" class="external-link">local_tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"output"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">dest_folder</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dest1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">dest_folder</span>, <span class="st">"output_1.csv"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dest2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">dest_folder</span>, <span class="st">"output_2.csv"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">16</span>, <span class="op">]</span>, <span class="va">dest1</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open file '/var/folders/x7/ch5v91h56_zbvbd1y2f600dm0000gn/T//RtmpwABvka/filef3317cf6e3a/output/output_1.csv': No such file or directory</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in file(file, ifelse(append, "a", "w")):</span> cannot open the connection</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">17</span><span class="op">:</span><span class="fl">32</span>, <span class="op">]</span>, <span class="va">dest2</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open file '/var/folders/x7/ch5v91h56_zbvbd1y2f600dm0000gn/T//RtmpwABvka/filef3317cf6e3a/output/output_2.csv': No such file or directory</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in file(file, ifelse(append, "a", "w")):</span> cannot open the connection</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">dest_folder</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Import all files as a LazyFrame</span></span></span>
+<span class="r-in"><span><span class="fu">scan_csv_polars</span><span class="op">(</span><span class="va">dest_folder</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in x$collect_schema():</span> Evaluation failed in `$collect_schema()`.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> No such file or directory (os error 2): /var/folders/x7/ch5v91h56_zbvbd1y2f600dm0000gn/T//RtmpwABvka/filef3317cf6e3a/output: 'csv scan'</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Include the file path to know where each row comes from</span></span></span>
+<span class="r-in"><span><span class="fu">scan_csv_polars</span><span class="op">(</span><span class="va">dest_folder</span>, include_file_paths <span class="op">=</span> <span class="st">"file_path"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in x$collect_schema():</span> Evaluation failed in `$collect_schema()`.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> No such file or directory (os error 2): /var/folders/x7/ch5v91h56_zbvbd1y2f600dm0000gn/T//RtmpwABvka/filef3317cf6e3a/output: 'csv scan'</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">### Read or scan all CSV files that match a glob pattern ------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Setup: create a folder "output" that contains three CSV files,</span></span></span>
+<span class="r-in"><span><span class="co"># two of which follow the pattern "output_XXX.csv"</span></span></span>
+<span class="r-in"><span><span class="va">dest_folder</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_tempfile.html" class="external-link">local_tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"output_glob"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">dest_folder</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dest1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">dest_folder</span>, <span class="st">"output_1.csv"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dest2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">dest_folder</span>, <span class="st">"output_2.csv"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dest3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">dest_folder</span>, <span class="st">"other_output.csv"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">16</span>, <span class="op">]</span>, <span class="va">dest1</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open file '/var/folders/x7/ch5v91h56_zbvbd1y2f600dm0000gn/T//RtmpwABvka/filef33334dae0c/output_glob/output_1.csv': No such file or directory</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in file(file, ifelse(append, "a", "w")):</span> cannot open the connection</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">17</span><span class="op">:</span><span class="fl">32</span>, <span class="op">]</span>, <span class="va">dest2</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open file '/var/folders/x7/ch5v91h56_zbvbd1y2f600dm0000gn/T//RtmpwABvka/filef33334dae0c/output_glob/output_2.csv': No such file or directory</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in file(file, ifelse(append, "a", "w")):</span> cannot open the connection</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="va">dest3</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open file '/var/folders/x7/ch5v91h56_zbvbd1y2f600dm0000gn/T//RtmpwABvka/filef33334dae0c/output_glob/other_output.csv': No such file or directory</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in file(file, ifelse(append, "a", "w")):</span> cannot open the connection</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">dest_folder</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Import only the files whose name match "output_XXX.csv" as a LazyFrame</span></span></span>
+<span class="r-in"><span><span class="fu">scan_csv_polars</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">dest_folder</span>, <span class="st">"/output_*.csv"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in x$collect_schema():</span> Evaluation failed in `$collect_schema()`.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> expected at least 1 source: 'csv scan'</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
