@@ -124,11 +124,11 @@ The scan function returns a LazyFrame, the read function returns a DataFrame.
 \code{scan_parquet_polars()} imports the data as a Polars LazyFrame.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 ### Read or scan a single Parquet file ------------------------
 
 # Setup: create a Parquet file
-dest <- tempfile(fileext = ".parquet")
+dest <- withr::local_tempfile(fileext = ".parquet")
 dat <- as_polars_df(mtcars)
 write_parquet_polars(dat, dest)
 
@@ -145,7 +145,7 @@ scan_parquet_polars(dest) |>
 ### Read or scan several all Parquet files in a folder ------------------------
 
 # Setup: create a folder "output" that contains two Parquet files
-dest_folder <- file.path(tempdir(), "output")
+dest_folder <- file.path(withr::local_tempdir(), "output")
 dir.create(dest_folder, showWarnings = FALSE)
 dest1 <- file.path(dest_folder, "output_1.parquet")
 dest2 <- file.path(dest_folder, "output_2.parquet")
@@ -169,7 +169,7 @@ scan_parquet_polars(dest_folder, include_file_paths = "file_path") |>
 
 # Setup: create a folder "output" that contains three Parquet files,
 # two of which follow the pattern "output_XXX.parquet"
-dest_folder <- file.path(tempdir(), "output_glob")
+dest_folder <- file.path(withr::local_tempdir(), "output_glob")
 dir.create(dest_folder, showWarnings = FALSE)
 dest1 <- file.path(dest_folder, "output_1.parquet")
 dest2 <- file.path(dest_folder, "output_2.parquet")

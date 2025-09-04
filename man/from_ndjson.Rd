@@ -74,11 +74,11 @@ The scan function returns a LazyFrame, the read function returns a DataFrame.
 \code{scan_ndjson_polars()} imports the data as a Polars LazyFrame.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("jsonlite", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE) && require("jsonlite", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 ### Read or scan a single NDJSON file ------------------------
 
 # Setup: create a NDJSON file
-dest <- tempfile(fileext = ".json")
+dest <- withr::local_tempfile(fileext = ".json")
 jsonlite::stream_out(mtcars, file(dest), verbose = FALSE)
 
 # Import this file as a DataFrame for eager evaluation
@@ -94,7 +94,7 @@ scan_ndjson_polars(dest) |>
 ### Read or scan several all NDJSON files in a folder ------------------------
 
 # Setup: create a folder "output" that contains two NDJSON files
-dest_folder <- file.path(tempdir(), "output")
+dest_folder <- file.path(withr::local_tempdir(), "output")
 dir.create(dest_folder, showWarnings = FALSE)
 dest1 <- file.path(dest_folder, "output_1.json")
 dest2 <- file.path(dest_folder, "output_2.json")
@@ -113,7 +113,7 @@ scan_ndjson_polars(dest_folder) |>
 
 # Setup: create a folder "output" that contains three NDJSON files,
 # two of which follow the pattern "output_XXX.json"
-dest_folder <- file.path(tempdir(), "output_glob")
+dest_folder <- file.path(withr::local_tempdir(), "output_glob")
 dir.create(dest_folder, showWarnings = FALSE)
 dest1 <- file.path(dest_folder, "output_1.json")
 dest2 <- file.path(dest_folder, "output_2.json")

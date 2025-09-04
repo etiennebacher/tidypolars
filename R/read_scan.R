@@ -12,11 +12,11 @@
 #' @return The scan function returns a LazyFrame, the read function returns a DataFrame.
 #' @export
 #'
-#' @examplesIf require("dplyr", quietly = TRUE)
+#' @examplesIf require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE)
 #' ### Read or scan a single Parquet file ------------------------
 #'
 #' # Setup: create a Parquet file
-#' dest <- tempfile(fileext = ".parquet")
+#' dest <- withr::local_tempfile(fileext = ".parquet")
 #' dat <- as_polars_df(mtcars)
 #' write_parquet_polars(dat, dest)
 #'
@@ -33,7 +33,7 @@
 #' ### Read or scan several all Parquet files in a folder ------------------------
 #'
 #' # Setup: create a folder "output" that contains two Parquet files
-#' dest_folder <- file.path(tempdir(), "output")
+#' dest_folder <- file.path(withr::local_tempdir(), "output")
 #' dir.create(dest_folder, showWarnings = FALSE)
 #' dest1 <- file.path(dest_folder, "output_1.parquet")
 #' dest2 <- file.path(dest_folder, "output_2.parquet")
@@ -57,7 +57,7 @@
 #'
 #' # Setup: create a folder "output" that contains three Parquet files,
 #' # two of which follow the pattern "output_XXX.parquet"
-#' dest_folder <- file.path(tempdir(), "output_glob")
+#' dest_folder <- file.path(withr::local_tempdir(), "output_glob")
 #' dir.create(dest_folder, showWarnings = FALSE)
 #' dest1 <- file.path(dest_folder, "output_1.parquet")
 #' dest2 <- file.path(dest_folder, "output_2.parquet")
@@ -180,11 +180,11 @@ scan_parquet_polars <- function(
 #' @export
 #' @inherit from_parquet return
 #'
-#' @examplesIf require("dplyr", quietly = TRUE)
+#' @examplesIf require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE)
 #' ### Read or scan a single CSV file ------------------------
 #'
 #' # Setup: create a CSV file
-#' dest <- tempfile(fileext = ".csv")
+#' dest <- withr::local_tempfile(fileext = ".csv")
 #' write.csv(mtcars, dest, row.names = FALSE)
 #'
 #' # Import this file as a DataFrame for eager evaluation
@@ -210,7 +210,7 @@ scan_parquet_polars <- function(
 #' ### Read or scan several all CSV files in a folder ------------------------
 #'
 #' # Setup: create a folder "output" that contains two CSV files
-#' dest_folder <- file.path(tempdir(), "output")
+#' dest_folder <- file.path(withr::local_tempdir(), "output")
 #' dir.create(dest_folder, showWarnings = FALSE)
 #' dest1 <- file.path(dest_folder, "output_1.csv")
 #' dest2 <- file.path(dest_folder, "output_2.csv")
@@ -234,7 +234,7 @@ scan_parquet_polars <- function(
 #'
 #' # Setup: create a folder "output" that contains three CSV files,
 #' # two of which follow the pattern "output_XXX.csv"
-#' dest_folder <- file.path(tempdir(), "output_glob")
+#' dest_folder <- file.path(withr::local_tempdir(), "output_glob")
 #' dir.create(dest_folder, showWarnings = FALSE)
 #' dest1 <- file.path(dest_folder, "output_1.csv")
 #' dest2 <- file.path(dest_folder, "output_2.csv")
@@ -422,11 +422,11 @@ scan_csv_polars <- function(
 #' @export
 #' @inherit from_parquet return
 #'
-#' @examplesIf require("dplyr", quietly = TRUE) && require("jsonlite", quietly = TRUE)
+#' @examplesIf require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE) && require("jsonlite", quietly = TRUE)
 #' ### Read or scan a single NDJSON file ------------------------
 #'
 #' # Setup: create a NDJSON file
-#' dest <- tempfile(fileext = ".json")
+#' dest <- withr::local_tempfile(fileext = ".json")
 #' jsonlite::stream_out(mtcars, file(dest), verbose = FALSE)
 #'
 #' # Import this file as a DataFrame for eager evaluation
@@ -442,7 +442,7 @@ scan_csv_polars <- function(
 #' ### Read or scan several all NDJSON files in a folder ------------------------
 #'
 #' # Setup: create a folder "output" that contains two NDJSON files
-#' dest_folder <- file.path(tempdir(), "output")
+#' dest_folder <- file.path(withr::local_tempdir(), "output")
 #' dir.create(dest_folder, showWarnings = FALSE)
 #' dest1 <- file.path(dest_folder, "output_1.json")
 #' dest2 <- file.path(dest_folder, "output_2.json")
@@ -461,7 +461,7 @@ scan_csv_polars <- function(
 #'
 #' # Setup: create a folder "output" that contains three NDJSON files,
 #' # two of which follow the pattern "output_XXX.json"
-#' dest_folder <- file.path(tempdir(), "output_glob")
+#' dest_folder <- file.path(withr::local_tempdir(), "output_glob")
 #' dir.create(dest_folder, showWarnings = FALSE)
 #' dest1 <- file.path(dest_folder, "output_1.json")
 #' dest2 <- file.path(dest_folder, "output_2.json")
@@ -566,11 +566,11 @@ scan_ndjson_polars <- function(
 #' @export
 #' @inherit from_parquet return
 #'
-#' @examplesIf require("dplyr", quietly = TRUE) && require("arrow", quietly = TRUE)
+#' @examplesIf require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE) && require("arrow", quietly = TRUE)
 #' ### Read or scan a single IPC file ------------------------
 #'
 #' # Setup: create an IPC file
-#' dest <- tempfile(fileext = ".ipc")
+#' dest <- withr::local_tempfile(fileext = ".ipc")
 #' arrow::write_ipc_file(mtcars, file(dest))
 #'
 #' # Import this file as a DataFrame for eager evaluation
@@ -586,7 +586,7 @@ scan_ndjson_polars <- function(
 #' ### Read or scan several all IPC files in a folder ------------------------
 #'
 #' # Setup: create a folder "output" that contains two IPC files
-#' dest_folder <- file.path(tempdir(), "output")
+#' dest_folder <- file.path(withr::local_tempdir(), "output")
 #' dir.create(dest_folder, showWarnings = FALSE)
 #' dest1 <- file.path(dest_folder, "output_1.ipc")
 #' dest2 <- file.path(dest_folder, "output_2.ipc")
@@ -605,7 +605,7 @@ scan_ndjson_polars <- function(
 #'
 #' # Setup: create a folder "output" that contains three IPC files,
 #' # two of which follow the pattern "output_XXX.ipc"
-#' dest_folder <- file.path(tempdir(), "output_glob")
+#' dest_folder <- file.path(withr::local_tempdir(), "output_glob")
 #' dir.create(dest_folder, showWarnings = FALSE)
 #' dest1 <- file.path(dest_folder, "output_1.ipc")
 #' dest2 <- file.path(dest_folder, "output_2.ipc")
