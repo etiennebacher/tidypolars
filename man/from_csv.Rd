@@ -159,3 +159,75 @@ The scan function returns a LazyFrame, the read function returns a DataFrame.
 
 \code{scan_csv_polars()} imports the data as a Polars LazyFrame.
 }
+\examples{
+\dontshow{if (require("dplyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+### Read or scan a single CSV file ------------------------
+
+# Setup: create a CSV file
+dest <- tempfile(fileext = ".csv")
+write.csv(mtcars, dest, row.names = FALSE)
+
+# Import this file as a DataFrame for eager evaluation
+read_csv_polars(dest) |>
+  arrange(mpg)
+
+# Import this file as a LazyFrame for lazy evaluation
+scan_csv_polars(dest) |>
+  arrange(mpg) |>
+  compute()
+
+
+### Change the datatype of some columns when reading the file ------------------------
+
+scan_csv_polars(
+  dest,
+  schema_overrides = list(gear = polars::pl$String, carb = polars::pl$Float32)
+) |>
+  arrange(mpg) |>
+  compute()
+
+
+### Read or scan several all CSV files in a folder ------------------------
+
+# Setup: create a folder "output" that contains two CSV files
+dest_folder <- file.path(tempdir(), "output")
+dir.create(dest_folder, showWarnings = FALSE)
+dest1 <- file.path(dest_folder, "output_1.csv")
+dest2 <- file.path(dest_folder, "output_2.csv")
+
+write.csv(mtcars[1:16, ], dest1, row.names = FALSE)
+write.csv(mtcars[17:32, ], dest2, row.names = FALSE)
+list.files(dest_folder)
+
+# Import all files as a LazyFrame
+scan_csv_polars(dest_folder) |>
+  arrange(mpg) |>
+  compute()
+
+# Include the file path to know where each row comes from
+scan_csv_polars(dest_folder, include_file_paths = "file_path") |>
+  arrange(mpg) |>
+  compute()
+
+
+### Read or scan all CSV files that match a glob pattern ------------------------
+
+# Setup: create a folder "output" that contains three CSV files,
+# two of which follow the pattern "output_XXX.csv"
+dest_folder <- file.path(tempdir(), "output_glob")
+dir.create(dest_folder, showWarnings = FALSE)
+dest1 <- file.path(dest_folder, "output_1.csv")
+dest2 <- file.path(dest_folder, "output_2.csv")
+dest3 <- file.path(dest_folder, "other_output.csv")
+
+write.csv(mtcars[1:16, ], dest1, row.names = FALSE)
+write.csv(mtcars[17:32, ], dest2, row.names = FALSE)
+write.csv(iris, dest3, row.names = FALSE)
+list.files(dest_folder)
+
+# Import only the files whose name match "output_XXX.csv" as a LazyFrame
+scan_csv_polars(paste0(dest_folder, "/output_*.csv")) |>
+  arrange(mpg) |>
+  compute()
+\dontshow{\}) # examplesIf}
+}
