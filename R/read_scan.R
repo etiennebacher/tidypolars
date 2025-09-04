@@ -9,7 +9,69 @@
 #'
 #' @rdname from_parquet
 #' @name from_parquet
+#' @return The scan function returns a LazyFrame, the read function returns a DataFrame.
 #' @export
+#'
+#' @examplesIf require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE)
+#' ### Read or scan a single Parquet file ------------------------
+#'
+#' # Setup: create a Parquet file
+#' dest <- withr::local_tempfile(fileext = ".parquet")
+#' dat <- as_polars_df(mtcars)
+#' write_parquet_polars(dat, dest)
+#'
+#' # Import this file as a DataFrame for eager evaluation
+#' read_parquet_polars(dest) |>
+#'   arrange(mpg)
+#'
+#' # Import this file as a LazyFrame for lazy evaluation
+#' scan_parquet_polars(dest) |>
+#'   arrange(mpg) |>
+#'   compute()
+#'
+#'
+#' ### Read or scan several all Parquet files in a folder ------------------------
+#'
+#' # Setup: create a folder "output" that contains two Parquet files
+#' dest_folder <- file.path(withr::local_tempdir(), "output")
+#' dir.create(dest_folder, showWarnings = FALSE)
+#' dest1 <- file.path(dest_folder, "output_1.parquet")
+#' dest2 <- file.path(dest_folder, "output_2.parquet")
+#'
+#' write_parquet_polars(as_polars_df(mtcars[1:16, ]), dest1)
+#' write_parquet_polars(as_polars_df(mtcars[17:32, ]), dest2)
+#' list.files(dest_folder)
+#'
+#' # Import all files as a LazyFrame
+#' scan_parquet_polars(dest_folder) |>
+#'   arrange(mpg) |>
+#'   compute()
+#'
+#' # Include the file path to know where each row comes from
+#' scan_parquet_polars(dest_folder, include_file_paths = "file_path") |>
+#'   arrange(mpg) |>
+#'   compute()
+#'
+#'
+#' ### Read or scan all Parquet files that match a glob pattern ------------------------
+#'
+#' # Setup: create a folder "output" that contains three Parquet files,
+#' # two of which follow the pattern "output_XXX.parquet"
+#' dest_folder <- file.path(withr::local_tempdir(), "output_glob")
+#' dir.create(dest_folder, showWarnings = FALSE)
+#' dest1 <- file.path(dest_folder, "output_1.parquet")
+#' dest2 <- file.path(dest_folder, "output_2.parquet")
+#' dest3 <- file.path(dest_folder, "other_output.parquet")
+#'
+#' write_parquet_polars(as_polars_df(mtcars[1:16, ]), dest1)
+#' write_parquet_polars(as_polars_df(mtcars[17:32, ]), dest2)
+#' write_parquet_polars(as_polars_df(iris), dest3)
+#' list.files(dest_folder)
+#'
+#' # Import only the files whose name match "output_XXX.parquet" as a LazyFrame
+#' scan_parquet_polars(paste0(dest_folder, "/output_*.parquet")) |>
+#'   arrange(mpg) |>
+#'   compute()
 read_parquet_polars <- function(
   source,
   ...,
@@ -116,6 +178,77 @@ scan_parquet_polars <- function(
 #' @rdname from_csv
 #' @name from_csv
 #' @export
+#' @inherit from_parquet return
+#'
+#' @examplesIf require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE)
+#' ### Read or scan a single CSV file ------------------------
+#'
+#' # Setup: create a CSV file
+#' dest <- withr::local_tempfile(fileext = ".csv")
+#' write.csv(mtcars, dest, row.names = FALSE)
+#'
+#' # Import this file as a DataFrame for eager evaluation
+#' read_csv_polars(dest) |>
+#'   arrange(mpg)
+#'
+#' # Import this file as a LazyFrame for lazy evaluation
+#' scan_csv_polars(dest) |>
+#'   arrange(mpg) |>
+#'   compute()
+#'
+#'
+#' ### Change the datatype of some columns when reading the file ------------------------
+#'
+#' scan_csv_polars(
+#'   dest,
+#'   schema_overrides = list(gear = polars::pl$String, carb = polars::pl$Float32)
+#' ) |>
+#'   arrange(mpg) |>
+#'   compute()
+#'
+#'
+#' ### Read or scan several all CSV files in a folder ------------------------
+#'
+#' # Setup: create a folder "output" that contains two CSV files
+#' dest_folder <- file.path(withr::local_tempdir(), "output")
+#' dir.create(dest_folder, showWarnings = FALSE)
+#' dest1 <- file.path(dest_folder, "output_1.csv")
+#' dest2 <- file.path(dest_folder, "output_2.csv")
+#'
+#' write.csv(mtcars[1:16, ], dest1, row.names = FALSE)
+#' write.csv(mtcars[17:32, ], dest2, row.names = FALSE)
+#' list.files(dest_folder)
+#'
+#' # Import all files as a LazyFrame
+#' scan_csv_polars(dest_folder) |>
+#'   arrange(mpg) |>
+#'   compute()
+#'
+#' # Include the file path to know where each row comes from
+#' scan_csv_polars(dest_folder, include_file_paths = "file_path") |>
+#'   arrange(mpg) |>
+#'   compute()
+#'
+#'
+#' ### Read or scan all CSV files that match a glob pattern ------------------------
+#'
+#' # Setup: create a folder "output" that contains three CSV files,
+#' # two of which follow the pattern "output_XXX.csv"
+#' dest_folder <- file.path(withr::local_tempdir(), "output_glob")
+#' dir.create(dest_folder, showWarnings = FALSE)
+#' dest1 <- file.path(dest_folder, "output_1.csv")
+#' dest2 <- file.path(dest_folder, "output_2.csv")
+#' dest3 <- file.path(dest_folder, "other_output.csv")
+#'
+#' write.csv(mtcars[1:16, ], dest1, row.names = FALSE)
+#' write.csv(mtcars[17:32, ], dest2, row.names = FALSE)
+#' write.csv(iris, dest3, row.names = FALSE)
+#' list.files(dest_folder)
+#'
+#' # Import only the files whose name match "output_XXX.csv" as a LazyFrame
+#' scan_csv_polars(paste0(dest_folder, "/output_*.csv")) |>
+#'   arrange(mpg) |>
+#'   compute()
 read_csv_polars <- function(
   source,
   ...,
@@ -287,6 +420,62 @@ scan_csv_polars <- function(
 #' @rdname from_ndjson
 #' @name from_ndjson
 #' @export
+#' @inherit from_parquet return
+#'
+#' @examplesIf require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE) && require("jsonlite", quietly = TRUE)
+#' ### Read or scan a single NDJSON file ------------------------
+#'
+#' # Setup: create a NDJSON file
+#' dest <- withr::local_tempfile(fileext = ".json")
+#' jsonlite::stream_out(mtcars, file(dest), verbose = FALSE)
+#'
+#' # Import this file as a DataFrame for eager evaluation
+#' read_ndjson_polars(dest) |>
+#'   arrange(mpg)
+#'
+#' # Import this file as a LazyFrame for lazy evaluation
+#' scan_ndjson_polars(dest) |>
+#'   arrange(mpg) |>
+#'   compute()
+#'
+#'
+#' ### Read or scan several all NDJSON files in a folder ------------------------
+#'
+#' # Setup: create a folder "output" that contains two NDJSON files
+#' dest_folder <- file.path(withr::local_tempdir(), "output")
+#' dir.create(dest_folder, showWarnings = FALSE)
+#' dest1 <- file.path(dest_folder, "output_1.json")
+#' dest2 <- file.path(dest_folder, "output_2.json")
+#'
+#' jsonlite::stream_out(mtcars[1:16, ], file(dest1), verbose = FALSE)
+#' jsonlite::stream_out(mtcars[17:32, ], file(dest2), verbose = FALSE)
+#' list.files(dest_folder)
+#'
+#' # Import all files as a LazyFrame
+#' scan_ndjson_polars(dest_folder) |>
+#'   arrange(mpg) |>
+#'   compute()
+#'
+#'
+#' ### Read or scan all NDJSON files that match a glob pattern ------------------------
+#'
+#' # Setup: create a folder "output" that contains three NDJSON files,
+#' # two of which follow the pattern "output_XXX.json"
+#' dest_folder <- file.path(withr::local_tempdir(), "output_glob")
+#' dir.create(dest_folder, showWarnings = FALSE)
+#' dest1 <- file.path(dest_folder, "output_1.json")
+#' dest2 <- file.path(dest_folder, "output_2.json")
+#' dest3 <- file.path(dest_folder, "other_output.json")
+#'
+#' jsonlite::stream_out(mtcars[1:16, ], file(dest1), verbose = FALSE)
+#' jsonlite::stream_out(mtcars[17:32, ], file(dest2), verbose = FALSE)
+#' jsonlite::stream_out(iris, file(dest3), verbose = FALSE)
+#' list.files(dest_folder)
+#'
+#' # Import only the files whose name match "output_XXX.json" as a LazyFrame
+#' scan_ndjson_polars(paste0(dest_folder, "/output_*.json")) |>
+#'   arrange(mpg) |>
+#'   compute()
 read_ndjson_polars <- function(
   source,
   ...,
@@ -375,6 +564,62 @@ scan_ndjson_polars <- function(
 #' @rdname from_ipc
 #' @name from_ipc
 #' @export
+#' @inherit from_parquet return
+#'
+#' @examplesIf require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE) && require("arrow", quietly = TRUE)
+#' ### Read or scan a single IPC file ------------------------
+#'
+#' # Setup: create an IPC file
+#' dest <- withr::local_tempfile(fileext = ".ipc")
+#' arrow::write_ipc_file(mtcars, file(dest))
+#'
+#' # Import this file as a DataFrame for eager evaluation
+#' read_ipc_polars(dest) |>
+#'   arrange(mpg)
+#'
+#' # Import this file as a LazyFrame for lazy evaluation
+#' scan_ipc_polars(dest) |>
+#'   arrange(mpg) |>
+#'   compute()
+#'
+#'
+#' ### Read or scan several all IPC files in a folder ------------------------
+#'
+#' # Setup: create a folder "output" that contains two IPC files
+#' dest_folder <- file.path(withr::local_tempdir(), "output")
+#' dir.create(dest_folder, showWarnings = FALSE)
+#' dest1 <- file.path(dest_folder, "output_1.ipc")
+#' dest2 <- file.path(dest_folder, "output_2.ipc")
+#'
+#' arrow::write_ipc_file(mtcars[1:16, ], dest1)
+#' arrow::write_ipc_file(mtcars[17:32, ], dest2)
+#' list.files(dest_folder)
+#'
+#' # Import all files as a LazyFrame
+#' scan_ipc_polars(dest_folder) |>
+#'   arrange(mpg) |>
+#'   compute()
+#'
+#'
+#' ### Read or scan all IPC files that match a glob pattern ------------------------
+#'
+#' # Setup: create a folder "output" that contains three IPC files,
+#' # two of which follow the pattern "output_XXX.ipc"
+#' dest_folder <- file.path(withr::local_tempdir(), "output_glob")
+#' dir.create(dest_folder, showWarnings = FALSE)
+#' dest1 <- file.path(dest_folder, "output_1.ipc")
+#' dest2 <- file.path(dest_folder, "output_2.ipc")
+#' dest3 <- file.path(dest_folder, "other_output.ipc")
+#'
+#' arrow::write_ipc_file(mtcars[1:16, ], dest1)
+#' arrow::write_ipc_file(mtcars[17:32, ], dest2)
+#' arrow::write_ipc_file(iris, dest3)
+#' list.files(dest_folder)
+#'
+#' # Import only the files whose name match "output_XXX.ipc" as a LazyFrame
+#' scan_ipc_polars(paste0(dest_folder, "/output_*.ipc")) |>
+#'   arrange(mpg) |>
+#'   compute()
 read_ipc_polars <- function(
   source,
   ...,

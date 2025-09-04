@@ -54,8 +54,68 @@ with this name.}
 \item{memory_map}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated
 with no replacement.}
 }
+\value{
+The scan function returns a LazyFrame, the read function returns a DataFrame.
+}
 \description{
 \code{read_ipc_polars()} imports the data as a Polars DataFrame.
 
 \code{scan_ipc_polars()} imports the data as a Polars LazyFrame.
+}
+\examples{
+\dontshow{if (require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE) && require("arrow", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+### Read or scan a single IPC file ------------------------
+
+# Setup: create an IPC file
+dest <- withr::local_tempfile(fileext = ".ipc")
+arrow::write_ipc_file(mtcars, file(dest))
+
+# Import this file as a DataFrame for eager evaluation
+read_ipc_polars(dest) |>
+  arrange(mpg)
+
+# Import this file as a LazyFrame for lazy evaluation
+scan_ipc_polars(dest) |>
+  arrange(mpg) |>
+  compute()
+
+
+### Read or scan several all IPC files in a folder ------------------------
+
+# Setup: create a folder "output" that contains two IPC files
+dest_folder <- file.path(withr::local_tempdir(), "output")
+dir.create(dest_folder, showWarnings = FALSE)
+dest1 <- file.path(dest_folder, "output_1.ipc")
+dest2 <- file.path(dest_folder, "output_2.ipc")
+
+arrow::write_ipc_file(mtcars[1:16, ], dest1)
+arrow::write_ipc_file(mtcars[17:32, ], dest2)
+list.files(dest_folder)
+
+# Import all files as a LazyFrame
+scan_ipc_polars(dest_folder) |>
+  arrange(mpg) |>
+  compute()
+
+
+### Read or scan all IPC files that match a glob pattern ------------------------
+
+# Setup: create a folder "output" that contains three IPC files,
+# two of which follow the pattern "output_XXX.ipc"
+dest_folder <- file.path(withr::local_tempdir(), "output_glob")
+dir.create(dest_folder, showWarnings = FALSE)
+dest1 <- file.path(dest_folder, "output_1.ipc")
+dest2 <- file.path(dest_folder, "output_2.ipc")
+dest3 <- file.path(dest_folder, "other_output.ipc")
+
+arrow::write_ipc_file(mtcars[1:16, ], dest1)
+arrow::write_ipc_file(mtcars[17:32, ], dest2)
+arrow::write_ipc_file(iris, dest3)
+list.files(dest_folder)
+
+# Import only the files whose name match "output_XXX.ipc" as a LazyFrame
+scan_ipc_polars(paste0(dest_folder, "/output_*.ipc")) |>
+  arrange(mpg) |>
+  compute()
+\dontshow{\}) # examplesIf}
 }

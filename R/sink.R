@@ -466,7 +466,7 @@ sink_ipc <- function(
 #'
 #' @inherit sink_parquet params details return
 #' @export
-#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE) && require("yyjsonr", quietly = TRUE)
+#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE) && require("jsonlite", quietly = TRUE)
 #' # This is an example workflow where sink_ndjson() is not very useful because
 #' # the data would fit in memory. It simply is an example of using it at the
 #' # end of a piped workflow.
@@ -477,7 +477,7 @@ sink_ipc <- function(
 #'
 #' # Write some data in a CSV file
 #' fake_data <- do.call("rbind", rep(list(mtcars), 1000))
-#' yyjsonr::write_ndjson_file(fake_data, file_ndjson)
+#' jsonlite::stream_out(fake_data, file(file_ndjson), verbose = FALSE)
 #'
 #' # In a new R session, we could read this file as a LazyFrame, do some operations,
 #' # and write it to another NDJSON file without ever collecting it in the R session:
