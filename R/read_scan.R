@@ -421,6 +421,61 @@ scan_csv_polars <- function(
 #' @name from_ndjson
 #' @export
 #' @inherit from_parquet return
+#'
+#' @examplesIf require("dplyr", quietly = TRUE) && require("jsonlite", quietly = TRUE)
+#' ### Read or scan a single NDJSON file ------------------------
+#'
+#' # Setup: create a NDJSON file
+#' dest <- tempfile(fileext = ".json")
+#' jsonlite::stream_out(mtcars, file(dest), verbose = FALSE)
+#'
+#' # Import this file as a DataFrame for eager evaluation
+#' read_ndjson_polars(dest) |>
+#'   arrange(mpg)
+#'
+#' # Import this file as a LazyFrame for lazy evaluation
+#' scan_ndjson_polars(dest) |>
+#'   arrange(mpg) |>
+#'   compute()
+#'
+#'
+#' ### Read or scan several all NDJSON files in a folder ------------------------
+#'
+#' # Setup: create a folder "output" that contains two NDJSON files
+#' dest_folder <- file.path(tempdir(), "output")
+#' dir.create(dest_folder, showWarnings = FALSE)
+#' dest1 <- file.path(dest_folder, "output_1.json")
+#' dest2 <- file.path(dest_folder, "output_2.json")
+#'
+#' jsonlite::stream_out(mtcars[1:16, ], file(dest1), verbose = FALSE)
+#' jsonlite::stream_out(mtcars[17:32, ], file(dest2), verbose = FALSE)
+#' list.files(dest_folder)
+#'
+#' # Import all files as a LazyFrame
+#' scan_ndjson_polars(dest_folder) |>
+#'   arrange(mpg) |>
+#'   compute()
+#'
+#'
+#' ### Read or scan all NDJSON files that match a glob pattern ------------------------
+#'
+#' # Setup: create a folder "output" that contains three NDJSON files,
+#' # two of which follow the pattern "output_XXX.json"
+#' dest_folder <- file.path(tempdir(), "output_glob")
+#' dir.create(dest_folder, showWarnings = FALSE)
+#' dest1 <- file.path(dest_folder, "output_1.json")
+#' dest2 <- file.path(dest_folder, "output_2.json")
+#' dest3 <- file.path(dest_folder, "other_output.json")
+#'
+#' jsonlite::stream_out(mtcars[1:16, ], file(dest1), verbose = FALSE)
+#' jsonlite::stream_out(mtcars[17:32, ], file(dest2), verbose = FALSE)
+#' jsonlite::stream_out(iris, file(dest3), verbose = FALSE)
+#' list.files(dest_folder)
+#'
+#' # Import only the files whose name match "output_XXX.json" as a LazyFrame
+#' scan_ndjson_polars(paste0(dest_folder, "/output_*.json")) |>
+#'   arrange(mpg) |>
+#'   compute()
 read_ndjson_polars <- function(
   source,
   ...,
