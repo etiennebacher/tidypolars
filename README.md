@@ -19,8 +19,11 @@ is here:
 ------------------------------------------------------------------------
 
 <!-- * [Motivation](#motivation) -->
+
 <!-- * [Installation](#installation) -->
+
 <!-- * [Example](#example) -->
+
 <!-- * [Contributing](#contributing) -->
 
 ## Overview
@@ -39,7 +42,9 @@ Since most of the work is rewriting `tidyverse` code into `polars`
 syntax, `tidypolars` and `polars` have very similar performance.
 
 <details>
+
 <summary>
+
 Click to see a small benchmark
 </summary>
 
@@ -49,81 +54,69 @@ thorough, representative benchmarks about `polars`, take a look at
 [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/) instead.
 
 ``` r
-library(collapse, warn.conflicts = FALSE)
-#> collapse 2.1.1, see ?`collapse-package` or ?`collapse-documentation`
-library(dplyr, warn.conflicts = FALSE)
-library(dtplyr)
-library(polars)
-library(tidypolars)
+# library(collapse, warn.conflicts = FALSE)
+# library(dplyr, warn.conflicts = FALSE)
+# library(dtplyr)
+# library(polars)
+# library(tidypolars)
 
-large_iris <- data.table::rbindlist(rep(list(iris), 100000))
-large_iris_pl <- as_polars_lf(large_iris)
-large_iris_dt <- lazy_dt(large_iris)
+# large_iris <- data.table::rbindlist(rep(list(iris), 100000))
+# large_iris_pl <- as_polars_lf(large_iris)
+# large_iris_dt <- lazy_dt(large_iris)
 
-format(nrow(large_iris), big.mark = ",")
-#> [1] "15,000,000"
+# format(nrow(large_iris), big.mark = ",")
 
-bench::mark(
-  polars = {
-    large_iris_pl$
-      select(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))$
-      with_columns(
-        pl$when(
-          (pl$col("Petal.Length") / pl$col("Petal.Width") > 3)
-        )$then(pl$lit("long"))$
-          otherwise(pl$lit("large"))$
-          alias("petal_type")
-      )$
-      filter(pl$col("Sepal.Length")$is_between(4.5, 5.5))$
-      collect()
-  },
-  tidypolars = {
-    large_iris_pl |>
-      select(starts_with(c("Sep", "Pet"))) |>
-      mutate(
-        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-      ) |> 
-      filter(between(Sepal.Length, 4.5, 5.5)) |> 
-      compute()
-  },
-  dplyr = {
-    large_iris |>
-      select(starts_with(c("Sep", "Pet"))) |>
-      mutate(
-        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-      ) |>
-      filter(between(Sepal.Length, 4.5, 5.5))
-  },
-  dtplyr = {
-    large_iris_dt |>
-      select(starts_with(c("Sep", "Pet"))) |>
-      mutate(
-        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-      ) |>
-      filter(between(Sepal.Length, 4.5, 5.5)) |> 
-      as.data.frame()
-  },
-  collapse = {
-    large_iris |>
-      fselect(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")) |>
-      fmutate(
-        petal_type = data.table::fifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-      ) |>
-      fsubset(Sepal.Length >= 4.5 & Sepal.Length <= 5.5)
-  },
-  check = FALSE,
-  iterations = 40
-)
-#> Warning: Some expressions had a GC in every iteration; so filtering is
-#> disabled.
-#> # A tibble: 5 × 6
-#>   expression      min   median `itr/sec` mem_alloc `gc/sec`
-#>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     103.47ms 121.17ms     7.30     2.29MB    0.183
-#> 2 tidypolars 109.71ms 140.55ms     6.03     2.19MB    0.754
-#> 3 dplyr         3.04s    3.25s     0.306    1.79GB    0.942
-#> 4 dtplyr     781.41ms 945.32ms     1.03     1.72GB    2.49 
-#> 5 collapse   323.83ms 469.67ms     2.02   745.96MB    1.36
+# bench::mark(
+#   polars = {
+#     large_iris_pl$
+#       select(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))$
+#       with_columns(
+#         pl$when(
+#           (pl$col("Petal.Length") / pl$col("Petal.Width") > 3)
+#         )$then(pl$lit("long"))$
+#           otherwise(pl$lit("large"))$
+#           alias("petal_type")
+#       )$
+#       filter(pl$col("Sepal.Length")$is_between(4.5, 5.5))$
+#       collect()
+#   },
+#   tidypolars = {
+#     large_iris_pl |>
+#       select(starts_with(c("Sep", "Pet"))) |>
+#       mutate(
+#         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+#       ) |> 
+#       filter(between(Sepal.Length, 4.5, 5.5)) |> 
+#       compute()
+#   },
+#   dplyr = {
+#     large_iris |>
+#       select(starts_with(c("Sep", "Pet"))) |>
+#       mutate(
+#         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+#       ) |>
+#       filter(between(Sepal.Length, 4.5, 5.5))
+#   },
+#   dtplyr = {
+#     large_iris_dt |>
+#       select(starts_with(c("Sep", "Pet"))) |>
+#       mutate(
+#         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+#       ) |>
+#       filter(between(Sepal.Length, 4.5, 5.5)) |> 
+#       as.data.frame()
+#   },
+#   collapse = {
+#     large_iris |>
+#       fselect(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")) |>
+#       fmutate(
+#         petal_type = data.table::fifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+#       ) |>
+#       fsubset(Sepal.Length >= 4.5 & Sepal.Length <= 5.5)
+#   },
+#   check = FALSE,
+#   iterations = 40
+# )
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
@@ -154,6 +147,48 @@ The development version contains the latest improvements and bug fixes:
 # install.packages("remotes")
 remotes::install_github("etiennebacher/tidypolars")
 ```
+
+## Related work
+
+Several packages have been developed to handle large data more
+efficiently while keeping the `tidyverse` syntax.
+
+- `arrow`: also has lazy evaluation and different query optimizations
+  \[TO CHECK\]
+  - **How is tidypolars different?**: Polars (and therefore
+    `tidypolars`) uses the Arrow memory specification but all operations
+    are implemented (and optimized) from scratch. The query
+    optimizations can therefore be very different. The list of R
+    functions that are translated to the Arrow engine may also differ.
+- `collapse`: has very fast operations but still needs to import all
+  data into memory, which prevents using larger-than-RAM datasets.
+  - **How is tidypolars different?**: `tidypolars` provides lazy
+    evaluation that is more memory-efficient since it doesn’t import all
+    data in memory. It also provides a streaming engine to handle
+    larger-than-RAM datasets.
+- `dbplyr`: allows using `dplyr` for data stored in a relational
+  database, but doesn’t provide specific optimizations \[TO CHECK\]
+  - **How is tidypolars different?**: `tidypolars` runs a lot of
+    optimizations when using lazy evaluation.
+- `dtplyr`: uses `data.table` in the background for better performance
+  but needs to import all data in memory, which prevents using
+  larger-than-RAM datasets.
+  - **How is tidypolars different?**: same as for `collapse`
+- `duckplyr`: the closest alternative to `tidypolars`. Uses DuckDB in
+  the background, also provides lazy evaluation and query optimizations.
+  - **How is tidypolars different?**: the list of R functions that are
+    optimized in Polars or DuckDB isn’t identical so the use case will
+    determine which tool runs the fastest. `duckplyr` also relies on a
+    fallback mechanism that will run the code in “standard R” if the
+    function cannot be translated. `tidypolars` is more conservative and
+    will error in this case, avoiding importing data which may crash the
+    session because of its size.
+- `sparklyr`: \[TODO: no clue, never used\]
+
+Therefore, if you need to handle data that is larger than memory, you
+have three options: `arrow`, `duckplyr`, and `tidypolars`. The best one
+will probably depend on the use case and on your constraints
+(e.g. `tidypolars` is available via R-universe but isn’t on CRAN).
 
 ## Contributing
 
