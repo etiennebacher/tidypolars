@@ -150,7 +150,7 @@ remotes::install_github("etiennebacher/tidypolars")
 
 Several packages have been developed to handle large data more efficiently while keeping the `tidyverse` syntax.
 
-* `arrow`: one of the closest alternative to `tidypolars`. Also has lazy evaluation and query optimizations, uses Acero in the background to translate dplyr queries to `arrow`.
+* `arrow`: one of the closest alternatives to `tidypolars`. Also has lazy evaluation and query optimizations, uses Acero in the background to translate dplyr queries to `arrow`.
   - **How is tidypolars different?**: Polars (and therefore `tidypolars`) uses an unofficial Arrow memory specification but all operations are implemented (and optimized) from scratch. The query optimizations can therefore be very different. The list of R functions that are translated to the Arrow engine may also differ.
 
 * `collapse`: has very fast operations but still needs to import all data into memory, which prevents using larger-than-RAM datasets.
@@ -162,8 +162,8 @@ Several packages have been developed to handle large data more efficiently while
 * `dtplyr`: uses `data.table` in the background for better performance but needs to import all data in memory, which prevents using larger-than-RAM datasets.
   - **How is tidypolars different?**: same as for `collapse`
 
-* `duckplyr`: the closest alternative to `tidypolars`. Uses DuckDB in the background, also provides lazy evaluation and query optimizations.
-  - **How is tidypolars different?**: the list of R functions that are optimized in Polars or DuckDB isn't identical so the use case will determine which tool runs the fastest. `duckplyr` also relies on a fallback mechanism that will run the code in "standard R" if the function cannot be translated. `tidypolars` is more conservative and will error in this case, avoiding importing data which may crash the session because of its size.
+* `duckplyr`: one of the closest alternatives to `tidypolars`. Uses DuckDB in the background, also provides lazy evaluation and query optimizations. Can perform operations directly on R `data.frame`s.
+  - **How is tidypolars different?**: similar to `arrow`, the list of R functions that are optimized in Polars or DuckDB isn't identical so the use case will determine which tool runs the fastest. `duckplyr` also relies on a fallback mechanism that will run the code in "standard R" if the function cannot be translated. `tidypolars` is more conservative and will error in this case, avoiding importing data that may crash the session because of its size.
 
 * `sparklyr`: [TODO: no clue, never used]
 
