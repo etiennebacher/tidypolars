@@ -156,8 +156,8 @@ Several packages have been developed to handle large data more efficiently while
 * `collapse`: has very fast operations but still needs to import all data into memory, which prevents using larger-than-RAM datasets.
   - **How is tidypolars different?**: `tidypolars` provides lazy evaluation that is more memory-efficient since it doesn't import all data in memory. It also provides a streaming engine to handle larger-than-RAM datasets.
 
-* `dbplyr`: allows using `dplyr` for data stored in a relational database, but doesn't provide specific optimizations [TO CHECK]
-  - **How is tidypolars different?**: `tidypolars` runs a lot of optimizations when using lazy evaluation.
+* `dbplyr`: allows using `dplyr` for data stored in a relational database by translating R code to SQL queries. The performance will therefore depend on the SQL backend used.
+  - **How is tidypolars different?**: `tidypolars` doesn't translate R code to SQL but directly evaluates it with Polars.
 
 * `dtplyr`: uses `data.table` in the background for better performance but needs to import all data in memory, which prevents using larger-than-RAM datasets.
   - **How is tidypolars different?**: same as for `collapse`
@@ -165,11 +165,14 @@ Several packages have been developed to handle large data more efficiently while
 * `duckplyr`: one of the closest alternatives to `tidypolars`. Uses DuckDB in the background, also provides lazy evaluation and query optimizations. Can perform operations directly on R `data.frame`s.
   - **How is tidypolars different?**: similar to `arrow`, the list of R functions that are optimized in Polars or DuckDB isn't identical so the use case will determine which tool runs the fastest. `duckplyr` also relies on a fallback mechanism that will run the code in "standard R" if the function cannot be translated. `tidypolars` is more conservative and will error in this case, avoiding importing data that may crash the session because of its size.
 
-* `sparklyr`: [TODO: no clue, never used]
+* `sparklyr`: uses Apache Spark in the background, requires installing Spark. Can perform distributed processing.
+  - **How is tidypolars different?**: `tidypolars` doesn't need installing another tool and performs better than Spark.
 
 
 Therefore, if you need to handle data that is larger than memory, you have three options: `arrow`, `duckplyr`, and `tidypolars`.
 The best one will probably depend on the use case and on your constraints (e.g. `tidypolars` is available via R-universe but isn't on CRAN).
+Regarding performance, one should refer to the [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/) to compare tools.
+Keep in mind that accurately benchmarking data processing tools is hard, those benchmarks give indications but don't necessarily apply to all contexts.
 
 
 ## Contributing
