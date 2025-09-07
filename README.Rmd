@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 ---
 
-:information_source: This is the R package "tidypolars". The Python one is here: [markfairbanks/tidypolars](https://github.com/markfairbanks/tidypolars) 
+:information_source: This is the R package "tidypolars". The Python one is here: [markfairbanks/tidypolars](https://github.com/markfairbanks/tidypolars)
 
 ---
 
@@ -40,17 +40,17 @@ knitr::opts_chunk$set(
 performance gains. The only thing that needs to change is the way data is
 imported in the R session.
 
-See the ["Getting started" vignette](https://tidypolars.etiennebacher.com/articles/tidypolars) 
+See the ["Getting started" vignette](https://tidypolars.etiennebacher.com/articles/tidypolars)
 for a gentle introduction to `tidypolars`.
 
-Since most of the work is rewriting `tidyverse` code into `polars` syntax, 
+Since most of the work is rewriting `tidyverse` code into `polars` syntax,
 `tidypolars` and `polars` have very similar performance.
 
 <details>
 <summary>Click to see a small benchmark</summary>
 
 The main purpose of this benchmark is to show that `polars` and `tidypolars` are
-close and to give an idea of the performance. For more thorough, representative 
+close and to give an idea of the performance. For more thorough, representative
 benchmarks about `polars`, take a look at [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/) instead.
 
 ```{r}
@@ -85,8 +85,8 @@ bench::mark(
       select(starts_with(c("Sep", "Pet"))) |>
       mutate(
         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-      ) |> 
-      filter(between(Sepal.Length, 4.5, 5.5)) |> 
+      ) |>
+      filter(between(Sepal.Length, 4.5, 5.5)) |>
       compute()
   },
   dplyr = {
@@ -103,7 +103,7 @@ bench::mark(
       mutate(
         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
       ) |>
-      filter(between(Sepal.Length, 4.5, 5.5)) |> 
+      filter(between(Sepal.Length, 4.5, 5.5)) |>
       as.data.frame()
   },
   collapse = {
@@ -129,8 +129,8 @@ If you want to do your own benchmarks, please take a look at [How to benchmark t
 
 ## Installation
 
-`tidypolars` is built on `polars`, which is not available on CRAN. This means 
-that `tidypolars` also can't be on CRAN. However, you can install it from 
+`tidypolars` is built on `polars`, which is not available on CRAN. This means
+that `tidypolars` also can't be on CRAN. However, you can install it from
 R-universe.
 
 ```{r eval=FALSE}
@@ -146,10 +146,38 @@ remotes::install_github("etiennebacher/tidypolars")
 ```
 
 
+## Related work
+
+Several packages have been developed to handle large data more efficiently while keeping the `tidyverse` syntax:
+
+* [`arrow`](https://arrow.apache.org/docs/r/): one of the closest alternatives to `tidypolars`. Also has lazy evaluation and query optimizations, uses Acero in the background to translate dplyr queries to `arrow`.
+  - **How is tidypolars different?**: Polars (and therefore `tidypolars`) uses an unofficial Arrow memory specification but all operations are implemented (and optimized) from scratch. The query optimizations can therefore be very different. The list of R functions that are translated to the Arrow engine may also differ.
+
+* [`collapse`](https://sebkrantz.github.io/collapse/): has very fast operations but still needs to import all data into memory, which prevents using larger-than-RAM datasets.
+  - **How is tidypolars different?**: `tidypolars` provides lazy evaluation that is more memory-efficient since it doesn't import all data in memory. It also provides a streaming engine to handle larger-than-RAM datasets.
+
+* [`dbplyr`](https://dbplyr.tidyverse.org/): allows using `dplyr` for data stored in a relational database by translating R code to SQL queries. The performance will therefore depend on the SQL backend used.
+  - **How is tidypolars different?**: `tidypolars` doesn't translate R code to SQL but directly evaluates it with Polars.
+
+* [`dtplyr`](https://dtplyr.tidyverse.org/): uses `data.table` in the background for better performance but needs to import all data in memory, which prevents using larger-than-RAM datasets.
+  - **How is tidypolars different?**: same as for `collapse`.
+
+* [`duckplyr`](https://duckplyr.tidyverse.org/): one of the closest alternatives to `tidypolars`. Uses DuckDB in the background, also provides lazy evaluation and query optimizations. Can perform operations directly on R `data.frame`s.
+  - **How is tidypolars different?**: similar to `arrow`, the list of R functions that are optimized in Polars or DuckDB isn't identical so the use case will determine which tool runs the fastest. `duckplyr` also relies on a fallback mechanism that will run the code in "standard R" if the function cannot be translated. `tidypolars` is more conservative and will error in this case, avoiding importing data that may crash the session because of its size.
+
+* [`sparklyr`](https://spark.posit.co/): uses Apache Spark in the background, requires installing Spark. Can perform distributed processing.
+  - **How is tidypolars different?**: `tidypolars` doesn't need installing another tool and performs better than Spark.
+
+
+Therefore, if you need to handle data that is larger than memory, you have three options: `arrow`, `duckplyr`, and `tidypolars`.
+The best one will probably depend on the use case and on your constraints (e.g. `tidypolars` is available via R-universe but isn't on CRAN).
+Regarding performance, one should refer to the [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/) to compare tools.
+Keep in mind that accurately benchmarking data processing tools is hard; those benchmarks give useful information but don't necessarily apply to all contexts.
+
 
 ## Contributing
 
-Did you find some bugs or some errors in the documentation? Do you want 
+Did you find some bugs or some errors in the documentation? Do you want
 `tidypolars` to support more functions?
 
 Take a look at the [contributing guide](https://tidypolars.etiennebacher.com/CONTRIBUTING.html) for instructions
@@ -160,5 +188,5 @@ on bug report and pull requests.
 
 The website theme was heavily inspired by Matthew Kay's `ggblend` package: https://mjskay.github.io/ggblend/.
 
-The package hex logo was created by Hubert Hałun as part of the Appsilon Hex 
+The package hex logo was created by Hubert Hałun as part of the Appsilon Hex
 Contest.

@@ -19,8 +19,11 @@ is here:
 ------------------------------------------------------------------------
 
 <!-- * [Motivation](#motivation) -->
+
 <!-- * [Installation](#installation) -->
+
 <!-- * [Example](#example) -->
+
 <!-- * [Contributing](#contributing) -->
 
 ## Overview
@@ -39,7 +42,9 @@ Since most of the work is rewriting `tidyverse` code into `polars`
 syntax, `tidypolars` and `polars` have very similar performance.
 
 <details>
+
 <summary>
+
 Click to see a small benchmark
 </summary>
 
@@ -50,7 +55,7 @@ thorough, representative benchmarks about `polars`, take a look at
 
 ``` r
 library(collapse, warn.conflicts = FALSE)
-#> collapse 2.1.1, see ?`collapse-package` or ?`collapse-documentation`
+#> collapse 2.1.3, see ?`collapse-package` or ?`collapse-documentation`
 library(dplyr, warn.conflicts = FALSE)
 library(dtplyr)
 library(polars)
@@ -82,8 +87,8 @@ bench::mark(
       select(starts_with(c("Sep", "Pet"))) |>
       mutate(
         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
-      ) |> 
-      filter(between(Sepal.Length, 4.5, 5.5)) |> 
+      ) |>
+      filter(between(Sepal.Length, 4.5, 5.5)) |>
       compute()
   },
   dplyr = {
@@ -100,7 +105,7 @@ bench::mark(
       mutate(
         petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
       ) |>
-      filter(between(Sepal.Length, 4.5, 5.5)) |> 
+      filter(between(Sepal.Length, 4.5, 5.5)) |>
       as.data.frame()
   },
   collapse = {
@@ -114,16 +119,15 @@ bench::mark(
   check = FALSE,
   iterations = 40
 )
-#> Warning: Some expressions had a GC in every iteration; so filtering is
-#> disabled.
+#> Warning: Some expressions had a GC in every iteration; so filtering is disabled.
 #> # A tibble: 5 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     103.47ms 121.17ms     7.30     2.29MB    0.183
-#> 2 tidypolars 109.71ms 140.55ms     6.03     2.19MB    0.754
-#> 3 dplyr         3.04s    3.25s     0.306    1.79GB    0.942
-#> 4 dtplyr     781.41ms 945.32ms     1.03     1.72GB    2.49 
-#> 5 collapse   323.83ms 469.67ms     2.02   745.96MB    1.36
+#> 1 polars     133.08ms 154.75ms     5.78     2.13MB    0.289
+#> 2 tidypolars 131.81ms 149.19ms     6.18     1.22MB    0.618
+#> 3 dplyr         1.74s    1.91s     0.524    1.79GB    1.39 
+#> 4 dtplyr     717.97ms 861.88ms     1.14     1.72GB    2.62 
+#> 5 collapse   402.99ms 477.96ms     2.04   745.96MB    1.63
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
@@ -154,6 +158,64 @@ The development version contains the latest improvements and bug fixes:
 # install.packages("remotes")
 remotes::install_github("etiennebacher/tidypolars")
 ```
+
+## Related work
+
+Several packages have been developed to handle large data more
+efficiently while keeping the `tidyverse` syntax:
+
+- [`arrow`](https://arrow.apache.org/docs/r/): one of the closest
+  alternatives to `tidypolars`. Also has lazy evaluation and query
+  optimizations, uses Acero in the background to translate dplyr queries
+  to `arrow`.
+  - **How is tidypolars different?**: Polars (and therefore
+    `tidypolars`) uses an unofficial Arrow memory specification but all
+    operations are implemented (and optimized) from scratch. The query
+    optimizations can therefore be very different. The list of R
+    functions that are translated to the Arrow engine may also differ.
+- [`collapse`](https://sebkrantz.github.io/collapse/): has very fast
+  operations but still needs to import all data into memory, which
+  prevents using larger-than-RAM datasets.
+  - **How is tidypolars different?**: `tidypolars` provides lazy
+    evaluation that is more memory-efficient since it doesn’t import all
+    data in memory. It also provides a streaming engine to handle
+    larger-than-RAM datasets.
+- [`dbplyr`](https://dbplyr.tidyverse.org/): allows using `dplyr` for
+  data stored in a relational database by translating R code to SQL
+  queries. The performance will therefore depend on the SQL backend
+  used.
+  - **How is tidypolars different?**: `tidypolars` doesn’t translate R
+    code to SQL but directly evaluates it with Polars.
+- [`dtplyr`](https://dtplyr.tidyverse.org/): uses `data.table` in the
+  background for better performance but needs to import all data in
+  memory, which prevents using larger-than-RAM datasets.
+  - **How is tidypolars different?**: same as for `collapse`.
+- [`duckplyr`](https://duckplyr.tidyverse.org/): one of the closest
+  alternatives to `tidypolars`. Uses DuckDB in the background, also
+  provides lazy evaluation and query optimizations. Can perform
+  operations directly on R `data.frame`s.
+  - **How is tidypolars different?**: similar to `arrow`, the list of R
+    functions that are optimized in Polars or DuckDB isn’t identical so
+    the use case will determine which tool runs the fastest. `duckplyr`
+    also relies on a fallback mechanism that will run the code in
+    “standard R” if the function cannot be translated. `tidypolars` is
+    more conservative and will error in this case, avoiding importing
+    data that may crash the session because of its size.
+- [`sparklyr`](https://spark.posit.co/): uses Apache Spark in the
+  background, requires installing Spark. Can perform distributed
+  processing.
+  - **How is tidypolars different?**: `tidypolars` doesn’t need
+    installing another tool and performs better than Spark.
+
+Therefore, if you need to handle data that is larger than memory, you
+have three options: `arrow`, `duckplyr`, and `tidypolars`. The best one
+will probably depend on the use case and on your constraints
+(e.g. `tidypolars` is available via R-universe but isn’t on CRAN).
+Regarding performance, one should refer to the [DuckDB
+benchmarks](https://duckdblabs.github.io/db-benchmark/) to compare
+tools. Keep in mind that accurately benchmarking data processing tools
+is hard; those benchmarks give useful information but don’t necessarily
+apply to all contexts.
 
 ## Contributing
 
