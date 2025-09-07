@@ -150,22 +150,22 @@ remotes::install_github("etiennebacher/tidypolars")
 
 Several packages have been developed to handle large data more efficiently while keeping the `tidyverse` syntax.
 
-* `arrow`: one of the closest alternatives to `tidypolars`. Also has lazy evaluation and query optimizations, uses Acero in the background to translate dplyr queries to `arrow`.
+* [`arrow`](https://arrow.apache.org/docs/r/): one of the closest alternatives to `tidypolars`. Also has lazy evaluation and query optimizations, uses Acero in the background to translate dplyr queries to `arrow`.
   - **How is tidypolars different?**: Polars (and therefore `tidypolars`) uses an unofficial Arrow memory specification but all operations are implemented (and optimized) from scratch. The query optimizations can therefore be very different. The list of R functions that are translated to the Arrow engine may also differ.
 
-* `collapse`: has very fast operations but still needs to import all data into memory, which prevents using larger-than-RAM datasets.
+* [`collapse`](https://sebkrantz.github.io/collapse/): has very fast operations but still needs to import all data into memory, which prevents using larger-than-RAM datasets.
   - **How is tidypolars different?**: `tidypolars` provides lazy evaluation that is more memory-efficient since it doesn't import all data in memory. It also provides a streaming engine to handle larger-than-RAM datasets.
 
-* `dbplyr`: allows using `dplyr` for data stored in a relational database by translating R code to SQL queries. The performance will therefore depend on the SQL backend used.
+* [`dbplyr`](https://dbplyr.tidyverse.org/): allows using `dplyr` for data stored in a relational database by translating R code to SQL queries. The performance will therefore depend on the SQL backend used.
   - **How is tidypolars different?**: `tidypolars` doesn't translate R code to SQL but directly evaluates it with Polars.
 
-* `dtplyr`: uses `data.table` in the background for better performance but needs to import all data in memory, which prevents using larger-than-RAM datasets.
-  - **How is tidypolars different?**: same as for `collapse`
+* [`dtplyr`](https://dtplyr.tidyverse.org/): uses `data.table` in the background for better performance but needs to import all data in memory, which prevents using larger-than-RAM datasets.
+  - **How is tidypolars different?**: same as for `collapse`.
 
-* `duckplyr`: one of the closest alternatives to `tidypolars`. Uses DuckDB in the background, also provides lazy evaluation and query optimizations. Can perform operations directly on R `data.frame`s.
+* [`duckplyr`](https://duckplyr.tidyverse.org/): one of the closest alternatives to `tidypolars`. Uses DuckDB in the background, also provides lazy evaluation and query optimizations. Can perform operations directly on R `data.frame`s.
   - **How is tidypolars different?**: similar to `arrow`, the list of R functions that are optimized in Polars or DuckDB isn't identical so the use case will determine which tool runs the fastest. `duckplyr` also relies on a fallback mechanism that will run the code in "standard R" if the function cannot be translated. `tidypolars` is more conservative and will error in this case, avoiding importing data that may crash the session because of its size.
 
-* `sparklyr`: uses Apache Spark in the background, requires installing Spark. Can perform distributed processing.
+* [`sparklyr`](https://spark.posit.co/): uses Apache Spark in the background, requires installing Spark. Can perform distributed processing.
   - **How is tidypolars different?**: `tidypolars` doesn't need installing another tool and performs better than Spark.
 
 
