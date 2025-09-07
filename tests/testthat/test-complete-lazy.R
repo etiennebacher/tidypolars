@@ -49,8 +49,9 @@ test_that("works on grouped data", {
     b = c("a", "a", "b"),
     c = c(4, 5, 6)
   )
-  gdf <- group_by(df, g, maintain_order = TRUE)
-  out <- complete(gdf, a, b)
+  gdf <- group_by(df, g)
+  out <- complete(gdf, a, b) |>
+    arrange(g)
 
   expect_equal_lazy(
     out,
@@ -66,8 +67,6 @@ test_that("works on grouped data", {
     attr(out, "pl_grps"),
     "g"
   )
-
-  expect_true(attr(out, "maintain_grp_order"))
 })
 
 test_that("argument 'explicit' works", {
