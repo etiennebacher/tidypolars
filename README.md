@@ -44,7 +44,6 @@ syntax, `tidypolars` and `polars` have very similar performance.
 <details>
 
 <summary>
-
 Click to see a small benchmark
 </summary>
 
