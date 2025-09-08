@@ -151,11 +151,11 @@ Click to see a small benchmark
 <span><span class="co">#&gt; # A tibble: 5 × 6</span></span>
 <span><span class="co">#&gt;   expression      min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 polars     133.08ms 154.75ms     5.78     2.13MB    0.289</span></span>
-<span><span class="co">#&gt; 2 tidypolars 131.81ms 149.19ms     6.18     1.22MB    0.618</span></span>
-<span><span class="co">#&gt; 3 dplyr         1.74s    1.91s     0.524    1.79GB    1.39 </span></span>
-<span><span class="co">#&gt; 4 dtplyr     717.97ms 861.88ms     1.14     1.72GB    2.62 </span></span>
-<span><span class="co">#&gt; 5 collapse   402.99ms 477.96ms     2.04   745.96MB    1.63</span></span>
+<span><span class="co">#&gt; 1 polars     108.38ms 149.19ms     6.32     2.13MB    0.158</span></span>
+<span><span class="co">#&gt; 2 tidypolars 118.42ms 247.73ms     3.61     1.22MB    0.452</span></span>
+<span><span class="co">#&gt; 3 dplyr         2.94s    3.75s     0.269    1.79GB    0.658</span></span>
+<span><span class="co">#&gt; 4 dtplyr     653.02ms 729.33ms     1.36     1.72GB    2.79 </span></span>
+<span><span class="co">#&gt; 5 collapse   269.73ms 368.59ms     2.69   745.96MB    2.63</span></span>
 <span></span>
 <span><span class="co"># NOTE: do NOT take the "mem_alloc" results into account.</span></span>
 <span><span class="co"># `bench::mark()` doesn't report the accurate memory usage for packages calling</span></span>
@@ -180,10 +180,10 @@ Click to see a small benchmark
 <p>Several packages have been developed to handle large data more efficiently while keeping the <code>tidyverse</code> syntax:</p>
 <ul>
 <li>
-<a href="https://arrow.apache.org/docs/r/" class="external-link"><code>arrow</code></a>: one of the closest alternatives to <code>tidypolars</code>. Also has lazy evaluation and query optimizations, uses Acero in the background to translate dplyr queries to <code>arrow</code>.
+<a href="https://arrow.apache.org/docs/r/" class="external-link"><code>arrow</code></a>: one of the closest alternatives to <code>tidypolars</code>. Also has lazy evaluation and query optimizations, uses Acero in the background to translate <code>dplyr</code> code and perform computations.
 <ul>
 <li>
-<strong>How is tidypolars different?</strong>: Polars (and therefore <code>tidypolars</code>) uses an unofficial Arrow memory specification but all operations are implemented (and optimized) from scratch. The query optimizations can therefore be very different. The list of R functions that are translated to the Arrow engine may also differ.</li>
+<strong>How is tidypolars different?</strong>: Polars (and therefore <code>tidypolars</code>) uses an unofficial Arrow memory specification. All operations are implemented (and optimized) from scratch, meaning that query optimizations can be very different from Acero. The list of R functions that are translated to the Arrow engine may also differ.</li>
 </ul>
 </li>
 <li>
@@ -218,7 +218,7 @@ Click to see a small benchmark
 <a href="https://spark.posit.co/" class="external-link"><code>sparklyr</code></a>: uses Apache Spark in the background, requires installing Spark. Can perform distributed processing.
 <ul>
 <li>
-<strong>How is tidypolars different?</strong>: <code>tidypolars</code> doesn’t need installing another tool and performs better than Spark.</li>
+<strong>How is tidypolars different?</strong>: <code>tidypolars</code> doesn’t need installing another tool and focuses on processing data on a single machine, not on distributed processing.</li>
 </ul>
 </li>
 </ul>
