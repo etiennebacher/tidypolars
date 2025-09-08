@@ -150,8 +150,8 @@ remotes::install_github("etiennebacher/tidypolars")
 
 Several packages have been developed to handle large data more efficiently while keeping the `tidyverse` syntax:
 
-* [`arrow`](https://arrow.apache.org/docs/r/): one of the closest alternatives to `tidypolars`. Also has lazy evaluation and query optimizations, uses Acero in the background to translate dplyr queries to `arrow`.
-  - **How is tidypolars different?**: Polars (and therefore `tidypolars`) uses an unofficial Arrow memory specification but all operations are implemented (and optimized) from scratch. The query optimizations can therefore be very different. The list of R functions that are translated to the Arrow engine may also differ.
+* [`arrow`](https://arrow.apache.org/docs/r/): one of the closest alternatives to `tidypolars`. Also has lazy evaluation and query optimizations, uses Acero in the background to translate `dplyr` code and perform computations.
+  - **How is tidypolars different?**: Polars (and therefore `tidypolars`) uses an unofficial Arrow memory specification. All operations are implemented (and optimized) from scratch, meaning that query optimizations can be very different from Acero. The list of R functions that are translated to the Arrow engine may also differ.
 
 * [`collapse`](https://sebkrantz.github.io/collapse/): has very fast operations but still needs to import all data into memory, which prevents using larger-than-RAM datasets.
   - **How is tidypolars different?**: `tidypolars` provides lazy evaluation that is more memory-efficient since it doesn't import all data in memory. It also provides a streaming engine to handle larger-than-RAM datasets.
@@ -166,7 +166,7 @@ Several packages have been developed to handle large data more efficiently while
   - **How is tidypolars different?**: similar to `arrow`, the list of R functions that are optimized in Polars or DuckDB isn't identical so the use case will determine which tool runs the fastest. `duckplyr` also relies on a fallback mechanism that will run the code in "standard R" if the function cannot be translated. `tidypolars` is more conservative and will error in this case, avoiding importing data that may crash the session because of its size.
 
 * [`sparklyr`](https://spark.posit.co/): uses Apache Spark in the background, requires installing Spark. Can perform distributed processing.
-  - **How is tidypolars different?**: `tidypolars` doesn't need installing another tool and performs better than Spark.
+  - **How is tidypolars different?**: `tidypolars` doesn't need installing another tool and focuses on processing data on a single machine, not on distributed processing.
 
 
 Therefore, if you need to handle data that is larger than memory, you have three options: `arrow`, `duckplyr`, and `tidypolars`.

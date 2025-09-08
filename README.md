@@ -123,11 +123,11 @@ bench::mark(
 #> # A tibble: 5 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     133.08ms 154.75ms     5.78     2.13MB    0.289
-#> 2 tidypolars 131.81ms 149.19ms     6.18     1.22MB    0.618
-#> 3 dplyr         1.74s    1.91s     0.524    1.79GB    1.39 
-#> 4 dtplyr     717.97ms 861.88ms     1.14     1.72GB    2.62 
-#> 5 collapse   402.99ms 477.96ms     2.04   745.96MB    1.63
+#> 1 polars     108.38ms 149.19ms     6.32     2.13MB    0.158
+#> 2 tidypolars 118.42ms 247.73ms     3.61     1.22MB    0.452
+#> 3 dplyr         2.94s    3.75s     0.269    1.79GB    0.658
+#> 4 dtplyr     653.02ms 729.33ms     1.36     1.72GB    2.79 
+#> 5 collapse   269.73ms 368.59ms     2.69   745.96MB    2.63
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
@@ -166,13 +166,14 @@ efficiently while keeping the `tidyverse` syntax:
 
 - [`arrow`](https://arrow.apache.org/docs/r/): one of the closest
   alternatives to `tidypolars`. Also has lazy evaluation and query
-  optimizations, uses Acero in the background to translate dplyr queries
-  to `arrow`.
+  optimizations, uses Acero in the background to translate `dplyr` code
+  and perform computations.
   - **How is tidypolars different?**: Polars (and therefore
-    `tidypolars`) uses an unofficial Arrow memory specification but all
-    operations are implemented (and optimized) from scratch. The query
-    optimizations can therefore be very different. The list of R
-    functions that are translated to the Arrow engine may also differ.
+    `tidypolars`) uses an unofficial Arrow memory specification. All
+    operations are implemented (and optimized) from scratch, meaning
+    that query optimizations can be very different from Acero. The list
+    of R functions that are translated to the Arrow engine may also
+    differ.
 - [`collapse`](https://sebkrantz.github.io/collapse/): has very fast
   operations but still needs to import all data into memory, which
   prevents using larger-than-RAM datasets.
@@ -205,7 +206,8 @@ efficiently while keeping the `tidyverse` syntax:
   background, requires installing Spark. Can perform distributed
   processing.
   - **How is tidypolars different?**: `tidypolars` doesn’t need
-    installing another tool and performs better than Spark.
+    installing another tool and focuses on processing data on a single
+    machine, not on distributed processing.
 
 Therefore, if you need to handle data that is larger than memory, you
 have three options: `arrow`, `duckplyr`, and `tidypolars`. The best one
