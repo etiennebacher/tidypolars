@@ -12,6 +12,8 @@
   LazyFrame to several files as partitioned output. See more details in 
   `?sink_parquet()` (#237).
 
+* `bind_cols_polars()` now works with more than two LazyFrames (#244).
+
 ## Bug fixes
 
 * Better error message in `group_by()` for unsupported argument `.drop` (#230).

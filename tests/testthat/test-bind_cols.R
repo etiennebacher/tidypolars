@@ -99,19 +99,12 @@ test_that("can only bind more than 2 elements if DataFrame", {
     )
   )
 
-  if (Sys.getenv("TIDYPOLARS_TEST") == "TRUE") {
-    expect_snapshot(
-      bind_cols_polars(l),
-      error = TRUE
-    )
-  } else {
-    expect_dim(bind_cols_polars(l), c(20, 6))
+  expect_dim(bind_cols_polars(l), c(20, 6))
 
-    expect_colnames(
-      bind_cols_polars(l),
-      c("x", "y", "a", "z", "v", "w")
-    )
-  }
+  expect_colnames(
+    bind_cols_polars(l),
+    c("x", "y", "a", "z", "v", "w")
+  )
 })
 
 test_that("arg .name_repair works", {

@@ -156,18 +156,7 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
         }
       }
 
-      if (is_polars_df(dots[[1]])) {
-        pl$concat(!!!dots, how = how)
-      } else {
-        # TODO: remove this limitation
-        if (length(dots) > 2) {
-          cli_abort(
-            "{.code bind_cols_polars()} doesn't work with more than two LazyFrames.",
-            call = caller_env()
-          )
-        }
-        pl$concat(dots[[1]], dots[[2]], how = "horizontal")
-      }
+      pl$concat(!!!dots, how = how)
     },
     # default
     pl$concat(!!!dots, how = how)
