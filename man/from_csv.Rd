@@ -190,7 +190,7 @@ scan_csv_polars(
 ### Read or scan several all CSV files in a folder ------------------------
 
 # Setup: create a folder "output" that contains two CSV files
-dest_folder <- file.path(withr::local_tempdir(), "output")
+dest_folder <- withr::local_tempdir(tmpdir = "output")
 dir.create(dest_folder, showWarnings = FALSE)
 dest1 <- file.path(dest_folder, "output_1.csv")
 dest2 <- file.path(dest_folder, "output_2.csv")
@@ -212,9 +212,9 @@ scan_csv_polars(dest_folder, include_file_paths = "file_path") |>
 
 ### Read or scan all CSV files that match a glob pattern ------------------------
 
-# Setup: create a folder "output" that contains three CSV files,
+# Setup: create a folder "output_glob" that contains three CSV files,
 # two of which follow the pattern "output_XXX.csv"
-dest_folder <- file.path(withr::local_tempdir(), "output_glob")
+dest_folder <- withr::local_tempdir(tmpdir = "output_glob")
 dir.create(dest_folder, showWarnings = FALSE)
 dest1 <- file.path(dest_folder, "output_1.csv")
 dest2 <- file.path(dest_folder, "output_2.csv")

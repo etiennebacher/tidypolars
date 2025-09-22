@@ -145,7 +145,7 @@ scan_parquet_polars(dest) |>
 ### Read or scan several all Parquet files in a folder ------------------------
 
 # Setup: create a folder "output" that contains two Parquet files
-dest_folder <- file.path(withr::local_tempdir(), "output")
+dest_folder <- withr::local_tempdir(tmpdir = "output")
 dir.create(dest_folder, showWarnings = FALSE)
 dest1 <- file.path(dest_folder, "output_1.parquet")
 dest2 <- file.path(dest_folder, "output_2.parquet")
@@ -167,9 +167,9 @@ scan_parquet_polars(dest_folder, include_file_paths = "file_path") |>
 
 ### Read or scan all Parquet files that match a glob pattern ------------------------
 
-# Setup: create a folder "output" that contains three Parquet files,
+# Setup: create a folder "output_glob" that contains three Parquet files,
 # two of which follow the pattern "output_XXX.parquet"
-dest_folder <- file.path(withr::local_tempdir(), "output_glob")
+dest_folder <- withr::local_tempdir(tmpdir = "output_glob")
 dir.create(dest_folder, showWarnings = FALSE)
 dest1 <- file.path(dest_folder, "output_1.parquet")
 dest2 <- file.path(dest_folder, "output_2.parquet")

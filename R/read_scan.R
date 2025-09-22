@@ -33,7 +33,7 @@
 #' ### Read or scan several all Parquet files in a folder ------------------------
 #'
 #' # Setup: create a folder "output" that contains two Parquet files
-#' dest_folder <- file.path(withr::local_tempdir(), "output")
+#' dest_folder <- withr::local_tempdir(tmpdir = "output")
 #' dir.create(dest_folder, showWarnings = FALSE)
 #' dest1 <- file.path(dest_folder, "output_1.parquet")
 #' dest2 <- file.path(dest_folder, "output_2.parquet")
@@ -55,9 +55,9 @@
 #'
 #' ### Read or scan all Parquet files that match a glob pattern ------------------------
 #'
-#' # Setup: create a folder "output" that contains three Parquet files,
+#' # Setup: create a folder "output_glob" that contains three Parquet files,
 #' # two of which follow the pattern "output_XXX.parquet"
-#' dest_folder <- file.path(withr::local_tempdir(), "output_glob")
+#' dest_folder <- withr::local_tempdir(tmpdir = "output_glob")
 #' dir.create(dest_folder, showWarnings = FALSE)
 #' dest1 <- file.path(dest_folder, "output_1.parquet")
 #' dest2 <- file.path(dest_folder, "output_2.parquet")
@@ -210,7 +210,7 @@ scan_parquet_polars <- function(
 #' ### Read or scan several all CSV files in a folder ------------------------
 #'
 #' # Setup: create a folder "output" that contains two CSV files
-#' dest_folder <- file.path(withr::local_tempdir(), "output")
+#' dest_folder <- withr::local_tempdir(tmpdir = "output")
 #' dir.create(dest_folder, showWarnings = FALSE)
 #' dest1 <- file.path(dest_folder, "output_1.csv")
 #' dest2 <- file.path(dest_folder, "output_2.csv")
@@ -232,9 +232,9 @@ scan_parquet_polars <- function(
 #'
 #' ### Read or scan all CSV files that match a glob pattern ------------------------
 #'
-#' # Setup: create a folder "output" that contains three CSV files,
+#' # Setup: create a folder "output_glob" that contains three CSV files,
 #' # two of which follow the pattern "output_XXX.csv"
-#' dest_folder <- file.path(withr::local_tempdir(), "output_glob")
+#' dest_folder <- withr::local_tempdir(tmpdir = "output_glob")
 #' dir.create(dest_folder, showWarnings = FALSE)
 #' dest1 <- file.path(dest_folder, "output_1.csv")
 #' dest2 <- file.path(dest_folder, "output_2.csv")
@@ -442,7 +442,7 @@ scan_csv_polars <- function(
 #' ### Read or scan several all NDJSON files in a folder ------------------------
 #'
 #' # Setup: create a folder "output" that contains two NDJSON files
-#' dest_folder <- file.path(withr::local_tempdir(), "output")
+#' dest_folder <- withr::local_tempdir(tmpdir = "output")
 #' dir.create(dest_folder, showWarnings = FALSE)
 #' dest1 <- file.path(dest_folder, "output_1.json")
 #' dest2 <- file.path(dest_folder, "output_2.json")
@@ -459,9 +459,9 @@ scan_csv_polars <- function(
 #'
 #' ### Read or scan all NDJSON files that match a glob pattern ------------------------
 #'
-#' # Setup: create a folder "output" that contains three NDJSON files,
+#' # Setup: create a folder "output_glob" that contains three NDJSON files,
 #' # two of which follow the pattern "output_XXX.json"
-#' dest_folder <- file.path(withr::local_tempdir(), "output_glob")
+#' dest_folder <- withr::local_tempdir(tmpdir = "output_glob")
 #' dir.create(dest_folder, showWarnings = FALSE)
 #' dest1 <- file.path(dest_folder, "output_1.json")
 #' dest2 <- file.path(dest_folder, "output_2.json")
@@ -586,7 +586,7 @@ scan_ndjson_polars <- function(
 #' ### Read or scan several all IPC files in a folder ------------------------
 #'
 #' # Setup: create a folder "output" that contains two IPC files
-#' dest_folder <- file.path(withr::local_tempdir(), "output")
+#' dest_folder <- withr::local_tempdir(tmpdir = "output")
 #' dir.create(dest_folder, showWarnings = FALSE)
 #' dest1 <- file.path(dest_folder, "output_1.ipc")
 #' dest2 <- file.path(dest_folder, "output_2.ipc")
@@ -603,9 +603,9 @@ scan_ndjson_polars <- function(
 #'
 #' ### Read or scan all IPC files that match a glob pattern ------------------------
 #'
-#' # Setup: create a folder "output" that contains three IPC files,
+#' # Setup: create a folder "output_glob" that contains three IPC files,
 #' # two of which follow the pattern "output_XXX.ipc"
-#' dest_folder <- file.path(withr::local_tempdir(), "output_glob")
+#' dest_folder <- withr::local_tempdir(tmpdir = "output_glob")
 #' dir.create(dest_folder, showWarnings = FALSE)
 #' dest1 <- file.path(dest_folder, "output_1.ipc")
 #' dest2 <- file.path(dest_folder, "output_2.ipc")

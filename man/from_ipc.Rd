@@ -83,7 +83,7 @@ scan_ipc_polars(dest) |>
 ### Read or scan several all IPC files in a folder ------------------------
 
 # Setup: create a folder "output" that contains two IPC files
-dest_folder <- file.path(withr::local_tempdir(), "output")
+dest_folder <- withr::local_tempdir(tmpdir = "output")
 dir.create(dest_folder, showWarnings = FALSE)
 dest1 <- file.path(dest_folder, "output_1.ipc")
 dest2 <- file.path(dest_folder, "output_2.ipc")
@@ -100,9 +100,9 @@ scan_ipc_polars(dest_folder) |>
 
 ### Read or scan all IPC files that match a glob pattern ------------------------
 
-# Setup: create a folder "output" that contains three IPC files,
+# Setup: create a folder "output_glob" that contains three IPC files,
 # two of which follow the pattern "output_XXX.ipc"
-dest_folder <- file.path(withr::local_tempdir(), "output_glob")
+dest_folder <- withr::local_tempdir(tmpdir = "output_glob")
 dir.create(dest_folder, showWarnings = FALSE)
 dest1 <- file.path(dest_folder, "output_1.ipc")
 dest2 <- file.path(dest_folder, "output_2.ipc")
