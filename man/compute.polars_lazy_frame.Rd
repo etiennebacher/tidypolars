@@ -101,13 +101,13 @@ values.}
 \code{collect()} and \code{compute()} can be applied on a LazyFrame only. They both
 check the validity of the query (for instance raising an error if a string operation
 would be applied on a numeric column), optimize it in the background, and
-perform computation.
+perform computations.
 
 These two functions differ in their output type:
 \itemize{
 \item \code{compute()} returns a \link[polars:pl__DataFrame]{Polars DataFrame};
 \item \code{collect()} returns an R \link{data.frame}. Converting the output to an R \code{data.frame}
-can be expensive, so \code{collect()} may consume more memory and take longer time.
+can be expensive, so \code{collect()} may consume more memory and take longer.
 }
 }
 \examples{

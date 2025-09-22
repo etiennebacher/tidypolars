@@ -4,12 +4,12 @@
 #' `collect()` and `compute()` can be applied on a LazyFrame only. They both
 #' check the validity of the query (for instance raising an error if a string operation
 #' would be applied on a numeric column), optimize it in the background, and
-#' perform computation.
+#' perform computations.
 #'
 #' These two functions differ in their output type:
 #' * `compute()` returns a [Polars DataFrame][polars::pl__DataFrame];
 #' * `collect()` returns an R [data.frame]. Converting the output to an R `data.frame`
-#'   can be expensive, so `collect()` may consume more memory and take longer time.
+#'   can be expensive, so `collect()` may consume more memory and take longer.
 #'
 #' @param x A Polars LazyFrame
 #' @param type_coercion Coerce types such that operations succeed and run on
