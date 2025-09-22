@@ -1,15 +1,15 @@
-#' Collect a LazyFrame
+#' Run computations on a LazyFrame
 #'
 #' @description
-#' `compute()` checks the query, optimizes it in the background, and runs it.
-#' The output is a [Polars DataFrame][polars::pl__DataFrame]. `collect()` is
-#' similar to `compute()` but converts the output to an R [data.frame], which
-#' consumes more memory.
+#' `collect()` and `compute()` can be applied on a LazyFrame only. They both
+#' check the validity of the query (for instance raising an error if a string operation
+#' would be applied on a numeric column), optimize it in the background, and
+#' perform computation.
 #'
-#' Until `tidypolars` 0.7.0, there was only `collect()` and it was used to
-#' collect a LazyFrame into a Polars DataFrame. This usage is still valid for
-#' now but will change in 0.8.0 to automatically convert a DataFrame to a
-#' `data.frame`. Use `compute()` to have a Polars DataFrame as output.
+#' These two functions differ in their output type:
+#' * `compute()` returns a [Polars DataFrame][polars::pl__DataFrame];
+#' * `collect()` returns an R [data.frame]. Converting the output to an R `data.frame`
+#'   can be expensive, so `collect()` may consume more memory and take longer time.
 #'
 #' @param x A Polars LazyFrame
 #' @param type_coercion Coerce types such that operations succeed and run on

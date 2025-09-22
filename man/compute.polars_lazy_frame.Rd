@@ -3,7 +3,7 @@
 \name{compute.polars_lazy_frame}
 \alias{compute.polars_lazy_frame}
 \alias{collect.polars_lazy_frame}
-\title{Collect a LazyFrame}
+\title{Run computations on a LazyFrame}
 \usage{
 \method{compute}{polars_lazy_frame}(
   x,
@@ -98,15 +98,17 @@ instead.}
 values.}
 }
 \description{
-\code{compute()} checks the query, optimizes it in the background, and runs it.
-The output is a \link[polars:pl__DataFrame]{Polars DataFrame}. \code{collect()} is
-similar to \code{compute()} but converts the output to an R \link{data.frame}, which
-consumes more memory.
+\code{collect()} and \code{compute()} can be applied on a LazyFrame only. They both
+check the validity of the query (for instance raising an error if a string operation
+would be applied on a numeric column), optimize it in the background, and
+perform computation.
 
-Until \code{tidypolars} 0.7.0, there was only \code{collect()} and it was used to
-collect a LazyFrame into a Polars DataFrame. This usage is still valid for
-now but will change in 0.8.0 to automatically convert a DataFrame to a
-\code{data.frame}. Use \code{compute()} to have a Polars DataFrame as output.
+These two functions differ in their output type:
+\itemize{
+\item \code{compute()} returns a \link[polars:pl__DataFrame]{Polars DataFrame};
+\item \code{collect()} returns an R \link{data.frame}. Converting the output to an R \code{data.frame}
+can be expensive, so \code{collect()} may consume more memory and take longer time.
+}
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
