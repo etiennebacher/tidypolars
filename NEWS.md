@@ -6,25 +6,27 @@
 
 * New argument `mkdir` in all `sink_*()` functions to recursively create the
   folder(s) specified in the path(s) to files (#236).
-  
+
 * New functions `partition_by_key()` and `partition_by_max_size()` that can be
-  used in the `path` argument of `sink_*()` functions. Those enable writing a 
-  LazyFrame to several files as partitioned output. See more details in 
+  used in the `path` argument of `sink_*()` functions. Those enable writing a
+  LazyFrame to several files as partitioned output. See more details in
   `?sink_parquet()` (#237).
 
 * `bind_cols_polars()` now works with more than two LazyFrames (#244).
+
+* Add support for argument `ignore.case` in `grepl()` (#251).
 
 ## Bug fixes
 
 * Better error message in `group_by()` for unsupported argument `.drop` (#230).
 
 * Better error message in `group_by()` when passing named expressions in `...`.
-  `dplyr` supports those but it is more and more recommended to use the `.by` / 
-  `by` argument in individual functions rather than using `group_by()` and 
+  `dplyr` supports those but it is more and more recommended to use the `.by` /
+  `by` argument in individual functions rather than using `group_by()` and
   `ungroup()` (#238).
 
 * Better error message in `count()` when passing named expressions in `...` (#239).
-  
+
 ## Documentation
 
 * New vignette "How to benchmark tidypolars" (#232).

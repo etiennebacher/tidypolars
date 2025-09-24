@@ -1,6 +1,9 @@
-pl_grepl <- function(pattern, x, fixed = FALSE, ...) {
+pl_grepl <- function(pattern, x, ignore.case = FALSE, fixed = FALSE, ...) {
   if (isTRUE(fixed)) {
     attr(pattern, "stringr_attr") <- "fixed"
+  }
+  if (isTRUE(ignore.case)) {
+    attr(pattern, "case_insensitive") <- TRUE
   }
   pl_str_detect_stringr(string = x, pattern = pattern, ...)
 }
