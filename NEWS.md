@@ -18,6 +18,8 @@
 
 * Support `stringr::fixed()` in more `stringr` functions (#250).
 
+* Add support for argument `ignore.case` in `grepl()` (#251).
+
 ## Bug fixes
 
 * Better error message in `group_by()` for unsupported argument `.drop` (#230).

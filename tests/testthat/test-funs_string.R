@@ -948,9 +948,11 @@ test_that("detect functions work", {
       pull(foo)
   )
 
-  expect_warning(
-    mutate(test, foo = grepl("e", x1, ignore.case = TRUE)),
-    "doesn't know how to use some arguments"
+  expect_equal(
+    mutate(test, foo = grepl("hello", x1, ignore.case = TRUE)) |>
+      pull(foo),
+    mutate(test_df, foo = grepl("hello", x1, ignore.case = TRUE)) |>
+      pull(foo)
   )
 })
 
