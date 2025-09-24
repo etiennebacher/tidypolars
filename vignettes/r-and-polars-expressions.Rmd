@@ -271,6 +271,7 @@ out <- tribble(
   "`base`", "`exp`",
   "`base`", "`floor`",
   "`base`", "`grepl`",
+  "`base`", "`gsub`",
   "`base`", "`ifelse`",
   "`base`", "`ISOdatetime`",
   "`base`", "`length`",
