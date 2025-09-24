@@ -14,6 +14,10 @@
 
 * `bind_cols_polars()` now works with more than two LazyFrames (#244).
 
+* Add support for `gsub()` (#250).
+
+* Support `stringr::fixed()` in more `stringr` functions (#250).
+
 * Add support for argument `ignore.case` in `grepl()` (#251).
 
 ## Bug fixes

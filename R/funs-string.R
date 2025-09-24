@@ -8,6 +8,28 @@ pl_grepl <- function(pattern, x, ignore.case = FALSE, fixed = FALSE, ...) {
   pl_str_detect_stringr(string = x, pattern = pattern, ...)
 }
 
+pl_gsub <- function(
+  pattern,
+  replacement,
+  x,
+  ignore.case = FALSE,
+  fixed = FALSE,
+  ...
+) {
+  if (isTRUE(fixed)) {
+    attr(pattern, "stringr_attr") <- "fixed"
+  }
+  if (isTRUE(ignore.case)) {
+    attr(pattern, "case_insensitive") <- TRUE
+  }
+  pl_str_replace_all_stringr(
+    string = x,
+    pattern = pattern,
+    replacement = replacement,
+    ...
+  )
+}
+
 pl_paste0 <- function(..., collapse = NULL) {
   pl_paste(..., sep = "", collapse = collapse)
 }
@@ -165,7 +187,7 @@ pl_str_remove_stringr <- function(string, pattern, ...) {
 pl_str_remove_all_stringr <- function(string, pattern, ...) {
   check_empty_dots(...)
   pattern <- check_pattern(pattern)
-  string$str$replace_all(pattern$pattern, "")
+  string$str$replace_all(pattern$pattern, "", literal = pattern$is_fixed)
 }
 
 pl_str_replace_stringr <- function(string, pattern, replacement, ...) {
@@ -174,7 +196,7 @@ pl_str_replace_stringr <- function(string, pattern, replacement, ...) {
   if (is.character(replacement)) {
     replacement <- parse_replacement(replacement)
   }
-  string$str$replace(pattern$pattern, replacement)
+  string$str$replace(pattern$pattern, replacement, literal = pattern$is_fixed)
 }
 
 pl_str_replace_all_stringr <- function(string, pattern, replacement, ...) {
@@ -190,7 +212,11 @@ pl_str_replace_all_stringr <- function(string, pattern, replacement, ...) {
   } else {
     pattern <- check_pattern(pattern)
     replacement <- parse_replacement(replacement)
-    out <- string$str$replace_all(pattern$pattern, replacement)
+    out <- string$str$replace_all(
+      pattern$pattern,
+      replacement,
+      literal = pattern$is_fixed
+    )
   }
 
   out

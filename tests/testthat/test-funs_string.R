@@ -311,6 +311,7 @@ test_that("replace functions work", {
     x8 = c("Jane-saw-a-cat", "Jane-sat-down"),
     x9 = c(" Some text    with ws   ", "and more     white   space  "),
     x10 = c("Age_groups_0_4_years_Persons", "Age_groups_5_14_years_Persons"),
+    x11 = c("[hello]", "[hi]"),
     n = 1:2
   )
   test <- as_polars_df(test_df)
@@ -417,6 +418,40 @@ test_that("replace functions work", {
   #   mutate(test_df, foo = str_replace_all(x1, "[aeiou]", toupper)) |>
   #     pull(foo)
   # )
+
+  expect_equal(
+    mutate(test, foo = gsub("[aeiou]", "-", x1)) |>
+      pull(foo),
+    mutate(test_df, foo = gsub("[aeiou]", "-", x1)) |>
+      pull(foo)
+  )
+
+  expect_equal(
+    mutate(
+      test,
+      foo = gsub("[aeiou]", "-", x1, ignore.case = TRUE)
+    ) |>
+      pull(foo),
+    mutate(
+      test_df,
+      foo = gsub("[aeiou]", "-", x1, ignore.case = TRUE)
+    ) |>
+      pull(foo)
+  )
+
+  expect_equal(
+    mutate(test, foo = gsub("[h", "-", x11, fixed = TRUE)) |>
+      pull(foo),
+    mutate(test_df, foo = gsub("[h", "-", x11, fixed = TRUE)) |>
+      pull(foo)
+  )
+
+  expect_equal(
+    mutate(test, foo = gsub("([aeiou])", "\\1", x1)) |>
+      pull(foo),
+    mutate(test_df, foo = gsub("([aeiou])", "\\1", x1)) |>
+      pull(foo)
+  )
 })
 
 test_that("remove functions work", {
