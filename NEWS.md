@@ -20,6 +20,8 @@
 
 * Add support for argument `ignore.case` in `grepl()` (#251).
 
+* Add support for `lubridate` functions `rollbackward()`, `rollback()`, and `rollforward()` (#252).
+
 ## Bug fixes
 
 * Better error message in `group_by()` for unsupported argument `.drop` (#230).
