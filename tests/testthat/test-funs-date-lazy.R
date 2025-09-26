@@ -188,4 +188,96 @@ test_that("operations on dates and durations", {
   )
 })
 
+test_that("rollbackward and rollforward work - date", {
+  for_all(
+    tests = 40,
+    date = date_(),
+    roll_to_first = logical_(len = 1, any_na = TRUE),
+    preserve_hms = logical_(len = 1, any_na = TRUE),
+    property = function(date, roll_to_first, preserve_hms) {
+      date[is.na(date)] <- NA_Date_
+      test_df <- data.frame(date = as_date(date))
+      test <- as_polars_lf(test_df)
+
+      # TODO: once the TODO in the implementations is fixed, use `preserve_hms = preserve_hms`
+      expect_equal_or_both_error(
+        mutate(
+          test,
+          date = rollbackward(
+            date,
+            roll_to_first = roll_to_first,
+            preserve_hms = TRUE
+          ),
+          date = rollforward(
+            date,
+            roll_to_first = roll_to_first,
+            preserve_hms = TRUE
+          )
+        ),
+        mutate(
+          test_df,
+          date = rollbackward(
+            date,
+            roll_to_first = roll_to_first,
+            preserve_hms = TRUE
+          ),
+          date = rollforward(
+            date,
+            roll_to_first = roll_to_first,
+            preserve_hms = TRUE
+          )
+        )
+      )
+    }
+  )
+})
+
+test_that("rollbackward and rollforward work - datetime", {
+  for_all(
+    datetime = posixct_bounded(
+      left = as.POSIXct("0001-01-01 00:00:00", tz = "UTC"),
+      right = as.POSIXct("2099-01-01 00:00:00", tz = "UTC"),
+      any_na = TRUE
+    ),
+    roll_to_first = logical_(len = 1, any_na = TRUE),
+    preserve_hms = logical_(len = 1, any_na = TRUE),
+    property = function(datetime, roll_to_first, preserve_hms) {
+      datetime[is.na(datetime)] <- NA_POSIXct_
+      # Seems that quickcheck doesn't give datetimes with many different timezones
+      tz(datetime) <- sample(OlsonNames(), 1)
+      test_df <- data.frame(datetime = datetime)
+      test <- as_polars_lf(test_df)
+
+      expect_equal_or_both_error(
+        mutate(
+          test,
+          datetime = rollbackward(
+            datetime,
+            roll_to_first = roll_to_first,
+            preserve_hms = preserve_hms
+          ),
+          datetime = rollforward(
+            datetime,
+            roll_to_first = roll_to_first,
+            preserve_hms = preserve_hms
+          )
+        ),
+        mutate(
+          test_df,
+          datetime = rollbackward(
+            datetime,
+            roll_to_first = roll_to_first,
+            preserve_hms = preserve_hms
+          ),
+          datetime = rollforward(
+            datetime,
+            roll_to_first = roll_to_first,
+            preserve_hms = preserve_hms
+          )
+        )
+      )
+    }
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
