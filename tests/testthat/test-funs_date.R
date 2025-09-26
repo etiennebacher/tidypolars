@@ -793,3 +793,23 @@ test_that("errors for durations", {
   expect_snapshot(mutate(test, x = hours(1.2)), error = TRUE)
   expect_snapshot(mutate(test, x = minutes(1.2)), error = TRUE)
 })
+
+test_that("errors for rolling functions", {
+  test <- pl$DataFrame(x = 1)
+  expect_snapshot(
+    mutate(test, x = rollbackward(x, roll_to_first = "a")),
+    error = TRUE
+  )
+  expect_snapshot(
+    mutate(test, x = rollbackward(x, preserve_hms = "a")),
+    error = TRUE
+  )
+  expect_snapshot(
+    mutate(test, x = rollforward(x, roll_to_first = "a")),
+    error = TRUE
+  )
+  expect_snapshot(
+    mutate(test, x = rollforward(x, preserve_hms = "a")),
+    error = TRUE
+  )
+})

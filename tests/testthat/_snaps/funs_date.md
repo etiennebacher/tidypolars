@@ -34,3 +34,39 @@
       ! Error while running function `minutes()` in Polars.
       x `x` must be integerish.
 
+# errors for rolling functions
+
+    Code
+      mutate(test, x = rollbackward(x, roll_to_first = "a"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `rollbackward()` in Polars.
+      x `roll_to_first` must be `TRUE` or `FALSE`.
+
+---
+
+    Code
+      mutate(test, x = rollbackward(x, preserve_hms = "a"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `rollbackward()` in Polars.
+      x `preserve_hms` must be `TRUE` or `FALSE`.
+
+---
+
+    Code
+      mutate(test, x = rollforward(x, roll_to_first = "a"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `rollforward()` in Polars.
+      x `roll_to_first` must be `TRUE` or `FALSE`.
+
+---
+
+    Code
+      mutate(test, x = rollforward(x, preserve_hms = "a"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `rollforward()` in Polars.
+      x `preserve_hms` must be `TRUE` or `FALSE`.
+

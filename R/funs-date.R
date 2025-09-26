@@ -218,6 +218,59 @@ pl_force_tz_lubridate <- function(time, tzone = "", ...) {
   time$dt$replace_time_zone(tzone)
 }
 
+pl_rollbackward_lubridate <- function(
+  dates,
+  roll_to_first = FALSE,
+  preserve_hms = TRUE
+) {
+  roll_to_first <- polars_expr_to_r(roll_to_first)
+  preserve_hms <- polars_expr_to_r(preserve_hms)
+  if (length(roll_to_first) != 1 || !roll_to_first %in% c(TRUE, FALSE)) {
+    cli_abort("{.arg roll_to_first} must be `TRUE` or `FALSE`.")
+  }
+  if (length(preserve_hms) != 1 || !preserve_hms %in% c(TRUE, FALSE)) {
+    cli_abort("{.arg preserve_hms} must be `TRUE` or `FALSE`.")
+  }
+  out <- dates$dt$month_start()
+  if (isFALSE(roll_to_first)) {
+    out <- out$dt$offset_by("-1d")
+  }
+  if (isFALSE(preserve_hms)) {
+    # TODO: When I have the tool to detect the datatype, then I can use
+    # $cast(pl$Datetime(time_zone = "UTC")) if `out` is a Date column.
+    # Fix property tests for date.
+    # Also remove the note in vignette.
+    out <- out$dt$replace(hour = 0, minute = 0, second = 0)
+  }
+  out
+}
+
+pl_rollback_lubridate <- pl_rollbackward_lubridate
+
+pl_rollforward_lubridate <- function(
+  dates,
+  roll_to_first = FALSE,
+  preserve_hms = TRUE
+) {
+  roll_to_first <- polars_expr_to_r(roll_to_first)
+  preserve_hms <- polars_expr_to_r(preserve_hms)
+  # TODO: import rlang check functions
+  if (length(roll_to_first) != 1 || !roll_to_first %in% c(TRUE, FALSE)) {
+    cli_abort("{.arg roll_to_first} must be `TRUE` or `FALSE`.")
+  }
+  if (length(preserve_hms) != 1 || !preserve_hms %in% c(TRUE, FALSE)) {
+    cli_abort("{.arg preserve_hms} must be `TRUE` or `FALSE`.")
+  }
+  out <- dates$dt$month_end()
+  if (isTRUE(roll_to_first)) {
+    out <- out$dt$offset_by("1d")
+  }
+  if (isFALSE(preserve_hms)) {
+    out <- out$dt$replace(hour = 0, minute = 0, second = 0, microsecond = 0)
+  }
+  out
+}
+
 # Had to change here default argument from `tzone=""` to
 # `tzone = "UTC"`, to avoid error since the polars
 # `convert_time_zone()` doesn't support NULL timezone

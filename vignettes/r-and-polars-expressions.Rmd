@@ -344,6 +344,9 @@ out <- tribble(
   "`lubridate`", "`now`",
   "`lubridate`", "`pm`",
   "`lubridate`", "`quarter`",
+  "`lubridate`", "`rollbackward`",
+  "`lubridate`", "`rollback`",
+  "`lubridate`", "`rollforward`",
   "`lubridate`", "`seconds`",
   "`lubridate`", "`today`",
   "`lubridate`", "`wday`",
@@ -391,6 +394,8 @@ out <- tribble(
         "In `lubridate`, when there is an overflow in some of the components (for example `hours = 25` or `month = 15`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this errors.",
       Package == "`base`" & Function  == "`ISOdatetime`" ~
         "In `base`, when there is an overflow in some of the components (for example `hours = 25` or `month = 15`), then it returns `NA`. In Polars, this errors.",
+      Package == "`lubridate`" & Function %in% c("`rollbackward`", "`rollback`", "`rollforward`") ~
+        "When `preserve_hms = FALSE`, there might be differences in the hour-minute-second parts due to issues in timezone conversion.",
       Package == "`lubridate`" & Function == "`wday`" ~
         "Requires `week_start == 7`. If `label = TRUE`, it returns a string variable and not a factor as in `lubridate`.",
       Package == "`lubridate`" & Function == "`with_tz`" ~
