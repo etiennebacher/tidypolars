@@ -1,0 +1,8 @@
+id: cli_abort-1
+language: r
+severity: warning
+rule:
+  any:
+    - pattern: abort($$$ELEMS)
+    - pattern: rlang::abort($$$ELEMS)
+message: Use `cli_abort()` instead of `abort()`.

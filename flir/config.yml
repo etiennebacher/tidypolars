@@ -46,6 +46,8 @@ keep:
   - unreachable_code
   - which_grepl
 
+  - cli_abort
+
 exclude:
   - expect_identical
   - todo_comment
