@@ -188,4 +188,105 @@ test_that("operations on dates and durations", {
   )
 })
 
+test_that("rollbackward and rollforward work - date", {
+  for_all(
+    tests = 40,
+    date = date_(),
+    roll_to_first = logical_(len = 1, any_na = TRUE),
+    preserve_hms = logical_(len = 1, any_na = TRUE),
+    property = function(date, roll_to_first, preserve_hms) {
+      date[is.na(date)] <- NA_Date_
+      test_df <- data.frame(date = as_date(date))
+      test <- as_polars_lf(test_df)
+
+      # TODO: once the TODO in the implementations is fixed, use `preserve_hms = preserve_hms`
+      expect_equal_or_both_error(
+        mutate(
+          test,
+          date_rb = rollbackward(
+            date,
+            roll_to_first = roll_to_first,
+            preserve_hms = TRUE
+          ),
+          date_rf = rollforward(
+            date,
+            roll_to_first = roll_to_first,
+            preserve_hms = TRUE
+          )
+        ),
+        mutate(
+          test_df,
+          date_rb = rollbackward(
+            date,
+            roll_to_first = roll_to_first,
+            preserve_hms = TRUE
+          ),
+          date_rf = rollforward(
+            date,
+            roll_to_first = roll_to_first,
+            preserve_hms = TRUE
+          )
+        )
+      )
+    }
+  )
+})
+
+test_that("rollbackward and rollforward work - datetime", {
+  for_all(
+    datetime = posixct_bounded(
+      # Set this lower bound because before that R uses the "LMT" tz when dealing
+      # with ancient dates.
+      left = as.POSIXct("1850-01-01 00:00:00", tz = "UTC"),
+      right = as.POSIXct("2099-01-01 00:00:00", tz = "UTC"),
+      any_na = TRUE,
+      len = 1
+    ),
+    roll_to_first = logical_(len = 1, any_na = TRUE),
+    preserve_hms = logical_(len = 1, any_na = TRUE),
+    property = function(datetime, roll_to_first, preserve_hms) {
+      datetime[is.na(datetime)] <- NA_POSIXct_
+
+      # Ideally, this would also need to be checked for different timezones, but
+      # then we start hitting a bunch of problems with invalid timezones, cases
+      # where Polars and R likely don't have the same list of timezones, or
+      # OS differences. I couldn't find a way to reliably test for those.
+      # One of this edge cases (among many):
+      # https://github.com/etiennebacher/tidypolars/pull/252/commits/5e2acdcccb912bf034d23534865bce12b755d82b
+
+      test_df <- data.frame(datetime = datetime)
+      test <- as_polars_lf(test_df)
+
+      expect_equal_or_both_error(
+        mutate(
+          test,
+          datetime_rb = rollbackward(
+            datetime,
+            roll_to_first = roll_to_first,
+            preserve_hms = preserve_hms
+          ),
+          datetime_rf = rollforward(
+            datetime,
+            roll_to_first = roll_to_first,
+            preserve_hms = preserve_hms
+          )
+        ),
+        mutate(
+          test_df,
+          datetime_rb = rollbackward(
+            datetime,
+            roll_to_first = roll_to_first,
+            preserve_hms = preserve_hms
+          ),
+          datetime_rf = rollforward(
+            datetime,
+            roll_to_first = roll_to_first,
+            preserve_hms = preserve_hms
+          )
+        )
+      )
+    }
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
