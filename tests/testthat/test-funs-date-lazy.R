@@ -235,6 +235,8 @@ test_that("rollbackward and rollforward work - date", {
 test_that("rollbackward and rollforward work - datetime", {
   for_all(
     datetime = posixct_bounded(
+      # Set this lower bound because before that R uses the "LMT" tz when dealing
+      # with ancient dates.
       left = as.POSIXct("1850-01-01 00:00:00", tz = "UTC"),
       right = as.POSIXct("2099-01-01 00:00:00", tz = "UTC"),
       any_na = TRUE,
@@ -244,43 +246,16 @@ test_that("rollbackward and rollforward work - datetime", {
     preserve_hms = logical_(len = 1, any_na = TRUE),
     property = function(datetime, roll_to_first, preserve_hms) {
       datetime[is.na(datetime)] <- NA_POSIXct_
-      # Seems that quickcheck doesn't give datetimes with many different timezones
-      new_tz <- sample(OlsonNames(), 1)
-      print(new_tz)
-      tz(datetime) <- new_tz
+
+      # Ideally, this would also need to be checked for different timezones, but
+      # then we start hitting a bunch of problems with invalid timezones, cases
+      # where Polars and R likely don't have the same list of timezones, or
+      # OS differences. I couldn't find a way to reliably test for those.
+      # One of this edge cases (among many):
+      # https://github.com/etiennebacher/tidypolars/pull/252/commits/5e2acdcccb912bf034d23534865bce12b755d82b
+
       test_df <- data.frame(datetime = datetime)
       test <- as_polars_lf(test_df)
-
-      # Hate timezones.
-      # Example:
-      # new_tz <- "Pacific/Chatham"
-      # as.POSIXct("1987-03-03 02:45:00", tz = "CET")
-      #
-      # Month start would be 1987-03-03 02:45:00, which is ambiguous in this TZ.
-      # Polars doesn't allow to control for this in month_start()/month_end(),
-      # so rather than doing ugly gymnastics in those functions, I'd rather skip
-      # those cases here. I think it's fine since polars is more conservative
-      # than lubridate here, so if this happens it will force the users to handle
-      # this explicitly.
-      tryCatch(
-        test$select(
-          pl$col("datetime")$dt$month_start(),
-          pl$col("datetime")$dt$month_end()
-        ),
-        error = function(e) {
-          if (grepl("is ambiguous in time zone", e$parent$parent$message)) {
-            msg <- paste0(
-              "Polars errored because of ambigous timezone ",
-              new_tz,
-              " with datetime ",
-              datetime[!is.na(datetime)][1],
-              ".\nSkipping"
-            )
-            cat(msg)
-            return(expect_true(TRUE))
-          }
-        }
-      )
 
       expect_equal_or_both_error(
         mutate(
