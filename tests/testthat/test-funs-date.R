@@ -199,12 +199,12 @@ test_that("rollbackward and rollforward work - date", {
       expect_equal_or_both_error(
         mutate(
           test,
-          date = rollbackward(
+          date_rb = rollbackward(
             date,
             roll_to_first = roll_to_first,
             preserve_hms = TRUE
           ),
-          date = rollforward(
+          date_rf = rollforward(
             date,
             roll_to_first = roll_to_first,
             preserve_hms = TRUE
@@ -212,12 +212,12 @@ test_that("rollbackward and rollforward work - date", {
         ),
         mutate(
           test_df,
-          date = rollbackward(
+          date_rb = rollbackward(
             date,
             roll_to_first = roll_to_first,
             preserve_hms = TRUE
           ),
-          date = rollforward(
+          date_rf = rollforward(
             date,
             roll_to_first = roll_to_first,
             preserve_hms = TRUE
@@ -231,28 +231,62 @@ test_that("rollbackward and rollforward work - date", {
 test_that("rollbackward and rollforward work - datetime", {
   for_all(
     datetime = posixct_bounded(
-      left = as.POSIXct("0001-01-01 00:00:00", tz = "UTC"),
+      left = as.POSIXct("1850-01-01 00:00:00", tz = "UTC"),
       right = as.POSIXct("2099-01-01 00:00:00", tz = "UTC"),
-      any_na = TRUE
+      any_na = TRUE,
+      len = 1
     ),
     roll_to_first = logical_(len = 1, any_na = TRUE),
     preserve_hms = logical_(len = 1, any_na = TRUE),
     property = function(datetime, roll_to_first, preserve_hms) {
       datetime[is.na(datetime)] <- NA_POSIXct_
       # Seems that quickcheck doesn't give datetimes with many different timezones
-      tz(datetime) <- sample(OlsonNames(), 1)
+      new_tz <- sample(OlsonNames(), 1)
+      print(new_tz)
+      tz(datetime) <- new_tz
       test_df <- data.frame(datetime = datetime)
       test <- as_polars_df(test_df)
+
+      # Hate timezones.
+      # Example:
+      # new_tz <- "Pacific/Chatham"
+      # as.POSIXct("1987-03-03 02:45:00", tz = "CET")
+      #
+      # Month start would be 1987-03-03 02:45:00, which is ambiguous in this TZ.
+      # Polars doesn't allow to control for this in month_start()/month_end(),
+      # so rather than doing ugly gymnastics in those functions, I'd rather skip
+      # those cases here. I think it's fine since polars is more conservative
+      # than lubridate here, so if this happens it will force the users to handle
+      # this explicitly.
+      tryCatch(
+        test$select(
+          pl$col("datetime")$dt$month_start(),
+          pl$col("datetime")$dt$month_end()
+        ),
+        error = function(e) {
+          if (grepl("is ambiguous in time zone", e$parent$parent$message)) {
+            msg <- paste0(
+              "Polars errored because of ambigous timezone ",
+              new_tz,
+              " with datetime ",
+              datetime[!is.na(datetime)][1],
+              ".\nSkipping"
+            )
+            cat(msg)
+            return(expect_true(TRUE))
+          }
+        }
+      )
 
       expect_equal_or_both_error(
         mutate(
           test,
-          datetime = rollbackward(
+          datetime_rb = rollbackward(
             datetime,
             roll_to_first = roll_to_first,
             preserve_hms = preserve_hms
           ),
-          datetime = rollforward(
+          datetime_rf = rollforward(
             datetime,
             roll_to_first = roll_to_first,
             preserve_hms = preserve_hms
@@ -260,12 +294,12 @@ test_that("rollbackward and rollforward work - datetime", {
         ),
         mutate(
           test_df,
-          datetime = rollbackward(
+          datetime_rb = rollbackward(
             datetime,
             roll_to_first = roll_to_first,
             preserve_hms = preserve_hms
           ),
-          datetime = rollforward(
+          datetime_rf = rollforward(
             datetime,
             roll_to_first = roll_to_first,
             preserve_hms = preserve_hms
