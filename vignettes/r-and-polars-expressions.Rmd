@@ -395,7 +395,7 @@ out <- tribble(
       Package == "`base`" & Function  == "`ISOdatetime`" ~
         "In `base`, when there is an overflow in some of the components (for example `hours = 25` or `month = 15`), then it returns `NA`. In Polars, this errors.",
       Package == "`lubridate`" & Function %in% c("`rollbackward`", "`rollback`", "`rollforward`") ~
-        "When `preserve_hms = FALSE`, there might be differences in the hour-minute-second parts due to issues in timezone conversion.",
+        "While time zone handling should mimick the behaviour of `lubridate` in most cases, it is possible that Polars errors if rolling back/forward leads to am ambiguous datetime. It is also possible to have some differences in hours/minutes/seconds when converting between Polars and R.",
       Package == "`lubridate`" & Function == "`wday`" ~
         "Requires `week_start == 7`. If `label = TRUE`, it returns a string variable and not a factor as in `lubridate`.",
       Package == "`lubridate`" & Function == "`with_tz`" ~
