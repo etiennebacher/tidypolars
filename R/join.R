@@ -556,13 +556,13 @@ eval_inequality_join <- function(x, y, how, by, suffix) {
   if (length(to_drop) > 0) {
     res <- res$drop(!!!to_drop)
   }
+  # Only keep common columns that were involved in inequality joins, otherwise
+  # they just don't have a duplicate in the output
+  common_cols <- Filter(
+    function(x) paste0(x, suffix[2]) %in% names(res),
+    common_cols
+  )
   if (length(common_cols) > 0) {
-    # Only keep common columns that were involved in inequality joins, otherwise
-    # they just don't have a duplicate in the output
-    common_cols <- Filter(
-      function(x) paste0(x, suffix[2]) %in% names(res),
-      common_cols
-    )
     new_cols <- as.list(paste0(common_cols, suffix[1]))
     names(new_cols) <- common_cols
     res <- res$rename(!!!new_cols)

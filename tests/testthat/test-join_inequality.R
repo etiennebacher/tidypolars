@@ -167,3 +167,28 @@ test_that("'overlaps' helper works", {
     )
   }
 })
+
+test_that("all common columns are used in join conditions", {
+  # https://stackoverflow.com/questions/79782259/tidypolars-strange-error-with-inequality-join
+  x <- tibble(
+    id = c(1, 1, 2, 2),
+    t = as.POSIXct("2023-05-02 12:00") %m+% months(0:3)
+  )
+  x_pl <- as_polars_lf(x)
+
+  y <- tibble(
+    id = c(1, 1, 2, 2),
+    start = as.POSIXct("2023-05-01 12:00") %m+% months(0:3),
+    end = as.POSIXct("2023-05-03 12:00") %m+% months(0:3),
+  )
+  y_pl <- as_polars_lf(y)
+
+  expect_identical(
+    x_pl |>
+      inner_join(y_pl, by = join_by(id, between(t, start, end))) |>
+      as_tibble(),
+    x |>
+      inner_join(y, by = join_by(id, between(t, start, end))) |>
+      as_tibble()
+  )
+})
