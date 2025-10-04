@@ -168,7 +168,8 @@ test_that("'overlaps' helper works", {
   }
 })
 
-test_that("", {
+test_that("all common columns are used in join conditions", {
+  # https://stackoverflow.com/questions/79782259/tidypolars-strange-error-with-inequality-join
   x <- tibble(
     id = c(1, 1, 2, 2),
     t = as.POSIXct("2023-05-02 12:00") %m+% months(0:3)
