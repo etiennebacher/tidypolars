@@ -33,6 +33,9 @@
 
 * Better error message in `count()` when passing named expressions in `...` (#239).
 
+* Fix bug in `join_where()` when all common column names between two DataFrames
+  are used in the join conditions (#254)
+
 ## Documentation
 
 * New vignette "How to benchmark tidypolars" (#232).
