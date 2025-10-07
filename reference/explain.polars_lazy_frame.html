@@ -90,20 +90,20 @@ Polars. Otherwise, show the initial query.</p></dd>
 <span class="r-in"><span><span class="co"># unoptimized query plan:</span></span></span>
 <span class="r-in"><span><span class="va">no_opt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/explain.html" class="external-link">explain</a></span><span class="op">(</span><span class="va">query</span>, optimized <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">no_opt</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "SELECT [col(\"mpg\")]\n  FILTER [(col(\"cyl\")) == (3.0)]\n  FROM\n    SORT BY [col(\"drat\")]\n      DF [\"mpg\", \"cyl\", \"disp\", \"hp\", ...]; PROJECT */11 COLUMNS"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "SELECT [col(\"mpg\")]\n  FILTER [(col(\"cyl\")) == (3.0)]\n  FROM\n    SORT BY [nulls_last: [true]] [col(\"drat\")]\n      DF [\"mpg\", \"cyl\", \"disp\", \"hp\", ...]; PROJECT */11 COLUMNS"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># better printing with cat():</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">no_opt</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SELECT [col("mpg")]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   FILTER [(col("cyl")) == (3.0)]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   FROM</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     SORT BY [col("drat")]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     SORT BY [nulls_last: [true]] [col("drat")]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       DF ["mpg", "cyl", "disp", "hp", ...]; PROJECT */11 COLUMNS</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># optimized query run by polars</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/explain.html" class="external-link">explain</a></span><span class="op">(</span><span class="va">query</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> simple π 1/1 ["mpg"]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   SORT BY [col("drat")]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   SORT BY [nulls_last: [true]] [col("drat")]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     FILTER [(col("cyl")) == (3.0)]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     FROM</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       DF ["mpg", "cyl", "disp", "hp", ...]; PROJECT["mpg", "cyl", "drat"] 3/11 COLUMNS</span>
