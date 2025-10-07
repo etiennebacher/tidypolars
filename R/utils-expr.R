@@ -495,7 +495,7 @@ translate <- function(
               if (is.list(rhs)) {
                 rhs <- unlist(rhs)
               }
-              lhs$is_in(rhs)
+              lhs$is_in(rhs, nulls_equal = TRUE)
             },
             error = identity
           )
