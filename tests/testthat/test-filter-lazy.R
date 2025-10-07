@@ -137,6 +137,24 @@ test_that("%in% works", {
   )
 })
 
+test_that("%in% works with NA", {
+  test <- data.frame(x = c(1, 2, NA))
+  test_pl <- as_polars_lf(test)
+
+  expect_equal_lazy(
+    test |> filter(x %in% c(1, NA)),
+    test_pl |> filter(x %in% c(1, NA))
+  )
+  # TODO: ideally this should work, but I think it's going to be tricky because
+  # we need to know the dtype of the LHS, which is not easy (or possible?).
+  # Maybe throw a custom error since this should only happen when the rhs is NA
+  # only?
+  # expect_equal_lazy(
+  #   test |> filter(x %in% NA),
+  #   test_pl |> filter(x %in% NA)
+  # )
+})
+
 test_that("between() works", {
   pl_iris <- as_polars_lf(iris)
 

@@ -174,14 +174,14 @@ test_that("all common columns are used in join conditions", {
     id = c(1, 1, 2, 2),
     t = as.POSIXct("2023-05-02 12:00") %m+% months(0:3)
   )
-  x_pl <- as_polars_lf(x)
+  x_pl <- as_polars_df(x)
 
   y <- tibble(
     id = c(1, 1, 2, 2),
     start = as.POSIXct("2023-05-01 12:00") %m+% months(0:3),
     end = as.POSIXct("2023-05-03 12:00") %m+% months(0:3),
   )
-  y_pl <- as_polars_lf(y)
+  y_pl <- as_polars_df(y)
 
   expect_identical(
     x_pl |>

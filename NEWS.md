@@ -34,7 +34,10 @@
 * Better error message in `count()` when passing named expressions in `...` (#239).
 
 * Fix bug in `join_where()` when all common column names between two DataFrames
-  are used in the join conditions (#254)
+  are used in the join conditions (#254).
+
+* Using `%in%` with `NA` now retains the `NA` in the data. Using `%in% NA` will
+  error (#256).
 
 ## Documentation
 
