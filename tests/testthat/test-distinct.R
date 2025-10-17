@@ -83,5 +83,4 @@ test_that("argument .keep_all works", {
     test |> distinct(iso_o, iso_d, .keep_all = TRUE),
     test_pl |> distinct(iso_o, iso_d, .keep_all = TRUE)
   )
-
 })
