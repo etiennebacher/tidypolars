@@ -18,11 +18,11 @@ test_that("distinct() works", {
 
   expect_dim(
     distinct(pl_test, iso_o),
-    c(3, 1)
+    c(3, 3)
   )
 
   expect_equal_lazy(
-    distinct(pl_test, iso_o, .keep_all = TRUE) |>
+    distinct(pl_test, iso_o) |>
       pull(value),
     c(1, 3, 5)
   )
@@ -36,14 +36,14 @@ test_that("argument keep works", {
   )
 
   expect_equal_lazy(
-    distinct(pl_test, iso_o, keep = "last", .keep_all = TRUE) |>
+    distinct(pl_test, iso_o, keep = "last") |>
       pull(value),
     c(2, 4, 6)
   )
 
   expect_dim(
     distinct(pl_test, iso_o, keep = "none"),
-    c(0, 1)
+    c(0, 3)
   )
 })
 
@@ -68,26 +68,6 @@ test_that("duplicated_rows() works", {
     duplicated_rows(pl_test, iso_d),
     c(6, 3)
   )
-})
-
-test_that("argument .keep_all works", {
-  test <- data.frame(
-    iso_o = rep(c("AA", "AB", "AC"), each = 2),
-    iso_d = rep(c("BA", "BB", "BC"), each = 2),
-    value = 1:6
-  )
-  test_pl <- as_polars_lf(test)
-
-  expect_equal_lazy(
-    test |> distinct(iso_o, iso_d),
-    test_pl |> distinct(iso_o, iso_d)
-  )
-
-  expect_equal_lazy(
-    test |> distinct(iso_o, iso_d, .keep_all = TRUE),
-    test_pl |> distinct(iso_o, iso_d, .keep_all = TRUE)
-  )
-
 })
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

@@ -18,7 +18,7 @@ duplicated_rows(.data, ...)
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}
 
-\item{.keep_all}{If TRUE, keep all variables in .data after deduplication.}
+\item{.keep_all}{If TRUE, keep all variables in .data after duplicated rows are removed.}
 
 \item{keep}{Either "first" (keep the first occurrence of the duplicated row),
 "last" (last occurrence) or "none" (remove all ofccurences of duplicated

@@ -6,7 +6,7 @@
 #' remove all duplicates.
 #'
 #' @inheritParams fill.polars_data_frame
-#' @param .keep_all If TRUE, keep all variables in .data after deduplication.
+#' @param .keep_all If TRUE, keep all variables in .data after duplicated rows are removed.
 #' @param keep Either "first" (keep the first occurrence of the duplicated row),
 #'  "last" (last occurrence) or "none" (remove all ofccurences of duplicated
 #'  rows).
