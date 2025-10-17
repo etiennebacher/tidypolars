@@ -23,7 +23,7 @@ any optimization done, but this is not the query performed. Note that the
 plans are read from bottom to top.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 query <- mtcars |>
   as_polars_lf() |>
   arrange(drat) |>

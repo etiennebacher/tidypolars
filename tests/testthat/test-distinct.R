@@ -14,11 +14,11 @@ test_that("distinct() works", {
 
   expect_dim(
     distinct(pl_test, iso_o),
-    c(3, 3)
+    c(3, 1)
   )
 
   expect_equal(
-    distinct(pl_test, iso_o) |>
+    distinct(pl_test, iso_o, .keep_all = TRUE) |>
       pull(value),
     c(1, 3, 5)
   )
@@ -32,14 +32,14 @@ test_that("argument keep works", {
   )
 
   expect_equal(
-    distinct(pl_test, iso_o, keep = "last") |>
+    distinct(pl_test, iso_o, keep = "last", .keep_all = TRUE) |>
       pull(value),
     c(2, 4, 6)
   )
 
   expect_dim(
     distinct(pl_test, iso_o, keep = "none"),
-    c(0, 3)
+    c(0, 1)
   )
 })
 
@@ -64,4 +64,24 @@ test_that("duplicated_rows() works", {
     duplicated_rows(pl_test, iso_d),
     c(6, 3)
   )
+})
+
+test_that("argument .keep_all works", {
+  test <- data.frame(
+    iso_o = rep(c("AA", "AB", "AC"), each = 2),
+    iso_d = rep(c("BA", "BB", "BC"), each = 2),
+    value = 1:6
+  )
+  test_pl <- as_polars_df(test)
+
+  expect_equal(
+    test |> distinct(iso_o, iso_d),
+    test_pl |> distinct(iso_o, iso_d)
+  )
+
+  expect_equal(
+    test |> distinct(iso_o, iso_d, .keep_all = TRUE),
+    test_pl |> distinct(iso_o, iso_d, .keep_all = TRUE)
+  )
+
 })

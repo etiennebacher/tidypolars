@@ -28,7 +28,7 @@ prior to uniting each value.}
 Unite multiple columns into one by pasting strings together
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 test <- polars::pl$DataFrame(
   year = 2009:2011,
   month = 10:12,

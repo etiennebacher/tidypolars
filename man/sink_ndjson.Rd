@@ -82,7 +82,7 @@ automatically create the required subfolders.
 }
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE) && require("jsonlite", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE) && require("jsonlite", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 # This is an example workflow where sink_ndjson() is not very useful because
 # the data would fit in memory. It simply is an example of using it at the
 # end of a piped workflow.

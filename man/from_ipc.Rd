@@ -63,7 +63,7 @@ The scan function returns a LazyFrame, the read function returns a DataFrame.
 \code{scan_ipc_polars()} imports the data as a Polars LazyFrame.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE) && require("arrow", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE) && require("arrow", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 ### Read or scan a single IPC file ------------------------
 
 # Setup: create an IPC file

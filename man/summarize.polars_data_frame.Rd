@@ -52,7 +52,7 @@ accepts grouped data). It will contain one column for each grouping variable
 and one column for each of the summary statistics that you have specified.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 mtcars |>
   as_polars_df() |>
   group_by(cyl) |>

@@ -111,7 +111,7 @@ can be expensive, so \code{collect()} may consume more memory and take longer.
 }
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 dat_lazy <- polars::as_polars_df(iris)$lazy()
 
 compute(dat_lazy)

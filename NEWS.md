@@ -22,6 +22,10 @@
 
 * Add support for `lubridate` functions `rollbackward()`, `rollback()`, and `rollforward()` (#252).
 
+* Add support for argument `.keep_all` in `distinct()` (#227)
+
+* `distinct` now subsets to the selected columns (#227)
+
 ## Bug fixes
 
 * Better error message in `group_by()` for unsupported argument `.drop` (#230).

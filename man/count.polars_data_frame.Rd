@@ -37,7 +37,7 @@ column numbers, select helpers, etc.}
 Count the observations in each group
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 test <- polars::as_polars_df(mtcars)
 
 # grouping variables must be specified in count() and add_count()

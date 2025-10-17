@@ -81,5 +81,5 @@ On the other hand, appending some rows during the query can lead to an output
 that has more rows than \code{n_rows}.
 }
 \seealso{
-\code{\link[=collect]{collect()}} for applying a lazy query on the full data.
+\code{\link[dplyr:compute]{dplyr::collect()}} for applying a lazy query on the full data.
 }

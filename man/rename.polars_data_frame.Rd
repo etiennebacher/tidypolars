@@ -33,7 +33,7 @@ For \code{rename_with}, additional arguments passed to \code{fn}.}
 Rename columns
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 pl_test <- polars::as_polars_df(mtcars)
 
 rename(pl_test, miles_per_gallon = mpg, horsepower = "hp")

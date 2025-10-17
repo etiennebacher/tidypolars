@@ -60,7 +60,7 @@ expressions to know how to write custom functions that are accepted by
 \code{tidypolars}.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 pl_iris <- polars::as_polars_df(iris)
 
 # classic operation

@@ -25,7 +25,7 @@
 variables. \code{group_keys()} returns a data frame with one row per group.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 pl_g <- polars::as_polars_df(mtcars) |>
   group_by(cyl, am)
 
