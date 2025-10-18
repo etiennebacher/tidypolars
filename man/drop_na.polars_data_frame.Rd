@@ -21,7 +21,7 @@ possible to specify a subset of variables so that only missing values in these
 variables will be considered.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 tmp <- mtcars
 tmp[1:3, "mpg"] <- NA
 tmp[4, "hp"] <- NA

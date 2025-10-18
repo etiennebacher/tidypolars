@@ -26,7 +26,7 @@ is most useful when a vectorised function doesn't exist. \code{rowwise()} produc
 another type of grouped data, and therefore can be removed with \code{ungroup()}.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 df <- polars::pl$DataFrame(x = c(1, 3, 4), y = c(2, 1, 5), z = c(2, 3, 1))
 
 # Compute the mean of x, y, z in each row

@@ -74,7 +74,7 @@ The scan function returns a LazyFrame, the read function returns a DataFrame.
 \code{scan_ndjson_polars()} imports the data as a Polars LazyFrame.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE) && require("jsonlite", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE) && require("jsonlite", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 ### Read or scan a single NDJSON file ------------------------
 
 # Setup: create a NDJSON file

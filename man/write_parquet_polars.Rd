@@ -67,7 +67,7 @@ The input DataFrame.
 Export data to Parquet file(s)
 }
 \examples{
-\dontshow{if (requireNamespace("nanoparquet")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("nanoparquet")) withAutoprint(\{ # examplesIf}
 dest <- tempfile(fileext = ".parquet")
 mtcars |>
   as_polars_df() |>

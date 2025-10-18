@@ -20,7 +20,7 @@
 This returns an R vector and not a Polars Series.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 pl_test <- as_polars_df(iris)
 pull(pl_test, Sepal.Length)
 pull(pl_test, "Sepal.Length")

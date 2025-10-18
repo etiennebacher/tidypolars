@@ -22,7 +22,7 @@ used to replace \code{NA} in it.}
 Replace NAs with specified values
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 
 # replace all NA with 0

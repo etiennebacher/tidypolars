@@ -6,9 +6,9 @@
 \alias{duplicated_rows}
 \title{Remove or keep only duplicated rows in a Data/LazyFrame}
 \usage{
-\method{distinct}{polars_data_frame}(.data, ..., keep = "first", maintain_order = TRUE)
+\method{distinct}{polars_data_frame}(.data, ..., .keep_all = FALSE, keep = "first", maintain_order = TRUE)
 
-\method{distinct}{polars_lazy_frame}(.data, ..., keep = "first", maintain_order = TRUE)
+\method{distinct}{polars_lazy_frame}(.data, ..., .keep_all = FALSE, keep = "first", maintain_order = TRUE)
 
 duplicated_rows(.data, ...)
 }
@@ -17,6 +17,8 @@ duplicated_rows(.data, ...)
 
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}
+
+\item{.keep_all}{If TRUE, keep all variables in .data after duplicated rows are removed.}
 
 \item{keep}{Either "first" (keep the first occurrence of the duplicated row),
 "last" (last occurrence) or "none" (remove all ofccurences of duplicated
@@ -33,7 +35,7 @@ also possible to keep either the first occurrence, the last occurence or
 remove all duplicates.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 pl_test <- polars::pl$DataFrame(
   iso_o = c(rep(c("AA", "AB"), each = 2), "AC", "DC"),
   iso_d = rep(c("BA", "BB", "BC"), each = 2),

@@ -19,7 +19,7 @@ column numbers, select helpers, etc. Renaming is also possible.}
 Select columns from a Data/LazyFrame
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 
 pl_iris <- polars::as_polars_df(iris)
 

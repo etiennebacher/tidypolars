@@ -66,7 +66,7 @@ specified. To change this behavior to error instead, use
 }
 
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 pl_fish_encounters <- as_polars_df(tidyr::fish_encounters)
 
 pl_fish_encounters |>

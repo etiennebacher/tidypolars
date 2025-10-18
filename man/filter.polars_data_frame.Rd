@@ -28,7 +28,7 @@ conditions. Note that when a condition evaluates to NA the row will be
 dropped, unlike base subsetting with \code{[}.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 pl_iris <- polars::as_polars_df(iris)
 
 filter(pl_iris, Sepal.Length < 5, Species == "setosa")

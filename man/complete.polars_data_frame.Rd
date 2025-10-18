@@ -32,7 +32,7 @@ Turns implicit missing values into explicit missing values. This is useful
 for completing missing combinations of data.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 df <- polars::pl$DataFrame(
   group = c(1:2, 1, 2),
   item_id = c(1:2, 2, 3),

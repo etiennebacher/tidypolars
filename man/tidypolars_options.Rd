@@ -29,7 +29,7 @@ such as changing the default behavior when converting Int64 values to R:
 \url{https://pola-rs.github.io/r-polars/man/polars_options.html}.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 ##### Unknown arguments
 
 options(tidypolars_unknown_args = "warn")

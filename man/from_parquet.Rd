@@ -124,7 +124,7 @@ The scan function returns a LazyFrame, the read function returns a DataFrame.
 \code{scan_parquet_polars()} imports the data as a Polars LazyFrame.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 ### Read or scan a single Parquet file ------------------------
 
 # Setup: create a Parquet file

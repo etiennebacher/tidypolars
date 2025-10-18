@@ -18,7 +18,7 @@ The input DataFrame.
 Export data to NDJSON file(s)
 }
 \examples{
-\dontshow{if (requireNamespace("jsonlite")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("jsonlite")) withAutoprint(\{ # examplesIf}
 dest <- tempfile(fileext = ".ndjson")
 mtcars |>
   as_polars_df() |>

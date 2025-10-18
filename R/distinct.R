@@ -6,6 +6,7 @@
 #' remove all duplicates.
 #'
 #' @inheritParams fill.polars_data_frame
+#' @param .keep_all If TRUE, keep all variables in .data after duplicated rows are removed.
 #' @param keep Either "first" (keep the first occurrence of the duplicated row),
 #'  "last" (last occurrence) or "none" (remove all ofccurences of duplicated
 #'  rows).
@@ -30,12 +31,16 @@
 distinct.polars_data_frame <- function(
   .data,
   ...,
+  .keep_all = FALSE,
   keep = "first",
   maintain_order = TRUE
 ) {
   vars <- tidyselect_dots(.data, ...)
   if (length(vars) == 0) {
     vars <- names(.data)
+  }
+  if (!.keep_all) {
+    .data <- .data$select(!!!vars)
   }
   out <- .data$unique(
     !!!vars,
