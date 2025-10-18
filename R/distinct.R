@@ -36,11 +36,11 @@ distinct.polars_data_frame <- function(
   maintain_order = TRUE
 ) {
   vars <- tidyselect_dots(.data, ...)
-  if (!.keep_all && length(vars)) {
-    .data <- .data$select(!!!vars)
-  }
   if (length(vars) == 0) {
     vars <- names(.data)
+  }
+  if (!.keep_all) {
+    .data <- .data$select(!!!vars)
   }
   out <- .data$unique(
     !!!vars,

@@ -1,5 +1,10 @@
 # tidypolars (development version)
 
+## Breaking changes
+
+* For consistency with `dplyr`, `distinct()` now subsets the selected columns.
+  To keep all columns, use `.keep_all = TRUE` (#227, @ppanko).
+
 ## New features
 
 * Add partial support for `stringr::str_equal()` (#228).
@@ -22,9 +27,7 @@
 
 * Add support for `lubridate` functions `rollbackward()`, `rollback()`, and `rollforward()` (#252).
 
-* Add support for argument `.keep_all` in `distinct()` (#227)
-
-* `distinct` now subsets to the selected columns (#227)
+* Add support for argument `.keep_all` in `distinct()` (#227, @ppanko).
 
 ## Bug fixes
 
