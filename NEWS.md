@@ -2,7 +2,7 @@
 
 ## Breaking changes
 
-* For consistency with `dplyr`, `distinct()` now subsets the selected columns.
+* For consistency with `dplyr`, `distinct()` now only keeps the selected columns.
   To keep all columns, use `.keep_all = TRUE` (#227, @ppanko).
 
 ## New features
