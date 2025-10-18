@@ -41,6 +41,10 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
 <div class="section level3">
+<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<ul><li>For consistency with <code>dplyr</code>, <code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct()</a></code> now only keeps the selected columns. To keep all columns, use <code>.keep_all = TRUE</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/227" class="external-link">#227</a>, <a href="https://github.com/ppanko" class="external-link">@ppanko</a>).</li>
+</ul></div>
+<div class="section level3">
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
 <ul><li><p>Add partial support for <code><a href="https://stringr.tidyverse.org/reference/str_equal.html" class="external-link">stringr::str_equal()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/228" class="external-link">#228</a>).</p></li>
 <li><p>New argument <code>mkdir</code> in all <code>sink_*()</code> functions to recursively create the folder(s) specified in the path(s) to files (<a href="https://github.com/etiennebacher/tidypolars/issues/236" class="external-link">#236</a>).</p></li>
@@ -50,6 +54,7 @@
 <li><p>Support <code><a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">stringr::fixed()</a></code> in more <code>stringr</code> functions (<a href="https://github.com/etiennebacher/tidypolars/issues/250" class="external-link">#250</a>).</p></li>
 <li><p>Add support for argument <code>ignore.case</code> in <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/251" class="external-link">#251</a>).</p></li>
 <li><p>Add support for <code>lubridate</code> functions <code>rollbackward()</code>, <code>rollback()</code>, and <code>rollforward()</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/252" class="external-link">#252</a>).</p></li>
+<li><p>Add support for argument <code>.keep_all</code> in <code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/227" class="external-link">#227</a>, <a href="https://github.com/ppanko" class="external-link">@ppanko</a>).</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
