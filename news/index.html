@@ -63,6 +63,7 @@
 <li><p>Better error message in <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code> when passing named expressions in <code>...</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/239" class="external-link">#239</a>).</p></li>
 <li><p>Fix bug in <code>join_where()</code> when all common column names between two DataFrames are used in the join conditions (<a href="https://github.com/etiennebacher/tidypolars/issues/254" class="external-link">#254</a>).</p></li>
 <li><p>Using <code>%in%</code> with <code>NA</code> now retains the <code>NA</code> in the data. Using <code>%in% NA</code> will error (<a href="https://github.com/etiennebacher/tidypolars/issues/256" class="external-link">#256</a>).</p></li>
+<li><p>Remove occasional deprecation message coming from Polars when using <code>%in%</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/259" class="external-link">#259</a>, <a href="https://github.com/ppanko" class="external-link">@ppanko</a>).</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-development-version">Documentation<a class="anchor" aria-label="anchor" href="#documentation-development-version"></a></h3>
