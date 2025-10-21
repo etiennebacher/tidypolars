@@ -131,6 +131,16 @@ test_that("%in% works", {
       filter(Species %in% c("setosa", "virginica")),
     c(100, 5)
   )
+
+  # If both sides of `%in%` are of same length, ensure that each value of the
+  # LHS are checked against *all* values of the RHS.
+  test <- pl$DataFrame(x = c(1, 2, 3), y = c(1, 3, 2))
+
+  expect_dim(
+    test |>
+      filter(x %in% y),
+    c(3, 2)
+  )
 })
 
 test_that("%in% works with NA", {
