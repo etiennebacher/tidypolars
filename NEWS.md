@@ -46,6 +46,9 @@
 * Using `%in%` with `NA` now retains the `NA` in the data. Using `%in% NA` will
   error (#256).
 
+* Remove occasional deprecation message coming from Polars when using `%in%`
+  (#259, @ppanko).
+
 ## Documentation
 
 * New vignette "How to benchmark tidypolars" (#232).
