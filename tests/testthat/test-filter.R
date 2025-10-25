@@ -49,6 +49,10 @@ test_that("is.na() works", {
     c(4, 5)
   )
   expect_dim(
+    filter(pl_iris_2, base::is.na(Species)),
+    c(4, 5)
+  )
+  expect_dim(
     filter(pl_iris_2, !is.na(Species)),
     c(146, 5)
   )
@@ -69,6 +73,10 @@ test_that("is.nan() works", {
 
   expect_dim(
     filter(pl_iris_2, is.nan(Sepal.Length)),
+    c(4, 5)
+  )
+  expect_dim(
+    filter(pl_iris_2, base::is.nan(Sepal.Length)),
     c(4, 5)
   )
   expect_dim(

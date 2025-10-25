@@ -21,6 +21,19 @@ test_that("basic behavior works", {
   expect_equal(
     test |>
       mutate(
+        y = dplyr::case_when(
+          x1 == 'a' ~ "foo",
+          x2 == 3 ~ "bar",
+          .default = "hi there"
+        )
+      ) |>
+      pull(y),
+    c("foo", "foo", "hi there", "foo", "hi there")
+  )
+
+  expect_equal(
+    test |>
+      mutate(
         y = case_when(
           x1 %in% 'a' ~ "foo",
           x2 == 3 ~ "bar",

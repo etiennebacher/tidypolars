@@ -48,6 +48,8 @@
 
 * Remove occasional deprecation message coming from Polars when using `%in%`
   (#259, @ppanko).
+  
+* Better handling of functions prefixed with `<pkg>::` (#261).
 
 ## Documentation
 

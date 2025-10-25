@@ -18,6 +18,13 @@ test_that("basic behavior of ifelse() works", {
 
   expect_equal_lazy(
     test |>
+      mutate(y = base::ifelse(x1 == 'a', "foo", "bar")) |>
+      pull(y),
+    c("foo", "foo", "bar", "foo", "bar")
+  )
+
+  expect_equal_lazy(
+    test |>
       mutate(y = ifelse(x1 == 'a', x3, x1)) |>
       pull(y),
     c("hello", "hello", "b", "hello", "c")
@@ -34,6 +41,13 @@ test_that("basic behavior of if_else() works", {
   expect_equal_lazy(
     test |>
       mutate(y = if_else(x1 == 'a', "foo", "bar")) |>
+      pull(y),
+    c("foo", "foo", "bar", "foo", "bar")
+  )
+
+  expect_equal_lazy(
+    test |>
+      mutate(y = dplyr::if_else(x1 == 'a', "foo", "bar")) |>
       pull(y),
     c("foo", "foo", "bar", "foo", "bar")
   )
