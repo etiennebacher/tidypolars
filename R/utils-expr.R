@@ -410,6 +410,7 @@ translate <- function(
         },
         # these two case_ functions are handled separately from other funs
         # because we don't want to evaluate the conditions inside too soon
+        "dplyr::case_match" = ,
         "case_match" = {
           args <- call_args(expr)
           args$.data <- .data
@@ -419,6 +420,7 @@ translate <- function(
           args[["__tidypolars__expr_uses_col"]] <- expr_uses_col
           return(do.call(pl_case_match, args))
         },
+        "dplyr::case_when" = ,
         "case_when" = {
           args <- call_args(expr)
           args$.data <- .data
@@ -501,7 +503,9 @@ translate <- function(
           )
           return(out)
         },
+        "base::ifelse" = ,
         "ifelse" = ,
+        "dplyr::if_else" = ,
         "if_else" = {
           args <- call_args(expr)
           args$.data <- .data
@@ -523,6 +527,7 @@ translate <- function(
           }
           return(do.call(pl_ifelse, args))
         },
+        "base::is.na" = ,
         "is.na" = {
           out <- tryCatch(
             {
@@ -541,6 +546,7 @@ translate <- function(
           )
           return(out)
         },
+        "base::is.nan" = ,
         "is.nan" = {
           out <- tryCatch(
             {
@@ -561,11 +567,13 @@ translate <- function(
         },
 
         ### stringr functions
+        "stringr::fixed" = ,
         "fixed" = {
           out <- expr[[2]]
           attr(out, "stringr_attr") <- "fixed"
           return(out)
         },
+        "stringr::regex" = ,
         "regex" = {
           out <- select_by_name_or_position(expr, "pattern", 1, env = env)
           case_insensitive <- select_by_name_or_position(

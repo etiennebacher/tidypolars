@@ -26,6 +26,20 @@ test_that("basic behavior works", {
   expect_equal_lazy(
     test |>
       mutate(
+        y = dplyr::case_match(
+          x1,
+          'a' ~ "foo",
+          'b' ~ "bar",
+          .default = "hi there"
+        )
+      ) |>
+      pull(y),
+    c("foo", "foo", "bar", "foo", "hi there")
+  )
+
+  expect_equal_lazy(
+    test |>
+      mutate(
         y = case_match(
           x1,
           c('a', 'c') ~ "foo",

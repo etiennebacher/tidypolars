@@ -693,9 +693,29 @@ test_that("count functions work", {
   )
 
   expect_equal_lazy(
+    mutate(test, foo = str_count(x5, stringr::fixed("."))) |>
+      pull(foo),
+    mutate(test_df, foo = str_count(x5, stringr::fixed("."))) |>
+      pull(foo)
+  )
+
+  expect_equal_lazy(
     mutate(test, foo = str_count(x1, regex("hello", ignore_case = TRUE))) |>
       pull(foo),
     mutate(test_df, foo = str_count(x1, regex("hello", ignore_case = TRUE))) |>
+      pull(foo)
+  )
+
+  expect_equal_lazy(
+    mutate(
+      test,
+      foo = str_count(x1, stringr::regex("hello", ignore_case = TRUE))
+    ) |>
+      pull(foo),
+    mutate(
+      test_df,
+      foo = str_count(x1, stringr::regex("hello", ignore_case = TRUE))
+    ) |>
       pull(foo)
   )
 })

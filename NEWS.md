@@ -46,6 +46,8 @@
 * Using `%in%` with `NA` now retains the `NA` in the data. Using `%in% NA` will
   error (#256).
 
+* Better handling of functions prefixed with `<pkg>::` (#261).
+
 ## Documentation
 
 * New vignette "How to benchmark tidypolars" (#232).
