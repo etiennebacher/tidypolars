@@ -128,6 +128,16 @@ test_that("paste with groups and collapse", {
     mutate(test_df, foo = paste(x, sep = "/", collapse = "-"), .by = grp) |>
       pull(foo)
   )
+  expect_equal(
+    mutate(test, foo = paste(x, "a", sep = "/", collapse = "-"), .by = grp) |>
+      pull(foo),
+    mutate(
+      test_df,
+      foo = paste(x, "a", sep = "/", collapse = "-"),
+      .by = grp
+    ) |>
+      pull(foo)
+  )
 
   expect_snapshot(
     mutate(test, foo = paste(x, collapse = 1:2)),
