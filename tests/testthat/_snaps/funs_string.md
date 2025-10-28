@@ -1,3 +1,12 @@
+# paste with groups and collapse
+
+    Code
+      mutate(test, foo = paste(x, collapse = 1:2))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `paste()` in Polars.
+      x `collapse` must be a string.
+
 # stringr::str_replace_na works
 
     Code

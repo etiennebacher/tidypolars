@@ -95,6 +95,50 @@ test_that("paste and paste0 work", {
   )
 })
 
+test_that("paste with groups and collapse", {
+  test_df <- data.frame(
+    grp = c(1, 1, 2, 2),
+    x = c("aa", "bb", "cc", "dd")
+  )
+  test <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    mutate(test, foo = paste(x), .by = grp) |>
+      pull(foo),
+    mutate(test_df, foo = paste(x), .by = grp) |>
+      pull(foo)
+  )
+  expect_equal_lazy(
+    mutate(test, foo = paste(x, sep = "/"), .by = grp) |>
+      pull(foo),
+    mutate(test_df, foo = paste(x, sep = "/"), .by = grp) |>
+      pull(foo)
+  )
+  expect_equal_lazy(
+    mutate(test, foo = paste(x, collapse = "-")) |>
+      pull(foo),
+    mutate(test_df, foo = paste(x, collapse = "-")) |>
+      pull(foo)
+  )
+  expect_equal_lazy(
+    mutate(test, foo = paste(x, collapse = "-"), .by = grp) |>
+      pull(foo),
+    mutate(test_df, foo = paste(x, collapse = "-"), .by = grp) |>
+      pull(foo)
+  )
+  expect_equal_lazy(
+    mutate(test, foo = paste(x, sep = "/", collapse = "-"), .by = grp) |>
+      pull(foo),
+    mutate(test_df, foo = paste(x, sep = "/", collapse = "-"), .by = grp) |>
+      pull(foo)
+  )
+
+  expect_snapshot_lazy(
+    mutate(test, foo = paste(x, collapse = 1:2)),
+    error = TRUE
+  )
+})
+
 test_that("start and end functions work", {
   test_df <- data.frame(
     x1 = c("heLLo there", "it's mE"),
