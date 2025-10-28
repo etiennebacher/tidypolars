@@ -37,6 +37,9 @@ pl_paste0 <- function(..., collapse = NULL) {
 pl_paste <- function(..., sep = " ", collapse = NULL) {
   sep <- polars_expr_to_r(sep)
   dots <- clean_dots(...)
+  if (!is.null(collapse) && !is_string(collapse)) {
+    cli_abort("{.code collapse} must be a string.", call = env_from_dots(...))
+  }
   # paste(NA) -> "NA"
   dots <- lapply(seq_along(dots), function(x) {
     elem <- dots[[x]]
@@ -45,8 +48,14 @@ pl_paste <- function(..., sep = " ", collapse = NULL) {
     }
     elem$fill_null(pl$lit("NA"))
   })
-  call2(pl$concat_str, !!!dots, separator = sep) |>
+  out <- call2(pl$concat_str, !!!dots, separator = sep) |>
     eval_bare()
+
+  if (!is.null(collapse)) {
+    out$str$join(delimiter = collapse)
+  } else {
+    out
+  }
 }
 
 pl_str_count_stringr <- function(string, pattern = "", ...) {
