@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.15.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,25 +39,25 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.15.0" id="tidypolars-0150">tidypolars 0.15.0<a class="anchor" aria-label="anchor" href="#tidypolars-0150"></a></h2>
 <div class="section level3">
-<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<h3 id="breaking-changes-0-15-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-15-0"></a></h3>
 <ul><li>For consistency with <code>dplyr</code>, <code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct()</a></code> now only keeps the selected columns. To keep all columns, use <code>.keep_all = TRUE</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/227" class="external-link">#227</a>, <a href="https://github.com/ppanko" class="external-link">@ppanko</a>).</li>
 </ul></div>
 <div class="section level3">
-<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
-<ul><li><p>Add partial support for <code><a href="https://stringr.tidyverse.org/reference/str_equal.html" class="external-link">stringr::str_equal()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/228" class="external-link">#228</a>).</p></li>
-<li><p>New argument <code>mkdir</code> in all <code>sink_*()</code> functions to recursively create the folder(s) specified in the path(s) to files (<a href="https://github.com/etiennebacher/tidypolars/issues/236" class="external-link">#236</a>).</p></li>
+<h3 id="new-features-0-15-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-15-0"></a></h3>
+<ul><li><p>New argument <code>mkdir</code> in all <code>sink_*()</code> functions to recursively create the folder(s) specified in the path(s) to files (<a href="https://github.com/etiennebacher/tidypolars/issues/236" class="external-link">#236</a>).</p></li>
 <li><p>New functions <code><a href="../reference/partitioned_output.html">partition_by_key()</a></code> and <code><a href="../reference/partitioned_output.html">partition_by_max_size()</a></code> that can be used in the <code>path</code> argument of <code>sink_*()</code> functions. Those enable writing a LazyFrame to several files as partitioned output. See more details in <code>?sink_parquet()</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/237" class="external-link">#237</a>).</p></li>
 <li><p><code><a href="../reference/bind_cols_polars.html">bind_cols_polars()</a></code> now works with more than two LazyFrames (<a href="https://github.com/etiennebacher/tidypolars/issues/244" class="external-link">#244</a>).</p></li>
 <li><p>Add support for <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/250" class="external-link">#250</a>).</p></li>
+<li><p>Add partial support for <code><a href="https://stringr.tidyverse.org/reference/str_equal.html" class="external-link">stringr::str_equal()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/228" class="external-link">#228</a>).</p></li>
+<li><p>Add support for <code>lubridate</code> functions <code>rollbackward()</code>, <code>rollback()</code>, and <code>rollforward()</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/252" class="external-link">#252</a>).</p></li>
 <li><p>Support <code><a href="https://stringr.tidyverse.org/reference/modifiers.html" class="external-link">stringr::fixed()</a></code> in more <code>stringr</code> functions (<a href="https://github.com/etiennebacher/tidypolars/issues/250" class="external-link">#250</a>).</p></li>
 <li><p>Add support for argument <code>ignore.case</code> in <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/251" class="external-link">#251</a>).</p></li>
-<li><p>Add support for <code>lubridate</code> functions <code>rollbackward()</code>, <code>rollback()</code>, and <code>rollforward()</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/252" class="external-link">#252</a>).</p></li>
 <li><p>Add support for argument <code>.keep_all</code> in <code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/227" class="external-link">#227</a>, <a href="https://github.com/ppanko" class="external-link">@ppanko</a>).</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
+<h3 id="bug-fixes-0-15-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-15-0"></a></h3>
 <ul><li><p>Better error message in <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code> for unsupported argument <code>.drop</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/230" class="external-link">#230</a>).</p></li>
 <li><p>Better error message in <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code> when passing named expressions in <code>...</code>. <code>dplyr</code> supports those but it is more and more recommended to use the <code>.by</code> / <code>by</code> argument in individual functions rather than using <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/238" class="external-link">#238</a>).</p></li>
 <li><p>Better error message in <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code> when passing named expressions in <code>...</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/239" class="external-link">#239</a>).</p></li>
@@ -68,7 +68,7 @@
 <li><p>Fix wrong behavior of <code><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste()</a></code> and <code><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0()</a></code> with <code>collapse</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/263" class="external-link">#263</a>).</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="documentation-development-version">Documentation<a class="anchor" aria-label="anchor" href="#documentation-development-version"></a></h3>
+<h3 id="documentation-0-15-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-15-0"></a></h3>
 <ul><li><p>New vignette “How to benchmark tidypolars” (<a href="https://github.com/etiennebacher/tidypolars/issues/232" class="external-link">#232</a>).</p></li>
 <li><p>Better documentation for all <code>read_*()</code> and <code>scan_*()</code> functions (<a href="https://github.com/etiennebacher/tidypolars/issues/241" class="external-link">#241</a>).</p></li>
 </ul></div>

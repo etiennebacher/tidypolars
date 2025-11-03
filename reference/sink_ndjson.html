@@ -11,7 +11,7 @@ larger than RAM as it would crash the R session if it was collected into R."><me
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.15.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -183,7 +183,7 @@ automatically create the required subfolders.</p>
 <span class="r-in"><span><span class="va">out_path</span> <span class="op">&lt;-</span> <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_tempfile.html" class="external-link">local_tempdir</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">sink_ndjson</span><span class="op">(</span><span class="va">my_lf</span>, <span class="fu"><a href="partitioned_output.html">partition_by_key</a></span><span class="op">(</span><span class="va">out_path</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"am"</span>, <span class="st">"cyl"</span><span class="op">)</span><span class="op">)</span>, mkdir <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">out_path</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/var/folders/xc/cl1fyykn2pj4ryhdw6r1mqtc0000gn/T//RtmpA7bYxc/file169c52148b11</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/var/folders/xc/cl1fyykn2pj4ryhdw6r1mqtc0000gn/T//RtmpQU8Bwi/file1a4da2aabb0</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── <span style="color: #0000BB; font-weight: bold;">am=0.0</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │   ├── <span style="color: #0000BB; font-weight: bold;">cyl=4.0</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │   │   └── 0.jsonl</span>
@@ -203,7 +203,7 @@ automatically create the required subfolders.</p>
 <span class="r-in"><span><span class="va">out_path</span> <span class="op">&lt;-</span> <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_tempfile.html" class="external-link">local_tempdir</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">sink_ndjson</span><span class="op">(</span><span class="va">my_lf</span>, <span class="fu"><a href="partitioned_output.html">partition_by_max_size</a></span><span class="op">(</span><span class="va">out_path</span>, max_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>, mkdir <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">out_path</span><span class="op">)</span> <span class="co"># mtcars has 32 rows so we have 7 output files</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/var/folders/xc/cl1fyykn2pj4ryhdw6r1mqtc0000gn/T//RtmpA7bYxc/file169c42b63330</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/var/folders/xc/cl1fyykn2pj4ryhdw6r1mqtc0000gn/T//RtmpQU8Bwi/file1a4d776db506</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000000.jsonl</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000001.jsonl</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000002.jsonl</span>
