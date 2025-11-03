@@ -1,4 +1,4 @@
-# tidypolars (development version)
+# tidypolars 0.15.0
 
 ## Breaking changes
 
@@ -6,8 +6,6 @@
   To keep all columns, use `.keep_all = TRUE` (#227, @ppanko).
 
 ## New features
-
-* Add partial support for `stringr::str_equal()` (#228).
 
 * New argument `mkdir` in all `sink_*()` functions to recursively create the
   folder(s) specified in the path(s) to files (#236).
@@ -21,11 +19,13 @@
 
 * Add support for `gsub()` (#250).
 
+* Add partial support for `stringr::str_equal()` (#228).
+
+* Add support for `lubridate` functions `rollbackward()`, `rollback()`, and `rollforward()` (#252).
+
 * Support `stringr::fixed()` in more `stringr` functions (#250).
 
 * Add support for argument `ignore.case` in `grepl()` (#251).
-
-* Add support for `lubridate` functions `rollbackward()`, `rollback()`, and `rollforward()` (#252).
 
 * Add support for argument `.keep_all` in `distinct()` (#227, @ppanko).
 
