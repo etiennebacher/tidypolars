@@ -14,6 +14,5 @@ jobs:
     name: jarl-check
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          ls -R ${{ github.workspace }}
+      - uses: actions/checkout@v4
       - uses: etiennebacher/setup-jarl@v0.0.4
