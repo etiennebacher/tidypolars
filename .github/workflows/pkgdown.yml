@@ -3,8 +3,24 @@
 on:
   push:
     branches: [main, master]
+    paths:
+      - _pkgdown.yml
+      - .Rbuildignore
+      - R/**
+      - tests/**
+      - vignettes/*
+      - DESCRIPTION
+      - NAMESPACE
   pull_request:
     branches: [main, master]
+    paths:
+      - _pkgdown.yml
+      - .Rbuildignore
+      - R/**
+      - tests/**
+      - vignettes/*
+      - DESCRIPTION
+      - NAMESPACE
   release:
     types: [published]
   workflow_dispatch:
