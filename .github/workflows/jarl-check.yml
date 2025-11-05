@@ -1,0 +1,17 @@
+# Workflow derived from https://github.com/posit-dev/setup-air/tree/main/examples
+
+on:
+  push:
+    branches: main
+  pull_request:
+
+name: jarl-check.yaml
+
+permissions: read-all
+
+jobs:
+  jarl-check:
+    name: jarl-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: etiennebacher/setup-jarl@v1
