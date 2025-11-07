@@ -1,0 +1,424 @@
+# tidypolars
+
+------------------------------------------------------------------------
+
+ℹ️ This is the R package “tidypolars”. The Python one is here:
+[markfairbanks/tidypolars](https://github.com/markfairbanks/tidypolars)
+
+------------------------------------------------------------------------
+
+## Overview
+
+`tidypolars` provides a [`polars`](https://rpolars.github.io/) backend
+for the `tidyverse`. The aim of `tidypolars` is to enable users to keep
+their existing `tidyverse` code while using `polars` in the background
+to benefit from large performance gains. The only thing that needs to
+change is the way data is imported in the R session.
+
+See the [“Getting started”
+vignette](https://tidypolars.etiennebacher.com/articles/tidypolars) for
+a gentle introduction to `tidypolars`.
+
+Since most of the work is rewriting `tidyverse` code into `polars`
+syntax, `tidypolars` and `polars` have very similar performance.
+
+Click to see a small benchmark
+
+The main purpose of this benchmark is to show that `polars` and
+`tidypolars` are close and to give an idea of the performance. For more
+thorough, representative benchmarks about `polars`, take a look at
+[DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/) instead.
+
+``` r
+library(collapse, warn.conflicts = FALSE)
+#> collapse 2.1.3, see ?`collapse-package` or ?`collapse-documentation`
+library(dplyr, warn.conflicts = FALSE)
+library(dtplyr)
+library(polars)
+library(tidypolars)
+
+large_iris <- data.table::rbindlist(rep(list(iris), 100000))
+large_iris_pl <- as_polars_lf(large_iris)
+large_iris_dt <- lazy_dt(large_iris)
+
+format(nrow(large_iris), big.mark = ",")
+#> [1] "15,000,000"
+
+bench::mark(
+  polars = {
+    large_iris_pl$
+      select(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"))$
+      with_columns(
+        pl$when(
+          (pl$col("Petal.Length") / pl$col("Petal.Width") > 3)
+        )$then(pl$lit("long"))$
+          otherwise(pl$lit("large"))$
+          alias("petal_type")
+      )$
+      filter(pl$col("Sepal.Length")$is_between(4.5, 5.5))$
+      collect()
+  },
+  tidypolars = {
+    large_iris_pl |>
+      select(starts_with(c("Sep", "Pet"))) |>
+      mutate(
+        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+      ) |>
+      filter(between(Sepal.Length, 4.5, 5.5)) |>
+      compute()
+  },
+  dplyr = {
+    large_iris |>
+      select(starts_with(c("Sep", "Pet"))) |>
+      mutate(
+        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+      ) |>
+      filter(between(Sepal.Length, 4.5, 5.5))
+  },
+  dtplyr = {
+    large_iris_dt |>
+      select(starts_with(c("Sep", "Pet"))) |>
+      mutate(
+        petal_type = ifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+      ) |>
+      filter(between(Sepal.Length, 4.5, 5.5)) |>
+      as.data.frame()
+  },
+  collapse = {
+    large_iris |>
+      fselect(c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")) |>
+      fmutate(
+        petal_type = data.table::fifelse((Petal.Length / Petal.Width) > 3, "long", "large")
+      ) |>
+      fsubset(Sepal.Length >= 4.5 & Sepal.Length <= 5.5)
+  },
+  check = FALSE,
+  iterations = 40
+)
+#> Warning: Some expressions had a GC in every iteration; so filtering is disabled.
+#> # A tibble: 5 × 6
+#>   expression      min   median `itr/sec` mem_alloc `gc/sec`
+#>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
+#> 1 polars     108.38ms 149.19ms     6.32     2.13MB    0.158
+#> 2 tidypolars 118.42ms 247.73ms     3.61     1.22MB    0.452
+#> 3 dplyr         2.94s    3.75s     0.269    1.79GB    0.658
+#> 4 dtplyr     653.02ms 729.33ms     1.36     1.72GB    2.79 
+#> 5 collapse   269.73ms 368.59ms     2.69   745.96MB    2.63
+
+# NOTE: do NOT take the "mem_alloc" results into account.
+# `bench::mark()` doesn't report the accurate memory usage for packages calling
+# Rust code.
+```
+
+If you want to do your own benchmarks, please take a look at [How to
+benchmark
+tidypolars](https://tidypolars.etiennebacher.com/articles/how-to-benchmark)
+first for some best practices.
+
+## Installation
+
+`tidypolars` is built on `polars`, which is not available on CRAN. This
+means that `tidypolars` also can’t be on CRAN. However, you can install
+it from R-universe.
+
+``` r
+Sys.setenv(NOT_CRAN = "true")
+install.packages("tidypolars", repos = c("https://community.r-multiverse.org", 'https://cloud.r-project.org'))
+```
+
+The development version contains the latest improvements and bug fixes:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("etiennebacher/tidypolars")
+```
+
+## Related work
+
+Several packages have been developed to handle large data more
+efficiently while keeping the `tidyverse` syntax:
+
+- [`arrow`](https://arrow.apache.org/docs/r/): one of the closest
+  alternatives to `tidypolars`. Also has lazy evaluation and query
+  optimizations, uses Acero in the background to translate `dplyr` code
+  and perform computations.
+  - **How is tidypolars different?**: Polars (and therefore
+    `tidypolars`) uses an unofficial Arrow memory specification. All
+    operations are implemented (and optimized) from scratch, meaning
+    that query optimizations can be very different from Acero. The list
+    of R functions that are translated to the Arrow engine may also
+    differ.
+- [`collapse`](https://sebkrantz.github.io/collapse/): has very fast
+  operations but still needs to import all data into memory, which
+  prevents using larger-than-RAM datasets.
+  - **How is tidypolars different?**: `tidypolars` provides lazy
+    evaluation that is more memory-efficient since it doesn’t import all
+    data in memory. It also provides a streaming engine to handle
+    larger-than-RAM datasets.
+- [`dbplyr`](https://dbplyr.tidyverse.org/): allows using `dplyr` for
+  data stored in a relational database by translating R code to SQL
+  queries. The performance will therefore depend on the SQL backend
+  used.
+  - **How is tidypolars different?**: `tidypolars` doesn’t translate R
+    code to SQL but directly evaluates it with Polars.
+- [`dtplyr`](https://dtplyr.tidyverse.org/): uses `data.table` in the
+  background for better performance but needs to import all data in
+  memory, which prevents using larger-than-RAM datasets.
+  - **How is tidypolars different?**: same as for `collapse`.
+- [`duckplyr`](https://duckplyr.tidyverse.org/): one of the closest
+  alternatives to `tidypolars`. Uses DuckDB in the background, also
+  provides lazy evaluation and query optimizations. Can perform
+  operations directly on R `data.frame`s.
+  - **How is tidypolars different?**: similar to `arrow`, the list of R
+    functions that are optimized in Polars or DuckDB isn’t identical so
+    the use case will determine which tool runs the fastest. `duckplyr`
+    also relies on a fallback mechanism that will run the code in
+    “standard R” if the function cannot be translated. `tidypolars` is
+    more conservative and will error in this case, avoiding importing
+    data that may crash the session because of its size.
+- [`sparklyr`](https://spark.posit.co/): uses Apache Spark in the
+  background, requires installing Spark. Can perform distributed
+  processing.
+  - **How is tidypolars different?**: `tidypolars` doesn’t need
+    installing another tool and focuses on processing data on a single
+    machine, not on distributed processing.
+
+Therefore, if you need to handle data that is larger than memory, you
+have three options: `arrow`, `duckplyr`, and `tidypolars`. The best one
+will probably depend on the use case and on your constraints
+(e.g. `tidypolars` is available via R-universe but isn’t on CRAN).
+Regarding performance, one should refer to the [DuckDB
+benchmarks](https://duckdblabs.github.io/db-benchmark/) to compare
+tools. Keep in mind that accurately benchmarking data processing tools
+is hard; those benchmarks give useful information but don’t necessarily
+apply to all contexts.
+
+## Contributing
+
+Did you find some bugs or some errors in the documentation? Do you want
+`tidypolars` to support more functions?
+
+Take a look at the [contributing
+guide](https://tidypolars.etiennebacher.com/CONTRIBUTING.html) for
+instructions on bug report and pull requests.
+
+## Acknowledgements
+
+The website theme was heavily inspired by Matthew Kay’s `ggblend`
+package: <https://mjskay.github.io/ggblend/>.
+
+The package hex logo was created by Hubert Hałun as part of the Appsilon
+Hex Contest.
+
+# Package index
+
+## Import data
+
+Functions to import data as Polars DataFrames (`read_` functions) and
+LazyFrames (`scan_` functions).
+
+- [`read_csv_polars()`](https://tidypolars.etiennebacher.com/reference/from_csv.md)
+  [`scan_csv_polars()`](https://tidypolars.etiennebacher.com/reference/from_csv.md)
+  : Import data from CSV file(s)
+- [`read_ipc_polars()`](https://tidypolars.etiennebacher.com/reference/from_ipc.md)
+  [`scan_ipc_polars()`](https://tidypolars.etiennebacher.com/reference/from_ipc.md)
+  : Import data from IPC file(s)
+- [`read_ndjson_polars()`](https://tidypolars.etiennebacher.com/reference/from_ndjson.md)
+  [`scan_ndjson_polars()`](https://tidypolars.etiennebacher.com/reference/from_ndjson.md)
+  : Import data from NDJSON file(s)
+- [`read_parquet_polars()`](https://tidypolars.etiennebacher.com/reference/from_parquet.md)
+  [`scan_parquet_polars()`](https://tidypolars.etiennebacher.com/reference/from_parquet.md)
+  : Import data from Parquet file(s)
+
+## Export data
+
+Functions to export Polars DataFrames (`write_` functions) and
+LazyFrames (`sink_` functions).
+
+- [`sink_csv()`](https://tidypolars.etiennebacher.com/reference/sink_csv.md)
+  : Stream output to a CSV file
+- [`sink_ipc()`](https://tidypolars.etiennebacher.com/reference/sink_ipc.md)
+  : Stream output to an IPC file
+- [`sink_ndjson()`](https://tidypolars.etiennebacher.com/reference/sink_ndjson.md)
+  : Stream output to a NDJSON file
+- [`sink_parquet()`](https://tidypolars.etiennebacher.com/reference/sink_parquet.md)
+  : Stream output to a parquet file
+- [`write_csv_polars()`](https://tidypolars.etiennebacher.com/reference/write_csv_polars.md)
+  : Export data to CSV file(s)
+- [`write_ipc_polars()`](https://tidypolars.etiennebacher.com/reference/write_ipc_polars.md)
+  : Export data to IPC file(s)
+- [`write_json_polars()`](https://tidypolars.etiennebacher.com/reference/write_json_polars.md)
+  : Export data to JSON file(s)
+- [`write_ndjson_polars()`](https://tidypolars.etiennebacher.com/reference/write_ndjson_polars.md)
+  : Export data to NDJSON file(s)
+- [`write_parquet_polars()`](https://tidypolars.etiennebacher.com/reference/write_parquet_polars.md)
+  : Export data to Parquet file(s)
+
+## Functions from `dplyr`
+
+- [`count(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/count.polars_data_frame.md)
+  [`tally(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/count.polars_data_frame.md)
+  [`count(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/count.polars_data_frame.md)
+  [`tally(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/count.polars_data_frame.md)
+  [`add_count(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/count.polars_data_frame.md)
+  [`add_count(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/count.polars_data_frame.md)
+  : Count the observations in each group
+- [`semi_join(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/semi_join.polars_data_frame.md)
+  [`anti_join(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/semi_join.polars_data_frame.md)
+  [`semi_join(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/semi_join.polars_data_frame.md)
+  [`anti_join(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/semi_join.polars_data_frame.md)
+  : Filtering joins
+- [`arrange(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/arrange.polars_data_frame.md)
+  : Order rows using column values
+- [`bind_cols_polars()`](https://tidypolars.etiennebacher.com/reference/bind_cols_polars.md)
+  : Append multiple Data/LazyFrames next to each other
+- [`bind_rows_polars()`](https://tidypolars.etiennebacher.com/reference/bind_rows_polars.md)
+  : Stack multiple Data/LazyFrames on top of each other
+- [`compute(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/compute.polars_lazy_frame.md)
+  [`collect(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/compute.polars_lazy_frame.md)
+  : Run computations on a LazyFrame
+- [`cross_join(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/cross_join.polars_data_frame.md)
+  [`cross_join(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/cross_join.polars_data_frame.md)
+  : Cross join
+- [`distinct(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/distinct.polars_data_frame.md)
+  [`distinct(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/distinct.polars_data_frame.md)
+  [`duplicated_rows()`](https://tidypolars.etiennebacher.com/reference/distinct.polars_data_frame.md)
+  : Remove or keep only duplicated rows in a Data/LazyFrame
+- [`explain(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/explain.polars_lazy_frame.md)
+  : Show the optimized and non-optimized query plans
+- [`filter(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/filter.polars_data_frame.md)
+  [`filter(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/filter.polars_data_frame.md)
+  : Keep rows that match a condition
+- [`left_join(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/mutating-joins.md)
+  [`right_join(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/mutating-joins.md)
+  [`full_join(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/mutating-joins.md)
+  [`inner_join(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/mutating-joins.md)
+  [`left_join(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/mutating-joins.md)
+  [`right_join(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/mutating-joins.md)
+  [`full_join(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/mutating-joins.md)
+  [`inner_join(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/mutating-joins.md)
+  : Mutating joins
+- [`group_by(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/group_by.polars_data_frame.md)
+  [`ungroup(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/group_by.polars_data_frame.md)
+  [`group_by(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/group_by.polars_data_frame.md)
+  [`ungroup(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/group_by.polars_data_frame.md)
+  : Group by one or more variables
+- [`group_split(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/group_split.polars_data_frame.md)
+  : Grouping metadata
+- [`group_vars(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/group_vars.polars_data_frame.md)
+  [`group_vars(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/group_vars.polars_data_frame.md)
+  [`group_keys(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/group_vars.polars_data_frame.md)
+  [`group_keys(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/group_vars.polars_data_frame.md)
+  : Grouping metadata
+- [`mutate(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/mutate.polars_data_frame.md)
+  [`mutate(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/mutate.polars_data_frame.md)
+  : Create, modify, and delete columns
+- [`pull(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/pull.polars_data_frame.md)
+  [`pull(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/pull.polars_data_frame.md)
+  : Extract a variable of a Data/LazyFrame
+- [`relocate(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/relocate.polars_data_frame.md)
+  [`relocate(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/relocate.polars_data_frame.md)
+  : Change column order
+- [`rename(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/rename.polars_data_frame.md)
+  [`rename(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/rename.polars_data_frame.md)
+  [`rename_with(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/rename.polars_data_frame.md)
+  [`rename_with(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/rename.polars_data_frame.md)
+  : Rename columns
+- [`rowwise(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/rowwise.polars_data_frame.md)
+  [`rowwise(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/rowwise.polars_data_frame.md)
+  : Group input by rows
+- [`select(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/select.polars_data_frame.md)
+  [`select(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/select.polars_data_frame.md)
+  : Select columns from a Data/LazyFrame
+- [`separate(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/separate.polars_data_frame.md)
+  [`separate(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/separate.polars_data_frame.md)
+  : Separate a character column into multiple columns based on a
+  substring
+- [`slice_tail(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/slice_tail.polars_data_frame.md)
+  [`slice_tail(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/slice_tail.polars_data_frame.md)
+  [`slice_head(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/slice_tail.polars_data_frame.md)
+  [`slice_head(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/slice_tail.polars_data_frame.md)
+  [`slice_sample(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/slice_tail.polars_data_frame.md)
+  : Subset rows of a Data/LazyFrame
+- [`summarize(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/summarize.polars_data_frame.md)
+  [`summarise(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/summarize.polars_data_frame.md)
+  [`summarize(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/summarize.polars_data_frame.md)
+  [`summarise(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/summarize.polars_data_frame.md)
+  : Summarize each group down to one row
+
+## Functions from `tidyr`
+
+- [`complete(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/complete.polars_data_frame.md)
+  [`complete(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/complete.polars_data_frame.md)
+  : Complete a data frame with missing combinations of data
+- [`drop_na(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/drop_na.polars_data_frame.md)
+  [`drop_na(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/drop_na.polars_data_frame.md)
+  : Drop missing values
+- [`fill(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/fill.polars_data_frame.md)
+  : Fill in missing values with previous or next value
+- [`pivot_longer(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/pivot_longer.polars_data_frame.md)
+  [`pivot_longer(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/pivot_longer.polars_data_frame.md)
+  : Pivot a Data/LazyFrame from wide to long
+- [`pivot_wider(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/pivot_wider.polars_data_frame.md)
+  : Pivot a DataFrame from long to wide
+- [`replace_na(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/replace_na.polars_data_frame.md)
+  [`replace_na(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/replace_na.polars_data_frame.md)
+  : Replace NAs with specified values
+- [`separate(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/separate.polars_data_frame.md)
+  [`separate(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/separate.polars_data_frame.md)
+  : Separate a character column into multiple columns based on a
+  substring
+- [`uncount(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/uncount.polars_data_frame.md)
+  [`uncount(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/uncount.polars_data_frame.md)
+  : Uncount a Data/LazyFrame
+- [`unite(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/unite.polars_data_frame.md)
+  [`unite(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/unite.polars_data_frame.md)
+  : Unite multiple columns into one by pasting strings together
+
+## Other methods
+
+Other functions or S3 methods.
+
+- [`summary(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/summary.polars_data_frame.md)
+  : Summary statistics for a Polars DataFrame
+
+- [`tidypolars_options`](https://tidypolars.etiennebacher.com/reference/tidypolars_options.md)
+  :
+
+  `tidypolars` global options
+
+## Other Polars functions
+
+Other Polars-specific functions (most are deprecated).
+
+- [`describe()`](https://tidypolars.etiennebacher.com/reference/describe.md)
+  **\[deprecated\]** : Summary statistics for a Polars DataFrame
+
+- [`describe_plan()`](https://tidypolars.etiennebacher.com/reference/describe_plan.md)
+  [`describe_optimized_plan()`](https://tidypolars.etiennebacher.com/reference/describe_plan.md)
+  **\[deprecated\]** : Show the optimized and non-optimized query plans
+
+- [`fetch()`](https://tidypolars.etiennebacher.com/reference/fetch.md)
+  **\[deprecated\]** :
+
+  Fetch `n` rows of a LazyFrame
+
+- [`make_unique_id()`](https://tidypolars.etiennebacher.com/reference/make_unique_id.md)
+  : Create a column with unique id per row values
+
+- [`partition_by_key()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
+  [`partition_by_max_size()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
+  **\[experimental\]** : Helper functions to export a LazyFrame as a
+  partitioned output
+
+# Articles
+
+### All vignettes
+
+- [FAQ](https://tidypolars.etiennebacher.com/articles/faq.md):
+- [How to benchmark
+  tidypolars](https://tidypolars.etiennebacher.com/articles/how-to-benchmark.md):
+- [R and Polars
+  expressions](https://tidypolars.etiennebacher.com/articles/r-and-polars-expressions.md):
+- [Getting
+  started](https://tidypolars.etiennebacher.com/articles/tidypolars.md):
