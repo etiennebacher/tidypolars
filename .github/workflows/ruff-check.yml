@@ -1,0 +1,20 @@
+# Workflow derived from https://github.com/posit-dev/setup-air/tree/main/examples
+
+on:
+  push:
+    branches: main
+  pull_request:
+
+name: ruff-check
+
+permissions: read-all
+
+jobs:
+  ruff-check:
+    name: ruff-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v3
+        with:
+          args: "--select FURB122 --preview --output-format github"
