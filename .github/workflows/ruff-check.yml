@@ -17,4 +17,4 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/ruff-action@v3
         with:
-          args: "--select FURB122 --preview --output-format github"
+          args: "check . --select FURB122 --preview --output-format github"
