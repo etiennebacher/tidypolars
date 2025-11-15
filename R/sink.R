@@ -164,6 +164,17 @@ sink_parquet <- function(
     cli_abort("{.fn sink_parquet} can only be used on a Polars LazyFrame.")
   }
 
+  if (isTRUE(no_optimization)) {
+    optimizations <- polars::pl$QueryOptFlags()$no_optimizations()
+  } else {
+    optimizations <- polars::pl$QueryOptFlags(
+      predicate_pushdown = predicate_pushdown,
+      projection_pushdown = projection_pushdown,
+      simplify_expression = simplify_expression,
+      slice_pushdown = slice_pushdown,
+    )
+  }
+
   .data$sink_parquet(
     path = path,
     compression = compression,
@@ -172,13 +183,8 @@ sink_parquet <- function(
     row_group_size = row_group_size,
     data_page_size = data_page_size,
     maintain_order = maintain_order,
-    type_coercion = type_coercion,
-    predicate_pushdown = predicate_pushdown,
-    projection_pushdown = projection_pushdown,
-    simplify_expression = simplify_expression,
-    slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization,
-    mkdir = mkdir
+    mkdir = mkdir,
+    optimizations = optimizations
   )
 }
 
@@ -329,6 +335,17 @@ sink_csv <- function(
     null_values <- null_values
   }
 
+  if (isTRUE(no_optimization)) {
+    optimizations <- polars::pl$QueryOptFlags()$no_optimizations()
+  } else {
+    optimizations <- polars::pl$QueryOptFlags(
+      predicate_pushdown = predicate_pushdown,
+      projection_pushdown = projection_pushdown,
+      simplify_expression = simplify_expression,
+      slice_pushdown = slice_pushdown,
+    )
+  }
+
   .data$sink_csv(
     path = path,
     include_bom = include_bom,
@@ -344,12 +361,7 @@ sink_csv <- function(
     null_value = null_value,
     quote_style = quote_style,
     maintain_order = maintain_order,
-    type_coercion = type_coercion,
-    predicate_pushdown = predicate_pushdown,
-    projection_pushdown = projection_pushdown,
-    simplify_expression = simplify_expression,
-    slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization,
+    optimizations = optimizations,
     mkdir = mkdir
   )
 }
@@ -443,17 +455,23 @@ sink_ipc <- function(
 
   rlang::arg_match0(compression, values = c("zstd", "lz4", "uncompressed"))
 
+  if (isTRUE(no_optimization)) {
+    optimizations <- polars::pl$QueryOptFlags()$no_optimizations()
+  } else {
+    optimizations <- polars::pl$QueryOptFlags(
+      predicate_pushdown = predicate_pushdown,
+      projection_pushdown = projection_pushdown,
+      simplify_expression = simplify_expression,
+      slice_pushdown = slice_pushdown,
+    )
+  }
+
   .data$sink_ipc(
     path = path,
     compat_level = compat_level,
     compression = compression,
     maintain_order = maintain_order,
-    type_coercion = type_coercion,
-    predicate_pushdown = predicate_pushdown,
-    projection_pushdown = projection_pushdown,
-    simplify_expression = simplify_expression,
-    slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization,
+    optimizations = optimizations,
     mkdir = mkdir
   )
 }
@@ -536,15 +554,21 @@ sink_ndjson <- function(
     cli_abort("{.fn sink_ndjson} can only be used on a Polars LazyFrame.")
   }
 
+  if (isTRUE(no_optimization)) {
+    optimizations <- polars::pl$QueryOptFlags()$no_optimizations()
+  } else {
+    optimizations <- polars::pl$QueryOptFlags(
+      predicate_pushdown = predicate_pushdown,
+      projection_pushdown = projection_pushdown,
+      simplify_expression = simplify_expression,
+      slice_pushdown = slice_pushdown,
+    )
+  }
+
   .data$sink_ndjson(
     path = path,
     maintain_order = maintain_order,
-    type_coercion = type_coercion,
-    predicate_pushdown = predicate_pushdown,
-    projection_pushdown = projection_pushdown,
-    simplify_expression = simplify_expression,
-    slice_pushdown = slice_pushdown,
-    no_optimization = no_optimization,
+    optimizations = optimizations,
     mkdir = mkdir
   )
 }

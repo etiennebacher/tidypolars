@@ -52,16 +52,23 @@ fetch <- function(
       engine <- "in-memory"
     }
   }
+
+  if (isTRUE(no_optimization)) {
+    optimizations <- polars::pl$QueryOptFlags()$no_optimizations()
+  } else {
+    optimizations <- polars::pl$QueryOptFlags(
+      predicate_pushdown = predicate_pushdown,
+      projection_pushdown = projection_pushdown,
+      simplify_expression = simplify_expression,
+      slice_pushdown = slice_pushdown,
+      comm_subplan_elim = comm_subplan_elim,
+      comm_subexpr_elim = comm_subexpr_elim,
+      cluster_with_columns = cluster_with_columns,
+    )
+  }
+
   out <- .data$head(n_rows)$collect(
-    type_coercion = type_coercion,
-    predicate_pushdown = predicate_pushdown,
-    projection_pushdown = projection_pushdown,
-    simplify_expression = simplify_expression,
-    slice_pushdown = slice_pushdown,
-    comm_subplan_elim = comm_subplan_elim,
-    comm_subexpr_elim = comm_subexpr_elim,
-    cluster_with_columns = cluster_with_columns,
-    no_optimization = no_optimization,
+    optimizations = optimizations,
     engine = engine
   )
 
