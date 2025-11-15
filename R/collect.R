@@ -101,18 +101,21 @@ compute.polars_lazy_frame <- function(
     if (isFALSE(streaming)) engine <- "in-memory"
   }
 
-  out <- x$collect(
-    type_coercion = type_coercion,
-    predicate_pushdown = predicate_pushdown,
-    projection_pushdown = projection_pushdown,
-    simplify_expression = simplify_expression,
-    slice_pushdown = slice_pushdown,
-    comm_subplan_elim = comm_subplan_elim,
-    comm_subexpr_elim = comm_subexpr_elim,
-    cluster_with_columns = cluster_with_columns,
-    no_optimization = no_optimization,
-    engine = engine
-  )
+  if (isTRUE(no_optimization)) {
+    optimizations <- polars::pl$QueryOptFlags()$no_optimizations()
+  } else {
+    optimizations <- polars::pl$QueryOptFlags(
+      predicate_pushdown = predicate_pushdown,
+      projection_pushdown = projection_pushdown,
+      simplify_expression = simplify_expression,
+      slice_pushdown = slice_pushdown,
+      comm_subplan_elim = comm_subplan_elim,
+      comm_subexpr_elim = comm_subexpr_elim,
+      cluster_with_columns = cluster_with_columns,
+    )
+  }
+
+  out <- x$collect(optimizations = optimizations, engine = engine)
 
   out <- if (is_grouped) {
     out |>
@@ -167,9 +170,10 @@ collect.polars_lazy_frame <- function(
     if (isFALSE(streaming)) engine <- "in-memory"
   }
 
-  x |>
-    as.data.frame(
-      type_coercion = type_coercion,
+  if (isTRUE(no_optimization)) {
+    optimizations <- polars::pl$QueryOptFlags()$no_optimizations()
+  } else {
+    optimizations <- polars::pl$QueryOptFlags(
       predicate_pushdown = predicate_pushdown,
       projection_pushdown = projection_pushdown,
       simplify_expression = simplify_expression,
@@ -177,7 +181,12 @@ collect.polars_lazy_frame <- function(
       comm_subplan_elim = comm_subplan_elim,
       comm_subexpr_elim = comm_subexpr_elim,
       cluster_with_columns = cluster_with_columns,
-      no_optimization = no_optimization,
+    )
+  }
+
+  x |>
+    as.data.frame(
+      optimizations = optimizations,
       engine = engine,
       .name_repair = .name_repair,
       uint8 = uint8,
