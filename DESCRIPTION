@@ -1,7 +1,7 @@
 Package: tidypolars
 Type: Package
 Title: More Efficient Tidyverse Code, Using Polars in the Background
-Version: 0.15.0
+Version: 0.15.1
 Authors@R:
     c(person(given = "Etienne",
              family = "Bacher",
