@@ -14,13 +14,13 @@ Source:
 [`DESCRIPTION`](https://github.com/etiennebacher/tidypolars/blob/main/DESCRIPTION)
 
 Bacher E (2025). *tidypolars: More Efficient Tidyverse Code, Using
-Polars in the Background*. R package version 0.15.0,
+Polars in the Background*. R package version 0.15.1,
 <https://tidypolars.etiennebacher.com>.
 
     @Manual{,
       title = {tidypolars: More Efficient Tidyverse Code, Using Polars in the Background},
       author = {Etienne Bacher},
       year = {2025},
-      note = {R package version 0.15.0},
+      note = {R package version 0.15.1},
       url = {https://tidypolars.etiennebacher.com},
     }
