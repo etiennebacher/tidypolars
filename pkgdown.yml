@@ -2,11 +2,10 @@ pandoc: 3.1.11
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
-  faq: faq.html
   how-to-benchmark: how-to-benchmark.html
   r-and-polars-expressions: r-and-polars-expressions.html
   tidypolars: tidypolars.html
-last_built: 2025-11-16T12:57Z
+last_built: 2025-11-16T20:13Z
 urls:
   reference: https://tidypolars.etiennebacher.com/reference
   article: https://tidypolars.etiennebacher.com/articles
