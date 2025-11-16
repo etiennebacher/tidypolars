@@ -1,3 +1,9 @@
+# tidypolars (development)
+
+## Documentation
+
+* Removed the "FAQ" vignette, which was outdated and wasn't particularly helpful.
+
 # tidypolars 0.15.1
 
 `tidypolars` requires `polars` >= 1.6.0.
