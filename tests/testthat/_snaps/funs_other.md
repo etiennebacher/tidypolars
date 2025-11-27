@@ -35,7 +35,7 @@
     Condition
       Error in `summarize()`:
       ! Error while running function `nth()` in Polars.
-      x `n` cannot be `NA`.
+      x `n` must be a whole number, not `NA`.
 
 ---
 
@@ -44,7 +44,7 @@
     Condition
       Error in `summarize()`:
       ! Error while running function `nth()` in Polars.
-      x `n` must be an integer.
+      x `n` must be a whole number, not the number 1.5.
 
 # na_if() works
 

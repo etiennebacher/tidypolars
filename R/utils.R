@@ -149,16 +149,6 @@ check_unsupported_arg <- function(...) {
   }
 }
 
-check_integerish <- function(x, name, allow_na = TRUE) {
-  x <- polars_expr_to_r(x)
-  if (is.na(x) && allow_na) {
-    return(invisible())
-  }
-  if (!rlang::is_integerish(x)) {
-    cli_abort("{.code {name}} must be integerish.")
-  }
-}
-
 disallow_named_expressions <- function(...) {
   if (!is.null(...names())) {
     fn_name <- call_match(sys.call(sys.parent()), sys.function(sys.parent())) |>

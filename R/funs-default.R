@@ -267,9 +267,9 @@ pl_case_match <- function(x, ..., .data) {
     ) |>
       as_polars_expr(as_lit = TRUE)
     if (is.null(out)) {
-      out <- polars::pl$when(x$is_in(lhs))$then(rhs)
+      out <- polars::pl$when(x$is_in(lhs$implode()))$then(rhs)
     } else {
-      out <- out$when(x$is_in(lhs))$then(rhs)
+      out <- out$when(x$is_in(lhs$implode()))$then(rhs)
     }
   }
 
@@ -580,12 +580,8 @@ pl_nth_dplyr <- function(x, n, ...) {
       call = env_from_dots(...)
     )
   }
-  if (is.na(n)) {
-    cli_abort("{.code n} cannot be {.code NA}.", call = env_from_dots(...))
-  }
-  if (as.integer(n) != n) {
-    cli_abort("{.code n} must be an integer.", call = env_from_dots(...))
-  }
+  check_number_whole(n, allow_na = FALSE)
+
   # 0-indexed
   if (n > 0) {
     n <- n - 1
@@ -642,6 +638,8 @@ pl_seq <- function(from = 1, to = 1, by = NULL, ...) {
 
 pl_seq_len <- function(length.out) {
   length.out <- polars_expr_to_r(length.out)
+  check_number_whole(length.out)
+
   if (length.out < 0) {
     cli_abort("{.code length.out} must be a non-negative integer.")
   }

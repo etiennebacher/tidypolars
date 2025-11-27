@@ -30,7 +30,7 @@ Imports:
     glue,
     lifecycle,
     polars (>= 1.6.0),
-    rlang,
+    rlang (>= 1.1.0),
     tidyr,
     tidyselect,
     vctrs

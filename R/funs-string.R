@@ -37,9 +37,9 @@ pl_paste0 <- function(..., collapse = NULL) {
 pl_paste <- function(..., sep = " ", collapse = NULL) {
   sep <- polars_expr_to_r(sep)
   dots <- clean_dots(...)
-  if (!is.null(collapse) && !is_string(collapse)) {
-    cli_abort("{.code collapse} must be a string.", call = env_from_dots(...))
-  }
+  check_string(sep)
+  check_string(collapse, allow_null = TRUE)
+
   # paste(NA) -> "NA"
   dots <- lapply(seq_along(dots), function(x) {
     elem <- dots[[x]]
@@ -155,14 +155,14 @@ pl_str_pad_stringr <- function(
 
   if (isFALSE(use_width)) {
     cli_abort(
-      "{.fn str_pad} doesn't work in a Polars DataFrame when {.code use_width = FALSE}",
+      "{.fn str_pad} doesn't work with a Polars object when {.code use_width = FALSE}",
       class = "tidypolars_error"
     )
   }
 
   if (length(width) > 1) {
     cli_abort(
-      "{.fn str_pad} doesn't work in a Polars DataFrame when `width` has a length greater than 1.",
+      "{.fn str_pad} doesn't work with a Polars object when `width` has a length greater than 1.",
       class = "tidypolars_error"
     )
   }
@@ -178,7 +178,7 @@ pl_str_pad_stringr <- function(
   switch(
     side,
     "both" = cli_abort(
-      '{.fn str_pad} doesn\'t work in a Polars DataFrame when {.code side = "both"}',
+      '{.fn str_pad} doesn\'t work with a Polars object when {.code side = "both"}',
       class = "tidypolars_error"
     ),
     # polars and dplyr have the opposite understanding for "side"
@@ -490,14 +490,8 @@ pl_str_split_i_stringr <- function(string, pattern, i, ...) {
 
 pl_str_replace_na_stringr <- function(string, replacement = "NA", ...) {
   replacement <- polars_expr_to_r(replacement)
-  if (
-    length(replacement) > 1 || is.na(replacement) || !is.character(replacement)
-  ) {
-    cli_abort(
-      "{.code replacement} must be a single string.",
-      call = env_from_dots(...)
-    )
-  }
+  check_string(replacement, allow_na = FALSE)
+
   string$replace_strict(
     old = NA,
     new = replacement,

@@ -86,6 +86,8 @@ pivot_wider.polars_data_frame <- function(
       "unused_fn"
     )
   )
+  check_string(names_prefix, allow_null = TRUE)
+
   data_names <- names(data)
   value_vars <- tidyselect_named_arg(data, rlang::enquo(values_from))
   names_vars <- tidyselect_named_arg(data, rlang::enquo(names_from))
@@ -131,9 +133,6 @@ pivot_wider.polars_data_frame <- function(
   names(new_cols) <- final_cols
 
   if (!is.null(names_prefix)) {
-    if (length(names_prefix) > 1) {
-      cli_abort("{.code names_prefix} must be of length 1.")
-    }
     names(new_cols) <- paste0(names_prefix, final_cols)
   }
 

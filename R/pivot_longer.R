@@ -53,6 +53,8 @@ pivot_longer.polars_data_frame <- function(
       "values_transform"
     )
   )
+  check_string(names_prefix, allow_null = TRUE)
+
   data_names <- names(data)
   on <- tidyselect_named_arg(data, rlang::enquo(cols))
   index <- data_names[!data_names %in% on]
@@ -64,11 +66,6 @@ pivot_longer.polars_data_frame <- function(
   )$sort(index)
 
   if (!is.null(names_prefix)) {
-    if (length(names_prefix) > 1) {
-      cli_abort(
-        "{.code names_prefix} must be of length 1."
-      )
-    }
     out <- out$with_columns(
       pl$col(!!!names_to)$str$replace(paste0("^", names_prefix), "")
     )
