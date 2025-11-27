@@ -14,10 +14,11 @@ These two functions differ in their output type:
   DataFrame](https://pola-rs.github.io/r-polars/man/pl__DataFrame.html);
 
 - [`collect()`](https://dplyr.tidyverse.org/reference/compute.html)
-  returns an R [data.frame](https://rdrr.io/r/base/data.frame.html).
-  Converting the output to an R `data.frame` can be expensive, so
-  [`collect()`](https://dplyr.tidyverse.org/reference/compute.html) may
-  consume more memory and take longer.
+  returns a
+  [tibble::tibble](https://tibble.tidyverse.org/reference/tibble.html).
+  This operation consumes more memory and takes longer than
+  [`compute()`](https://dplyr.tidyverse.org/reference/compute.html)
+  because it also needs to convert the data from Polars to R.
 
 ## Usage
 
@@ -144,6 +145,13 @@ collect(
   `?polars:::as.data.frame.polars_lazy_frame` for explanations and
   accepted values.
 
+## Value
+
+[`compute()`](https://dplyr.tidyverse.org/reference/compute.html)
+returns a Polars DataFrame,
+[`collect()`](https://dplyr.tidyverse.org/reference/compute.html)
+returns a tibble.
+
 ## See also
 
 [`fetch()`](https://tidypolars.etiennebacher.com/reference/fetch.md) for
@@ -204,72 +212,18 @@ dat_lazy |>
   select(starts_with("Sepal")) |>
   filter(between(Sepal.Length, 5, 6)) |>
   collect()
+#> # A tibble: 67 × 2
 #>    Sepal.Length Sepal.Width
-#> 1           5.1         3.5
-#> 2           5.0         3.6
-#> 3           5.4         3.9
-#> 4           5.0         3.4
-#> 5           5.4         3.7
-#> 6           5.8         4.0
-#> 7           5.7         4.4
-#> 8           5.4         3.9
-#> 9           5.1         3.5
+#>           <dbl>       <dbl>
+#>  1          5.1         3.5
+#>  2          5           3.6
+#>  3          5.4         3.9
+#>  4          5           3.4
+#>  5          5.4         3.7
+#>  6          5.8         4  
+#>  7          5.7         4.4
+#>  8          5.4         3.9
+#>  9          5.1         3.5
 #> 10          5.7         3.8
-#> 11          5.1         3.8
-#> 12          5.4         3.4
-#> 13          5.1         3.7
-#> 14          5.1         3.3
-#> 15          5.0         3.0
-#> 16          5.0         3.4
-#> 17          5.2         3.5
-#> 18          5.2         3.4
-#> 19          5.4         3.4
-#> 20          5.2         4.1
-#> 21          5.5         4.2
-#> 22          5.0         3.2
-#> 23          5.5         3.5
-#> 24          5.1         3.4
-#> 25          5.0         3.5
-#> 26          5.0         3.5
-#> 27          5.1         3.8
-#> 28          5.1         3.8
-#> 29          5.3         3.7
-#> 30          5.0         3.3
-#> 31          5.5         2.3
-#> 32          5.7         2.8
-#> 33          5.2         2.7
-#> 34          5.0         2.0
-#> 35          5.9         3.0
-#> 36          6.0         2.2
-#> 37          5.6         2.9
-#> 38          5.6         3.0
-#> 39          5.8         2.7
-#> 40          5.6         2.5
-#> 41          5.9         3.2
-#> 42          6.0         2.9
-#> 43          5.7         2.6
-#> 44          5.5         2.4
-#> 45          5.5         2.4
-#> 46          5.8         2.7
-#> 47          6.0         2.7
-#> 48          5.4         3.0
-#> 49          6.0         3.4
-#> 50          5.6         3.0
-#> 51          5.5         2.5
-#> 52          5.5         2.6
-#> 53          5.8         2.6
-#> 54          5.0         2.3
-#> 55          5.6         2.7
-#> 56          5.7         3.0
-#> 57          5.7         2.9
-#> 58          5.1         2.5
-#> 59          5.7         2.8
-#> 60          5.8         2.7
-#> 61          5.7         2.5
-#> 62          5.8         2.8
-#> 63          6.0         2.2
-#> 64          5.6         2.8
-#> 65          6.0         3.0
-#> 66          5.8         2.7
-#> 67          5.9         3.0
+#> # ℹ 57 more rows
 ```
