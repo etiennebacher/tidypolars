@@ -57,6 +57,7 @@ prefiltered
 regexes
 subfolders
 subplans
+tibble
 tidyselect
 tidyverse
 timeunit
