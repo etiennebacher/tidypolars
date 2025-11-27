@@ -97,6 +97,9 @@ instead.}
 \code{?polars:::as.data.frame.polars_lazy_frame} for explanations and accepted
 values.}
 }
+\value{
+\code{compute()} returns a Polars DataFrame, \code{collect()} returns a tibble.
+}
 \description{
 \code{collect()} and \code{compute()} can be applied on a LazyFrame only. They both
 check the validity of the query (for instance raising an error if a string operation
@@ -106,8 +109,9 @@ perform computations.
 These two functions differ in their output type:
 \itemize{
 \item \code{compute()} returns a \link[polars:pl__DataFrame]{Polars DataFrame};
-\item \code{collect()} returns an R \link{data.frame}. Converting the output to an R \code{data.frame}
-can be expensive, so \code{collect()} may consume more memory and take longer.
+\item \code{collect()} returns a \link[tibble:tibble]{tibble::tibble}. This operation consumes more memory and
+takes longer than \code{compute()} because it also needs to convert the data
+from Polars to R.
 }
 }
 \examples{
