@@ -2,8 +2,8 @@
 
 ## Changes
 
-* `collect()` now returns a `tibble` for consistency with other `collect()`
-  methods (#273).
+* `collect()` now returns a `tibble` instead of a `data.frame`, for consistency
+  with other `collect()` methods (#273).
 
 ## Documentation
 
