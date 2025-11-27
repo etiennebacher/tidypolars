@@ -5,7 +5,7 @@
     Condition
       Error in `mutate()`:
       ! Error while running function `weeks()` in Polars.
-      x `x` must be a whole number, not the number 1.2.
+      x `x` must be a whole number or `NA`, not the number 1.2.
 
 ---
 
@@ -14,7 +14,7 @@
     Condition
       Error in `mutate()`:
       ! Error while running function `days()` in Polars.
-      x `x` must be a whole number, not the number 1.2.
+      x `x` must be a whole number or `NA`, not the number 1.2.
 
 ---
 
@@ -23,7 +23,7 @@
     Condition
       Error in `mutate()`:
       ! Error while running function `hours()` in Polars.
-      x `x` must be a whole number, not the number 1.2.
+      x `x` must be a whole number or `NA`, not the number 1.2.
 
 ---
 
@@ -32,7 +32,7 @@
     Condition
       Error in `mutate()`:
       ! Error while running function `minutes()` in Polars.
-      x `x` must be a whole number, not the number 1.2.
+      x `x` must be a whole number or `NA`, not the number 1.2.
 
 # errors for rolling functions
 

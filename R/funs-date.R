@@ -178,19 +178,23 @@ pl_ISOdatetime <- function(
 # Periods --------------------------------------
 
 pl_weeks_lubridate <- function(x = 1) {
-  check_number_whole(x)
+  x <- polars_expr_to_r(x)
+  check_number_whole(x, allow_na = TRUE)
   pl$duration(weeks = x)
 }
 pl_days_lubridate <- function(x = 1) {
-  check_number_whole(x)
+  x <- polars_expr_to_r(x)
+  check_number_whole(x, allow_na = TRUE)
   pl$duration(days = x)
 }
 pl_hours_lubridate <- function(x = 1) {
-  check_number_whole(x)
+  x <- polars_expr_to_r(x)
+  check_number_whole(x, allow_na = TRUE)
   pl$duration(hours = x)
 }
 pl_minutes_lubridate <- function(x = 1) {
-  check_number_whole(x)
+  x <- polars_expr_to_r(x)
+  check_number_whole(x, allow_na = TRUE)
   pl$duration(minutes = x)
 }
 

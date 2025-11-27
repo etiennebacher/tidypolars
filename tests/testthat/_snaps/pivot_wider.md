@@ -5,7 +5,7 @@
         names_prefix = c("foo1", "foo2"))
     Condition
       Error in `pivot_wider()`:
-      ! `names_prefix` must be of length 1.
+      ! `names_prefix` must be a single string or `NULL`, not a character vector.
 
 # error when overwriting existing column
 

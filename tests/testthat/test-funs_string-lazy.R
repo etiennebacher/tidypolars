@@ -877,12 +877,12 @@ test_that("pad functions work", {
 
   expect_error_lazy(
     mutate(test, foo = str_pad(x6, width = 10, side = "both")),
-    "doesn't work in a Polars DataFrame"
+    "doesn't work with a Polars object"
   )
 
   expect_error_lazy(
     mutate(test, foo = str_pad(x6, width = 10, use_width = FALSE)),
-    "doesn't work in a Polars DataFrame"
+    "doesn't work with a Polars object"
   )
 })
 

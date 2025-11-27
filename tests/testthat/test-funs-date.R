@@ -25,7 +25,6 @@ patrick::with_parameters_test_that(
         )
         tv_code <- paste0("mutate(test_df, foo = ", fun, "(x1)) |> pull(foo)")
 
-        browser()
         expect_equal(
           eval(parse(text = pl_code)),
           eval(parse(text = tv_code))

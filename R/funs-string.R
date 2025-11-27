@@ -565,5 +565,5 @@ pl_str_trunc_stringr <- function(
 
 pl_word_stringr <- function(string, start = 1L, end = start, sep = " ", ...) {
   check_empty_dots(...)
-  string$str$split(sep)$list$gather((start:end) - 1L)$list$join(sep)
+  string$str$split(sep)$list$gather(list((start:end) - 1L))$list$join(sep)
 }
