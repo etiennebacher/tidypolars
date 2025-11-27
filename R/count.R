@@ -121,7 +121,7 @@ add_count.polars_data_frame <- function(
 add_count.polars_lazy_frame <- add_count.polars_data_frame
 
 count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
-  name <- check_name(x, vars, name, missing_name)
+  name <- check_count_name(x, vars, name, missing_name)
   if (isTRUE(new_col)) {
     if (length(vars) == 0) {
       out <- x$with_columns(
@@ -155,7 +155,7 @@ count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
   }
 }
 
-check_name <- function(x, vars, name, missing_name) {
+check_count_name <- function(x, vars, name, missing_name) {
   new_name <- name
   if (isTRUE(missing_name)) {
     while (new_name %in% names(x)) {

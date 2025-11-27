@@ -5,7 +5,7 @@
       names_prefix = c("wk", "foo"))
     Condition
       Error in `pivot_longer()`:
-      ! `names_prefix` must be of length 1.
+      ! `names_prefix` must be a single string or `NULL`, not a character vector.
 
 # dots must be empty
 

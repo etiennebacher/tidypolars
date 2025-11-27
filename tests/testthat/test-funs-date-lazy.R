@@ -22,7 +22,11 @@ patrick::with_parameters_test_that(
         test_df <- data.frame(x1 = date)
         test <- pl$LazyFrame(x1 = date)
 
-        pl_code <- paste0("mutate(test, foo = ", fun, "(x1)) |> pull(foo)")
+        pl_code <- paste0(
+          "mutate(test, foo = ",
+          fun,
+          "(x1)) |> pull(foo) |> as.numeric()"
+        )
         tv_code <- paste0("mutate(test_df, foo = ", fun, "(x1)) |> pull(foo)")
 
         expect_equal_lazy(
@@ -36,7 +40,11 @@ patrick::with_parameters_test_that(
           test_df <- data.frame(x1 = datetime)
           test <- pl$LazyFrame(x1 = datetime)
 
-          pl_code <- paste0("mutate(test, foo = ", fun, "(x1)) |> pull(foo)")
+          pl_code <- paste0(
+            "mutate(test, foo = ",
+            fun,
+            "(x1)) |> pull(foo) |> as.numeric()"
+          )
           tv_code <- paste0("mutate(test_df, foo = ", fun, "(x1)) |> pull(foo)")
 
           expect_equal_lazy(

@@ -178,19 +178,23 @@ pl_ISOdatetime <- function(
 # Periods --------------------------------------
 
 pl_weeks_lubridate <- function(x = 1) {
-  check_integerish(x, "x")
+  x <- polars_expr_to_r(x)
+  check_number_whole(x, allow_na = TRUE)
   pl$duration(weeks = x)
 }
 pl_days_lubridate <- function(x = 1) {
-  check_integerish(x, "x")
+  x <- polars_expr_to_r(x)
+  check_number_whole(x, allow_na = TRUE)
   pl$duration(days = x)
 }
 pl_hours_lubridate <- function(x = 1) {
-  check_integerish(x, "x")
+  x <- polars_expr_to_r(x)
+  check_number_whole(x, allow_na = TRUE)
   pl$duration(hours = x)
 }
 pl_minutes_lubridate <- function(x = 1) {
-  check_integerish(x, "x")
+  x <- polars_expr_to_r(x)
+  check_number_whole(x, allow_na = TRUE)
   pl$duration(minutes = x)
 }
 
@@ -225,12 +229,9 @@ pl_rollbackward_lubridate <- function(
 ) {
   roll_to_first <- polars_expr_to_r(roll_to_first)
   preserve_hms <- polars_expr_to_r(preserve_hms)
-  if (length(roll_to_first) != 1 || !roll_to_first %in% c(TRUE, FALSE)) {
-    cli_abort("{.arg roll_to_first} must be `TRUE` or `FALSE`.")
-  }
-  if (length(preserve_hms) != 1 || !preserve_hms %in% c(TRUE, FALSE)) {
-    cli_abort("{.arg preserve_hms} must be `TRUE` or `FALSE`.")
-  }
+  check_bool(roll_to_first)
+  check_bool(preserve_hms)
+
   out <- dates$dt$month_start()
   if (isFALSE(roll_to_first)) {
     out <- out$dt$offset_by("-1d")
@@ -254,13 +255,9 @@ pl_rollforward_lubridate <- function(
 ) {
   roll_to_first <- polars_expr_to_r(roll_to_first)
   preserve_hms <- polars_expr_to_r(preserve_hms)
-  # TODO: import rlang check functions
-  if (length(roll_to_first) != 1 || !roll_to_first %in% c(TRUE, FALSE)) {
-    cli_abort("{.arg roll_to_first} must be `TRUE` or `FALSE`.")
-  }
-  if (length(preserve_hms) != 1 || !preserve_hms %in% c(TRUE, FALSE)) {
-    cli_abort("{.arg preserve_hms} must be `TRUE` or `FALSE`.")
-  }
+  check_bool(roll_to_first)
+  check_bool(preserve_hms)
+
   out <- dates$dt$month_end()
   if (isTRUE(roll_to_first)) {
     out <- out$dt$offset_by("1d")
@@ -354,9 +351,9 @@ pl_pm_lubridate <- function(x) {
 
 pl_days_in_month_lubridate <- function(x) {
   pl$when(x$is_null())$then(NA)$when(
-    x$dt$month()$is_in(c(1, 3, 5, 7, 8, 10, 12))
+    x$dt$month()$is_in(list(c(1, 3, 5, 7, 8, 10, 12)))
   )$then(31)$when(
-    x$dt$month()$is_in(c(4, 6, 9, 11))
+    x$dt$month()$is_in(list(c(4, 6, 9, 11)))
   )$then(30)$when(x$dt$month() == 2 & x$dt$is_leap_year())$then(29)$otherwise(
     28
   )$cast(pl$Int32)
