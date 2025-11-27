@@ -1,5 +1,10 @@
 # tidypolars (development)
 
+## Changes
+
+* `collect()` now returns a `tibble` instead of a `data.frame`, for consistency
+  with other `collect()` methods (#273).
+
 ## Documentation
 
 * Removed the "FAQ" vignette, which was outdated and wasn't particularly helpful.

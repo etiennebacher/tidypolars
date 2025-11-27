@@ -8,8 +8,9 @@
 #'
 #' These two functions differ in their output type:
 #' * `compute()` returns a [Polars DataFrame][polars::pl__DataFrame];
-#' * `collect()` returns an R [data.frame]. Converting the output to an R `data.frame`
-#'   can be expensive, so `collect()` may consume more memory and take longer.
+#' * `collect()` returns a [tibble]. This operation consumes more memory and
+#'   takes longer than `compute()` because it also needs to convert the data
+#'   from Polars to R.
 #'
 #' @param x A Polars LazyFrame
 #' @param type_coercion Coerce types such that operations succeed and run on
@@ -47,6 +48,7 @@
 #' `?polars:::as.data.frame.polars_lazy_frame` for explanations and accepted
 #' values.
 #'
+#' @return `compute()` returns a Polars DataFrame, `collect()` returns a tibble.
 #' @export
 #' @seealso [fetch()] for applying a lazy query on a subset of the data.
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -185,7 +187,7 @@ collect.polars_lazy_frame <- function(
   }
 
   x |>
-    as.data.frame(
+    as_tibble(
       optimizations = optimizations,
       engine = engine,
       .name_repair = .name_repair,
