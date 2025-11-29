@@ -6,7 +6,7 @@ test_that("basic behavior works", {
   test <- pl$LazyFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample(1:5)
+    value = sample.int(5, )
   )
 
   expect_equal_lazy(
@@ -66,7 +66,7 @@ test_that("if no .default, NA is used", {
   test <- pl$LazyFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample(1:5)
+    value = sample.int(5, )
   )
 
   expect_equal_lazy(
@@ -86,7 +86,7 @@ test_that("evaluation of external objects works", {
   test <- pl$LazyFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample(1:5)
+    value = sample.int(5, )
   )
   foo <- "a"
   foo2 <- "b"

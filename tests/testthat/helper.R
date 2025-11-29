@@ -1,19 +1,23 @@
 expect_equal_or_both_error <- function(object, other, ...) {
-  # flir-ignore-start
   polars_error <- FALSE
   polars_res <- tryCatch(
     object,
-    error = function(e) polars_error <<- TRUE
+    error = function(e) {
+      # nolint: implicit_assignment
+      polars_error <<- TRUE
+    }
   )
 
   other_error <- FALSE
   other_res <- suppressWarnings(
     tryCatch(
       other,
-      error = function(e) other_error <<- TRUE
+      error = function(e) {
+        # nolint: implicit_assignment
+        other_error <<- TRUE
+      }
     )
   )
-  # flir-ignore-end
 
   if (isTRUE(polars_error)) {
     testthat::expect(
