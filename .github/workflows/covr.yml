@@ -34,7 +34,7 @@ env:
   GITHUB_PAT: ${{ secrets.COVR_GH_PAT }}
 
 jobs:
-  ci:
+  codecov:
     runs-on: ubuntu-latest
 
     container:
