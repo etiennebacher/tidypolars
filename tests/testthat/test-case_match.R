@@ -2,7 +2,7 @@ test_that("basic behavior works", {
   test <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample(1:5)
+    value = sample.int(5, )
   )
 
   expect_equal(

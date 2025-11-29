@@ -1,4 +1,4 @@
-name: check-spelling
+name: Spelling
 
 on:
   push:

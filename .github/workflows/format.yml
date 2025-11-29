@@ -1,4 +1,4 @@
-name: format
+name: Format
 
 on:
   push:
@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  ci:
+  air-check:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,4 +20,4 @@ jobs:
         run: curl -LsSf https://github.com/posit-dev/air/releases/latest/download/air-installer.sh | sh
       - name: Check for changes
         run: air format . --check
-        
+

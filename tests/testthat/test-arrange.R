@@ -2,7 +2,7 @@ test_that("output has custom class", {
   test <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample(1:5)
+    value = sample.int(5, )
   )
 
   expect_is_tidypolars(arrange(test, x1))
@@ -12,7 +12,7 @@ test_that("basic behavior works", {
   test <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample(1:5)
+    value = sample.int(5, )
   )
   expect_equal(
     arrange(test, x1) |> pull(x1),
@@ -29,7 +29,7 @@ test_that("using desc() works", {
   test <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample(1:5)
+    value = sample.int(5, )
   )
   expect_equal(
     arrange(test, desc(x1)),
@@ -46,7 +46,7 @@ test_that("sorting by multiple variables works", {
   test <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample(1:5)
+    value = sample.int(5, )
   )
   expect_equal(
     arrange(test, x1, -x2) |>
@@ -63,7 +63,7 @@ test_that("errors with unknown vars", {
   test <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample(1:5)
+    value = sample.int(5, )
   )
 
   expect_snapshot(
@@ -84,7 +84,7 @@ test_that("using .by_group = TRUE on grouped data works", {
   test <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample(1:5)
+    value = sample.int(5, )
   )
   test_grp <- group_by(test, x1)
 
@@ -104,7 +104,7 @@ test_that("returns grouped output if input was grouped", {
   test <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample(1:5)
+    value = sample.int(5, )
   )
   test_grp <- group_by(test, x1)
   expect_equal(

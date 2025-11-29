@@ -1,6 +1,6 @@
 # Run CI for R using https://eddelbuettel.github.io/r-ci/
 
-name: covr
+name: Code coverage
 
 on:
   push:
@@ -34,7 +34,7 @@ env:
   GITHUB_PAT: ${{ secrets.COVR_GH_PAT }}
 
 jobs:
-  ci:
+  codecov:
     runs-on: ubuntu-latest
 
     container:
