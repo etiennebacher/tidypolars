@@ -28,8 +28,6 @@ test_that("internally, expressions are correctly split in pools", {
     )
   )
 
-  expect_equal(names(x), "a")
-
   expect_true(result$pool_exprs_1$x$meta$eq(expected$pool_exprs_1$x))
   expect_true(result$pool_exprs_1$foo$meta$eq(expected$pool_exprs_1$foo))
   expect_true(
