@@ -1,1 +1,2 @@
 [lint]
+extend-select = ["TESTTHAT"]
