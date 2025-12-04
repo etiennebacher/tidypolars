@@ -51,6 +51,8 @@ Suggests:
     testthat (>= 3.0.0),
     tibble,
     withr
+Remotes:
+    tidyverse/dplyr#7780
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Config/testthat/parallel: true

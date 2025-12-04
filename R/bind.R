@@ -35,6 +35,12 @@ bind_rows_polars <- function(..., .id = NULL) {
   concat_(..., how = "diagonal_relaxed", .id = .id)
 }
 
+#' @export
+bind_rows.polars_data_frame <- bind_rows_polars
+
+#' @export
+bind_rows.polars_lazy_frame <- bind_rows_polars
+
 #' Append multiple Data/LazyFrames next to each other
 #'
 #' @param ... Polars DataFrames or LazyFrames to combine. Each argument can
