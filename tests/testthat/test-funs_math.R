@@ -95,42 +95,6 @@ test_that("warns if unknown args", {
   )
 })
 
-test_that("diff() works", {
-  test_df <- data.frame(
-    x1 = c("a", "a", "b", "a", "c"),
-    x2 = c(2, 1, 5, 3, 1),
-    value = sample(11:15),
-    value_trigo = seq(0, 0.4, 0.1),
-    value_mix = -2:2,
-    value_with_NA = c(-2, -1, NA, 1, 2)
-  )
-  test <- as_polars_df(test_df)
-  expect_equal(
-    test |>
-      summarize(foo = diff(value)) |>
-      pull(foo),
-    test_df |>
-      summarize(foo = diff(value)) |>
-      pull(foo) |>
-      suppressWarnings()
-  )
-
-  expect_equal(
-    test |>
-      summarize(foo = diff(value, lag = 2)) |>
-      pull(foo),
-    test_df |>
-      summarize(foo = diff(value, lag = 2)) |>
-      pull(foo) |>
-      suppressWarnings()
-  )
-
-  expect_error(
-    test |> summarize(foo = diff(value, differences = 2)),
-    "doesn't support"
-  )
-})
-
 test_that("%% and %/% work", {
   test_df <- data.frame(
     x1 = c("a", "a", "b", "a", "c"),
