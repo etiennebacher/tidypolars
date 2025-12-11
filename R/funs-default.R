@@ -392,6 +392,7 @@ pl_dense_rank_dplyr <- function(x) {
 #   mutate()
 # - as of dplyr 1.2.0, summarize() errors if a function returns more than one row
 #   per group, which is the case here.
+
 pl_diff <- function(x, lag = 1, differences = 1, ...) {
   check_empty_dots(...)
   if (!is.null(differences) && length(differences) == 1 && differences != 1) {
