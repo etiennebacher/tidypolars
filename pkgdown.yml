@@ -5,7 +5,7 @@ articles:
   how-to-benchmark: how-to-benchmark.html
   r-and-polars-expressions: r-and-polars-expressions.html
   tidypolars: tidypolars.html
-last_built: 2025-12-11T09:34Z
+last_built: 2025-12-13T19:17Z
 urls:
   reference: https://tidypolars.etiennebacher.com/reference
   article: https://tidypolars.etiennebacher.com/articles
