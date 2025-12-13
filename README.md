@@ -54,7 +54,7 @@ thorough, representative benchmarks about `polars`, take a look at
 
 ``` r
 library(collapse, warn.conflicts = FALSE)
-#> collapse 2.1.3, see ?`collapse-package` or ?`collapse-documentation`
+#> collapse 2.1.5, see ?`collapse-package` or ?`collapse-documentation`
 library(dplyr, warn.conflicts = FALSE)
 library(dtplyr)
 library(polars)
@@ -122,11 +122,11 @@ bench::mark(
 #> # A tibble: 5 × 6
 #>   expression      min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 polars     108.38ms 149.19ms     6.32     2.13MB    0.158
-#> 2 tidypolars 118.42ms 247.73ms     3.61     1.22MB    0.452
-#> 3 dplyr         2.94s    3.75s     0.269    1.79GB    0.658
-#> 4 dtplyr     653.02ms 729.33ms     1.36     1.72GB    2.79 
-#> 5 collapse   269.73ms 368.59ms     2.69   745.96MB    2.63
+#> 1 polars     140.93ms 151.97ms     6.34     2.32MB    0.158
+#> 2 tidypolars 145.25ms 163.29ms     5.45     1.24MB    0.545
+#> 3 dplyr         1.72s    1.88s     0.519    1.79GB    1.41
+#> 4 dtplyr     751.04ms 920.18ms     1.10     1.72GB    2.97
+#> 5 collapse   387.92ms 457.01ms     2.20   745.96MB    1.10
 
 # NOTE: do NOT take the "mem_alloc" results into account.
 # `bench::mark()` doesn't report the accurate memory usage for packages calling
@@ -155,7 +155,10 @@ The development version contains the latest improvements and bug fixes:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("etiennebacher/tidypolars")
+remotes::install_github(
+  "etiennebacher/tidypolars",
+  repos = c("https://community.r-multiverse.org", 'https://cloud.r-project.org')
+)
 ```
 
 ## Related work
