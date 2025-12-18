@@ -434,7 +434,7 @@ translate <- function(
           expr[[1]] <- NULL
           if (
             # we may pass a named vector in str_replace_all() for instance
-            !is.null(names(expr)) |
+            !is.null(names(expr)) ||
               # we may pass a vector of column names
               any(vapply(expr, is.symbol, FUN.VALUE = logical(1L)))
           ) {
@@ -745,7 +745,10 @@ translate <- function(
           }
           # Only suggest opening an issue for functions coming from other pkgs,
           # not for custom functions.
-          if (!is.null(fn_names$pkg) || grepl("::", fn_names$orig_name)) {
+          if (
+            !is.null(fn_names$pkg) ||
+              grepl("::", fn_names$orig_name, fixed = TRUE)
+          ) {
             msg <- c(
               msg,
               i = "You can ask for it to be translated here: {.url https://github.com/etiennebacher/tidypolars/issues}."
@@ -926,7 +929,7 @@ add_pkg_suffix <- function(name, known_ops, user_defined) {
 
   fn <- name
 
-  if (grepl("::", fn)) {
+  if (grepl("::", fn, fixed = TRUE)) {
     pkg <- gsub("::.*", "", fn)
     fn <- gsub(".*::", "", fn)
   } else {
@@ -944,7 +947,7 @@ add_pkg_suffix <- function(name, known_ops, user_defined) {
     name_to_eval <- paste0("pl_", fn, "_", pkg)
   }
 
-  if (grepl("::", name)) {
+  if (grepl("::", name, fixed = TRUE)) {
     # Don't store the pkg name if it's explicitly specified.
     # Don't do this too early because we need pkg when building the function to
     # eval.
