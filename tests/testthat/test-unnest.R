@@ -233,7 +233,7 @@ test_that("multiple columns with indices_to works", {
   )
 })
 
-test_that("values_to errors with multiple columns", {
+test_that("values_to errors with multiple columns without template", {
   df <- polars::pl$DataFrame(
     id = 1:2,
     a = list(1:2, 3:4),
@@ -242,8 +242,74 @@ test_that("values_to errors with multiple columns", {
 
   expect_error(
     unnest_longer_polars(df, c(a, b), values_to = "val"),
-    "not supported when multiple columns"
+    "must contain"
   )
+})
+
+test_that("values_to template works with multiple columns", {
+  df <- polars::pl$DataFrame(
+    x = c(1L, 2L),
+    y = list(c(1L, 2L), c(3L, 4L)),
+    z = list(c(5L, 6L), c(7L, 8L))
+  )
+
+  result <- unnest_longer_polars(df, c(y, z), values_to = "{col}_val")
+
+  expect_dim(result, c(4, 3))
+  expect_colnames(result, c("x", "y_val", "z_val"))
+  expect_equal(as.data.frame(result)$y_val, c(1L, 2L, 3L, 4L))
+  expect_equal(as.data.frame(result)$z_val, c(5L, 6L, 7L, 8L))
+})
+
+test_that("indices_to template works with multiple columns", {
+  df <- polars::pl$DataFrame(
+    x = c(1L, 2L),
+    y = list(c(1L, 2L), c(3L, 4L)),
+    z = list(c(5L, 6L), c(7L, 8L))
+  )
+
+  result <- unnest_longer_polars(df, c(y, z), indices_to = "{col}_idx")
+
+  expect_dim(result, c(4, 5))
+  expect_colnames(result, c("x", "y", "z", "y_idx", "z_idx"))
+  expect_equal(as.data.frame(result)$y_idx, c(1L, 2L, 1L, 2L))
+  expect_equal(as.data.frame(result)$z_idx, c(1L, 2L, 1L, 2L))
+})
+
+test_that("both values_to and indices_to templates work together", {
+  df <- polars::pl$DataFrame(
+    x = c(1L, 2L),
+    y = list(c(1L, 2L), c(3L, 4L)),
+    z = list(c(5L, 6L), c(7L, 8L))
+  )
+
+  result <- unnest_longer_polars(
+    df,
+    c(y, z),
+    values_to = "{col}_val",
+    indices_to = "{col}_idx"
+  )
+
+  expect_dim(result, c(4, 5))
+  expect_colnames(result, c("x", "y_val", "z_val", "y_idx", "z_idx"))
+  expect_equal(as.data.frame(result)$y_val, c(1L, 2L, 3L, 4L))
+  expect_equal(as.data.frame(result)$z_val, c(5L, 6L, 7L, 8L))
+  expect_equal(as.data.frame(result)$y_idx, c(1L, 2L, 1L, 2L))
+  expect_equal(as.data.frame(result)$z_idx, c(1L, 2L, 1L, 2L))
+})
+
+test_that("values_to template with dash separator works", {
+  df <- polars::pl$DataFrame(
+    x = c(1L, 2L),
+    y = list(c(1L, 2L), c(3L, 4L)),
+    z = list(c(5L, 6L), c(7L, 8L))
+  )
+
+  result <- unnest_longer_polars(df, c(y, z), values_to = "{col}-n")
+
+  expect_colnames(result, c("x", "y-n", "z-n"))
+  expect_equal(as.data.frame(result)$`y-n`, c(1L, 2L, 3L, 4L))
+  expect_equal(as.data.frame(result)$`z-n`, c(5L, 6L, 7L, 8L))
 })
 
 test_that("errors on non-polars data", {

@@ -23,12 +23,17 @@ same length across all selected columns.}
 
 \item{...}{These dots are for future extensions and must be empty.}
 
-\item{values_to}{Not supported when multiple columns are selected. A string
-giving the column name to store the unnested values in. If \code{NULL} (the
-default), the original column name is used.}
+\item{values_to}{A string giving the column name to store the unnested values
+in. If \code{NULL} (the default), the original column name is used. When
+multiple columns are selected, this can be a glue string containing
+\code{"{col}"} to provide a template for the column names (e.g.,
+\code{values_to = "{col}_val"}).}
 
 \item{indices_to}{A string giving the column name to store the index of the
-values. If \code{NULL} (the default), no index column is created.}
+values. If \code{NULL} (the default), no index column is created. When multiple
+columns are selected, this can be a glue string containing \code{"{col}"} to
+create separate index columns for each unnested column (e.g.,
+\code{indices_to = "{col}_idx"}).}
 
 \item{keep_empty}{If \code{TRUE}, empty values (NULL or empty lists) are kept as
 \code{NA} in the output. If \code{FALSE} (the default), empty values are dropped.}
@@ -50,6 +55,9 @@ The \code{indices_to} parameter creates an integer column with the position
 (1-indexed) of each element within the original list. Named elements in the
 list are not currently supported for index names (they will use integer
 positions).
+
+When using \code{"{col}"} templates with multiple columns, the template is applied
+to each column name to generate the output column names.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
@@ -77,6 +85,12 @@ df2 <- pl$DataFrame(
   b = list(c("x", "y"), c("z", "w"))
 )
 unnest_longer_polars(df2, c(a, b))
+
+# Multiple columns with values_to template
+unnest_longer_polars(df2, c(a, b), values_to = "{col}_val")
+
+# Multiple columns with indices_to template
+unnest_longer_polars(df2, c(a, b), indices_to = "{col}_idx")
 
 # Example with strings split into a list
 df3 <- pl$DataFrame(
