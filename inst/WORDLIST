@@ -58,10 +58,13 @@ regexes
 subfolders
 subplans
 tibble
+tidyr
 tidyselect
 tidyverse
 timeunit
 ungrouped
+unnest
+unnested
 upcast
 updown
 zstd
