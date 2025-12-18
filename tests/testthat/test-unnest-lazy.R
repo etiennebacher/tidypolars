@@ -3,20 +3,20 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("unnest_longer_polars returns custom class", {
-  lf <- polars::pl$LazyFrame(
+  df <- polars::pl$LazyFrame(
     id = 1:3,
     values = list(c(1, 2), c(3, 4, 5), 6)
   )
-  expect_is_tidypolars(unnest_longer_polars(lf, values))
+  expect_is_tidypolars(unnest_longer_polars(df, values))
 })
 
 test_that("basic unnest works", {
-  lf <- polars::pl$LazyFrame(
+  df <- polars::pl$LazyFrame(
     id = 1:3,
     values = list(c(1, 2), c(3, 4, 5), 6)
   )
 
-  result <- unnest_longer_polars(lf, values)
+  result <- unnest_longer_polars(df, values)
 
   expect_dim(result, c(6, 2))
   expect_colnames(result, c("id", "values"))
@@ -33,12 +33,12 @@ test_that("basic unnest works", {
 })
 
 test_that("unnest with values_to works", {
-  lf <- polars::pl$LazyFrame(
+  df <- polars::pl$LazyFrame(
     id = 1:2,
     values = list(c(1, 2), c(3, 4))
   )
 
-  result <- unnest_longer_polars(lf, values, values_to = "val")
+  result <- unnest_longer_polars(df, values, values_to = "val")
 
   expect_colnames(result, c("id", "val"))
   expect_equal_lazy(
@@ -48,12 +48,12 @@ test_that("unnest with values_to works", {
 })
 
 test_that("unnest with indices_to works", {
-  lf <- polars::pl$LazyFrame(
+  df <- polars::pl$LazyFrame(
     id = 1:2,
     values = list(c(10, 20), c(30, 40, 50))
   )
 
-  result <- unnest_longer_polars(lf, values, indices_to = "idx")
+  result <- unnest_longer_polars(df, values, indices_to = "idx")
 
   expect_colnames(result, c("id", "values", "idx"))
   expect_dim(result, c(5, 3))
@@ -66,13 +66,13 @@ test_that("unnest with indices_to works", {
 })
 
 test_that("unnest with both values_to and indices_to works", {
-  lf <- polars::pl$LazyFrame(
+  df <- polars::pl$LazyFrame(
     id = 1:2,
     values = list(c(10, 20), c(30, 40, 50))
   )
 
   result <- unnest_longer_polars(
-    lf,
+    df,
     values,
     values_to = "val",
     indices_to = "idx"
@@ -90,12 +90,12 @@ test_that("unnest with both values_to and indices_to works", {
 })
 
 test_that("keep_empty = FALSE drops NULL values", {
-  lf <- polars::pl$LazyFrame(
+  df <- polars::pl$LazyFrame(
     id = 1:3,
     values = list(c(1, 2), NULL, 3)
   )
 
-  result <- unnest_longer_polars(lf, values, keep_empty = FALSE)
+  result <- unnest_longer_polars(df, values, keep_empty = FALSE)
 
   # NULL row should be dropped
   expect_dim(result, c(3, 2))
@@ -106,12 +106,12 @@ test_that("keep_empty = FALSE drops NULL values", {
 })
 
 test_that("keep_empty = TRUE keeps NULL values as NA", {
-  lf <- polars::pl$LazyFrame(
+  df <- polars::pl$LazyFrame(
     id = 1:3,
     values = list(c(1, 2), NULL, 3)
   )
 
-  result <- unnest_longer_polars(lf, values, keep_empty = TRUE)
+  result <- unnest_longer_polars(df, values, keep_empty = TRUE)
 
   # NULL row should be kept as NA
   expect_dim(result, c(4, 2))
@@ -123,14 +123,14 @@ test_that("keep_empty = TRUE keeps NULL values as NA", {
 })
 
 test_that("unnest works with string list columns", {
-  lf <- polars::pl$LazyFrame(
+  df <- polars::pl$LazyFrame(
     id = 1:2,
     tags = c("apple,banana", "grape,pear")
   )$with_columns(
     pl$col("tags")$str$split(",")$alias("tags_list")
   )
 
-  result <- unnest_longer_polars(lf, tags_list)
+  result <- unnest_longer_polars(df, tags_list)
 
   expect_dim(result, c(4, 3))
   expect_equal_lazy(
@@ -144,24 +144,24 @@ test_that("unnest works with string list columns", {
 })
 
 test_that("column can be specified as string", {
-  lf <- polars::pl$LazyFrame(
+  df <- polars::pl$LazyFrame(
     id = 1:2,
     values = list(c(1, 2), c(3, 4))
   )
 
-  result <- unnest_longer_polars(lf, "values")
+  result <- unnest_longer_polars(df, "values")
 
   expect_dim(result, c(4, 2))
 })
 
 test_that("multiple columns can be unnested together", {
-  lf <- polars::pl$LazyFrame(
+  df <- polars::pl$LazyFrame(
     id = 1:3,
     a = list(c(1, 2), c(3, 4), c(5, 7, 6)),
     b = list(c("x", "y"), c("z", "w"), c("u", "v", "w"))
   )
 
-  result <- unnest_longer_polars(lf, c(a, b))
+  result <- unnest_longer_polars(df, c(a, b))
 
   expect_dim(result, c(7, 3))
   expect_colnames(result, c("id", "a", "b"))
@@ -180,33 +180,33 @@ test_that("multiple columns can be unnested together", {
 })
 
 test_that("chained unnest_longer works", {
-  lf <- polars::pl$LazyFrame(
+  df <- polars::pl$LazyFrame(
     id = 1:2,
     a = list(1:2, 3:4),
     b = list(5:6, 7:8)
   )
 
-  result <- lf |>
+  result <- df |>
     unnest_longer_polars(a) |>
     unnest_longer_polars(b)
 
   expect_dim(result, c(8, 3))
   expect_colnames(result, c("id", "a", "b"))
 
-  result_lf <- as.data.frame(result)
-  expect_equal_lazy(result_lf$id, c(1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L))
-  expect_equal_lazy(result_lf$a, c(1L, 1L, 2L, 2L, 3L, 3L, 4L, 4L))
-  expect_equal_lazy(result_lf$b, c(5L, 6L, 5L, 6L, 7L, 8L, 7L, 8L))
+  result_df <- as.data.frame(result)
+  expect_equal_lazy(result_df$id, c(1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L))
+  expect_equal_lazy(result_df$a, c(1L, 1L, 2L, 2L, 3L, 3L, 4L, 4L))
+  expect_equal_lazy(result_df$b, c(5L, 6L, 5L, 6L, 7L, 8L, 7L, 8L))
 })
 
 test_that("multiple columns can be specified as character vector", {
-  lf <- polars::pl$LazyFrame(
+  df <- polars::pl$LazyFrame(
     id = 1:2,
     a = list(c(1, 2), c(3, 4)),
     b = list(c("x", "y"), c("z", "w"))
   )
 
-  result <- unnest_longer_polars(lf, c("a", "b"))
+  result <- unnest_longer_polars(df, c("a", "b"))
 
   expect_dim(result, c(4, 3))
   expect_colnames(result, c("id", "a", "b"))
@@ -221,13 +221,13 @@ test_that("multiple columns can be specified as character vector", {
 })
 
 test_that("multiple columns with indices_to works", {
-  lf <- polars::pl$LazyFrame(
+  df <- polars::pl$LazyFrame(
     id = 1:2,
     a = list(c(1, 2), c(3, 4, 5)),
     b = list(c("x", "y"), c("z", "w", "v"))
   )
 
-  result <- unnest_longer_polars(lf, c(a, b), indices_to = "idx")
+  result <- unnest_longer_polars(df, c(a, b), indices_to = "idx")
 
   expect_dim(result, c(5, 4))
   expect_colnames(result, c("id", "a", "b", "idx"))
@@ -238,47 +238,47 @@ test_that("multiple columns with indices_to works", {
 })
 
 test_that("values_to errors with multiple columns", {
-  lf <- polars::pl$LazyFrame(
+  df <- polars::pl$LazyFrame(
     id = 1:2,
     a = list(1:2, 3:4),
     b = list(5:6, 7:8)
   )
 
   expect_error_lazy(
-    unnest_longer_polars(lf, c(a, b), values_to = "val"),
+    unnest_longer_polars(df, c(a, b), values_to = "val"),
     "not supported when multiple columns"
   )
 })
 
 test_that("errors on non-polars data", {
-  lf <- data.frame(id = 1:2, values = I(list(1:2, 3:4)))
+  df <- data.frame(id = 1:2, values = I(list(1:2, 3:4)))
 
   expect_error_lazy(
-    unnest_longer_polars(lf, values),
+    unnest_longer_polars(df, values),
     "must be a Polars DataFrame or LazyFrame"
   )
 })
 
 test_that("errors on non-existent column", {
-  lf <- polars::pl$LazyFrame(
+  df <- polars::pl$LazyFrame(
     id = 1:2,
     values = list(c(1, 2), c(3, 4))
   )
 
   expect_error_lazy(
-    unnest_longer_polars(lf, nonexistent),
+    unnest_longer_polars(df, nonexistent),
     class = "vctrs_error_subscript_oob"
   )
 })
 
 test_that("errors when ... is not empty", {
-  lf <- polars::pl$LazyFrame(
+  df <- polars::pl$LazyFrame(
     id = 1:2,
     values = list(c(1, 2), c(3, 4))
   )
 
   expect_error_lazy(
-    unnest_longer_polars(lf, values, extra_arg = TRUE),
+    unnest_longer_polars(df, values, extra_arg = TRUE),
     class = "rlib_error_dots_nonempty"
   )
 })
