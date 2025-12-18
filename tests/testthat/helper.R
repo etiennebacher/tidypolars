@@ -92,7 +92,7 @@ expect_snapshot_lazy <- function(current, ...) {
 
 test_this_file <- function() {
   file <- rstudioapi::getSourceEditorContext()$path
-  if (!grepl("testthat/", file)) {
+  if (!grepl("testthat/", file, fixed = TRUE)) {
     message("Must run this when the active window is a test file.")
     return(invisible())
   }

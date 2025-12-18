@@ -6,7 +6,7 @@ library(tidyr)
 library(tools)
 
 lf <- list.files(test_path(), pattern = "^test")
-eager <- lf[grep("lazy", lf, invert = TRUE)]
+eager <- lf[grep("lazy", lf, invert = TRUE, fixed = TRUE)]
 
 exceptions <- c(
   "test-benchmark.R",
@@ -33,7 +33,7 @@ for (i in eager) {
   out <- gsub("as_polars_df\\(", "as_polars_lf(", out)
   out <- gsub("expect_equal\\(", "expect_equal_lazy(", out)
   out <- gsub("expect_error\\(", "expect_error_lazy(", out)
-  out <- gsub("expect_snapshot", "expect_snapshot_lazy", out)
+  out <- gsub("expect_snapshot", "expect_snapshot_lazy", out, fixed = TRUE)
   out <- paste0(
     "### [GENERATED AUTOMATICALLY] Update ",
     i,
