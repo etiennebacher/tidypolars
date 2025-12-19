@@ -79,6 +79,7 @@ reference:
       - separate.polars_data_frame
       - uncount.polars_data_frame
       - unite.polars_data_frame
+      - unnest_longer_polars
 
   - title: Other methods
     desc: |

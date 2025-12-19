@@ -25,6 +25,7 @@ Useful links:
 Other contributors:
 \itemize{
   \item Anatoly Tsyplenkov \email{atsyplenkov@fastmail.com} (\href{https://orcid.org/0000-0003-4144-8402}{ORCID}) [contributor]
+  \item Yousa Mirage \email{Yousa-Mirage@foxmail.com} (\href{https://orcid.org/0009-0004-5329-1881}{ORCID}) (Yousa-Mirage) [contributor]
 }
 
 }
