@@ -3,7 +3,9 @@
 ## New features
 
 * New function `unnest_longer_polars()` to unnest list-columns into rows,
-  equivalent to `tidyr::unnest_longer()`. It supports `values_to`, `indices_to`, `keep_empty` three parameters, and supports `{col}` templates for column naming. (#212, @Yousa-Mirage)
+  equivalent to `tidyr::unnest_longer()`. It supports the parameters `values_to`, 
+  `indices_to`, `keep_empty`, as well as the `{col}` templates for column 
+  naming. (#212, @Yousa-Mirage)
 
 ## Changes
 
