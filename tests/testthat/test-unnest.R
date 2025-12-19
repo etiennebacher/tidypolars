@@ -167,9 +167,9 @@ test_that("values_to errors with multiple columns without template", {
     b = list(5:6, 7:8)
   )
 
-  expect_error(
+  expect_snapshot(
     df |> unnest_longer_polars(c(a, b), values_to = "val"),
-    "must contain"
+    error = TRUE
   )
 })
 
@@ -180,9 +180,9 @@ test_that("indices_to errors with multiple columns without template", {
     b = list(5:6, 7:8)
   )
 
-  expect_error(
+  expect_snapshot(
     df |> unnest_longer_polars(c(a, b), indices_to = "idx"),
-    "must contain"
+    error = TRUE
   )
 })
 
@@ -282,9 +282,9 @@ test_that("values_to template with dash separator works", {
 test_that("errors on non-polars data", {
   df <- data.frame(id = 1:2, values = I(list(1:2, 3:4)))
 
-  expect_error(
+  expect_snapshot(
     df |> unnest_longer_polars(values),
-    "must be a Polars DataFrame or LazyFrame"
+    error = TRUE
   )
 })
 
@@ -294,9 +294,9 @@ test_that("errors on non-existent column", {
     values = list(c(1, 2), c(3, 4))
   )
 
-  expect_error(
+  expect_snapshot(
     df |> unnest_longer_polars(nonexistent),
-    class = "vctrs_error_subscript_oob"
+    error = TRUE
   )
 })
 
@@ -306,8 +306,8 @@ test_that("errors when ... is not empty", {
     values = list(c(1, 2), c(3, 4))
   )
 
-  expect_error(
+  expect_snapshot(
     df |> unnest_longer_polars(values, extra_arg = TRUE),
-    class = "rlib_error_dots_nonempty"
+    error = TRUE
   )
 })

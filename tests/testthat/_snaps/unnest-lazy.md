@@ -1,0 +1,45 @@
+# values_to errors with multiple columns without template
+
+    Code
+      current$collect()
+    Condition
+      Error:
+      ! `values_to` must contain `{col}` when multiple columns are selected.
+      i You provided 2 columns: "a" and "b".
+
+# indices_to errors with multiple columns without template
+
+    Code
+      current$collect()
+    Condition
+      Error:
+      ! `indices_to` must contain `{col}` when multiple columns are selected.
+      i You provided 2 columns: "a" and "b".
+
+# errors on non-polars data
+
+    Code
+      current$collect()
+    Condition
+      Error in `unnest_longer_polars()`:
+      ! The data must be a Polars DataFrame or LazyFrame.
+
+# errors on non-existent column
+
+    Code
+      current$collect()
+    Condition
+      Error in `unnest_longer_polars()`:
+      ! Can't select columns that don't exist.
+      x Column `nonexistent` doesn't exist.
+
+# errors when ... is not empty
+
+    Code
+      current$collect()
+    Condition
+      Error in `unnest_longer_polars()`:
+      ! `...` must be empty.
+      x Problematic argument:
+      * extra_arg = TRUE
+

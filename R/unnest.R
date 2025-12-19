@@ -217,24 +217,18 @@ unnest_longer_polars <- function(
 }
 
 
-# Expand a template string containing `{col}` for each column name
-#
-# @param template A string that may contain `{col}` as a placeholder.
-# @param col_names A character vector of column names to substitute.
-#
-# @return If template is NULL, returns NULL. If template contains `{col}`,
-#   returns a named character vector where values are the expanded names and
-#   names are the original column names. Otherwise returns the template as-is.
-#
-# @noRd
+#' Expand a template string containing `{col}` for each column name
+#'
+#' @param template A string that may contain `{col}` as a placeholder.
+#' @param col_names A character vector of column names to substitute.
+#'
+#' @return If template is NULL, returns NULL. If template contains `{col}`,
+#'   returns a named character vector where values are the expanded names and
+#'   names are the original column names. Otherwise returns the template as-is.
+#'
+#' @noRd
 expand_col_template <- function(template, col_names) {
-  if (is.null(template)) {
-    return(NULL)
-  }
-
-  is_template <- grepl("\\{col\\}", template)
-
-  if (is_template) {
+  if (is_col_template(template)) {
     result <- vapply(
       col_names,
       function(x) gsub("\\{col\\}", x, template),
@@ -247,13 +241,13 @@ expand_col_template <- function(template, col_names) {
   template
 }
 
-# Check if a string is a `{col}` template
-#
-# @param x A string or NULL.
-#
-# @return TRUE if x contains `{col}`, FALSE otherwise.
-#
-# @noRd
+#' Check if a string is a `{col}` template
+#'
+#' @param x A string or NULL.
+#'
+#' @return TRUE if x contains `{col}`, FALSE otherwise.
+#'
+#' @noRd
 is_col_template <- function(x) {
   !is.null(x) && grepl("\\{col\\}", x)
 }
