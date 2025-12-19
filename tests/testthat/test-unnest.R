@@ -250,6 +250,27 @@ test_that("both values_to and indices_to templates work together", {
   )
 })
 
+test_that("no errors when col isn't list or array and return unchanged", {
+  df <- polars::pl$DataFrame(
+    id = 1:2,
+    values = list(c(1L, 2L), c(3L, 4L))
+  )
+
+  expect_equal(
+    df |> unnest_longer_polars(id),
+    as.data.frame(df) |>
+      tidyr::unnest_longer(id) |>
+      as.data.frame()
+  )
+
+  expect_equal(
+    df |> unnest_longer_polars(c(id, values)),
+    as.data.frame(df) |>
+      tidyr::unnest_longer(c(id, values)) |>
+      as.data.frame()
+  )
+})
+
 test_that("errors on non-polars data", {
   df <- data.frame(id = 1:2, values = I(list(1:2, 3:4)))
 

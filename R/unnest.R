@@ -139,9 +139,29 @@ unnest_longer_polars <- function(
   values_to_names <- expand_col_template(values_to, col_names)
   indices_to_names <- expand_col_template(indices_to, col_names)
 
+  # Filter to only list/array columns (like tidyr behavior)
+  # Non-list columns are silently ignored
+  schema <- data$collect_schema()
+  list_col_names <- Filter(
+    function(nm) {
+      dtype <- schema[[nm]]
+      inherits(dtype, "polars_dtype_list") ||
+        inherits(dtype, "polars_dtype_array")
+    },
+    col_names
+  )
+
+  # If no list columns, return data unchanged (like tidyr)
+  if (length(list_col_names) == 0) {
+    return(add_tidypolars_class(data))
+  }
+
+  # Update col_names to only include list columns
+  col_names <- list_col_names
+
   # Check for column name conflicts
   check_unnest_names(
-    data_names = suppressWarnings(names(data)),
+    data_names = names(schema),
     col_names = col_names,
     values_to = values_to,
     values_to_names = values_to_names,
@@ -151,6 +171,10 @@ unnest_longer_polars <- function(
     indices_to_is_template = indices_to_is_template,
     call = rlang::current_env()
   )
+
+  # Regenerate template names since col_names may have changed
+  values_to_names <- expand_col_template(values_to, col_names)
+  indices_to_names <- expand_col_template(indices_to, col_names)
 
   # If indices_to is provided, use struct approach to ensure index columns
   # are placed immediately after their value columns

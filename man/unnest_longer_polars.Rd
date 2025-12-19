@@ -44,7 +44,7 @@ rows.
 }
 \description{
 \code{unnest_longer_polars()} turns each element of a list-column into a row.
-This is a polars-specific implementation based on \code{polars$explode()}.
+This is the equivalent of \code{tidyr::unnest_longer()}.
 }
 \details{
 When multiple columns are selected, the corresponding list elements from each
@@ -91,14 +91,6 @@ unnest_longer_polars(df2, c(a, b), values_to = "{col}_val")
 
 # Multiple columns with indices_to template
 unnest_longer_polars(df2, c(a, b), indices_to = "{col}_idx")
-
-# Example with strings split into a list
-df3 <- pl$DataFrame(
-  id = 1:2,
-  tags = list(c("apple", "banana"), c("grape", "pear"))
-)
-
-unnest_longer_polars(df3, tags)
 
 # keep_empty example
 df4 <- pl$DataFrame(
