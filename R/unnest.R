@@ -1,45 +1,3 @@
-# Expand a template string containing `{col}` for each column name
-#
-# @param template A string that may contain `{col}` as a placeholder.
-# @param col_names A character vector of column names to substitute.
-#
-# @return If template is NULL, returns NULL. If template contains `{col}`,
-#   returns a named character vector where values are the expanded names and
-#   names are the original column names. Otherwise returns the template as-is.
-#
-# @noRd
-expand_col_template <- function(template, col_names) {
-  if (is.null(template)) {
-    return(NULL)
-  }
-
-  is_template <- grepl("\\{col\\}", template)
-
-  if (is_template) {
-    result <- vapply(
-      col_names,
-      function(x) gsub("\\{col\\}", x, template),
-      FUN.VALUE = character(1)
-    )
-    names(result) <- col_names
-    return(result)
-  }
-
-  template
-}
-
-# Check if a string is a `{col}` template
-#
-# @param x A string or NULL.
-#
-# @return TRUE if x contains `{col}`, FALSE otherwise.
-#
-# @noRd
-is_col_template <- function(x) {
-  !is.null(x) && grepl("\\{col\\}", x)
-}
-
-
 #' Unnest a list-column into rows
 #'
 #' `unnest_longer_polars()` turns each element of a list-column into a row.
@@ -118,12 +76,10 @@ is_col_template <- function(x) {
 #' # Example with strings split into a list
 #' df3 <- pl$DataFrame(
 #'   id = 1:2,
-#'   tags = c("apple,banana", "grape,pear")
-#' )$with_columns(
-#'   pl$col("tags")$str$split(",")$alias("tags_list")
+#'   tags = list(c("apple", "banana"), c("grape", "pear"))
 #' )
 #'
-#' unnest_longer_polars(df3, tags_list)
+#' unnest_longer_polars(df3, tags)
 #'
 #' # keep_empty example
 #' df4 <- pl$DataFrame(
@@ -171,6 +127,22 @@ unnest_longer_polars <- function(
       c(
         paste0(
           "{.arg values_to} must contain {.code {{col}}} when multiple ",
+          "columns are selected."
+        ),
+        "i" = "You provided {length(col_names)} columns: {.val {col_names}}."
+      ),
+      call = caller_env()
+    )
+  }
+
+  # indices_to without template is only supported for single column
+  if (
+    !is.null(indices_to) && length(col_names) > 1 && !indices_to_is_template
+  ) {
+    cli_abort(
+      c(
+        paste0(
+          "{.arg indices_to} must contain {.code {{col}}} when multiple ",
           "columns are selected."
         ),
         "i" = "You provided {length(col_names)} columns: {.val {col_names}}."
@@ -242,4 +214,46 @@ unnest_longer_polars <- function(
   }
 
   add_tidypolars_class(out)
+}
+
+
+# Expand a template string containing `{col}` for each column name
+#
+# @param template A string that may contain `{col}` as a placeholder.
+# @param col_names A character vector of column names to substitute.
+#
+# @return If template is NULL, returns NULL. If template contains `{col}`,
+#   returns a named character vector where values are the expanded names and
+#   names are the original column names. Otherwise returns the template as-is.
+#
+# @noRd
+expand_col_template <- function(template, col_names) {
+  if (is.null(template)) {
+    return(NULL)
+  }
+
+  is_template <- grepl("\\{col\\}", template)
+
+  if (is_template) {
+    result <- vapply(
+      col_names,
+      function(x) gsub("\\{col\\}", x, template),
+      FUN.VALUE = character(1)
+    )
+    names(result) <- col_names
+    return(result)
+  }
+
+  template
+}
+
+# Check if a string is a `{col}` template
+#
+# @param x A string or NULL.
+#
+# @return TRUE if x contains `{col}`, FALSE otherwise.
+#
+# @noRd
+is_col_template <- function(x) {
+  !is.null(x) && grepl("\\{col\\}", x)
 }

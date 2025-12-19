@@ -95,12 +95,10 @@ unnest_longer_polars(df2, c(a, b), indices_to = "{col}_idx")
 # Example with strings split into a list
 df3 <- pl$DataFrame(
   id = 1:2,
-  tags = c("apple,banana", "grape,pear")
-)$with_columns(
-  pl$col("tags")$str$split(",")$alias("tags_list")
+  tags = list(c("apple", "banana"), c("grape", "pear"))
 )
 
-unnest_longer_polars(df3, tags_list)
+unnest_longer_polars(df3, tags)
 
 # keep_empty example
 df4 <- pl$DataFrame(
