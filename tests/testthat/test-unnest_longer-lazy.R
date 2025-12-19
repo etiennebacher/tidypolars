@@ -1,4 +1,4 @@
-### [GENERATED AUTOMATICALLY] Update test-unnest.R instead.
+### [GENERATED AUTOMATICALLY] Update test-unnest_longer.R instead.
 
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
