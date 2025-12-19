@@ -25,3 +25,7 @@ Other contributors:
 
 - Anatoly Tsyplenkov <atsyplenkov@fastmail.com>
   ([ORCID](https://orcid.org/0000-0003-4144-8402)) \[contributor\]
+
+- Yousa Mirage <Yousa-Mirage@foxmail.com>
+  ([ORCID](https://orcid.org/0009-0004-5329-1881)) (Yousa-Mirage)
+  \[contributor\]

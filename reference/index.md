@@ -162,6 +162,8 @@ LazyFrames (`sink_` functions).
 - [`unite(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/unite.polars_data_frame.md)
   [`unite(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/unite.polars_data_frame.md)
   : Unite multiple columns into one by pasting strings together
+- [`unnest_longer_polars()`](https://tidypolars.etiennebacher.com/reference/unnest_longer_polars.md)
+  : Unnest a list-column into rows
 
 ## Other methods
 
