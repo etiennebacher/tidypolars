@@ -193,11 +193,16 @@ unnest_longer_polars <- function(
 
       # Convert value column to struct, add index field, then unnest
       out <- out$with_columns(
-        pl$struct(col_nm)$alias(col_nm)
+        pl$struct(col_nm)
       )$with_columns(
         pl$col(col_nm)$struct$with_fields(
           (pl$field(col_nm)$cum_count()$over(pl$col(temp_row_id)))$alias(idx_nm)
         )
+      )$with_columns(
+        pl$struct(
+          pl$col(col_nm)$struct$field(idx_nm),
+          pl$col(col_nm)$struct$field(col_nm)
+        )$alias(col_nm)
       )$unnest(col_nm)
     }
 
