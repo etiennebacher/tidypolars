@@ -14,3 +14,5 @@
 
 # flir files
 ^flir$
+
+^jarl\.toml$
