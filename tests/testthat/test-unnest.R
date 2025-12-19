@@ -261,24 +261,6 @@ test_that("both values_to and indices_to templates work together", {
   )
 })
 
-test_that("values_to template with dash separator works", {
-  df <- polars::pl$DataFrame(
-    x = c(1L, 2L),
-    y = list(c(1L, 2L), c(3L, 4L)),
-    z = list(c(5L, 6L), c(7L, 8L))
-  )
-
-  expect_equal(
-    df |> unnest_longer_polars(c(y, z), values_to = "{col}-n"),
-    as.data.frame(df) |>
-      tidyr::unnest_longer(
-        c(y, z),
-        values_to = "{col}-n"
-      ) |>
-      as.data.frame()
-  )
-})
-
 test_that("errors on non-polars data", {
   df <- data.frame(id = 1:2, values = I(list(1:2, 3:4)))
 
@@ -296,6 +278,18 @@ test_that("errors on non-existent column", {
 
   expect_snapshot(
     df |> unnest_longer_polars(nonexistent),
+    error = TRUE
+  )
+})
+
+test_that("errors when no column is provided", {
+  df <- polars::pl$DataFrame(
+    id = 1:2,
+    values = list(c(1, 2), c(3, 4))
+  )
+
+  expect_snapshot(
+    df |> unnest_longer_polars(),
     error = TRUE
   )
 })

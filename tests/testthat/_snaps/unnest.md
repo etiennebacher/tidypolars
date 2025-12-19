@@ -3,7 +3,7 @@
     Code
       unnest_longer_polars(df, c(a, b), values_to = "val")
     Condition
-      Error:
+      Error in `unnest_longer_polars()`:
       ! `values_to` must contain `{col}` when multiple columns are selected.
       i You provided 2 columns: "a" and "b".
 
@@ -12,7 +12,7 @@
     Code
       unnest_longer_polars(df, c(a, b), indices_to = "idx")
     Condition
-      Error:
+      Error in `unnest_longer_polars()`:
       ! `indices_to` must contain `{col}` when multiple columns are selected.
       i You provided 2 columns: "a" and "b".
 
@@ -32,6 +32,14 @@
       Error in `unnest_longer_polars()`:
       ! Can't select columns that don't exist.
       x Column `nonexistent` doesn't exist.
+
+# errors when no column is provided
+
+    Code
+      unnest_longer_polars(df)
+    Condition
+      Error in `unnest_longer_polars()`:
+      ! `col` is absent but must be supplied.
 
 # errors when ... is not empty
 

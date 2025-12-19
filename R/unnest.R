@@ -1,7 +1,7 @@
 #' Unnest a list-column into rows
 #'
 #' `unnest_longer_polars()` turns each element of a list-column into a row.
-#' This is a polars-specific implementation based on `polars$explode()`.
+#' This is the equivalent of `tidyr::unnest_longer()`.
 #'
 #' @param data A Polars DataFrame or LazyFrame.
 #' @param col <[`tidy-select`][tidyr_tidy_select]> Column(s) to unnest. Can be
@@ -73,14 +73,6 @@
 #' # Multiple columns with indices_to template
 #' unnest_longer_polars(df2, c(a, b), indices_to = "{col}_idx")
 #'
-#' # Example with strings split into a list
-#' df3 <- pl$DataFrame(
-#'   id = 1:2,
-#'   tags = list(c("apple", "banana"), c("grape", "pear"))
-#' )
-#'
-#' unnest_longer_polars(df3, tags)
-#'
 #' # keep_empty example
 #' df4 <- pl$DataFrame(
 #'   id = 1:3,
@@ -102,16 +94,10 @@ unnest_longer_polars <- function(
 ) {
   check_polars_data(data)
   rlang::check_dots_empty()
+  rlang::check_required(col)
 
   # Capture the column expression
   col_names <- tidyselect_named_arg(data, rlang::enquo(col))
-
-  if (length(col_names) == 0) {
-    cli_abort(
-      "Column not found.",
-      call = caller_env()
-    )
-  }
 
   check_string(values_to, allow_null = TRUE)
   check_string(indices_to, allow_null = TRUE)
@@ -130,8 +116,7 @@ unnest_longer_polars <- function(
           "columns are selected."
         ),
         "i" = "You provided {length(col_names)} columns: {.val {col_names}}."
-      ),
-      call = caller_env()
+      )
     )
   }
 
@@ -146,8 +131,7 @@ unnest_longer_polars <- function(
           "columns are selected."
         ),
         "i" = "You provided {length(col_names)} columns: {.val {col_names}}."
-      ),
-      call = caller_env()
+      )
     )
   }
 
