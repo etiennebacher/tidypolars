@@ -39,9 +39,8 @@
       current$collect()
     Condition
       Error in `unnest_longer_polars()`:
-      ! Names must be unique.
-      x These names are duplicated:
-      * "y", from both `values_to` and `indices_to`.
+      ! Column names in the output must be unique.
+      x These names are duplicated: "y".
 
 ---
 
@@ -49,9 +48,8 @@
       current$collect()
     Condition
       Error in `unnest_longer_polars()`:
-      ! Can't duplicate names between the affected columns and the original data.
-      x These names are duplicated:
-      i "z", from "y".
+      ! Column names in the output must be unique.
+      x These names are duplicated: "z".
 
 ---
 
@@ -59,9 +57,8 @@
       current$collect()
     Condition
       Error in `unnest_longer_polars()`:
-      ! Can't duplicate names between the affected columns and the original data.
-      x These names are duplicated:
-      i "z", from "y".
+      ! Column names in the output must be unique.
+      x These names are duplicated: "z".
 
 ---
 
@@ -69,9 +66,8 @@
       current$collect()
     Condition
       Error in `unnest_longer_polars()`:
-      ! Names must be unique.
-      x These names are duplicated:
-      * "a", from both `values_to` and `indices_to`.
+      ! Column names in the output must be unique.
+      x These names are duplicated: "a".
 
 ---
 
@@ -79,9 +75,8 @@
       current$collect()
     Condition
       Error in `unnest_longer_polars()`:
-      ! Names must be unique.
-      x These names are duplicated:
-      * "y" and "z", from both `values_to` and `indices_to`.
+      ! Column names in the output must be unique.
+      x These names are duplicated: "y" and "z".
 
 # errors when no column is provided
 

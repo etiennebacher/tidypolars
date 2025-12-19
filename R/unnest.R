@@ -286,9 +286,8 @@ check_unnest_names <- function(
     if (length(dup_val_idx) > 0) {
       cli_abort(
         c(
-          "Names must be unique.",
-          "x" = "These names are duplicated:",
-          "*" = "{.val {dup_val_idx}}, from both {.arg values_to} and {.arg indices_to}."
+          "Column names in the output must be unique.",
+          "x" = "These names are duplicated: {.val {dup_val_idx}}."
         ),
         call = call
       )
@@ -302,19 +301,10 @@ check_unnest_names <- function(
   if (length(final_idx_names) > 0) {
     dup_idx_data <- intersect(final_idx_names, other_cols)
     if (length(dup_idx_data) > 0) {
-      # Find which col_names produced these conflicts
-      if (indices_to_is_template) {
-        sources <- names(indices_to_names)[
-          unname(indices_to_names) %in% dup_idx_data
-        ]
-      } else {
-        sources <- col_names[1]
-      }
       cli_abort(
         c(
-          "Can't duplicate names between the affected columns and the original data.",
-          "x" = "These names are duplicated:",
-          "i" = "{.val {dup_idx_data}}, from {.val {sources}}."
+          "Column names in the output must be unique.",
+          "x" = "These names are duplicated: {.val {dup_idx_data}}."
         ),
         call = call
       )
@@ -325,18 +315,10 @@ check_unnest_names <- function(
   if (!is.null(values_to)) {
     dup_val_data <- intersect(final_val_names, other_cols)
     if (length(dup_val_data) > 0) {
-      if (values_to_is_template) {
-        sources <- names(values_to_names)[
-          unname(values_to_names) %in% dup_val_data
-        ]
-      } else {
-        sources <- col_names[1]
-      }
       cli_abort(
         c(
-          "Can't duplicate names between the affected columns and the original data.",
-          "x" = "These names are duplicated:",
-          "i" = "{.val {dup_val_data}}, from {.val {sources}}."
+          "Column names in the output must be unique.",
+          "x" = "These names are duplicated: {.val {dup_val_data}}."
         ),
         call = call
       )
