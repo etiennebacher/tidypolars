@@ -33,6 +33,56 @@
       ! Can't select columns that don't exist.
       x Column `nonexistent` doesn't exist.
 
+# errors when column names duplicate
+
+    Code
+      current$collect()
+    Condition
+      Error in `unnest_longer_polars()`:
+      ! Names must be unique.
+      x These names are duplicated:
+      * "y", from both `values_to` and `indices_to`.
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `unnest_longer_polars()`:
+      ! Can't duplicate names between the affected columns and the original data.
+      x These names are duplicated:
+      i "z", from "y".
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `unnest_longer_polars()`:
+      ! Can't duplicate names between the affected columns and the original data.
+      x These names are duplicated:
+      i "z", from "y".
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `unnest_longer_polars()`:
+      ! Names must be unique.
+      x These names are duplicated:
+      * "a", from both `values_to` and `indices_to`.
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `unnest_longer_polars()`:
+      ! Names must be unique.
+      x These names are duplicated:
+      * "y" and "z", from both `values_to` and `indices_to`.
+
 # errors when no column is provided
 
     Code

@@ -33,6 +33,56 @@
       ! Can't select columns that don't exist.
       x Column `nonexistent` doesn't exist.
 
+# errors when column names duplicate
+
+    Code
+      unnest_longer_polars(df, y, indices_to = "y")
+    Condition
+      Error in `unnest_longer_polars()`:
+      ! Names must be unique.
+      x These names are duplicated:
+      * "y", from both `values_to` and `indices_to`.
+
+---
+
+    Code
+      unnest_longer_polars(df, y, indices_to = "z")
+    Condition
+      Error in `unnest_longer_polars()`:
+      ! Can't duplicate names between the affected columns and the original data.
+      x These names are duplicated:
+      i "z", from "y".
+
+---
+
+    Code
+      unnest_longer_polars(df, y, values_to = "z")
+    Condition
+      Error in `unnest_longer_polars()`:
+      ! Can't duplicate names between the affected columns and the original data.
+      x These names are duplicated:
+      i "z", from "y".
+
+---
+
+    Code
+      unnest_longer_polars(df, y, indices_to = "a", values_to = "a")
+    Condition
+      Error in `unnest_longer_polars()`:
+      ! Names must be unique.
+      x These names are duplicated:
+      * "a", from both `values_to` and `indices_to`.
+
+---
+
+    Code
+      unnest_longer_polars(df, c(y, z), values_to = "{col}", indices_to = "{col}")
+    Condition
+      Error in `unnest_longer_polars()`:
+      ! Names must be unique.
+      x These names are duplicated:
+      * "y" and "z", from both `values_to` and `indices_to`.
+
 # errors when no column is provided
 
     Code

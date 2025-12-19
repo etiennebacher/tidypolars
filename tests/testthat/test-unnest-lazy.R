@@ -215,24 +215,17 @@ test_that("indices_to template works with multiple columns", {
     z = list(c(5L, 6L), c(7L, 8L))
   )
 
-  # Warning: `tidyr::unnest_longer()` places the index column immediately
-  # after the corresponding value column.
-  # `unnest_longer_polars()` currently places all index columns at the end.
-  columns <- c("x", "y", "y_idx", "z", "z_idx")
-
   expect_equal_lazy(
     df |>
       unnest_longer_polars(
         c(y, z),
         indices_to = "{col}_idx"
-      ) |>
-      select(all_of(columns)),
+      ),
     as.data.frame(df) |>
       tidyr::unnest_longer(
         c(y, z),
         indices_to = "{col}_idx"
       ) |>
-      select(all_of(columns)) |>
       as.data.frame()
   )
 })
@@ -244,23 +237,19 @@ test_that("both values_to and indices_to templates work together", {
     z = list(c(5L, 6L), c(7L, 8L))
   )
 
-  columns <- c("x", "y_val", "y_idx", "z_val", "z_idx")
-
   expect_equal_lazy(
     df |>
       unnest_longer_polars(
         c(y, z),
         values_to = "{col}_val",
         indices_to = "{col}_idx"
-      ) |>
-      select(all_of(columns)),
+      ),
     as.data.frame(df) |>
       tidyr::unnest_longer(
         c(y, z),
         values_to = "{col}_val",
         indices_to = "{col}_idx"
       ) |>
-      select(all_of(columns)) |>
       as.data.frame()
   )
 })
@@ -282,6 +271,44 @@ test_that("errors on non-existent column", {
 
   expect_snapshot_lazy(
     df |> unnest_longer_polars(nonexistent),
+    error = TRUE
+  )
+})
+
+test_that("errors when column names duplicate", {
+  df <- polars::pl$LazyFrame(
+    x = c(1L, 2L),
+    y = list(c(1L, 2L), c(3L, 4L)),
+    z = list(c(5L, 6L), c(7L, 8L))
+  )
+
+  expect_snapshot_lazy(
+    df |>
+      unnest_longer_polars(y, indices_to = "y"),
+    error = TRUE
+  )
+
+  expect_snapshot_lazy(
+    df |>
+      unnest_longer_polars(y, indices_to = "z"),
+    error = TRUE
+  )
+
+  expect_snapshot_lazy(
+    df |>
+      unnest_longer_polars(y, values_to = "z"),
+    error = TRUE
+  )
+
+  expect_snapshot_lazy(
+    df |>
+      unnest_longer_polars(y, indices_to = "a", values_to = "a"),
+    error = TRUE
+  )
+
+  expect_snapshot_lazy(
+    df |>
+      unnest_longer_polars(c(y, z), values_to = "{col}", indices_to = "{col}"),
     error = TRUE
   )
 })

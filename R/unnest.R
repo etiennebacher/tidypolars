@@ -139,38 +139,42 @@ unnest_longer_polars <- function(
   values_to_names <- expand_col_template(values_to, col_names)
   indices_to_names <- expand_col_template(indices_to, col_names)
 
-  # If indices_to is provided, we need to add an index column before exploding
+  # Check for column name conflicts
+  check_unnest_names(
+    data_names = suppressWarnings(names(data)),
+    col_names = col_names,
+    values_to = values_to,
+    values_to_names = values_to_names,
+    values_to_is_template = values_to_is_template,
+    indices_to = indices_to,
+    indices_to_names = indices_to_names,
+    indices_to_is_template = indices_to_is_template,
+    call = rlang::current_env()
+  )
+
+  # If indices_to is provided, use struct approach to ensure index columns
+  # are placed immediately after their value columns
   if (!is.null(indices_to)) {
-    # First add a row number to track original rows
+    # Create temporary row id for tracking original rows
     temp_row_id <- paste0("__tidypolars_row_id_", sample.int(1e6, 1), "__")
+    out <- data$with_row_index(name = temp_row_id)
 
-    data <- data$with_row_index(name = temp_row_id)
+    # Explode the value columns
+    out <- out$explode(col_names)
 
-    # Explode the column(s)
-    out <- data$explode(col_names)
+    # For each value column, convert to struct and add index field, then unnest
+    for (i in seq_along(col_names)) {
+      col_nm <- col_names[i]
+      idx_nm <- if (indices_to_is_template) indices_to_names[i] else indices_to
 
-    # Create the index column(s)
-    if (indices_to_is_template) {
-      # Create multiple index columns with template names
-      # First create the base index
-      temp_idx <- paste0("__tidypolars_idx_", sample.int(1e6, 1), "__")
+      # Convert value column to struct, add index field, then unnest
       out <- out$with_columns(
-        (pl$col(temp_row_id)$cum_count()$over(pl$col(temp_row_id)))$alias(
-          temp_idx
+        pl$struct(col_nm)$alias(col_nm)
+      )$with_columns(
+        pl$col(col_nm)$struct$with_fields(
+          (pl$field(col_nm)$cum_count()$over(pl$col(temp_row_id)))$alias(idx_nm)
         )
-      )
-      # Copy to all template column names
-      for (idx_name in indices_to_names) {
-        out <- out$with_columns(pl$col(temp_idx)$alias(idx_name))
-      }
-      out <- out$drop(temp_idx)
-    } else {
-      # Single index column
-      out <- out$with_columns(
-        (pl$col(temp_row_id)$cum_count()$over(pl$col(temp_row_id)))$alias(
-          indices_to
-        )
-      )
+      )$unnest(col_nm)
     }
 
     # Remove the temporary row id
@@ -198,6 +202,119 @@ unnest_longer_polars <- function(
   }
 
   add_tidypolars_class(out)
+}
+
+
+#' Check for column name conflicts in unnest operations
+#'
+#' @param data_names Character vector of existing column names in the data.
+#' @param col_names Character vector of columns being unnested.
+#' @param values_to The values_to parameter (string or NULL).
+#' @param values_to_names Expanded values_to names (from template or original).
+#' @param values_to_is_template Whether values_to is a template.
+#' @param indices_to The indices_to parameter (string or NULL).
+#' @param indices_to_names Expanded indices_to names (from template or original).
+#' @param indices_to_is_template Whether indices_to is a template.
+#' @param call The calling environment for error reporting.
+#'
+#' @noRd
+check_unnest_names <- function(
+  data_names,
+  col_names,
+  values_to,
+  values_to_names,
+  values_to_is_template,
+  indices_to,
+  indices_to_names,
+  indices_to_is_template,
+  call = rlang::caller_env()
+) {
+  # Compute final value column names
+  if (!is.null(values_to)) {
+    if (values_to_is_template) {
+      final_val_names <- unname(values_to_names)
+    } else {
+      final_val_names <- values_to
+    }
+  } else {
+    final_val_names <- col_names
+  }
+
+  # Compute final index column names
+  if (!is.null(indices_to)) {
+    if (indices_to_is_template) {
+      final_idx_names <- unname(indices_to_names)
+    } else {
+      final_idx_names <- indices_to
+    }
+  } else {
+    final_idx_names <- character(0)
+  }
+
+  # Check 1: Duplicates between values_to and indices_to
+  if (length(final_idx_names) > 0) {
+    dup_val_idx <- intersect(final_val_names, final_idx_names)
+    if (length(dup_val_idx) > 0) {
+      cli_abort(
+        c(
+          "Names must be unique.",
+          "x" = "These names are duplicated:",
+          "*" = "{.val {dup_val_idx}}, from both {.arg values_to} and {.arg indices_to}."
+        ),
+        call = call
+      )
+    }
+  }
+
+  # Columns that will remain after unnesting (excluding the unnested cols)
+  other_cols <- setdiff(data_names, col_names)
+
+  # Check 2: indices_to conflicts with existing columns
+  if (length(final_idx_names) > 0) {
+    dup_idx_data <- intersect(final_idx_names, other_cols)
+    if (length(dup_idx_data) > 0) {
+      # Find which col_names produced these conflicts
+      if (indices_to_is_template) {
+        sources <- names(indices_to_names)[
+          unname(indices_to_names) %in% dup_idx_data
+        ]
+      } else {
+        sources <- col_names[1]
+      }
+      cli_abort(
+        c(
+          "Can't duplicate names between the affected columns and the original data.",
+          "x" = "These names are duplicated:",
+          "i" = "{.val {dup_idx_data}}, from {.val {sources}}."
+        ),
+        call = call
+      )
+    }
+  }
+
+  # Check 3: values_to conflicts with existing columns
+  if (!is.null(values_to)) {
+    dup_val_data <- intersect(final_val_names, other_cols)
+    if (length(dup_val_data) > 0) {
+      if (values_to_is_template) {
+        sources <- names(values_to_names)[
+          unname(values_to_names) %in% dup_val_data
+        ]
+      } else {
+        sources <- col_names[1]
+      }
+      cli_abort(
+        c(
+          "Can't duplicate names between the affected columns and the original data.",
+          "x" = "These names are duplicated:",
+          "i" = "{.val {dup_val_data}}, from {.val {sources}}."
+        ),
+        call = call
+      )
+    }
+  }
+
+  invisible(NULL)
 }
 
 
