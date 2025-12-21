@@ -51,12 +51,12 @@ jobs:
       - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
+          extra-repositories: 'https://community.r-multiverse.org'
 
       - name: Install R dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
           needs: check
-          extra-repositories: 'https://community.r-multiverse.org'
 
       - uses: r-lib/actions/check-r-package@v2
