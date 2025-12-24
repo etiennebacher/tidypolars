@@ -3,9 +3,14 @@
 ## New features
 
 * New function `unnest_longer_polars()` to unnest list-columns into rows,
-  equivalent to `tidyr::unnest_longer()`. It supports the parameters `values_to`, 
-  `indices_to`, `keep_empty`, as well as the `{col}` templates for column 
-  naming. (#281, @Yousa-Mirage)
+  equivalent to `tidyr::unnest_longer()`. It supports the parameters `values_to`,
+  `indices_to`, `keep_empty`, as well as the `{col}` templates for column
+  naming. (#212, #281, @Yousa-Mirage)
+
+* New functions `separate_longer_delim_polars()` and `separate_longer_position_polars()`
+  to split string columns into rows by delimiter or fixed width, equivalent to
+  `tidyr::separate_longer_delim()` and `tidyr::separate_longer_position()`.
+  (#57, @Yousa-Mirage)
 
 ## Changes
 

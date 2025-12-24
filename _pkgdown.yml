@@ -76,7 +76,9 @@ reference:
       - pivot_longer.polars_data_frame
       - pivot_wider.polars_data_frame
       - replace_na.polars_data_frame
-      - separate.polars_data_frame
+      - separate.polars_data_frame'
+      - separate_longer_delim_polars
+      - separate_longer_position_polars
       - uncount.polars_data_frame
       - unite.polars_data_frame
       - unnest_longer_polars
