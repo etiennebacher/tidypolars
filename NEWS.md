@@ -10,7 +10,7 @@
 * New functions `separate_longer_delim_polars()` and `separate_longer_position_polars()`
   to split string columns into rows by delimiter or fixed width, equivalent to
   `tidyr::separate_longer_delim()` and `tidyr::separate_longer_position()`.
-  (#57, @Yousa-Mirage)
+  (#57, #285, @Yousa-Mirage)
 
 ## Changes
 
