@@ -481,7 +481,7 @@ test_that("separate_longer_position_polars errors on incompatible lengths", {
   df <- pl$DataFrame(
     id = 1:4,
     x = c("a", "bc", "def", "gh"),
-    y = c("12", "345", "67890", "")
+    y = c("12", "345", "6789012", "")
   )
 
   expect_snapshot(

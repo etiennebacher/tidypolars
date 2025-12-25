@@ -105,16 +105,14 @@
     Code
       current$collect()
     Condition
-      Error in `vapply()`:
-      ! values must be type 'integer',
-       but FUN(X[[1]]) result is type 'double'
+      Error in `handle_multi_column_explode()`:
+      ! Can't recycle input of size 2 to size 3.
 
 # separate_longer_position_polars errors on incompatible lengths
 
     Code
       current$collect()
     Condition
-      Error in `vapply()`:
-      ! values must be type 'integer',
-       but FUN(X[[1]]) result is type 'double'
+      Error in `handle_multi_column_explode()`:
+      ! Can't recycle input of size 2 to size 4.
 

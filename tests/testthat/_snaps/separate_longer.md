@@ -105,16 +105,14 @@
     Code
       separate_longer_delim_polars(df, c(x, y), delim = ",")
     Condition
-      Error in `vapply()`:
-      ! values must be type 'integer',
-       but FUN(X[[1]]) result is type 'double'
+      Error in `handle_multi_column_explode()`:
+      ! Can't recycle input of size 2 to size 3.
 
 # separate_longer_position_polars errors on incompatible lengths
 
     Code
       separate_longer_position_polars(df, c(x, y), width = 2)
     Condition
-      Error in `vapply()`:
-      ! values must be type 'integer',
-       but FUN(X[[1]]) result is type 'double'
+      Error in `handle_multi_column_explode()`:
+      ! Can't recycle input of size 2 to size 4.
 

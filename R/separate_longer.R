@@ -211,7 +211,7 @@ handle_multi_column_explode <- function(data, col_names) {
     lens <- vapply(
       len_col_names,
       function(nm) as.data.frame(first_problem$select(nm))[[1]],
-      integer(1)
+      numeric(1)
     )
     sizes_gt_1 <- unique(lens[lens > 1 & !is.na(lens)])
     rlang::abort(
