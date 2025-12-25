@@ -173,13 +173,21 @@ separate_longer_position_polars <- function(
 }
 
 #' Helper function to handle multi-column explode with broadcasting
-#' Rules (following tidyr behavior):
-#' 1. If all columns have the same length, explode normally
-#' 2. If some columns have length 1 while others have length > 1, recycle the length-1 values
-#' 3. If two columns both have length >= 2 but different lengths, error
+#'
+#' Handles broadcasting and validation for multi-column explode operations,
+#' following tidyr behavior:
+#' - Columns with length 0 (empty) or 1 are broadcast to match the row's max length
+#' - Null values are repeated to match the max length
+#' - Empty lists (from empty strings) become [""] when max_len is 0
+#' - Error if two columns both have length >= 2 but different lengths
+#'
+#' @param data A Polars DataFrame with list columns to explode
+#' @param col_names Character vector of column names to process
+#'
+#' @return A Polars DataFrame with columns broadcast to compatible lengths
+#'   (ready for explode operation)
 #'
 #' @noRd
-
 handle_multi_column_explode <- function(data, col_names) {
   # Create length columns for each list column
   len_col_names <- paste0(".len_", col_names)
@@ -193,26 +201,23 @@ handle_multi_column_explode <- function(data, col_names) {
   data <- data$with_columns(pl$max_horizontal(len_col_names)$alias(".max_len"))
 
   # Check for incompatible lengths (n to m where n, m >= 2 and n != m)
-  # Use any_horizontal for idiomatic Polars expression combining
   incompatible_expr <- pl$any_horizontal(
     !!!lapply(len_col_names, function(len_col) {
       pl$col(len_col)$gt(1L)$and(pl$col(len_col)$ne_missing(pl$col(".max_len")))
     })
   )
 
-  # Get first problematic row (if any) - single filter + collect operation
-  first_problem <- data$filter(incompatible_expr)$head(1L)
+  # Find first problematic row - filter, select, and collect in one chain
+  first_problem <- data$filter(incompatible_expr)$select(len_col_names)$head(1L)
   if (inherits(first_problem, "polars_lazy_frame")) {
     first_problem <- first_problem$collect()
   }
 
-  # If problematic row found, report error with size information
+  # Report error with size information if found
   if (first_problem$height > 0L) {
-    lens <- vapply(
-      len_col_names,
-      function(nm) as.data.frame(first_problem$select(nm))[[1]],
-      numeric(1)
-    )
+    lens <- sapply(len_col_names, function(nm) {
+      as.data.frame(first_problem$select(nm))[[1]]
+    })
     sizes_gt_1 <- unique(lens[lens > 1 & !is.na(lens)])
     rlang::abort(
       paste0(
