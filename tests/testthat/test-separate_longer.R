@@ -315,14 +315,22 @@ test_that("separate_longer_position_polars broadcasting works with NA and empty 
     y = c("12", "34", "", NA)
   )
 
-  result <- df |> separate_longer_position_polars(c(x, y), width = 2)
-
   expect_equal(
-    result,
+    df |> separate_longer_position_polars(c(x, y), width = 2),
     pl$DataFrame(
       id = c(1L, 1L, 2L, 4L),
       x = c("ab", "cd", NA, "gh"),
       y = c("12", "12", "34", NA)
+    )
+  )
+
+  expect_equal(
+    df |>
+      separate_longer_position_polars(c(x, y), width = 2, keep_empty = TRUE),
+    pl$DataFrame(
+      id = c(1L, 1L, 2L, 3L, 4L),
+      x = c("ab", "cd", NA, "ef", "gh"),
+      y = c("12", "12", "34", "", NA)
     )
   )
 })

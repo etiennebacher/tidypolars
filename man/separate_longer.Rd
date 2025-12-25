@@ -15,17 +15,15 @@ separate_longer_position_polars(data, cols, width, ..., keep_empty = FALSE)
 
 \item{cols}{<\code{\link[tidyr:tidyr_tidy_select]{tidy-select}}> Column(s) to separate.}
 
-\item{delim}{The delimiter to split on. For \code{separate_longer_delim_polars()}
-only.}
+\item{delim}{The delimiter string to split on. For \code{separate_longer_delim_polars()} only.}
 
 \item{...}{These dots are for future extensions and must be empty.}
 
-\item{width}{The width of each piece. For \code{separate_longer_position_polars()}
-only.}
+\item{width}{The width of each piece. For \code{separate_longer_position_polars()} only.}
 
 \item{keep_empty}{If \code{TRUE}, empty strings are kept in the output.
 If \code{FALSE} (the default), empty strings are dropped.
-For \code{separate_longer_delim_polars()}, empty strings are always kept.}
+\code{NA} values are always kept.}
 }
 \value{
 A Polars DataFrame or LazyFrame with the specified column(s) split
@@ -36,24 +34,23 @@ Each of these functions takes a string and splits it into multiple rows:
 \itemize{
 \item \code{separate_longer_delim_polars()} splits by delimiter.
 It is the polars equivalent of \code{tidyr::separate_longer_delim()}.
-\item \code{separate_longer_position_polars()} splits by fixed widths.
+\item \code{separate_longer_position_polars()} splits by fixed width.
 It is the polars equivalent of \code{tidyr::separate_longer_position()}.
 }
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 library(polars)
+library(tidypolars)
 
 # separate_longer_delim_polars: split by delimiter
 df <- pl$DataFrame(
   id = 1:3,
   x = c("a,b,c", "d,e", "f")
 )
-df
-
 separate_longer_delim_polars(df, x, delim = ",")
 
-# Multiple columns
+# Multiple columns with broadcasting, the same as tidyr behavior
 df2 <- pl$DataFrame(
   id = 1:2,
   x = c("a,b", "c,d"),
@@ -61,20 +58,37 @@ df2 <- pl$DataFrame(
 )
 separate_longer_delim_polars(df2, c(x, y), delim = ",")
 
-# separate_longer_position_polars: split by fixed width
+# Multiple columns with broadcasting
 df3 <- pl$DataFrame(
-  id = 1:3,
-  x = c("abcd", "efgh", "ij")
+  id = 1:5,
+  x = c("a,b", NA, "", "c", ""),
+  y = c("1", "2,3", "4,5", NA, "")
 )
-separate_longer_position_polars(df3, x, width = 2)
+separate_longer_delim_polars(df3, c(x, y), delim = ",")
 
-# keep_empty example
+# separate_longer_position_polars: split by fixed width
 df4 <- pl$DataFrame(
-  id = 1:2,
-  x = c("ab", "cdef")
+  id = 1:3,
+  x = c("abcd", "efg", "hi")
 )
-# By default, short strings are kept (no empty pieces created)
 separate_longer_position_polars(df4, x, width = 2)
+
+# keep_empty example: control whether empty strings are preserved
+df5 <- pl$DataFrame(
+  id = 1:4,
+  x = c("ab", "", "ef", NA)
+)
+separate_longer_position_polars(df5, x, width = 2)
+separate_longer_position_polars(df5, x, width = 2, keep_empty = TRUE)
+
+# Multiple columns with broadcasting
+df6 <- pl$DataFrame(
+  id = 1:3,
+  x = c("a", "bc", "def"),
+  y = c("12", "345", "67")
+)
+# Shorter strings are recycled to match the longest in each row
+separate_longer_position_polars(df6, c(x, y), width = 2)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

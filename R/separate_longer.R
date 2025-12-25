@@ -7,18 +7,17 @@
 #' - `separate_longer_delim_polars()` splits by delimiter.
 #' It is the polars equivalent of `tidyr::separate_longer_delim()`.
 #'
-#' - `separate_longer_position_polars()` splits by fixed widths.
+#' - `separate_longer_position_polars()` splits by fixed width.
 #' It is the polars equivalent of `tidyr::separate_longer_position()`.
 #'
 #' @param data A Polars DataFrame or LazyFrame.
 #' @param cols <[`tidy-select`][tidyr_tidy_select]> Column(s) to separate.
-#' @param delim The delimiter to split on. For `separate_longer_delim_polars()`
-#'   only.
-#' @param width The width of each piece. For `separate_longer_position_polars()`
-#'   only.
+#' @param delim The delimiter string to split on. For `separate_longer_delim_polars()` only.
+#' @param width The width of each piece. For `separate_longer_position_polars()` only.
 #' @param ... These dots are for future extensions and must be empty.
 #' @param keep_empty If `TRUE`, empty strings are kept in the output.
 #'   If `FALSE` (the default), empty strings are dropped.
+#'   `NA` values are always kept.
 #'
 #' @return A Polars DataFrame or LazyFrame with the specified column(s) split
 #'   into rows.
@@ -29,17 +28,16 @@
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' library(polars)
+#' library(tidypolars)
 #'
 #' # separate_longer_delim_polars: split by delimiter
 #' df <- pl$DataFrame(
 #'   id = 1:3,
 #'   x = c("a,b,c", "d,e", "f")
 #' )
-#' df
-#'
 #' separate_longer_delim_polars(df, x, delim = ",")
 #'
-#' # Multiple columns
+#' # Multiple columns with broadcasting, the same as tidyr behavior
 #' df2 <- pl$DataFrame(
 #'   id = 1:2,
 #'   x = c("a,b", "c,d"),
@@ -47,20 +45,37 @@
 #' )
 #' separate_longer_delim_polars(df2, c(x, y), delim = ",")
 #'
-#' # separate_longer_position_polars: split by fixed width
+#' # Multiple columns with broadcasting
 #' df3 <- pl$DataFrame(
-#'   id = 1:3,
-#'   x = c("abcd", "efgh", "ij")
+#'   id = 1:5,
+#'   x = c("a,b", NA, "", "c", ""),
+#'   y = c("1", "2,3", "4,5", NA, "")
 #' )
-#' separate_longer_position_polars(df3, x, width = 2)
+#' separate_longer_delim_polars(df3, c(x, y), delim = ",")
 #'
-#' # keep_empty example
+#' # separate_longer_position_polars: split by fixed width
 #' df4 <- pl$DataFrame(
-#'   id = 1:2,
-#'   x = c("ab", "cdef")
+#'   id = 1:3,
+#'   x = c("abcd", "efg", "hi")
 #' )
-#' # By default, short strings are kept (no empty pieces created)
 #' separate_longer_position_polars(df4, x, width = 2)
+#'
+#' # keep_empty example: control whether empty strings are preserved
+#' df5 <- pl$DataFrame(
+#'   id = 1:4,
+#'   x = c("ab", "", "ef", NA)
+#' )
+#' separate_longer_position_polars(df5, x, width = 2)
+#' separate_longer_position_polars(df5, x, width = 2, keep_empty = TRUE)
+#'
+#' # Multiple columns with broadcasting
+#' df6 <- pl$DataFrame(
+#'   id = 1:3,
+#'   x = c("a", "bc", "def"),
+#'   y = c("12", "345", "67")
+#' )
+#' # Shorter strings are recycled to match the longest in each row
+#' separate_longer_position_polars(df6, c(x, y), width = 2)
 separate_longer_delim_polars <- function(
   data,
   cols,
@@ -168,49 +183,37 @@ separate_longer_position_polars <- function(
 handle_multi_column_explode <- function(data, col_names) {
   # Create length columns for each list column
   len_col_names <- paste0(".len_", col_names)
+  data <- data$with_columns(
+    !!!lapply(seq_along(col_names), function(i) {
+      pl$col(col_names[i])$list$len()$alias(len_col_names[i])
+    })
+  )
 
-  len_exprs <- lapply(seq_along(col_names), function(i) {
-    pl$col(col_names[i])$list$len()$alias(len_col_names[i])
-  })
-  data <- data$with_columns(!!!len_exprs)
-
-  # Calculate max length per row (considering only lengths >= 1)
-  # For NULL values, the length is 0, we need to handle them
+  # Calculate max length per row
   data <- data$with_columns(pl$max_horizontal(len_col_names)$alias(".max_len"))
 
-  # Check for incompatible lengths: any column has length >= 2 and != max_len
-  # This means we have n to m where n, m >= 2 and n != m
-  incompatible_exprs <- lapply(len_col_names, function(len_col) {
-    # Incompatible if: length >= 2 AND length != max_len
-    pl$col(len_col)$gt(1L)$and(pl$col(len_col)$ne_missing(pl$col(".max_len")))
-  })
+  # Check for incompatible lengths (n to m where n, m >= 2 and n != m)
+  # Use any_horizontal for idiomatic Polars expression combining
+  incompatible_expr <- pl$any_horizontal(
+    !!!lapply(len_col_names, function(len_col) {
+      pl$col(len_col)$gt(1L)$and(pl$col(len_col)$ne_missing(pl$col(".max_len")))
+    })
+  )
 
-  # Combine with OR to find any row with incompatible lengths
-  any_incompatible <- Reduce(`|`, incompatible_exprs)
-
-  # Check if any row has incompatible lengths
-  # We need to collect to check this (unfortunately this breaks lazy evaluation)
-  has_incompatible <- data$select(any_incompatible$any())
-  if (inherits(has_incompatible, "polars_lazy_frame")) {
-    has_incompatible <- has_incompatible$collect()
+  # Get first problematic row (if any) - single filter + collect operation
+  first_problem <- data$filter(incompatible_expr)$head(1L)
+  if (inherits(first_problem, "polars_lazy_frame")) {
+    first_problem <- first_problem$collect()
   }
-  has_any_incompatible <- as.data.frame(has_incompatible)[[1]]
-  if (isTRUE(has_any_incompatible)) {
-    # Find the first problematic row to report a helpful error
-    problem_data <- data$filter(any_incompatible)
-    if (inherits(problem_data, "polars_lazy_frame")) {
-      problem_data <- problem_data$collect()
-    }
-    first_problem <- problem_data$head(1L)
+
+  # If problematic row found, report error with size information
+  if (first_problem$height > 0L) {
     lens <- vapply(
       len_col_names,
-      function(nm) {
-        as.data.frame(first_problem$select(nm))[[1]]
-      },
+      function(nm) as.data.frame(first_problem$select(nm))[[1]],
       integer(1)
     )
-    # Find sizes that are > 1
-    sizes_gt_1 <- unique(lens[lens > 1])
+    sizes_gt_1 <- unique(lens[lens > 1 & !is.na(lens)])
     rlang::abort(
       paste0(
         "Can't recycle input of size ",
@@ -222,49 +225,25 @@ handle_multi_column_explode <- function(data, col_names) {
     )
   }
 
-  # For columns that need broadcasting:
-  # - If max_len = 0 (all empty lists), replace [] with [""]
-  # - If length is 0 (empty list from empty string) and max_len > 0, repeat [""] max_len times
-  # - For null values and max_len > 0, repeat [null] max_len times
-  # - If length is 1 and max_len > 1, repeat the single element max_len times
+  # Broadcast columns to match max_len using unified repeat logic
   repeat_exprs <- lapply(seq_along(col_names), function(i) {
-    col_nm <- col_names[i]
-    len_nm <- len_col_names[i]
-    col <- pl$col(col_nm)
-    len <- pl$col(len_nm)
+    col <- pl$col(col_names[i])
+    len <- pl$col(len_col_names[i])
     max_len <- pl$col(".max_len")
 
-    # Case 1: max_len = 0 and column is not null - replace [] with [""]
-    # Case 2: Empty list (len == 0) but not null column and max_len > 0 - repeat [""] max_len times
-    # Case 3: Null value and max_len > 0 - repeat [null] max_len times
-    # Case 4: Length 1 and max_len > 1 - repeat the element
-    # Case 5: Otherwise keep original
     pl$when(
-      # max_len = 0 and column is empty list (not null)
-      max_len$eq(0)$and(len$eq(0))$and(col$is_null()$not())
+      # Need broadcasting: len < 2 OR (len is null AND max_len > 0)
+      len$lt(2L)$or(len$is_null()$and(max_len$gt(0L)))
     )$then(
-      # Replace [] with [""]
-      pl$lit(list(""))$cast(pl$List(pl$String))
-    )$when(
-      # Empty list (len == 0) but not null column and max_len > 0
-      len$eq(0)$and(col$is_null()$not())$and(max_len$gt(0))
-    )$then(
-      # Create a list of empty strings repeated max_len times
-      pl$lit("")$cast(pl$String)$repeat_by(max_len)
-    )$when(
-      # Null column and max_len > 0
-      col$is_null()$and(max_len$gt(0))
-    )$then(
-      # Create a list of nulls repeated max_len times
-      pl$lit(NULL)$cast(pl$String)$repeat_by(max_len)
-    )$when(
-      len$eq(1)$and(max_len$gt(1))
-    )$then(
-      # Single element - repeat it
-      col$list$first()$repeat_by(max_len)
-    )$otherwise(
-      col
-    )$alias(col_nm)
+      # For null/empty/single lists, repeat first value (or "" for empty)
+      pl$when(col$is_null())$then(
+        pl$lit(NULL)$cast(pl$String)
+      )$when(len$eq(0L))$then(
+        pl$lit("")$cast(pl$String)
+      )$otherwise(
+        col$list$first()
+      )$repeat_by(max_len$clip(1L))
+    )$otherwise(col)$alias(col_names[i])
   })
 
   data$with_columns(!!!repeat_exprs)$drop(c(len_col_names, ".max_len"))
