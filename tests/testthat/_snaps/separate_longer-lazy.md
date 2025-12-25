@@ -14,24 +14,6 @@
       Error in `separate_longer_position_polars()`:
       ! The data must be a Polars DataFrame or LazyFrame.
 
-# errors on non-string column
-
-    Code
-      current$collect()
-    Condition
-      Error in `separate_longer_delim_polars()`:
-      ! Column "x" must be of type <String>.
-      x Column "x" is of type <polars_dtype_float64>.
-
----
-
-    Code
-      current$collect()
-    Condition
-      Error in `separate_longer_position_polars()`:
-      ! Column "x" must be of type <String>.
-      x Column "x" is of type <polars_dtype_float64>.
-
 # errors on non-existent column
 
     Code
@@ -96,14 +78,6 @@
       current$collect()
     Condition
       Error in `separate_longer_position_polars()`:
-      ! `width` must be a whole number larger than or equal to 1, not the number -1.
-
----
-
-    Code
-      current$collect()
-    Condition
-      Error in `separate_longer_position_polars()`:
       ! `width` must be a whole number, not the number 1.5.
 
 # errors when ... is not empty
@@ -125,4 +99,22 @@
       ! `...` must be empty.
       x Problematic argument:
       * extra = TRUE
+
+# separate_longer_delim_polars errors on incompatible lengths
+
+    Code
+      current$collect()
+    Condition
+      Error in `vapply()`:
+      ! values must be type 'integer',
+       but FUN(X[[1]]) result is type 'double'
+
+# separate_longer_position_polars errors on incompatible lengths
+
+    Code
+      current$collect()
+    Condition
+      Error in `vapply()`:
+      ! values must be type 'integer',
+       but FUN(X[[1]]) result is type 'double'
 

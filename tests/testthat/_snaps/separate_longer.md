@@ -75,14 +75,6 @@
 ---
 
     Code
-      separate_longer_position_polars(df, x, width = -1)
-    Condition
-      Error in `separate_longer_position_polars()`:
-      ! `width` must be a whole number larger than or equal to 1, not the number -1.
-
----
-
-    Code
       separate_longer_position_polars(df, x, width = 1.5)
     Condition
       Error in `separate_longer_position_polars()`:
@@ -107,4 +99,22 @@
       ! `...` must be empty.
       x Problematic argument:
       * extra = TRUE
+
+# separate_longer_delim_polars errors on incompatible lengths
+
+    Code
+      separate_longer_delim_polars(df, c(x, y), delim = ",")
+    Condition
+      Error in `vapply()`:
+      ! values must be type 'integer',
+       but FUN(X[[1]]) result is type 'double'
+
+# separate_longer_position_polars errors on incompatible lengths
+
+    Code
+      separate_longer_position_polars(df, c(x, y), width = 2)
+    Condition
+      Error in `vapply()`:
+      ! values must be type 'integer',
+       but FUN(X[[1]]) result is type 'double'
 

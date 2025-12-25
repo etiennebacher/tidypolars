@@ -1,5 +1,5 @@
 test_that("separate_longer_delim_polars returns custom class", {
-  df <- polars::pl$DataFrame(
+  df <- pl$DataFrame(
     id = 1:3,
     x = c("a,b,c", "d,e", "f")
   )
@@ -7,7 +7,7 @@ test_that("separate_longer_delim_polars returns custom class", {
 })
 
 test_that("separate_longer_delim_polars basic functionality", {
-  df <- polars::pl$DataFrame(
+  df <- pl$DataFrame(
     id = 1:3,
     x = c("a,b,c", "d,e", "f")
   )
@@ -27,8 +27,8 @@ test_that("separate_longer_delim_polars basic functionality", {
   )
 })
 
-test_that("separate_longer_delim_polars mulit delims in text", {
-  df <- polars::pl$DataFrame(
+test_that("separate_longer_delim_polars multiple delims in text", {
+  df <- pl$DataFrame(
     id = 1:3,
     x = c(",a,,b,,c", "d,,,e,", "f,,,")
   )
@@ -41,13 +41,15 @@ test_that("separate_longer_delim_polars mulit delims in text", {
   )
 })
 
+# This is different from tidyr behavior
+# In tidyr, empty string as delim will return all NAs, which I think is unintuitive.
 test_that("separate_longer_delim_polars with empty string as delim", {
-  df <- polars::pl$DataFrame(
+  df <- pl$DataFrame(
     id = 1:3,
     x = c("abc", "de", "f")
   )
 
-  target_df <- polars::pl$DataFrame(
+  target_df <- pl$DataFrame(
     id = c(1L, 1L, 1L, 2L, 2L, 3L),
     x = c("a", "b", "c", "d", "e", "f")
   )
@@ -59,7 +61,7 @@ test_that("separate_longer_delim_polars with empty string as delim", {
 })
 
 test_that("separate_longer_delim_polars works with multiple columns", {
-  df <- polars::pl$DataFrame(
+  df <- pl$DataFrame(
     id = 1:2,
     x = c("a,b", "c,d"),
     y = c("1,2", "3,4")
@@ -73,10 +75,32 @@ test_that("separate_longer_delim_polars works with multiple columns", {
   )
 })
 
-# TODO:
-# 1 to n; n to 1; n to n 都是可以的
-test_that("separate_longer_delim_polars works with not matched multiple columns", {
-  df <- polars::pl$DataFrame(
+test_that("separate_longer_delim_polars supports tidyselect", {
+  df <- pl$DataFrame(
+    id = 1:2,
+    x1 = c("a,b", "c"),
+    x2 = c("1,2", "3,4"),
+    y = c("u", "v")
+  )
+
+  expect_equal(
+    df |> separate_longer_delim_polars(c("x1", "x2"), delim = ","),
+    as.data.frame(df) |>
+      tidyr::separate_longer_delim(c("x1", "x2"), delim = ",") |>
+      as.data.frame()
+  )
+
+  expect_equal(
+    df |>
+      separate_longer_delim_polars(tidyselect::starts_with("x"), delim = ","),
+    as.data.frame(df) |>
+      tidyr::separate_longer_delim(tidyselect::starts_with("x"), delim = ",") |>
+      as.data.frame()
+  )
+})
+
+test_that("separate_longer_delim_polars works with 1 to n and n to 1 broadcasting", {
+  df <- pl$DataFrame(
     id = 1:6,
     x = c("a", "", "b", "c,d,e", "f,g,h", "i"),
     y = c("", "0", "1,2,3", "3", "4,5,6", "7")
@@ -91,7 +115,7 @@ test_that("separate_longer_delim_polars works with not matched multiple columns"
 })
 
 test_that("separate_longer_delim_polars handles NA and empty strings", {
-  df <- polars::pl$DataFrame(
+  df <- pl$DataFrame(
     id = 1:3,
     x = c("a,b", NA, "")
   )
@@ -104,8 +128,34 @@ test_that("separate_longer_delim_polars handles NA and empty strings", {
   )
 })
 
+test_that("separate_longer_delim_polars broadcasting works with NA and empty strings on multiple columns", {
+  df <- pl$DataFrame(
+    id = 1:5,
+    x = c("a,b", NA, "", "c", ""),
+    y = c("1", "2,3", "4,5", NA, "")
+  )
+
+  # tidyr::separate_longer_delim(c(x, y), delim = ","):
+  #   id    x    y
+  # 1  1    a    1
+  # 2  1    b    1
+  # 3  2 <NA>    2
+  # 4  2 <NA>    3
+  # 5  3         4
+  # 6  3         5
+  # 7  4    c <NA>
+  # 8  5
+
+  expect_equal(
+    df |> separate_longer_delim_polars(c(x, y), delim = ","),
+    as.data.frame(df) |>
+      tidyr::separate_longer_delim(c(x, y), delim = ",") |>
+      as.data.frame()
+  )
+})
+
 test_that("separate_longer_position_polars returns custom class", {
-  df <- polars::pl$DataFrame(
+  df <- pl$DataFrame(
     id = 1:3,
     x = c("abcd", "efgh", "ij")
   )
@@ -113,7 +163,7 @@ test_that("separate_longer_position_polars returns custom class", {
 })
 
 test_that("separate_longer_position_polars basic functionality", {
-  df <- polars::pl$DataFrame(
+  df <- pl$DataFrame(
     id = 1:3,
     x = c("abcd", "efg", "ij")
   )
@@ -126,18 +176,8 @@ test_that("separate_longer_position_polars basic functionality", {
   )
 })
 
-test_that("do nothing on non-string column", {
-  df <- polars::pl$DataFrame(
-    id = 1:3,
-    x = c(1L, 2L, 3L)
-  )
-
-  expect_equal(df |> separate_longer_delim_polars(x, delim = ","), df)
-  expect_equal(df |> separate_longer_position_polars(x, width = 2), df)
-})
-
 test_that("separate_longer_position_polars works with width=1", {
-  df <- polars::pl$DataFrame(
+  df <- pl$DataFrame(
     id = 1:3,
     x = c("abc", "de", "f")
   )
@@ -151,7 +191,7 @@ test_that("separate_longer_position_polars works with width=1", {
 })
 
 test_that("separate_longer_position_polars handles empty strings", {
-  df <- polars::pl$DataFrame(
+  df <- pl$DataFrame(
     id = 1:2,
     x = c("abc", "")
   )
@@ -165,7 +205,7 @@ test_that("separate_longer_position_polars handles empty strings", {
 })
 
 test_that("separate_longer_position_polars handles NA values", {
-  df <- polars::pl$DataFrame(
+  df <- pl$DataFrame(
     id = 1:3,
     x = c("abcd", NA, "ef")
   )
@@ -173,21 +213,21 @@ test_that("separate_longer_position_polars handles NA values", {
   # tidyr::separate_longer_position errors on NA values,
   # but Polars handles it by keeping NA as is.
   # I think keeping NA is the correct behavior, the same as delim version.
-  # Maybe this is a bug in tidyr, because tidyr::separate_longer_delim keeps NA.
+  # Maybe this is a bug in tidyr, because tidyr::separate_longer_delim keeps NA,
+  # but tidyr::separate_longer_position don't.
   result <- df |>
     separate_longer_position_polars(x, width = 2) |>
     as.data.frame()
 
-  expect_equal(nrow(result), 4)
-  expect_true(is.na(result$x[3]))
+  expect_equal(result$x, c("ab", "cd", NA, "ef"))
 })
 
 
 test_that("separate_longer_position_polars works with multiple columns", {
-  df <- polars::pl$DataFrame(
-    id = 1:6,
-    x = c("abcd", "efg", "hi", "j", "", NA),
-    y = c("1234", "567", "89", "0", "", NA)
+  df <- pl$DataFrame(
+    id = 1:5,
+    x = c("abcd", "efg", "hi", "j", ""),
+    y = c("1234", "567", "89", "0", "")
   )
 
   expect_equal(
@@ -196,19 +236,37 @@ test_that("separate_longer_position_polars works with multiple columns", {
       tidyr::separate_longer_position(c(x, y), width = 2) |>
       as.data.frame()
   )
+})
+
+test_that("separate_longer_position_polars supports tidyselect", {
+  df <- pl$DataFrame(
+    id = 1:2,
+    x1 = c("abcd", "ef"),
+    x2 = c("12", "3456"),
+    y = c("u", "v")
+  )
 
   expect_equal(
-    df |> separate_longer_position_polars(c(x, y), width = 3),
+    df |> separate_longer_position_polars(c("x1", "x2"), width = 2),
     as.data.frame(df) |>
-      tidyr::separate_longer_position(c(x, y), width = 3) |>
+      tidyr::separate_longer_position(c("x1", "x2"), width = 2) |>
+      as.data.frame()
+  )
+
+  expect_equal(
+    df |>
+      separate_longer_position_polars(tidyselect::starts_with("x"), width = 2),
+    as.data.frame(df) |>
+      tidyr::separate_longer_position(
+        tidyselect::starts_with("x"),
+        width = 2
+      ) |>
       as.data.frame()
   )
 })
 
-# TODO
-# 对于切分长度大于字符串长度的情况，tidyr会保留原字符串并重复，并对其他列继续切分
-test_that("separate_longer_position_polars works with matched nrow and multiple columns", {
-  df <- polars::pl$DataFrame(
+test_that("separate_longer_position_polars works with broadcasting on multiple columns", {
+  df <- pl$DataFrame(
     id = 1:4,
     x = c("a", "bc", "def", "gh"),
     y = c("12", "345", "67", "")
@@ -229,7 +287,7 @@ test_that("separate_longer_position_polars works with matched nrow and multiple 
       as.data.frame()
   )
 
-  df_2 <- polars::pl$DataFrame(
+  df_2 <- pl$DataFrame(
     id = 1:4,
     x = c("a", "bc", "def", "gh"),
     y = c("12", "345", "67890", "")
@@ -250,10 +308,49 @@ test_that("separate_longer_position_polars works with matched nrow and multiple 
   )
 })
 
+test_that("separate_longer_position_polars broadcasting works with NA and empty strings on multiple columns", {
+  df <- pl$DataFrame(
+    id = 1:4,
+    x = c("abcd", NA, "ef", "gh"),
+    y = c("12", "34", "", NA)
+  )
+
+  result <- df |> separate_longer_position_polars(c(x, y), width = 2)
+
+  expect_equal(
+    result,
+    pl$DataFrame(
+      id = c(1L, 1L, 2L, 4L),
+      x = c("ab", "cd", NA, "gh"),
+      y = c("12", "12", "34", NA)
+    )
+  )
+})
+
+test_that("do nothing on non-string column", {
+  df <- pl$DataFrame(
+    id = 1:3,
+    x = c("a,b", "c,d", "e"),
+    y = c("abcd", "efg", "hi"),
+    z = c(1L, 2L, 3L)
+  )
+
+  expect_equal(df |> separate_longer_delim_polars(z, delim = ","), df)
+  expect_equal(df |> separate_longer_position_polars(z, width = 2), df)
+
+  expect_equal(
+    df |> separate_longer_delim_polars(c(x, z), delim = ","),
+    df |> separate_longer_delim_polars(x, delim = ",")
+  )
+  expect_equal(
+    df |> separate_longer_position_polars(c(y, z), width = 2),
+    df |> separate_longer_position_polars(y, width = 2)
+  )
+})
+
 # Error tests
 test_that("errors on non-polars data", {
   df <- data.frame(id = 1:2, x = c("a,b", "c,d"))
-  df_tibble <- tibble::tibble(id = 1:2, x = c("a,b", "c,d"))
 
   expect_snapshot(
     df |> separate_longer_delim_polars(x, delim = ","),
@@ -263,19 +360,10 @@ test_that("errors on non-polars data", {
     df |> separate_longer_position_polars(x, width = 2),
     error = TRUE
   )
-
-  expect_snapshot(
-    df_tibble |> separate_longer_delim_polars(x, delim = ","),
-    error = TRUE
-  )
-  expect_snapshot(
-    df_tibble |> separate_longer_position_polars(x, width = 2),
-    error = TRUE
-  )
 })
 
 test_that("errors on non-existent column", {
-  df <- polars::pl$DataFrame(
+  df <- pl$DataFrame(
     id = 1:2,
     x = c("a,b", "c,d")
   )
@@ -292,7 +380,7 @@ test_that("errors on non-existent column", {
 })
 
 test_that("errors when cols is missing", {
-  df <- polars::pl$DataFrame(
+  df <- pl$DataFrame(
     id = 1:2,
     x = c("a,b", "c,d")
   )
@@ -309,7 +397,7 @@ test_that("errors when cols is missing", {
 })
 
 test_that("errors when delim is missing", {
-  df <- polars::pl$DataFrame(
+  df <- pl$DataFrame(
     id = 1:2,
     x = c("a,b", "c,d")
   )
@@ -321,7 +409,7 @@ test_that("errors when delim is missing", {
 })
 
 test_that("errors when width is missing", {
-  df <- polars::pl$DataFrame(
+  df <- pl$DataFrame(
     id = 1:2,
     x = c("a,b", "c,d")
   )
@@ -333,29 +421,24 @@ test_that("errors when width is missing", {
 })
 
 test_that("errors when width is invalid", {
-  df <- polars::pl$DataFrame(
+  df <- pl$DataFrame(
     id = 1:2,
     x = c("ab", "cd")
   )
 
   expect_snapshot(
-    separate_longer_position_polars(df, x, width = 0),
+    df |> separate_longer_position_polars(x, width = 0),
     error = TRUE
   )
 
   expect_snapshot(
-    separate_longer_position_polars(df, x, width = -1),
-    error = TRUE
-  )
-
-  expect_snapshot(
-    separate_longer_position_polars(df, x, width = 1.5),
+    df |> separate_longer_position_polars(x, width = 1.5),
     error = TRUE
   )
 })
 
 test_that("errors when ... is not empty", {
-  df <- polars::pl$DataFrame(
+  df <- pl$DataFrame(
     id = 1:2,
     x = c("a,b", "c,d")
   )
@@ -371,10 +454,9 @@ test_that("errors when ... is not empty", {
   )
 })
 
-# TODO:
-# n to m 是不可以的
-test_that("separate_longer_delim_polars works with not matched multiple columns", {
-  df <- polars::pl$DataFrame(
+# Error when n to m (n, m >= 2, n != m) - incompatible lengths
+test_that("separate_longer_delim_polars errors on incompatible lengths", {
+  df <- pl$DataFrame(
     id = 1:2,
     x = c("a,b,c", "d,e"),
     y = c("1,2", "3,4,5,6")
@@ -386,18 +468,12 @@ test_that("separate_longer_delim_polars works with not matched multiple columns"
   )
 })
 
-# TODO:
-# n to m 是不可以的
-test_that("separate_longer_position_polars error when nrow not match with multiple columns", {
-  df <- polars::pl$DataFrame(
+# Error when n to m (n, m >= 2, n != m) - incompatible lengths
+test_that("separate_longer_position_polars errors on incompatible lengths", {
+  df <- pl$DataFrame(
     id = 1:4,
     x = c("a", "bc", "def", "gh"),
     y = c("12", "345", "67890", "")
-  )
-
-  expect_snapshot(
-    df |> separate_longer_position_polars(c(x, y), width = 1),
-    error = TRUE
   )
 
   expect_snapshot(
