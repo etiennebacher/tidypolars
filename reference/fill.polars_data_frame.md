@@ -8,7 +8,7 @@ repeated, and are only recorded when they change.
 
 ``` r
 # S3 method for class 'polars_data_frame'
-fill(data, ..., .direction = c("down", "up", "downup", "updown"))
+fill(data, ..., .by = NULL, .direction = c("down", "up", "downup", "updown"))
 ```
 
 ## Arguments
@@ -22,6 +22,15 @@ fill(data, ..., .direction = c("down", "up", "downup", "updown"))
   Any expression accepted by
   [`dplyr::select()`](https://dplyr.tidyverse.org/reference/select.html):
   variable names, column numbers, select helpers, etc.
+
+- .by:
+
+  Optionally, a selection of columns to group by for just this
+  operation, functioning as an alternative to
+  [`group_by()`](https://dplyr.tidyverse.org/reference/group_by.html).
+  The group order is not maintained, use
+  [`group_by()`](https://dplyr.tidyverse.org/reference/group_by.html) if
+  you want more control over it.
 
 - .direction:
 
