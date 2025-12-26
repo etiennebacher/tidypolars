@@ -4,13 +4,17 @@
 \alias{fill.polars_data_frame}
 \title{Fill in missing values with previous or next value}
 \usage{
-\method{fill}{polars_data_frame}(data, ..., .direction = c("down", "up", "downup", "updown"))
+\method{fill}{polars_data_frame}(data, ..., .by = NULL, .direction = c("down", "up", "downup", "updown"))
 }
 \arguments{
 \item{data}{A Polars Data/LazyFrame}
 
 \item{...}{Any expression accepted by \code{dplyr::select()}: variable names,
 column numbers, select helpers, etc.}
+
+\item{.by}{Optionally, a selection of columns to group by for just this
+operation, functioning as an alternative to \code{group_by()}. The group order
+is not maintained, use \code{group_by()} if you want more control over it.}
 
 \item{.direction}{Direction in which to fill missing values. Either "down"
 (the default), "up", "downup" (i.e. first down and then up) or "updown"
