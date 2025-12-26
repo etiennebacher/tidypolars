@@ -33,9 +33,9 @@ into rows.
 Each of these functions takes a string and splits it into multiple rows:
 \itemize{
 \item \code{separate_longer_delim_polars()} splits by delimiter.
-It is the polars equivalent of \code{tidyr::separate_longer_delim()}.
+It is the \code{polars} equivalent of \code{tidyr::separate_longer_delim()}.
 \item \code{separate_longer_position_polars()} splits by fixed width.
-It is the polars equivalent of \code{tidyr::separate_longer_position()}.
+It is the \code{polars} equivalent of \code{tidyr::separate_longer_position()}.
 }
 }
 \examples{
@@ -50,7 +50,7 @@ df <- pl$DataFrame(
 )
 separate_longer_delim_polars(df, x, delim = ",")
 
-# Multiple columns with broadcasting, the same as tidyr behavior
+# Multiple columns with broadcasting, the same as `tidyr` behavior
 df2 <- pl$DataFrame(
   id = 1:2,
   x = c("a,b", "c,d"),

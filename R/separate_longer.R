@@ -5,10 +5,10 @@
 #' Each of these functions takes a string and splits it into multiple rows:
 #'
 #' - `separate_longer_delim_polars()` splits by delimiter.
-#' It is the polars equivalent of `tidyr::separate_longer_delim()`.
+#' It is the `polars` equivalent of `tidyr::separate_longer_delim()`.
 #'
 #' - `separate_longer_position_polars()` splits by fixed width.
-#' It is the polars equivalent of `tidyr::separate_longer_position()`.
+#' It is the `polars` equivalent of `tidyr::separate_longer_position()`.
 #'
 #' @param data A Polars DataFrame or LazyFrame.
 #' @param cols <[`tidy-select`][tidyr_tidy_select]> Column(s) to separate.
@@ -37,7 +37,7 @@
 #' )
 #' separate_longer_delim_polars(df, x, delim = ",")
 #'
-#' # Multiple columns with broadcasting, the same as tidyr behavior
+#' # Multiple columns with broadcasting, the same as `tidyr` behavior
 #' df2 <- pl$DataFrame(
 #'   id = 1:2,
 #'   x = c("a,b", "c,d"),
@@ -91,28 +91,28 @@ separate_longer_delim_polars <- function(
   col_names <- tidyselect_named_arg(data, rlang::enquo(cols)) |>
     intersect(names(data$select(pl$col(pl$String))))
 
-  # If no string columns, return data unchanged (like tidyr)
+  # If no string columns, return data unchanged (like `tidyr`)
   if (length(col_names) == 0) {
     return(add_tidypolars_class(data))
   }
 
   # Split each column by delimiter and convert to list
   out <- data$with_columns(
-    do.call(pl$col, as.list(col_names))$str$split(delim)
+    pl$col(!!!col_names)$str$split(delim)
   )
 
   # Handle multi-column broadcasting and validation
   if (length(col_names) > 1) {
     # Convert lists containing only empty strings [""] to empty lists []
-    # This matches tidyr behavior where "" split by "," gives character(0)
+    # This matches `tidyr` behavior where "" split by "," gives character(0)
     # Only do this for multi-column case to enable proper broadcasting
     empty_list_exprs <- lapply(col_names, function(nm) {
       col <- pl$col(nm)
       # Check if list has length 1 and that element is ""
-      is_empty_string <- col$list$len()$eq(1)$and(col$list$first()$eq(""))
+      is_empty_string <- col$list$len() == 1 & col$list$first() == ""
       # If so, replace with empty list, otherwise keep original
       pl$when(is_empty_string)$then(
-        pl$lit(list(character(0)))$cast(pl$List(pl$String))
+        pl$lit(list(character(0)))
       )$otherwise(col)$alias(nm)
     })
     out <- out$with_columns(!!!empty_list_exprs)
@@ -144,7 +144,7 @@ separate_longer_position_polars <- function(
   col_names <- tidyselect_named_arg(data, rlang::enquo(cols)) |>
     intersect(names(data$select(pl$col(pl$String))))
 
-  # If no string columns, return data unchanged (like tidyr)
+  # If no string columns, return data unchanged (like `tidyr`)
   if (length(col_names) == 0) {
     return(add_tidypolars_class(data))
   }
@@ -153,13 +153,13 @@ separate_longer_position_polars <- function(
   # Pattern: .{1,width} matches 1 to width characters (greedy)
   pattern <- paste0(".{1,", width, "}")
   out <- data$with_columns(
-    do.call(pl$col, as.list(col_names))$str$extract_all(pattern)
+    pl$col(!!!col_names)$str$extract_all(pattern)
   )
 
   # Handle keep_empty
   if (!keep_empty) {
-    cols <- do.call(pl$col, as.list(col_names))
-    condition <- cols$is_null()$or(cols$list$len()$gt(0))
+    cols <- pl$col(!!!col_names)
+    condition <- cols$is_null() | cols$list$len() > 0
     out <- out$filter(pl$all_horizontal(condition))
   }
 
@@ -175,10 +175,10 @@ separate_longer_position_polars <- function(
 #' Helper function to handle multi-column explode with broadcasting
 #'
 #' Handles broadcasting and validation for multi-column explode operations,
-#' following tidyr behavior:
+#' following `tidyr` behavior:
 #' - Columns with length 0 (empty) or 1 are broadcast to match the row's max length
 #' - Null values are repeated to match the max length
-#' - Empty lists (from empty strings) become [""] when max_len is 0
+#' - Empty lists (from empty strings) become `[""]` when max_len is 0
 #' - Error if two columns both have length >= 2 but different lengths
 #'
 #' @param data A Polars DataFrame with list columns to explode
@@ -203,7 +203,7 @@ handle_multi_column_explode <- function(data, col_names) {
   # Check for incompatible lengths (n to m where n, m >= 2 and n != m)
   incompatible_expr <- pl$any_horizontal(
     !!!lapply(len_col_names, function(len_col) {
-      pl$col(len_col)$gt(1L)$and(pl$col(len_col)$ne_missing(pl$col(".max_len")))
+      pl$col(len_col) > 1 & pl$col(len_col) != pl$col(".max_len")
     })
   )
 
@@ -238,12 +238,12 @@ handle_multi_column_explode <- function(data, col_names) {
 
     pl$when(
       # Need broadcasting: len < 2 OR (len is null AND max_len > 0)
-      len$lt(2L)$or(len$is_null()$and(max_len$gt(0L)))
+      len < 2 | (len$is_null() & max_len > 0)
     )$then(
       # For null/empty/single lists, repeat first value (or "" for empty)
       pl$when(col$is_null())$then(
         pl$lit(NULL)$cast(pl$String)
-      )$when(len$eq(0L))$then(
+      )$when(len == 0)$then(
         pl$lit("")$cast(pl$String)
       )$otherwise(
         col$list$first()
