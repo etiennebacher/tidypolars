@@ -100,19 +100,3 @@
       x Problematic argument:
       * extra = TRUE
 
-# separate_longer_delim_polars errors on incompatible lengths
-
-    Code
-      current$collect()
-    Condition
-      Error in `handle_multi_column_explode()`:
-      ! Can't recycle input of size 2 to size 3.
-
-# separate_longer_position_polars errors on incompatible lengths
-
-    Code
-      current$collect()
-    Condition
-      Error in `handle_multi_column_explode()`:
-      ! Can't recycle input of size 2 to size 4.
-

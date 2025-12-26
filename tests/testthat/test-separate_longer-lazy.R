@@ -493,9 +493,9 @@ test_that("separate_longer_delim_polars errors on incompatible lengths", {
     y = c("1,2", "3,4,5,6")
   )
 
-  expect_snapshot_lazy(
+  expect_equal_or_both_error(
     df |> separate_longer_delim_polars(c(x, y), delim = ","),
-    error = TRUE
+    as.data.frame(df) |> tidyr::separate_longer_delim(c(x, y), delim = ",")
   )
 })
 
@@ -507,9 +507,9 @@ test_that("separate_longer_position_polars errors on incompatible lengths", {
     y = c("12", "345", "6789012", "")
   )
 
-  expect_snapshot_lazy(
+  expect_equal_or_both_error(
     df |> separate_longer_position_polars(c(x, y), width = 2),
-    error = TRUE
+    as.data.frame(df) |> tidyr::separate_longer_position(c(x, y), width = 2)
   )
 })
 
