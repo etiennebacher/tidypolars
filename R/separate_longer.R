@@ -90,6 +90,15 @@ separate_longer_delim_polars <- function(
   # Capture the column expression (tidyr coerces to string before splitting)
   col_names <- tidyselect_named_arg(data, rlang::enquo(cols))
 
+  # Empty delimiter: tidyr returns all NAs (with warning in base R)
+  if (delim == "") {
+    null_exprs <- lapply(col_names, function(nm) {
+      pl$lit(NULL)$cast(pl$String)$alias(nm)
+    })
+    out <- data$with_columns(!!!null_exprs)
+    return(add_tidypolars_class(out))
+  }
+
   # Cast to string and split each column by delimiter, converting to list
   out <- data$with_columns(
     pl$col(!!!col_names)$cast(pl$String)$str$split(delim)

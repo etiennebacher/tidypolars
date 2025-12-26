@@ -41,22 +41,30 @@ test_that("separate_longer_delim_polars multiple delims in text", {
   )
 })
 
-# This is different from tidyr behavior
-# In tidyr, empty string as delim will return all NAs, which I think is unintuitive.
 test_that("separate_longer_delim_polars with empty string as delim", {
   df <- pl$DataFrame(
     id = 1:3,
-    x = c("abc", "de", "f")
+    x = c("abc", "de", "f"),
+    y = c("123", "45", "6")
   )
 
-  target_df <- pl$DataFrame(
-    id = c(1L, 1L, 1L, 2L, 2L, 3L),
-    x = c("a", "b", "c", "d", "e", "f")
+  # tidyr returns all NAs with empty delimiter with warning
+  expect_equal(
+    df |> separate_longer_delim_polars(x, delim = ""),
+    suppressWarnings(
+      as.data.frame(df) |>
+        tidyr::separate_longer_delim(x, delim = "") |>
+        as.data.frame()
+    )
   )
 
   expect_equal(
-    df |> separate_longer_delim_polars(x, delim = ""),
-    target_df
+    df |> separate_longer_delim_polars(c(x, y), delim = ""),
+    suppressWarnings(
+      as.data.frame(df) |>
+        tidyr::separate_longer_delim(c(x, y), delim = "") |>
+        as.data.frame()
+    )
   )
 })
 
