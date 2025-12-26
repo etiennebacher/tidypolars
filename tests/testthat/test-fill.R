@@ -81,3 +81,17 @@ test_that("works with grouped data", {
       attr("maintain_grp_order")
   )
 })
+
+test_that("argument '.by' works", {
+  dat <- polars::pl$DataFrame(
+    grp = rep(c("A", "B"), each = 3),
+    x = c(NA, 1, NA, NA, 2, NA),
+    y = c(3, NA, 4, NA, 3, 1)
+  )
+
+  expect_equal(
+    fill(dat, everything(), .direction = "down", .by = grp) |>
+      pull(x),
+    c(NA, 1, 1, NA, 2, 2)
+  )
+})
