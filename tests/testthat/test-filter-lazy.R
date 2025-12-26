@@ -6,29 +6,46 @@ test_that("basic behavior works", {
   pl_iris <- as_polars_lf(iris)
 
   expect_is_tidypolars(filter(pl_iris, Species == "setosa"))
+  expect_is_tidypolars(filter_out(pl_iris, Species == "setosa"))
 
   expect_dim(
     filter(pl_iris, Species == "setosa"),
     c(50, 5)
   )
+  expect_dim(
+    filter_out(pl_iris, Species == "setosa"),
+    c(100, 5)
+  )
 })
 
-test_that("combining combinations", {
+test_that("combining conditions", {
   pl_iris <- as_polars_lf(iris)
 
   expect_dim(
     filter(pl_iris, Sepal.Length < 5 & Species == "setosa"),
     c(20, 5)
   )
+  expect_dim(
+    filter_out(pl_iris, Sepal.Length < 5 & Species == "setosa"),
+    c(130, 5)
+  )
 
   expect_dim(
     filter(pl_iris, Sepal.Length < 5, Species == "setosa"),
     c(20, 5)
   )
+  expect_dim(
+    filter_out(pl_iris, Sepal.Length < 5, Species == "setosa"),
+    c(130, 5)
+  )
 
   expect_dim(
     filter(pl_iris, Sepal.Length < 5 | Species == "setosa"),
     c(52, 5)
+  )
+  expect_dim(
+    filter_out(pl_iris, Sepal.Length < 5 | Species == "setosa"),
+    c(98, 5)
   )
 })
 
@@ -38,6 +55,10 @@ test_that("expressions work", {
   expect_dim(
     filter(pl_iris, Sepal.Length < Sepal.Width + Petal.Length),
     c(115, 5)
+  )
+  expect_dim(
+    filter_out(pl_iris, Sepal.Length < Sepal.Width + Petal.Length),
+    c(35, 5)
   )
 })
 
@@ -351,6 +372,34 @@ test_that("works when using [] on external objects", {
     test |>
       filter(x %in% obj[1:2]),
     c(2, 1)
+  )
+})
+
+test_that("NA handling is correct", {
+  dat <- data.frame(x = c(1, NA))
+  pl_dat <- as_polars_lf(dat)
+
+  expect_equal_lazy(
+    pl_dat |> filter(x == 1),
+    dat |> filter(x == 1)
+  )
+  expect_equal_lazy(
+    pl_dat |> filter_out(x == 1),
+    dat |> filter_out(x == 1)
+  )
+})
+
+test_that("no input is equivalent to all rows being TRUE", {
+  dat <- data.frame(x = c(1, NA))
+  pl_dat <- as_polars_lf(dat)
+
+  expect_equal_lazy(
+    pl_dat |> filter(!!!list()),
+    dat |> filter(!!!list())
+  )
+  expect_equal_lazy(
+    pl_dat |> filter_out(!!!list()),
+    dat |> filter_out(!!!list())
   )
 })
 
