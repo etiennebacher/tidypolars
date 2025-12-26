@@ -339,24 +339,43 @@ test_that("separate_longer_position_polars broadcasting works with NA and empty 
   )
 })
 
-test_that("do nothing on non-string column", {
+test_that("non-string columns are coerced to string (like tidyr)", {
   df <- pl$LazyFrame(
     id = 1:3,
     x = c("a,b", "c,d", "e"),
     y = c("abcd", "efg", "hi"),
-    z = c(1L, 2L, 3L)
+    z = c(1.4, 2.5, 3.6)
   )
 
-  expect_equal_lazy(df |> separate_longer_delim_polars(z, delim = ","), df)
-  expect_equal_lazy(df |> separate_longer_position_polars(z, width = 2), df)
-
+  # Numeric column is coerced to string, then split by delimiter
   expect_equal_lazy(
-    df |> separate_longer_delim_polars(c(x, z), delim = ","),
-    df |> separate_longer_delim_polars(x, delim = ",")
+    df |> separate_longer_delim_polars(z, delim = "."),
+    as.data.frame(df) |>
+      tidyr::separate_longer_delim(z, delim = ".") |>
+      as.data.frame()
   )
+
+  # Multi-column with string and numeric: both processed
+  expect_equal_lazy(
+    df |> separate_longer_delim_polars(c(x, z), delim = "."),
+    as.data.frame(df) |>
+      tidyr::separate_longer_delim(c(x, z), delim = ".") |>
+      as.data.frame()
+  )
+
+  # separate_longer_position_polars also coerces to string
+  expect_equal_lazy(
+    df |> separate_longer_position_polars(z, width = 1),
+    as.data.frame(df) |>
+      tidyr::separate_longer_position(z, width = 1) |>
+      as.data.frame()
+  )
+
   expect_equal_lazy(
     df |> separate_longer_position_polars(c(y, z), width = 2),
-    df |> separate_longer_position_polars(y, width = 2)
+    as.data.frame(df) |>
+      tidyr::separate_longer_position(c(y, z), width = 2) |>
+      as.data.frame()
   )
 })
 

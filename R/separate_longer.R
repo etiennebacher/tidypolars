@@ -87,18 +87,12 @@ separate_longer_delim_polars <- function(
   rlang::check_required(cols)
   check_string(delim)
 
-  # Capture the column expression and filter to only string columns
-  col_names <- tidyselect_named_arg(data, rlang::enquo(cols)) |>
-    intersect(names(data$select(pl$col(pl$String))))
+  # Capture the column expression (tidyr coerces to string before splitting)
+  col_names <- tidyselect_named_arg(data, rlang::enquo(cols))
 
-  # If no string columns, return data unchanged (like `tidyr`)
-  if (length(col_names) == 0) {
-    return(add_tidypolars_class(data))
-  }
-
-  # Split each column by delimiter and convert to list
+  # Cast to string and split each column by delimiter, converting to list
   out <- data$with_columns(
-    pl$col(!!!col_names)$str$split(delim)
+    pl$col(!!!col_names)$cast(pl$String)$str$split(delim)
   )
 
   # Handle multi-column broadcasting and validation
@@ -140,20 +134,14 @@ separate_longer_position_polars <- function(
   check_number_whole(width, min = 1)
   check_bool(keep_empty)
 
-  # Capture the column expression and filter to only string columns
-  col_names <- tidyselect_named_arg(data, rlang::enquo(cols)) |>
-    intersect(names(data$select(pl$col(pl$String))))
+  # Capture the column expression (tidyr coerces to string before splitting)
+  col_names <- tidyselect_named_arg(data, rlang::enquo(cols))
 
-  # If no string columns, return data unchanged (like `tidyr`)
-  if (length(col_names) == 0) {
-    return(add_tidypolars_class(data))
-  }
-
-  # Use regex to extract groups of `width` characters
+  # Cast to string and use regex to extract groups of `width` characters
   # Pattern: .{1,width} matches 1 to width characters (greedy)
   pattern <- paste0(".{1,", width, "}")
   out <- data$with_columns(
-    pl$col(!!!col_names)$str$extract_all(pattern)
+    pl$col(!!!col_names)$cast(pl$String)$str$extract_all(pattern)
   )
 
   # Handle keep_empty
