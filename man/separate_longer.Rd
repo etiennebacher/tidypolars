@@ -76,7 +76,7 @@ separate_longer_position_polars(df4, x, width = 2)
 # keep_empty example: control whether empty strings are preserved
 df5 <- pl$DataFrame(
   id = 1:4,
-  x = c("ab", "", "ef", NA)
+  x = c("ab", "", "ef", "")
 )
 separate_longer_position_polars(df5, x, width = 2)
 separate_longer_position_polars(df5, x, width = 2, keep_empty = TRUE)
