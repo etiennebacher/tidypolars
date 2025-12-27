@@ -13,6 +13,7 @@
 #' @param .direction Direction in which to fill missing values. Either "down"
 #'    (the default), "up", "downup" (i.e. first down and then up) or "updown"
 #'    (first up and then down).
+#' @inheritParams mutate.polars_data_frame
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -34,6 +35,7 @@
 fill.polars_data_frame <- function(
   data,
   ...,
+  .by = NULL,
   .direction = c("down", "up", "downup", "updown")
 ) {
   vars <- tidyselect_dots(data, ...)
@@ -42,7 +44,7 @@ fill.polars_data_frame <- function(
   }
   .direction <- match.arg(.direction)
 
-  grps <- attributes(data)$pl_grps
+  grps <- get_grps(data, rlang::enquo(.by), env = rlang::current_env())
   is_grouped <- !is.null(grps)
   mo <- attributes(data)$maintain_grp_order
 

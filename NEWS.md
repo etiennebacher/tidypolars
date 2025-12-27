@@ -12,6 +12,8 @@
   `tidyr::separate_longer_delim()` and `tidyr::separate_longer_position()`.
   (#57, #285, @Yousa-Mirage)
 
+* New argument `.by` in `fill()` (this was introduced in `tidyr` 1.3.2). (#283)
+
 ## Changes
 
 * `collect()` now returns a `tibble` instead of a `data.frame`, for consistency
