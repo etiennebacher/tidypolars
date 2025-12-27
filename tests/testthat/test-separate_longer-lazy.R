@@ -483,14 +483,14 @@ test_that("separate_longer_position_polars errors on NA values (like tidyr)", {
   )
 
   # tidyr::separate_longer_position errors on NA values
-  expect_snapshot_lazy(
+  expect_equal_or_both_error(
     df |> separate_longer_position_polars(x, width = 2),
-    error = TRUE
+    as.data.frame(df) |> tidyr::separate_longer_position(x, width = 2)
   )
 
-  expect_snapshot_lazy(
+  expect_equal_or_both_error(
     df |> separate_longer_position_polars(c(x, y), width = 2),
-    error = TRUE
+    as.data.frame(df) |> tidyr::separate_longer_position(c(x, y), width = 2)
   )
 })
 

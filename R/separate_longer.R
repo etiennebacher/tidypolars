@@ -151,6 +151,19 @@ separate_longer_position_polars <- function(
   # Capture the column expression (tidyr coerces to string before splitting)
   col_names <- tidyselect_named_arg(data, rlang::enquo(cols))
 
+  # Check for NA values (like tidyr, which errors on NA)
+  has_null_expr <- data$select(
+    pl$any_horizontal(pl$col(!!!col_names)$is_null())$any()
+  )
+  if (inherits(has_null_expr, "polars_lazy_frame")) {
+    has_null_expr <- has_null_expr$collect()
+  }
+  if (as.data.frame(has_null_expr)[[1, 1]]) {
+    cli_abort(
+      "{.fn separate_longer_position_polars} does not support NA values in the columns to separate."
+    )
+  }
+
   # Cast to string and use regex to extract groups of `width` characters
   # Pattern: .{1,width} matches 1 to width characters (greedy)
   pattern <- paste0(".{1,", width, "}")
