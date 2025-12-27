@@ -123,8 +123,13 @@ separate_longer_delim_polars <- function(
     out <- handle_multi_column_explode(out, col_names)
   }
 
-  # Explode all columns together
-  add_tidypolars_class(out$explode(col_names))
+  # Explode all columns together, catching polars errors for incompatible lengths
+  tryCatch(
+    add_tidypolars_class(out$explode(col_names)),
+    error = function(e) {
+      abort(conditionMessage(e), call = caller_env(4))
+    }
+  )
 }
 
 
@@ -165,18 +170,22 @@ separate_longer_position_polars <- function(
     out <- handle_multi_column_explode(out, col_names)
   }
 
-  # Explode all columns together
-  add_tidypolars_class(out$explode(col_names))
+  # Explode all columns together, catching polars errors for incompatible lengths
+  tryCatch(
+    add_tidypolars_class(out$explode(col_names)),
+    error = function(e) {
+      abort(conditionMessage(e), call = caller_env(4))
+    }
+  )
 }
 
 #' Helper function to handle multi-column explode with broadcasting
 #'
-#' Handles broadcasting and validation for multi-column explode operations,
+#' Handles broadcasting for multi-column explode operations,
 #' following `tidyr` behavior:
 #' - Columns with length 0 (empty) or 1 are broadcast to match the row's max length
 #' - Null values are repeated to match the max length
 #' - Empty lists (from empty strings) become `[""]` when max_len is 0
-#' - Error if two columns both have length >= 2 but different lengths
 #'
 #' @param data A Polars DataFrame with list columns to explode
 #' @param col_names Character vector of column names to process
@@ -192,40 +201,9 @@ handle_multi_column_explode <- function(data, col_names) {
     !!!lapply(seq_along(col_names), function(i) {
       pl$col(col_names[i])$list$len()$alias(len_col_names[i])
     })
+  )$with_columns(
+    pl$max_horizontal(len_col_names)$alias(".max_len")
   )
-
-  # Calculate max length per row
-  data <- data$with_columns(pl$max_horizontal(len_col_names)$alias(".max_len"))
-
-  # Check for incompatible lengths (n to m where n, m >= 2 and n != m)
-  incompatible_expr <- pl$any_horizontal(
-    !!!lapply(len_col_names, function(len_col) {
-      pl$col(len_col) > 1 & pl$col(len_col) != pl$col(".max_len")
-    })
-  )
-
-  # Find first problematic row - filter, select, and collect in one chain
-  first_problem <- data$filter(incompatible_expr)$select(len_col_names)$head(1L)
-  if (inherits(first_problem, "polars_lazy_frame")) {
-    first_problem <- first_problem$collect()
-  }
-
-  # Report error with size information if found
-  if (first_problem$height > 0L) {
-    lens <- sapply(len_col_names, function(nm) {
-      as.data.frame(first_problem$select(nm))[[1]]
-    })
-    sizes_gt_1 <- unique(lens[lens > 1 & !is.na(lens)])
-    rlang::abort(
-      paste0(
-        "Can't recycle input of size ",
-        min(sizes_gt_1),
-        " to size ",
-        max(sizes_gt_1),
-        "."
-      )
-    )
-  }
 
   # Broadcast columns to match max_len using unified repeat logic
   repeat_exprs <- lapply(seq_along(col_names), function(i) {

@@ -216,25 +216,6 @@ test_that("separate_longer_position_polars handles empty strings", {
   )
 })
 
-test_that("separate_longer_position_polars handles NA values", {
-  df <- pl$LazyFrame(
-    id = 1:3,
-    x = c("abcd", NA, "ef")
-  )
-
-  # tidyr::separate_longer_position errors on NA values,
-  # but Polars handles it by keeping NA as is.
-  # I think keeping NA is the correct behavior, the same as delim version.
-  # Maybe this is a bug in tidyr, because tidyr::separate_longer_delim keeps NA,
-  # but tidyr::separate_longer_position don't.
-  result <- df |>
-    separate_longer_position_polars(x, width = 2) |>
-    as.data.frame()
-
-  expect_equal_lazy(result$x, c("ab", "cd", NA, "ef"))
-})
-
-
 test_that("separate_longer_position_polars works with multiple columns", {
   df <- pl$LazyFrame(
     id = 1:5,
@@ -317,33 +298,6 @@ test_that("separate_longer_position_polars works with broadcasting on multiple c
     as.data.frame(df_2) |>
       tidyr::separate_longer_position(c(x, y), width = 3) |>
       as.data.frame()
-  )
-})
-
-test_that("separate_longer_position_polars broadcasting works with NA and empty strings on multiple columns", {
-  df <- pl$LazyFrame(
-    id = 1:4,
-    x = c("abcd", NA, "ef", "gh"),
-    y = c("12", "34", "", NA)
-  )
-
-  expect_equal_lazy(
-    df |> separate_longer_position_polars(c(x, y), width = 2),
-    pl$LazyFrame(
-      id = c(1L, 1L, 2L, 4L),
-      x = c("ab", "cd", NA, "gh"),
-      y = c("12", "12", "34", NA)
-    )
-  )
-
-  expect_equal_lazy(
-    df |>
-      separate_longer_position_polars(c(x, y), width = 2, keep_empty = TRUE),
-    pl$LazyFrame(
-      id = c(1L, 1L, 2L, 3L, 4L),
-      x = c("ab", "cd", NA, "ef", "gh"),
-      y = c("12", "12", "34", "", NA)
-    )
   )
 })
 
@@ -501,9 +455,9 @@ test_that("separate_longer_delim_polars errors on incompatible lengths", {
     y = c("1,2", "3,4,5,6")
   )
 
-  expect_equal_or_both_error(
+  expect_snapshot_lazy(
     df |> separate_longer_delim_polars(c(x, y), delim = ","),
-    as.data.frame(df) |> tidyr::separate_longer_delim(c(x, y), delim = ",")
+    error = TRUE
   )
 })
 
@@ -515,9 +469,28 @@ test_that("separate_longer_position_polars errors on incompatible lengths", {
     y = c("12", "345", "6789012", "")
   )
 
-  expect_equal_or_both_error(
+  expect_snapshot_lazy(
+    df |> separate_longer_position_polars(c(x, y), , width = 2),
+    error = TRUE
+  )
+})
+
+test_that("separate_longer_position_polars errors on NA values (like tidyr)", {
+  df <- pl$LazyFrame(
+    id = 1:4,
+    x = c("abcd", NA, "ef", "gh"),
+    y = c("12", "34", "", NA)
+  )
+
+  # tidyr::separate_longer_position errors on NA values
+  expect_snapshot_lazy(
+    df |> separate_longer_position_polars(x, width = 2),
+    error = TRUE
+  )
+
+  expect_snapshot_lazy(
     df |> separate_longer_position_polars(c(x, y), width = 2),
-    as.data.frame(df) |> tidyr::separate_longer_position(c(x, y), width = 2)
+    error = TRUE
   )
 })
 

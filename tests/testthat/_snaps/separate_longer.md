@@ -100,3 +100,27 @@
       x Problematic argument:
       * extra = TRUE
 
+# separate_longer_delim_polars errors on incompatible lengths
+
+    Code
+      separate_longer_delim_polars(df, c(x, y), delim = ",")
+    Condition
+      Error in `separate_longer_delim_polars()`:
+      ! Evaluation failed in `$explode()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! lengths don't match: exploded columns must have matching element counts
+
+# separate_longer_position_polars errors on incompatible lengths
+
+    Code
+      separate_longer_position_polars(df, c(x, y), , width = 2)
+    Condition
+      Error in `separate_longer_position_polars()`:
+      ! Evaluation failed in `$explode()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! lengths don't match: exploded columns must have matching element counts
+

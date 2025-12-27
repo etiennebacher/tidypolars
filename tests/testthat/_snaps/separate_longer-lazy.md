@@ -100,3 +100,23 @@
       x Problematic argument:
       * extra = TRUE
 
+# separate_longer_delim_polars errors on incompatible lengths
+
+    Code
+      current$collect()
+    Condition
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! lengths don't match: exploded columns must have matching element counts
+
+# separate_longer_position_polars errors on incompatible lengths
+
+    Code
+      current$collect()
+    Condition
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! lengths don't match: exploded columns must have matching element counts
+
