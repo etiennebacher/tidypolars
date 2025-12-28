@@ -224,5 +224,8 @@ handle_multi_column_explode <- function(data, col_names) {
     )$otherwise(col)$alias(col_names[i])
   })
 
-  data$with_columns(!!!repeat_exprs)$drop(c(len_col_names, ".tidypolars__max_len"))
+  data$with_columns(!!!repeat_exprs)$drop(c(
+    len_col_names,
+    ".tidypolars__max_len"
+  ))
 }
