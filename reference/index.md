@@ -156,6 +156,9 @@ LazyFrames (`sink_` functions).
   [`separate(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/separate.polars_data_frame.md)
   : Separate a character column into multiple columns based on a
   substring
+- [`separate_longer_delim_polars()`](https://tidypolars.etiennebacher.com/reference/separate_longer.md)
+  [`separate_longer_position_polars()`](https://tidypolars.etiennebacher.com/reference/separate_longer.md)
+  : Split a string column into rows
 - [`uncount(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/uncount.polars_data_frame.md)
   [`uncount(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/uncount.polars_data_frame.md)
   : Uncount a Data/LazyFrame

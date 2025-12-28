@@ -48,6 +48,7 @@
 <url><loc>https://tidypolars.etiennebacher.com/reference/select.polars_data_frame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/semi_join.polars_data_frame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/separate.polars_data_frame.html</loc></url>
+<url><loc>https://tidypolars.etiennebacher.com/reference/separate_longer.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/sink_csv.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/sink_ipc.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/sink_ndjson.html</loc></url>
