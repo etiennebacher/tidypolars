@@ -7,6 +7,8 @@
   `indices_to`, `keep_empty`, as well as the `{col}` templates for column
   naming. (#281, @Yousa-Mirage)
 
+* New argument `.by` in `fill()` (this was introduced in `tidyr` 1.3.2). (#283)
+
 * Add support for argument `type` in `nchar` (#288).
 
 ## Changes
