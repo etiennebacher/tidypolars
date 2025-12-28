@@ -466,26 +466,57 @@ test_that("separate_longer_position_polars errors on incompatible lengths", {
   )
 
   expect_snapshot(
-    df |> separate_longer_position_polars(c(x, y), , width = 2),
+    df |> separate_longer_position_polars(c(x, y), width = 2),
     error = TRUE
   )
 })
 
-test_that("separate_longer_position_polars errors on NA values (like tidyr)", {
+# tidypolars handles NA correctly
+# (tidyr has a bug: tidyverse/tidyr#1625)
+test_that("separate_longer_position_polars handles NA values correctly", {
   df <- pl$DataFrame(
-    id = 1:4,
-    x = c("abcd", NA, "ef", "gh"),
-    y = c("12", "34", "", NA)
+    id = 1:3,
+    x = c("abcd", NA, "gh"),
+    y = c("1234", "5678", NA)
   )
 
-  # tidyr::separate_longer_position errors on NA values
-  expect_snapshot(
-    df |> separate_longer_position_polars(x, width = 2),
-    error = TRUE
+  result <- df |> separate_longer_position_polars(x, width = 2)
+  expected <- pl$DataFrame(
+    id = c(1L, 1L, 2L, 3L),
+    x = c("ab", "cd", NA, "gh"),
+    y = c("1234", "1234", "5678", NA)
+  )
+  expect_equal(result, expected)
+
+  result <- df |> separate_longer_position_polars(c(x, y), width = 2)
+  expected <- pl$DataFrame(
+    id = c(1L, 1L, 2L, 2L, 3L),
+    x = c("ab", "cd", NA, NA, "gh"),
+    y = c("12", "34", "56", "78", NA)
+  )
+  expect_equal(result, expected)
+})
+
+test_that("separate_longer_position_polars handles NA with keep_empty", {
+  df <- pl$DataFrame(
+    id = 1:3,
+    x = c("ab", NA, "")
   )
 
-  expect_snapshot(
-    df |> separate_longer_position_polars(c(x, y), width = 2),
-    error = TRUE
+  # keep_empty = FALSE (default)
+  result <- df |> separate_longer_position_polars(x, width = 2)
+  expected <- pl$DataFrame(
+    id = c(1L, 2L),
+    x = c("ab", NA)
   )
+  expect_equal(result, expected)
+
+  # keep_empty = TRUE
+  result <- df |>
+    separate_longer_position_polars(x, width = 2, keep_empty = TRUE)
+  expected <- pl$DataFrame(
+    id = c(1L, 2L, 3L),
+    x = c("ab", NA, NA)
+  )
+  expect_equal(result, expected)
 })

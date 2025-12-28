@@ -196,26 +196,24 @@ separate_longer_position_polars <- function(
 #' @noRd
 handle_multi_column_explode <- function(data, col_names) {
   # Create length columns for each list column
-  len_col_names <- paste0(".len_", col_names)
+  len_col_names <- paste0(".tidypolars__len_", col_names)
   data <- data$with_columns(
     !!!lapply(seq_along(col_names), function(i) {
       pl$col(col_names[i])$list$len()$alias(len_col_names[i])
     })
   )$with_columns(
-    pl$max_horizontal(len_col_names)$alias(".max_len")
+    pl$max_horizontal(len_col_names)$alias(".tidypolars__max_len")
   )
 
   # Broadcast columns to match max_len using unified repeat logic
   repeat_exprs <- lapply(seq_along(col_names), function(i) {
     col <- pl$col(col_names[i])
     len <- pl$col(len_col_names[i])
-    max_len <- pl$col(".max_len")
+    max_len <- pl$col(".tidypolars__max_len")
 
     pl$when(
-      # Need broadcasting: len < 2 OR (len is null AND max_len > 0)
       len < 2 | (len$is_null() & max_len > 0)
     )$then(
-      # For null/empty/single lists, repeat first value (or "" for empty)
       pl$when(col$is_null())$then(
         pl$lit(NULL)$cast(pl$String)
       )$when(len == 0)$then(
@@ -226,5 +224,5 @@ handle_multi_column_explode <- function(data, col_names) {
     )$otherwise(col)$alias(col_names[i])
   })
 
-  data$with_columns(!!!repeat_exprs)$drop(c(len_col_names, ".max_len"))
+  data$with_columns(!!!repeat_exprs)$drop(c(len_col_names, ".tidypolars__max_len"))
 }

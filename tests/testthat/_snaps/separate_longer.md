@@ -115,7 +115,7 @@
 # separate_longer_position_polars errors on incompatible lengths
 
     Code
-      separate_longer_position_polars(df, c(x, y), , width = 2)
+      separate_longer_position_polars(df, c(x, y), width = 2)
     Condition
       Error in `separate_longer_position_polars()`:
       ! Evaluation failed in `$explode()`.
