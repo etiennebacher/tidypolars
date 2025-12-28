@@ -93,7 +93,7 @@ separate_longer_delim_polars <- function(
   # Empty delimiter: tidyr returns all NAs (with warning in base R)
   if (delim == "") {
     null_exprs <- lapply(col_names, function(nm) {
-      pl$lit(NULL)$cast(pl$String)$alias(nm)
+      pl$lit(NA_character_)$alias(nm)
     })
     out <- data$with_columns(!!!null_exprs)
     return(add_tidypolars_class(out))
@@ -215,9 +215,9 @@ handle_multi_column_explode <- function(data, col_names) {
       len < 2 | (len$is_null() & max_len > 0)
     )$then(
       pl$when(col$is_null())$then(
-        pl$lit(NULL)$cast(pl$String)
+        pl$lit(NA_character_)
       )$when(len == 0)$then(
-        pl$lit("")$cast(pl$String)
+        pl$lit("")
       )$otherwise(
         col$list$first()
       )$repeat_by(max_len$clip(1L))
