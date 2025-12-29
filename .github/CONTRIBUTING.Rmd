@@ -117,3 +117,18 @@ some tests in the related file in `tests/testthat`.
 Note that you only need to edit the file with `test_<function name>.R`. Files
 ending with `_lazy.R` are automatically generated. Use `devtools::load_all()`
 and `test_all_tidypolars()` to run the test suite.
+
+### PR title
+
+Please follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+for PR titles, meaning that your PR titles must start with "feat:", "fix:",
+or another appropriate name (see the linked documentation). For example:
+
+* `feat`: A new feature.
+* `fix`: A bug fix.
+* `docs`: Documentation only changes.
+* `test`: Adding missing tests or correcting existing tests.
+* `chore`: Changes to the build process or auxiliary tools and libraries.
+* `refactor`: A code change that neither fixes a bug nor adds a feature.
+
+See the [list of previous PRs](https://github.com/etiennebacher/tidypolars/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Aclosed) for some examples.
