@@ -182,3 +182,22 @@ No matter the type of function you added or modified, you should only
 write tests on Polars DataFrames. Those will be automatically modified
 when running the tests to run on LazyFrames as well (for instance, the
 file `test-drop_na-lazy.R` will be automatically generated).
+
+### PR title
+
+Please follow [Conventional
+Commits](https://www.conventionalcommits.org/en/v1.0.0/) for PR titles,
+meaning that your PR titles must start with “feat:”, “fix:”, or another
+appropriate name (see the linked documentation). For example:
+
+- `feat`: A new feature.
+- `fix`: A bug fix.
+- `docs`: Documentation only changes.
+- `test`: Adding missing tests or correcting existing tests.
+- `chore`: Changes to the build process or auxiliary tools and
+  libraries.
+- `refactor`: A code change that neither fixes a bug nor adds a feature.
+
+See the [list of previous
+PRs](https://github.com/etiennebacher/tidypolars/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Aclosed)
+for some examples.

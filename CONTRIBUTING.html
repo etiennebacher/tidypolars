@@ -131,6 +131,23 @@
 <p>Functions that apply to one or multiple vectors only (i.e. functions that are used in <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code>, etc.) are tested in specific files. If you added a function in <code>R/funs-string.R</code>, then you should add tests in <code>tests/testthat/test-funs_string.R</code> (same for datetime functions, etc.).</p>
 <p>No matter the type of function you added or modified, you should only write tests on Polars DataFrames. Those will be automatically modified when running the tests to run on LazyFrames as well (for instance, the file <code>test-drop_na-lazy.R</code> will be automatically generated).</p>
 </div>
+<div class="section level3">
+<h3 id="pr-title">PR title<a class="anchor" aria-label="anchor" href="#pr-title"></a></h3>
+<p>Please follow <a href="https://www.conventionalcommits.org/en/v1.0.0/" class="external-link">Conventional Commits</a> for PR titles, meaning that your PR titles must start with “feat:”, “fix:”, or another appropriate name (see the linked documentation). For example:</p>
+<ul><li>
+<code>feat</code>: A new feature.</li>
+<li>
+<code>fix</code>: A bug fix.</li>
+<li>
+<code>docs</code>: Documentation only changes.</li>
+<li>
+<code>test</code>: Adding missing tests or correcting existing tests.</li>
+<li>
+<code>chore</code>: Changes to the build process or auxiliary tools and libraries.</li>
+<li>
+<code>refactor</code>: A code change that neither fixes a bug nor adds a feature.</li>
+</ul><p>See the <a href="https://github.com/etiennebacher/tidypolars/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Aclosed" class="external-link">list of previous PRs</a> for some examples.</p>
+</div>
 </div>
 </div>
 
