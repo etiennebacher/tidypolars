@@ -62,7 +62,7 @@ Then, find the `polars` syntax that gives the same output as
 `$ends_with()`:
 
 ``` r
-test |> 
+test |>
   mutate(ends_with_c = str_ends(x, "c"))
 ```
 
@@ -114,11 +114,12 @@ pl_str_ends_stringr <- function(string, pattern, negate = FALSE, ...) {
 }
 ```
 
-You can notice that the new function must be named as 
-`pl_<function_name>_<package_name>`. This is because multiple packages can
-export functions with the same name (for example `data.table::between()` and
-`dplyr::between()`). Therefore, we want to ensure that our translation is called 
-only if the function comes from a specific package.
+You can notice that the new function must be named as
+`pl_<function_name>_<package_name>`. This is because multiple packages
+can export functions with the same name (for example
+`data.table::between()` and `dplyr::between()`). Therefore, we want to
+ensure that our translation is called only if the function comes from a
+specific package.
 
 The `check_empty_dots(...)` is here to grab all additional arguments
 that `stringr::str_ends()` might have and ignore them because they have
@@ -131,7 +132,7 @@ workflow:
 ``` r
 library(tidypolars, warn.conflicts = FALSE)
 
-test_pl |> 
+test_pl |>
   mutate(ends_with_c = str_ends(x, "c"))
 ```
 
@@ -152,35 +153,40 @@ Finally, the only thing left to do is to add some tests in the
 ### Testing changes
 
 `tidypolars` uses
-[`testthat`](https://cran.r-project.org/web/packages/testthat/) to
-check that functions have the expected output. If changes affect the
-behavior of some functions (for example when adding an extra argument),
-add some tests in the related file in `tests/testthat`.
+[`testthat`](https://cran.r-project.org/web/packages/testthat/) to check
+that functions have the expected output. If changes affect the behavior
+of some functions (for example when adding an extra argument), add some
+tests in the related file in `tests/testthat`.
 
-`tidyverse` functions that apply to an entire dataframe (e.g., `drop_na()`) have
-their own test file (`test-drop_na.R` in this case). 
+`tidyverse` functions that apply to an entire dataframe (e.g.,
+`drop_na()`) have their own test file (`test-drop_na.R` in this case).
 
-Functions that apply to one or multiple vectors only (i.e. functions that are
-used in `mutate()`, `summarize()`, etc.) are tested in specific files. If you
-added a function in `R/funs-string.R`, then you should add tests in 
-`tests/testthat/test-funs_string.R` (same for datetime functions, etc.).
+Functions that apply to one or multiple vectors only (i.e. functions
+that are used in `mutate()`, `summarize()`, etc.) are tested in specific
+files. If you added a function in `R/funs-string.R`, then you should add
+tests in `tests/testthat/test-funs_string.R` (same for datetime
+functions, etc.).
 
-No matter the type of function you added or modified, you should only write
-tests on Polars DataFrames. Those will be automatically modified when running 
-the tests to run on LazyFrames as well (for instance, the file 
-`test-drop_na-lazy.R` will be automatically generated). 
+No matter the type of function you added or modified, you should only
+write tests on Polars DataFrames. Those will be automatically modified
+when running the tests to run on LazyFrames as well (for instance, the
+file `test-drop_na-lazy.R` will be automatically generated).
 
 ### PR title
 
-Please follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
-for PR titles, meaning that your PR titles must start with "feat:", "fix:",
-or another appropriate name (see the linked documentation). For example:
+Please follow [Conventional
+Commits](https://www.conventionalcommits.org/en/v1.0.0/) for PR titles,
+meaning that your PR titles must start with “feat:”, “fix:”, or another
+appropriate name (see the linked documentation). For example:
 
 - `feat`: A new feature.
 - `fix`: A bug fix.
 - `docs`: Documentation only changes.
 - `test`: Adding missing tests or correcting existing tests.
-- `chore`: Changes to the build process or auxiliary tools and libraries.
+- `chore`: Changes to the build process or auxiliary tools and
+  libraries.
 - `refactor`: A code change that neither fixes a bug nor adds a feature.
 
-See the [list of previous PRs](https://github.com/etiennebacher/tidypolars/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Aclosed) for some examples.
+See the [list of previous
+PRs](https://github.com/etiennebacher/tidypolars/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Aclosed)
+for some examples.
