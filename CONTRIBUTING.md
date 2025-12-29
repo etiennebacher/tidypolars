@@ -61,7 +61,7 @@ Then, find the `polars` syntax that gives the same output as
 In this case, `polars` has a string methods `$ends_with()`:
 
 ``` r
-test |> 
+test |>
   mutate(ends_with_c = str_ends(x, "c"))
 ```
 
@@ -139,7 +139,7 @@ workflow:
 ``` r
 library(tidypolars, warn.conflicts = FALSE)
 
-test_pl |> 
+test_pl |>
   mutate(ends_with_c = str_ends(x, "c"))
 ```
 

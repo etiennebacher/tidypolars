@@ -70,7 +70,7 @@
 <span><span class="va">test_pl</span> <span class="op">&lt;-</span> <span class="va">pl</span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"abc"</span>, <span class="st">"a1"</span>, <span class="st">"dac"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Then, find the <code>polars</code> syntax that gives the same output as <code><a href="https://stringr.tidyverse.org/reference/str_starts.html" class="external-link">stringr::str_ends()</a></code>. In this case, <code>polars</code> has a string methods <code>$ends_with()</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">test</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">test</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>ends_with_c <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_starts.html" class="external-link">str_ends</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"c"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="do">## # A tibble: 3 × 2</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="do">##   x     ends_with_c</span></span>
@@ -110,7 +110,7 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidypolars.etiennebacher.com">tidypolars</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">test_pl</span> <span class="op">|&gt;</span> </span>
+<span><span class="va">test_pl</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>ends_with_c <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_starts.html" class="external-link">str_ends</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"c"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="do">## shape: (3, 2)</span></span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="do">## ┌─────┬─────────────┐</span></span>
