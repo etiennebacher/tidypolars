@@ -14,6 +14,10 @@
 
 * New argument `.by` in `fill()` (this was introduced in `tidyr` 1.3.2). (#283)
 
+* `wday()` now supports arbitrary `week_start` values (1~7), allowing for
+  custom week start days. It should totally match `lubridate::wday()`'s
+  behavior now. (#292, @Yousa-Mirage)
+
 ## Changes
 
 * `collect()` now returns a `tibble` instead of a `data.frame`, for consistency
