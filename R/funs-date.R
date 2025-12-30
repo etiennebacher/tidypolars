@@ -50,12 +50,6 @@ pl_day_lubridate <- function(x, ...) {
   x$dt$day()
 }
 
-# TODO: doesn't work because lubridate's default is start counting from Sundays
-# (and has an option to change that)
-pl_wday_lubridate <- function(x, ...) {
-  x$dt$weekday()
-}
-
 pl_mday_lubridate <- pl_day_lubridate
 
 pl_yday_lubridate <- function(x, ...) {
@@ -310,8 +304,8 @@ pl_strptime <- function(string, format, tz = "", strict = TRUE, ...) {
 #   x$dt$tz_localize()
 # }
 
-# TODO: check the day of weekstart (lubridate starts the
-# week on sunday, polars on monday)
+# wday() implementation
+# Conversion formula: (polars_weekday - week_start + 7) % 7 + 1
 pl_wday_lubridate <- function(
   x,
   label = FALSE,
@@ -321,12 +315,16 @@ pl_wday_lubridate <- function(
 ) {
   check_empty_dots(...)
   env <- env_from_dots(...)
-  if (week_start != 7) {
-    cli_abort(
-      "Currently, {.pkg tidypolars} only works if {.code week_start} is 7.",
-      call = env
-    )
-  }
+  week_start <- polars_expr_to_r(week_start)
+  check_number_whole(
+    week_start,
+    min = 1,
+    max = 7,
+    allow_na = FALSE,
+    arg = "week_start",
+    call = env
+  )
+
   if (isTRUE(label)) {
     if (isTRUE(abbr)) {
       out <- x$dt$strftime("%a")
@@ -334,7 +332,7 @@ pl_wday_lubridate <- function(
       out <- x$dt$strftime("%A")
     }
   } else {
-    out <- x$dt$weekday() + 1L
+    out <- (x$dt$weekday() - as.integer(week_start) + 7L) %% 7L + 1L
   }
   out
 }

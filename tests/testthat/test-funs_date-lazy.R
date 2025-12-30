@@ -77,61 +77,87 @@ test_that("extracting components of date works", {
   # }
 })
 
-test_that("weekday is a special function", {
+test_that("weekday works", {
   test_df <- data.frame(
-    YMD = as.Date(c("2012-03-26", "2020-01-01", "2023-12-14", NA)),
-    YMD_tz = ymd(
-      c("2012-03-26", "2020-01-01", "2023-12-14", NA),
-      tz = "America/Chicago"
-    ),
-    YMD_HMS = ymd_hms(
-      c("2012-03-26 12:00:00", "2020-01-01 12:00:00", "2023-12-14 12:00:00", NA)
-    ),
-    to_ymd_hms = c(
-      "2012-03-26 12:00:00",
-      "2020-01-01 12:00:00",
-      "2023-12-14 12:00:00",
-      NA
-    ),
-    to_ymd_hm = c(
-      "2012-03-26 12:00",
-      "2020-01-01 12:00",
-      "2023-12-14 12:00",
-      NA
-    ),
-    somedate = c("Jul 24 2014", "Dec 24 2015", "Jan 21 2016", NA),
-    y = c(2020:2022, NA),
-    m = c(1, 2, 20, 3),
-    d = 1:4,
-    h = 0:3,
-    min = 24:27,
-    s = 55:58
+    YMD = as.Date(c(
+      "2012-03-26",
+      "2020-01-01",
+      "2023-12-14",
+      NA,
+      "2024-02-29",
+      "2025-01-01"
+    ))
   )
   test <- as_polars_lf(test_df)
 
   expect_equal_lazy(
-    test |>
-      mutate(foo = wday(YMD)),
-    test_df |>
-      mutate(foo = wday(YMD))
+    test |> mutate(foo = wday(YMD)),
+    test_df |> mutate(foo = wday(YMD))
   )
 
-  expect_error_lazy(
+  expect_equal_lazy(
     test |> mutate(foo = wday(YMD, week_start = 1)),
-    "Currently, tidypolars only works if `week_start` is 7."
+    test_df |> mutate(foo = wday(YMD, week_start = 1))
   )
 
   expect_equal_lazy(
-    test |>
-      mutate(foo = wday(YMD, label = TRUE)) |>
-      pull(foo),
-    c("Mon", "Wed", "Thu", NA)
+    test |> mutate(foo = wday(YMD, week_start = 2)),
+    test_df |> mutate(foo = wday(YMD, week_start = 2))
+  )
+
+  expect_equal_lazy(
+    test |> mutate(foo = wday(YMD, week_start = 3)),
+    test_df |> mutate(foo = wday(YMD, week_start = 3))
+  )
+
+  expect_equal_lazy(
+    test |> mutate(foo = wday(YMD, week_start = 4)),
+    test_df |> mutate(foo = wday(YMD, week_start = 4))
+  )
+
+  expect_equal_lazy(
+    test |> mutate(foo = wday(YMD, week_start = 5)),
+    test_df |> mutate(foo = wday(YMD, week_start = 5))
+  )
+
+  expect_equal_lazy(
+    test |> mutate(foo = wday(YMD, week_start = 6)),
+    test_df |> mutate(foo = wday(YMD, week_start = 6))
+  )
+
+  # Test with label = TRUE (returns character, not ordered factor)
+  expect_equal_lazy(
+    test |> mutate(foo = wday(YMD, label = TRUE)),
+    test_df |> mutate(foo = as.character(wday(YMD, label = TRUE)))
   )
   expect_equal_lazy(
-    test |>
-      mutate(foo = wday(YMD, label = TRUE, abbr = FALSE)) |>
-      pull(foo),
-    c("Monday", "Wednesday", "Thursday", NA)
+    test |> mutate(foo = wday(YMD, label = TRUE, abbr = FALSE)),
+    test_df |> mutate(foo = as.character(wday(YMD, label = TRUE, abbr = FALSE)))
+  )
+
+  # Test with variable for week_start (not a literal)
+  ws <- 3
+  expect_equal_lazy(
+    test |> mutate(foo = wday(YMD, week_start = ws)),
+    test_df |> mutate(foo = wday(YMD, week_start = ws))
+  )
+
+  # Errors
+  expect_snapshot_lazy(
+    test |> mutate(foo = wday(YMD, week_start = 0)),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    test |> mutate(foo = wday(YMD, week_start = 8)),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    test |> mutate(foo = wday(YMD, week_start = 1.5)),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    test |> mutate(foo = wday(YMD, week_start = "Monday")),
+    error = TRUE
   )
 })
 
