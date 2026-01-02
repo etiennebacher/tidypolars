@@ -14,6 +14,9 @@
 
 * New argument `.by` in `fill()` (this was introduced in `tidyr` 1.3.2). (#283)
 
+* `wday()` now supports arbitrary `week_start` values (1~7), allowing for
+  custom week start days. (#292, @Yousa-Mirage)
+
 * Add support for argument `type` in `nchar` (#288).
 
 ## Changes
