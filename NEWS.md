@@ -14,6 +14,8 @@
 
 * New argument `.by` in `fill()` (this was introduced in `tidyr` 1.3.2). (#283)
 
+* Add support for argument `type` in `nchar` (#288).
+
 ## Changes
 
 * `collect()` now returns a `tibble` instead of a `data.frame`, for consistency
