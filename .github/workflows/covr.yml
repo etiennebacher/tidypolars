@@ -1,7 +1,24 @@
 name: Code coverage
 
 on:
-  workflow_call:
+  push:
+    branches: [main, master]
+    paths:
+      - .Rbuildignore
+      - R/**
+      - tests/**
+      - vignettes/*
+      - DESCRIPTION
+      - NAMESPACE
+  pull_request:
+    branches: [main, master]
+    paths:
+      - .Rbuildignore
+      - R/**
+      - tests/**
+      - vignettes/*
+      - DESCRIPTION
+      - NAMESPACE
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
@@ -9,11 +26,7 @@ concurrency:
 
 jobs:
   codecov:
-    runs-on: windows-latest
-
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      R_KEEP_PKG_SOURCE: yes
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v6
