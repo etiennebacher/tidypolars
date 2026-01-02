@@ -32,7 +32,7 @@
 #' # List of all functions stored in this object
 #' sort(names(tp))
 #'
-#' dat <- pl$DataFrame(x = c("abc12", "def3"))
+#' dat <- polars::pl$DataFrame(x = c("abc12", "def3"))
 #' dat |>
 #'   mutate(y = tp$str_extract_stringr(x, "\\d+"))
 tp <- new.env(parent = emptyenv())

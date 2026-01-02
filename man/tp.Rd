@@ -38,7 +38,7 @@ This is similar to the \code{dd} object in \code{duckplyr} and to the \code{.sql
 # List of all functions stored in this object
 sort(names(tp))
 
-dat <- pl$DataFrame(x = c("abc12", "def3"))
+dat <- polars::pl$DataFrame(x = c("abc12", "def3"))
 dat |>
   mutate(y = tp$str_extract_stringr(x, "\\\\d+"))
 \dontshow{\}) # examplesIf}
