@@ -397,7 +397,7 @@ out <- tribble(
       Package == "`lubridate`" & Function %in% c("`rollbackward`", "`rollback`", "`rollforward`") ~
         "While time zone handling should mimick the behaviour of `lubridate` in most cases, it is possible that Polars errors if rolling back/forward leads to am ambiguous datetime. It is also possible to have some differences in hours/minutes/seconds when converting between Polars and R.",
       Package == "`lubridate`" & Function == "`wday`" ~
-        "If `label = TRUE`, it returns a string variable and not a factor as in `lubridate`.",
+        "`week_start` must be an integer in `tidypolars`. If `label = TRUE`, it returns a string variable and not a factor as in `lubridate`.",
       Package == "`lubridate`" & Function == "`with_tz`" ~
         "`tidypolars` cannot use several timezones in a single column, while `lubridate::with_tz()` can. Unrecognized timezones and/or NULL are not supported and will throw an error.",
       Package == "`lubridate`" & Function == "`force_tz`" ~

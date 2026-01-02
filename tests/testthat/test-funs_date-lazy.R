@@ -90,40 +90,12 @@ test_that("weekday works", {
   )
   test <- as_polars_lf(test_df)
 
-  expect_equal_lazy(
-    test |> mutate(foo = wday(YMD)),
-    test_df |> mutate(foo = wday(YMD))
-  )
-
-  expect_equal_lazy(
-    test |> mutate(foo = wday(YMD, week_start = 1)),
-    test_df |> mutate(foo = wday(YMD, week_start = 1))
-  )
-
-  expect_equal_lazy(
-    test |> mutate(foo = wday(YMD, week_start = 2)),
-    test_df |> mutate(foo = wday(YMD, week_start = 2))
-  )
-
-  expect_equal_lazy(
-    test |> mutate(foo = wday(YMD, week_start = 3)),
-    test_df |> mutate(foo = wday(YMD, week_start = 3))
-  )
-
-  expect_equal_lazy(
-    test |> mutate(foo = wday(YMD, week_start = 4)),
-    test_df |> mutate(foo = wday(YMD, week_start = 4))
-  )
-
-  expect_equal_lazy(
-    test |> mutate(foo = wday(YMD, week_start = 5)),
-    test_df |> mutate(foo = wday(YMD, week_start = 5))
-  )
-
-  expect_equal_lazy(
-    test |> mutate(foo = wday(YMD, week_start = 6)),
-    test_df |> mutate(foo = wday(YMD, week_start = 6))
-  )
+  for (i in 1:7) {
+    expect_equal_lazy(
+      test |> mutate(foo = wday(YMD, week_start = i)),
+      test_df |> mutate(foo = wday(YMD, week_start = i))
+    )
+  }
 
   # Test with label = TRUE (returns character, not ordered factor)
   expect_equal_lazy(
