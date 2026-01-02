@@ -29,7 +29,7 @@
 #' @export
 #' @format NULL
 #' @examplesIf require("dplyr", quietly = TRUE)
-#' # List all functions stored in this object
+#' # List of all functions stored in this object
 #' sort(names(tp))
 #'
 #' dat <- pl$DataFrame(x = c("abc12", "def3"))

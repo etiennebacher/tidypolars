@@ -35,7 +35,7 @@ This is similar to the \code{dd} object in \code{duckplyr} and to the \code{.sql
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
-# List all functions stored in this object
+# List of all functions stored in this object
 sort(names(tp))
 
 dat <- pl$DataFrame(x = c("abc12", "def3"))
