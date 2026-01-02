@@ -18,6 +18,8 @@
   custom week start days. It should totally match `lubridate::wday()`'s
   behavior now. (#292, @Yousa-Mirage)
 
+* Add support for argument `type` in `nchar` (#288).
+
 ## Changes
 
 * `collect()` now returns a `tibble` instead of a `data.frame`, for consistency

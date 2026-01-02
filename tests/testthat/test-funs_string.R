@@ -14,7 +14,7 @@ test_that("case functions work", {
   )
   test <- as_polars_df(test_df)
 
-  for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper", "nchar")) {
+  for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper")) {
     pol <- paste0("mutate(test, foo = ", i, "(x1))") |>
       str2lang() |>
       eval() |>
@@ -350,6 +350,25 @@ test_that("length functions work", {
       pull(foo),
     mutate(test_df, foo = str_length(x4)) |>
       pull(foo)
+  )
+
+  expect_equal(
+    mutate(test, foo = nchar(x4)) |>
+      pull(foo),
+    mutate(test_df, foo = nchar(x4)) |>
+      pull(foo)
+  )
+
+  expect_equal(
+    mutate(test, foo = nchar(x4, "bytes")) |>
+      pull(foo),
+    mutate(test_df, foo = nchar(x4, "bytes")) |>
+      pull(foo)
+  )
+
+  expect_snapshot(
+    mutate(test, foo = nchar(x4, "foo")),
+    error = TRUE
   )
 })
 

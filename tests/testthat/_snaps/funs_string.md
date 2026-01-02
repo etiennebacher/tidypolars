@@ -7,6 +7,15 @@
       ! Error while running function `paste()` in Polars.
       x `collapse` must be a single string or `NULL`, not an integer vector.
 
+# length functions work
+
+    Code
+      mutate(test, foo = nchar(x4, "foo"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `nchar()` in Polars.
+      x `type` must be one of "chars" or "bytes", not "foo".
+
 # stringr::str_replace_na works
 
     Code
