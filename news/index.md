@@ -1,5 +1,77 @@
 # Changelog
 
+## tidypolars (development version)
+
+### New features
+
+- New function
+  [`unnest_longer_polars()`](https://tidypolars.etiennebacher.com/reference/unnest_longer_polars.md)
+  to unnest list-columns into rows, equivalent to
+  [`tidyr::unnest_longer()`](https://tidyr.tidyverse.org/reference/unnest_longer.html).
+  It supports the parameters `values_to`, `indices_to`, `keep_empty`, as
+  well as the `{col}` templates for column naming.
+  ([\#212](https://github.com/etiennebacher/tidypolars/issues/212),
+  [\#281](https://github.com/etiennebacher/tidypolars/issues/281),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage))
+
+- New functions
+  [`separate_longer_delim_polars()`](https://tidypolars.etiennebacher.com/reference/separate_longer.md)
+  and
+  [`separate_longer_position_polars()`](https://tidypolars.etiennebacher.com/reference/separate_longer.md)
+  to split string columns into rows by delimiter or fixed width,
+  equivalent to
+  [`tidyr::separate_longer_delim()`](https://tidyr.tidyverse.org/reference/separate_longer_delim.html)
+  and
+  [`tidyr::separate_longer_position()`](https://tidyr.tidyverse.org/reference/separate_longer_delim.html).
+  ([\#57](https://github.com/etiennebacher/tidypolars/issues/57),
+  [\#285](https://github.com/etiennebacher/tidypolars/issues/285),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage))
+
+- New argument `.by` in
+  [`fill()`](https://tidyr.tidyverse.org/reference/fill.html) (this was
+  introduced in `tidyr` 1.3.2).
+  ([\#283](https://github.com/etiennebacher/tidypolars/issues/283))
+
+- `wday()` now supports arbitrary `week_start` values (1~7), allowing
+  for custom week start days.
+  ([\#292](https://github.com/etiennebacher/tidypolars/issues/292),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage))
+
+- Add support for argument `type` in `nchar`
+  ([\#288](https://github.com/etiennebacher/tidypolars/issues/288)).
+
+- It is now possible to use translated functions without loading the
+  package they come from. For example, the following code can run
+  without loading `stringr` in the session:
+
+  ``` r
+  data |>
+    mutate(y = .tp$str_extract_stringr(x, "\\d+"))
+  ```
+
+  This can be useful to benefit from `polars` speed while using the
+  interface of `tidyverse` functions, without adding additional
+  `tidyverse` dependencies. This may be useful to avoid installing extra
+  dependencies, but it is not the recommended usage because it makes it
+  harder to convert `tidypolars` code to run with other
+  `tidyverse`-based backends. More information with
+  [`?.tp`](https://tidypolars.etiennebacher.com/reference/dot-tp.md)
+  ([\#293](https://github.com/etiennebacher/tidypolars/issues/293)).
+
+### Changes
+
+- [`collect()`](https://dplyr.tidyverse.org/reference/compute.html) now
+  returns a `tibble` instead of a `data.frame`, for consistency with
+  other
+  [`collect()`](https://dplyr.tidyverse.org/reference/compute.html)
+  methods
+  ([\#273](https://github.com/etiennebacher/tidypolars/issues/273)).
+
+### Documentation
+
+- Removed the “FAQ” vignette, which was outdated and wasn’t particularly
+  helpful.
+
 ## tidypolars 0.15.1
 
 `tidypolars` requires `polars` \>= 1.6.0.
