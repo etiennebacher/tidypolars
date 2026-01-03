@@ -99,3 +99,8 @@ reference:
       - fetch
       - make_unique_id
       - partitioned_output
+
+  - title: Advanced
+    desc: Functions for very specific usage.
+    contents:
+      - .tp

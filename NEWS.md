@@ -19,6 +19,21 @@
 
 * Add support for argument `type` in `nchar` (#288).
 
+* It is now possible to use translated functions without loading the package
+  they come from. For example, the following code can run without loading
+  `stringr` in the session:
+
+  ```r
+  data |>
+    mutate(y = .tp$str_extract_stringr(x, "\\d+"))
+  ```
+
+  This can be useful to benefit from `polars` speed while using the interface of
+  `tidyverse` functions, without adding additional `tidyverse` dependencies. This
+  may be useful to avoid installing extra dependencies, but it is not the
+  recommended usage because it makes it harder to convert `tidypolars` code to
+  run with other `tidyverse`-based backends. More information with `?.tp` (#293).
+
 ## Changes
 
 * `collect()` now returns a `tibble` instead of a `data.frame`, for consistency

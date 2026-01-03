@@ -300,6 +300,27 @@ translate <- function(
         name <- paste0(name[[2]], "::", name[[3]])
       }
 
+      # e.g. `.tp$str_extract_stringr()`.
+      if (length(name) == 3 && name[[1]] == "$" && name[[2]] == ".tp") {
+        name <- paste0("pl_", name[[3]])
+        args <- call_args(expr)
+        args <- lapply(
+          args,
+          translate,
+          .data = .data,
+          new_vars = new_vars,
+          env = env,
+          caller = caller,
+          call_is_function = call_is_function,
+          expr_uses_col = expr_uses_col
+        )
+        args[["__tidypolars__new_vars"]] <- as.list(new_vars)
+        args[["__tidypolars__env"]] <- env
+        args[["__tidypolars__caller"]] <- caller
+        args[["__tidypolars__expr_uses_col"]] <- expr_uses_col
+        return(do.call(name, args))
+      }
+
       switch(
         name,
         "[" = {
