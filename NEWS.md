@@ -1,4 +1,4 @@
-# tidypolars (development)
+# tidypolars (development version)
 
 ## New features
 
