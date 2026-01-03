@@ -419,6 +419,14 @@ Other Polars-specific functions (most are deprecated).
   **\[experimental\]** : Helper functions to export a LazyFrame as a
   partitioned output
 
+## Advanced
+
+Functions for very specific usage.
+
+- [`.tp`](https://tidypolars.etiennebacher.com/reference/dot-tp.md) :
+  Get tidypolars function translation without loading their original
+  package
+
 # Articles
 
 ### All vignettes

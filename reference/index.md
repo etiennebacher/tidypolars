@@ -203,3 +203,11 @@ Other Polars-specific functions (most are deprecated).
   [`partition_by_max_size()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
   **\[experimental\]** : Helper functions to export a LazyFrame as a
   partitioned output
+
+## Advanced
+
+Functions for very specific usage.
+
+- [`.tp`](https://tidypolars.etiennebacher.com/reference/dot-tp.md) :
+  Get tidypolars function translation without loading their original
+  package
