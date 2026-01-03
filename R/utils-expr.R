@@ -300,8 +300,8 @@ translate <- function(
         name <- paste0(name[[2]], "::", name[[3]])
       }
 
-      # e.g. `tp$str_extract_stringr()`.
-      if (length(name) == 3 && name[[1]] == "$" && name[[2]] == "tp") {
+      # e.g. `.tp$str_extract_stringr()`.
+      if (length(name) == 3 && name[[1]] == "$" && name[[2]] == ".tp") {
         name <- paste0("pl_", name[[3]])
         args <- call_args(expr)
         args <- lapply(

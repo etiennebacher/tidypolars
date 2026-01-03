@@ -25,13 +25,13 @@
 
   ```r
   data |>
-    mutate(y = tp$str_extract_stringr(x, "\\d+"))
+    mutate(y = .tp$str_extract_stringr(x, "\\d+"))
   ```
 
   This can be useful to benefit from `polars` speed while using the interface of
   `tidyverse` functions, without adding additional `tidyverse` dependencies. The
   main drawback is that it makes it harder to convert `tidypolars` code to run
-  with other `tidyverse`-based backends. More information with `?tp` (#293).
+  with other `tidyverse`-based backends. More information with `?.tp` (#293).
 
 ## Changes
 
