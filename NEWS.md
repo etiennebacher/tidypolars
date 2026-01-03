@@ -29,9 +29,10 @@
   ```
 
   This can be useful to benefit from `polars` speed while using the interface of
-  `tidyverse` functions, without adding additional `tidyverse` dependencies. The
-  main drawback is that it makes it harder to convert `tidypolars` code to run
-  with other `tidyverse`-based backends. More information with `?.tp` (#293).
+  `tidyverse` functions, without adding additional `tidyverse` dependencies. This
+  may be useful to avoid installing extra dependencies, but it is not the
+  recommended usage because it makes it harder to convert `tidypolars` code to
+  run with other `tidyverse`-based backends. More information with `?.tp` (#293).
 
 ## Changes
 
