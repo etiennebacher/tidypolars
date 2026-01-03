@@ -103,4 +103,4 @@ reference:
   - title: Advanced
     desc: Functions for very specific usage.
     contents:
-      - tp
+      - .tp
