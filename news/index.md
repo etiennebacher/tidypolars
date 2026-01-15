@@ -67,6 +67,12 @@
   methods
   ([\#273](https://github.com/etiennebacher/tidypolars/issues/273)).
 
+### Bug fixes
+
+- [`arrange()`](https://dplyr.tidyverse.org/reference/arrange.html) now
+  works with literal values, such as `arrange(x, 1:2)`
+  ([\#296](https://github.com/etiennebacher/tidypolars/issues/296)).
+
 ### Documentation
 
 - Removed the “FAQ” vignette, which was outdated and wasn’t particularly
