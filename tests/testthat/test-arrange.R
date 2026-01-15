@@ -141,3 +141,25 @@ test_that("NA are placed last", {
     data.frame(x = c(2, 3, 1, NA), g = rep(c("a", "b"), each = 2))
   )
 })
+
+test_that("arrange() works with literals, #295", {
+  test <- pl$DataFrame(x = c("a", "b", "c"), grp = c(1, 2, 2))
+  test_df <- data.frame(x = c("a", "b", "c"), grp = c(1, 2, 2))
+
+  expect_equal_or_both_error(
+    test |> arrange(1),
+    test_df |> arrange(1)
+  )
+  expect_equal_or_both_error(
+    test |> arrange(c(1, 3, 2)),
+    test_df |> arrange(c(1, 3, 2))
+  )
+  expect_equal_or_both_error(
+    test |> arrange(c(1, 2)),
+    test_df |> arrange(c(1, 2))
+  )
+  expect_equal_or_both_error(
+    test |> group_by(grp) |> arrange(c(1, 2), .by_group = TRUE),
+    test_df |> group_by(grp) |> arrange(c(1, 2), .by_group = TRUE)
+  )
+})

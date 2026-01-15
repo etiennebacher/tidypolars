@@ -44,16 +44,35 @@ arrange.polars_data_frame <- function(.data, ..., .by_group = FALSE) {
     FUN.VALUE = logical(1L)
   )
 
+  # We want to allow sort expressions of length 1 (e.g. `arrange("a")`). This
+  # isn't doing anything on the sort but dplyr allows it.
+  polars_exprs <- lapply(seq_along(polars_exprs), function(x) {
+    if (!is_polars_expr(polars_exprs[[x]])) {
+      polars_exprs[[x]] <- pl$lit(polars_exprs[[x]])
+    }
+    polars_exprs[[x]]$alias(paste0("__TIDYPOLARS_TEMP_SORT__", x))
+  })
+
+  names_exprs <- lapply(polars_exprs, function(x) {
+    x$meta$output_name()
+  })
+
   if (is_grouped && isTRUE(.by_group)) {
-    polars_exprs <- c(grps, polars_exprs)
+    to_sort_with <- c(grps, names_exprs)
     descending <- c(rep(FALSE, length(grps)), descending)
+  } else {
+    to_sort_with <- names_exprs
   }
 
-  out <- if (is_grouped) {
-    .data$sort(!!!polars_exprs, descending = descending, nulls_last = TRUE) |>
+  out <- .data$with_columns(!!!polars_exprs)$sort(
+    !!!to_sort_with,
+    descending = descending,
+    nulls_last = TRUE
+  )$drop(!!!names_exprs)
+
+  if (is_grouped) {
+    out <- out |>
       group_by(all_of(grps), maintain_order = mo)
-  } else {
-    .data$sort(!!!polars_exprs, descending = descending, nulls_last = TRUE)
   }
 
   add_tidypolars_class(out)

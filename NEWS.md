@@ -39,6 +39,10 @@
 * `collect()` now returns a `tibble` instead of a `data.frame`, for consistency
   with other `collect()` methods (#273).
 
+## Bug fixes
+
+* `arrange()` now works with literal values, such as `arrange(x, 1:2)` (#296).
+
 ## Documentation
 
 * Removed the "FAQ" vignette, which was outdated and wasn't particularly helpful.

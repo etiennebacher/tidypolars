@@ -1,7 +1,11 @@
 expect_equal_or_both_error <- function(object, other, ...) {
   polars_error <- FALSE
   polars_res <- tryCatch(
-    object,
+    if (is_polars_lf(object)) {
+      object$collect()
+    } else {
+      object
+    },
     error = function(e) {
       # nolint: implicit_assignment
       polars_error <<- TRUE
