@@ -15,7 +15,8 @@ write_parquet_polars(
   row_group_size = NULL,
   data_page_size = NULL,
   partition_by = NULL,
-  partition_chunk_size_bytes = 4294967296
+  partition_chunk_size_bytes = 4294967296,
+  mkdir = FALSE
 )
 ```
 
@@ -86,6 +87,10 @@ write_parquet_polars(
   writing. Note this is calculated using the size of the DataFrame in
   memory - the size of the output file may differ depending on the file
   format / compression.
+
+- mkdir:
+
+  Recursively create all the directories in the path.
 
 ## Value
 

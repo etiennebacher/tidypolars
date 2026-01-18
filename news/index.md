@@ -58,6 +58,12 @@
   [`?.tp`](https://tidypolars.etiennebacher.com/reference/dot-tp.md)
   ([\#293](https://github.com/etiennebacher/tidypolars/issues/293)).
 
+- New argument `mkdir` in
+  [`write_parquet_polars()`](https://tidypolars.etiennebacher.com/reference/write_parquet_polars.md)
+  (this already existed in
+  [`sink_parquet()`](https://tidypolars.etiennebacher.com/reference/sink_parquet.md)).
+  ([\#298](https://github.com/etiennebacher/tidypolars/issues/298))
+
 ### Changes
 
 - [`collect()`](https://dplyr.tidyverse.org/reference/compute.html) now

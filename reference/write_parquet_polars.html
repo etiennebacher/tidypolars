@@ -54,7 +54,8 @@
 <span>  row_group_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  data_page_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  partition_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  partition_chunk_size_bytes <span class="op">=</span> <span class="fl">4294967296</span></span>
+<span>  partition_chunk_size_bytes <span class="op">=</span> <span class="fl">4294967296</span>,</span>
+<span>  mkdir <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -118,6 +119,10 @@ written if this is specified.</p></dd>
 a single partition when writing. Note this is calculated using the size of
 the DataFrame in memory - the size of the output file may differ depending
 on the file format / compression.</p></dd>
+
+
+<dt id="arg-mkdir">mkdir<a class="anchor" aria-label="anchor" href="#arg-mkdir"></a></dt>
+<dd><p>Recursively create all the directories in the path.</p></dd>
 
 </dl></div>
     <div class="section level2">
