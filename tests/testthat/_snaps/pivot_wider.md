@@ -15,8 +15,6 @@
       Error in `data$pivot()`:
       ! Evaluation failed in `$pivot()`.
       Caused by error:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
       ! Duplicated column(s): could not create a new DataFrame: column with name 'a' has more than one occurrence
 
 # `names_from` must be supplied if `name` isn't in data
@@ -61,9 +59,7 @@
       Error in `data$pivot()`:
       ! Evaluation failed in `$pivot()`.
       Caused by error:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
-      ! at least one key is required in a group_by operation
+      ! index cannot be zero length
 
 ---
 
@@ -73,9 +69,7 @@
       Error in `data$pivot()`:
       ! Evaluation failed in `$pivot()`.
       Caused by error:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
-      ! at least one key is required in a group_by operation
+      ! index cannot be zero length
 
 # dots must be empty
 

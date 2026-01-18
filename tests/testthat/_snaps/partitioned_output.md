@@ -69,18 +69,18 @@
       <scrubbed>
       +-- am=0.0
       |   +-- cyl=4.0
-      |   |   \-- 00000000.parquet
+      |   |   \-- 0.parquet
       |   +-- cyl=6.0
-      |   |   \-- 00000000.parquet
+      |   |   \-- 0.parquet
       |   \-- cyl=8.0
-      |       \-- 00000000.parquet
+      |       \-- 0.parquet
       \-- am=1.0
           +-- cyl=4.0
-          |   \-- 00000000.parquet
+          |   \-- 0.parquet
           +-- cyl=6.0
-          |   \-- 00000000.parquet
+          |   \-- 0.parquet
           \-- cyl=8.0
-              \-- 00000000.parquet
+              \-- 0.parquet
 
 # partition_by_max_size() works
 
