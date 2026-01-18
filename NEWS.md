@@ -34,6 +34,9 @@
   recommended usage because it makes it harder to convert `tidypolars` code to
   run with other `tidyverse`-based backends. More information with `?.tp` (#293).
 
+* New argument `mkdir` in `write_parquet_polars()` (this already existed in
+  `sink_parquet()`). (#298)
+
 ## Changes
 
 * `collect()` now returns a `tibble` instead of a `data.frame`, for consistency

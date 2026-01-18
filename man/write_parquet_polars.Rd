@@ -14,7 +14,8 @@ write_parquet_polars(
   row_group_size = NULL,
   data_page_size = NULL,
   partition_by = NULL,
-  partition_chunk_size_bytes = 4294967296
+  partition_chunk_size_bytes = 4294967296,
+  mkdir = FALSE
 )
 }
 \arguments{
@@ -59,6 +60,8 @@ written if this is specified.}
 a single partition when writing. Note this is calculated using the size of
 the DataFrame in memory - the size of the output file may differ depending
 on the file format / compression.}
+
+\item{mkdir}{Recursively create all the directories in the path.}
 }
 \value{
 The input DataFrame.
