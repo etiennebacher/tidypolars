@@ -118,11 +118,8 @@ test_that("write_parquet: mkdir works", {
   dest <- file.path(dest_dir, "another_folder", "foo.parquet")
   dat <- as_polars_df(mtcars)
 
-  # Path changes everytime, don't use snapshot
-  expect_error(
-    write_parquet_polars(dat, dest),
-    "No such file or directory"
-  )
+  # Error message is OS-dependent
+  expect_error(write_parquet_polars(dat, dest))
   expect_silent(
     write_parquet_polars(dat, dest, mkdir = TRUE)
   )
