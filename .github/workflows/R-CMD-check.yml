@@ -33,6 +33,7 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         include:
@@ -54,7 +55,8 @@ jobs:
       - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
-          extra-repositories: 'https://community.r-multiverse.org'
+          extra-repositories: 'https://rpolars.r-universe.org'
+          # extra-repositories: 'https://community.r-multiverse.org'
 
       - name: Install R dependencies
         uses: r-lib/actions/setup-r-dependencies@v2

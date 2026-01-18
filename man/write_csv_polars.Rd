@@ -88,6 +88,14 @@ The input DataFrame.
 \description{
 Export data to CSV file(s)
 }
+\details{
+\subsection{Partitioned output}{
+
+It is possible to export data to multiple files based on various parameters,
+such as the values of some variables, or such that each file has a maximum
+number of rows. See \code{\link[=partition_by]{partition_by()}} for more details.
+}
+}
 \examples{
 dest <- tempfile(fileext = ".csv")
 mtcars |>

@@ -39,6 +39,7 @@
 #' @param null_values `r lifecycle::badge("deprecated")` Deprecated, use
 #' `null_value` instead.
 #'
+#' @inherit sink_parquet details
 #' @return The input DataFrame.
 #' @export
 #'
@@ -124,6 +125,7 @@ write_csv_polars <- function(
 #' the DataFrame in memory - the size of the output file may differ depending
 #' on the file format / compression.
 #'
+#' @inherit sink_parquet details
 #' @inherit write_csv_polars return
 #' @export
 #'
@@ -174,6 +176,7 @@ write_parquet_polars <- function(
 #'
 #' @inheritParams write_csv_polars
 #'
+#' @inherit sink_parquet details
 #' @inherit write_csv_polars return
 #' @export
 #'
@@ -260,6 +263,7 @@ write_json_polars <- function(
 #' @param future `r lifecycle::badge("deprecated")` Deprecated, use
 #' `compat_level` instead.
 #'
+#' @inherit sink_parquet details
 #' @inherit write_csv_polars return
 #' @export
 write_ipc_polars <- function(
