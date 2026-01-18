@@ -37,6 +37,13 @@
 * New argument `mkdir` in `write_parquet_polars()` (this already existed in
   `sink_parquet()`). (#298)
 
+* New (experimental) function `partition_by()` to write partitioned output in
+  `sink_*()` and `write_*_polars()`. The following functions are deprecated and
+  will be removed in a future release (#299):
+
+  - `partition_by_key()` can be replaced with `partition_by(key =)`
+  - `partition_by_max_size()` can be replaced with `partition_by(max_rows_per_file =)`
+
 ## Changes
 
 * `collect()` now returns a `tibble` instead of a `data.frame`, for consistency
