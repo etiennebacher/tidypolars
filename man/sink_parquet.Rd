@@ -96,22 +96,9 @@ crashes because of too small memory.
 \details{
 \subsection{Partitioned output}{
 
-It is possible to export a LazyFrame to multiple files, also called
-\emph{partitioned output}. A partition can be determined in several ways:
-\itemize{
-\item by key(s): split by the values of keys. The amount of files that can be
-written is not limited. However, when writing beyond a certain amount of
-files, the data for the remaining partitions is buffered before writing to
-the file.
-\item by maximum number of rows: if the number of rows in a file reaches the
-maximum number of rows, the file is closed and a new file is opened.
-}
-
-These partitioning schemes can be used with the functions \code{partition_by_key()}
-and \code{partition_by_max_size()}. See Examples below.
-
-Writing a partitioned output usually requires setting \code{mkdir = TRUE} to
-automatically create the required subfolders.
+It is possible to export data to multiple files based on various parameters,
+such as the values of some variables, or such that each file has a maximum
+number of rows. See \code{\link[=partition_by]{partition_by()}} for more details.
 }
 }
 \examples{

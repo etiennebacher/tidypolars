@@ -57,33 +57,9 @@
 #'
 #' ## Partitioned output
 #'
-#' It is possible to export a LazyFrame to multiple files, also called
-#' *partitioned output*. A partition can be determined in several ways:
-#'
-#' - by key(s): split by the values of keys. The amount of files that can be
-#'   written is not limited. However, when writing beyond a certain amount of
-#'   files, the data for the remaining partitions is buffered before writing to
-#'   the file.
-#' - by maximum number of rows: if the number of rows in a file reaches the
-#'   maximum number of rows, the file is closed and a new file is opened.
-
-# TODO: add this back when https://github.com/pola-rs/r-polars/issues/1522 is
-# solved
-# - by "sorted partition": this is a specialized version of partitioning by
-#   key. Whereas partitioning by key accepts data in any order, this scheme
-#   expects the input data to be pre-grouped or pre-sorted. This scheme suffers
-#   a lot less overhead, but may not be always applicable. Each new value of
-#   the key expressions starts a new partition, therefore repeating the same
-#   value multiple times may overwrite previous partitions.
-# These partitioning schemes can be used with the functions `partition_by_key()`,
-# `partition_by_max_size()`, and `partition_parted()`. See Examples below.
-
-#'
-#' These partitioning schemes can be used with the functions `partition_by_key()`
-#' and `partition_by_max_size()`. See Examples below.
-#'
-#' Writing a partitioned output usually requires setting `mkdir = TRUE` to
-#' automatically create the required subfolders.
+#' It is possible to export data to multiple files based on various parameters,
+#' such as the values of some variables, or such that each file has a maximum
+#' number of rows. See [partition_by()] for more details.
 #'
 #' @return The input LazyFrame.
 #' @export
@@ -124,22 +100,6 @@
 #' out_path <- withr::local_tempdir()
 #' sink_parquet(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
 #' fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-
-# TODO: add this back when https://github.com/pola-rs/r-polars/issues/1522 is
-# solved
-#
-# # Split the LazyFrame by pre-sorted data:
-# out_path <- withr::local_tempdir()
-# my_lf |>
-#   arrange(am, cyl) |>
-#   sink_parquet(partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
-#
-# fs::dir_tree(out_path)
-#
-# # Careful when using partition_parted(): if the data is not presorted then
-# # the output files may be incorrect!
-# out_path <- withr::local_tempdir()
-# sink_parquet(my_lf, partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
 sink_parquet <- function(
   .data,
   path,
@@ -264,22 +224,6 @@ sink_parquet <- function(
 #' out_path <- withr::local_tempdir()
 #' sink_csv(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
 #' fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-
-# TODO: add this back when https://github.com/pola-rs/r-polars/issues/1522 is
-# solved
-#
-# # Split the LazyFrame by pre-sorted data:
-# out_path <- withr::local_tempdir()
-# my_lf |>
-#   arrange(am, cyl) |>
-#   sink_csv(partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
-#
-# fs::dir_tree(out_path)
-#
-# # Careful when using partition_parted(): if the data is not presorted then
-# # the output files may be incorrect!
-# out_path <- withr::local_tempdir()
-# sink_csv(my_lf, partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
 sink_csv <- function(
   .data,
   path,
@@ -417,22 +361,6 @@ sink_csv <- function(
 #' out_path <- withr::local_tempdir()
 #' sink_ipc(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
 #' fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-
-# TODO: add this back when https://github.com/pola-rs/r-polars/issues/1522 is
-# solved
-#
-# # Split the LazyFrame by pre-sorted data:
-# out_path <- withr::local_tempdir()
-# my_lf |>
-#   arrange(am, cyl) |>
-#   sink_ipc(partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
-#
-# fs::dir_tree(out_path)
-#
-# # Careful when using partition_parted(): if the data is not presorted then
-# # the output files may be incorrect!
-# out_path <- withr::local_tempdir()
-# sink_ipc(my_lf, partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
 sink_ipc <- function(
   .data,
   path,
@@ -520,22 +448,6 @@ sink_ipc <- function(
 #' out_path <- withr::local_tempdir()
 #' sink_ndjson(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
 #' fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-
-# TODO: add this back when https://github.com/pola-rs/r-polars/issues/1522 is
-# solved
-#
-# # Split the LazyFrame by pre-sorted data:
-# out_path <- withr::local_tempdir()
-# my_lf |>
-#   arrange(am, cyl) |>
-#   sink_ndjson(partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
-#
-# fs::dir_tree(out_path)
-#
-# # Careful when using partition_parted(): if the data is not presorted then
-# # the output files may be incorrect!
-# out_path <- withr::local_tempdir()
-# sink_ndjson(my_lf, partition_parted(out_path, by = c("am", "cyl")), mkdir = TRUE)
 sink_ndjson <- function(
   .data,
   path,
@@ -570,76 +482,5 @@ sink_ndjson <- function(
     maintain_order = maintain_order,
     optimizations = optimizations,
     mkdir = mkdir
-  )
-}
-
-#' Helper functions to export a LazyFrame as a partitioned output
-#'
-#' `r lifecycle::badge("experimental")`
-#' More details and examples in the documentation of `sink_*()` functions.
-#'
-#' @inheritParams rlang::args_dots_empty
-#' @param base_path The base path for the output files. Use the `mkdir` option
-#' of the `sink_*` methods to ensure directories in the path are created.
-#' @param by Something can be coerced to a list of Polars expressions. Used to
-#' partition by.
-#' @param include_key If `TRUE` (default), include the key columns in the output
-#' files.
-#' @param per_partition_sort_by Something can be coerced to a list of Polars
-#' expressions, or `NULL` (default). Used  to sort over within each partition.
-#' Note that this might increase the memory consumption needed for each partition.
-#' @param max_size An integer-ish value indicating the maximum number of rows in
-#' each of the generated files.
-#'
-#' @name partitioned_output
-#' @export
-partition_by_key <- function(
-  base_path,
-  ...,
-  by,
-  include_key = TRUE,
-  per_partition_sort_by = NULL
-) {
-  check_dots_empty()
-  pl$PartitionByKey(
-    base_path = base_path,
-    by = by,
-    include_key = TRUE,
-    per_partition_sort_by = NULL
-  )
-}
-
-#' @rdname partitioned_output
-#' @export
-partition_by_max_size <- function(
-  base_path,
-  ...,
-  max_size,
-  per_partition_sort_by = NULL
-) {
-  check_dots_empty()
-  pl$PartitionMaxSize(
-    base_path = base_path,
-    max_size = max_size,
-    per_partition_sort_by = NULL
-  )
-}
-
-# TODO: add this back when https://github.com/pola-rs/r-polars/issues/1522 is
-# solved
-# @export
-partition_parted <- function(
-  base_path,
-  ...,
-  by,
-  include_key = TRUE,
-  per_partition_sort_by = NULL
-) {
-  check_dots_empty()
-  pl$PartitionParted(
-    base_path = base_path,
-    by = by,
-    include_key = TRUE,
-    per_partition_sort_by = NULL
   )
 }
