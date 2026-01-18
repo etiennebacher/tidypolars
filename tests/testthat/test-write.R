@@ -112,3 +112,15 @@ test_that("basic behavior with Parquet", {
   expect_equal(nanoparquet::read_parquet(dest), mtcars, ignore_attr = TRUE)
   expect_s3_class(read_parquet_polars(dest), "polars_data_frame")
 })
+
+test_that("write_parquet: mkdir works", {
+  dest_dir <- withr::local_tempdir()
+  dest <- file.path(dest_dir, "another_folder", "foo.parquet")
+  dat <- as_polars_df(mtcars)
+
+  # Error message is OS-dependent
+  expect_error(write_parquet_polars(dat, dest))
+  expect_silent(
+    write_parquet_polars(dat, dest, mkdir = TRUE)
+  )
+})

@@ -144,7 +144,8 @@ write_parquet_polars <- function(
   row_group_size = NULL,
   data_page_size = NULL,
   partition_by = NULL,
-  partition_chunk_size_bytes = 4294967296
+  partition_chunk_size_bytes = 4294967296,
+  mkdir = FALSE
 ) {
   if (!is_polars_df(.data)) {
     cli_abort("{.fn write_parquet_polars} can only be used on a DataFrame.")
@@ -164,7 +165,8 @@ write_parquet_polars <- function(
     row_group_size = row_group_size,
     data_page_size = data_page_size,
     partition_by = partition_by,
-    partition_chunk_size_bytes = partition_chunk_size_bytes
+    partition_chunk_size_bytes = partition_chunk_size_bytes,
+    mkdir = mkdir
   )
 }
 
