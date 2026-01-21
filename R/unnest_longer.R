@@ -196,8 +196,8 @@ unnest_longer_polars <- function(
         pl$struct(col_nm)
       )$with_columns(
         pl$col(col_nm)$struct$with_fields(
-          (pl$field(col_nm)$cum_count()$over(pl$col(temp_row_id)))$alias(idx_nm)
-        )
+          pl$field(col_nm)$cum_count()$alias(idx_nm)
+        )$over(pl$col(temp_row_id))
       )$with_columns(
         pl$struct(
           pl$col(col_nm)$struct$field(idx_nm),
