@@ -41,49 +41,49 @@
 #' @seealso [tidyr::unnest_longer()] for the tidyr equivalent.
 #'
 #' @export
-#' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
-#' library(polars)
-#'
-#' # Basic example with a list column
-#' df <- pl$DataFrame(
-#'   id = 1:3,
-#'   values = list(c(1, 2), c(3, 4, 5), 6)
-#' )
-#' df
-#'
-#' unnest_longer_polars(df, values)
-#'
-#' # With indices
-#' unnest_longer_polars(df, values, indices_to = "idx")
-#'
-#' # Rename the output column
-#' unnest_longer_polars(df, values, values_to = "val")
-#'
-#' # Multiple columns - list elements must have same length per row
-#' df2 <- pl$DataFrame(
-#'   id = 1:2,
-#'   a = list(c(1, 2), c(3, 4)),
-#'   b = list(c("x", "y"), c("z", "w"))
-#' )
-#' unnest_longer_polars(df2, c(a, b))
-#'
-#' # Multiple columns with values_to template
-#' unnest_longer_polars(df2, c(a, b), values_to = "{col}_val")
-#'
-#' # Multiple columns with indices_to template
-#' unnest_longer_polars(df2, c(a, b), indices_to = "{col}_idx")
-#'
-#' # keep_empty example
-#' df4 <- pl$DataFrame(
-#'   id = 1:3,
-#'   values = list(c(1, 2), NULL, 3)
-#' )
-#'
-#' # By default, NULL/empty values are dropped
-#' unnest_longer_polars(df4, values)
-#'
-#' # Use keep_empty = TRUE to keep them as NA
-#' unnest_longer_polars(df4, values, keep_empty = TRUE)
+# @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
+# library(polars)
+#
+# # Basic example with a list column
+# df <- pl$DataFrame(
+#   id = 1:3,
+#   values = list(c(1, 2), c(3, 4, 5), 6)
+# )
+# df
+#
+# unnest_longer_polars(df, values)
+#
+# # With indices
+# unnest_longer_polars(df, values, indices_to = "idx")
+#
+# # Rename the output column
+# unnest_longer_polars(df, values, values_to = "val")
+#
+# # Multiple columns - list elements must have same length per row
+# df2 <- pl$DataFrame(
+#   id = 1:2,
+#   a = list(c(1, 2), c(3, 4)),
+#   b = list(c("x", "y"), c("z", "w"))
+# )
+# unnest_longer_polars(df2, c(a, b))
+#
+# # Multiple columns with values_to template
+# unnest_longer_polars(df2, c(a, b), values_to = "{col}_val")
+#
+# # Multiple columns with indices_to template
+# unnest_longer_polars(df2, c(a, b), indices_to = "{col}_idx")
+#
+# # keep_empty example
+# df4 <- pl$DataFrame(
+#   id = 1:3,
+#   values = list(c(1, 2), NULL, 3)
+# )
+#
+# # By default, NULL/empty values are dropped
+# unnest_longer_polars(df4, values)
+#
+# # Use keep_empty = TRUE to keep them as NA
+# unnest_longer_polars(df4, values, keep_empty = TRUE)
 unnest_longer_polars <- function(
   data,
   col,
