@@ -259,28 +259,34 @@ automatically create the required subfolders.</p>
 <span class="r-in"><span><span class="co"># Split the LazyFrame by key(s) and write each split to a different file:</span></span></span>
 <span class="r-in"><span><span class="va">out_path</span> <span class="op">&lt;-</span> <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_tempfile.html" class="external-link">local_tempdir</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">sink_csv</span><span class="op">(</span><span class="va">my_lf</span>, <span class="fu"><a href="partitioned_output.html">partition_by_key</a></span><span class="op">(</span><span class="va">out_path</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"am"</span>, <span class="st">"cyl"</span><span class="op">)</span><span class="op">)</span>, mkdir <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span><span style="color: #BBBB00;">!</span> <span style="color: #0000BB;">&lt;PartitionByKey&gt;</span> is deprecated as of <span style="color: #0000BB;">polars</span> 1.8.0.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Use <span style="color: #0000BB;">&lt;PartitionBy&gt;</span> instead.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span>
 <span class="r-in"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">out_path</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpO2NBEH/file1b5b3a56e1f0</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/Rtmpu5tGPc/file1c5545b9838c</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── <span style="color: #0000BB; font-weight: bold;">am=0.0</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │   ├── <span style="color: #0000BB; font-weight: bold;">cyl=4.0</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │   │   └── 0.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │   │   └── 00000000.csv</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │   ├── <span style="color: #0000BB; font-weight: bold;">cyl=6.0</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │   │   └── 0.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │   │   └── 00000000.csv</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │   └── <span style="color: #0000BB; font-weight: bold;">cyl=8.0</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │       └── 0.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │       └── 00000000.csv</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └── <span style="color: #0000BB; font-weight: bold;">am=1.0</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     ├── <span style="color: #0000BB; font-weight: bold;">cyl=4.0</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     │   └── 0.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     │   └── 00000000.csv</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     ├── <span style="color: #0000BB; font-weight: bold;">cyl=6.0</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     │   └── 0.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     │   └── 00000000.csv</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     └── <span style="color: #0000BB; font-weight: bold;">cyl=8.0</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         └── 0.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         └── 00000000.csv</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Split the LazyFrame by max number of rows per file:</span></span></span>
 <span class="r-in"><span><span class="va">out_path</span> <span class="op">&lt;-</span> <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_tempfile.html" class="external-link">local_tempdir</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">sink_csv</span><span class="op">(</span><span class="va">my_lf</span>, <span class="fu"><a href="partitioned_output.html">partition_by_max_size</a></span><span class="op">(</span><span class="va">out_path</span>, max_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>, mkdir <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span><span style="color: #BBBB00;">!</span> <span style="color: #0000BB;">&lt;PartitionMaxSize&gt;</span> is deprecated as of <span style="color: #0000BB;">polars</span> 1.8.0.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Use <span style="color: #0000BB;">&lt;PartitionBy&gt;</span> instead.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span>
 <span class="r-in"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">out_path</span><span class="op">)</span> <span class="co"># mtcars has 32 rows so we have 7 output files</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpO2NBEH/file1b5b6a529c82</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/Rtmpu5tGPc/file1c55340cf78b</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000000.csv</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000001.csv</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000002.csv</span>

@@ -161,27 +161,27 @@ my_lf <- as_polars_lf(mtcars)
 out_path <- withr::local_tempdir()
 sink_ipc(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
 fs::dir_tree(out_path)
-#> /tmp/RtmpO2NBEH/file1b5b4e168bb1
+#> /tmp/Rtmpu5tGPc/file1c5572a6b6b0
 #> ├── am=0.0
 #> │   ├── cyl=4.0
-#> │   │   └── 0.ipc
+#> │   │   └── 00000000.ipc
 #> │   ├── cyl=6.0
-#> │   │   └── 0.ipc
+#> │   │   └── 00000000.ipc
 #> │   └── cyl=8.0
-#> │       └── 0.ipc
+#> │       └── 00000000.ipc
 #> └── am=1.0
 #>     ├── cyl=4.0
-#>     │   └── 0.ipc
+#>     │   └── 00000000.ipc
 #>     ├── cyl=6.0
-#>     │   └── 0.ipc
+#>     │   └── 00000000.ipc
 #>     └── cyl=8.0
-#>         └── 0.ipc
+#>         └── 00000000.ipc
 
 # Split the LazyFrame by max number of rows per file:
 out_path <- withr::local_tempdir()
 sink_ipc(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
 fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-#> /tmp/RtmpO2NBEH/file1b5b4b7cf1a3
+#> /tmp/Rtmpu5tGPc/file1c551cdc209f
 #> ├── 00000000.ipc
 #> ├── 00000001.ipc
 #> ├── 00000002.ipc
