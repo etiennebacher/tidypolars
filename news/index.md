@@ -1,6 +1,6 @@
 # Changelog
 
-## tidypolars (development version)
+## tidypolars 0.16.0
 
 `tidypolars` requires `polars` \>= 1.8.0.
 
