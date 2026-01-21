@@ -2,6 +2,8 @@
 
 ## tidypolars (development version)
 
+`tidypolars` requires `polars` \>= 1.8.0.
+
 ### New features
 
 - New function
