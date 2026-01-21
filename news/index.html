@@ -54,6 +54,15 @@
 <p>This can be useful to benefit from <code>polars</code> speed while using the interface of <code>tidyverse</code> functions, without adding additional <code>tidyverse</code> dependencies. This may be useful to avoid installing extra dependencies, but it is not the recommended usage because it makes it harder to convert <code>tidypolars</code> code to run with other <code>tidyverse</code>-based backends. More information with <code><a href="../reference/dot-tp.html">?.tp</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/293" class="external-link">#293</a>).</p>
 </li>
 <li><p>New argument <code>mkdir</code> in <code><a href="../reference/write_parquet_polars.html">write_parquet_polars()</a></code> (this already existed in <code><a href="../reference/sink_parquet.html">sink_parquet()</a></code>). (<a href="https://github.com/etiennebacher/tidypolars/issues/298" class="external-link">#298</a>)</p></li>
+<li>
+<p>New (experimental) function <code><a href="../reference/partitioned_output.html">partition_by()</a></code> to write partitioned output in <code>sink_*()</code> and <code>write_*_polars()</code>. The following functions are deprecated and will be removed in a future release (<a href="https://github.com/etiennebacher/tidypolars/issues/299" class="external-link">#299</a>):</p>
+<ul><li>
+<code><a href="../reference/partitioned_output.html">partition_by_key()</a></code> can be replaced with <code>partition_by(key =)</code>
+</li>
+<li>
+<code><a href="../reference/partitioned_output.html">partition_by_max_size()</a></code> can be replaced with <code>partition_by(max_rows_per_file =)</code>
+</li>
+</ul></li>
 </ul></div>
 <div class="section level3">
 <h3 id="changes-development-version">Changes<a class="anchor" aria-label="anchor" href="#changes-development-version"></a></h3>

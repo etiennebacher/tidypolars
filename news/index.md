@@ -64,6 +64,18 @@
   [`sink_parquet()`](https://tidypolars.etiennebacher.com/reference/sink_parquet.md)).
   ([\#298](https://github.com/etiennebacher/tidypolars/issues/298))
 
+- New (experimental) function
+  [`partition_by()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
+  to write partitioned output in `sink_*()` and `write_*_polars()`. The
+  following functions are deprecated and will be removed in a future
+  release
+  ([\#299](https://github.com/etiennebacher/tidypolars/issues/299)):
+
+  - [`partition_by_key()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
+    can be replaced with `partition_by(key =)`
+  - [`partition_by_max_size()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
+    can be replaced with `partition_by(max_rows_per_file =)`
+
 ### Changes
 
 - [`collect()`](https://dplyr.tidyverse.org/reference/compute.html) now

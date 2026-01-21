@@ -414,9 +414,10 @@ Other Polars-specific functions (most are deprecated).
 - [`make_unique_id()`](https://tidypolars.etiennebacher.com/reference/make_unique_id.md)
   : Create a column with unique id per row values
 
-- [`partition_by_key()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
+- [`partition_by()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
+  [`partition_by_key()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
   [`partition_by_max_size()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
-  **\[experimental\]** : Helper functions to export a LazyFrame as a
+  **\[experimental\]** : Helper functions to export data as a
   partitioned output
 
 ## Advanced

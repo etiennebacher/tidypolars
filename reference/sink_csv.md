@@ -164,25 +164,11 @@ The input LazyFrame.
 
 ### Partitioned output
 
-It is possible to export a LazyFrame to multiple files, also called
-*partitioned output*. A partition can be determined in several ways:
-
-- by key(s): split by the values of keys. The amount of files that can
-  be written is not limited. However, when writing beyond a certain
-  amount of files, the data for the remaining partitions is buffered
-  before writing to the file.
-
-- by maximum number of rows: if the number of rows in a file reaches the
-  maximum number of rows, the file is closed and a new file is opened.
-
-These partitioning schemes can be used with the functions
-[`partition_by_key()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
-and
-[`partition_by_max_size()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md).
-See Examples below.
-
-Writing a partitioned output usually requires setting `mkdir = TRUE` to
-automatically create the required subfolders.
+It is possible to export data to multiple files based on various
+parameters, such as the values of some variables, or such that each file
+has a maximum number of rows. See
+[`partition_by()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
+for more details.
 
 ## Examples
 
@@ -216,11 +202,10 @@ my_lf <- as_polars_lf(mtcars)
 # Split the LazyFrame by key(s) and write each split to a different file:
 out_path <- withr::local_tempdir()
 sink_csv(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
-#> Warning: ! <PartitionByKey> is deprecated as of polars 1.8.0.
-#> ℹ Use <PartitionBy> instead.
-#> This warning is displayed once every 8 hours.
+#> Warning: `partition_by_key()` was deprecated in tidypolars 0.16.0.
+#> ℹ Please use `partition_by(key = )` instead.
 fs::dir_tree(out_path)
-#> /tmp/Rtmpu5tGPc/file1c5545b9838c
+#> /tmp/RtmpTo533P/file1b1f4f4d6972
 #> ├── am=0.0
 #> │   ├── cyl=4.0
 #> │   │   └── 00000000.csv
@@ -239,11 +224,10 @@ fs::dir_tree(out_path)
 # Split the LazyFrame by max number of rows per file:
 out_path <- withr::local_tempdir()
 sink_csv(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
-#> Warning: ! <PartitionMaxSize> is deprecated as of polars 1.8.0.
-#> ℹ Use <PartitionBy> instead.
-#> This warning is displayed once every 8 hours.
+#> Warning: `partition_by_max_size()` was deprecated in tidypolars 0.16.0.
+#> ℹ Please use `partition_by(max_rows_per_file = )` instead.
 fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-#> /tmp/Rtmpu5tGPc/file1c55340cf78b
+#> /tmp/RtmpTo533P/file1b1f456fa49b
 #> ├── 00000000.csv
 #> ├── 00000001.csv
 #> ├── 00000002.csv

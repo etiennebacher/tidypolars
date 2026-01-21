@@ -57,3 +57,13 @@ write_ipc_polars(
 ## Value
 
 The input DataFrame.
+
+## Details
+
+### Partitioned output
+
+It is possible to export data to multiple files based on various
+parameters, such as the values of some variables, or such that each file
+has a maximum number of rows. See
+[`partition_by()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
+for more details.
