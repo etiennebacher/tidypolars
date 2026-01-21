@@ -1,5 +1,7 @@
 # tidypolars (development version)
 
+`tidypolars` requires `polars` >= 1.8.0.
+
 ## New features
 
 * New function `unnest_longer_polars()` to unnest list-columns into rows,
