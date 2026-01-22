@@ -93,9 +93,6 @@ reference:
   - title: Other Polars functions
     desc: Other Polars-specific functions (most are deprecated).
     contents:
-      - describe
-      - describe_plan
-      - describe_optimized_plan
       - fetch
       - make_unique_id
       - partitioned_output
