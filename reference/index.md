@@ -184,13 +184,6 @@ Other functions or S3 methods.
 
 Other Polars-specific functions (most are deprecated).
 
-- [`describe()`](https://tidypolars.etiennebacher.com/reference/describe.md)
-  **\[deprecated\]** : Summary statistics for a Polars DataFrame
-
-- [`describe_plan()`](https://tidypolars.etiennebacher.com/reference/describe_plan.md)
-  [`describe_optimized_plan()`](https://tidypolars.etiennebacher.com/reference/describe_plan.md)
-  **\[deprecated\]** : Show the optimized and non-optimized query plans
-
 - [`fetch()`](https://tidypolars.etiennebacher.com/reference/fetch.md)
   **\[deprecated\]** :
 

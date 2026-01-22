@@ -17,8 +17,6 @@
 <url><loc>https://tidypolars.etiennebacher.com/reference/compute.polars_lazy_frame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/count.polars_data_frame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/cross_join.polars_data_frame.html</loc></url>
-<url><loc>https://tidypolars.etiennebacher.com/reference/describe.html</loc></url>
-<url><loc>https://tidypolars.etiennebacher.com/reference/describe_plan.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/distinct.polars_data_frame.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/dot-tp.html</loc></url>
 <url><loc>https://tidypolars.etiennebacher.com/reference/drop_na.polars_data_frame.html</loc></url>

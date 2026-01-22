@@ -1,5 +1,17 @@
 # Changelog
 
+## tidypolars (development version)
+
+### Breaking changes
+
+- The following functions (deprecated since 0.10.0, August 2024) are now
+  removed:
+
+  - `describe()`, use [`summary()`](https://rdrr.io/r/base/summary.html)
+    instead.
+  - `describe_plan()` and `describe_optimized_plan()`, use
+    `explain(optimized = TRUE/FALSE)` instead.
+
 ## tidypolars 0.16.0
 
 `tidypolars` requires `polars` \>= 1.8.0.
@@ -385,11 +397,9 @@
   ([\#211](https://github.com/etiennebacher/tidypolars/issues/211)).
 
 - `tidypolars` now exports rules to be used with `flir` for detecting
-  deprecated functions
-  [`describe_plan()`](https://tidypolars.etiennebacher.com/reference/describe_plan.md)
-  and
-  [`describe_optimized_plan()`](https://tidypolars.etiennebacher.com/reference/describe_plan.md).
-  Those can be used in your project by following [this
+  deprecated functions `describe_plan()` and
+  `describe_optimized_plan()`. Those can be used in your project by
+  following [this
   article](https://flir.etiennebacher.com/articles/sharing_rules#for-users).
   Note that this requires `flir` 0.5.0.9000 or higher
   ([\#214](https://github.com/etiennebacher/tidypolars/issues/214)).
@@ -567,17 +577,14 @@
 
 ### Breaking changes and deprecations
 
-- [`describe()`](https://tidypolars.etiennebacher.com/reference/describe.md)
-  is deprecated as of tidypolars 0.10.0 and will be removed in a future
-  update. Use [`summary()`](https://rdrr.io/r/base/summary.html) with
-  the same arguments instead
+- `describe()` is deprecated as of tidypolars 0.10.0 and will be removed
+  in a future update. Use
+  [`summary()`](https://rdrr.io/r/base/summary.html) with the same
+  arguments instead
   ([\#127](https://github.com/etiennebacher/tidypolars/issues/127)).
 
-- [`describe_plan()`](https://tidypolars.etiennebacher.com/reference/describe_plan.md)
-  and
-  [`describe_optimized_plan()`](https://tidypolars.etiennebacher.com/reference/describe_plan.md)
-  are deprecated as of tidypolars 0.10.0 and will be removed in a future
-  update. Use
+- `describe_plan()` and `describe_optimized_plan()` are deprecated as of
+  tidypolars 0.10.0 and will be removed in a future update. Use
   [`explain()`](https://dplyr.tidyverse.org/reference/explain.html) with
   `optimized = TRUE/FALSE` instead
   ([\#128](https://github.com/etiennebacher/tidypolars/issues/128)).
@@ -1212,8 +1219,7 @@
 - Rename `pl_fetch()` to
   [`fetch()`](https://tidypolars.etiennebacher.com/reference/fetch.md).
 
-- New functions supported:
-  [`describe()`](https://tidypolars.etiennebacher.com/reference/describe.md),
+- New functions supported: `describe()`,
   [`sink_csv()`](https://tidypolars.etiennebacher.com/reference/sink_csv.md),
   [`slice_sample()`](https://dplyr.tidyverse.org/reference/slice.html).
 
