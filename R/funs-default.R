@@ -330,6 +330,71 @@ pl_case_when <- function(..., .data) {
   out
 }
 
+### Very similar to pl_case_when.
+### The main differences is that we have "x" as input, and that we put
+### $otherwise(x) instead of $otherwise(NA).
+pl_replace_when <- function(x, ..., .data) {
+  x <- enquo(x)
+  env <- env_from_dots(...)
+  expr_uses_col <- expr_uses_col_from_dots(...)
+  new_vars <- new_vars_from_dots(...)
+  caller <- caller_from_dots(...)
+  dots <- clean_dots(...)
+
+  if (!".default" %in% names(dots)) {
+    dots[[length(dots) + 1]] <- c(".default" = NA)
+  }
+  x <- translate_expr(
+    .data,
+    x,
+    new_vars = new_vars,
+    env = env,
+    caller = caller,
+    expr_uses_col = expr_uses_col
+  )
+
+  out <- NULL
+  for (y in seq_along(dots)) {
+    if (y == length(dots)) {
+      otw <- translate_expr(
+        .data,
+        dots[[y]],
+        new_vars = new_vars,
+        env = env,
+        caller = caller,
+        expr_uses_col = expr_uses_col
+      ) |>
+        as_polars_expr(as_lit = TRUE)
+      next
+    }
+    lhs <- translate_expr(
+      .data,
+      dots[[y]][[2]],
+      new_vars = new_vars,
+      env = env,
+      caller = caller,
+      expr_uses_col = expr_uses_col
+    ) |>
+      as_polars_expr(as_lit = TRUE)
+    rhs <- translate_expr(
+      .data,
+      dots[[y]][[3]],
+      new_vars = new_vars,
+      env = env,
+      caller = caller,
+      expr_uses_col = expr_uses_col
+    ) |>
+      as_polars_expr(as_lit = TRUE)
+
+    if (is.null(out)) {
+      out <- polars::pl$when(lhs)$then(rhs)
+    } else {
+      out <- out$when(lhs)$then(rhs)
+    }
+  }
+  out$otherwise(x)
+}
+
 pl_ceiling <- function(x, ...) {
   check_empty_dots(...)
   x$ceil()
