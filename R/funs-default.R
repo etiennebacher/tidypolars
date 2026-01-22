@@ -333,6 +333,7 @@ pl_case_when <- function(..., .data) {
 ### Very similar to pl_case_when.
 ### The main differences is that we have "x" as input, and that we put
 ### $otherwise(x) instead of $otherwise(NA).
+
 pl_replace_when <- function(x, ..., .data) {
   x <- enquo(x)
   env <- env_from_dots(...)
