@@ -319,6 +319,8 @@ out <- tribble(
   "`dplyr`", "`nth`",
   "`dplyr`", "`n_distinct`",
   "`dplyr`", "`row_number`",
+  "`dplyr`", "`when_all`",
+  "`dplyr`", "`when_any`",
   "`lubridate`", "`am`",
   "`lubridate`", "`day`",
   "`lubridate`", "`days`",
@@ -404,6 +406,8 @@ out <- tribble(
         "`tidypolars` cannot use several timezones in a single column, while `lubridate::force_tz()` can.",
       Package == "`dplyr`" & Function == "`row_number`" ~
         "Doesn't work when `x` is missing.",
+      Package == "`dplyr`" & Function %in% c("`when_all`", "`when_any`") ~
+        "Arguments `na_rm` and `size` not supported.",
       Package == "`stringr`" & Function == "`str_to_title`" ~
         "Letters following apostrophe will be capitalized as well, which differs from the `stringr` implementation.",
       Package == "`tools`" & Function == "`toTitleCase`" ~

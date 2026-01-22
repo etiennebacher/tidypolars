@@ -14,6 +14,11 @@
   results across different versions. This function doesn't have a replacement in
   `tidypolars` (#304).
 
+## New features
+
+* Add support for `dplyr::when_any()` and `dplyr::when_all()`, added in `dplyr`
+  1.2.0 (#306).
+
 # tidypolars 0.16.0
 
 `tidypolars` requires `polars` >= 1.8.0.

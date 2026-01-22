@@ -723,3 +723,63 @@ test_that("seq_len() works", {
     "must be a non-negative integer"
   )
 })
+
+test_that("dplyr::when_all() and dplyr::when_any() work", {
+  dat <- data.frame(
+    x = c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, NA, NA, NA),
+    y = c(TRUE, FALSE, NA, TRUE, FALSE, NA, TRUE, FALSE, NA)
+  )
+  dat_pl <- as_polars_df(dat)
+
+  expect_equal(
+    dat_pl |>
+      mutate(
+        any_propagate = when_any(x, y),
+        all_propagate = when_all(x, y),
+      ),
+    dat |>
+      mutate(
+        any_propagate = when_any(x, y),
+        all_propagate = when_all(x, y),
+      )
+  )
+
+  expect_snapshot(
+    dat_pl |> mutate(any_propagate = when_any(x, y, na_rm = TRUE)),
+    error = TRUE
+  )
+  expect_snapshot(
+    dat_pl |> mutate(any_propagate = when_any(x, y, size = TRUE)),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    dat_pl |> mutate(all_propagate = when_all(x, y, na_rm = TRUE)),
+    error = TRUE
+  )
+  expect_snapshot(
+    dat_pl |> mutate(all_propagate = when_all(x, y, size = TRUE)),
+    error = TRUE
+  )
+
+  # From dplyr examples, just to be sure it works fine
+  countries <- data.frame(
+    name = c("US", "CA", "PR", "RU", "US", NA, "CA", "PR", "RU"),
+    score = c(200, 100, 150, NA, 50, 100, 300, 250, 120)
+  )
+  countries_pl <- as_polars_df(countries)
+
+  expect_equal(
+    countries_pl |>
+      filter(when_any(
+        name %in% c("US", "CA") & between(score, 200, 300),
+        name %in% c("PR", "RU") & between(score, 100, 200)
+      )),
+    countries |>
+      as_polars_df() |>
+      filter(when_any(
+        name %in% c("US", "CA") & between(score, 200, 300),
+        name %in% c("PR", "RU") & between(score, 100, 200)
+      ))
+  )
+})
