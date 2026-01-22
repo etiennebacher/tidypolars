@@ -1,12 +1,18 @@
 # tidypolars (development version)
 
-## Breaking changes
+## Breaking changes and deprecations
 
-* The following functions (deprecated since 0.10.0, August 2024) are now removed:
+* The following functions (deprecated since 0.10.0, August 2024) are now removed
+  (#303):
 
   - `describe()`, use `summary()` instead.
   - `describe_plan()` and `describe_optimized_plan()`, use
     `explain(optimized = TRUE/FALSE)` instead.
+
+* `make_unique_id()` is deprecated and will be removed in a future version. This
+  is because the underlying Polars function isn't guaranteed to give the same
+  results across different versions. This function doesn't have a replacement in
+  `tidypolars` (#304).
 
 # tidypolars 0.16.0
 

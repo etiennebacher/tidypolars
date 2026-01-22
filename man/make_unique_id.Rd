@@ -15,12 +15,9 @@ column numbers, select helpers, etc.}
 \item{new_col}{Name of the new column}
 }
 \description{
-Create a column with unique id per row values
-}
-\examples{
-\dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
-mtcars |>
-  as_polars_df() |>
-  make_unique_id(am, gear)
-\dontshow{\}) # examplesIf}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+The underlying Polars function isn't guaranteed to give the same results
+across different versions. Therefore, this function will be removed and has
+no replacement in \code{tidypolars}.
 }
