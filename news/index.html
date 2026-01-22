@@ -40,14 +40,15 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
 <div class="section level3">
-<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<h3 id="breaking-changes-and-deprecations-development-version">Breaking changes and deprecations<a class="anchor" aria-label="anchor" href="#breaking-changes-and-deprecations-development-version"></a></h3>
 <ul><li>
-<p>The following functions (deprecated since 0.10.0, August 2024) are now removed:</p>
+<p>The following functions (deprecated since 0.10.0, August 2024) are now removed (<a href="https://github.com/etiennebacher/tidypolars/issues/303" class="external-link">#303</a>):</p>
 <ul><li>
 <code>describe()</code>, use <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> instead.</li>
 <li>
 <code>describe_plan()</code> and <code>describe_optimized_plan()</code>, use <code>explain(optimized = TRUE/FALSE)</code> instead.</li>
 </ul></li>
+<li><p><code><a href="../reference/make_unique_id.html">make_unique_id()</a></code> is deprecated and will be removed in a future version. This is because the underlying Polars function isn’t guaranteed to give the same results across different versions. This function doesn’t have a replacement in <code>tidypolars</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/304" class="external-link">#304</a>).</p></li>
 </ul></div>
 </div>
     <div class="section level2">

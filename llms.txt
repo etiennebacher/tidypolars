@@ -405,7 +405,7 @@ Other Polars-specific functions (most are deprecated).
   Fetch `n` rows of a LazyFrame
 
 - [`make_unique_id()`](https://tidypolars.etiennebacher.com/reference/make_unique_id.md)
-  : Create a column with unique id per row values
+  **\[deprecated\]** : Create a column with unique id per row values
 
 - [`partition_by()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
   [`partition_by_key()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
