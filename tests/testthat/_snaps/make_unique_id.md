@@ -1,16 +1,29 @@
-# can't overwrite existing column
+# make_unique_id() is deprecated
 
     Code
-      make_unique_id(test2, am, gear)
+      make_unique_id(as_polars_df(mtcars))
     Condition
-      Error in `make_unique_id()`:
-      ! Column "hash" already exists. Use a new name with the argument `new_col`.
-
----
-
-    Code
-      make_unique_id(mtcars)
-    Condition
-      Error in `make_unique_id()`:
-      ! The data must be a Polars DataFrame or LazyFrame.
+      Warning:
+      `make_unique_id()` was deprecated in tidypolars 0.16.0.
+      i This has no guarantee of giving the same results across Polars versions.
+      i It has no replacement in `tidypolars`.
+    Output
+      shape: (32, 12)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬──────────────────────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ hash                 │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---                  │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ u64                  │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪══════════════════════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 10018161497052856355 │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 2499615642872460999  │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 13182655700412918917 │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ 9789002779799054054  │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ 16379647180457243898 │
+      │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …                    │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ 9851473567428847827  │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ 1497037129039422966  │
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ 7364575201138973926  │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ 17659894658373094728 │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ 664913387449153964   │
+      └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴──────────────────────┘
 
