@@ -1,3 +1,13 @@
+# tidypolars (development version)
+
+## Breaking changes
+
+* The following functions (deprecated since 0.10.0, August 2024) are now removed:
+
+  - `describe()`, use `summary()` instead.
+  - `describe_plan()` and `describe_optimized_plan()`, use
+    `explain(optimized = TRUE/FALSE)` instead.
+
 # tidypolars 0.16.0
 
 `tidypolars` requires `polars` >= 1.8.0.
