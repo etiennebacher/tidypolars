@@ -600,6 +600,97 @@ pl_rank <- function(x, ...) {
   x$rank()
 }
 
+pl_recode_values_dplyr <- function(
+  x,
+  ...,
+  from = NULL,
+  to = NULL,
+  default = NULL,
+  unmatched,
+  ptype
+) {
+  default <- default %||% NA
+  env <- env_from_dots(...)
+  dots <- clean_dots(...)
+  if (length(dots) > 0 && (!is.null(from) || !is.null(to))) {
+    cli_abort(
+      "Can't supply both {.arg ...} and {.arg from} / {.arg to}.",
+      call = env
+    )
+  }
+  if (!is.null(from) && is.null(to)) {
+    cli_abort(
+      "Specified {.arg from} but not {.arg to}.",
+      call = env
+    )
+  }
+  if (is.null(from) && !is.null(to)) {
+    cli_abort(
+      "Specified {.arg to} but not {.arg from}.",
+      call = env
+    )
+  }
+  if (!missing(unmatched)) {
+    cli_abort(
+      "Argument {.code unmatched} is not supported by {.pkg tidypolars}.",
+      call = env
+    )
+  }
+  if (!missing(ptype)) {
+    cli_abort(
+      "Argument {.code ptype} is not supported by {.pkg tidypolars}.",
+      call = env
+    )
+  }
+
+  if (length(dots) > 0) {
+    from <- lapply(dots, `[[`, 1) |>
+      unlist(use.names = FALSE)
+    to <- lapply(dots, `[[`, 2) |>
+      unlist(use.names = FALSE)
+  }
+
+  x$replace_strict(
+    old = from,
+    new = to,
+    default = default,
+    return_dtype = pl$dtype_of(as_polars_expr(default, as_lit = TRUE))
+  )
+}
+
+pl_replace_values_dplyr <- function(x, ..., from = NULL, to = NULL) {
+  env <- env_from_dots(...)
+  dots <- clean_dots(...)
+  if (length(dots) > 0 && (!is.null(from) || !is.null(to))) {
+    cli_abort(
+      "Can't supply both {.arg ...} and {.arg from} / {.arg to}.",
+      call = env
+    )
+  }
+
+  if (!is.null(from) && is.null(to)) {
+    cli_abort(
+      "Specified {.arg from} but not {.arg to}.",
+      call = env
+    )
+  }
+  if (is.null(from) && !is.null(to)) {
+    cli_abort(
+      "Specified {.arg to} but not {.arg from}.",
+      call = env
+    )
+  }
+
+  if (length(dots) > 0) {
+    from <- lapply(dots, `[[`, 1) |>
+      unlist(use.names = FALSE)
+    to <- lapply(dots, `[[`, 2) |>
+      unlist(use.names = FALSE)
+  }
+
+  x$replace(old = from, new = to)
+}
+
 pl_replace_na_tidyr <- function(data, replace, ...) {
   check_empty_dots(...)
   data$fill_null(replace)

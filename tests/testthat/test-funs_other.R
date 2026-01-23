@@ -723,3 +723,38 @@ test_that("seq_len() works", {
     "must be a non-negative integer"
   )
 })
+
+test_that("replace_values() works", {
+  dat <- data.frame(
+    x = c("NC", "NYC", "CA", NA, "NYC", "Unknown")
+  )
+  dat_pl <- as_polars_df(dat)
+
+  expect_equal(
+    dat_pl |>
+      mutate(
+        y = replace_values(x, "NYC" ~ "NY", "Unknown" ~ "a")
+      ),
+    dat |>
+      mutate(
+        y = replace_values(x, "NYC" ~ "NY", "Unknown" ~ "a")
+      )
+  )
+
+  expect_snapshot(
+    mutate(dat_pl, y = replace_values(x, "NYC" ~ "NY", from = "a")),
+    error = TRUE
+  )
+  expect_snapshot(
+    mutate(dat_pl, y = replace_values(x, "NYC" ~ "NY", to = "a")),
+    error = TRUE
+  )
+  expect_snapshot(
+    mutate(dat_pl, y = replace_values(x, from = "a")),
+    error = TRUE
+  )
+  expect_snapshot(
+    mutate(dat_pl, y = replace_values(x, to = "a")),
+    error = TRUE
+  )
+})

@@ -451,6 +451,19 @@ translate <- function(
           args[["__tidypolars__expr_uses_col"]] <- expr_uses_col
           return(do.call(pl_case_when, args))
         },
+        "~" = {
+          args <- list(expr[[2]], expr[[3]])
+          return(lapply(
+            args,
+            translate,
+            .data = .data,
+            new_vars = new_vars,
+            env = env,
+            caller = caller,
+            call_is_function = call_is_function,
+            expr_uses_col = expr_uses_col
+          ))
+        },
         "c" = {
           expr[[1]] <- NULL
           if (

@@ -728,4 +728,39 @@ test_that("seq_len() works", {
   )
 })
 
+test_that("replace_values() works", {
+  dat <- data.frame(
+    x = c("NC", "NYC", "CA", NA, "NYC", "Unknown")
+  )
+  dat_pl <- as_polars_lf(dat)
+
+  expect_equal_lazy(
+    dat_pl |>
+      mutate(
+        y = replace_values(x, "NYC" ~ "NY", "Unknown" ~ "a")
+      ),
+    dat |>
+      mutate(
+        y = replace_values(x, "NYC" ~ "NY", "Unknown" ~ "a")
+      )
+  )
+
+  expect_snapshot_lazy(
+    mutate(dat_pl, y = replace_values(x, "NYC" ~ "NY", from = "a")),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    mutate(dat_pl, y = replace_values(x, "NYC" ~ "NY", to = "a")),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    mutate(dat_pl, y = replace_values(x, from = "a")),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    mutate(dat_pl, y = replace_values(x, to = "a")),
+    error = TRUE
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

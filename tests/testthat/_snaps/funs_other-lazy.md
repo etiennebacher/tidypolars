@@ -56,3 +56,39 @@
       
       Error originated in expression: '[(col("x")) == (Series[literal])]'
 
+# replace_values() works
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `replace_values()` in Polars.
+      x Can't supply both `...` and `from` / `to`.
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `replace_values()` in Polars.
+      x Can't supply both `...` and `from` / `to`.
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `replace_values()` in Polars.
+      x Specified `from` but not `to`.
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `replace_values()` in Polars.
+      x Specified `to` but not `from`.
+
