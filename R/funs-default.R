@@ -330,11 +330,6 @@ pl_rank <- function(x, ...) {
   x$rank()
 }
 
-pl_replace_na_tidyr <- function(data, replace, ...) {
-  check_empty_dots(...)
-  data$fill_null(replace)
-}
-
 pl_rev <- function(x) {
   x$reverse()
 }
