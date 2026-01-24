@@ -77,8 +77,11 @@ reference:
       - pivot_wider.polars_data_frame
       - replace_na.polars_data_frame
       - separate.polars_data_frame
+      - separate_longer_delim_polars
+      - separate_longer_position_polars
       - uncount.polars_data_frame
       - unite.polars_data_frame
+      - unnest_longer_polars
 
   - title: Other methods
     desc: |
@@ -90,9 +93,11 @@ reference:
   - title: Other Polars functions
     desc: Other Polars-specific functions (most are deprecated).
     contents:
-      - describe
-      - describe_plan
-      - describe_optimized_plan
       - fetch
       - make_unique_id
       - partitioned_output
+
+  - title: Advanced
+    desc: Functions for very specific usage.
+    contents:
+      - .tp

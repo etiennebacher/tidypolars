@@ -1,3 +1,39 @@
+# weekday works
+
+    Code
+      mutate(test, foo = wday(YMD, week_start = 0))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `wday()` in Polars.
+      x `week_start` must be a whole number between 1 and 7, not the number 0.
+
+---
+
+    Code
+      mutate(test, foo = wday(YMD, week_start = 8))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `wday()` in Polars.
+      x `week_start` must be a whole number between 1 and 7, not the number 8.
+
+---
+
+    Code
+      mutate(test, foo = wday(YMD, week_start = 1.5))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `wday()` in Polars.
+      x `week_start` must be a whole number, not the number 1.5.
+
+---
+
+    Code
+      mutate(test, foo = wday(YMD, week_start = "Monday"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `wday()` in Polars.
+      x `week_start` must be a whole number, not the string "Monday".
+
 # errors for durations
 
     Code

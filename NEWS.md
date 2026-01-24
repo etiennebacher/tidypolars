@@ -1,9 +1,75 @@
-# tidypolars (development)
+# tidypolars (development version)
+
+## Breaking changes and deprecations
+
+* The following functions (deprecated since 0.10.0, August 2024) are now removed
+  (#303):
+
+  - `describe()`, use `summary()` instead.
+  - `describe_plan()` and `describe_optimized_plan()`, use
+    `explain(optimized = TRUE/FALSE)` instead.
+
+* `make_unique_id()` is deprecated and will be removed in a future version. This
+  is because the underlying Polars function isn't guaranteed to give the same
+  results across different versions. This function doesn't have a replacement in
+  `tidypolars` (#304).
+
+# tidypolars 0.16.0
+
+`tidypolars` requires `polars` >= 1.8.0.
+
+## New features
+
+* New function `unnest_longer_polars()` to unnest list-columns into rows,
+  equivalent to `tidyr::unnest_longer()`. It supports the parameters `values_to`,
+  `indices_to`, `keep_empty`, as well as the `{col}` templates for column
+  naming. (#212, #281, @Yousa-Mirage)
+
+* New functions `separate_longer_delim_polars()` and `separate_longer_position_polars()`
+  to split string columns into rows by delimiter or fixed width, equivalent to
+  `tidyr::separate_longer_delim()` and `tidyr::separate_longer_position()`.
+  (#57, #285, @Yousa-Mirage)
+
+* New argument `.by` in `fill()` (this was introduced in `tidyr` 1.3.2). (#283)
+
+* `wday()` now supports arbitrary `week_start` values (1~7), allowing for
+  custom week start days. (#292, @Yousa-Mirage)
+
+* Add support for argument `type` in `nchar` (#288).
+
+* It is now possible to use translated functions without loading the package
+  they come from. For example, the following code can run without loading
+  `stringr` in the session:
+
+  ```r
+  data |>
+    mutate(y = .tp$str_extract_stringr(x, "\\d+"))
+  ```
+
+  This can be useful to benefit from `polars` speed while using the interface of
+  `tidyverse` functions, without adding additional `tidyverse` dependencies. This
+  may be useful to avoid installing extra dependencies, but it is not the
+  recommended usage because it makes it harder to convert `tidypolars` code to
+  run with other `tidyverse`-based backends. More information with `?.tp` (#293).
+
+* New argument `mkdir` in `write_parquet_polars()` (this already existed in
+  `sink_parquet()`). (#298)
+
+* New (experimental) function `partition_by()` to write partitioned output in
+  `sink_*()` and `write_*_polars()`. The following functions are deprecated and
+  will be removed in a future release (#299):
+
+  - `partition_by_key()` can be replaced with `partition_by(key =)`
+  - `partition_by_max_size()` can be replaced with `partition_by(max_rows_per_file =)`
 
 ## Changes
 
 * `collect()` now returns a `tibble` instead of a `data.frame`, for consistency
   with other `collect()` methods (#273).
+
+## Bug fixes
+
+* `arrange()` now works with literal values, such as `arrange(x, 1:2)` (#296).
 
 ## Documentation
 

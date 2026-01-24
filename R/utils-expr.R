@@ -300,6 +300,27 @@ translate <- function(
         name <- paste0(name[[2]], "::", name[[3]])
       }
 
+      # e.g. `.tp$str_extract_stringr()`.
+      if (length(name) == 3 && name[[1]] == "$" && name[[2]] == ".tp") {
+        name <- paste0("pl_", name[[3]])
+        args <- call_args(expr)
+        args <- lapply(
+          args,
+          translate,
+          .data = .data,
+          new_vars = new_vars,
+          env = env,
+          caller = caller,
+          call_is_function = call_is_function,
+          expr_uses_col = expr_uses_col
+        )
+        args[["__tidypolars__new_vars"]] <- as.list(new_vars)
+        args[["__tidypolars__env"]] <- env
+        args[["__tidypolars__caller"]] <- caller
+        args[["__tidypolars__expr_uses_col"]] <- expr_uses_col
+        return(do.call(name, args))
+      }
+
       switch(
         name,
         "[" = {
@@ -408,33 +429,25 @@ translate <- function(
             )
           )
         },
-        # these two case_ functions are handled separately from other funs
-        # because we don't want to evaluate the conditions inside too soon
-        "dplyr::case_match" = ,
-        "case_match" = {
-          args <- call_args(expr)
-          args$.data <- .data
-          args[["__tidypolars__new_vars"]] <- as.list(new_vars)
-          args[["__tidypolars__env"]] <- env
-          args[["__tidypolars__caller"]] <- caller
-          args[["__tidypolars__expr_uses_col"]] <- expr_uses_col
-          return(do.call(pl_case_match, args))
-        },
-        "dplyr::case_when" = ,
-        "case_when" = {
-          args <- call_args(expr)
-          args$.data <- .data
-          args[["__tidypolars__new_vars"]] <- as.list(new_vars)
-          args[["__tidypolars__env"]] <- env
-          args[["__tidypolars__caller"]] <- caller
-          args[["__tidypolars__expr_uses_col"]] <- expr_uses_col
-          return(do.call(pl_case_when, args))
+        "~" = {
+          args <- list(expr[[2]], expr[[3]])
+          args <- lapply(
+            args,
+            translate,
+            .data = .data,
+            new_vars = new_vars,
+            env = env,
+            caller = caller,
+            call_is_function = call_is_function,
+            expr_uses_col = expr_uses_col
+          )
+          return(args)
         },
         "c" = {
           expr[[1]] <- NULL
           if (
             # we may pass a named vector in str_replace_all() for instance
-            !is.null(names(expr)) |
+            !is.null(names(expr)) ||
               # we may pass a vector of column names
               any(vapply(expr, is.symbol, FUN.VALUE = logical(1L)))
           ) {
@@ -745,7 +758,10 @@ translate <- function(
           }
           # Only suggest opening an issue for functions coming from other pkgs,
           # not for custom functions.
-          if (!is.null(fn_names$pkg) || grepl("::", fn_names$orig_name)) {
+          if (
+            !is.null(fn_names$pkg) ||
+              grepl("::", fn_names$orig_name, fixed = TRUE)
+          ) {
             msg <- c(
               msg,
               i = "You can ask for it to be translated here: {.url https://github.com/etiennebacher/tidypolars/issues}."
@@ -926,7 +942,7 @@ add_pkg_suffix <- function(name, known_ops, user_defined) {
 
   fn <- name
 
-  if (grepl("::", fn)) {
+  if (grepl("::", fn, fixed = TRUE)) {
     pkg <- gsub("::.*", "", fn)
     fn <- gsub(".*::", "", fn)
   } else {
@@ -944,7 +960,7 @@ add_pkg_suffix <- function(name, known_ops, user_defined) {
     name_to_eval <- paste0("pl_", fn, "_", pkg)
   }
 
-  if (grepl("::", name)) {
+  if (grepl("::", name, fixed = TRUE)) {
     # Don't store the pkg name if it's explicitly specified.
     # Don't do this too early because we need pkg when building the function to
     # eval.

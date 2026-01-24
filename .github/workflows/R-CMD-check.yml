@@ -1,11 +1,11 @@
-# Run CI for R using https://eddelbuettel.github.io/r-ci/
-
-name: R-CMD-check
+# For help debugging build failures open an issue on the RStudio community with the 'github-actions' tag.
+# https://community.rstudio.com/new-topic?category=Package%20development&tags=github-actions
 
 on:
   push:
     branches: [main, master]
     paths:
+      - .github/workflows/R-CMD-check.yml
       - .Rbuildignore
       - R/**
       - tests/**
@@ -15,6 +15,7 @@ on:
   pull_request:
     branches: [main, master]
     paths:
+      - .github/workflows/R-CMD-check.yml
       - .Rbuildignore
       - R/**
       - tests/**
@@ -22,50 +23,43 @@ on:
       - DESCRIPTION
       - NAMESPACE
 
+name: R-CMD-check
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true
 
-env:
-  USE_BSPM: "true"
-  _R_CHECK_FORCE_SUGGESTS_: "false"
-   # Otherwise default is to use "--no-build-vignettes --no-manual --as-cran"
-  R_BUILD_ARGS: "--no-manual"
-  R_CHECK_ARGS: "--no-manual --no-vignettes --as-cran"
-  WARNINGS_ARE_ERRORS: "true"
-  R_GH: true
-  GITHUB_PAT: ${{ secrets.COVR_GH_PAT }}
-
 jobs:
-  ci:
-    strategy:
-      matrix:
-        include:
-          - {os: macOS-latest,   r: 'release'}
-          - {os: ubuntu-latest,  r: 'release'}
-
+  R-CMD-check:
     runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            platform: "linux"
+          - os: macos-latest
+            platform: "mac"
+          - os: windows-latest
+            platform: "windows"
 
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      # TODO: this shouldn't be necessary but it prevents occasional failures on
+      # Windows, #291
+      TESTTHAT_CPUS: ${{ matrix.os == 'windows-latest' && '1' || '2' }}
     steps:
       - uses: actions/checkout@v4
-
       - uses: r-lib/actions/setup-pandoc@v2
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+          extra-repositories: 'https://community.r-multiverse.org'
 
-      - name: Setup
-        uses: eddelbuettel/github-actions/r-ci-setup@master
+      - name: Install R dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
 
-      - name: Bootstrap
-        run: ./run.sh bootstrap
-
-      - name: Install r-polars
-        run: |
-          Sys.setenv(NOT_CRAN = "true") # Enable installation with pre-built Rust library binary, or enable Rust caching
-          install.packages("polars", repos = c("https://community.r-multiverse.org", getOption("repos")))
-
-        shell: Rscript {0}
-
-      - name: Dependencies
-        run: ./run.sh install_all
-
-      - name: Test
-        run: ./run.sh run_tests
+      - uses: r-lib/actions/check-r-package@v2

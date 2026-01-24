@@ -1,7 +1,7 @@
 Package: tidypolars
 Type: Package
 Title: More Efficient Tidyverse Code, Using Polars in the Background
-Version: 0.15.1
+Version: 0.16.0
 Authors@R:
     c(person(given = "Etienne",
              family = "Bacher",
@@ -11,7 +11,11 @@ Authors@R:
              family = "Tsyplenkov",
              role = "ctb",
              email = "atsyplenkov@fastmail.com",
-             comment = c(ORCID = "0000-0003-4144-8402")))
+             comment = c(ORCID = "0000-0003-4144-8402")),
+      person(given = "Yousa Mirage",
+             role = "ctb",
+             email = "Yousa-Mirage@foxmail.com",
+             comment = c(ORCID = "0009-0004-5329-1881", GitHub = "Yousa-Mirage")))
 Description: Polars is a cross-language tool for manipulating very large data.
     However, one drawback is that the R implementation has a syntax that
     will look odd to many R users who are not used to Python syntax. The objective of tidypolars is to improve the ease-of-use of Polars in R by

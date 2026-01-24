@@ -39,6 +39,7 @@
 #' @param null_values `r lifecycle::badge("deprecated")` Deprecated, use
 #' `null_value` instead.
 #'
+#' @inherit sink_parquet details
 #' @return The input DataFrame.
 #' @export
 #'
@@ -124,6 +125,7 @@ write_csv_polars <- function(
 #' the DataFrame in memory - the size of the output file may differ depending
 #' on the file format / compression.
 #'
+#' @inherit sink_parquet details
 #' @inherit write_csv_polars return
 #' @export
 #'
@@ -144,7 +146,8 @@ write_parquet_polars <- function(
   row_group_size = NULL,
   data_page_size = NULL,
   partition_by = NULL,
-  partition_chunk_size_bytes = 4294967296
+  partition_chunk_size_bytes = 4294967296,
+  mkdir = FALSE
 ) {
   if (!is_polars_df(.data)) {
     cli_abort("{.fn write_parquet_polars} can only be used on a DataFrame.")
@@ -164,7 +167,8 @@ write_parquet_polars <- function(
     row_group_size = row_group_size,
     data_page_size = data_page_size,
     partition_by = partition_by,
-    partition_chunk_size_bytes = partition_chunk_size_bytes
+    partition_chunk_size_bytes = partition_chunk_size_bytes,
+    mkdir = mkdir
   )
 }
 
@@ -172,6 +176,7 @@ write_parquet_polars <- function(
 #'
 #' @inheritParams write_csv_polars
 #'
+#' @inherit sink_parquet details
 #' @inherit write_csv_polars return
 #' @export
 #'
@@ -258,6 +263,7 @@ write_json_polars <- function(
 #' @param future `r lifecycle::badge("deprecated")` Deprecated, use
 #' `compat_level` instead.
 #'
+#' @inherit sink_parquet details
 #' @inherit write_csv_polars return
 #' @export
 write_ipc_polars <- function(

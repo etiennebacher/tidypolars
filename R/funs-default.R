@@ -51,135 +51,6 @@ pl_any <- function(..., na.rm = FALSE) {
   }
 }
 
-pl_desc_dplyr <- function(x) {
-  attr(x, "descending") <- TRUE
-  x
-}
-
-pl_mean <- function(x, na.rm = FALSE, ...) {
-  check_empty_dots(...)
-  x <- check_rowwise(x, ...)
-  if (isTRUE(x$is_rowwise)) {
-    if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$mean())$explode()
-    } else {
-      x$expr$list$eval(
-        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(
-          pl$element()$mean()
-        )
-      )$explode()
-    }
-  } else {
-    if (isTRUE(na.rm)) {
-      x$expr$mean()
-    } else {
-      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$mean())
-    }
-  }
-}
-
-pl_median <- function(x, na.rm = FALSE, ...) {
-  check_empty_dots(...)
-  x <- check_rowwise(x, ...)
-  if (isTRUE(x$is_rowwise)) {
-    if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$median())$explode()
-    } else {
-      x$expr$list$eval(
-        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(
-          pl$element()$median()
-        )
-      )$explode()
-    }
-  } else {
-    if (isTRUE(na.rm)) {
-      x$expr$median()
-    } else {
-      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$median())
-    }
-  }
-}
-
-pl_min <- function(x, na.rm = FALSE, ...) {
-  check_empty_dots(...)
-  x <- check_rowwise(x, ...)
-  if (isTRUE(x$is_rowwise)) {
-    if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$min())$explode()
-    } else {
-      x$expr$list$eval(
-        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(pl$element()$min())
-      )$explode()
-    }
-  } else {
-    if (isTRUE(na.rm)) {
-      x$expr$min()
-    } else {
-      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$min())
-    }
-  }
-}
-
-pl_max <- function(x, na.rm = FALSE, ...) {
-  check_empty_dots(...)
-  x <- check_rowwise(x, ...)
-  if (isTRUE(x$is_rowwise)) {
-    if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$max())$explode()
-    } else {
-      x$expr$list$eval(
-        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(pl$element()$max())
-      )$explode()
-    }
-  } else {
-    if (isTRUE(na.rm)) {
-      x$expr$max()
-    } else {
-      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$max())
-    }
-  }
-}
-
-pl_sum <- function(..., na.rm = FALSE) {
-  x <- check_rowwise_dots(...)
-  if (isTRUE(x$is_rowwise)) {
-    if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$sum())$explode()
-    } else {
-      x$expr$list$eval(
-        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(pl$element()$sum())
-      )$explode()
-    }
-  } else {
-    if (isTRUE(na.rm)) {
-      x$expr$sum()
-    } else {
-      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$sum())
-    }
-  }
-}
-
-pl_sd <- function(x, na.rm = FALSE) {
-  x <- check_rowwise(x)
-  if (isTRUE(x$is_rowwise)) {
-    if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$std(ddof = 1))$explode()
-    } else {
-      x$expr$list$eval(
-        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(
-          pl$element()$std(ddof = 1)
-        )
-      )$explode()
-    }
-  } else {
-    if (isTRUE(na.rm)) {
-      x$expr$std(ddof = 1)
-    } else {
-      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$std(ddof = 1))
-    }
-  }
-}
-
 pl_floor <- function(x, ...) {
   check_empty_dots(...)
   x$floor()
@@ -215,142 +86,9 @@ pl_atanh <- function(x, ...) {
   x$arctanh()
 }
 
-pl_between_dplyr <- function(x, left, right, ...) {
-  check_empty_dots(...)
-  x$is_between(lower_bound = left, upper_bound = right, closed = "both")
-}
-
-pl_case_match <- function(x, ..., .data) {
-  env <- env_from_dots(...)
-  expr_uses_col <- expr_uses_col_from_dots(...)
-  new_vars <- new_vars_from_dots(...)
-  caller <- caller_from_dots(...)
-  dots <- clean_dots(...)
-
-  x <- polars::pl$col(deparse(substitute(x)))
-
-  if (!".default" %in% names(dots)) {
-    dots[[length(dots) + 1]] <- c(".default" = NA)
-  }
-
-  out <- NULL
-  for (y in seq_along(dots)) {
-    if (y == length(dots)) {
-      otw <- translate_expr(
-        .data,
-        dots[[y]],
-        new_vars = new_vars,
-        env = env,
-        caller = caller,
-        expr_uses_col = expr_uses_col
-      ) |>
-        as_polars_expr(as_lit = TRUE)
-      out <- out$otherwise(otw)
-      next
-    }
-    lhs <- translate_expr(
-      .data,
-      dots[[y]][[2]],
-      new_vars = new_vars,
-      env = env,
-      caller = caller,
-      expr_uses_col = expr_uses_col
-    ) |>
-      as_polars_expr(as_lit = TRUE)
-    rhs <- translate_expr(
-      .data,
-      dots[[y]][[3]],
-      new_vars = new_vars,
-      env = env,
-      caller = caller,
-      expr_uses_col = expr_uses_col
-    ) |>
-      as_polars_expr(as_lit = TRUE)
-    if (is.null(out)) {
-      out <- polars::pl$when(x$is_in(lhs$implode()))$then(rhs)
-    } else {
-      out <- out$when(x$is_in(lhs$implode()))$then(rhs)
-    }
-  }
-
-  out
-}
-
-pl_case_when <- function(..., .data) {
-  env <- env_from_dots(...)
-  expr_uses_col <- expr_uses_col_from_dots(...)
-  new_vars <- new_vars_from_dots(...)
-  caller <- caller_from_dots(...)
-  dots <- clean_dots(...)
-
-  if (!".default" %in% names(dots)) {
-    dots[[length(dots) + 1]] <- c(".default" = NA)
-  }
-
-  out <- NULL
-  for (y in seq_along(dots)) {
-    if (y == length(dots)) {
-      otw <- translate_expr(
-        .data,
-        dots[[y]],
-        new_vars = new_vars,
-        env = env,
-        caller = caller,
-        expr_uses_col = expr_uses_col
-      ) |>
-        as_polars_expr(as_lit = TRUE)
-      out <- out$otherwise(otw)
-      next
-    }
-    lhs <- translate_expr(
-      .data,
-      dots[[y]][[2]],
-      new_vars = new_vars,
-      env = env,
-      caller = caller,
-      expr_uses_col = expr_uses_col
-    ) |>
-      as_polars_expr(as_lit = TRUE)
-    rhs <- translate_expr(
-      .data,
-      dots[[y]][[3]],
-      new_vars = new_vars,
-      env = env,
-      caller = caller,
-      expr_uses_col = expr_uses_col
-    ) |>
-      as_polars_expr(as_lit = TRUE)
-
-    if (is.null(out)) {
-      out <- polars::pl$when(lhs)$then(rhs)
-    } else {
-      out <- out$when(lhs)$then(rhs)
-    }
-  }
-  out
-}
-
 pl_ceiling <- function(x, ...) {
   check_empty_dots(...)
   x$ceil()
-}
-
-pl_coalesce_dplyr <- function(..., default = NULL) {
-  # pl$coalesce() doesn't accept a list
-  call2(pl$coalesce, !!!clean_dots(...), default) |> eval_bare()
-}
-
-pl_consecutive_id_dplyr <- function(...) {
-  dots <- clean_dots(...)
-  env <- env_from_dots(...)
-  if (length(dots) == 0) {
-    cli_abort(
-      "{.code ...} is absent, but must be supplied.",
-      call = env
-    )
-  }
-  dots <- pl$struct(!!!dots)
-  dots$rle_id() + 1
 }
 
 pl_cos <- function(x, ...) {
@@ -383,10 +121,6 @@ pl_cumsum <- function(x, ...) {
   x$cum_sum()
 }
 
-pl_dense_rank_dplyr <- function(x) {
-  x$rank(method = "dense")
-}
-
 # TODO: this is not tested anymore because it requires reframe():
 # - the number of output values is not the same as input values, so we can't use
 #   mutate()
@@ -412,11 +146,6 @@ pl_duplicated <- function(x, ...) {
 pl_exp <- function(x, ...) {
   check_empty_dots(...)
   x$exp()
-}
-
-pl_first_dplyr <- function(x, ...) {
-  check_empty_dots(...)
-  x$first()
 }
 
 pl_ifelse <- function(test, yes, no, .data, ...) {
@@ -493,37 +222,6 @@ pl_kurtosis <- function(x, ...) {
   x$kurtosis()
 }
 
-pl_lag_dplyr <- function(x, n = 1, default = NULL, order_by = NULL, ...) {
-  check_empty_dots(...)
-  if (!is.null(default)) {
-    out <- x$shift(n, fill_value = default)
-  } else {
-    out <- x$shift(n)
-  }
-  if (!is.null(order_by)) {
-    attr(out, "order_by") <- order_by
-  }
-  out
-}
-
-pl_last_dplyr <- function(x, ...) {
-  check_empty_dots(...)
-  x$last()
-}
-
-pl_lead_dplyr <- function(x, n = 1, default = NULL, order_by = NULL, ...) {
-  check_empty_dots(...)
-  if (!is.null(default)) {
-    out <- x$shift(-n, fill_value = default)
-  } else {
-    out <- x$shift(-n)
-  }
-  if (!is.null(order_by)) {
-    attr(out, "order_by") <- order_by
-  }
-  out
-}
-
 pl_length <- function(x) {
   x$len()
 }
@@ -538,71 +236,98 @@ pl_log10 <- function(x, ...) {
   x$log10()
 }
 
+pl_max <- function(x, na.rm = FALSE, ...) {
+  check_empty_dots(...)
+  x <- check_rowwise(x, ...)
+  if (isTRUE(x$is_rowwise)) {
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$max())$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(pl$element()$max())
+      )$explode()
+    }
+  } else {
+    if (isTRUE(na.rm)) {
+      x$expr$max()
+    } else {
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$max())
+    }
+  }
+}
+
+pl_mean <- function(x, na.rm = FALSE, ...) {
+  check_empty_dots(...)
+  x <- check_rowwise(x, ...)
+  if (isTRUE(x$is_rowwise)) {
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$mean())$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(
+          pl$element()$mean()
+        )
+      )$explode()
+    }
+  } else {
+    if (isTRUE(na.rm)) {
+      x$expr$mean()
+    } else {
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$mean())
+    }
+  }
+}
+
+pl_median <- function(x, na.rm = FALSE, ...) {
+  check_empty_dots(...)
+  x <- check_rowwise(x, ...)
+  if (isTRUE(x$is_rowwise)) {
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$median())$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(
+          pl$element()$median()
+        )
+      )$explode()
+    }
+  } else {
+    if (isTRUE(na.rm)) {
+      x$expr$median()
+    } else {
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$median())
+    }
+  }
+}
+
+pl_min <- function(x, na.rm = FALSE, ...) {
+  check_empty_dots(...)
+  x <- check_rowwise(x, ...)
+  if (isTRUE(x$is_rowwise)) {
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$min())$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(pl$element()$min())
+      )$explode()
+    }
+  } else {
+    if (isTRUE(na.rm)) {
+      x$expr$min()
+    } else {
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$min())
+    }
+  }
+}
+
 pl_mode <- function(x, ...) {
   check_empty_dots(...)
   x$mode()
 }
 
-pl_min_rank_dplyr <- function(x) {
-  x$rank(method = "min")
-}
-
-pl_n_dplyr <- function(...) {
-  check_empty_dots()
-  pl$len()
-}
-
-pl_na_if_dplyr <- function(x, y) {
-  if (length(y) == 1 && !is_polars_expr(y) && is.na(y)) {
-    pl$when(x$is_null())$then(pl$lit(NA))$otherwise(x)
-  } else {
-    pl$when(x == y)$then(pl$lit(NA))$otherwise(x)
-  }
-}
-
-pl_n_distinct_dplyr <- function(..., na.rm = FALSE) {
-  dots <- clean_dots(...)
-  if (length(dots) == 0) {
-    cli_abort(
-      "{.code ...} is absent, but must be supplied.",
-      call = env_from_dots(...)
-    )
-  }
-  if (isTRUE(na.rm)) {
-    # https://stackoverflow.com/a/78888889/11598948
-    check_is_null <- lapply(dots, function(x) x$is_null())
-    check_any_is_null <- call2(pl$any_horizontal, !!!check_is_null) |>
-      eval_bare()
-    pl$struct(!!!dots)$filter(check_any_is_null$not())$n_unique()
-  } else {
-    pl$struct(!!!dots)$n_unique()
-  }
-}
-
-pl_nth_dplyr <- function(x, n, ...) {
-  if (length(n) > 1) {
-    cli_abort(
-      paste0("{.code n} must have size 1, not size {length(n)}."),
-      call = env_from_dots(...)
-    )
-  }
-  check_number_whole(n, allow_na = FALSE)
-
-  # 0-indexed
-  if (n > 0) {
-    n <- n - 1
-  }
-  x$gather(n)
-}
-
 pl_rank <- function(x, ...) {
   check_empty_dots(...)
   x$rank()
-}
-
-pl_replace_na_tidyr <- function(data, replace, ...) {
-  check_empty_dots(...)
-  data$fill_null(replace)
 }
 
 pl_rev <- function(x) {
@@ -614,14 +339,6 @@ pl_round <- function(x, digits = 0, ...) {
   x$round(decimals = digits)
 }
 
-pl_row_number_dplyr <- function(x = NULL) {
-  if (is.null(x)) {
-    pl$int_range(start = 1, pl$len() + 1)
-  } else {
-    x$rank(method = "ordinal")
-  }
-}
-
 pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
   check_empty_dots(...)
   # TODO: how should I handle seed, given that R sample() doesn't have this arg
@@ -630,6 +347,27 @@ pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
     out <- out$first()
   }
   out
+}
+
+pl_sd <- function(x, na.rm = FALSE) {
+  x <- check_rowwise(x)
+  if (isTRUE(x$is_rowwise)) {
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$std(ddof = 1))$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(
+          pl$element()$std(ddof = 1)
+        )
+      )$explode()
+    }
+  } else {
+    if (isTRUE(na.rm)) {
+      x$expr$std(ddof = 1)
+    } else {
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$std(ddof = 1))
+    }
+  }
 }
 
 pl_seq <- function(from = 1, to = 1, by = NULL, ...) {
@@ -686,6 +424,25 @@ pl_sqrt <- function(x, ...) {
   x$sqrt()
 }
 
+pl_sum <- function(..., na.rm = FALSE) {
+  x <- check_rowwise_dots(...)
+  if (isTRUE(x$is_rowwise)) {
+    if (isTRUE(na.rm)) {
+      x$expr$list$eval(pl$element()$sum())$explode()
+    } else {
+      x$expr$list$eval(
+        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(pl$element()$sum())
+      )$explode()
+    }
+  } else {
+    if (isTRUE(na.rm)) {
+      x$expr$sum()
+    } else {
+      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$sum())
+    }
+  }
+}
+
 pl_tan <- function(x, ...) {
   check_empty_dots(...)
   x$tan()
@@ -723,4 +480,50 @@ pl_which.max <- function(x, ...) {
 pl_which.min <- function(x, ...) {
   check_empty_dots(...)
   (x$arg_min() + 1)$first()
+}
+
+# Utils ---------------------------------------------------
+
+# Extract the "from" and "to" components from the dots in replace_/recode_*()
+extract_from_to <- function(dots, env) {
+  # Start by checking that each element is a formula
+  not_length_2 <- which(vapply(dots, \(x) length(x) != 2, logical(1)))
+  if (length(not_length_2) > 0) {
+    n <- length(not_length_2)
+    cli_abort(
+      "{qty(n)} Case{?s} {.code {not_length_2}} must be {qty(n)} {?a/} two-sided {qty(n)} formula{?s}.",
+      call = env
+    )
+  }
+
+  # Extract LHS and RHS and ensure there is no NULL on either side
+  from <- lapply(dots, `[[`, 1)
+  any_null_from <- any(vapply(
+    from,
+    function(x) identical(x, list(NULL)),
+    logical(1)
+  ))
+  if (isTRUE(any_null_from)) {
+    cli_abort(
+      "Cannot have {.code NULL} in {.arg ...} or {.arg from}.",
+      call = env
+    )
+  }
+  from <- unlist(from, use.names = FALSE)
+
+  to <- lapply(dots, `[[`, 2)
+  any_null_to <- any(vapply(
+    to,
+    function(x) identical(x, list(NULL)),
+    logical(1)
+  ))
+  if (isTRUE(any_null_to)) {
+    cli_abort(
+      "Cannot have {.code NULL} in {.arg ...} or {.arg to}.",
+      call = env
+    )
+  }
+  to <- unlist(to, use.names = FALSE)
+
+  list(from = from, to = to)
 }

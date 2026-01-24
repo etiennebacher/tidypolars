@@ -138,7 +138,16 @@ pl_str_length_stringr <- function(string, ...) {
   string$str$len_chars()
 }
 
-pl_nchar <- pl_str_length_stringr
+pl_nchar <- function(x, type = "chars", ...) {
+  check_empty_dots(...)
+  type <- arg_match0(type, c("chars", "bytes"))
+  switch(
+    type,
+    "chars" = x$str$len_chars(),
+    "bytes" = x$str$len_bytes(),
+    cli_abort("unreachable")
+  )
+}
 
 pl_str_pad_stringr <- function(
   string,

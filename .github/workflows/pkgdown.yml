@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   pkgdown:
-    runs-on: macOS-latest
+    runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     permissions:
