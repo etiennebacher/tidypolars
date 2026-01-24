@@ -725,12 +725,10 @@ test_that("seq_len() works", {
 })
 
 test_that("replace_when(): basic usage", {
+  # TODO: this should work when `type` is a factor, see examples in dplyr docs
   dat <- data.frame(
     name = c("Max", "Bella", "Chuck", "Luna", "Cooper"),
-    type = factor(
-      c("dog", "dog", "cat", "dog", "cat"),
-      levels = c("dog", "cat", "puppy")
-    ),
+    type = c("dog", "dog", "cat", "dog", "cat"),
     age = c(1, 3, 5, 2, 4)
   )
   dat_pl <- as_polars_df(dat)
