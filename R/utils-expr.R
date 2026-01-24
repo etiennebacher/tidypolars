@@ -429,27 +429,19 @@ translate <- function(
             )
           )
         },
-        # these two case_ functions are handled separately from other funs
-        # because we don't want to evaluate the conditions inside too soon
-        "dplyr::case_match" = ,
-        "case_match" = {
-          args <- call_args(expr)
-          args$.data <- .data
-          args[["__tidypolars__new_vars"]] <- as.list(new_vars)
-          args[["__tidypolars__env"]] <- env
-          args[["__tidypolars__caller"]] <- caller
-          args[["__tidypolars__expr_uses_col"]] <- expr_uses_col
-          return(do.call(pl_case_match, args))
-        },
-        "dplyr::case_when" = ,
-        "case_when" = {
-          args <- call_args(expr)
-          args$.data <- .data
-          args[["__tidypolars__new_vars"]] <- as.list(new_vars)
-          args[["__tidypolars__env"]] <- env
-          args[["__tidypolars__caller"]] <- caller
-          args[["__tidypolars__expr_uses_col"]] <- expr_uses_col
-          return(do.call(pl_case_when, args))
+        "~" = {
+          args <- list(expr[[2]], expr[[3]])
+          args <- lapply(
+            args,
+            translate,
+            .data = .data,
+            new_vars = new_vars,
+            env = env,
+            caller = caller,
+            call_is_function = call_is_function,
+            expr_uses_col = expr_uses_col
+          )
+          return(args)
         },
         "c" = {
           expr[[1]] <- NULL
