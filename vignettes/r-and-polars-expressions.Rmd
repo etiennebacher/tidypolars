@@ -318,6 +318,8 @@ out <- tribble(
   "`dplyr`", "`n`",
   "`dplyr`", "`nth`",
   "`dplyr`", "`n_distinct`",
+  "`dplyr`", "`recode_values`",
+  "`dplyr`", "`replace_values`",
   "`dplyr`", "`row_number`",
   "`lubridate`", "`am`",
   "`lubridate`", "`day`",
@@ -404,6 +406,8 @@ out <- tribble(
         "`tidypolars` cannot use several timezones in a single column, while `lubridate::force_tz()` can.",
       Package == "`dplyr`" & Function == "`row_number`" ~
         "Doesn't work when `x` is missing.",
+      Package == "`dplyr`" & Function %in% c("`recode_values`", "`replace_values`") ~
+        "The `dplyr` functions will error if the type of the replacement doesn't match the type of the column (for instance trying to replace a character with an integer). This works in `tidypolars`.",
       Package == "`stringr`" & Function == "`str_to_title`" ~
         "Letters following apostrophe will be capitalized as well, which differs from the `stringr` implementation.",
       Package == "`tools`" & Function == "`toTitleCase`" ~
