@@ -14,6 +14,8 @@
   results across different versions. This function doesn't have a replacement in
   `tidypolars` (#304).
 
+* Added support for `dplyr::replace_when()`, added in `dplyr` 1.2.0 (#307).
+
 # tidypolars 0.16.0
 
 `tidypolars` requires `polars` >= 1.8.0.
