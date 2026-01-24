@@ -724,17 +724,57 @@ test_that("seq_len() works", {
   )
 })
 
-test_that("replace_values() works", {
+test_that("replace_values(): basic usage", {
   dat <- data.frame(x = c("NC", "NYC", "CA", NA, "NYC", "Unknown"))
   dat_pl <- as_polars_df(dat)
 
-  # basic usage
   expect_equal(
     dat_pl |>
       mutate(y = replace_values(x, "NYC" ~ "NY", "Unknown" ~ "a")),
     dat |>
       mutate(y = replace_values(x, "NYC" ~ "NY", "Unknown" ~ "a"))
   )
+  expect_equal(
+    dat_pl |>
+      mutate(
+        y = replace_values(x, from = c("NYC", "Unknown"), to = c("NY", "a"))
+      ),
+    dat |>
+      mutate(
+        y = replace_values(x, from = c("NYC", "Unknown"), to = c("NY", "a"))
+      )
+  )
+
+  # broadcasting
+  expect_equal(
+    dat_pl |>
+      mutate(y = replace_values(x, from = c("NYC", "Unknown"), to = "a")),
+    dat |>
+      mutate(y = replace_values(x, from = c("NYC", "Unknown"), to = "a"))
+  )
+
+  # basic errors
+  expect_snapshot(
+    mutate(dat_pl, y = replace_values(x, "NYC" ~ "NY", from = "a")),
+    error = TRUE
+  )
+  expect_snapshot(
+    mutate(dat_pl, y = replace_values(x, "NYC" ~ "NY", to = "a")),
+    error = TRUE
+  )
+  expect_snapshot(
+    mutate(dat_pl, y = replace_values(x, from = "a")),
+    error = TRUE
+  )
+  expect_snapshot(
+    mutate(dat_pl, y = replace_values(x, to = "a")),
+    error = TRUE
+  )
+})
+
+test_that("replace_values(): corner cases", {
+  dat <- data.frame(x = c("NC", "NYC", "CA", NA, "NYC", "Unknown"))
+  dat_pl <- as_polars_df(dat)
 
   # TODO: this errors with tidyverse, which I think is more helpful
   # expect_equal_or_both_error(
@@ -750,7 +790,6 @@ test_that("replace_values() works", {
   #     mutate(y = replace_values(x, 1 ~ "NYC"))
   # )
 
-  # corner cases on the LHS/RHS
   expect_equal(
     dat_pl |>
       mutate(y = replace_values(x, "NYC" ~ NA)),
@@ -788,21 +827,176 @@ test_that("replace_values() works", {
     dat |>
       mutate(y = replace_values(x, "NYC" ~ "NY", 1))
   )
+  expect_equal_or_both_error(
+    dat_pl |>
+      mutate(
+        y = replace_values(
+          x,
+          from = c("NYC", "CA", "Unknown"),
+          to = c("a", "b")
+        )
+      ),
+    dat |>
+      mutate(
+        y = replace_values(
+          x,
+          from = c("NYC", "CA", "Unknown"),
+          to = c("a", "b")
+        )
+      )
+  )
+})
+
+test_that("recode_values(): basic usage", {
+  dat <- data.frame(x = c("NC", "NYC", "CA", NA, "NYC", "Unknown"))
+  dat_pl <- as_polars_df(dat)
+
+  # basic usage
+  expect_equal(
+    dat_pl |>
+      mutate(y = recode_values(x, "NYC" ~ "NY", "Unknown" ~ "a")),
+    dat |>
+      mutate(y = recode_values(x, "NYC" ~ "NY", "Unknown" ~ "a"))
+  )
+  expect_equal(
+    dat_pl |>
+      mutate(
+        y = recode_values(x, from = c("NYC", "Unknown"), to = c("NY", "a"))
+      ),
+    dat |>
+      mutate(
+        y = recode_values(x, from = c("NYC", "Unknown"), to = c("NY", "a"))
+      )
+  )
+  expect_equal(
+    dat_pl |>
+      mutate(
+        y = recode_values(x, "NYC" ~ "NY", "Unknown" ~ "a", default = "foo")
+      ),
+    dat |>
+      mutate(
+        y = recode_values(x, "NYC" ~ "NY", "Unknown" ~ "a", default = "foo")
+      )
+  )
+  expect_equal(
+    dat_pl |>
+      mutate(
+        y = recode_values(
+          x,
+          from = c("NYC", "Unknown"),
+          to = c("NY", "a"),
+          default = "foo"
+        )
+      ),
+    dat |>
+      mutate(
+        y = recode_values(
+          x,
+          from = c("NYC", "Unknown"),
+          to = c("NY", "a"),
+          default = "foo"
+        )
+      )
+  )
+
+  # broadcasting
+  expect_equal(
+    dat_pl |>
+      mutate(y = recode_values(x, from = c("NYC", "Unknown"), to = "a")),
+    dat |>
+      mutate(y = recode_values(x, from = c("NYC", "Unknown"), to = "a"))
+  )
 
   expect_snapshot(
-    mutate(dat_pl, y = replace_values(x, "NYC" ~ "NY", from = "a")),
+    mutate(dat_pl, y = recode_values(x, "NYC" ~ "NY", from = "a")),
     error = TRUE
   )
   expect_snapshot(
-    mutate(dat_pl, y = replace_values(x, "NYC" ~ "NY", to = "a")),
+    mutate(dat_pl, y = recode_values(x, "NYC" ~ "NY", to = "a")),
     error = TRUE
   )
   expect_snapshot(
-    mutate(dat_pl, y = replace_values(x, from = "a")),
+    mutate(dat_pl, y = recode_values(x, from = "a")),
     error = TRUE
   )
   expect_snapshot(
-    mutate(dat_pl, y = replace_values(x, to = "a")),
+    mutate(dat_pl, y = recode_values(x, to = "a")),
     error = TRUE
+  )
+})
+
+test_that("recode_values(): errors and corner cases", {
+  dat <- data.frame(x = c("NC", "NYC", "CA", NA, "NYC", "Unknown"))
+  dat_pl <- as_polars_df(dat)
+
+  # TODO: this errors with tidyverse, which I think is more helpful
+  # expect_equal_or_both_error(
+  #   dat_pl |>
+  #     mutate(y = recode_values(x, "NYC" ~ 1)),
+  #   dat |>
+  #     mutate(y = recode_values(x, "NYC" ~ 1))
+  # )
+  # expect_equal_or_both_error(
+  #   dat_pl |>
+  #     mutate(y = recode_values(x, 1 ~ "NYC")),
+  #   dat |>
+  #     mutate(y = recode_values(x, 1 ~ "NYC"))
+  # )
+
+  # corner cases on the LHS/RHS
+  expect_equal(
+    dat_pl |>
+      mutate(y = recode_values(x, "NYC" ~ NA)),
+    dat |>
+      mutate(y = recode_values(x, "NYC" ~ NA))
+  )
+  expect_equal_or_both_error(
+    dat_pl |>
+      mutate(y = recode_values(x, "NYC" ~ NULL)),
+    dat |>
+      mutate(y = recode_values(x, "NYC" ~ NULL))
+  )
+  expect_equal_or_both_error(
+    dat_pl |>
+      mutate(y = recode_values(x, NULL ~ "NYC")),
+    dat |>
+      mutate(y = recode_values(x, NULL ~ "NYC"))
+  )
+  expect_equal_or_both_error(
+    dat_pl |>
+      mutate(y = recode_values(x, "NYC" ~ character(0))),
+    dat |>
+      mutate(y = recode_values(x, "NYC" ~ character(0)))
+  )
+  # TODO: tidypolars errors here, not tidyverse, so less impact.
+  # expect_equal_or_both_error(
+  #   dat_pl |>
+  #     mutate(y = recode_values(x, character(0) ~ "NYC")),
+  #   dat |>
+  #     mutate(y = recode_values(x, character(0) ~ "NYC"))
+  # )
+  expect_equal_or_both_error(
+    dat_pl |>
+      mutate(y = recode_values(x, "NYC" ~ "NY", 1)),
+    dat |>
+      mutate(y = recode_values(x, "NYC" ~ "NY", 1))
+  )
+  expect_equal_or_both_error(
+    dat_pl |>
+      mutate(
+        y = replace_values(
+          x,
+          from = c("NYC", "CA", "Unknown"),
+          to = c("a", "b")
+        )
+      ),
+    dat |>
+      mutate(
+        y = replace_values(
+          x,
+          from = c("NYC", "CA", "Unknown"),
+          to = c("a", "b")
+        )
+      )
   )
 })

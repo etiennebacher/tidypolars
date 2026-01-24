@@ -644,17 +644,15 @@ pl_recode_values_dplyr <- function(
   }
 
   if (length(dots) > 0) {
-    from <- lapply(dots, `[[`, 1) |>
-      unlist(use.names = FALSE)
-    to <- lapply(dots, `[[`, 2) |>
-      unlist(use.names = FALSE)
+    from_to <- extract_from_to(dots, env)
+  } else {
+    from_to <- list(from = from, to = to)
   }
 
   x$replace_strict(
-    old = from,
-    new = to,
-    default = default,
-    return_dtype = pl$dtype_of(as_polars_expr(default, as_lit = TRUE))
+    old = from_to$from,
+    new = from_to$to,
+    default = default
   )
 }
 
@@ -682,47 +680,12 @@ pl_replace_values_dplyr <- function(x, ..., from = NULL, to = NULL) {
   }
 
   if (length(dots) > 0) {
-    # Start by checking that each element is a formula
-    not_length_2 <- which(vapply(dots, \(x) length(x) != 2, logical(1)))
-    if (length(not_length_2) > 0) {
-      n <- length(not_length_2)
-      cli_abort(
-        "{qty(n)} Case{?s} {.code {not_length_2}} must be {qty(n)} {?a/} two-sided {qty(n)} formula{?s}.",
-        call = env
-      )
-    }
-
-    # Extract LHS and RHS and ensure there is no NULL on either side
-    from <- lapply(dots, `[[`, 1)
-    any_null_from <- any(vapply(
-      from,
-      function(x) identical(x, list(NULL)),
-      logical(1)
-    ))
-    if (isTRUE(any_null_from)) {
-      cli_abort(
-        "Cannot have {.code NULL} in {.arg ...} or {.arg from}.",
-        call = env
-      )
-    }
-    from <- unlist(from, use.names = FALSE)
-
-    to <- lapply(dots, `[[`, 2)
-    any_null_to <- any(vapply(
-      to,
-      function(x) identical(x, list(NULL)),
-      logical(1)
-    ))
-    if (isTRUE(any_null_to)) {
-      cli_abort(
-        "Cannot have {.code NULL} in {.arg ...} or {.arg to}.",
-        call = env
-      )
-    }
-    to <- unlist(to, use.names = FALSE)
+    from_to <- extract_from_to(dots, env)
+  } else {
+    from_to <- list(from = from, to = to)
   }
 
-  x$replace(old = from, new = to)
+  x$replace(old = from_to$from, new = from_to$to)
 }
 
 pl_replace_na_tidyr <- function(data, replace, ...) {
@@ -848,4 +811,51 @@ pl_which.max <- function(x, ...) {
 pl_which.min <- function(x, ...) {
   check_empty_dots(...)
   (x$arg_min() + 1)$first()
+}
+
+
+# Utils ---------------------------------------------------
+
+# Extract the "from" and "to" components from the dots in replace_/recode_values()
+extract_from_to <- function(dots, env) {
+  # Start by checking that each element is a formula
+  not_length_2 <- which(vapply(dots, \(x) length(x) != 2, logical(1)))
+  if (length(not_length_2) > 0) {
+    n <- length(not_length_2)
+    cli_abort(
+      "{qty(n)} Case{?s} {.code {not_length_2}} must be {qty(n)} {?a/} two-sided {qty(n)} formula{?s}.",
+      call = env
+    )
+  }
+
+  # Extract LHS and RHS and ensure there is no NULL on either side
+  from <- lapply(dots, `[[`, 1)
+  any_null_from <- any(vapply(
+    from,
+    function(x) identical(x, list(NULL)),
+    logical(1)
+  ))
+  if (isTRUE(any_null_from)) {
+    cli_abort(
+      "Cannot have {.code NULL} in {.arg ...} or {.arg from}.",
+      call = env
+    )
+  }
+  from <- unlist(from, use.names = FALSE)
+
+  to <- lapply(dots, `[[`, 2)
+  any_null_to <- any(vapply(
+    to,
+    function(x) identical(x, list(NULL)),
+    logical(1)
+  ))
+  if (isTRUE(any_null_to)) {
+    cli_abort(
+      "Cannot have {.code NULL} in {.arg ...} or {.arg to}.",
+      call = env
+    )
+  }
+  to <- unlist(to, use.names = FALSE)
+
+  list(from = from, to = to)
 }
