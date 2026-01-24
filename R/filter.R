@@ -71,6 +71,16 @@
 #' # rather than rows to keep, use `filter_out()`. This also removes the need
 #' # for any explicit `NA` handling.
 #' starwars |> filter_out(hair_color == "blond")
+#'
+#' # To refer to column names that are stored as strings, use the `.data`
+#' # pronoun:
+#' vars <- c("mass", "height")
+#' cond <- c(80, 150)
+#' starwars |>
+#'   filter(
+#'     .data[[vars[[1]]]] > cond[[1]],
+#'     .data[[vars[[2]]]] > cond[[2]]
+#'   )
 filter.polars_data_frame <- function(.data, ..., .by = NULL) {
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
