@@ -42,7 +42,7 @@
 #'   `devtools::load_all()`, the function will keep inheriting from
 #'   the old namespace. This might cause crashes because of dangling
 #'   `.Call()` pointers.
-#' @export
+#'
 #' @examples
 #' # A typical use case is to dynamically register tibble/pillar methods
 #' # for your class. That way you avoid creating a hard dependency on packages
