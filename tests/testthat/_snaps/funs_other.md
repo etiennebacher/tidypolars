@@ -60,7 +60,7 @@
       
       Error originated in expression: '[(col("x")) == (Series[literal])]'
 
-# replace_values() works
+# replace_values(): basic usage
 
     Code
       mutate(dat_pl, y = replace_values(x, "NYC" ~ "NY", from = "a"))
@@ -94,5 +94,41 @@
     Condition
       Error in `mutate()`:
       ! Error while running function `replace_values()` in Polars.
+      x Specified `to` but not `from`.
+
+# recode_values(): basic usage
+
+    Code
+      mutate(dat_pl, y = recode_values(x, "NYC" ~ "NY", from = "a"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `recode_values()` in Polars.
+      x Can't supply both `...` and `from` / `to`.
+
+---
+
+    Code
+      mutate(dat_pl, y = recode_values(x, "NYC" ~ "NY", to = "a"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `recode_values()` in Polars.
+      x Can't supply both `...` and `from` / `to`.
+
+---
+
+    Code
+      mutate(dat_pl, y = recode_values(x, from = "a"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `recode_values()` in Polars.
+      x Specified `from` but not `to`.
+
+---
+
+    Code
+      mutate(dat_pl, y = recode_values(x, to = "a"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `recode_values()` in Polars.
       x Specified `to` but not `from`.
 
