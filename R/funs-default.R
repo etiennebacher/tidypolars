@@ -220,105 +220,50 @@ pl_between_dplyr <- function(x, left, right, ...) {
   x$is_between(lower_bound = left, upper_bound = right, closed = "both")
 }
 
-pl_case_match <- function(x, ..., .data) {
+pl_case_match_dplyr <- function(x, ...) {
   env <- env_from_dots(...)
   expr_uses_col <- expr_uses_col_from_dots(...)
   new_vars <- new_vars_from_dots(...)
   caller <- caller_from_dots(...)
   dots <- clean_dots(...)
 
-  x <- polars::pl$col(deparse(substitute(x)))
-
-  if (!".default" %in% names(dots)) {
-    dots[[length(dots) + 1]] <- c(".default" = NA)
-  }
+  from_to <- extract_formula_case(dots, env)
 
   out <- NULL
-  for (y in seq_along(dots)) {
-    if (y == length(dots)) {
-      otw <- translate_expr(
-        .data,
-        dots[[y]],
-        new_vars = new_vars,
-        env = env,
-        caller = caller,
-        expr_uses_col = expr_uses_col
-      ) |>
-        as_polars_expr(as_lit = TRUE)
-      out <- out$otherwise(otw)
-      next
-    }
-    lhs <- translate_expr(
-      .data,
-      dots[[y]][[2]],
-      new_vars = new_vars,
-      env = env,
-      caller = caller,
-      expr_uses_col = expr_uses_col
-    ) |>
+  for (i in seq_along(from_to$from)) {
+    lhs <- from_to$from[[i]] |>
       as_polars_expr(as_lit = TRUE)
-    rhs <- translate_expr(
-      .data,
-      dots[[y]][[3]],
-      new_vars = new_vars,
-      env = env,
-      caller = caller,
-      expr_uses_col = expr_uses_col
-    ) |>
+    rhs <- from_to$to[[i]] |>
       as_polars_expr(as_lit = TRUE)
+
     if (is.null(out)) {
       out <- polars::pl$when(x$is_in(lhs$implode()))$then(rhs)
     } else {
       out <- out$when(x$is_in(lhs$implode()))$then(rhs)
     }
   }
+  otw <- from_to$default |>
+    as_polars_expr(as_lit = TRUE)
+
+  out <- out$otherwise(otw)
 
   out
 }
 
-pl_case_when <- function(..., .data) {
+pl_case_when_dplyr <- function(...) {
   env <- env_from_dots(...)
   expr_uses_col <- expr_uses_col_from_dots(...)
   new_vars <- new_vars_from_dots(...)
   caller <- caller_from_dots(...)
   dots <- clean_dots(...)
 
-  if (!".default" %in% names(dots)) {
-    dots[[length(dots) + 1]] <- c(".default" = NA)
-  }
+  from_to <- extract_formula_case(dots, env)
 
   out <- NULL
-  for (y in seq_along(dots)) {
-    if (y == length(dots)) {
-      otw <- translate_expr(
-        .data,
-        dots[[y]],
-        new_vars = new_vars,
-        env = env,
-        caller = caller,
-        expr_uses_col = expr_uses_col
-      ) |>
-        as_polars_expr(as_lit = TRUE)
-      out <- out$otherwise(otw)
-      next
-    }
-    lhs <- translate_expr(
-      .data,
-      dots[[y]][[2]],
-      new_vars = new_vars,
-      env = env,
-      caller = caller,
-      expr_uses_col = expr_uses_col
-    ) |>
+  for (i in seq_along(from_to$from)) {
+    lhs <- from_to$from[[i]] |>
       as_polars_expr(as_lit = TRUE)
-    rhs <- translate_expr(
-      .data,
-      dots[[y]][[3]],
-      new_vars = new_vars,
-      env = env,
-      caller = caller,
-      expr_uses_col = expr_uses_col
-    ) |>
+    rhs <- from_to$to[[i]] |>
       as_polars_expr(as_lit = TRUE)
 
     if (is.null(out)) {
@@ -327,6 +272,10 @@ pl_case_when <- function(..., .data) {
       out <- out$when(lhs)$then(rhs)
     }
   }
+  otw <- from_to$default |>
+    as_polars_expr(as_lit = TRUE)
+
+  out <- out$otherwise(otw)
   out
 }
 
@@ -813,10 +762,46 @@ pl_which.min <- function(x, ...) {
   (x$arg_min() + 1)$first()
 }
 
-
 # Utils ---------------------------------------------------
 
-# Extract the "from" and "to" components from the dots in replace_/recode_values()
+# Extract the "from" and "to" components from the dots in case_*()
+extract_formula_case <- function(dots, env) {
+  # Extract the default early to avoid error "subscript out of bounds" later
+  default <- dots[[".default"]] %||% NA
+  dots[[".default"]] <- NULL
+
+  # Extract LHS and RHS and ensure there is no NULL on either side
+  from <- lapply(dots, `[[`, 1)
+  any_null_from <- any(vapply(
+    from,
+    function(x) identical(x, list(NULL)),
+    logical(1)
+  ))
+  if (isTRUE(any_null_from)) {
+    cli_abort(
+      "Cannot have {.code NULL} in {.arg ...}.",
+      call = env
+    )
+  }
+
+  to <- lapply(dots, `[[`, 2)
+  any_null_to <- any(vapply(
+    to,
+    function(x) identical(x, list(NULL)),
+    logical(1)
+  ))
+  if (isTRUE(any_null_to)) {
+    cli_abort(
+      "Cannot have {.code NULL} in {.arg ...}.",
+      call = env
+    )
+  }
+  to <- unlist(to, use.names = FALSE)
+
+  list(from = from, to = to, default = default)
+}
+
+# Extract the "from" and "to" components from the dots in replace_/recode_*()
 extract_from_to <- function(dots, env) {
   # Start by checking that each element is a formula
   not_length_2 <- which(vapply(dots, \(x) length(x) != 2, logical(1)))
