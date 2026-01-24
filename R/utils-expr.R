@@ -443,19 +443,6 @@ translate <- function(
           )
           return(args)
         },
-        "dplyr::replace_when" = ,
-        "replace_when" = {
-          args <- call_args(expr)
-          if (!"x" %in% names(args)) {
-            names(args)[1] <- "x"
-          }
-          args$.data <- .data
-          args[["__tidypolars__new_vars"]] <- as.list(new_vars)
-          args[["__tidypolars__env"]] <- env
-          args[["__tidypolars__caller"]] <- caller
-          args[["__tidypolars__expr_uses_col"]] <- expr_uses_col
-          return(do.call(pl_replace_when, args))
-        },
         "c" = {
           expr[[1]] <- NULL
           if (
