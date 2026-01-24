@@ -20,6 +20,12 @@
   replacement in `tidypolars`
   ([\#304](https://github.com/etiennebacher/tidypolars/issues/304)).
 
+### New features
+
+- Added support for
+  [`dplyr::near()`](https://dplyr.tidyverse.org/reference/near.html)
+  ([\#311](https://github.com/etiennebacher/tidypolars/issues/311)).
+
 ## tidypolars 0.16.0
 
 `tidypolars` requires `polars` \>= 1.8.0.
