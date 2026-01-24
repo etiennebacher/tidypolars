@@ -60,3 +60,17 @@
       
       Error originated in expression: '[(col("x")) == (Series[literal])]'
 
+# near() works
+
+    Code
+      mutate(dat_pl, z = near(x, 1:2))
+    Condition
+      Error in `.data$with_columns()`:
+      ! Evaluation failed in `$with_columns()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! lengths don't match: cannot evaluate two Series of different lengths (3 and 2)
+      
+      Error originated in expression: '[(col("x")) - (Series[literal])]'
+

@@ -723,3 +723,34 @@ test_that("seq_len() works", {
     "must be a non-negative integer"
   )
 })
+
+test_that("near() works", {
+  dat <- data.frame(
+    x = c(sqrt(2)^2, 0.1, NA),
+    y = c(2, 0.2, 1)
+  )
+  dat_pl <- as_polars_df(dat)
+
+  expect_equal(
+    dat_pl |> mutate(z = near(x, y)),
+    dat |> mutate(z = near(x, y))
+  )
+  expect_equal(
+    dat_pl |> mutate(z = near(x, 2)),
+    dat |> mutate(z = near(x, 2))
+  )
+  expect_equal(
+    dat_pl |> mutate(z = near(x, y, tol = 0.01)),
+    dat |> mutate(z = near(x, y, tol = 0.01))
+  )
+  expect_equal(
+    dat_pl |> mutate(z = near(x, y, tol = NA)),
+    dat |> mutate(z = near(x, y, tol = NA))
+  )
+  # tidyverse doesn't error because of different lengths, but I think it's better
+  # to do (don't really know how I'd prevent this error anyway).
+  expect_snapshot(
+    dat_pl |> mutate(z = near(x, 1:2)),
+    error = TRUE
+  )
+})
