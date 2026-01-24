@@ -185,6 +185,42 @@ pl_row_number_dplyr <- function(x = NULL) {
   }
 }
 
+pl_when_all_dplyr <- function(..., na_rm, size) {
+  env <- env_from_dots(...)
+  dots <- clean_dots(...)
+  if (!missing(na_rm)) {
+    cli_abort(
+      "Argument {.code na_rm} is not supported by {.pkg tidypolars}.",
+      call = env
+    )
+  }
+  if (!missing(size)) {
+    cli_abort(
+      "Argument {.code size} is not supported by {.pkg tidypolars}.",
+      call = env
+    )
+  }
+  pl$all_horizontal(!!!dots)
+}
+
+pl_when_any_dplyr <- function(..., na_rm, size) {
+  env <- env_from_dots(...)
+  dots <- clean_dots(...)
+  if (!missing(na_rm)) {
+    cli_abort(
+      "Argument {.code na_rm} is not supported by {.pkg tidypolars}.",
+      call = env
+    )
+  }
+  if (!missing(size)) {
+    cli_abort(
+      "Argument {.code size} is not supported by {.pkg tidypolars}.",
+      call = env
+    )
+  }
+  pl$any_horizontal(!!!dots)
+}
+
 # Utils ---------------------------------------------------
 
 # Extract the "from" and "to" components from the dots in case_*()
