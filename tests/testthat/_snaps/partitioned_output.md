@@ -69,18 +69,18 @@
       <scrubbed>
       +-- am=0.0
       |   +-- cyl=4.0
-      |   |   \-- 0.parquet
+      |   |   \-- 00000000.parquet
       |   +-- cyl=6.0
-      |   |   \-- 0.parquet
+      |   |   \-- 00000000.parquet
       |   \-- cyl=8.0
-      |       \-- 0.parquet
+      |       \-- 00000000.parquet
       \-- am=1.0
           +-- cyl=4.0
-          |   \-- 0.parquet
+          |   \-- 00000000.parquet
           +-- cyl=6.0
-          |   \-- 0.parquet
+          |   \-- 00000000.parquet
           \-- cyl=8.0
-              \-- 0.parquet
+              \-- 00000000.parquet
 
 # partition_by() + key + include_key works
 
