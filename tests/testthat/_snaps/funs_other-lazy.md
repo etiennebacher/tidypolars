@@ -56,3 +56,15 @@
       
       Error originated in expression: '[(col("x")) == (Series[literal])]'
 
+# near() works
+
+    Code
+      current$collect()
+    Condition
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! lengths don't match: cannot evaluate two Series of different lengths (3 and 2)
+      
+      Error originated in expression: '[(col("x")) - (Series[literal])]'
+

@@ -14,6 +14,10 @@
   results across different versions. This function doesn't have a replacement in
   `tidypolars` (#304).
 
+## New features
+
+* Added support for `dplyr::near()` (#311).
+
 # tidypolars 0.16.0
 
 `tidypolars` requires `polars` >= 1.8.0.

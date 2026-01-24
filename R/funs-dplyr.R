@@ -161,6 +161,10 @@ pl_n_distinct_dplyr <- function(..., na.rm = FALSE) {
   }
 }
 
+pl_near_dplyr <- function(x, y, tol = .Machine$double.eps^0.5) {
+  (x - y)$abs() < tol
+}
+
 pl_nth_dplyr <- function(x, n, ...) {
   if (length(n) > 1) {
     cli_abort(
