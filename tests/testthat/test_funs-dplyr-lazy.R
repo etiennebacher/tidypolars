@@ -475,4 +475,35 @@ test_that("dplyr::lead() works", {
   )
 })
 
+test_that("near() works", {
+  dat <- data.frame(
+    x = c(sqrt(2)^2, 0.1, NA),
+    y = c(2, 0.2, 1)
+  )
+  dat_pl <- as_polars_lf(dat)
+
+  expect_equal_lazy(
+    dat_pl |> mutate(z = near(x, y)),
+    dat |> mutate(z = near(x, y))
+  )
+  expect_equal_lazy(
+    dat_pl |> mutate(z = near(x, 2)),
+    dat |> mutate(z = near(x, 2))
+  )
+  expect_equal_lazy(
+    dat_pl |> mutate(z = near(x, y, tol = 0.01)),
+    dat |> mutate(z = near(x, y, tol = 0.01))
+  )
+  expect_equal_lazy(
+    dat_pl |> mutate(z = near(x, y, tol = NA)),
+    dat |> mutate(z = near(x, y, tol = NA))
+  )
+  # tidyverse doesn't error because of different lengths, but I think it's better
+  # to do (don't really know how I'd prevent this error anyway).
+  expect_snapshot_lazy(
+    dat_pl |> mutate(z = near(x, 1:2)),
+    error = TRUE
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
