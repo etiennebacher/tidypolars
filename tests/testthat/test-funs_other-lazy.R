@@ -729,20 +729,68 @@ test_that("seq_len() works", {
 })
 
 test_that("replace_values() works", {
-  dat <- data.frame(
-    x = c("NC", "NYC", "CA", NA, "NYC", "Unknown")
-  )
+  dat <- data.frame(x = c("NC", "NYC", "CA", NA, "NYC", "Unknown"))
   dat_pl <- as_polars_lf(dat)
 
+  # basic usage
   expect_equal_lazy(
     dat_pl |>
-      mutate(
-        y = replace_values(x, "NYC" ~ "NY", "Unknown" ~ "a")
-      ),
+      mutate(y = replace_values(x, "NYC" ~ "NY", "Unknown" ~ "a")),
     dat |>
-      mutate(
-        y = replace_values(x, "NYC" ~ "NY", "Unknown" ~ "a")
-      )
+      mutate(y = replace_values(x, "NYC" ~ "NY", "Unknown" ~ "a"))
+  )
+
+  # TODO: this errors with tidyverse, which I think is more helpful
+  # expect_equal_or_both_error(
+  #   dat_pl |>
+  #     mutate(y = replace_values(x, "NYC" ~ 1)),
+  #   dat |>
+  #     mutate(y = replace_values(x, "NYC" ~ 1))
+  # )
+  # expect_equal_or_both_error(
+  #   dat_pl |>
+  #     mutate(y = replace_values(x, 1 ~ "NYC")),
+  #   dat |>
+  #     mutate(y = replace_values(x, 1 ~ "NYC"))
+  # )
+
+  # corner cases on the LHS/RHS
+  expect_equal_lazy(
+    dat_pl |>
+      mutate(y = replace_values(x, "NYC" ~ NA)),
+    dat |>
+      mutate(y = replace_values(x, "NYC" ~ NA))
+  )
+  expect_equal_or_both_error(
+    dat_pl |>
+      mutate(y = replace_values(x, "NYC" ~ NULL)),
+    dat |>
+      mutate(y = replace_values(x, "NYC" ~ NULL))
+  )
+  expect_equal_or_both_error(
+    dat_pl |>
+      mutate(y = replace_values(x, NULL ~ "NYC")),
+    dat |>
+      mutate(y = replace_values(x, NULL ~ "NYC"))
+  )
+  expect_equal_or_both_error(
+    dat_pl |>
+      mutate(y = replace_values(x, "NYC" ~ character(0))),
+    dat |>
+      mutate(y = replace_values(x, "NYC" ~ character(0)))
+  )
+  # TODO: tidypolars errors here, not tidyverse, so less impact.
+  # expect_equal_or_both_error(
+  #   dat_pl |>
+  #     mutate(y = replace_values(x, character(0) ~ "NYC")),
+  #   dat |>
+  #     mutate(y = replace_values(x, character(0) ~ "NYC"))
+  # )
+  expect_equal_or_both_error(
+    dat_pl |>
+      mutate(y = replace_values(x, "NYC" ~ "NY", 1)),
+    dat |>
+      mutate(y = replace_values(x, "NYC" ~ "NY", 1))
   )
 
   expect_snapshot_lazy(
