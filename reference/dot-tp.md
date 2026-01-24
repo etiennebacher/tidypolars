@@ -46,7 +46,7 @@ sort(names(.tp))
 #>  [11] "as.numeric"              "asin"                   
 #>  [13] "asinh"                   "atan"                   
 #>  [15] "atanh"                   "between_dplyr"          
-#>  [17] "case_match"              "case_when"              
+#>  [17] "case_match_dplyr"        "case_when_dplyr"        
 #>  [19] "ceiling"                 "coalesce_dplyr"         
 #>  [21] "consecutive_id_dplyr"    "cos"                    
 #>  [23] "cosh"                    "cumcount"               
