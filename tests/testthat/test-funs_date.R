@@ -1,5 +1,5 @@
 test_that("extracting components of date works", {
-  test_df <- data.frame(
+  test_df <- tibble(
     YMD = as.Date(c("2012-03-26", "2020-01-01", "2023-12-14", NA)),
     YMD_tz = ymd(
       c("2012-03-26", "2020-01-01", "2023-12-14", NA),
@@ -74,7 +74,7 @@ test_that("extracting components of date works", {
 })
 
 test_that("weekday works", {
-  test_df <- data.frame(
+  test_df <- tibble(
     YMD = as.Date(c(
       "2012-03-26",
       "2020-01-01",
@@ -130,7 +130,7 @@ test_that("weekday works", {
 })
 
 test_that("strptime() works", {
-  test_df <- data.frame(
+  test_df <- tibble(
     YMD = as.Date(c("2012-03-26", "2020-01-01", "2023-12-14", NA)),
     YMD_tz = ymd(
       c("2012-03-26", "2020-01-01", "2023-12-14", NA),
@@ -212,7 +212,7 @@ test_that("isoyear (test taken from the lubridate test suite)", {
 })
 
 test_that("handling durations work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     YMD = as.Date(c("2012-03-26", "2020-01-01", "2023-12-14", NA)),
     YMD_tz = ymd(
       c("2012-03-26", "2020-01-01", "2023-12-14", NA),
@@ -290,7 +290,7 @@ test_that("handling durations work", {
 })
 
 test_that("make_date() works", {
-  test_df <- data.frame(
+  test_df <- tibble(
     YMD = as.Date(c("2012-03-26", "2020-01-01", "2023-12-14", NA)),
     YMD_tz = ymd(
       c("2012-03-26", "2020-01-01", "2023-12-14", NA),
@@ -356,7 +356,7 @@ test_that("make_date() works", {
 })
 
 test_that("make_datetime() works", {
-  test_df <- data.frame(
+  test_df <- tibble(
     YMD = as.Date(c("2012-03-26", "2020-01-01", "2023-12-14", NA)),
     YMD_tz = ymd(
       c("2012-03-26", "2020-01-01", "2023-12-14", NA),
@@ -436,7 +436,7 @@ test_that("make_datetime() works", {
 })
 
 test_that("ISOdatetime() works", {
-  test_df <- data.frame(
+  test_df <- tibble(
     YMD = as.Date(c("2012-03-26", "2020-01-01", "2023-12-14", NA)),
     YMD_tz = ymd(
       c("2012-03-26", "2020-01-01", "2023-12-14", NA),
@@ -533,7 +533,7 @@ test_that("ISOdatetime() works", {
 })
 
 test_that("am/pm work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     datetime = ymd_hms(
       c(
         "2012-03-26 00:00:00",
@@ -566,7 +566,7 @@ test_that("am/pm work", {
 })
 
 test_that("days_in_month() works", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x = ymd_hms(
       c(
         "2012-03-26 00:00:00",
@@ -587,7 +587,7 @@ test_that("days_in_month() works", {
 })
 
 test_that("leap_year() works", {
-  test_df <- data.frame(
+  test_df <- tibble(
     date = ymd(c("2011-02-26", "2012-02-26", NA)),
     datetime = ymd_hms(
       c(
@@ -610,7 +610,7 @@ test_that("leap_year() works", {
 
 
 test_that("force_tz() works", {
-  test_df <- data.frame(
+  test_df <- tibble(
     dt_utc = ymd_hms(
       c(
         "2012-03-26 12:00:00",
@@ -661,7 +661,7 @@ test_that("force_tz() works", {
 })
 
 test_that("with_tz() works", {
-  test_df <- data.frame(
+  test_df <- tibble(
     dt_utc = ymd_hms(
       c(
         "2012-03-26 12:00:00",
@@ -711,7 +711,7 @@ test_that("with_tz() works", {
 })
 
 test_that("check_timezone() throws expected errors", {
-  test_df <- data.frame(
+  test_df <- tibble(
     dt_utc = ymd_hms(
       c(
         "2012-03-26 12:00:00",
@@ -772,7 +772,7 @@ test_that("check_timezone() throws expected errors", {
 })
 
 test_that("today() works", {
-  test_df <- data.frame(
+  test_df <- tibble(
     id = 1:6,
     date = lubridate::now(tzone = "") + lubridate::days(-5:0)
   )

@@ -1,63 +1,65 @@
 test_that("basic ops +, -, *, /, ^, ** work", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
 
-  expect_is_tidypolars(mutate(pl_iris, x = 1 + 1))
+  expect_is_tidypolars(mutate(iris_pl, x = 1 + 1))
 
   expect_equal(
-    mutate(pl_iris, x = 1 + 1) |>
+    mutate(iris_pl, x = 1 + 1) |>
       pull(x),
-    rep(2, 150)
+    dplyr::mutate(iris, x = 1 + 1) |>
+      dplyr::pull(x)
   )
 
   expect_equal(
-    mutate(pl_iris, x = 1 + 1, foo = x + 1) |>
+    mutate(iris_pl, x = 1 + 1, foo = x + 1) |>
       pull(x),
-    rep(2, 150)
+    dplyr::mutate(iris, x = 1 + 1, foo = x + 1) |>
+      dplyr::pull(x)
   )
 
   expect_equal(
-    mutate(pl_iris, x = Sepal.Width + Sepal.Length) |>
+    mutate(iris_pl, x = Sepal.Width + Sepal.Length) |>
       pull(x),
     iris$Sepal.Width + iris$Sepal.Length
   )
   expect_equal(
-    mutate(pl_iris, x = Sepal.Width - Sepal.Length + Petal.Length) |>
+    mutate(iris_pl, x = Sepal.Width - Sepal.Length + Petal.Length) |>
       pull(x),
     iris$Sepal.Width - iris$Sepal.Length + iris$Petal.Length
   )
   expect_equal(
-    mutate(pl_iris, x = Sepal.Width * Sepal.Length) |>
+    mutate(iris_pl, x = Sepal.Width * Sepal.Length) |>
       pull(x),
     iris$Sepal.Width * iris$Sepal.Length
   )
   expect_equal(
-    mutate(pl_iris, x = Sepal.Width / Sepal.Length) |>
+    mutate(iris_pl, x = Sepal.Width / Sepal.Length) |>
       pull(x),
     iris$Sepal.Width / iris$Sepal.Length
   )
   expect_equal(
-    mutate(pl_iris, x = Sepal.Width^Sepal.Length) |>
+    mutate(iris_pl, x = Sepal.Width^Sepal.Length) |>
       pull(x),
     iris$Sepal.Width^iris$Sepal.Length
   )
   expect_equal(
-    mutate(pl_iris, x = Sepal.Width**Sepal.Length) |>
+    mutate(iris_pl, x = Sepal.Width**Sepal.Length) |>
       pull(x),
     iris$Sepal.Width**iris$Sepal.Length
   )
 })
 
 test_that("logical ops +, -, *, / work", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
 
   expect_equal(
-    mutate(pl_iris, x = Sepal.Width > Sepal.Length) |>
+    mutate(iris_pl, x = Sepal.Width > Sepal.Length) |>
       pull(x),
     iris$Sepal.Width > iris$Sepal.Length
   )
   expect_equal(
     mutate(
-      pl_iris,
+      iris_pl,
       x = Sepal.Width > Sepal.Length & Petal.Width > Petal.Length
     ) |>
       pull(x),
@@ -65,26 +67,26 @@ test_that("logical ops +, -, *, / work", {
   )
 
   expect_false(
-    mutate(pl_iris, x = all(Sepal.Length / 2 > Sepal.Width)) |>
+    mutate(iris_pl, x = all(Sepal.Length / 2 > Sepal.Width)) |>
       pull(x) |>
       unique()
   )
 
   expect_true(
-    mutate(pl_iris, x = all(Sepal.Width > 0)) |>
+    mutate(iris_pl, x = all(Sepal.Width > 0)) |>
       pull(x) |>
       unique()
   )
 
   expect_false(
-    mutate(pl_iris, x = any(Sepal.Width > Sepal.Length)) |>
+    mutate(iris_pl, x = any(Sepal.Width > Sepal.Length)) |>
       pull(x) |>
       unique()
   )
 })
 
 test_that("%in operator works", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
 
   test <- pl$DataFrame(
     x1 = c("a", "a", "foo", "a", "c"),
@@ -106,46 +108,46 @@ test_that("%in operator works", {
 })
 
 test_that("can overwrite existin variables", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
 
   expect_equal(
-    mutate(pl_iris, Sepal.Width = Sepal.Width * 2) |>
+    mutate(iris_pl, Sepal.Width = Sepal.Width * 2) |>
       pull(Sepal.Width),
     iris$Sepal.Width * 2
   )
 })
 
 test_that("scalar value works", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
 
   expect_equal(
-    mutate(pl_iris, Sepal.Width = 2) |>
+    mutate(iris_pl, Sepal.Width = 2) |>
       pull(Sepal.Width) |>
       unique(),
     2
   )
 
   expect_equal(
-    mutate(pl_iris, Sepal.Width = "a") |>
+    mutate(iris_pl, Sepal.Width = "a") |>
       pull(Sepal.Width) |>
       unique(),
     "a"
   )
 
   expect_snapshot(
-    mutate(pl_iris, Sepal.Width = 1:2),
+    mutate(iris_pl, Sepal.Width = 1:2),
     error = TRUE
   )
   expect_snapshot(
-    mutate(pl_iris, Sepal.Width = letters[1:2]),
+    mutate(iris_pl, Sepal.Width = letters[1:2]),
     error = TRUE
   )
 })
 
 test_that("passing several expressions works", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
   out <- mutate(
-    pl_iris,
+    iris_pl,
     Sepal.Width = Sepal.Width * 2,
     Petal.Width = Petal.Width * 3
   )
@@ -160,18 +162,18 @@ test_that("passing several expressions works", {
 })
 
 test_that("dropping columns works", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
 
   expect_colnames(
-    mutate(pl_iris, Sepal.Length = 1, Species = NULL),
+    mutate(iris_pl, Sepal.Length = 1, Species = NULL),
     names(iris)[1:4]
   )
 })
 
 test_that("operations on grouped data work", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
 
-  out <- pl_iris |>
+  out <- iris_pl |>
     group_by(Species, maintain_order = TRUE) |>
     mutate(
       foo = mean(Sepal.Length)
@@ -179,7 +181,11 @@ test_that("operations on grouped data work", {
 
   expect_equal(
     pull(out, foo) |> unique(),
-    c(5.006, 5.936, 6.588)
+    iris |>
+      dplyr::group_by(Species) |>
+      dplyr::mutate(foo = mean(Sepal.Length)) |>
+      dplyr::pull(foo) |>
+      unique()
   )
 
   expect_equal(
@@ -209,45 +215,52 @@ test_that("operations on grouped data work", {
       attr("maintain_grp_order")
   )
 
-  pl_mtcars <- polars::as_polars_df(mtcars)
-  out <- pl_mtcars |>
+  mtcars_pl <- polars::as_polars_df(mtcars)
+  out <- mtcars_pl |>
     group_by(cyl, am) |>
     mutate(
       disp2 = disp / mean(disp)
     ) |>
     ungroup()
 
+  expected <- mtcars |>
+    dplyr::group_by(cyl, am) |>
+    dplyr::mutate(disp2 = disp / mean(disp)) |>
+    dplyr::ungroup() |>
+    dplyr::slice_head(n = 5) |>
+    dplyr::pull(disp2)
+
   expect_equal(
     out |> slice_head(n = 5) |> pull(disp2),
-    c(1.032258, 1.032258, 1.153692, 1.261305, 1.006664),
-    tolerance = 1e5
+    expected,
+    tolerance = 1e-5
   )
 
   expect_colnames(
-    pl_iris |>
+    iris_pl |>
       group_by(Species) |>
       mutate(Sepal.Length = NULL),
     names(iris)[2:5]
   )
 
   expect_equal(
-    pl_mtcars |>
+    mtcars_pl |>
       mutate(disp2 = disp / mean(disp), .by = c(cyl, am)),
     out
   )
 })
 
 test_that("warning if unknown argument", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
 
   expect_warning(
-    mutate(pl_iris, foo = mean(Sepal.Length, trim = 1)),
+    mutate(iris_pl, foo = mean(Sepal.Length, trim = 1)),
     "doesn't know how to use some arguments"
   )
 })
 
 test_that("custom function that returns Polars expression", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
 
   foo <- function(x, y) {
     tmp <- x$mean()
@@ -256,46 +269,46 @@ test_that("custom function that returns Polars expression", {
   }
 
   expect_equal(
-    mutate(pl_iris, x = foo(Sepal.Length, Petal.Length)) |>
+    mutate(iris_pl, x = foo(Sepal.Length, Petal.Length)) |>
       pull(x),
     rep(mean(iris$Sepal.Length) + mean(iris$Petal.Length), nrow(iris))
   )
 })
 
 test_that("custom function that doesn't return Polars expression", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
 
   foo <- function(x, y) {
     dplyr::near(x, y)
   }
 
   expect_snapshot(
-    mutate(pl_iris, x = foo(Sepal.Length, Petal.Length)),
+    mutate(iris_pl, x = foo(Sepal.Length, Petal.Length)),
     error = TRUE
   )
 })
 
 test_that("embracing work", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
 
   some_value <- 1
 
   expect_equal(
-    mutate(pl_iris, x = {{ some_value }}),
-    mutate(pl_iris, x = 1)
+    mutate(iris_pl, x = {{ some_value }}),
+    mutate(iris_pl, x = 1)
   )
 
   expect_equal(
-    mutate(pl_iris, x = some_value + Sepal.Length),
-    mutate(pl_iris, x = 1 + Sepal.Length)
+    mutate(iris_pl, x = some_value + Sepal.Length),
+    mutate(iris_pl, x = 1 + Sepal.Length)
   )
 })
 
 test_that("reordering expressions works", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
 
   expect_equal(
-    pl_iris |>
+    iris_pl |>
       mutate(
         x = Sepal.Length * 3,
         Petal.Length = Petal.Length / x,
@@ -303,7 +316,7 @@ test_that("reordering expressions works", {
         mean_pl = mean(Petal.Length),
         foo = Sepal.Width + Petal.Width
       ),
-    pl_iris$with_columns(
+    iris_pl$with_columns(
       x = pl$col("Sepal.Length") * 3,
       foo = pl$col("Sepal.Width") + pl$col("Petal.Width")
     )$with_columns(
@@ -314,14 +327,14 @@ test_that("reordering expressions works", {
   )
 
   expect_equal(
-    pl_iris |>
+    iris_pl |>
       mutate(
         x = 1,
         x = NULL,
         mean_pl = mean(Petal.Length),
         x = 2
       ),
-    pl_iris$with_columns(
+    iris_pl$with_columns(
       mean_pl = pl$col("Petal.Length")$mean(),
       x = 2
     )
@@ -329,9 +342,11 @@ test_that("reordering expressions works", {
 })
 
 test_that("correct sequential operations", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
+  iris_subset <- iris[c(1, 2, 149, 150), ]
+
   expect_equal(
-    iris[c(1, 2, 149, 150), ] |>
+    iris_subset |>
       as_polars_df() |>
       mutate(
         x = Sepal.Length > 6,
@@ -339,34 +354,40 @@ test_that("correct sequential operations", {
         z = ifelse(y, Petal.Width, Petal.Length * Sepal.Width)
       ) |>
       pull(z),
-    c(4.9, 4.2, 2.3, 15.3)
+    iris_subset |>
+      dplyr::mutate(
+        x = Sepal.Length > 6,
+        y = x & Species == "virginica",
+        z = ifelse(y, Petal.Width, Petal.Length * Sepal.Width)
+      ) |>
+      dplyr::pull(z)
   )
 })
 
 test_that("argument .keep works", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
 
   expect_snapshot(
-    mutate(pl_iris, x = 1, .keep = "foo"),
+    mutate(iris_pl, x = 1, .keep = "foo"),
     error = TRUE
   )
 
   expect_colnames(
-    mutate(pl_iris, x = Sepal.Length, y = Species, .keep = "used"),
+    mutate(iris_pl, x = Sepal.Length, y = Species, .keep = "used"),
     c("Sepal.Length", "Species", "x", "y")
   )
 
   expect_colnames(
-    mutate(pl_iris, x = Sepal.Length, y = Species, .keep = "unused"),
+    mutate(iris_pl, x = Sepal.Length, y = Species, .keep = "unused"),
     c("Sepal.Width", "Petal.Length", "Petal.Width", "x", "y")
   )
 
   expect_colnames(
-    mutate(pl_iris, x = Sepal.Length, y = Species, .keep = "none"),
+    mutate(iris_pl, x = Sepal.Length, y = Species, .keep = "none"),
     c("x", "y")
   )
 
-  pl_grp <- pl_iris |>
+  pl_grp <- iris_pl |>
     group_by(Species, maintain_order = TRUE)
 
   expect_colnames(
@@ -386,7 +407,7 @@ test_that("argument .keep works", {
 })
 
 test_that("works with a local variable defined in a function", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
   foobar <- function(x) {
     local_var <- "a"
     x |> mutate(foo = local_var)
@@ -401,9 +422,9 @@ test_that("works with a local variable defined in a function", {
 })
 
 test_that("works with external data.frame/list elements", {
-  pl_iris <- polars::as_polars_df(iris)
+  iris_pl <- polars::as_polars_df(iris)
   test <- polars::pl$DataFrame(x = 1:3)
-  test_df <- data.frame(x = 1:2)
+  test_df <- tibble(x = 1:2)
 
   expect_equal(
     test |>
@@ -422,7 +443,7 @@ test_that("works with external data.frame/list elements", {
 
 test_that("empty expressions", {
   test <- pl$DataFrame(grp = 1, x = 1)
-  test_df <- data.frame(grp = 1, x = 1)
+  test_df <- tibble(grp = 1, x = 1)
   expect_equal(
     test |> mutate(),
     test_df |> mutate()

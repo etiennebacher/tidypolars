@@ -8,7 +8,7 @@ test_that("paste() and paste0() work", {
     string = character_(any_na = TRUE),
     separator = character_(len = 1),
     property = function(string, separator) {
-      test_df <- data.frame(x1 = string)
+      test_df <- tibble(x1 = string)
       test <- pl$LazyFrame(x1 = string)
 
       expect_equal_lazy(
@@ -49,7 +49,7 @@ patrick::with_parameters_test_that(
       tests = 40,
       string = character_(any_na = TRUE),
       property = function(string) {
-        test_df <- data.frame(x1 = string)
+        test_df <- tibble(x1 = string)
         test <- pl$LazyFrame(x1 = string)
 
         pl_code <- paste0("mutate(test, foo = ", fun, "(string)) |> pull(foo)")
@@ -79,7 +79,7 @@ test_that("str_trim() works", {
       constant("right")
     ),
     property = function(string, side) {
-      test_df <- data.frame(x1 = string)
+      test_df <- tibble(x1 = string)
       test <- pl$LazyFrame(x1 = string)
 
       expect_equal_lazy(
@@ -112,7 +112,7 @@ test_that("str_trim() works", {
 #     # can't use "both" in polars
 #     side = quickcheck::one_of(constant("left"), constant("right")),
 #     property = function(string, side, pad, width) {
-#       test_df <- data.frame(x1 = string)
+#       test_df <- tibble(x1 = string)
 #       test <- pl$LazyFrame(x1 = string)
 #
 #       # Might work in the future but for now width must have length 1
@@ -140,7 +140,7 @@ test_that("str_dup() works", {
     # Very high numbers crash the session, I guess because of stringr
     times = numeric_bounded(-10000, 10000, any_na = TRUE),
     property = function(string, times) {
-      test_df <- data.frame(x1 = string)
+      test_df <- tibble(x1 = string)
       test <- pl$LazyFrame(x1 = string)
 
       expect_equal_or_both_error(
@@ -160,7 +160,7 @@ test_that("str_sub() works", {
     start = numeric_(any_na = TRUE),
     end = numeric_(any_na = TRUE),
     property = function(string, start, end) {
-      test_df <- data.frame(x1 = string)
+      test_df <- tibble(x1 = string)
       test <- pl$LazyFrame(x1 = string)
 
       expect_equal_or_both_error(
@@ -185,7 +185,7 @@ test_that("substr() works", {
     start = numeric_(any_na = TRUE, len = length),
     end = numeric_(any_na = TRUE, len = length),
     property = function(string, start, end) {
-      test_df <- data.frame(x1 = string)
+      test_df <- tibble(x1 = string)
       test <- pl$LazyFrame(x1 = string)
 
       expect_equal_or_both_error(
@@ -207,7 +207,7 @@ test_that("str_equal() works", {
     x = character_(any_na = TRUE, len = length),
     y = character_(any_na = TRUE, len = length),
     property = function(x, y) {
-      test_df <- data.frame(x = x, y = y)
+      test_df <- tibble(x = x, y = y)
       test <- as_polars_lf(test_df)
 
       expect_equal_or_both_error(

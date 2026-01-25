@@ -1,5 +1,5 @@
 test_that("which.min() and which.max() work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x = c(1:4, 0:5, 11, 10),
     x_na = c(1:4, NA, 1:5, 11, 10),
     x_inf = c(1, Inf, 3:4, -Inf, 1:5, 11, 10)
@@ -213,7 +213,7 @@ test_that("stats::lag() is not supported", {
 })
 
 test_that("seq() works", {
-  dat <- data.frame(x = 1:4)
+  dat <- tibble(x = 1:4)
   expect_equal(
     mutate(as_polars_df(dat), y = seq(2, 5)),
     mutate(dat, y = seq(2, 5))
@@ -223,7 +223,7 @@ test_that("seq() works", {
     mutate(dat, y = seq(1, 2, 4))
   )
 
-  dat <- data.frame(x = 1:2)
+  dat <- tibble(x = 1:2)
   expect_equal(
     mutate(as_polars_df(dat), y = seq(1, 4, by = 2)),
     mutate(dat, y = seq(1, 4, by = 2))
@@ -238,7 +238,7 @@ test_that("seq() works", {
 })
 
 test_that("seq_len() works", {
-  dat <- data.frame(x = 1:4)
+  dat <- tibble(x = 1:4)
   expect_equal(
     mutate(as_polars_df(dat), y = seq_len(4)),
     mutate(dat, y = seq_len(4))

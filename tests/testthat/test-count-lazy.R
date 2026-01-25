@@ -3,185 +3,227 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("count works", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
 
-  expect_is_tidypolars(count(test))
+  expect_is_tidypolars(count(test_pl))
 
   expect_equal_lazy(
-    count(test) |> pull(n),
-    32
+    count(test_pl),
+    count(test)
   )
 
   expect_equal_lazy(
-    count(test, cyl) |> pull(n),
-    c(11, 7, 14)
+    count(test_pl, cyl),
+    count(test, cyl)
   )
 
   expect_equal_lazy(
-    count(test, cyl, am) |> pull(n),
-    c(3, 8, 4, 3, 12, 2)
+    count(test_pl, cyl, am),
+    count(test, cyl, am)
   )
 })
 
 test_that("arguments name and sort work", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
-    count(test, cyl, am, sort = TRUE, name = "count") |> pull(count),
-    c(12, 8, 4, 3, 3, 2)
+    count(test_pl, cyl, am, sort = TRUE, name = "count"),
+    count(test, cyl, am, sort = TRUE, name = "count")
   )
 
   expect_equal_lazy(
-    count(test, name = "count") |> pull(count),
-    32
+    count(test_pl, name = "count"),
+    count(test, name = "count")
   )
 })
 
 test_that("count works on grouped data", {
-  test <- polars::as_polars_lf(mtcars)
-  test_grp <- group_by(test, am)
+  test <- as_tibble(mtcars)
+  test_g <- group_by(test, am)
+  test_pl <- as_polars_lf(test)
+  test_g_pl <- group_by(test_pl, am)
 
   expect_equal_lazy(
-    count(test_grp) |> pull(n),
-    c(19, 13)
+    count(test_g_pl),
+    count(test_g)
   )
 
   expect_equal_lazy(
-    count(test_grp, cyl) |> pull(n),
-    c(3, 4, 12, 8, 3, 2)
+    count(test_g_pl, cyl),
+    count(test_g, cyl)
   )
 })
 
 test_that("add_count works", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
 
-  expect_colnames(
-    add_count(test, cyl),
-    c(names(mtcars), "n")
+  expect_equal_lazy(
+    add_count(test_pl, cyl),
+    add_count(test, cyl)
   )
 })
 
 test_that("arguments name and sort work", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
 
-  expect_colnames(
-    add_count(test, cyl, am, sort = TRUE, name = "count"),
-    c(names(mtcars), "count")
+  expect_equal_lazy(
+    add_count(test_pl, cyl, am, sort = TRUE, name = "count"),
+    add_count(test, cyl, am, sort = TRUE, name = "count")
   )
 
-  expect_dim(
-    add_count(test, cyl, am, sort = TRUE, name = "count"),
-    c(32, 12)
+  expect_equal_lazy(
+    add_count(test_pl, cyl, am, sort = TRUE, name = "count"),
+    add_count(test, cyl, am, sort = TRUE, name = "count")
   )
 
-  expect_dim(
-    add_count(test, name = "count"),
-    c(32, 12)
+  expect_equal_lazy(
+    add_count(test_pl, name = "count"),
+    add_count(test, name = "count")
   )
 })
 
 test_that("add_count works on grouped data", {
-  test <- polars::as_polars_lf(mtcars)
-  test_grp <- group_by(test, am, maintain_order = TRUE)
+  test <- as_tibble(mtcars)
+  test_g <- group_by(test, am)
+  test_pl <- as_polars_lf(test)
+  test_g_pl <- group_by(test_pl, am, maintain_order = TRUE)
 
   expect_equal_lazy(
-    attr(count(test_grp), "pl_grps"),
-    "am"
+    add_count(test_g_pl, cyl, am),
+    add_count(test_g, cyl, am)
+  )
+  expect_equal_lazy(
+    count(test_g_pl, cyl, am),
+    count(test_g, cyl, am)
   )
 
   expect_equal_lazy(
-    attr(add_count(test_grp), "pl_grps"),
+    attr(count(test_g_pl), "pl_grps"),
     "am"
   )
-
-  expect_true(attr(count(test_grp), "maintain_grp_order"))
-
-  expect_true(attr(add_count(test_grp), "maintain_grp_order"))
+  expect_equal_lazy(
+    attr(add_count(test_g_pl), "pl_grps"),
+    "am"
+  )
+  expect_true(attr(count(test_g_pl), "maintain_grp_order"))
+  expect_true(attr(add_count(test_g_pl), "maintain_grp_order"))
 })
 
 test_that("message if overwriting variable", {
-  test <- polars::as_polars_lf(mtcars)
-
-  test2 <- test |>
-    mutate(n = 1)
-
-  test3 <- test2 |>
-    mutate(nn = 1)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
 
   expect_message(
-    test2 |> count(n),
+    expect_equal_lazy(
+      test_pl |>
+        mutate(n = 1) |>
+        count(n),
+      test |>
+        mutate(n = 1) |>
+        count(n) |>
+        suppressMessages()
+    ),
     "Storing counts in `nn`, as `n` already present in input."
   )
 
   expect_message(
-    test2 |> add_count(cyl),
+    expect_equal_lazy(
+      test_pl |>
+        mutate(n = 1) |>
+        add_count(n),
+      test |>
+        mutate(n = 1) |>
+        add_count(n) |>
+        suppressMessages()
+    ),
     "Storing counts in `nn`, as `n` already present in input."
   )
 
   expect_message(
-    test3 |> add_count(cyl),
+    expect_equal_lazy(
+      test_pl |>
+        mutate(n = 1, nn = 1) |>
+        count(n, nn),
+      test |>
+        mutate(n = 1, nn = 1) |>
+        count(n, nn) |>
+        suppressMessages()
+    ),
     "Storing counts in `nnn`, as `n` already present in input."
   )
 
-  expect_equal_lazy(
-    test2 |>
-      add_count(cyl, name = "n") |>
-      pull(n),
-    test |>
-      add_count(cyl, name = "n") |>
-      pull(n)
+  expect_message(
+    expect_equal_lazy(
+      test_pl |>
+        mutate(n = 1, nn = 1) |>
+        add_count(cyl),
+      test |>
+        mutate(n = 1, nn = 1) |>
+        add_count(cyl) |>
+        suppressMessages()
+    ),
+    "Storing counts in `nnn`, as `n` already present in input."
   )
 })
 
 test_that("count() on grouping variables", {
-  test <- pl$LazyFrame(
-    year = c(1, 1, 2, 2),
-    vals = 1:4
-  ) |>
+  df <- tibble(year = c(1, 1, 2, 2), vals = 1:4)
+  df_pl <- as_polars_lf(df)
+
+  out <- df |>
+    group_by(year) |>
+    count(year)
+  out_pl <- df_pl |>
     group_by(year) |>
     count(year)
 
-  expect_equal_lazy(
-    test,
-    data.frame(year = c(1, 2), n = c(2L, 2L))
-  )
-  expect_equal_lazy(group_vars(test), "year")
-  expect_false(attr(test, "maintain_grp_order"))
+  expect_equal_lazy(out_pl, out)
+  expect_equal_lazy(group_vars(out_pl), "year")
+  expect_false(attr(out_pl, "maintain_grp_order"))
 
-  test <- pl$LazyFrame(
+  df2 <- tibble(
     year = c(1, 1, 2, 2),
     state = c("a", "a", "a", "b"),
     vals = 1:4
-  ) |>
+  )
+  df2_pl <- as_polars_lf(df2)
+
+  out2 <- df2 |>
+    group_by(year, state) |>
+    count(year)
+  out2_pl <- df2_pl |>
     group_by(year, state) |>
     count(year)
 
-  expect_equal_lazy(
-    test,
-    data.frame(year = c(1, 2, 2), state = c("a", "a", "b"), n = c(2L, 1L, 1L))
-  )
-  expect_equal_lazy(group_vars(test), c("year", "state"))
-  expect_false(attr(test, "maintain_grp_order"))
+  expect_equal_lazy(out2_pl, out2)
+  expect_equal_lazy(group_vars(out2_pl), c("year", "state"))
+  expect_false(attr(out2_pl, "maintain_grp_order"))
 })
 
 test_that("count() and add_count() explicitly do not support 'wt'", {
+  test_pl <- as_polars_lf(mtcars)
+
   expect_warning(
-    mtcars |> as_polars_lf() |> count(wt = drat),
+    test_pl |> count(wt = drat),
     "Argument `wt` is not supported by tidypolars"
   )
   expect_warning(
-    mtcars |> as_polars_lf() |> add_count(wt = drat),
+    test_pl |> add_count(wt = drat),
     "Argument `wt` is not supported by tidypolars"
   )
   withr::with_options(
     list("tidypolars_unknown_args" = "error"),
     {
       expect_error_lazy(
-        mtcars |> as_polars_lf() |> count(wt = drat),
+        test_pl |> count(wt = drat),
         "Argument `wt` is not supported by tidypolars"
       )
       expect_error_lazy(
-        mtcars |> as_polars_lf() |> add_count(wt = drat),
+        test_pl |> add_count(wt = drat),
         "Argument `wt` is not supported by tidypolars"
       )
     }

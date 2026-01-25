@@ -1,81 +1,89 @@
 test_that("basic behavior works", {
-  pl_iris <- polars::as_polars_df(iris)
-  pl_iris_g <- pl_iris |>
+  iris_pl <- polars::as_polars_df(iris)
+  iris_g_pl <- iris_pl |>
     group_by(Species, maintain_order = TRUE)
 
   expect_equal(
-    summarize(pl_iris_g, x = mean(Sepal.Length)) |>
+    summarize(iris_g_pl, x = mean(Sepal.Length)) |>
       pull(x),
-    c(5.006, 5.936, 6.588)
+    iris |>
+      dplyr::group_by(Species) |>
+      dplyr::summarize(x = mean(Sepal.Length)) |>
+      dplyr::pull(x)
   )
 
   expect_equal(
-    summarize(pl_iris, x = mean(Sepal.Length), .by = Species) |>
+    summarize(iris_pl, x = mean(Sepal.Length), .by = Species) |>
       pull(x) |>
       sort(),
-    summarize(pl_iris_g, x = mean(Sepal.Length)) |>
+    summarize(iris_g_pl, x = mean(Sepal.Length)) |>
       pull(x) |>
       sort()
   )
 
   expect_equal(
-    summarize(pl_iris_g, x = sum(Sepal.Length), y = mean(Sepal.Length)) |>
+    summarize(iris_g_pl, x = sum(Sepal.Length), y = mean(Sepal.Length)) |>
       pull(y),
-    c(5.006, 5.936, 6.588)
+    iris |>
+      dplyr::group_by(Species) |>
+      dplyr::summarize(x = sum(Sepal.Length), y = mean(Sepal.Length)) |>
+      dplyr::pull(y)
   )
 
   expect_equal(
-    summarize(pl_iris_g, x = 1) |>
+    summarize(iris_g_pl, x = 1) |>
       pull(x),
     rep(1, 3)
   )
 
   expect_equal(
-    summarize(pl_iris, x = mean(Petal.Length)) |>
+    summarize(iris_pl, x = mean(Petal.Length)) |>
       pull(x),
-    3.758
+    iris |>
+      dplyr::summarize(x = mean(Petal.Length)) |>
+      dplyr::pull(x)
   )
 
   expect_colnames(
-    summarize(pl_iris_g, Sepal.Length = NULL),
+    summarize(iris_g_pl, Sepal.Length = NULL),
     names(iris)[2:5]
   )
 })
 
 test_that("correctly handles attributes", {
-  pl_mtcars <- polars::as_polars_df(mtcars)
-  pl_mtcars_g <- pl_mtcars |>
+  mtcars_pl <- polars::as_polars_df(mtcars)
+  mtcars_g_pl <- mtcars_pl |>
     group_by(cyl, am, maintain_order = TRUE)
 
   expect_equal(
-    summarize(pl_mtcars_g, x = mean(mpg)) |>
+    summarize(mtcars_g_pl, x = mean(mpg)) |>
       attr("pl_grps"),
     "cyl"
   )
 
   expect_true(
-    summarize(pl_mtcars_g, x = mean(mpg)) |>
+    summarize(mtcars_g_pl, x = mean(mpg)) |>
       attr("maintain_grp_order")
   )
 
   expect_null(
-    summarize(pl_mtcars, x = mean(mpg), .by = c(cyl, am)) |>
+    summarize(mtcars_pl, x = mean(mpg), .by = c(cyl, am)) |>
       attr("pl_grps")
   )
 
   expect_null(
-    summarize(pl_mtcars, x = mean(mpg), .by = c(cyl, am)) |>
+    summarize(mtcars_pl, x = mean(mpg), .by = c(cyl, am)) |>
       attr("maintain_grp_order")
   )
 
   expect_is_tidypolars(
-    summarize(pl_mtcars, x = mean(mpg), .by = c(cyl, am))
+    summarize(mtcars_pl, x = mean(mpg), .by = c(cyl, am))
   )
 })
 
 test_that("works with a local variable defined in a function", {
-  pl_iris <- polars::as_polars_df(iris)
-  pl_iris_g <- pl_iris |>
+  iris_pl <- polars::as_polars_df(iris)
+  iris_g_pl <- iris_pl |>
     group_by(Species, maintain_order = TRUE)
 
   foobar <- function(x) {
@@ -106,55 +114,52 @@ test_that("check .add argument of group_by works", {
 })
 
 test_that("argument .groups works", {
-  pl_mtcars <- as_polars_df(mtcars)
+  mtcars_pl <- as_polars_df(mtcars)
 
-  # default is "drop_last"
   expect_equal(
-    pl_mtcars |>
+    mtcars_pl |>
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n()) |>
       group_vars(),
     c("am", "cyl")
   )
 
-  # other values
   expect_equal(
-    pl_mtcars |>
+    mtcars_pl |>
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "drop_last") |>
       group_vars(),
     c("am", "cyl")
   )
   expect_equal(
-    pl_mtcars |>
+    mtcars_pl |>
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "keep") |>
       group_vars(),
     c("am", "cyl", "vs")
   )
   expect_equal(
-    pl_mtcars |>
+    mtcars_pl |>
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "drop") |>
       group_vars(),
     character(0)
   )
   expect_snapshot(
-    pl_mtcars |>
+    mtcars_pl |>
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "rowwise"),
     error = TRUE
   )
   expect_snapshot(
-    pl_mtcars |>
+    mtcars_pl |>
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "foobar"),
     error = TRUE
   )
 
-  # "drop_last" with one group originally
   expect_equal(
-    pl_mtcars |>
+    mtcars_pl |>
       group_by(am) |>
       summarise(cyl_n = n(), .groups = "drop_last") |>
       group_vars(),
@@ -165,7 +170,7 @@ test_that("argument .groups works", {
 
 test_that("empty expressions", {
   test <- pl$DataFrame(grp = 1:2, x = 1:2)
-  test_df <- data.frame(grp = 1:2, x = 1:2)
+  test_df <- tibble(grp = 1:2, x = 1:2)
   expect_equal(
     test |> summarize() |> ncol(),
     0

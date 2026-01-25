@@ -1,12 +1,18 @@
 test_that("basic behavior works", {
-  pl_fish_encounters <- as_polars_df(tidyr::fish_encounters)
+  fish_encounters <- as.data.frame(tidyr::fish_encounters)
+  fish_encounters_pl <- as_polars_df(fish_encounters)
 
-  out <- pl_fish_encounters |>
+  out <- fish_encounters_pl |>
     pivot_wider(names_from = station, values_from = seen)
 
   expect_is_tidypolars(out)
 
-  expect_equal(dim(out), c(19, 12))
+  expect_equal(
+    out,
+    fish_encounters |>
+      tidyr::pivot_wider(names_from = station, values_from = seen) |>
+      as.data.frame()
+  )
   expect_colnames(
     out,
     c(
@@ -38,8 +44,10 @@ test_that("basic behavior works", {
 })
 
 test_that("names_prefix works", {
-  pl_fish_encounters <- as_polars_df(tidyr::fish_encounters)
-  prefixed <- pl_fish_encounters |>
+  fish_encounters <- as.data.frame(tidyr::fish_encounters)
+  fish_encounters_pl <- as_polars_df(fish_encounters)
+
+  prefixed <- fish_encounters_pl |>
     pivot_wider(
       names_from = station,
       values_from = seen,
@@ -53,7 +61,7 @@ test_that("names_prefix works", {
   )
 
   expect_snapshot(
-    pl_fish_encounters |>
+    fish_encounters_pl |>
       pivot_wider(
         names_from = station,
         values_from = seen,
@@ -64,18 +72,18 @@ test_that("names_prefix works", {
 })
 
 test_that("names_sep works", {
-  us_rent_income <- tidyr::us_rent_income
-  pl_us_rent_income <- as_polars_df(us_rent_income)
+  us_rent_income <- as.data.frame(tidyr::us_rent_income)
+  us_rent_income_pl <- as_polars_df(us_rent_income)
 
   expect_equal(
     us_rent_income |>
-      pivot_wider(
+      tidyr::pivot_wider(
         names_from = variable,
         names_sep = ".",
         values_from = c(estimate, moe)
       ) |>
       as.data.frame(),
-    pl_us_rent_income |>
+    us_rent_income_pl |>
       pivot_wider(
         names_from = variable,
         names_sep = ".",
@@ -85,9 +93,10 @@ test_that("names_sep works", {
 })
 
 test_that("values_fill works", {
-  pl_fish_encounters <- as_polars_df(tidyr::fish_encounters)
+  fish_encounters <- as.data.frame(tidyr::fish_encounters)
+  fish_encounters_pl <- as_polars_df(fish_encounters)
 
-  filled <- pl_fish_encounters |>
+  filled <- fish_encounters_pl |>
     pivot_wider(names_from = station, values_from = seen, values_fill = 0) |>
     slice_head(n = 5)
 
@@ -107,11 +116,11 @@ test_that("several columns in names_from works", {
     country = c("AI", "EI"),
     year = 2000:2014
   ) |>
-    filter((product == "A" & country == "AI") | product == "B") |>
-    mutate(production = 1:45) |>
-    as_polars_df()
+    dplyr::filter((product == "A" & country == "AI") | product == "B") |>
+    dplyr::mutate(production = 1:45)
+  production_pl <- as_polars_df(production)
 
-  wide <- production |>
+  wide <- production_pl |>
     pivot_wider(
       names_from = c(product, country),
       values_from = production,
@@ -131,11 +140,11 @@ test_that("names_glue works", {
     country = c("AI", "EI"),
     year = 2000:2014
   ) |>
-    filter((product == "A" & country == "AI") | product == "B") |>
-    mutate(production = 1:45) |>
-    as_polars_df()
+    dplyr::filter((product == "A" & country == "AI") | product == "B") |>
+    dplyr::mutate(production = 1:45)
+  production_pl <- as_polars_df(production)
 
-  wide <- production |>
+  wide <- production_pl |>
     pivot_wider(
       names_from = c(product, country),
       values_from = production,
@@ -147,7 +156,7 @@ test_that("names_glue works", {
     data.frame(year = 2000, prod_A_AI = 1, prod_B_AI = 2, prod_B_EI = 3)
   )
 
-  wide <- production |>
+  wide <- production_pl |>
     pivot_wider(
       names_from = product,
       values_from = production,
@@ -166,77 +175,84 @@ test_that("names_glue works", {
 })
 
 test_that("error when overwriting existing column", {
-  df <- pl$DataFrame(
+  df <- tibble(
     a = c(1, 1),
     key = c("a", "b"),
     val = c(1, 2)
   )
+  df_pl <- as_polars_df(df)
 
   expect_snapshot(
-    pivot_wider(df, names_from = key, values_from = val),
+    pivot_wider(df_pl, names_from = key, values_from = val),
     error = TRUE
   )
 })
 
 test_that("`names_from` must be supplied if `name` isn't in data", {
-  df <- pl$DataFrame(key = "x", val = 1)
+  df <- tibble(key = "x", val = 1)
+  df_pl <- as_polars_df(df)
   expect_snapshot(
-    pivot_wider(df, values_from = val),
+    pivot_wider(df_pl, values_from = val),
     error = TRUE
   )
 })
 
-# `values_from` must be supplied if `value` isn't in `data`
 test_that("`values_from` must be supplied if `value` isn't in data", {
-  df <- pl$DataFrame(key = "x", val = 1)
+  df <- tibble(key = "x", val = 1)
+  df_pl <- as_polars_df(df)
   expect_snapshot(
-    pivot_wider(df, names_from = key),
+    pivot_wider(df_pl, names_from = key),
     error = TRUE
   )
 })
 
 test_that("`names_from` must identify at least 1 column", {
-  df <- pl$DataFrame(key = "x", val = 1)
+  df <- tibble(key = "x", val = 1)
+  df_pl <- as_polars_df(df)
   expect_snapshot(
-    pivot_wider(df, names_from = starts_with("foo"), values_from = val),
+    pivot_wider(df_pl, names_from = starts_with("foo"), values_from = val),
     error = TRUE
   )
 })
 
 test_that("`values_from` must identify at least 1 column", {
-  df <- pl$DataFrame(key = "x", val = 1)
+  df <- tibble(key = "x", val = 1)
+  df_pl <- as_polars_df(df)
   expect_snapshot(
-    pivot_wider(df, names_from = key, values_from = starts_with("foo")),
+    pivot_wider(df_pl, names_from = key, values_from = starts_with("foo")),
     error = TRUE
   )
 })
 
 test_that("`id_cols = everything()` excludes `names_from` and `values_from`", {
-  df <- pl$DataFrame(key = "x", name = "a", value = 1L)
+  df <- tibble(key = "x", name = "a", value = 1L)
+  df_pl <- as_polars_df(df)
   expect_equal(
-    pivot_wider(df, id_cols = everything()),
+    pivot_wider(df_pl, id_cols = everything()),
     data.frame(key = "x", a = 1L)
   )
 })
 
 test_that("`id_cols` can't select columns from `names_from` or `values_from`", {
-  df <- pl$DataFrame(name = c("x", "y"), value = c(1, 2))
+  df <- tibble(name = c("x", "y"), value = c(1, 2))
+  df_pl <- as_polars_df(df)
   expect_snapshot(
-    pivot_wider(df, id_cols = name, names_from = name, values_from = value),
+    pivot_wider(df_pl, id_cols = name, names_from = name, values_from = value),
     error = TRUE
   )
   expect_snapshot(
-    pivot_wider(df, id_cols = value, names_from = name, values_from = value),
+    pivot_wider(df_pl, id_cols = value, names_from = name, values_from = value),
     error = TRUE
   )
 })
 
 test_that("unsupported args throw warning", {
-  pl_fish_encounters <- as_polars_df(tidyr::fish_encounters)
+  fish_encounters <- as.data.frame(tidyr::fish_encounters)
+  fish_encounters_pl <- as_polars_df(fish_encounters)
 
   expect_warning(
     pivot_wider(
-      pl_fish_encounters,
+      fish_encounters_pl,
       names_from = station,
       values_from = seen,
       names_sort = TRUE,
@@ -246,13 +262,12 @@ test_that("unsupported args throw warning", {
 })
 
 test_that("dots must be empty", {
-  pl_fish_encounters <- as_polars_df(tidyr::fish_encounters)
+  fish_encounters <- as.data.frame(tidyr::fish_encounters)
+  fish_encounters_pl <- as_polars_df(fish_encounters)
 
-  # Also gets the message from rlang because check_dots_used() is called before
-  # dispatching the generic
   expect_snapshot(
     pivot_wider(
-      pl_fish_encounters,
+      fish_encounters_pl,
       names_from = station,
       values_from = seen,
       foo = TRUE,

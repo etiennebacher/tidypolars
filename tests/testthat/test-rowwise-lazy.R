@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior with statistical functions works", {
-  test_df <- data.frame(x = c(2, 2), y = c(2, 3), z = c(5, NA)) |>
+  test_df <- tibble(x = c(2, 2), y = c(2, 3), z = c(5, NA)) |>
     rowwise()
   test <- as_polars_lf(test_df) |>
     rowwise()

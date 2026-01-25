@@ -1,158 +1,134 @@
 test_that("basic behavior works", {
-  test <- polars::pl$DataFrame(
+  test <- tibble(
     country = c("France", "France", "UK", "UK", "Spain"),
     year = c(2020, 2021, 2019, 2020, 2022),
     value = c(1, 2, 3, 4, 5)
   )
+  test_pl <- as_polars_df(test)
 
-  expect_is_tidypolars(complete(test, country, year))
+  expect_is_tidypolars(complete(test_pl, country, year))
 
-  expect_dim(
-    complete(test, country, year),
-    c(12, 3)
+  expect_equal(
+    complete(test_pl, country, year),
+    complete(test, country, year)
   )
 
   expect_equal(
-    complete(test, country, year) |>
-      pull(country),
-    rep(c("France", "Spain", "UK"), each = 4)
+    complete(test_pl, country, year),
+    complete(test, country, year)
   )
 
   expect_equal(
-    complete(test, country, year) |>
-      slice_head(n = 4) |>
-      pull(value),
-    c(NA, 1, 2, NA)
+    complete(test_pl, country, year, fill = list(value = 99)),
+    complete(test, country, year, fill = list(value = 99))
   )
 
+  # I would rather not force an implicit sort in complete()
   expect_equal(
-    complete(test, country, year, fill = list(value = 99)) |>
-      slice_head(n = 4) |>
-      pull(value),
-    c(99, 1, 2, 99)
-  )
-
-  expect_equal(
-    complete(test, country),
-    test
+    complete(test_pl, country) |> arrange(country),
+    complete(test, country)
   )
 })
 
 test_that("works on grouped data", {
-  df <- pl$DataFrame(
+  df <- tibble(
     g = c("a", "b", "a"),
     a = c(1L, 1L, 2L),
     b = c("a", "a", "b"),
     c = c(4, 5, 6)
   )
   gdf <- group_by(df, g)
-  out <- complete(gdf, a, b) |>
-    arrange(g)
+  df_pl <- as_polars_df(df)
+  gdf_pl <- group_by(df_pl, g)
 
   expect_equal(
-    out,
-    data.frame(
-      g = c(rep("a", 4), "b"),
-      a = c(1, 1, 2, 2, 1),
-      b = c("a", "b", "a", "b", "a"),
-      c = c(4, NA, NA, 6, 5)
-    )
+    complete(gdf_pl, a, b) |>
+      arrange(g),
+    complete(gdf, a, b)
   )
 
   expect_equal(
-    attr(out, "pl_grps"),
+    attr(complete(gdf_pl, a, b), "pl_grps"),
     "g"
   )
 })
 
 test_that("argument 'explicit' works", {
-  df <- pl$DataFrame(
+  df <- tibble(
     g = c("a", "b", "a"),
     a = c(1L, 1L, 2L),
     b = c("a", NA, "b"),
     c = c(4, 5, NA)
   )
+  df_pl <- as_polars_df(df)
 
   expect_equal(
-    df |>
+    df_pl |>
       complete(g, a, fill = list(b = "foo", c = 1), explicit = FALSE),
-    data.frame(
-      g = rep(c("a", "b"), each = 2),
-      a = rep(1:2, 2),
-      b = c("a", "b", NA, "foo"),
-      c = c(4, NA, 5, 1)
-    )
+    df |>
+      complete(g, a, fill = list(b = "foo", c = 1), explicit = FALSE)
   )
 
   expect_equal(
-    df |>
+    df_pl |>
       group_by(g, maintain_order = TRUE) |>
       complete(a, b, fill = list(c = 1), explicit = FALSE),
-    data.frame(
-      g = rep(c("a", "b"), c(4L, 1L)),
-      a = c(1L, 1L, 2L, 2L, 1L),
-      b = c("a", "b", "a", "b", NA),
-      c = c(4, 1, 1, NA, 5)
-    )
+    df |>
+      group_by(g) |>
+      complete(a, b, fill = list(c = 1), explicit = FALSE)
   )
 })
 
 test_that("can use named arguments", {
-  df <- pl$DataFrame(
+  df <- tibble(
     group = c(1:2, 1, 2),
     item_id = c(1:2, 2, 3),
     item_name = c("a", "a", "b", "b"),
     value1 = c(1, NA, 3, 4),
     value2 = 4:7
   )
+  df_pl <- as_polars_df(df)
 
   expect_equal(
-    df |>
+    df_pl |>
       complete(group, value1 = c(1, 2, 3, 4)) |>
       arrange(group, value1),
-    as.data.frame(df) |>
-      complete(group, value1 = c(1, 2, 3, 4)) |>
-      as.data.frame()
+    df |>
+      complete(group, value1 = c(1, 2, 3, 4))
   )
 
-  # only one named input
   expect_equal(
-    df |>
+    df_pl |>
       complete(value1 = c(1, 2, 3, 4)) |>
       arrange(value1),
-    as.data.frame(df) |>
-      complete(value1 = c(1, 2, 3, 4)) |>
-      as.data.frame()
+    df |>
+      complete(value1 = c(1, 2, 3, 4))
   )
 
-  # input columns are reordered
   expect_equal(
-    df |>
+    df_pl |>
       complete(value1 = c(1, 2, 3, 4), group) |>
       arrange(value1, group),
-    as.data.frame(df) |>
-      complete(value1 = c(1, 2, 3, 4), group) |>
-      as.data.frame()
+    df |>
+      complete(value1 = c(1, 2, 3, 4), group)
   )
   expect_equal(
-    df |>
+    df_pl |>
       group_by(item_id) |>
       complete(value1 = c(1, 2, 3, 4), group) |>
       arrange(item_id, value1, group),
-    as.data.frame(df) |>
+    df |>
       group_by(item_id) |>
-      complete(value1 = c(1, 2, 3, 4), group) |>
-      as.data.frame()
+      complete(value1 = c(1, 2, 3, 4), group)
   )
 
-  # more than 1 unnamed and 1 named
-  df <- pl$DataFrame(a = 1:2, b = 3:4, c = 5:6)
+  df2 <- tibble(a = 1:2, b = 3:4, c = 5:6)
+  df2_pl <- as_polars_df(df2)
   expect_equal(
-    df |>
+    df2_pl |>
       complete(a, b = 1:4, c) |>
       arrange(a, b, c),
-    as.data.frame(df) |>
-      complete(a, b = 1:4, c) |>
-      as.data.frame()
+    df2 |>
+      complete(a, b = 1:4, c)
   )
 })

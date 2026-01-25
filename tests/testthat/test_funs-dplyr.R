@@ -370,7 +370,7 @@ test_that("row_number() works", {
 
 
 test_that("dplyr::lag() works", {
-  dat <- data.frame(
+  dat <- tibble(
     g = c(1, 1, 1, 1, 2, 2, 2, 2),
     t = c(1, 2, 3, 4, 4, 1, 2, 3),
     x = c(10, 20, 30, 40, 10, 20, 30, 40)
@@ -393,7 +393,7 @@ test_that("dplyr::lag() works", {
   )
 
   # With one group only
-  dat <- data.frame(
+  dat <- tibble(
     g = c(1, 1, 1, 1),
     t = c(1, 2, 3, 4),
     x = c(10, 20, 30, 40)
@@ -407,7 +407,7 @@ test_that("dplyr::lag() works", {
   )
 
   # fill NA
-  dat <- data.frame(
+  dat <- tibble(
     g = c(1, 1, 1, 1, 2),
     t = c(1, 2, 3, 4, 5),
     x = c(10, 20, 30, 40, 50)
@@ -422,7 +422,7 @@ test_that("dplyr::lag() works", {
 })
 
 test_that("dplyr::lead() works", {
-  dat <- data.frame(
+  dat <- tibble(
     g = c(1, 1, 1, 1, 2, 2, 2, 2),
     t = c(1, 2, 3, 4, 4, 1, 2, 3),
     x = c(10, 20, 30, 40, 10, 20, 30, 40)
@@ -443,7 +443,7 @@ test_that("dplyr::lead() works", {
   )
 
   # With one group only
-  dat <- data.frame(
+  dat <- tibble(
     g = c(1, 1, 1, 1),
     t = c(1, 2, 3, 4),
     x = c(10, 20, 30, 40)
@@ -457,7 +457,7 @@ test_that("dplyr::lead() works", {
   )
 
   # fill NA
-  dat <- data.frame(
+  dat <- tibble(
     g = c(1, 1, 1, 1, 2),
     t = c(1, 2, 3, 4, 5),
     x = c(10, 20, 30, 40, 50)
@@ -472,7 +472,7 @@ test_that("dplyr::lead() works", {
 })
 
 test_that("near() works", {
-  dat <- data.frame(
+  dat <- tibble(
     x = c(sqrt(2)^2, 0.1, NA),
     y = c(2, 0.2, 1)
   )

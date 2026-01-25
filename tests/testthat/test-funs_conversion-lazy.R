@@ -3,87 +3,102 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test_df <- polars::pl$LazyFrame(
+  test <- tibble(
     char1 = c("a", "a", "b"),
     char2 = c("1", "2", "3.5"),
     num1 = 1:3,
     num2 = c(0, 0, 1),
     log1 = c(TRUE, FALSE, TRUE)
   )
+  test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
-    mutate(test_df, char1 = as.numeric(char1)) |> pull(char1),
-    rep(NA_real_, 3)
+    mutate(test_pl, char1 = as.numeric(char1)),
+    mutate(test, char1 = as.numeric(char1)) |>
+      suppressWarnings()
   )
   expect_equal_lazy(
-    mutate(test_df, char2 = as.numeric(char2)) |> pull(char2),
-    c(1, 2, 3.5)
+    mutate(test_pl, char2 = as.numeric(char2)),
+    mutate(test, char2 = as.numeric(char2))
   )
   expect_equal_lazy(
-    mutate(test_df, num1 = as.logical(num1)) |> pull(num1),
-    c(TRUE, TRUE, TRUE)
+    mutate(test_pl, num1 = as.logical(num1)),
+    mutate(test, num1 = as.logical(num1))
   )
   expect_equal_lazy(
-    mutate(test_df, num2 = as.logical(num2)) |> pull(num2),
-    c(FALSE, FALSE, TRUE)
+    mutate(test_pl, num2 = as.logical(num2)),
+    mutate(test, num2 = as.logical(num2))
   )
   expect_equal_lazy(
-    mutate(test_df, num1 = as.character(num1)) |> pull(num1),
-    c("1", "2", "3")
+    mutate(test_pl, num1 = as.character(num1)),
+    mutate(test, num1 = as.character(num1))
   )
   expect_equal_lazy(
-    mutate(test_df, log1 = as.character(log1)) |> pull(log1),
-    c("true", "false", "true")
+    mutate(test_pl, log1 = as.character(log1)),
+    mutate(test, log1 = c("true", "false", "true"))
   )
 })
 
 test_that("as.Date() works for character columns", {
-  test <- pl$LazyFrame(a = "2020-01-01")
-  test_df <- as.data.frame(test)
+  test <- tibble(a = "2020-01-01")
+  test_pl <- as_polars_lf(test)
   expect_equal_lazy(
-    mutate(test, a = as.Date(a)),
-    mutate(test_df, a = as.Date(a))
+    mutate(test_pl, a = as.Date(a)),
+    mutate(test, a = as.Date(a))
   )
 
-  test <- pl$LazyFrame(a = c("2020-01-01", "abc"))
-  test_df <- as.data.frame(test)
+  test <- tibble(a = c("2020-01-01", "abc"))
+  test_pl <- as_polars_lf(test)
   expect_equal_lazy(
-    mutate(test, a = as.Date(a)),
-    mutate(test_df, a = as.Date(a))
+    mutate(test_pl, a = as.Date(a)),
+    mutate(test, a = as.Date(a))
   )
   expect_equal_lazy(
-    mutate(test, a = as.Date(a, format = "%Y-%m-%d")),
-    mutate(test_df, a = as.Date(a, format = "%Y-%m-%d"))
+    mutate(test_pl, a = as.Date(a, format = "%Y-%m-%d")),
+    mutate(test, a = as.Date(a, format = "%Y-%m-%d"))
   )
 
   expect_snapshot_lazy(
     mutate(
-      test,
+      test_pl,
       a = as.Date(a, format = c("%Y-%m-%d", "%Y-%m-%d", "%Y-%m-%d"))
     ),
     error = TRUE
   )
-  expect_snapshot_lazy(
-    mutate(
-      test,
-      a = as.Date(a, tryFormats = c("%Y-%m-%d", "%Y-%m-%d", "%Y-%m-%d"))
-    )
+  expect_warning(
+    expect_equal_lazy(
+      mutate(
+        test_pl,
+        a = as.Date(a, tryFormats = c("%Y-%m-%d", "%Y-%m-%d", "%Y-%m-%d"))
+      ),
+      mutate(
+        test,
+        a = as.Date(a, tryFormats = c("%Y-%m-%d", "%Y-%m-%d", "%Y-%m-%d"))
+      )
+    ),
+    'The following argument(s) will be ignored:',
+    fixed = TRUE
   )
-  expect_snapshot_lazy(
-    mutate(test, a = as.Date(a, optional = TRUE))
+  expect_warning(
+    expect_equal_lazy(
+      mutate(test_pl, a = as.Date(a, optional = TRUE)),
+      mutate(test, a = as.Date(a, optional = TRUE))
+    ),
+    'The following argument(s) will be ignored:',
+    fixed = TRUE
   )
 
-  test <- pl$LazyFrame(a = 1)
+  test_pl <- pl$LazyFrame(a = 1)
   expect_error_lazy(
-    mutate(test, a = as.Date(a)),
+    mutate(test_pl, a = as.Date(a)),
     "expected `String`"
   )
 
-  test <- pl$LazyFrame(a = as.Date("2020-01-01"))
-  test_df <- as.data.frame(test)
+  test <- tibble(a = as.Date("2020-01-01"))
+  test_pl <- as_polars_lf(test)
   expect_equal_lazy(
-    test |> filter(a >= as.Date("2020-01-01")),
-    test_df |> filter(a >= as.Date("2020-01-01"))
+    test_pl |> filter(a >= as.Date("2020-01-01")),
+    test |> filter(a >= as.Date("2020-01-01"))
   )
 })
 

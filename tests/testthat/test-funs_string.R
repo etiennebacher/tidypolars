@@ -1,5 +1,5 @@
 test_that("case functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -47,7 +47,7 @@ test_that("case functions work", {
 })
 
 test_that("paste and paste0 work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -92,7 +92,7 @@ test_that("paste and paste0 work", {
 })
 
 test_that("paste with groups and collapse", {
-  test_df <- data.frame(
+  test_df <- tibble(
     grp = c(1, 1, 2, 2),
     x = c("aa", "bb", "cc", "dd")
   )
@@ -146,7 +146,7 @@ test_that("paste with groups and collapse", {
 })
 
 test_that("start and end functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -225,7 +225,7 @@ test_that("start and end functions work", {
 # mutate(test, foo = str_starts(x1, filtervar))
 
 test_that("extract functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -316,7 +316,7 @@ test_that("extract functions work", {
 })
 
 test_that("length functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -373,7 +373,7 @@ test_that("length functions work", {
 })
 
 test_that("replace functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -528,7 +528,7 @@ test_that("replace functions work", {
 })
 
 test_that("remove functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -586,7 +586,7 @@ test_that("remove functions work", {
 })
 
 test_that("sub functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -725,7 +725,7 @@ test_that("sub functions work", {
 })
 
 test_that("count functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -790,7 +790,7 @@ test_that("count functions work", {
 })
 
 test_that("trim functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -854,7 +854,7 @@ test_that("trim functions work", {
 })
 
 test_that("pad functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -902,7 +902,7 @@ test_that("pad functions work", {
 })
 
 test_that("word functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -945,7 +945,7 @@ test_that("word functions work", {
 })
 
 test_that("squish functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -976,7 +976,7 @@ test_that("squish functions work", {
 })
 
 test_that("detect functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -1050,7 +1050,7 @@ test_that("detect functions work", {
 })
 
 test_that("regex functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -1082,7 +1082,7 @@ test_that("regex functions work", {
 })
 
 test_that("dup functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -1148,7 +1148,7 @@ test_that("dup functions work", {
 })
 
 test_that("split functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -1213,7 +1213,7 @@ test_that("split functions work", {
 })
 
 test_that("trunc functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("heLLo there", "it's mE"),
     x2 = c("apples x4", "bag of flour"),
     x3 = c("\u6c49\u5b57", "\U0001f60a"),
@@ -1274,7 +1274,7 @@ test_that("trunc functions work", {
 
 # str_replace_na ---------------------------------------------------------
 test_that("stringr::str_replace_na works", {
-  test_df <- data.frame(
+  test_df <- tibble(
     generic = c(NA, "abc", "def"),
     logical = c(NA, TRUE, FALSE),
     integer = c(NA_integer_, 2L, 3L),
@@ -1360,7 +1360,7 @@ test_that("stringr::str_replace_na works", {
 })
 
 test_that("str_equal() works", {
-  test_df <- data.frame(x = c("\u00e1", "\u2126"), y = c("a\u0301", "\u03A9"))
+  test_df <- tibble(x = c("\u00e1", "\u2126"), y = c("a\u0301", "\u03A9"))
   test <- as_polars_df(test_df)
 
   expect_equal(
@@ -1375,7 +1375,7 @@ test_that("str_equal() works", {
     "doesn't know how to use some arguments"
   )
 
-  test_df <- data.frame(x = character(), y = character())
+  test_df <- tibble(x = character(), y = character())
   test <- as_polars_df(test_df)
 
   expect_equal(

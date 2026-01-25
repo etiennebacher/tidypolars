@@ -1,5 +1,5 @@
 test_that("mathematical functions work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample(11:15),
@@ -74,7 +74,7 @@ test_that("mathematical functions work", {
 })
 
 test_that("warns if unknown args", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample(11:15),
@@ -96,7 +96,7 @@ test_that("warns if unknown args", {
 })
 
 test_that("%% and %/% work", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample(11:15),
@@ -126,7 +126,7 @@ test_that("%% and %/% work", {
 })
 
 test_that("ensure na.rm works fine", {
-  test_df <- data.frame(
+  test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample(11:15),

@@ -1,5 +1,5 @@
 test_that("basic behavior works", {
-  test <- data.frame(
+  test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample.int(5)
@@ -76,7 +76,7 @@ test_that("basic behavior works", {
 })
 
 test_that("if no .default, NA is used", {
-  test <- data.frame(
+  test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample.int(5)
@@ -96,7 +96,7 @@ test_that("if no .default, NA is used", {
 })
 
 test_that("evaluation of external objects works", {
-  test <- data.frame(
+  test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample.int(5)
@@ -118,7 +118,7 @@ test_that("evaluation of external objects works", {
 })
 
 test_that("some errors", {
-  test <- data.frame(
+  test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample.int(5)

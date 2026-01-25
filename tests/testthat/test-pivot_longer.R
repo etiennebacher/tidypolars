@@ -1,11 +1,17 @@
 test_that("basic behavior works", {
-  pl_relig_income <- as_polars_df(tidyr::relig_income)
-  out <- pl_relig_income |>
+  relig_income <- as.data.frame(tidyr::relig_income)
+  relig_income_pl <- as_polars_df(relig_income)
+  out <- relig_income_pl |>
     pivot_longer(!religion, names_to = "income", values_to = "count")
 
   expect_is_tidypolars(out)
 
-  expect_dim(out, c(180, 3))
+  expect_equal(
+    out,
+    relig_income |>
+      tidyr::pivot_longer(!religion, names_to = "income", values_to = "count") |>
+      as.data.frame()
+  )
   expect_colnames(out, c("religion", "income", "count"))
 
   first <- slice_head(out, n = 5)
@@ -44,10 +50,11 @@ test_that("basic behavior works", {
 })
 
 test_that("argument names_prefix works", {
-  pl_billboard <- as_polars_df(tidyr::billboard)
+  billboard <- as.data.frame(tidyr::billboard)
+  billboard_pl <- as_polars_df(billboard)
 
   expect_equal(
-    pl_billboard |>
+    billboard_pl |>
       pivot_longer(
         cols = starts_with("wk"),
         names_to = "week",
@@ -56,12 +63,11 @@ test_that("argument names_prefix works", {
       arrange(artist, track, date.entered, week) |>
       head(3) |>
       pull(week),
-    # polars and dplyr sort strings differently: for polars, "10" comes before "2"
     c("1", "10", "11")
   )
 
   expect_snapshot(
-    pl_billboard |>
+    billboard_pl |>
       pivot_longer(
         cols = starts_with("wk"),
         names_to = "week",
@@ -72,20 +78,20 @@ test_that("argument names_prefix works", {
 })
 
 test_that("unsupported args throw warning", {
-  pl_billboard <- as_polars_df(tidyr::billboard)
+  billboard <- as.data.frame(tidyr::billboard)
+  billboard_pl <- as_polars_df(billboard)
 
   expect_warning(
-    pivot_longer(pl_billboard, cols_vary = "fastest", names_ptypes = TRUE)
+    pivot_longer(billboard_pl, cols_vary = "fastest", names_ptypes = TRUE)
   )
 })
 
 test_that("dots must be empty", {
-  pl_billboard <- as_polars_df(tidyr::billboard)
+  billboard <- as.data.frame(tidyr::billboard)
+  billboard_pl <- as_polars_df(billboard)
 
-  # Also gets the message from rlang because check_dots_used() is called before
-  # dispatching the generic
   expect_snapshot(
-    pivot_longer(pl_billboard, foo = TRUE, cols_vary = "fastest"),
+    pivot_longer(billboard_pl, foo = TRUE, cols_vary = "fastest"),
     error = TRUE
   )
 })

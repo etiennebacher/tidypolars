@@ -1,285 +1,309 @@
 test_that("basic behavior works", {
-  pl_iris <- as_polars_df(iris)
+  test <- as_tibble(iris)
+  # TODO: this shouldn't be necessary
+  test$Species <- as.character(test$Species)
+  test_pl <- as_polars_df(test)
 
-  expect_is_tidypolars(filter(pl_iris, Species == "setosa"))
+  expect_is_tidypolars(filter(test_pl, Species == "setosa"))
 
-  expect_dim(
-    filter(pl_iris, Species == "setosa"),
-    c(50, 5)
+  expect_equal(
+    filter(test_pl, Species == "setosa"),
+    filter(test, Species == "setosa")
   )
 })
 
 test_that("combining combinations", {
-  pl_iris <- as_polars_df(iris)
+  test <- as_tibble(iris)
+  # TODO: this shouldn't be necessary
+  test$Species <- as.character(test$Species)
+  test_pl <- as_polars_df(test)
 
-  expect_dim(
-    filter(pl_iris, Sepal.Length < 5 & Species == "setosa"),
-    c(20, 5)
+  expect_equal(
+    filter(test_pl, Sepal.Length < 5 & Species == "setosa"),
+    filter(test, Sepal.Length < 5 & Species == "setosa")
   )
 
-  expect_dim(
-    filter(pl_iris, Sepal.Length < 5, Species == "setosa"),
-    c(20, 5)
+  expect_equal(
+    filter(test_pl, Sepal.Length < 5, Species == "setosa"),
+    filter(test, Sepal.Length < 5, Species == "setosa")
   )
 
-  expect_dim(
-    filter(pl_iris, Sepal.Length < 5 | Species == "setosa"),
-    c(52, 5)
+  expect_equal(
+    filter(test_pl, Sepal.Length < 5 | Species == "setosa"),
+    filter(test, Sepal.Length < 5 | Species == "setosa")
   )
 })
 
 test_that("expressions work", {
-  pl_iris <- as_polars_df(iris)
+  test <- as_tibble(iris)
+  test_pl <- as_polars_df(test)
 
-  expect_dim(
-    filter(pl_iris, Sepal.Length < Sepal.Width + Petal.Length),
-    c(115, 5)
+  expect_equal(
+    filter(test_pl, Sepal.Length < Sepal.Width + Petal.Length),
+    filter(test, Sepal.Length < Sepal.Width + Petal.Length)
   )
 })
 
 test_that("is.na() works", {
-  pl_iris <- as_polars_df(iris)
+  test2 <- as_tibble(iris)
+  # TODO: this shouldn't be necessary
+  test2$Species <- as.character(test2$Species)
 
-  iris2 <- iris
-  iris2[c(3, 8, 58, 133), "Species"] <- NA
-  pl_iris_2 <- as_polars_df(iris2)
+  test2[c(3, 8, 58, 133), "Species"] <- NA
+  test2_pl <- as_polars_df(test2)
 
-  expect_dim(
-    filter(pl_iris_2, is.na(Species)),
-    c(4, 5)
+  expect_equal(
+    filter(test2_pl, is.na(Species)),
+    filter(test2, is.na(Species))
   )
-  expect_dim(
-    filter(pl_iris_2, base::is.na(Species)),
-    c(4, 5)
+  expect_equal(
+    filter(test2_pl, base::is.na(Species)),
+    filter(test2, base::is.na(Species))
   )
-  expect_dim(
-    filter(pl_iris_2, !is.na(Species)),
-    c(146, 5)
+  expect_equal(
+    filter(test2_pl, !is.na(Species)),
+    filter(test2, !is.na(Species))
   )
-  expect_dim(
-    filter(pl_iris_2, Species == "setosa", !is.na(Species)),
-    c(48, 5)
+  expect_equal(
+    filter(test2_pl, Species == "setosa", !is.na(Species)),
+    filter(test2, Species == "setosa", !is.na(Species))
   )
-  expect_dim(
-    filter(pl_iris_2, Species == "setosa" | is.na(Species)),
-    c(52, 5)
+  expect_equal(
+    filter(test2_pl, Species == "setosa" | is.na(Species)),
+    filter(test2, Species == "setosa" | is.na(Species))
   )
 })
 
 test_that("is.nan() works", {
-  iris2 <- iris
-  iris2[c(3, 8, 58, 133), "Sepal.Length"] <- NaN
-  pl_iris_2 <- as_polars_df(iris2)
+  test2 <- as_tibble(iris)
+  # TODO: this shouldn't be necessary
+  test2$Species <- as.character(test2$Species)
 
-  expect_dim(
-    filter(pl_iris_2, is.nan(Sepal.Length)),
-    c(4, 5)
+  test2[c(3, 8, 58, 133), "Sepal.Length"] <- NaN
+  test2_pl <- as_polars_df(test2)
+
+  expect_equal(
+    filter(test2_pl, is.nan(Sepal.Length)),
+    filter(test2, is.nan(Sepal.Length))
   )
-  expect_dim(
-    filter(pl_iris_2, base::is.nan(Sepal.Length)),
-    c(4, 5)
+  expect_equal(
+    filter(test2_pl, base::is.nan(Sepal.Length)),
+    filter(test2, base::is.nan(Sepal.Length))
   )
-  expect_dim(
-    filter(pl_iris_2, !is.nan(Sepal.Length)),
-    c(146, 5)
+  expect_equal(
+    filter(test2_pl, !is.nan(Sepal.Length)),
+    filter(test2, !is.nan(Sepal.Length))
   )
-  expect_dim(
-    filter(pl_iris_2, Species == "setosa", !is.nan(Sepal.Length)),
-    c(48, 5)
+  expect_equal(
+    filter(test2_pl, Species == "setosa", !is.nan(Sepal.Length)),
+    filter(test2, Species == "setosa", !is.nan(Sepal.Length))
   )
-  expect_dim(
-    filter(pl_iris_2, Species == "setosa" | is.nan(Sepal.Length)),
-    c(52, 5)
+  expect_equal(
+    filter(test2_pl, Species == "setosa" | is.nan(Sepal.Length)),
+    filter(test2, Species == "setosa" | is.nan(Sepal.Length))
   )
 })
 
 test_that("%in% works", {
-  pl_mtcars <- as_polars_df(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test)
 
-  expect_dim(
-    filter(pl_mtcars, cyl %in% 4:5),
-    c(11, 11)
+  expect_equal(
+    filter(test_pl, cyl %in% 4:5),
+    filter(test, cyl %in% 4:5)
   )
 
-  expect_dim(
-    filter(pl_mtcars, cyl %in% 4:5 & am %in% 1),
-    c(8, 11)
+  expect_equal(
+    filter(test_pl, cyl %in% 4:5 & am %in% 1),
+    filter(test, cyl %in% 4:5 & am %in% 1)
   )
 
-  expect_dim(
-    filter(pl_mtcars, cyl %in% 4:5, am %in% 1),
-    c(8, 11)
+  expect_equal(
+    filter(test_pl, cyl %in% 4:5, am %in% 1),
+    filter(test, cyl %in% 4:5, am %in% 1)
   )
 
-  expect_dim(
-    filter(pl_mtcars, cyl %in% 4:5 | am %in% 1),
-    c(16, 11)
+  expect_equal(
+    filter(test_pl, cyl %in% 4:5 | am %in% 1),
+    filter(test, cyl %in% 4:5 | am %in% 1)
   )
 
-  expect_dim(
-    filter(pl_mtcars, cyl %in% 4:5, vs == 1),
-    c(10, 11)
+  expect_equal(
+    filter(test_pl, cyl %in% 4:5, vs == 1),
+    filter(test, cyl %in% 4:5, vs == 1)
   )
 
-  expect_dim(
-    filter(pl_mtcars, cyl %in% 4:5 | carb == 4),
-    c(21, 11)
+  expect_equal(
+    filter(test_pl, cyl %in% 4:5 | carb == 4),
+    filter(test, cyl %in% 4:5 | carb == 4)
   )
 
-  expect_dim(
-    iris |>
-      as_polars_df() |>
-      filter(Species %in% c("setosa", "virginica")),
-    c(100, 5)
+  test <- as_tibble(iris)
+  # TODO: this shouldn't be necessary
+  test$Species <- as.character(test$Species)
+  test_pl <- as_polars_df(test)
+
+  expect_equal(
+    test_pl |> filter(Species %in% c("setosa", "virginica")),
+    test |> filter(Species %in% c("setosa", "virginica"))
   )
 
-  expect_dim(
-    iris |>
-      as_polars_df() |>
-      filter(Species %in% c("setosa", "virginica")),
-    c(100, 5)
+  expect_equal(
+    test_pl |> filter(Species %in% c("setosa", "virginica")),
+    test |> filter(Species %in% c("setosa", "virginica"))
   )
 
-  # If both sides of `%in%` are of same length, ensure that each value of the
-  # LHS are checked against *all* values of the RHS.
-  test <- pl$DataFrame(x = c(1, 2, 3), y = c(1, 3, 2))
+  test <- tibble(x = c(1, 2, 3), y = c(1, 3, 2))
+  test_pl <- pl$DataFrame(x = c(1, 2, 3), y = c(1, 3, 2))
 
-  expect_dim(
-    test |>
-      filter(x %in% y),
-    c(3, 2)
+  expect_equal(
+    test_pl |> filter(x %in% y),
+    test |> filter(x %in% y)
   )
 })
 
 test_that("%in% works with NA", {
-  test <- data.frame(x = c(1, 2, NA))
+  test <- tibble(x = c(1, 2, NA))
   test_pl <- as_polars_df(test)
 
   expect_equal(
-    test |> filter(x %in% c(1, NA)),
-    test_pl |> filter(x %in% c(1, NA))
+    test_pl |> filter(x %in% c(1, NA)),
+    test |> filter(x %in% c(1, NA))
   )
-  # TODO: ideally this should work, but I think it's going to be tricky because
-  # we need to know the dtype of the LHS, which is not easy (or possible?).
-  # Maybe throw a custom error since this should only happen when the rhs is NA
-  # only?
-  # expect_equal(
-  #   test |> filter(x %in% NA),
-  #   test_pl |> filter(x %in% NA)
-  # )
 })
 
 test_that("between() works", {
-  pl_iris <- as_polars_df(iris)
+  test <- as_tibble(iris)
+  # TODO: this shouldn't be necessary
+  test$Species <- as.character(test$Species)
+  test_pl <- as_polars_df(test)
 
-  expect_dim(
-    filter(pl_iris, between(Sepal.Length, 5, 6)),
-    c(67, 5)
+  expect_equal(
+    filter(test_pl, between(Sepal.Length, 5, 6)),
+    filter(test, between(Sepal.Length, 5, 6))
   )
 
-  expect_dim(
-    filter(pl_iris, between(Sepal.Length, 5, 6), Species == "setosa"),
-    c(30, 5)
+  expect_equal(
+    filter(test_pl, between(Sepal.Length, 5, 6), Species == "setosa"),
+    filter(test, between(Sepal.Length, 5, 6), Species == "setosa")
   )
 })
 
 test_that("works with grouped data", {
-  by_cyl <- polars::as_polars_df(mtcars) |>
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test)
+
+  by_cyl <- test |>
+    group_by(cyl)
+  by_cyl_pl <- test_pl |>
     group_by(cyl, maintain_order = TRUE)
 
   expect_equal(
-    by_cyl |>
-      filter(disp == max(disp)) |>
-      pull(mpg),
-    c(21.4, 24.4, 10.4)
+    by_cyl_pl |> filter(disp == max(disp)),
+    by_cyl |> filter(disp == max(disp))
   )
 
   expect_equal(
-    as_polars_df(mtcars) |>
-      filter(disp == max(disp), .by = cyl) |>
-      pull(mpg),
-    by_cyl |>
-      filter(disp == max(disp)) |>
-      pull(mpg)
-  )
-
-  expect_dim(
-    as_polars_df(iris) |>
-      group_by(Species) |>
-      filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4),
-    c(123, 5)
-  )
-
-  expect_dim(
-    as_polars_df(iris) |>
-      filter(
-        Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4,
-        .by = Species
-      ),
-    c(123, 5)
+    test_pl |> filter(disp == max(disp), .by = cyl),
+    test |> filter(disp == max(disp), .by = cyl)
   )
 
   expect_equal(
-    by_cyl |>
+    by_cyl_pl |>
       filter(disp == max(disp)) |>
       attr("pl_grps"),
     "cyl"
   )
 
   expect_true(
-    by_cyl |>
+    by_cyl_pl |>
       filter(disp == max(disp)) |>
       attr("maintain_grp_order")
+  )
+
+  test <- as_tibble(iris)
+  # TODO: this shouldn't be necessary
+  test$Species <- as.character(test$Species)
+  test_pl <- as_polars_df(test)
+
+  expect_equal(
+    test_pl |>
+      group_by(Species) |>
+      filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4),
+    test |>
+      group_by(Species) |>
+      filter(Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4)
+  )
+
+  expect_equal(
+    test_pl |>
+      filter(
+        Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4,
+        .by = Species
+      ),
+    test |>
+      filter(
+        Sepal.Length > median(Sepal.Length) | Petal.Width > 0.4,
+        .by = Species
+      )
   )
 })
 
 test_that("all() and any() work with grouped data", {
-  foo <- pl$DataFrame(
+  test <- tibble(
     grp = c("a", "a", "b", "b"),
     x = c(TRUE, TRUE, TRUE, FALSE)
   )
+  test_pl <- as_polars_df(test)
 
-  expect_dim(
-    foo |>
+  expect_equal(
+    test_pl |>
       group_by(grp) |>
       filter(all(x)),
-    c(2, 2)
+    test |>
+      group_by(grp) |>
+      filter(all(x))
   )
 
-  expect_dim(
-    foo |>
+  expect_equal(
+    test_pl |>
       group_by(grp) |>
       filter(any(x)),
-    c(4, 2)
+    test |>
+      group_by(grp) |>
+      filter(any(x))
   )
 })
 
 test_that("works with .by", {
-  foo <- pl$DataFrame(
+  test <- tibble(
     grp = c("a", "a", "b", "b"),
     x = c(TRUE, TRUE, TRUE, FALSE)
   )
+  test_pl <- as_polars_df(test)
 
-  expect_dim(
-    foo |>
+  expect_equal(
+    test_pl |>
       filter(all(x), .by = starts_with("g")),
-    c(2, 2)
+    test |>
+      filter(all(x), .by = starts_with("g"))
   )
 
-  expect_dim(
-    foo |>
+  expect_equal(
+    test_pl |>
       filter(any(x), .by = starts_with("g")),
-    c(4, 2)
+    test |>
+      filter(any(x), .by = starts_with("g"))
   )
 
   expect_null(
-    foo |>
+    test_pl |>
       filter(all(x), .by = starts_with("g")) |>
       attr("pl_grps")
   )
 
   expect_null(
-    foo |>
+    test_pl |>
       filter(all(x), .by = starts_with("g")) |>
       attr("maintain_grp_order")
   )
@@ -291,61 +315,61 @@ test_that("works with a local variable defined in a function", {
     x |> filter(chars == local_var)
   }
 
-  test <- polars::pl$DataFrame(chars = letters[1:3])
+  test <- tibble(chars = letters[1:3])
+  test_pl <- as_polars_df(test)
 
   expect_equal(
-    foobar(test),
-    data.frame(chars = "a")
+    foobar(test_pl),
+    foobar(test)
   )
 })
 
 test_that("error message when using =", {
-  test <- polars::pl$DataFrame(chars = letters[1:3])
+  test_pl <- pl$DataFrame(chars = letters[1:3])
 
   expect_snapshot(
-    test |> filter(chars = "a"),
+    test_pl |> filter(chars = "a"),
     error = TRUE
   )
 })
 
 test_that("works with non-latin and weird characters", {
-  test <- polars::pl$DataFrame(x = c(letters, "<other>$", "生脉胶囊"))
+  test <- tibble(x = c(letters, "<other>$", "生脉胶囊"))
+  test_pl <- as_polars_df(test)
 
-  expect_dim(
-    test |> filter(x %in% c("<other>$", "生脉胶囊")),
-    c(2, 1)
+  expect_equal(
+    test_pl |> filter(x %in% c("<other>$", "生脉胶囊")),
+    test |> filter(x %in% c("<other>$", "生脉胶囊"))
   )
 
-  expect_dim(
-    test |> filter(x == "生脉胶囊"),
-    c(1, 1)
+  expect_equal(
+    test_pl |> filter(x == "生脉胶囊"),
+    test |> filter(x == "生脉胶囊")
   )
 })
 
 test_that("works with external data.frame/list elements", {
-  test <- polars::pl$DataFrame(x = 1:3)
-  test_df <- data.frame(x = 1:2)
+  test <- tibble(x = 1:3)
+  test_pl <- as_polars_df(test)
 
-  expect_dim(
-    test |>
-      filter(x %in% test_df$x),
-    c(2, 1)
+  expect_equal(
+    test_pl |> filter(x %in% test$x),
+    test |> filter(x %in% test$x)
   )
 
-  expect_dim(
-    test |>
-      filter(x %in% test_df[["x"]]),
-    c(2, 1)
+  expect_equal(
+    test_pl |> filter(x %in% test[["x"]]),
+    test |> filter(x %in% test[["x"]])
   )
 })
 
 test_that("works when using [] on external objects", {
-  test <- polars::pl$DataFrame(x = 1:3)
+  test <- tibble(x = 1:3)
+  test_pl <- as_polars_df(test)
   obj <- 1:3
 
-  expect_dim(
-    test |>
-      filter(x %in% obj[1:2]),
-    c(2, 1)
+  expect_equal(
+    test_pl |> filter(x %in% obj[1:2]),
+    test |> filter(x %in% obj[1:2])
   )
 })
