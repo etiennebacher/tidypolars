@@ -46,9 +46,6 @@ jobs:
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      # TODO: this shouldn't be necessary but it prevents occasional failures on
-      # Windows, #291
-      TESTTHAT_CPUS: ${{ matrix.os == 'windows-latest' && '1' || '2' }}
     steps:
       - uses: actions/checkout@v4
       - uses: r-lib/actions/setup-pandoc@v2
