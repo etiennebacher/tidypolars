@@ -10,10 +10,6 @@
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 #'
-#' # replace all NA with 0
-#' replace_na(pl_test, 0)
-#'
-#' # custom replacement per column
 #' replace_na(pl_test, list(x = 0, y = 999))
 
 replace_na.polars_data_frame <- function(data, replace, ...) {
