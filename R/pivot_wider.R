@@ -1,6 +1,6 @@
-#' Pivot a DataFrame from long to wide
+#' Pivot a Data/LazyFrame from long to wide
 #'
-#' @param data A Polars DataFrame (LazyFrames are not supported).
+#' @param data A Polars Data/LazyFrame.
 #' @inheritParams rlang::check_dots_empty0
 #' @param id_cols A set of columns that uniquely identify each observation.
 #'   Typically used when you have redundant variables, i.e. variables whose
