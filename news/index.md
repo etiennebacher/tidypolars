@@ -60,6 +60,13 @@
     returns columns in the correct order, and doesn’t duplicate the
     `sep` in the output if some values are `NA`.
 
+#### Bug fixes
+
+- [`bind_rows_polars()`](https://tidypolars.etiennebacher.com/reference/bind_rows_polars.md)
+  now uses input names in `.id` if not all inputs are named, for example
+  `bind_rows_polars(x1 = x1, x2, .id = "id")`
+  ([\#317](https://github.com/etiennebacher/tidypolars/issues/317)).
+
 ## tidypolars 0.16.0
 
 `tidypolars` requires `polars` \>= 1.8.0.
@@ -588,7 +595,7 @@
 ### Bug fixes
 
 - Using an external object in
-  [`case_when()`](https://dplyr.tidyverse.org/reference/case_when.html),
+  [`case_when()`](https://dplyr.tidyverse.org/reference/case-and-replace-when.html),
   [`ifelse()`](https://rdrr.io/r/base/ifelse.html) and
   [`ifelse()`](https://rdrr.io/r/base/ifelse.html) now works.
 
