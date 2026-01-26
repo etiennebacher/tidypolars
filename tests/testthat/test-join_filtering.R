@@ -162,13 +162,13 @@ test_that("unsupported args throw warning", {
     language = c("english", "japanese", "portuguese")
   )
   expect_warning(
-    semi_join(test, test2, copy = TRUE),
+    semi_join(test, test2, by = "country", copy = TRUE),
     "Argument `copy` is not supported by tidypolars"
   )
   withr::with_options(
     list(tidypolars_unknown_args = "error"),
     expect_snapshot(
-      semi_join(test, test2, copy = TRUE),
+      semi_join(test, test2, by = "country", copy = TRUE),
       error = TRUE
     )
   )
