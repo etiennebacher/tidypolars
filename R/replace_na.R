@@ -13,8 +13,7 @@
 #' replace_na(pl_test, list(x = 0, y = 999))
 
 replace_na.polars_data_frame <- function(data, replace, ...) {
-  is_scalar <- length(replace) == 1 && !is.list(replace)
-  if (is_scalar && (is_polars_df(data) || is_polars_lf(data))) {
+  if (!is.list(replace)) {
     cli_abort(
       "{.arg replace} must be a list, not {obj_type_friendly(replace, value= FALSE)}",
       call = caller_env()
@@ -29,25 +28,17 @@ replace_na.polars_data_frame <- function(data, replace, ...) {
   # fill_null() does the opposite
   #
   # => depending on the replacement, use one or the other.
-  if (is_scalar) {
-    if (is.character(replace)) {
-      exprs <- pl$all()$replace(NA, replace)
+  exprs <- list()
+  for (i in seq_along(replace)) {
+    if (is.character(replace[[i]])) {
+      exprs[[i]] <- polars::pl$col(names(replace)[i])$replace(
+        NA,
+        replace[[i]]
+      )
     } else {
-      exprs <- pl$all()$fill_null(replace)
-    }
-  } else if (is.list(replace)) {
-    exprs <- list()
-    for (i in seq_along(replace)) {
-      if (is.character(replace[[i]])) {
-        exprs[[i]] <- polars::pl$col(names(replace)[i])$replace(
-          NA,
-          replace[[i]]
-        )
-      } else {
-        exprs[[i]] <- polars::pl$col(names(replace)[i])$fill_null(replace[[
-          i
-        ]])
-      }
+      exprs[[i]] <- polars::pl$col(names(replace)[i])$fill_null(replace[[
+        i
+      ]])
     }
   }
   if (is_polars_expr(exprs)) {
