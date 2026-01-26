@@ -80,11 +80,10 @@ test_that("arg .id works", {
     bind_rows(list(df1 = df1, df2 = df2), .id = "foo")
   )
 
-  # https://github.com/etiennebacher/tidypolars/issues/315
-  # expect_equal(
-  #   bind_rows_polars(df1 = df1_pl, df2_pl, .id = "foo"),
-  #   bind_rows(df1 = df1, df2, .id = "foo")
-  # )
+  expect_equal(
+    bind_rows_polars(df1 = df1_pl, df2_pl, .id = "foo"),
+    bind_rows(df1 = df1, df2, .id = "foo")
+  )
 })
 
 test_that("error if not all elements don't have the same class", {

@@ -41,6 +41,11 @@
   - `unite()` now returns columns in the correct order, and doesn't duplicate the
     `sep` in the output if some values are `NA`.
 
+### Bug fixes
+
+* `bind_rows_polars()` now uses input names in `.id` if not all inputs are named,
+  for example `bind_rows_polars(x1 = x1, x2, .id = "id")` (#317).
+
 
 # tidypolars 0.16.0
 
