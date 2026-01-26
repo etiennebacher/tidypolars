@@ -1,12 +1,16 @@
+### [GENERATED AUTOMATICALLY] Update test-pivot_wider.R instead.
+
+Sys.setenv('TIDYPOLARS_TEST' = TRUE)
+
 test_that("basic behavior works", {
   test <- as_tibble(tidyr::fish_encounters)
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_lf(test)
 
   expect_is_tidypolars(
     test_pl |> pivot_wider(names_from = station, values_from = seen)
   )
 
-  expect_equal(
+  expect_equal_lazy(
     test_pl |>
       pivot_wider(names_from = station, values_from = seen) |>
       arrange(fish),
@@ -16,9 +20,9 @@ test_that("basic behavior works", {
 
 test_that("names_prefix works", {
   test <- as_tibble(tidyr::fish_encounters)
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_lf(test)
 
-  expect_equal(
+  expect_equal_lazy(
     test_pl |>
       pivot_wider(
         names_from = station,
@@ -48,7 +52,7 @@ test_that("names_prefix works", {
         names_prefix = c("foo1", "foo2")
       )
   )
-  expect_snapshot(
+  expect_snapshot_lazy(
     test_pl |>
       pivot_wider(
         names_from = station,
@@ -61,9 +65,9 @@ test_that("names_prefix works", {
 
 test_that("names_sep works", {
   test <- as_tibble(tidyr::us_rent_income)
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_lf(test)
 
-  expect_equal(
+  expect_equal_lazy(
     test_pl |>
       pivot_wider(
         names_from = variable,
@@ -82,9 +86,9 @@ test_that("names_sep works", {
 
 test_that("values_fill works", {
   test <- as_tibble(tidyr::fish_encounters)
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_lf(test)
 
-  expect_equal(
+  expect_equal_lazy(
     test_pl |>
       pivot_wider(names_from = station, values_from = seen, values_fill = 0) |>
       arrange(fish),
@@ -101,9 +105,9 @@ test_that("several columns in names_from works", {
   ) |>
     filter((product == "A" & country == "AI") | product == "B") |>
     mutate(production = 1:45)
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_lf(test)
 
-  expect_equal(
+  expect_equal_lazy(
     test_pl |>
       pivot_wider(
         names_from = c(product, country),
@@ -130,9 +134,9 @@ test_that("names_glue works", {
   ) |>
     filter((product == "A" & country == "AI") | product == "B") |>
     mutate(production = 1:45)
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_lf(test)
 
-  expect_equal(
+  expect_equal_lazy(
     test_pl |>
       pivot_wider(
         names_from = c(product, country),
@@ -148,7 +152,7 @@ test_that("names_glue works", {
       )
   )
 
-  expect_equal(
+  expect_equal_lazy(
     test_pl |>
       pivot_wider(
         names_from = product,
@@ -171,13 +175,13 @@ test_that("error when overwriting existing column", {
     key = c("a", "b"),
     val = c(1, 2)
   )
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_lf(test)
 
   expect_both_error(
     pivot_wider(test_pl, names_from = key, values_from = val),
     pivot_wider(test, names_from = key, values_from = val)
   )
-  expect_snapshot(
+  expect_snapshot_lazy(
     pivot_wider(test_pl, names_from = key, values_from = val),
     error = TRUE
   )
@@ -185,12 +189,12 @@ test_that("error when overwriting existing column", {
 
 test_that("`names_from` must be supplied if `name` isn't in data", {
   test <- tibble(key = "x", val = 1)
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_lf(test)
   expect_both_error(
     pivot_wider(test_pl, values_from = val),
     pivot_wider(test, values_from = val)
   )
-  expect_snapshot(
+  expect_snapshot_lazy(
     pivot_wider(test_pl, values_from = val),
     error = TRUE
   )
@@ -198,12 +202,12 @@ test_that("`names_from` must be supplied if `name` isn't in data", {
 
 test_that("`values_from` must be supplied if `value` isn't in data", {
   test <- tibble(key = "x", val = 1)
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_lf(test)
   expect_both_error(
     pivot_wider(test_pl, names_from = key),
     pivot_wider(test, names_from = key)
   )
-  expect_snapshot(
+  expect_snapshot_lazy(
     pivot_wider(test_pl, names_from = key),
     error = TRUE
   )
@@ -211,12 +215,12 @@ test_that("`values_from` must be supplied if `value` isn't in data", {
 
 test_that("`names_from` must identify at least 1 column", {
   test <- tibble(key = "x", val = 1)
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_lf(test)
   expect_both_error(
     pivot_wider(test_pl, names_from = starts_with("foo"), values_from = val),
     pivot_wider(test, names_from = starts_with("foo"), values_from = val)
   )
-  expect_snapshot(
+  expect_snapshot_lazy(
     pivot_wider(test_pl, names_from = starts_with("foo"), values_from = val),
     error = TRUE
   )
@@ -224,12 +228,12 @@ test_that("`names_from` must identify at least 1 column", {
 
 test_that("`values_from` must identify at least 1 column", {
   test <- tibble(key = "x", val = 1)
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_lf(test)
   expect_both_error(
     pivot_wider(test_pl, names_from = key, values_from = starts_with("foo")),
     pivot_wider(test, names_from = key, values_from = starts_with("foo"))
   )
-  expect_snapshot(
+  expect_snapshot_lazy(
     pivot_wider(test_pl, names_from = key, values_from = starts_with("foo")),
     error = TRUE
   )
@@ -237,8 +241,8 @@ test_that("`values_from` must identify at least 1 column", {
 
 test_that("`id_cols = everything()` excludes `names_from` and `values_from`", {
   test <- tibble(key = "x", name = "a", value = 1L)
-  test_pl <- as_polars_df(test)
-  expect_equal(
+  test_pl <- as_polars_lf(test)
+  expect_equal_lazy(
     pivot_wider(test_pl, id_cols = everything()),
     pivot_wider(test, id_cols = everything())
   )
@@ -246,7 +250,7 @@ test_that("`id_cols = everything()` excludes `names_from` and `values_from`", {
 
 test_that("`id_cols` can't select columns from `names_from` or `values_from`", {
   test <- tibble(name = c("x", "y"), value = c(1, 2))
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_lf(test)
   expect_both_error(
     pivot_wider(
       test_pl,
@@ -256,7 +260,7 @@ test_that("`id_cols` can't select columns from `names_from` or `values_from`", {
     ),
     pivot_wider(test, id_cols = name, names_from = name, values_from = value)
   )
-  expect_snapshot(
+  expect_snapshot_lazy(
     pivot_wider(
       test_pl,
       id_cols = name,
@@ -274,7 +278,7 @@ test_that("`id_cols` can't select columns from `names_from` or `values_from`", {
     ),
     pivot_wider(test, id_cols = value, names_from = name, values_from = value)
   )
-  expect_snapshot(
+  expect_snapshot_lazy(
     pivot_wider(
       test_pl,
       id_cols = value,
@@ -287,7 +291,7 @@ test_that("`id_cols` can't select columns from `names_from` or `values_from`", {
 
 test_that("unsupported args throw warning", {
   test <- as_tibble(tidyr::fish_encounters)
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_lf(test)
 
   expect_warning(
     pivot_wider(
@@ -302,7 +306,7 @@ test_that("unsupported args throw warning", {
 
 test_that("dots must be empty", {
   test <- as_tibble(tidyr::fish_encounters)
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_lf(test)
 
   expect_both_error(
     pivot_wider(
@@ -318,7 +322,7 @@ test_that("dots must be empty", {
       foo = TRUE
     )
   )
-  expect_snapshot(
+  expect_snapshot_lazy(
     pivot_wider(
       test_pl,
       names_from = station,
@@ -328,3 +332,5 @@ test_that("dots must be empty", {
     error = TRUE
   )
 })
+
+Sys.setenv('TIDYPOLARS_TEST' = FALSE)

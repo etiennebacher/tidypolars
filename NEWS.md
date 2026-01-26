@@ -18,6 +18,8 @@
 
 * Added support for `dplyr::near()` (#311).
 
+* `pivot_wider()` now works with Polars LazyFrames (#318).
+
 ## Other changes
 
 * Several changes to make `tidypolars` more aligned with the `tidyverse` output
