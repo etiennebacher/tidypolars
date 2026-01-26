@@ -8,31 +8,23 @@ test_that("paste() and paste0() work", {
       test <- pl$DataFrame(x1 = string)
 
       expect_equal(
-        mutate(test, foo = paste(x1, "he")) |>
-          pull(foo),
-        mutate(test_df, foo = paste(x1, "he")) |>
-          pull(foo)
+        mutate(test, foo = paste(x1, "he")) |> pull(foo),
+        mutate(test_df, foo = paste(x1, "he")) |> pull(foo)
       )
 
       expect_equal(
-        mutate(test, foo = paste(x1, "he", sep = separator)) |>
-          pull(foo),
-        mutate(test_df, foo = paste(x1, "he", sep = separator)) |>
-          pull(foo)
+        mutate(test, foo = paste(x1, "he", sep = separator)) |> pull(foo),
+        mutate(test_df, foo = paste(x1, "he", sep = separator)) |> pull(foo)
       )
 
       expect_equal(
-        mutate(test, foo = paste0(x1, "he")) |>
-          pull(foo),
-        mutate(test_df, foo = paste0(x1, "he")) |>
-          pull(foo)
+        mutate(test, foo = paste0(x1, "he")) |> pull(foo),
+        mutate(test_df, foo = paste0(x1, "he")) |> pull(foo)
       )
 
       expect_equal(
-        mutate(test, foo = paste0(x1, "he", x1)) |>
-          pull(foo),
-        mutate(test_df, foo = paste0(x1, "he", x1)) |>
-          pull(foo)
+        mutate(test, foo = paste0(x1, "he", x1)) |> pull(foo),
+        mutate(test_df, foo = paste0(x1, "he", x1)) |> pull(foo)
       )
     }
   )
@@ -79,17 +71,13 @@ test_that("str_trim() works", {
       test <- pl$DataFrame(x1 = string)
 
       expect_equal(
-        mutate(test, foo = str_trim(x1)) |>
-          pull(foo),
-        mutate(test_df, foo = str_trim(x1)) |>
-          pull(foo)
+        mutate(test, foo = str_trim(x1)) |> pull(foo),
+        mutate(test_df, foo = str_trim(x1)) |> pull(foo)
       )
 
       expect_equal(
-        mutate(test, foo = str_trim(x1, side = side)) |>
-          pull(foo),
-        mutate(test_df, foo = str_trim(x1, side = side)) |>
-          pull(foo)
+        mutate(test, foo = str_trim(x1, side = side)) |> pull(foo),
+        mutate(test_df, foo = str_trim(x1, side = side)) |> pull(foo)
       )
     }
   )
@@ -140,10 +128,8 @@ test_that("str_dup() works", {
       test <- pl$DataFrame(x1 = string)
 
       expect_equal_or_both_error(
-        mutate(test, foo = str_dup(x1, times = times)) |>
-          pull(foo),
-        mutate(test_df, foo = str_dup(x1, times = times)) |>
-          pull(foo)
+        mutate(test, foo = str_dup(x1, times = times)) |> pull(foo),
+        mutate(test_df, foo = str_dup(x1, times = times)) |> pull(foo)
       )
     }
   )
@@ -160,10 +146,8 @@ test_that("str_sub() works", {
       test <- pl$DataFrame(x1 = string)
 
       expect_equal_or_both_error(
-        mutate(test, foo = str_sub(x1, start, end)) |>
-          pull(foo),
-        mutate(test_df, foo = str_sub(x1, start, end)) |>
-          pull(foo)
+        mutate(test, foo = str_sub(x1, start, end)) |> pull(foo),
+        mutate(test_df, foo = str_sub(x1, start, end)) |> pull(foo)
       )
     }
   )
@@ -185,10 +169,8 @@ test_that("substr() works", {
       test <- pl$DataFrame(x1 = string)
 
       expect_equal_or_both_error(
-        mutate(test, foo = substr(x1, start, end)) |>
-          pull(foo),
-        mutate(test_df, foo = substr(x1, start, end)) |>
-          pull(foo)
+        mutate(test, foo = substr(x1, start, end)) |> pull(foo),
+        mutate(test_df, foo = substr(x1, start, end)) |> pull(foo)
       )
     }
   )
@@ -207,10 +189,8 @@ test_that("str_equal() works", {
       test <- as_polars_df(test_df)
 
       expect_equal_or_both_error(
-        mutate(test, foo = str_equal(x, y)) |>
-          pull(foo),
-        mutate(test_df, foo = str_equal(x, y)) |>
-          pull(foo)
+        mutate(test, foo = str_equal(x, y)) |> pull(foo),
+        mutate(test_df, foo = str_equal(x, y)) |> pull(foo)
       )
     }
   )

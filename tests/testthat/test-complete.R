@@ -31,104 +31,89 @@ test_that("basic behavior works", {
 })
 
 test_that("works on grouped data", {
-  df <- tibble(
+  test <- tibble(
     g = c("a", "b", "a"),
     a = c(1L, 1L, 2L),
     b = c("a", "a", "b"),
     c = c(4, 5, 6)
   )
-  gdf <- group_by(df, g)
-  df_pl <- as_polars_df(df)
-  gdf_pl <- group_by(df_pl, g)
+  test_pl <- as_polars_df(test)
+  test_grp <- group_by(test, g)
+  test_pl_grp <- group_by(test_pl, g)
 
   expect_equal(
-    complete(gdf_pl, a, b) |>
-      arrange(g),
-    complete(gdf, a, b)
+    complete(test_pl_grp, a, b) |> arrange(g),
+    complete(test_grp, a, b)
   )
 
   expect_equal(
-    attr(complete(gdf_pl, a, b), "pl_grps"),
+    attr(complete(test_pl_grp, a, b), "pl_grps"),
     "g"
   )
 })
 
 test_that("argument 'explicit' works", {
-  df <- tibble(
+  test <- tibble(
     g = c("a", "b", "a"),
     a = c(1L, 1L, 2L),
     b = c("a", NA, "b"),
     c = c(4, 5, NA)
   )
-  df_pl <- as_polars_df(df)
+  test_pl <- as_polars_df(test)
 
   expect_equal(
-    df_pl |>
-      complete(g, a, fill = list(b = "foo", c = 1), explicit = FALSE),
-    df |>
-      complete(g, a, fill = list(b = "foo", c = 1), explicit = FALSE)
+    test_pl |> complete(g, a, fill = list(b = "foo", c = 1), explicit = FALSE),
+    test |> complete(g, a, fill = list(b = "foo", c = 1), explicit = FALSE)
   )
 
   expect_equal(
-    df_pl |>
+    test_pl |>
       group_by(g, maintain_order = TRUE) |>
       complete(a, b, fill = list(c = 1), explicit = FALSE),
-    df |>
-      group_by(g) |>
-      complete(a, b, fill = list(c = 1), explicit = FALSE)
+    test |> group_by(g) |> complete(a, b, fill = list(c = 1), explicit = FALSE)
   )
 })
 
 test_that("can use named arguments", {
-  df <- tibble(
+  test <- tibble(
     group = c(1:2, 1, 2),
     item_id = c(1:2, 2, 3),
     item_name = c("a", "a", "b", "b"),
     value1 = c(1, NA, 3, 4),
     value2 = 4:7
   )
-  df_pl <- as_polars_df(df)
+  test_pl <- as_polars_df(test)
 
   expect_equal(
-    df_pl |>
+    test_pl |>
       complete(group, value1 = c(1, 2, 3, 4)) |>
       arrange(group, value1),
-    df |>
-      complete(group, value1 = c(1, 2, 3, 4))
+    test |> complete(group, value1 = c(1, 2, 3, 4))
   )
 
   expect_equal(
-    df_pl |>
-      complete(value1 = c(1, 2, 3, 4)) |>
-      arrange(value1),
-    df |>
-      complete(value1 = c(1, 2, 3, 4))
+    test_pl |> complete(value1 = c(1, 2, 3, 4)) |> arrange(value1),
+    test |> complete(value1 = c(1, 2, 3, 4))
   )
 
   expect_equal(
-    df_pl |>
+    test_pl |>
       complete(value1 = c(1, 2, 3, 4), group) |>
       arrange(value1, group),
-    df |>
-      complete(value1 = c(1, 2, 3, 4), group)
+    test |> complete(value1 = c(1, 2, 3, 4), group)
   )
   expect_equal(
-    df_pl |>
+    test_pl |>
       group_by(item_id) |>
       complete(value1 = c(1, 2, 3, 4), group) |>
       arrange(item_id, value1, group),
-    df |>
-      group_by(item_id) |>
-      complete(value1 = c(1, 2, 3, 4), group)
+    test |> group_by(item_id) |> complete(value1 = c(1, 2, 3, 4), group)
   )
 
-  df2 <- tibble(a = 1:2, b = 3:4, c = 5:6)
-  df2_pl <- as_polars_df(df2)
+  test <- tibble(a = 1:2, b = 3:4, c = 5:6)
+  test_pl <- as_polars_df(test)
   expect_equal(
-    df2_pl |>
-      complete(a, b = 1:4, c) |>
-      arrange(a, b, c),
-    df2 |>
-      complete(a, b = 1:4, c)
+    test_pl |> complete(a, b = 1:4, c) |> arrange(a, b, c),
+    test |> complete(a, b = 1:4, c)
   )
 })

@@ -4,47 +4,37 @@ test_that("distinct() works", {
     iso_d = rep(c("BA", "BB", "BC"), each = 2),
     value = 1:6
   )
-  test_pl <- pl$DataFrame(
-    iso_o = rep(c("AA", "AB", "AC"), each = 2),
-    iso_d = rep(c("BA", "BB", "BC"), each = 2),
-    value = 1:6
-  )
+  test_pl <- as_polars_df(test)
 
   expect_is_tidypolars(distinct(test_pl))
 
   expect_equal(
     distinct(test_pl),
-    dplyr::distinct(test)
+    distinct(test)
   )
 
   expect_equal(
     distinct(test_pl, iso_o),
-    dplyr::distinct(test, iso_o)
+    distinct(test, iso_o)
   )
 
   expect_equal(
-    distinct(test_pl, iso_o, .keep_all = TRUE) |>
-      pull(value),
-    dplyr::distinct(test, iso_o, .keep_all = TRUE) |>
-      dplyr::pull(value)
+    distinct(test_pl, iso_o, .keep_all = TRUE),
+    distinct(test, iso_o, .keep_all = TRUE)
   )
 })
 
 test_that("argument keep works", {
+  # tidypolars-specific argument `keep` not available in dplyr
   test <- tibble(
     iso_o = rep(c("AA", "AB", "AC"), each = 2),
     iso_d = rep(c("BA", "BB", "BC"), each = 2),
     value = 1:6
   )
-  test_pl <- pl$DataFrame(
-    iso_o = rep(c("AA", "AB", "AC"), each = 2),
-    iso_d = rep(c("BA", "BB", "BC"), each = 2),
-    value = 1:6
-  )
+  test_pl <- as_polars_df(test)
 
   expect_equal(
-    distinct(test_pl, iso_o, keep = "last", .keep_all = TRUE) |>
-      pull(value),
+    distinct(test_pl, iso_o, keep = "last", .keep_all = TRUE) |> pull(value),
     c(2, 4, 6)
   )
 
@@ -60,11 +50,7 @@ test_that("duplicated_rows() works", {
     iso_d = rep(c("BA", "BB", "BC"), each = 2),
     value = c(2, 2, 3, 4, 5, 6)
   )
-  test_pl <- pl$DataFrame(
-    iso_o = c(rep(c("AA", "AB"), each = 2), "AC", "DC"),
-    iso_d = rep(c("BA", "BB", "BC"), each = 2),
-    value = c(2, 2, 3, 4, 5, 6)
-  )
+  test_pl <- as_polars_df(test)
 
   expect_equal(
     duplicated_rows(test_pl),
@@ -97,12 +83,12 @@ test_that("argument .keep_all works", {
   test_pl <- as_polars_df(test)
 
   expect_equal(
-    test |> distinct(iso_o, iso_d),
-    test_pl |> distinct(iso_o, iso_d)
+    distinct(test_pl, iso_o, iso_d),
+    distinct(test, iso_o, iso_d)
   )
 
   expect_equal(
-    test |> distinct(iso_o, iso_d, .keep_all = TRUE),
-    test_pl |> distinct(iso_o, iso_d, .keep_all = TRUE)
+    distinct(test_pl, iso_o, iso_d, .keep_all = TRUE),
+    distinct(test, iso_o, iso_d, .keep_all = TRUE)
   )
 })

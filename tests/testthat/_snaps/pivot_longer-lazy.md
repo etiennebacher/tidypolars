@@ -11,8 +11,6 @@
     Code
       current$collect()
     Condition
-      Warning in `pivot_longer()`:
-      Argument `cols_vary` is not supported by tidypolars.
       Error in `pivot_longer()`:
       ! `...` must be empty.
       Error in `pivot_longer()`:

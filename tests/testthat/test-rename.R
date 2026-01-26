@@ -1,74 +1,57 @@
 test_that("basic behavior works", {
-  pl_test <- polars::as_polars_df(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test)
 
-  expect_is_tidypolars(rename(pl_test, miles_per_gallon = "mpg"))
+  expect_is_tidypolars(rename(test_pl, miles_per_gallon = "mpg"))
 
-  test <- rename(pl_test, miles_per_gallon = "mpg", n_cyl = "cyl") |>
-    names()
+  expect_equal(
+    rename(test_pl, miles_per_gallon = "mpg", n_cyl = "cyl") |> names(),
+    rename(test, miles_per_gallon = "mpg", n_cyl = "cyl") |> names()
+  )
 
-  expect_true("miles_per_gallon" %in% test)
-  expect_true("n_cyl" %in% test)
-  expect_false("mpg" %in% test)
-  expect_false("cyl" %in% test)
-
-  test2 <- rename(pl_test, miles_per_gallon = mpg, n_cyl = "cyl") |>
-    names()
-
-  expect_true("miles_per_gallon" %in% test2)
-  expect_true("n_cyl" %in% test2)
-  expect_false("mpg" %in% test2)
-  expect_false("cyl" %in% test2)
+  expect_equal(
+    rename(test_pl, miles_per_gallon = mpg, n_cyl = "cyl") |> names(),
+    rename(test, miles_per_gallon = mpg, n_cyl = "cyl") |> names()
+  )
 })
 
 test_that("rename_with works with builtin function", {
-  pl_test <- polars::as_polars_df(mtcars)
-  test <- rename_with(pl_test, toupper, c(mpg, cyl)) |>
-    names()
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test)
 
-  expect_true("MPG" %in% test)
-  expect_true("CYL" %in% test)
-  expect_false("mpg" %in% test)
-  expect_false("cyl" %in% test)
+  expect_equal(
+    rename_with(test_pl, toupper, c(mpg, cyl)) |> names(),
+    rename_with(test, toupper, c(mpg, cyl)) |> names()
+  )
 
-  testbis <- rename_with(pl_test, toupper) |>
-    names()
+  expect_equal(
+    rename_with(test_pl, toupper) |> names(),
+    rename_with(test, toupper) |> names()
+  )
 
-  expect_true("DISP" %in% testbis)
-  expect_true("DRAT" %in% testbis)
-  expect_false("mpg" %in% testbis)
-
-  test4 <- rename_with(pl_test, toupper, contains("p")) |>
-    names()
-
-  expect_true("MPG" %in% test4)
-  expect_true("DISP" %in% test4)
-  expect_true("HP" %in% test4)
-  expect_false("mpg" %in% test4)
-  expect_false("disp" %in% test4)
+  expect_equal(
+    rename_with(test_pl, toupper, contains("p")) |> names(),
+    rename_with(test, toupper, contains("p")) |> names()
+  )
 })
 
 test_that("rename_with works with custom function", {
-  pl_test <- polars::as_polars_df(iris)
+  test <- as_tibble(iris)
+  test_pl <- as_polars_df(test)
 
-  test <- rename_with(
-    pl_test,
-    \(x) tolower(gsub(".", "_", x, fixed = TRUE))
+  fn <- \(x) tolower(gsub(".", "_", x, fixed = TRUE))
+
+  expect_equal(
+    rename_with(test_pl, fn) |> names(),
+    rename_with(test, fn) |> names()
   )
 
-  expect_colnames(
-    test,
-    c("sepal_length", "sepal_width", "petal_length", "petal_width", "species")
-  )
+  fn2 <- function(x) tolower(gsub(".", "_", x, fixed = TRUE))
 
-  test2 <- rename_with(
-    pl_test,
-    function(x) tolower(gsub(".", "_", x, fixed = TRUE))
-  )
+  expect_is_tidypolars(rename_with(test_pl, fn2))
 
-  expect_is_tidypolars(test2)
-
-  expect_colnames(
-    test2,
-    c("sepal_length", "sepal_width", "petal_length", "petal_width", "species")
+  expect_equal(
+    rename_with(test_pl, fn2) |> names(),
+    rename_with(test, fn2) |> names()
   )
 })

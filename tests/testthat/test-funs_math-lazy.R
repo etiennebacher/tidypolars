@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("mathematical functions work", {
-  test_df <- tibble(
+  test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample(11:15),
@@ -11,7 +11,7 @@ test_that("mathematical functions work", {
     value_mix = -2:2,
     value_with_NA = c(-2, -1, NA, 1, 2)
   )
-  test <- as_polars_lf(test_df)
+  test_pl <- as_polars_lf(test)
 
   for (i in c(
     "abs",
@@ -63,22 +63,20 @@ test_that("mathematical functions work", {
       variable <- "value"
     }
 
-    pol <- paste0("mutate(test, foo =", i, "(", variable, "))") |>
+    pol <- paste0("mutate(test_pl, foo =", i, "(", variable, "))") |>
       str2lang() |>
-      eval() |>
-      pull(foo)
+      eval()
 
-    res <- paste0("mutate(test_df, foo =", i, "(", variable, "))") |>
+    res <- paste0("mutate(test, foo =", i, "(", variable, "))") |>
       str2lang() |>
-      eval() |>
-      pull(foo)
+      eval()
 
     expect_equal_lazy(pol, res, info = i)
   }
 })
 
 test_that("warns if unknown args", {
-  test_df <- tibble(
+  test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample(11:15),
@@ -86,21 +84,21 @@ test_that("warns if unknown args", {
     value_mix = -2:2,
     value_with_NA = c(-2, -1, NA, 1, 2)
   )
-  test <- as_polars_lf(test_df)
-  foo <- test |>
+  test_pl <- as_polars_lf(test)
+  foo <- test_pl |>
     mutate(x = sample(x2)) |>
     pull(x)
 
   expect_true(all(foo %in% c(1, 2, 3, 5)))
 
   expect_warning(
-    test |> mutate(x = sample(x2, prob = 0.5)),
+    test_pl |> mutate(x = sample(x2, prob = 0.5)),
     "doesn't know how to use some arguments"
   )
 })
 
 test_that("%% and %/% work", {
-  test_df <- tibble(
+  test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample(11:15),
@@ -108,29 +106,21 @@ test_that("%% and %/% work", {
     value_mix = -2:2,
     value_with_NA = c(-2, -1, NA, 1, 2)
   )
-  test <- as_polars_lf(test_df)
+  test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
-    test |>
-      mutate(foo = value %% 10) |>
-      pull(foo),
-    test_df |>
-      mutate(foo = value %% 10) |>
-      pull(foo)
+    test_pl |> mutate(foo = value %% 10),
+    test |> mutate(foo = value %% 10)
   )
 
   expect_equal_lazy(
-    test |>
-      mutate(foo = value %/% 10) |>
-      pull(foo),
-    test_df |>
-      mutate(foo = value %/% 10) |>
-      pull(foo)
+    test_pl |> mutate(foo = value %/% 10),
+    test |> mutate(foo = value %/% 10)
   )
 })
 
 test_that("ensure na.rm works fine", {
-  test_df <- tibble(
+  test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample(11:15),
@@ -138,11 +128,21 @@ test_that("ensure na.rm works fine", {
     value_mix = -2:2,
     value_with_NA = c(-2, -1, NA, 1, 2)
   )
-  test <- as_polars_lf(test_df)
+  test_pl <- as_polars_lf(test)
 
   for (i in c("max", "mean", "median", "min", "sd", "sum", "var")) {
     for (remove_na in c(TRUE, FALSE)) {
       pol <- paste0(
+        "mutate(test_pl, foo =",
+        i,
+        "(value_with_NA, na.rm = ",
+        remove_na,
+        "))"
+      ) |>
+        str2lang() |>
+        eval()
+
+      res <- paste0(
         "mutate(test, foo =",
         i,
         "(value_with_NA, na.rm = ",
@@ -150,19 +150,7 @@ test_that("ensure na.rm works fine", {
         "))"
       ) |>
         str2lang() |>
-        eval() |>
-        pull(foo)
-
-      res <- paste0(
-        "mutate(test_df, foo =",
-        i,
-        "(value_with_NA, na.rm = ",
-        remove_na,
-        "))"
-      ) |>
-        str2lang() |>
-        eval() |>
-        pull(foo)
+        eval()
 
       expect_equal_lazy(pol, res, info = i)
     }

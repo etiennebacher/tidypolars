@@ -209,16 +209,12 @@ test_that("works with grouped data", {
   )
 
   expect_equal(
-    by_cyl_pl |>
-      filter(disp == max(disp)) |>
-      attr("pl_grps"),
+    by_cyl_pl |> filter(disp == max(disp)) |> attr("pl_grps"),
     "cyl"
   )
 
   expect_true(
-    by_cyl_pl |>
-      filter(disp == max(disp)) |>
-      attr("maintain_grp_order")
+    by_cyl_pl |> filter(disp == max(disp)) |> attr("maintain_grp_order")
   )
 
   test <- as_tibble(iris)
@@ -257,21 +253,13 @@ test_that("all() and any() work with grouped data", {
   test_pl <- as_polars_df(test)
 
   expect_equal(
-    test_pl |>
-      group_by(grp) |>
-      filter(all(x)),
-    test |>
-      group_by(grp) |>
-      filter(all(x))
+    test_pl |> group_by(grp) |> filter(all(x)),
+    test |> group_by(grp) |> filter(all(x))
   )
 
   expect_equal(
-    test_pl |>
-      group_by(grp) |>
-      filter(any(x)),
-    test |>
-      group_by(grp) |>
-      filter(any(x))
+    test_pl |> group_by(grp) |> filter(any(x)),
+    test |> group_by(grp) |> filter(any(x))
   )
 })
 
@@ -283,23 +271,17 @@ test_that("works with .by", {
   test_pl <- as_polars_df(test)
 
   expect_equal(
-    test_pl |>
-      filter(all(x), .by = starts_with("g")),
-    test |>
-      filter(all(x), .by = starts_with("g"))
+    test_pl |> filter(all(x), .by = starts_with("g")),
+    test |> filter(all(x), .by = starts_with("g"))
   )
 
   expect_equal(
-    test_pl |>
-      filter(any(x), .by = starts_with("g")),
-    test |>
-      filter(any(x), .by = starts_with("g"))
+    test_pl |> filter(any(x), .by = starts_with("g")),
+    test |> filter(any(x), .by = starts_with("g"))
   )
 
   expect_null(
-    test_pl |>
-      filter(all(x), .by = starts_with("g")) |>
-      attr("pl_grps")
+    test_pl |> filter(all(x), .by = starts_with("g")) |> attr("pl_grps")
   )
 
   expect_null(

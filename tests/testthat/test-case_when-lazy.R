@@ -130,34 +130,24 @@ test_that("some errors", {
   test_pl <- as_polars_lf(test)
 
   expect_equal_or_both_error(
-    test_pl |>
-      mutate(y = case_when("a" ~ "b")),
-    test |>
-      mutate(y = case_when("a" ~ "b"))
+    test_pl |> mutate(y = case_when("a" ~ "b")),
+    test |> mutate(y = case_when("a" ~ "b"))
   )
   expect_equal_or_both_error(
-    test_pl |>
-      mutate(y = case_when(x1 == "a" ~ NULL)),
-    test |>
-      mutate(y = case_when(x1 == "a" ~ NULL))
+    test_pl |> mutate(y = case_when(x1 == "a" ~ NULL)),
+    test |> mutate(y = case_when(x1 == "a" ~ NULL))
   )
   expect_equal_or_both_error(
-    test_pl |>
-      mutate(y = case_when(NULL ~ "a")),
-    test |>
-      mutate(y = case_when(NULL ~ "a"))
+    test_pl |> mutate(y = case_when(NULL ~ "a")),
+    test |> mutate(y = case_when(NULL ~ "a"))
   )
   expect_equal_or_both_error(
-    test_pl |>
-      mutate(y = case_when(x1 == "a" ~ character(0))),
-    test |>
-      mutate(y = case_when(x1 == "a" ~ character(0)))
+    test_pl |> mutate(y = case_when(x1 == "a" ~ character(0))),
+    test |> mutate(y = case_when(x1 == "a" ~ character(0)))
   )
   expect_equal_or_both_error(
-    test_pl |>
-      mutate(y = case_when(character(0) ~ "a")),
-    test |>
-      mutate(y = case_when(character(0) ~ "a"))
+    test_pl |> mutate(y = case_when(character(0) ~ "a")),
+    test |> mutate(y = case_when(character(0) ~ "a"))
   )
 })
 

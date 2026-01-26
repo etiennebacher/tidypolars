@@ -1,9 +1,9 @@
 test_that("separate_longer_delim_polars returns custom class", {
-  test <- pl$DataFrame(
+  test_pl <- pl$DataFrame(
     id = 1:3,
     x = c("a,b,c", "d,e", "f")
   )
-  expect_is_tidypolars(df |> separate_longer_delim_polars(x, delim = ","))
+  expect_is_tidypolars(test_pl |> separate_longer_delim_polars(x, delim = ","))
 })
 
 test_that("separate_longer_delim_polars basic functionality", {
@@ -89,8 +89,7 @@ test_that("separate_longer_delim_polars supports tidyselect", {
   expect_equal(
     test_pl |>
       separate_longer_delim_polars(tidyselect::starts_with("x"), delim = ","),
-    test |>
-      separate_longer_delim(tidyselect::starts_with("x"), delim = ",")
+    test |> separate_longer_delim(tidyselect::starts_with("x"), delim = ",")
   )
 })
 
@@ -209,8 +208,7 @@ test_that("separate_longer_position_polars supports tidyselect", {
   expect_equal(
     test_pl |>
       separate_longer_position_polars(tidyselect::starts_with("x"), width = 2),
-    test |>
-      separate_longer_position(tidyselect::starts_with("x"), width = 2)
+    test |> separate_longer_position(tidyselect::starts_with("x"), width = 2)
   )
 })
 
@@ -498,8 +496,7 @@ test_that("separate_longer_position_polars handles NA with keep_empty", {
 
   # keep_empty = TRUE
   expect_equal(
-    test_pl |>
-      separate_longer_position_polars(x, width = 2, keep_empty = TRUE),
+    test_pl |> separate_longer_position_polars(x, width = 2, keep_empty = TRUE),
     pl$DataFrame(
       id = c(1L, 2L, 3L),
       x = c("ab", NA, NA)

@@ -10,8 +10,7 @@ test_that("basic behavior works", {
 
   expect_equal(
     mutate(test_pl, char1 = as.numeric(char1)),
-    mutate(test, char1 = as.numeric(char1)) |>
-      suppressWarnings()
+    mutate(test, char1 = as.numeric(char1)) |> suppressWarnings()
   )
   expect_equal(
     mutate(test_pl, char2 = as.numeric(char2)),

@@ -3,98 +3,106 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  pl_iris <- polars::as_polars_lf(iris)
+  test <- as_tibble(iris)
+  test_pl <- as_polars_lf(test)
 
-  expect_is_tidypolars(select(pl_iris, c("Sepal.Length", "Sepal.Width")))
+  expect_is_tidypolars(select(test_pl, c("Sepal.Length", "Sepal.Width")))
 
-  expect_colnames(
-    select(pl_iris, c("Sepal.Length", "Sepal.Width")),
-    c("Sepal.Length", "Sepal.Width")
+  expect_equal_lazy(
+    select(test_pl, c("Sepal.Length", "Sepal.Width")) |> names(),
+    select(test, c("Sepal.Length", "Sepal.Width")) |> names()
   )
 
-  expect_colnames(
-    select(pl_iris, Sepal.Length, Sepal.Width),
-    c("Sepal.Length", "Sepal.Width")
+  expect_equal_lazy(
+    select(test_pl, Sepal.Length, Sepal.Width) |> names(),
+    select(test, Sepal.Length, Sepal.Width) |> names()
   )
 
-  expect_colnames(
-    select(pl_iris, 1:4),
-    c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
+  expect_equal_lazy(
+    select(test_pl, 1:4) |> names(),
+    select(test, 1:4) |> names()
   )
 
-  expect_colnames(
-    select(pl_iris, -5),
-    c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
+  expect_equal_lazy(
+    select(test_pl, -5) |> names(),
+    select(test, -5) |> names()
   )
 })
 
 test_that("select helpers work", {
-  pl_iris <- polars::as_polars_lf(iris)
-  expect_colnames(
-    select(pl_iris, starts_with("Sepal")),
-    c("Sepal.Length", "Sepal.Width")
+  test <- as_tibble(iris)
+  test_pl <- as_polars_lf(test)
+
+  expect_equal_lazy(
+    select(test_pl, starts_with("Sepal")) |> names(),
+    select(test, starts_with("Sepal")) |> names()
   )
 
-  expect_colnames(
-    select(pl_iris, ends_with("Length")),
-    c("Sepal.Length", "Petal.Length")
+  expect_equal_lazy(
+    select(test_pl, ends_with("Length")) |> names(),
+    select(test, ends_with("Length")) |> names()
   )
 
-  expect_colnames(
-    select(pl_iris, contains(".")),
-    c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
+  expect_equal_lazy(
+    select(test_pl, contains(".")) |> names(),
+    select(test, contains(".")) |> names()
   )
 
   selection <- c("Sepal.Length", "Sepal.Width")
 
-  expect_colnames(
-    select(pl_iris, all_of(selection)),
-    c("Sepal.Length", "Sepal.Width")
+  expect_equal_lazy(
+    select(test_pl, all_of(selection)) |> names(),
+    select(test, all_of(selection)) |> names()
   )
 
-  expect_colnames(
-    select(pl_iris, any_of(selection)),
-    c("Sepal.Length", "Sepal.Width")
+  expect_equal_lazy(
+    select(test_pl, any_of(selection)) |> names(),
+    select(test, any_of(selection)) |> names()
   )
 
   bad_selection <- c("Sepal.Length", "Sepal.Width", "foo")
 
+  expect_both_error(
+    select(test_pl, all_of(bad_selection)),
+    select(test, all_of(bad_selection))
+  )
   expect_snapshot_lazy(
-    select(pl_iris, all_of(bad_selection)),
+    select(test_pl, all_of(bad_selection)),
     error = TRUE
   )
 
-  expect_colnames(
-    select(pl_iris, any_of(bad_selection)),
-    c("Sepal.Length", "Sepal.Width")
+  expect_equal_lazy(
+    select(test_pl, any_of(bad_selection)) |> names(),
+    select(test, any_of(bad_selection)) |> names()
   )
 
-  expect_colnames(
-    select(pl_iris, where(is.numeric)),
-    c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
+  expect_equal_lazy(
+    select(test_pl, where(is.numeric)) |> names(),
+    select(test, where(is.numeric)) |> names()
   )
 
-  expect_colnames(
-    select(pl_iris, where(is.factor)),
-    "Species"
+  expect_equal_lazy(
+    select(test_pl, where(is.factor)) |> names(),
+    select(test, where(is.factor)) |> names()
   )
 
+  # tidypolars-specific (tidypolars doesn't support formula predicates in where())
   expect_snapshot_lazy(
-    select(pl_iris, where(~ mean(.x) > 3.5)),
+    select(test_pl, where(~ mean(.x) > 3.5)),
     error = TRUE
   )
 
-  expect_colnames(
-    select(pl_iris, last_col(3)),
-    "Sepal.Width"
+  expect_equal_lazy(
+    select(test_pl, last_col(3)) |> names(),
+    select(test, last_col(3)) |> names()
   )
 
-  expect_colnames(
-    select(pl_iris, 1:last_col(3)),
-    c("Sepal.Length", "Sepal.Width")
+  expect_equal_lazy(
+    select(test_pl, 1:last_col(3)) |> names(),
+    select(test, 1:last_col(3)) |> names()
   )
 
-  test <- polars::pl$LazyFrame(
+  test2 <- tibble(
     x1 = "a",
     x2 = 1,
     x3 = "b",
@@ -103,37 +111,36 @@ test_that("select helpers work", {
     x02 = 1,
     x03 = "b"
   )
+  test2_pl <- as_polars_lf(test2)
 
-  expect_colnames(
-    select(test, num_range("x", 2:3)),
-    c("x2", "x3")
+  expect_equal_lazy(
+    select(test2_pl, num_range("x", 2:3)) |> names(),
+    select(test2, num_range("x", 2:3)) |> names()
   )
 
-  expect_colnames(
-    select(test, num_range("x", 2:3, width = 2)),
-    c("x02", "x03")
+  expect_equal_lazy(
+    select(test2_pl, num_range("x", 2:3, width = 2)) |> names(),
+    select(test2, num_range("x", 2:3, width = 2)) |> names()
   )
 })
 
 test_that("renaming in select works", {
-  test <- polars::as_polars_lf(iris)
+  test <- as_tibble(iris)
+  test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
-    select(test, foo = Sepal.Length, foo2 = Species),
-    select(test, Sepal.Length, Species) |>
-      rename(foo = Sepal.Length, foo2 = Species)
+    select(test_pl, foo = Sepal.Length, foo2 = Species),
+    select(test, foo = Sepal.Length, foo2 = Species)
   )
 
   expect_equal_lazy(
-    select(test, foo = Sepal.Length, everything(), foo2 = Species),
-    select(test, Sepal.Length, everything(), Species) |>
-      rename(foo = Sepal.Length, foo2 = Species)
+    select(test_pl, foo = Sepal.Length, everything(), foo2 = Species),
+    select(test, foo = Sepal.Length, everything(), foo2 = Species)
   )
 
   expect_equal_lazy(
-    select(test, foo = contains("tal")),
-    select(test, Petal.Length, Petal.Width) |>
-      rename(foo1 = Petal.Length, foo2 = Petal.Width)
+    select(test_pl, foo = contains("tal")),
+    select(test, foo = contains("tal"))
   )
 })
 

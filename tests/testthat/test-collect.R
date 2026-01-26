@@ -11,13 +11,8 @@ test_that("basic behavior works", {
 
   # TODO: droplevels() shouldn't be needed
   expect_equal(
-    pl_iris_lazy |>
-      filter(Species == "setosa") |>
-      collect() |>
-      droplevels(),
-    iris[iris$Species == "setosa", ] |>
-      droplevels() |>
-      as_tibble(),
+    pl_iris_lazy |> filter(Species == "setosa") |> collect() |> droplevels(),
+    iris[iris$Species == "setosa", ] |> droplevels() |> as_tibble(),
     ignore_attr = FALSE
   )
 })

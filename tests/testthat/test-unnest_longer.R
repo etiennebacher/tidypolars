@@ -55,8 +55,7 @@ test_that("unnest with both values_to and indices_to works", {
   expect_equal(
     test_pl |>
       unnest_longer_polars(values, values_to = "val", indices_to = "idx"),
-    test |>
-      unnest_longer(values, values_to = "val", indices_to = "idx")
+    test |> unnest_longer(values, values_to = "val", indices_to = "idx")
   )
 })
 
@@ -139,12 +138,8 @@ test_that("chained unnest_longer works", {
   test_pl <- as_polars_df(test)
 
   expect_equal(
-    test_pl |>
-      unnest_longer_polars(a) |>
-      unnest_longer_polars(b),
-    test |>
-      unnest_longer(a) |>
-      unnest_longer(b)
+    test_pl |> unnest_longer_polars(a) |> unnest_longer_polars(b),
+    test |> unnest_longer(a) |> unnest_longer(b)
   )
 })
 
@@ -322,8 +317,7 @@ test_that("errors when column names duplicate", {
     test |> unnest_longer(y, indices_to = "y")
   )
   expect_snapshot(
-    test_pl |>
-      unnest_longer_polars(y, indices_to = "y"),
+    test_pl |> unnest_longer_polars(y, indices_to = "y"),
     error = TRUE
   )
 
@@ -332,8 +326,7 @@ test_that("errors when column names duplicate", {
     test |> unnest_longer(y, indices_to = "z")
   )
   expect_snapshot(
-    test_pl |>
-      unnest_longer_polars(y, values_to = "z"),
+    test_pl |> unnest_longer_polars(y, values_to = "z"),
     error = TRUE
   )
 
@@ -342,8 +335,7 @@ test_that("errors when column names duplicate", {
     test |> unnest_longer(y, indices_to = "a", values_to = "a")
   )
   expect_snapshot(
-    test_pl |>
-      unnest_longer_polars(y, indices_to = "a", values_to = "a"),
+    test_pl |> unnest_longer_polars(y, indices_to = "a", values_to = "a"),
     error = TRUE
   )
 

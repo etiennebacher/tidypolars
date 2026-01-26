@@ -191,9 +191,7 @@ test_that("all common columns are used in join conditions", {
     x_pl |>
       inner_join(y_pl, by = join_by(id, between(t, start, end))) |>
       as_tibble(),
-    x |>
-      inner_join(y, by = join_by(id, between(t, start, end))) |>
-      as_tibble()
+    x |> inner_join(y, by = join_by(id, between(t, start, end))) |> as_tibble()
   )
 })
 

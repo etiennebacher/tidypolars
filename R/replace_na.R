@@ -18,6 +18,12 @@
 
 replace_na.polars_data_frame <- function(data, replace, ...) {
   is_scalar <- length(replace) == 1 && !is.list(replace)
+  if (is_scalar && (is_polars_df(data) || is_polars_lf(data))) {
+    cli_abort(
+      "{.arg replace} must be a list, not {obj_type_friendly(replace, value= FALSE)}",
+      call = caller_env()
+    )
+  }
 
   # TODO: maybe re-use fill_null() once this is fixed
   # https://github.com/pola-rs/polars/issues/22892

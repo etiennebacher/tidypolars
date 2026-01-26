@@ -13,7 +13,7 @@ test_that("basic behavior works", {
 
   expect_equal(
     out,
-    tidyr::unite(test, col = "full_date", year, month, day, sep = "-")
+    unite(test, col = "full_date", year, month, day, sep = "-")
   )
 })
 
@@ -38,7 +38,7 @@ test_that("argument remove works", {
 
   expect_equal(
     out,
-    tidyr::unite(
+    unite(
       test,
       col = "full_date",
       year,
@@ -58,17 +58,21 @@ test_that("tidy selection works", {
   )
   test_pl <- as_polars_df(test)
 
-  out <- unite(
-    test_pl,
-    col = "full_name",
-    everything(),
-    sep = " ",
-    na.rm = TRUE
-  )
-
   expect_equal(
-    pull(out, full_name),
-    c("John T. Smith", "Jack  Thompson", "Thomas F. Jones")
+    unite(
+      test_pl,
+      col = "full_name",
+      everything(),
+      sep = " ",
+      na.rm = TRUE
+    ),
+    unite(
+      test,
+      col = "full_name",
+      everything(),
+      sep = " ",
+      na.rm = TRUE
+    )
   )
 })
 
@@ -81,6 +85,10 @@ test_that("name of output column must be provided", {
   )
   test_pl <- as_polars_df(test)
 
+  expect_both_error(
+    unite(test_pl),
+    unite(test)
+  )
   expect_snapshot(
     unite(test_pl),
     error = TRUE
@@ -97,7 +105,7 @@ test_that("no selection selects all columns", {
   test_pl <- as_polars_df(test)
 
   expect_equal(
-    test_pl |> unite(col = "foo") |> pull(foo),
-    c("2009_10_11_Monday", "2010_11_22_Thursday", "2011_12_28_Wednesday")
+    test_pl |> unite(col = "foo"),
+    test |> unite(col = "foo")
   )
 })

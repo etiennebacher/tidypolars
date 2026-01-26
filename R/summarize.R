@@ -63,6 +63,11 @@ summarize.polars_data_frame <- function(
     caller = rlang::caller_env()
   )
 
+  polars_exprs <- lapply(polars_exprs, \(x) {
+    Filter(Negate(is.null), x)
+  })
+  polars_exprs <- Filter(\(x) length(x) > 0, polars_exprs)
+
   if (length(polars_exprs) == 0) {
     if (!is_grouped) {
       if (is_polars_df(.data)) {

@@ -159,10 +159,7 @@ test_that("operations on grouped data work", {
 
   expect_equal(
     out |> ungroup(),
-    test |>
-      group_by(Species) |>
-      mutate(foo = mean(Sepal.Length)) |>
-      ungroup()
+    test |> group_by(Species) |> mutate(foo = mean(Sepal.Length)) |> ungroup()
   )
 
   expect_equal(
@@ -173,10 +170,8 @@ test_that("operations on grouped data work", {
   expect_true(attr(out, "maintain_grp_order"))
 
   expect_equal(
-    test_pl |>
-      mutate(foo = mean(Sepal.Length), .by = Species),
-    test |>
-      mutate(foo = mean(Sepal.Length), .by = Species)
+    test_pl |> mutate(foo = mean(Sepal.Length), .by = Species),
+    test |> mutate(foo = mean(Sepal.Length), .by = Species)
   )
 
   expect_null(
@@ -199,10 +194,7 @@ test_that("operations on grouped data work", {
       group_by(cyl, am) |>
       mutate(disp2 = disp / mean(disp)) |>
       ungroup(),
-    test |>
-      group_by(cyl, am) |>
-      mutate(disp2 = disp / mean(disp)) |>
-      ungroup(),
+    test |> group_by(cyl, am) |> mutate(disp2 = disp / mean(disp)) |> ungroup(),
     tolerance = 1e-5
   )
 
@@ -210,9 +202,7 @@ test_that("operations on grouped data work", {
   test_pl <- as_polars_df(test)
 
   expect_colnames(
-    test_pl |>
-      group_by(Species) |>
-      mutate(Sepal.Length = NULL),
+    test_pl |> group_by(Species) |> mutate(Sepal.Length = NULL),
     names(test)[2:5]
   )
 
@@ -220,10 +210,8 @@ test_that("operations on grouped data work", {
   test_pl <- as_polars_df(test)
 
   expect_equal(
-    test_pl |>
-      mutate(disp2 = disp / mean(disp), .by = c(cyl, am)),
-    test |>
-      mutate(disp2 = disp / mean(disp), .by = c(cyl, am)),
+    test_pl |> mutate(disp2 = disp / mean(disp), .by = c(cyl, am)),
+    test |> mutate(disp2 = disp / mean(disp), .by = c(cyl, am)),
     tolerance = 1e-5
   )
 })
@@ -249,8 +237,7 @@ test_that("custom function that returns Polars expression", {
   }
 
   expect_equal(
-    mutate(test_pl, x = foo(Sepal.Length, Petal.Length)) |>
-      pull(x),
+    mutate(test_pl, x = foo(Sepal.Length, Petal.Length)) |> pull(x),
     rep(mean(test$Sepal.Length) + mean(test$Petal.Length), nrow(test))
   )
 })
@@ -410,17 +397,13 @@ test_that("works with external data.frame/list elements", {
   external_df <- tibble(x = 1:2)
 
   expect_equal(
-    test_pl |>
-      mutate(foo = x %in% external_df$x),
-    test |>
-      mutate(foo = x %in% external_df$x)
+    test_pl |> mutate(foo = x %in% external_df$x),
+    test |> mutate(foo = x %in% external_df$x)
   )
 
   expect_equal(
-    test_pl |>
-      mutate(foo = x %in% external_df[["x"]]),
-    test |>
-      mutate(foo = x %in% external_df[["x"]])
+    test_pl |> mutate(foo = x %in% external_df[["x"]]),
+    test |> mutate(foo = x %in% external_df[["x"]])
   )
 })
 
