@@ -120,7 +120,7 @@ pl_str_ends_stringr <- function(string, pattern, negate = FALSE, ...) {
 You can notice that the new function must be named as
 `pl_<function_name>_<package_name>`. This is because multiple packages
 can export functions with the same name (for example
-[`data.table::between()`](https://rdatatable.gitlab.io/data.table/reference/between.html)
+[`data.table::between()`](https://rdrr.io/pkg/data.table/man/between.html)
 and
 [`dplyr::between()`](https://dplyr.tidyverse.org/reference/between.html)).
 Therefore, we want to ensure that our translation is called only if the

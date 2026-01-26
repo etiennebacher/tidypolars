@@ -54,26 +54,26 @@ test <- polars::pl$DataFrame(
 # By default, united columns are dropped
 unite(test, col = "full_date", year, month, day, sep = "-")
 #> shape: (3, 2)
-#> ┌───────────┬────────────┐
-#> │ name_day  ┆ full_date  │
-#> │ ---       ┆ ---        │
-#> │ str       ┆ str        │
-#> ╞═══════════╪════════════╡
-#> │ Monday    ┆ 2009-10-11 │
-#> │ Thursday  ┆ 2010-11-22 │
-#> │ Wednesday ┆ 2011-12-28 │
-#> └───────────┴────────────┘
+#> ┌────────────┬───────────┐
+#> │ full_date  ┆ name_day  │
+#> │ ---        ┆ ---       │
+#> │ str        ┆ str       │
+#> ╞════════════╪═══════════╡
+#> │ 2009-10-11 ┆ Monday    │
+#> │ 2010-11-22 ┆ Thursday  │
+#> │ 2011-12-28 ┆ Wednesday │
+#> └────────────┴───────────┘
 unite(test, col = "full_date", year, month, day, sep = "-", remove = FALSE)
 #> shape: (3, 5)
-#> ┌──────┬───────┬─────┬───────────┬────────────┐
-#> │ year ┆ month ┆ day ┆ name_day  ┆ full_date  │
-#> │ ---  ┆ ---   ┆ --- ┆ ---       ┆ ---        │
-#> │ i32  ┆ i32   ┆ i32 ┆ str       ┆ str        │
-#> ╞══════╪═══════╪═════╪═══════════╪════════════╡
-#> │ 2009 ┆ 10    ┆ 11  ┆ Monday    ┆ 2009-10-11 │
-#> │ 2010 ┆ 11    ┆ 22  ┆ Thursday  ┆ 2010-11-22 │
-#> │ 2011 ┆ 12    ┆ 28  ┆ Wednesday ┆ 2011-12-28 │
-#> └──────┴───────┴─────┴───────────┴────────────┘
+#> ┌────────────┬──────┬───────┬─────┬───────────┐
+#> │ full_date  ┆ year ┆ month ┆ day ┆ name_day  │
+#> │ ---        ┆ ---  ┆ ---   ┆ --- ┆ ---       │
+#> │ str        ┆ i32  ┆ i32   ┆ i32 ┆ str       │
+#> ╞════════════╪══════╪═══════╪═════╪═══════════╡
+#> │ 2009-10-11 ┆ 2009 ┆ 10    ┆ 11  ┆ Monday    │
+#> │ 2010-11-22 ┆ 2010 ┆ 11    ┆ 22  ┆ Thursday  │
+#> │ 2011-12-28 ┆ 2011 ┆ 12    ┆ 28  ┆ Wednesday │
+#> └────────────┴──────┴───────┴─────┴───────────┘
 
 test2 <- polars::pl$DataFrame(
   name = c("John", "Jack", "Thomas"),
@@ -84,15 +84,15 @@ test2 <- polars::pl$DataFrame(
 # By default, NA values are kept in the character output
 unite(test2, col = "full_name", everything(), sep = " ")
 #> shape: (3, 1)
-#> ┌──────────────────┐
-#> │ full_name        │
-#> │ ---              │
-#> │ str              │
-#> ╞══════════════════╡
-#> │ John T. Smith    │
-#> │ Jack NA Thompson │
-#> │ Thomas F. Jones  │
-#> └──────────────────┘
+#> ┌─────────────────┐
+#> │ full_name       │
+#> │ ---             │
+#> │ str             │
+#> ╞═════════════════╡
+#> │ John T. Smith   │
+#> │ Jack Thompson   │
+#> │ Thomas F. Jones │
+#> └─────────────────┘
 unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
 #> shape: (3, 1)
 #> ┌─────────────────┐
@@ -101,7 +101,7 @@ unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
 #> │ str             │
 #> ╞═════════════════╡
 #> │ John T. Smith   │
-#> │ Jack  Thompson  │
+#> │ Jack Thompson   │
 #> │ Thomas F. Jones │
 #> └─────────────────┘
 ```

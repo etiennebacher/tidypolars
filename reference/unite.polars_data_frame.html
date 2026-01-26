@@ -94,26 +94,26 @@ prior to uniting each value.</p></dd>
 <span class="r-in"><span><span class="co"># By default, united columns are dropped</span></span></span>
 <span class="r-in"><span><span class="fu">unite</span><span class="op">(</span><span class="va">test</span>, col <span class="op">=</span> <span class="st">"full_date"</span>, <span class="va">year</span>, <span class="va">month</span>, <span class="va">day</span>, sep <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 2)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ┌───────────┬────────────┐</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ name_day  ┆ full_date  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---       ┆ ---        │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ str       ┆ str        │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ╞═══════════╪════════════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ Monday    ┆ 2009-10-11 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ Thursday  ┆ 2010-11-22 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ Wednesday ┆ 2011-12-28 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> └───────────┴────────────┘</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌────────────┬───────────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ full_date  ┆ name_day  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---        ┆ ---       │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ str        ┆ str       │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞════════════╪═══════════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2009-10-11 ┆ Monday    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2010-11-22 ┆ Thursday  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2011-12-28 ┆ Wednesday │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └────────────┴───────────┘</span>
 <span class="r-in"><span><span class="fu">unite</span><span class="op">(</span><span class="va">test</span>, col <span class="op">=</span> <span class="st">"full_date"</span>, <span class="va">year</span>, <span class="va">month</span>, <span class="va">day</span>, sep <span class="op">=</span> <span class="st">"-"</span>, remove <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 5)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────┬───────┬─────┬───────────┬────────────┐</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ year ┆ month ┆ day ┆ name_day  ┆ full_date  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---  ┆ ---   ┆ --- ┆ ---       ┆ ---        │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ i32  ┆ i32   ┆ i32 ┆ str       ┆ str        │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ╞══════╪═══════╪═════╪═══════════╪════════════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2009 ┆ 10    ┆ 11  ┆ Monday    ┆ 2009-10-11 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2010 ┆ 11    ┆ 22  ┆ Thursday  ┆ 2010-11-22 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2011 ┆ 12    ┆ 28  ┆ Wednesday ┆ 2011-12-28 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> └──────┴───────┴─────┴───────────┴────────────┘</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌────────────┬──────┬───────┬─────┬───────────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ full_date  ┆ year ┆ month ┆ day ┆ name_day  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---        ┆ ---  ┆ ---   ┆ --- ┆ ---       │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ str        ┆ i32  ┆ i32   ┆ i32 ┆ str       │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞════════════╪══════╪═══════╪═════╪═══════════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2009-10-11 ┆ 2009 ┆ 10    ┆ 11  ┆ Monday    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2010-11-22 ┆ 2010 ┆ 11    ┆ 22  ┆ Thursday  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2011-12-28 ┆ 2011 ┆ 12    ┆ 28  ┆ Wednesday │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └────────────┴──────┴───────┴─────┴───────────┘</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">test2</span> <span class="op">&lt;-</span> <span class="fu">polars</span><span class="fu">::</span><span class="va"><a href="https://pola-rs.github.io/r-polars/man/pl.html" class="external-link">pl</a></span><span class="op">$</span><span class="fu">DataFrame</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"John"</span>, <span class="st">"Jack"</span>, <span class="st">"Thomas"</span><span class="op">)</span>,</span></span>
@@ -124,15 +124,15 @@ prior to uniting each value.</p></dd>
 <span class="r-in"><span><span class="co"># By default, NA values are kept in the character output</span></span></span>
 <span class="r-in"><span><span class="fu">unite</span><span class="op">(</span><span class="va">test2</span>, col <span class="op">=</span> <span class="st">"full_name"</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">" "</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 1)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────────────────┐</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ full_name        │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---              │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ str              │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ╞══════════════════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ John T. Smith    │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ Jack NA Thompson │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ Thomas F. Jones  │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> └──────────────────┘</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────────────────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ full_name       │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---             │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ str             │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════════════════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ John T. Smith   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ Jack Thompson   │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ Thomas F. Jones │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └─────────────────┘</span>
 <span class="r-in"><span><span class="fu">unite</span><span class="op">(</span><span class="va">test2</span>, col <span class="op">=</span> <span class="st">"full_name"</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">" "</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 1)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────────────────┐</span>
@@ -141,7 +141,7 @@ prior to uniting each value.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ str             │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════════════════╡</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ John T. Smith   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ Jack  Thompson  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ Jack Thompson   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ Thomas F. Jones │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────────────────┘</span>
 </code></pre></div>

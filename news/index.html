@@ -54,6 +54,25 @@
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
 <ul><li>Added support for <code><a href="https://dplyr.tidyverse.org/reference/near.html" class="external-link">dplyr::near()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/311" class="external-link">#311</a>).</li>
 </ul></div>
+<div class="section level3">
+<h3 id="other-changes-development-version">Other changes<a class="anchor" aria-label="anchor" href="#other-changes-development-version"></a></h3>
+<ul><li>
+<p>Several changes to make <code>tidypolars</code> more aligned with the <code>tidyverse</code> output in general (<a href="https://github.com/etiennebacher/tidypolars/issues/316" class="external-link">#316</a>):</p>
+<ul><li>in <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code>, if <code>sort = TRUE</code> and there are some ties, then other variables are sorted in increasing order.</li>
+<li>
+<code><a href="https://dplyr.tidyverse.org/reference/coalesce.html" class="external-link">coalesce()</a></code> no longer has a <code>default</code> argument. This was an implementation mistake since <code><a href="https://dplyr.tidyverse.org/reference/coalesce.html" class="external-link">dplyr::coalesce()</a></code> never had this argument.</li>
+<li>
+<code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup()</a></code> used to remove the group-specific attributes in the original grouped data, even if the result of the operation was not assigned. This is fixed.</li>
+<li>
+<code><a href="https://tidyr.tidyverse.org/reference/replace_na.html" class="external-link">replace_na()</a></code> on a Polars DataFrame or LazyFrame now errors if <code>replacement</code> is not a list.</li>
+<li>
+<code>slice_*()</code> functions on grouped data return columns in the same order as in the input.</li>
+<li>
+<code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code> with only <code>NULL</code> expressions now returns one row per unique group instead of the entire data.</li>
+<li>
+<code><a href="https://tidyr.tidyverse.org/reference/unite.html" class="external-link">unite()</a></code> now returns columns in the correct order, and doesn’t duplicate the <code>sep</code> in the output if some values are <code>NA</code>.</li>
+</ul></li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.16.0" id="tidypolars-0160">tidypolars 0.16.0<a class="anchor" aria-label="anchor" href="#tidypolars-0160"></a></h2>

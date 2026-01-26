@@ -33,19 +33,6 @@ replace_na(data, replace, ...)
 ``` r
 pl_test <- polars::pl$DataFrame(x = c(NA, 1), y = c(2, NA))
 
-# replace all NA with 0
-replace_na(pl_test, 0)
-#> shape: (2, 2)
-#> ┌─────┬─────┐
-#> │ x   ┆ y   │
-#> │ --- ┆ --- │
-#> │ f64 ┆ f64 │
-#> ╞═════╪═════╡
-#> │ 0.0 ┆ 2.0 │
-#> │ 1.0 ┆ 0.0 │
-#> └─────┴─────┘
-
-# custom replacement per column
 replace_na(pl_test, list(x = 0, y = 999))
 #> shape: (2, 2)
 #> ┌─────┬───────┐

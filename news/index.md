@@ -26,6 +26,36 @@
   [`dplyr::near()`](https://dplyr.tidyverse.org/reference/near.html)
   ([\#311](https://github.com/etiennebacher/tidypolars/issues/311)).
 
+### Other changes
+
+- Several changes to make `tidypolars` more aligned with the `tidyverse`
+  output in general
+  ([\#316](https://github.com/etiennebacher/tidypolars/issues/316)):
+
+  - in [`count()`](https://dplyr.tidyverse.org/reference/count.html), if
+    `sort = TRUE` and there are some ties, then other variables are
+    sorted in increasing order.
+  - [`coalesce()`](https://dplyr.tidyverse.org/reference/coalesce.html)
+    no longer has a `default` argument. This was an implementation
+    mistake since
+    [`dplyr::coalesce()`](https://dplyr.tidyverse.org/reference/coalesce.html)
+    never had this argument.
+  - [`ungroup()`](https://dplyr.tidyverse.org/reference/group_by.html)
+    used to remove the group-specific attributes in the original grouped
+    data, even if the result of the operation was not assigned. This is
+    fixed.
+  - [`replace_na()`](https://tidyr.tidyverse.org/reference/replace_na.html)
+    on a Polars DataFrame or LazyFrame now errors if `replacement` is
+    not a list.
+  - `slice_*()` functions on grouped data return columns in the same
+    order as in the input.
+  - [`summarize()`](https://dplyr.tidyverse.org/reference/summarise.html)
+    with only `NULL` expressions now returns one row per unique group
+    instead of the entire data.
+  - [`unite()`](https://tidyr.tidyverse.org/reference/unite.html) now
+    returns columns in the correct order, and doesn’t duplicate the
+    `sep` in the output if some values are `NA`.
+
 ## tidypolars 0.16.0
 
 `tidypolars` requires `polars` \>= 1.8.0.
