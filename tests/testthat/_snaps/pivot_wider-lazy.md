@@ -1,8 +1,7 @@
 # names_prefix works
 
     Code
-      pivot_wider(test_pl, names_from = station, values_from = seen, names_prefix = c(
-        "foo1", "foo2"))
+      current$collect()
     Condition
       Error in `pivot_wider()`:
       ! `names_prefix` must be a single string or `NULL`, not a character vector.
@@ -10,7 +9,7 @@
 # error when overwriting existing column
 
     Code
-      pivot_wider(test_pl, names_from = key, values_from = val)
+      current$collect()
     Condition
       Error in `pivot_wider()`:
       ! This operation would generate column name(s) that already exist: a.
@@ -18,19 +17,25 @@
 ---
 
     Code
-      pivot_wider(test_pl, names_from = c(key, key_2), values_from = val)
+      current$collect()
     Condition
-      Error in `new_data$rename()`:
-      ! Evaluation failed in `$rename()`.
-      Caused by error:
+      Error in `current$collect()`:
       ! Evaluation failed in `$collect()`.
       Caused by error:
       ! Duplicated column(s): column 'a_c' is duplicate
+      
+      Resolved plan until failure:
+      
+      	---> FAILED HERE RESOLVING 'sink' <---
+      AGGREGATE[maintain_order: false]
+        [col("val").filter([(col("key")) == ("a")].all_horizontal([[(col("key_2")) == ("c")]])).item(allow_empty=true).alias("{"a","c"}"), col("val").filter([(col("key")) == ("b")].all_horizontal([[(col("key_2")) == ("d")]])).item(allow_empty=true).alias("{"b","d"}")] BY [col("a_c")]
+        FROM
+        DF ["a_c", "key", "key_2", "val"]; PROJECT */4 COLUMNS
 
 # `names_from` must be supplied if `name` isn't in data
 
     Code
-      pivot_wider(test_pl, values_from = val)
+      current$collect()
     Condition
       Error in `pivot_wider()`:
       ! Can't select columns that don't exist.
@@ -39,7 +44,7 @@
 # `values_from` must be supplied if `value` isn't in data
 
     Code
-      pivot_wider(test_pl, names_from = key)
+      current$collect()
     Condition
       Error in `pivot_wider()`:
       ! Can't select columns that don't exist.
@@ -48,7 +53,7 @@
 # `names_from` must identify at least 1 column
 
     Code
-      pivot_wider(test_pl, names_from = starts_with("foo"), values_from = val)
+      current$collect()
     Condition
       Error in `pivot_wider()`:
       ! Must select at least one variable in `names_from`.
@@ -56,7 +61,7 @@
 # `values_from` must identify at least 1 column
 
     Code
-      pivot_wider(test_pl, names_from = key, values_from = starts_with("foo"))
+      current$collect()
     Condition
       Error in `pivot_wider()`:
       ! Must select at least one variable in `values_from`.
@@ -64,11 +69,9 @@
 # `id_cols` can't select columns from `names_from` or `values_from`
 
     Code
-      pivot_wider(test_pl, id_cols = name, names_from = name, values_from = value)
+      current$collect()
     Condition
-      Error in `data$pivot()`:
-      ! Evaluation failed in `$pivot()`.
-      Caused by error:
+      Error in `current$collect()`:
       ! Evaluation failed in `$collect()`.
       Caused by error:
       ! at least one key is required in a group_by operation
@@ -76,11 +79,9 @@
 ---
 
     Code
-      pivot_wider(test_pl, id_cols = value, names_from = name, values_from = value)
+      current$collect()
     Condition
-      Error in `data$pivot()`:
-      ! Evaluation failed in `$pivot()`.
-      Caused by error:
+      Error in `current$collect()`:
       ! Evaluation failed in `$collect()`.
       Caused by error:
       ! at least one key is required in a group_by operation
@@ -88,7 +89,7 @@
 # dots must be empty
 
     Code
-      pivot_wider(test_pl, names_from = station, values_from = seen, foo = TRUE)
+      current$collect()
     Condition
       Error in `pivot_wider()`:
       ! `...` must be empty.
