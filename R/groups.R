@@ -74,10 +74,12 @@ group_by.polars_data_frame <- function(
 #' @export
 
 ungroup.polars_data_frame <- function(x, ...) {
-  attributes(x)$pl_grps <- NULL
-  attributes(x)$maintain_grp_order <- NULL
-  attributes(x)$grp_type <- NULL
-  x
+  # need to clone, otherwise the original data loses its attributes, even if unassigned
+  x2 <- x$clone()
+  attributes(x2)$pl_grps <- NULL
+  attributes(x2)$maintain_grp_order <- NULL
+  attributes(x2)$grp_type <- NULL
+  x2
 }
 
 #' @rdname group_by.polars_data_frame

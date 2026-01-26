@@ -62,9 +62,9 @@ pl_case_when_dplyr <- function(...) {
   out
 }
 
-pl_coalesce_dplyr <- function(..., default = NULL) {
+pl_coalesce_dplyr <- function(...) {
   # pl$coalesce() doesn't accept a list
-  call2(pl$coalesce, !!!clean_dots(...), default) |> eval_bare()
+  call2(pl$coalesce, !!!clean_dots(...)) |> eval_bare()
 }
 
 pl_consecutive_id_dplyr <- function(...) {

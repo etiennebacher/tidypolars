@@ -3,58 +3,58 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("tally works", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
 
-  expect_is_tidypolars(tally(test))
+  expect_is_tidypolars(tally(test_pl))
 
   expect_equal_lazy(
-    tally(test) |> pull(n),
-    32
+    tally(test_pl),
+    tally(test)
   )
 
   expect_equal_lazy(
-    test |> group_by(cyl) |> tally() |> pull(n),
-    c(11, 7, 14)
+    test_pl |> group_by(cyl) |> tally() |> arrange(cyl),
+    test |> group_by(cyl) |> tally() |> arrange(cyl)
   )
 
   expect_equal_lazy(
-    test |> group_by(cyl, am) |> tally() |> pull(n),
-    c(3, 8, 4, 3, 12, 2)
+    test_pl |> group_by(cyl, am) |> tally() |> arrange(cyl, am),
+    test |> group_by(cyl, am) |> tally() |> arrange(cyl, am)
   )
 })
 
 test_that("arguments name and sort work", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
+    test_pl |>
+      group_by(cyl, am) |>
+      tally(sort = TRUE, name = "tally"),
     test |>
       group_by(cyl, am) |>
-      tally(sort = TRUE, name = "tally") |>
-      pull(tally),
-    c(12, 8, 4, 3, 3, 2)
+      tally(sort = TRUE, name = "tally")
   )
 
   expect_equal_lazy(
-    tally(test, name = "tally") |> pull(tally),
-    32
+    tally(test_pl, name = "tally"),
+    tally(test, name = "tally")
   )
 })
 
 test_that("tally() drops one grouping level", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
+
   expect_equal_lazy(
-    test |>
-      group_by(cyl) |>
-      tally() |>
-      group_vars(),
-    character(0)
+    test_pl |> group_by(cyl) |> tally() |> group_vars(),
+    test |> group_by(cyl) |> tally() |> group_vars()
   )
+
   expect_equal_lazy(
-    test |>
-      group_by(cyl, am) |>
-      tally() |>
-      group_vars(),
-    "cyl"
+    test_pl |> group_by(cyl, am) |> tally() |> group_vars(),
+    test |> group_by(cyl, am) |> tally() |> group_vars()
   )
 })
 
@@ -88,16 +88,17 @@ test_that("tally() drops one grouping level", {
 # })
 
 test_that("message if overwriting variable", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
 
-  test2 <- test |>
-    mutate(n = 1)
+  test2 <- test |> mutate(n = 1)
+  test2_pl <- test_pl |> mutate(n = 1)
 
-  test3 <- test2 |>
-    mutate(nn = 1)
+  test3 <- test2 |> mutate(nn = 1)
+  test3_pl <- test2_pl |> mutate(nn = 1)
 
   expect_message(
-    test2 |> group_by(n) |> tally(),
+    test2_pl |> group_by(n) |> tally(),
     "Storing counts in `nn`, as `n` already present in input."
   )
 
@@ -122,15 +123,18 @@ test_that("message if overwriting variable", {
 })
 
 test_that("tally() explicitly does not support 'wt'", {
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
+
   expect_warning(
-    mtcars |> as_polars_lf() |> tally(wt = drat),
+    test_pl |> tally(wt = drat),
     "Argument `wt` is not supported by tidypolars"
   )
   withr::with_options(
     list("tidypolars_unknown_args" = "error"),
     {
       expect_error_lazy(
-        mtcars |> as_polars_lf() |> tally(wt = drat),
+        test_pl |> tally(wt = drat),
         "Argument `wt` is not supported by tidypolars"
       )
     }

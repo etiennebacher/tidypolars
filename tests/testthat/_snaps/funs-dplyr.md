@@ -1,7 +1,7 @@
 # n_distinct() works
 
     Code
-      summarize(test, foo = n_distinct())
+      summarize(test_pl, foo = n_distinct())
     Condition
       Error in `summarize()`:
       ! Error while running function `n_distinct()` in Polars.
@@ -10,7 +10,7 @@
 # nth() work
 
     Code
-      summarize(test, foo = nth(x, 2:3))
+      summarize(test_pl, foo = nth(x, 2:3))
     Condition
       Error in `summarize()`:
       ! Error while running function `nth()` in Polars.
@@ -19,7 +19,7 @@
 ---
 
     Code
-      summarize(test, foo = nth(x, NA))
+      summarize(test_pl, foo = nth(x, NA))
     Condition
       Error in `summarize()`:
       ! Error while running function `nth()` in Polars.
@@ -28,7 +28,7 @@
 ---
 
     Code
-      summarize(test, foo = nth(x, 1.5))
+      summarize(test_pl, foo = nth(x, 1.5))
     Condition
       Error in `summarize()`:
       ! Error while running function `nth()` in Polars.
@@ -37,7 +37,7 @@
 # na_if() works
 
     Code
-      mutate(test, foo = na_if(x, 1:2))
+      mutate(test_pl, foo = na_if(x, 1:2))
     Condition
       Error in `.data$with_columns()`:
       ! Evaluation failed in `$with_columns()`.
@@ -51,7 +51,7 @@
 # near() works
 
     Code
-      mutate(dat_pl, z = near(x, 1:2))
+      mutate(test_pl, z = near(x, 1:2))
     Condition
       Error in `.data$with_columns()`:
       ! Evaluation failed in `$with_columns()`.

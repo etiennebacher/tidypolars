@@ -1,8 +1,8 @@
 # names_prefix works
 
     Code
-      pivot_wider(pl_fish_encounters, names_from = station, values_from = seen,
-        names_prefix = c("foo1", "foo2"))
+      pivot_wider(test_pl, names_from = station, values_from = seen, names_prefix = c(
+        "foo1", "foo2"))
     Condition
       Error in `pivot_wider()`:
       ! `names_prefix` must be a single string or `NULL`, not a character vector.
@@ -10,7 +10,7 @@
 # error when overwriting existing column
 
     Code
-      pivot_wider(df, names_from = key, values_from = val)
+      pivot_wider(test_pl, names_from = key, values_from = val)
     Condition
       Error in `data$pivot()`:
       ! Evaluation failed in `$pivot()`.
@@ -22,7 +22,7 @@
 # `names_from` must be supplied if `name` isn't in data
 
     Code
-      pivot_wider(df, values_from = val)
+      pivot_wider(test_pl, values_from = val)
     Condition
       Error in `pivot_wider()`:
       ! Can't select columns that don't exist.
@@ -31,7 +31,7 @@
 # `values_from` must be supplied if `value` isn't in data
 
     Code
-      pivot_wider(df, names_from = key)
+      pivot_wider(test_pl, names_from = key)
     Condition
       Error in `pivot_wider()`:
       ! Can't select columns that don't exist.
@@ -40,7 +40,7 @@
 # `names_from` must identify at least 1 column
 
     Code
-      pivot_wider(df, names_from = starts_with("foo"), values_from = val)
+      pivot_wider(test_pl, names_from = starts_with("foo"), values_from = val)
     Condition
       Error in `pivot_wider()`:
       ! Must select at least one variable in `names_from`.
@@ -48,7 +48,7 @@
 # `values_from` must identify at least 1 column
 
     Code
-      pivot_wider(df, names_from = key, values_from = starts_with("foo"))
+      pivot_wider(test_pl, names_from = key, values_from = starts_with("foo"))
     Condition
       Error in `pivot_wider()`:
       ! Must select at least one variable in `values_from`.
@@ -56,7 +56,7 @@
 # `id_cols` can't select columns from `names_from` or `values_from`
 
     Code
-      pivot_wider(df, id_cols = name, names_from = name, values_from = value)
+      pivot_wider(test_pl, id_cols = name, names_from = name, values_from = value)
     Condition
       Error in `data$pivot()`:
       ! Evaluation failed in `$pivot()`.
@@ -68,7 +68,7 @@
 ---
 
     Code
-      pivot_wider(df, id_cols = value, names_from = name, values_from = value)
+      pivot_wider(test_pl, id_cols = value, names_from = name, values_from = value)
     Condition
       Error in `data$pivot()`:
       ! Evaluation failed in `$pivot()`.
@@ -80,11 +80,8 @@
 # dots must be empty
 
     Code
-      pivot_wider(pl_fish_encounters, names_from = station, values_from = seen, foo = TRUE,
-        names_sort = TRUE)
+      pivot_wider(test_pl, names_from = station, values_from = seen, foo = TRUE)
     Condition
-      Warning in `pivot_wider()`:
-      Argument `names_sort` is not supported by tidypolars.
       Error in `pivot_wider()`:
       ! `...` must be empty.
 

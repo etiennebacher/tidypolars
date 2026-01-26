@@ -35,7 +35,7 @@
 # unsupported args throw warning
 
     Code
-      semi_join(test, test2, copy = TRUE)
+      semi_join(test, test2, by = "country", copy = TRUE)
     Condition
       Error in `semi_join()`:
       ! Argument `copy` is not supported by tidypolars.

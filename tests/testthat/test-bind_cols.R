@@ -15,34 +15,42 @@ test_that("returns custom class", {
 
 test_that("basic behavior with list works", {
   l <- list(
-    polars::pl$DataFrame(
+    tibble(
       x = sample(letters, 20),
       y = sample.int(100, 20)
     ),
-    polars::pl$DataFrame(
+    tibble(
       a = sample(letters, 20),
       z = sample.int(100, 20)
     )
   )
-  expect_dim(
-    bind_cols_polars(l),
-    c(20, 4)
+  l_pl <- lapply(l, as_polars_df)
+
+  expect_equal(
+    bind_cols_polars(l_pl),
+    bind_cols(l)
   )
 })
 
-test_that("passing individual elements works", {
-  p1 <- pl$DataFrame(
+test_that("dots and list are equivalent", {
+  df1 <- tibble(
     x = sample(letters, 20),
     y = sample.int(100, 20)
   )
-  p2 <- pl$DataFrame(
+  df2 <- tibble(
     z = sample(letters, 20),
     w = sample.int(100, 20)
   )
+  df1_pl <- as_polars_df(df1)
+  df2_pl <- as_polars_df(df2)
 
   expect_equal(
-    bind_cols_polars(p1, p2),
-    bind_cols_polars(list(p1, p2))
+    bind_rows_polars(df1_pl, df2_pl),
+    bind_rows(df1, df2)
+  )
+  expect_equal(
+    bind_rows_polars(list(df1_pl, df2_pl)),
+    bind_rows(list(df1, df2))
   )
 })
 
@@ -85,25 +93,23 @@ test_that("elements must be either all DataFrames or all LazyFrames", {
 
 test_that("can only bind more than 2 elements if DataFrame", {
   l <- list(
-    polars::pl$DataFrame(
+    tibble(
       x = sample(letters, 20),
       y = sample.int(100, 20)
     ),
-    polars::pl$DataFrame(
+    tibble(
       a = sample(letters, 20),
       z = sample.int(100, 20)
     ),
-    polars::pl$DataFrame(
+    tibble(
       v = sample(letters, 20),
       w = sample.int(100, 20)
     )
   )
-
-  expect_dim(bind_cols_polars(l), c(20, 6))
-
-  expect_colnames(
-    bind_cols_polars(l),
-    c("x", "y", "a", "z", "v", "w")
+  l_pl <- lapply(l, as_polars_df)
+  expect_equal(
+    bind_cols_polars(l_pl),
+    bind_cols(l)
   )
 })
 

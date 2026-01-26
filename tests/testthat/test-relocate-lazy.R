@@ -3,144 +3,91 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
 
-  expect_is_tidypolars(relocate(test))
-  expect_is_tidypolars(relocate(test, hp, .before = cyl))
+  expect_is_tidypolars(relocate(test_pl))
+  expect_is_tidypolars(relocate(test_pl, hp, .before = cyl))
 
-  expect_colnames(
-    test |> relocate(hp, vs, .before = cyl),
-    c(
-      "mpg",
-      "hp",
-      "vs",
-      "cyl",
-      "disp",
-      "drat",
-      "wt",
-      "qsec",
-      "am",
-      "gear",
-      "carb"
-    )
+  expect_equal_lazy(
+    test_pl |> relocate(hp, vs, .before = cyl),
+    test |> relocate(hp, vs, .before = cyl)
   )
 
   expect_equal_lazy(
-    relocate(test),
-    test
+    relocate(test_pl),
+    relocate(test)
   )
 })
 
 test_that("moved to first positions if no .before or .after", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
 
-  expect_colnames(
-    test |> relocate(hp, vs),
-    c(
-      "hp",
-      "vs",
-      "mpg",
-      "cyl",
-      "disp",
-      "drat",
-      "wt",
-      "qsec",
-      "am",
-      "gear",
-      "carb"
-    )
+  expect_equal_lazy(
+    test_pl |> relocate(hp, vs),
+    test |> relocate(hp, vs)
   )
 })
 
 test_that(".before and .after can be quoted or unquoted", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
 
-  expect_colnames(
-    test |> relocate(hp, vs, .after = "gear"),
-    c(
-      "mpg",
-      "cyl",
-      "disp",
-      "drat",
-      "wt",
-      "qsec",
-      "am",
-      "gear",
-      "hp",
-      "vs",
-      "carb"
-    )
+  expect_equal_lazy(
+    test_pl |> relocate(hp, vs, .after = "gear"),
+    test |> relocate(hp, vs, .after = "gear")
   )
 })
 
 test_that("select helpers are also available", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
 
-  expect_colnames(
-    test |> relocate(matches("[aeiouy]")),
-    c(
-      "cyl",
-      "disp",
-      "drat",
-      "qsec",
-      "am",
-      "gear",
-      "carb",
-      "mpg",
-      "hp",
-      "wt",
-      "vs"
-    )
+  expect_equal_lazy(
+    test_pl |> relocate(matches("[aeiouy]")),
+    test |> relocate(matches("[aeiouy]"))
   )
 
-  expect_colnames(
-    test |> relocate(hp, vs, .after = last_col()),
-    c(
-      "mpg",
-      "cyl",
-      "disp",
-      "drat",
-      "wt",
-      "qsec",
-      "am",
-      "gear",
-      "carb",
-      "hp",
-      "vs"
-    )
+  expect_equal_lazy(
+    test_pl |> relocate(hp, vs, .after = last_col()),
+    test |> relocate(hp, vs, .after = last_col())
   )
 
-  expect_colnames(
-    test |> relocate(hp, vs, .before = last_col()),
-    c(
-      "mpg",
-      "cyl",
-      "disp",
-      "drat",
-      "wt",
-      "qsec",
-      "am",
-      "gear",
-      "hp",
-      "vs",
-      "carb"
-    )
+  expect_equal_lazy(
+    test_pl |> relocate(hp, vs, .before = last_col()),
+    test |> relocate(hp, vs, .before = last_col())
   )
 })
 
 test_that("error cases work", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
 
-  expect_snapshot_lazy(
-    test |> relocate(mpg, .before = cyl, .after = drat),
-    error = TRUE
+  expect_both_error(
+    test_pl |> relocate(mpg, .before = cyl, .after = drat),
+    test |> relocate(mpg, .before = cyl, .after = drat)
   )
   expect_snapshot_lazy(
-    test |> relocate(mpg, .before = foo),
+    test_pl |> relocate(mpg, .before = cyl, .after = drat),
     error = TRUE
   )
+
+  expect_both_error(
+    test_pl |> relocate(mpg, .before = foo),
+    test |> relocate(mpg, .before = foo)
+  )
   expect_snapshot_lazy(
-    test |> relocate(mpg, .after = foo),
+    test_pl |> relocate(mpg, .before = foo),
+    error = TRUE
+  )
+
+  expect_both_error(
+    test_pl |> relocate(mpg, .after = foo),
+    test |> relocate(mpg, .after = foo)
+  )
+  expect_snapshot_lazy(
+    test_pl |> relocate(mpg, .after = foo),
     error = TRUE
   )
 })

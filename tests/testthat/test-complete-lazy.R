@@ -3,161 +3,122 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- polars::pl$LazyFrame(
+  test <- tibble(
     country = c("France", "France", "UK", "UK", "Spain"),
     year = c(2020, 2021, 2019, 2020, 2022),
     value = c(1, 2, 3, 4, 5)
   )
+  test_pl <- as_polars_lf(test)
 
-  expect_is_tidypolars(complete(test, country, year))
+  expect_is_tidypolars(complete(test_pl, country, year))
 
-  expect_dim(
-    complete(test, country, year),
-    c(12, 3)
+  expect_equal_lazy(
+    complete(test_pl, country, year),
+    complete(test, country, year)
   )
 
   expect_equal_lazy(
-    complete(test, country, year) |>
-      pull(country),
-    rep(c("France", "Spain", "UK"), each = 4)
+    complete(test_pl, country, year),
+    complete(test, country, year)
   )
 
   expect_equal_lazy(
-    complete(test, country, year) |>
-      slice_head(n = 4) |>
-      pull(value),
-    c(NA, 1, 2, NA)
+    complete(test_pl, country, year, fill = list(value = 99)),
+    complete(test, country, year, fill = list(value = 99))
   )
 
+  # I would rather not force an implicit sort in complete()
   expect_equal_lazy(
-    complete(test, country, year, fill = list(value = 99)) |>
-      slice_head(n = 4) |>
-      pull(value),
-    c(99, 1, 2, 99)
-  )
-
-  expect_equal_lazy(
-    complete(test, country),
-    test
+    complete(test_pl, country) |> arrange(country),
+    complete(test, country)
   )
 })
 
 test_that("works on grouped data", {
-  df <- pl$LazyFrame(
+  test <- tibble(
     g = c("a", "b", "a"),
     a = c(1L, 1L, 2L),
     b = c("a", "a", "b"),
     c = c(4, 5, 6)
   )
-  gdf <- group_by(df, g)
-  out <- complete(gdf, a, b) |>
-    arrange(g)
+  test_pl <- as_polars_lf(test)
+  test_grp <- group_by(test, g)
+  test_pl_grp <- group_by(test_pl, g)
 
   expect_equal_lazy(
-    out,
-    data.frame(
-      g = c(rep("a", 4), "b"),
-      a = c(1, 1, 2, 2, 1),
-      b = c("a", "b", "a", "b", "a"),
-      c = c(4, NA, NA, 6, 5)
-    )
+    complete(test_pl_grp, a, b) |> arrange(g),
+    complete(test_grp, a, b)
   )
 
   expect_equal_lazy(
-    attr(out, "pl_grps"),
+    attr(complete(test_pl_grp, a, b), "pl_grps"),
     "g"
   )
 })
 
 test_that("argument 'explicit' works", {
-  df <- pl$LazyFrame(
+  test <- tibble(
     g = c("a", "b", "a"),
     a = c(1L, 1L, 2L),
     b = c("a", NA, "b"),
     c = c(4, 5, NA)
   )
+  test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
-    df |>
-      complete(g, a, fill = list(b = "foo", c = 1), explicit = FALSE),
-    data.frame(
-      g = rep(c("a", "b"), each = 2),
-      a = rep(1:2, 2),
-      b = c("a", "b", NA, "foo"),
-      c = c(4, NA, 5, 1)
-    )
+    test_pl |> complete(g, a, fill = list(b = "foo", c = 1), explicit = FALSE),
+    test |> complete(g, a, fill = list(b = "foo", c = 1), explicit = FALSE)
   )
 
   expect_equal_lazy(
-    df |>
+    test_pl |>
       group_by(g, maintain_order = TRUE) |>
       complete(a, b, fill = list(c = 1), explicit = FALSE),
-    data.frame(
-      g = rep(c("a", "b"), c(4L, 1L)),
-      a = c(1L, 1L, 2L, 2L, 1L),
-      b = c("a", "b", "a", "b", NA),
-      c = c(4, 1, 1, NA, 5)
-    )
+    test |> group_by(g) |> complete(a, b, fill = list(c = 1), explicit = FALSE)
   )
 })
 
 test_that("can use named arguments", {
-  df <- pl$LazyFrame(
+  test <- tibble(
     group = c(1:2, 1, 2),
     item_id = c(1:2, 2, 3),
     item_name = c("a", "a", "b", "b"),
     value1 = c(1, NA, 3, 4),
     value2 = 4:7
   )
+  test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
-    df |>
+    test_pl |>
       complete(group, value1 = c(1, 2, 3, 4)) |>
       arrange(group, value1),
-    as.data.frame(df) |>
-      complete(group, value1 = c(1, 2, 3, 4)) |>
-      as.data.frame()
+    test |> complete(group, value1 = c(1, 2, 3, 4))
   )
 
-  # only one named input
   expect_equal_lazy(
-    df |>
-      complete(value1 = c(1, 2, 3, 4)) |>
-      arrange(value1),
-    as.data.frame(df) |>
-      complete(value1 = c(1, 2, 3, 4)) |>
-      as.data.frame()
+    test_pl |> complete(value1 = c(1, 2, 3, 4)) |> arrange(value1),
+    test |> complete(value1 = c(1, 2, 3, 4))
   )
 
-  # input columns are reordered
   expect_equal_lazy(
-    df |>
+    test_pl |>
       complete(value1 = c(1, 2, 3, 4), group) |>
       arrange(value1, group),
-    as.data.frame(df) |>
-      complete(value1 = c(1, 2, 3, 4), group) |>
-      as.data.frame()
+    test |> complete(value1 = c(1, 2, 3, 4), group)
   )
   expect_equal_lazy(
-    df |>
+    test_pl |>
       group_by(item_id) |>
       complete(value1 = c(1, 2, 3, 4), group) |>
       arrange(item_id, value1, group),
-    as.data.frame(df) |>
-      group_by(item_id) |>
-      complete(value1 = c(1, 2, 3, 4), group) |>
-      as.data.frame()
+    test |> group_by(item_id) |> complete(value1 = c(1, 2, 3, 4), group)
   )
 
-  # more than 1 unnamed and 1 named
-  df <- pl$LazyFrame(a = 1:2, b = 3:4, c = 5:6)
+  test <- tibble(a = 1:2, b = 3:4, c = 5:6)
+  test_pl <- as_polars_lf(test)
   expect_equal_lazy(
-    df |>
-      complete(a, b = 1:4, c) |>
-      arrange(a, b, c),
-    as.data.frame(df) |>
-      complete(a, b = 1:4, c) |>
-      as.data.frame()
+    test_pl |> complete(a, b = 1:4, c) |> arrange(a, b, c),
+    test |> complete(a, b = 1:4, c)
   )
 })
 
