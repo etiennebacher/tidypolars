@@ -1,11 +1,24 @@
-# Pivot a DataFrame from long to wide
+# Pivot a Data/LazyFrame from long to wide
 
-Pivot a DataFrame from long to wide
+Pivot a Data/LazyFrame from long to wide
 
 ## Usage
 
 ``` r
 # S3 method for class 'polars_data_frame'
+pivot_wider(
+  data,
+  ...,
+  id_cols = NULL,
+  names_from = name,
+  values_from = value,
+  names_prefix = "",
+  names_sep = "_",
+  names_glue = NULL,
+  values_fill = NULL
+)
+
+# S3 method for class 'polars_lazy_frame'
 pivot_wider(
   data,
   ...,
@@ -23,7 +36,7 @@ pivot_wider(
 
 - data:
 
-  A Polars DataFrame (LazyFrames are not supported).
+  A Polars Data/LazyFrame.
 
 - ...:
 

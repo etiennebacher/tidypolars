@@ -148,7 +148,8 @@ LazyFrames (`sink_` functions).
   [`pivot_longer(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/pivot_longer.polars_data_frame.md)
   : Pivot a Data/LazyFrame from wide to long
 - [`pivot_wider(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/pivot_wider.polars_data_frame.md)
-  : Pivot a DataFrame from long to wide
+  [`pivot_wider(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/pivot_wider.polars_data_frame.md)
+  : Pivot a Data/LazyFrame from long to wide
 - [`replace_na(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/replace_na.polars_data_frame.md)
   [`replace_na(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/replace_na.polars_data_frame.md)
   : Replace NAs with specified values

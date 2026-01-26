@@ -26,6 +26,10 @@
   [`dplyr::near()`](https://dplyr.tidyverse.org/reference/near.html)
   ([\#311](https://github.com/etiennebacher/tidypolars/issues/311)).
 
+- [`pivot_wider()`](https://tidyr.tidyverse.org/reference/pivot_wider.html)
+  now works with Polars LazyFrames
+  ([\#318](https://github.com/etiennebacher/tidypolars/issues/318)).
+
 ### Other changes
 
 - Several changes to make `tidypolars` more aligned with the `tidyverse`
