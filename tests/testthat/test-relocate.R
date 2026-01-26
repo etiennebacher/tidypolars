@@ -6,13 +6,13 @@ test_that("basic behavior works", {
   expect_is_tidypolars(relocate(test_pl, hp, .before = cyl))
 
   expect_equal(
-    test_pl |> relocate(hp, vs, .before = cyl) |> names(),
-    test |> relocate(hp, vs, .before = cyl) |> names()
+    test_pl |> relocate(hp, vs, .before = cyl),
+    test |> relocate(hp, vs, .before = cyl)
   )
 
   expect_equal(
     relocate(test_pl),
-    test_pl
+    relocate(test)
   )
 })
 
@@ -21,8 +21,8 @@ test_that("moved to first positions if no .before or .after", {
   test_pl <- as_polars_df(test)
 
   expect_equal(
-    test_pl |> relocate(hp, vs) |> names(),
-    test |> relocate(hp, vs) |> names()
+    test_pl |> relocate(hp, vs),
+    test |> relocate(hp, vs)
   )
 })
 
@@ -31,8 +31,8 @@ test_that(".before and .after can be quoted or unquoted", {
   test_pl <- as_polars_df(test)
 
   expect_equal(
-    test_pl |> relocate(hp, vs, .after = "gear") |> names(),
-    test |> relocate(hp, vs, .after = "gear") |> names()
+    test_pl |> relocate(hp, vs, .after = "gear"),
+    test |> relocate(hp, vs, .after = "gear")
   )
 })
 
@@ -41,18 +41,18 @@ test_that("select helpers are also available", {
   test_pl <- as_polars_df(test)
 
   expect_equal(
-    test_pl |> relocate(matches("[aeiouy]")) |> names(),
-    test |> relocate(matches("[aeiouy]")) |> names()
+    test_pl |> relocate(matches("[aeiouy]")),
+    test |> relocate(matches("[aeiouy]"))
   )
 
   expect_equal(
-    test_pl |> relocate(hp, vs, .after = last_col()) |> names(),
-    test |> relocate(hp, vs, .after = last_col()) |> names()
+    test_pl |> relocate(hp, vs, .after = last_col()),
+    test |> relocate(hp, vs, .after = last_col())
   )
 
   expect_equal(
-    test_pl |> relocate(hp, vs, .before = last_col()) |> names(),
-    test |> relocate(hp, vs, .before = last_col()) |> names()
+    test_pl |> relocate(hp, vs, .before = last_col()),
+    test |> relocate(hp, vs, .before = last_col())
   )
 })
 

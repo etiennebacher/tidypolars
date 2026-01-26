@@ -16,10 +16,8 @@ test_that("basic inequality join works", {
 
   by <- join_by(company == id, year >= since)
   expect_equal(
-    inner_join(transactions, companies, by),
-    inner_join(transactions_pl, companies_pl, by) |>
-      arrange(company) |>
-      as_tibble()
+    inner_join(transactions_pl, companies_pl, by),
+    inner_join(transactions, companies, by)
   )
 })
 
@@ -61,11 +59,10 @@ test_that("'between' helper works", {
       between(start, start, end, bounds = !!bnds)
     )
 
-    expect_identical(
-      inner_join(segments, reference, by),
+    expect_equal(
       inner_join(segments_pl, reference_pl, by) |>
-        arrange(segment_id) |>
-        as_tibble()
+        arrange(segment_id),
+      inner_join(segments, reference, by)
     )
 
     by2 <- join_by(
@@ -73,11 +70,10 @@ test_that("'between' helper works", {
       between(x$start, y$start, y$end, bounds = !!bnds)
     )
 
-    expect_identical(
-      inner_join(segments, reference, by2),
+    expect_equal(
       inner_join(segments_pl, reference_pl, by2) |>
-        arrange(segment_id) |>
-        as_tibble()
+        arrange(segment_id),
+      inner_join(segments, reference, by2)
     )
   }
 })
@@ -104,11 +100,10 @@ test_that("'within' helper works", {
     within(start, end, start, end)
   )
 
-  expect_identical(
-    inner_join(segments, reference, by),
+  expect_equal(
     inner_join(segments_pl, reference_pl, by) |>
-      arrange(segment_id) |>
-      as_tibble()
+      arrange(segment_id),
+    inner_join(segments, reference, by)
   )
 
   by2 <- join_by(
@@ -116,11 +111,10 @@ test_that("'within' helper works", {
     within(x$start, x$end, y$start, y$end)
   )
 
-  expect_identical(
-    inner_join(segments, reference, by2),
+  expect_equal(
     inner_join(segments_pl, reference_pl, by2) |>
-      arrange(segment_id) |>
-      as_tibble()
+      arrange(segment_id),
+    inner_join(segments, reference, by2)
   )
 })
 
@@ -147,11 +141,10 @@ test_that("'overlaps' helper works", {
       overlaps(start, end, start, end, bounds = !!bnds)
     )
 
-    expect_identical(
-      inner_join(segments, reference, by),
+    expect_equal(
       inner_join(segments_pl, reference_pl, by) |>
-        arrange(segment_id) |>
-        as_tibble()
+        arrange(segment_id),
+      inner_join(segments, reference, by)
     )
 
     by2 <- join_by(
@@ -159,11 +152,10 @@ test_that("'overlaps' helper works", {
       overlaps(x$start, x$end, y$start, y$end, bounds = !!bnds)
     )
 
-    expect_identical(
-      inner_join(segments, reference, by2),
+    expect_equal(
       inner_join(segments_pl, reference_pl, by2) |>
-        arrange(segment_id) |>
-        as_tibble()
+        arrange(segment_id),
+      inner_join(segments, reference, by2)
     )
   }
 })
@@ -183,10 +175,8 @@ test_that("all common columns are used in join conditions", {
   )
   y_pl <- as_polars_df(y)
 
-  expect_identical(
-    x_pl |>
-      inner_join(y_pl, by = join_by(id, between(t, start, end))) |>
-      as_tibble(),
-    x |> inner_join(y, by = join_by(id, between(t, start, end))) |> as_tibble()
+  expect_equal(
+    x_pl |> inner_join(y_pl, by = join_by(id, between(t, start, end))),
+    x |> inner_join(y, by = join_by(id, between(t, start, end)))
   )
 })

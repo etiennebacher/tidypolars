@@ -70,7 +70,6 @@ test_that("if_else() and ifelse() work with named args", {
 })
 
 test_that("error when different types", {
-  # tidypolars-specific errors (different behavior than from classic R)
   # I think it's better like this because it forces the user to
   # be clear about data types
   test <- tibble(

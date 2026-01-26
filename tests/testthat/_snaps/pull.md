@@ -1,7 +1,7 @@
 # error cases work
 
     Code
-      pull(test_pl, dplyr::all_of(c("mpg", "drat")))
+      pull(test_pl, all_of(c("mpg", "drat")))
     Condition
       Error in `pull()`:
       ! `pull()` can only extract one column. You tried to extract 2.

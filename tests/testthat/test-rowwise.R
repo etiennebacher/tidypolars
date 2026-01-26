@@ -104,18 +104,17 @@ test_that("rowwise mode is kept after operations", {
     rowwise()
 
   expect_equal(
-    (test_pl |> mutate(m = all(c(x, y, z))) |> attributes())$grp_type,
+    test_pl |> mutate(m = all(c(x, y, z))) |> attr(x = _, "grp_type"),
     "rowwise"
   )
 
   expect_equal(
-    (test_pl |> summarize(m = all(c(x, y, z))) |> attributes())$grp_type,
+    test_pl |> summarize(m = all(c(x, y, z))) |> attr(x = _, "grp_type"),
     "rowwise"
   )
 })
 
 test_that("can't apply rowwise on grouped data, and vice versa", {
-  # tidypolars-specific errors (tidyverse allows these combinations)
   test <- as_tibble(mtcars)
   test_pl <- as_polars_df(test)
 

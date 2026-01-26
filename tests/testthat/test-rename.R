@@ -5,13 +5,13 @@ test_that("basic behavior works", {
   expect_is_tidypolars(rename(test_pl, miles_per_gallon = "mpg"))
 
   expect_equal(
-    rename(test_pl, miles_per_gallon = "mpg", n_cyl = "cyl") |> names(),
-    rename(test, miles_per_gallon = "mpg", n_cyl = "cyl") |> names()
+    rename(test_pl, miles_per_gallon = "mpg", n_cyl = "cyl"),
+    rename(test, miles_per_gallon = "mpg", n_cyl = "cyl")
   )
 
   expect_equal(
-    rename(test_pl, miles_per_gallon = mpg, n_cyl = "cyl") |> names(),
-    rename(test, miles_per_gallon = mpg, n_cyl = "cyl") |> names()
+    rename(test_pl, miles_per_gallon = mpg, n_cyl = "cyl"),
+    rename(test, miles_per_gallon = mpg, n_cyl = "cyl")
   )
 })
 
@@ -20,18 +20,18 @@ test_that("rename_with works with builtin function", {
   test_pl <- as_polars_df(test)
 
   expect_equal(
-    rename_with(test_pl, toupper, c(mpg, cyl)) |> names(),
-    rename_with(test, toupper, c(mpg, cyl)) |> names()
+    rename_with(test_pl, toupper, c(mpg, cyl)),
+    rename_with(test, toupper, c(mpg, cyl))
   )
 
   expect_equal(
-    rename_with(test_pl, toupper) |> names(),
-    rename_with(test, toupper) |> names()
+    rename_with(test_pl, toupper),
+    rename_with(test, toupper)
   )
 
   expect_equal(
-    rename_with(test_pl, toupper, contains("p")) |> names(),
-    rename_with(test, toupper, contains("p")) |> names()
+    rename_with(test_pl, toupper, contains("p")),
+    rename_with(test, toupper, contains("p"))
   )
 })
 
@@ -42,8 +42,8 @@ test_that("rename_with works with custom function", {
   fn <- \(x) tolower(gsub(".", "_", x, fixed = TRUE))
 
   expect_equal(
-    rename_with(test_pl, fn) |> names(),
-    rename_with(test, fn) |> names()
+    rename_with(test_pl, fn),
+    rename_with(test, fn)
   )
 
   fn2 <- function(x) tolower(gsub(".", "_", x, fixed = TRUE))
@@ -51,7 +51,7 @@ test_that("rename_with works with custom function", {
   expect_is_tidypolars(rename_with(test_pl, fn2))
 
   expect_equal(
-    rename_with(test_pl, fn2) |> names(),
-    rename_with(test, fn2) |> names()
+    rename_with(test_pl, fn2),
+    rename_with(test, fn2)
   )
 })

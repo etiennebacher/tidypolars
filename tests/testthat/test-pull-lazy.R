@@ -27,15 +27,17 @@ test_that("error cases work", {
   test_pl <- as_polars_lf(test)
 
   expect_both_error(
-    pull(test_pl, dplyr::all_of(c("mpg", "drat"))),
-    pull(test, dplyr::all_of(c("mpg", "drat")))
+    pull(test_pl, all_of(c("mpg", "drat"))),
+    pull(test, all_of(c("mpg", "drat")))
   )
   expect_snapshot_lazy(
-    pull(test_pl, dplyr::all_of(c("mpg", "drat"))),
+    pull(test_pl, all_of(c("mpg", "drat"))),
     error = TRUE
   )
-
-  # tidypolars-specific (dplyr::pull only takes one column argument)
+  expect_both_error(
+    pull(test_pl, mpg, drat, hp),
+    pull(test, mpg, drat, hp),
+  )
   expect_snapshot_lazy(
     pull(test_pl, mpg, drat, hp),
     error = TRUE

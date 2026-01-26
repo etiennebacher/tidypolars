@@ -119,7 +119,6 @@ test_that("message if overwriting variable", {
 })
 
 test_that("tally() explicitly does not support 'wt'", {
-  # tidypolars-specific (tidyverse supports wt argument)
   test <- as_tibble(mtcars)
   test_pl <- as_polars_df(test)
 

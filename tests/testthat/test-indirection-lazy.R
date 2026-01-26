@@ -14,10 +14,6 @@ test_that("basic behavior works", {
     data |> mutate("{{add_col}}_plus_2" := {{ add_col }} + 2)
   }
 
-  var_summary <- function(data, var) {
-    data |> summarise(min = min({{ var }}), max = max({{ var }}))
-  }
-
   expect_equal_lazy(
     test_pl |> add_one(x),
     test |> add_one(x)
@@ -30,6 +26,10 @@ test_that("basic behavior works", {
 
   test2 <- as_tibble(mtcars)
   test2_pl <- as_polars_lf(test2)
+
+  var_summary <- function(data, var) {
+    data |> summarise(min = min({{ var }}), max = max({{ var }}))
+  }
 
   expect_equal_lazy(
     test2_pl |>
