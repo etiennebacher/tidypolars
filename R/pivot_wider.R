@@ -160,5 +160,6 @@ pivot_wider.polars_data_frame <- function(
   add_tidypolars_class(out)
 }
 
+#' @rdname pivot_wider.polars_data_frame
 #' @export
 pivot_wider.polars_lazy_frame <- pivot_wider.polars_data_frame

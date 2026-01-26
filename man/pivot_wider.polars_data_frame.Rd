@@ -2,9 +2,22 @@
 % Please edit documentation in R/pivot_wider.R
 \name{pivot_wider.polars_data_frame}
 \alias{pivot_wider.polars_data_frame}
+\alias{pivot_wider.polars_lazy_frame}
 \title{Pivot a DataFrame from long to wide}
 \usage{
 \method{pivot_wider}{polars_data_frame}(
+  data,
+  ...,
+  id_cols = NULL,
+  names_from = name,
+  values_from = value,
+  names_prefix = "",
+  names_sep = "_",
+  names_glue = NULL,
+  values_fill = NULL
+)
+
+\method{pivot_wider}{polars_lazy_frame}(
   data,
   ...,
   id_cols = NULL,
