@@ -11,10 +11,26 @@
     Code
       current$collect()
     Condition
+      Error in `pivot_wider()`:
+      ! This operation would generate column name(s) that already exist: a.
+
+---
+
+    Code
+      current$collect()
+    Condition
       Error in `current$collect()`:
       ! Evaluation failed in `$collect()`.
       Caused by error:
-      ! Duplicated column(s): could not create a new DataFrame: column with name 'a' has more than one occurrence
+      ! Duplicated column(s): column 'a_c' is duplicate
+      
+      Resolved plan until failure:
+      
+      	---> FAILED HERE RESOLVING 'sink' <---
+      AGGREGATE[maintain_order: false]
+        [col("val").filter([(col("key")) == ("a")].all_horizontal([[(col("key_2")) == ("c")]])).item(allow_empty=true).alias("{"a","c"}"), col("val").filter([(col("key")) == ("b")].all_horizontal([[(col("key_2")) == ("d")]])).item(allow_empty=true).alias("{"b","d"}")] BY [col("a_c")]
+        FROM
+        DF ["a_c", "key", "key_2", "val"]; PROJECT */4 COLUMNS
 
 # `names_from` must be supplied if `name` isn't in data
 

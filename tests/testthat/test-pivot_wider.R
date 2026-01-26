@@ -181,6 +181,24 @@ test_that("error when overwriting existing column", {
     pivot_wider(test_pl, names_from = key, values_from = val),
     error = TRUE
   )
+
+  # With multiple columns in names_from
+  test <- tibble(
+    a_c = c(1, 1),
+    key = c("a", "b"),
+    key_2 = c("c", "d"),
+    val = c(1, 2)
+  )
+  test_pl <- as_polars_df(test)
+
+  expect_both_error(
+    pivot_wider(test_pl, names_from = c(key, key_2), values_from = val),
+    pivot_wider(test, names_from = c(key, key_2), values_from = val)
+  )
+  expect_snapshot(
+    pivot_wider(test_pl, names_from = c(key, key_2), values_from = val),
+    error = TRUE
+  )
 })
 
 test_that("`names_from` must be supplied if `name` isn't in data", {

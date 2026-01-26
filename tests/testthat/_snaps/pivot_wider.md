@@ -12,12 +12,20 @@
     Code
       pivot_wider(test_pl, names_from = key, values_from = val)
     Condition
-      Error in `data$pivot()`:
-      ! Evaluation failed in `$pivot()`.
+      Error in `pivot_wider()`:
+      ! This operation would generate column name(s) that already exist: a.
+
+---
+
+    Code
+      pivot_wider(test_pl, names_from = c(key, key_2), values_from = val)
+    Condition
+      Error in `new_data$rename()`:
+      ! Evaluation failed in `$rename()`.
       Caused by error:
       ! Evaluation failed in `$collect()`.
       Caused by error:
-      ! Duplicated column(s): could not create a new DataFrame: column with name 'a' has more than one occurrence
+      ! Duplicated column(s): column 'a_c' is duplicate
 
 # `names_from` must be supplied if `name` isn't in data
 
