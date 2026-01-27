@@ -76,7 +76,9 @@ LazyFrames (`sink_` functions).
   : Show the optimized and non-optimized query plans
 - [`filter(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/filter.polars_data_frame.md)
   [`filter(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/filter.polars_data_frame.md)
-  : Keep rows that match a condition
+  [`filter_out(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/filter.polars_data_frame.md)
+  [`filter_out(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/filter.polars_data_frame.md)
+  : Keep or drop rows that match a condition
 - [`left_join(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/mutating-joins.md)
   [`right_join(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/mutating-joins.md)
   [`full_join(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/mutating-joins.md)

@@ -30,24 +30,20 @@
   now works with Polars LazyFrames
   ([\#318](https://github.com/etiennebacher/tidypolars/issues/318)).
 
-- Added support for
-  [`dplyr::replace_when()`](https://dplyr.tidyverse.org/reference/case-and-replace-when.html),
-  added in `dplyr` 1.2.0
-  ([\#307](https://github.com/etiennebacher/tidypolars/issues/307)).
+- Added support for several functions implemented in `dplyr` 1.2.0:
 
-- Add support for
-  [`dplyr::when_any()`](https://dplyr.tidyverse.org/reference/when-any-all.html)
-  and
-  [`dplyr::when_all()`](https://dplyr.tidyverse.org/reference/when-any-all.html),
-  added in `dplyr` 1.2.0
-  ([\#306](https://github.com/etiennebacher/tidypolars/issues/306)).
-
-- Added support for
-  [`dplyr::recode_values()`](https://dplyr.tidyverse.org/reference/recode-and-replace-values.html)
-  and
-  [`dplyr::replace_values()`](https://dplyr.tidyverse.org/reference/recode-and-replace-values.html),
-  added in `dplyr` 1.2.0
-  ([\#308](https://github.com/etiennebacher/tidypolars/issues/308)).
+  - [`filter_out()`](https://dplyr.tidyverse.org/reference/filter.html)
+    ([\#280](https://github.com/etiennebacher/tidypolars/issues/280))
+  - [`recode_values()`](https://dplyr.tidyverse.org/reference/recode-and-replace-values.html)
+    ([\#308](https://github.com/etiennebacher/tidypolars/issues/308))
+  - [`replace_values()`](https://dplyr.tidyverse.org/reference/recode-and-replace-values.html)
+    ([\#308](https://github.com/etiennebacher/tidypolars/issues/308))
+  - [`replace_when()`](https://dplyr.tidyverse.org/reference/case-and-replace-when.html)
+    ([\#307](https://github.com/etiennebacher/tidypolars/issues/307))
+  - [`when_any()`](https://dplyr.tidyverse.org/reference/when-any-all.html)
+    ([\#306](https://github.com/etiennebacher/tidypolars/issues/306))
+  - [`when_all()`](https://dplyr.tidyverse.org/reference/when-any-all.html)
+    ([\#306](https://github.com/etiennebacher/tidypolars/issues/306))
 
 ### Other changes
 
