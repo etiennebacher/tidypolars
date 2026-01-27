@@ -28,6 +28,8 @@
 * Added support for `dplyr::recode_values()` and `dplyr::replace_values()`, added
   in `dplyr` 1.2.0 (#308).
 
+* Added support for `filter_out()`, added in `dplyr` 1.2.0 (#280).
+
 ## Other changes
 
 * Several changes to make `tidypolars` more aligned with the `tidyverse` output

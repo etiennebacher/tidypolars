@@ -30,7 +30,7 @@ BugReports: https://github.com/etiennebacher/tidypolars/issues
 Depends: R (>= 4.3.0)
 Imports:
     cli,
-    dplyr,
+    dplyr (> 1.1.4),
     glue,
     lifecycle,
     polars (>= 1.8.0),

@@ -10,6 +10,10 @@ test_that("basic behavior works", {
     filter(test_pl, Species == "setosa"),
     filter(test, Species == "setosa")
   )
+  expect_equal(
+    filter_out(test_pl, Species == "setosa"),
+    filter_out(test, Species == "setosa")
+  )
 })
 
 test_that("combining combinations", {
@@ -22,25 +26,43 @@ test_that("combining combinations", {
     filter(test_pl, Sepal.Length < 5 & Species == "setosa"),
     filter(test, Sepal.Length < 5 & Species == "setosa")
   )
+  expect_equal(
+    filter_out(test_pl, Sepal.Length < 5 & Species == "setosa"),
+    filter_out(test, Sepal.Length < 5 & Species == "setosa")
+  )
 
   expect_equal(
     filter(test_pl, Sepal.Length < 5, Species == "setosa"),
     filter(test, Sepal.Length < 5, Species == "setosa")
+  )
+  expect_equal(
+    filter_out(test_pl, Sepal.Length < 5, Species == "setosa"),
+    filter_out(test, Sepal.Length < 5, Species == "setosa")
   )
 
   expect_equal(
     filter(test_pl, Sepal.Length < 5 | Species == "setosa"),
     filter(test, Sepal.Length < 5 | Species == "setosa")
   )
+  expect_equal(
+    filter_out(test_pl, Sepal.Length < 5 | Species == "setosa"),
+    filter_out(test, Sepal.Length < 5 | Species == "setosa")
+  )
 })
 
 test_that("expressions work", {
   test <- as_tibble(iris)
+  # TODO: this shouldn't be necessary
+  test$Species <- as.character(test$Species)
   test_pl <- as_polars_df(test)
 
   expect_equal(
     filter(test_pl, Sepal.Length < Sepal.Width + Petal.Length),
     filter(test, Sepal.Length < Sepal.Width + Petal.Length)
+  )
+  expect_equal(
+    filter_out(test_pl, Sepal.Length < Sepal.Width + Petal.Length),
+    filter_out(test, Sepal.Length < Sepal.Width + Petal.Length)
   )
 })
 
@@ -330,7 +352,7 @@ test_that("works with non-latin and weird characters", {
   )
 })
 
-test_that("works with external data.frame/list elements", {
+test_that("works with external tibble/list elements", {
   test <- tibble(x = 1:3)
   test_pl <- as_polars_df(test)
 
@@ -353,5 +375,33 @@ test_that("works when using [] on external objects", {
   expect_equal(
     test_pl |> filter(x %in% obj[1:2]),
     test |> filter(x %in% obj[1:2])
+  )
+})
+
+test_that("NA handling is correct", {
+  test <- tibble(x = c(1, NA))
+  test_pl <- as_polars_df(test)
+
+  expect_equal(
+    test_pl |> filter(x == 1),
+    test |> filter(x == 1)
+  )
+  expect_equal(
+    test_pl |> filter_out(x == 1),
+    test |> filter_out(x == 1)
+  )
+})
+
+test_that("no input is equivalent to all rows being TRUE", {
+  test <- tibble(x = c(1, NA))
+  test_pl <- as_polars_df(test)
+
+  expect_equal(
+    test_pl |> filter(!!!list()),
+    test |> filter(!!!list())
+  )
+  expect_equal(
+    test_pl |> filter_out(!!!list()),
+    test |> filter_out(!!!list())
   )
 })

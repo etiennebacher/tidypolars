@@ -3,11 +3,17 @@
 \name{filter.polars_data_frame}
 \alias{filter.polars_data_frame}
 \alias{filter.polars_lazy_frame}
-\title{Keep rows that match a condition}
+\alias{filter_out.polars_data_frame}
+\alias{filter_out.polars_lazy_frame}
+\title{Keep or drop rows that match a condition}
 \usage{
 \method{filter}{polars_data_frame}(.data, ..., .by = NULL)
 
 \method{filter}{polars_lazy_frame}(.data, ..., .by = NULL)
+
+\method{filter_out}{polars_data_frame}(.data, ..., .by = NULL)
+
+\method{filter_out}{polars_lazy_frame}(.data, ..., .by = NULL)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
@@ -15,42 +21,86 @@
 \item{...}{Expressions that return a logical value, and are defined in terms
 of the variables in the data. If multiple expressions are included, they
 will be combined with the & operator. Only rows for which all conditions
-evaluate to \code{TRUE} are kept.}
+evaluate to \code{TRUE} are kept (for \code{filter()}) or dropped (for \code{filter_out()}).}
 
 \item{.by}{Optionally, a selection of columns to group by for just this
 operation, functioning as an alternative to \code{group_by()}. The group order
 is not maintained, use \code{group_by()} if you want more control over it.}
 }
 \description{
-This function is used to subset a data frame, retaining all rows that satisfy
-your conditions. To be retained, the row must produce a value of TRUE for all
-conditions. Note that when a condition evaluates to NA the row will be
-dropped, unlike base subsetting with \code{[}.
+These functions are used to subset a data frame, applying the expressions in \code{...} to
+determine which rows should be kept (for \code{filter()}) or dropped (for \code{filter_out()}).
+
+Multiple conditions can be supplied separated by a comma. These will be combined with
+the \code{&} operator.
+
+Both \code{filter()} and \code{filter_out()} treat \code{NA} like \code{FALSE}. This subtle behavior can impact
+how you write your conditions when missing values are involved. See the section on \verb{Missing values} for important details and examples.
+
+\code{filter_out()} is available for \code{dplyr} >= 1.2.0.
 }
+\section{Missing values}{
+
+
+Read this section in the \href{https://dplyr.tidyverse.org/dev/reference/filter.html#missing-values}{\code{dplyr} documentation}.
+}
+
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
-pl_iris <- polars::as_polars_df(iris)
+starwars <- as_polars_df(dplyr::starwars)
 
-filter(pl_iris, Sepal.Length < 5, Species == "setosa")
+# Filtering for one criterion
+filter(starwars, species == "Human")
 
-filter(pl_iris, Sepal.Length < Sepal.Width + Petal.Length)
+# Filtering for multiple criteria within a single logical expression
+filter(starwars, hair_color == "none" & eye_color == "black")
+filter(starwars, hair_color == "none" | eye_color == "black")
 
-filter(pl_iris, Species == "setosa" | is.na(Species))
+# When multiple expressions are used, they are combined using &
+filter(starwars, hair_color == "none", eye_color == "black")
 
-iris2 <- iris
-iris2$Species <- as.character(iris2$Species)
-iris2 |>
-  as_polars_df() |>
-  filter(Species \%in\% c("setosa", "virginica"))
+# Filtering out to drop rows
+filter_out(starwars, hair_color == "none")
 
-# filter by group
-pl_iris |>
-  group_by(Species) |>
-  filter(Sepal.Length == max(Sepal.Length)) |>
-  ungroup()
+# When filtering out, it can be useful to first interactively filter for the
+# rows you want to drop, just to double check that you've written the
+# conditions correctly. Then, just change `filter()` to `filter_out()`.
+filter(starwars, mass > 1000, eye_color == "orange")
+filter_out(starwars, mass > 1000, eye_color == "orange")
 
-# an alternative syntax for grouping is to use `.by`
-pl_iris |>
-  filter(Sepal.Length == max(Sepal.Length), .by = Species)
+# The filtering operation may yield different results on grouped
+# tibbles because the expressions are computed within groups.
+#
+# The following keeps rows where `mass` is greater than the
+# global average:
+starwars |> filter(mass > mean(mass, na.rm = TRUE))
+
+# Whereas this keeps rows with `mass` greater than the per `gender`
+# average:
+starwars |> filter(mass > mean(mass, na.rm = TRUE), .by = gender)
+
+# If you find yourself trying to use a `filter()` to drop rows, then
+# you should consider if switching to `filter_out()` can simplify your
+# conditions. For example, to drop blond individuals, you might try:
+starwars |> filter(hair_color != "blond")
+
+# But this also drops rows with an `NA` hair color! To retain those:
+starwars |> filter(hair_color != "blond" | is.na(hair_color))
+
+# But explicit `NA` handling like this can quickly get unwieldy, especially
+# with multiple conditions. Since your intent was to specify rows to drop
+# rather than rows to keep, use `filter_out()`. This also removes the need
+# for any explicit `NA` handling.
+starwars |> filter_out(hair_color == "blond")
+
+# To refer to column names that are stored as strings, use the `.data`
+# pronoun:
+vars <- c("mass", "height")
+cond <- c(80, 150)
+starwars |>
+  filter(
+    .data[[vars[[1]]]] > cond[[1]],
+    .data[[vars[[2]]]] > cond[[2]]
+  )
 \dontshow{\}) # examplesIf}
 }

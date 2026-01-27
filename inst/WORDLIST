@@ -35,6 +35,7 @@ chrono
 csv
 datatypes
 deprecations
+devtools
 downup
 dplyr
 dtypes
@@ -57,7 +58,7 @@ polars
 pre
 prefiltered
 regexes
-subfolders
+roxygen
 subplans
 tibble
 tidyr
@@ -65,8 +66,10 @@ tidyselect
 tidyverse
 timeunit
 ungrouped
+unlicense
 unnest
 unnested
 upcast
 updown
+vctrs
 zstd
