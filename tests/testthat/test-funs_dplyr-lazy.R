@@ -1,4 +1,4 @@
-### [GENERATED AUTOMATICALLY] Update test_funs-dplyr.R instead.
+### [GENERATED AUTOMATICALLY] Update test-funs_dplyr.R instead.
 
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
