@@ -129,7 +129,15 @@
 <p><code>tidypolars</code> uses <a href="https://cran.r-project.org/web/packages/testthat/" class="external-link"><code>testthat</code></a> to check that functions have the expected output. If changes affect the behavior of some functions (for example when adding an extra argument), add some tests in the related file in <code>tests/testthat</code>.</p>
 <p><code>tidyverse</code> functions that apply to an entire dataframe (e.g., <code>drop_na()</code>) have their own test file (<code>test-drop_na.R</code> in this case).</p>
 <p>Functions that apply to one or multiple vectors only (i.e. functions that are used in <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize()</a></code>, etc.) are tested in specific files. If you added a function in <code>R/funs-string.R</code>, then you should add tests in <code>tests/testthat/test-funs_string.R</code> (same for datetime functions, etc.).</p>
-<p>No matter the type of function you added or modified, you should only write tests on Polars DataFrames. Those will be automatically modified when running the tests to run on LazyFrames as well (for instance, the file <code>test-drop_na-lazy.R</code> will be automatically generated).</p>
+<p>A few test rules:</p>
+<ol style="list-style-type: decimal"><li>The test data must be always be i) a <code>tibble</code> named <code>test</code> and ii) a Polars DataFrame named <code>test_pl</code>.</li>
+<li>Always compare the <code>tidypolars</code> and <code>tidyverse</code> code directly, do not compare the <code>tidypolars</code> output to hard-coded values.</li>
+<li>Which <code>expect_*()</code> to use?
+<ul><li>Use <code>expect_equal()</code> if the <code>tidyverse</code> and <code>tidypolars</code> code should give the same output.</li>
+<li>Use <code>expect_both_error()</code> if the <code>tidyverse</code> and <code>tidypolars</code> code should error (ensure that the error is actually due to the tested function and not to a typo for instance).</li>
+<li>Use <code>expect_equal_or_both_error()</code> in property-based testing only since we do not control the input in this case.</li>
+</ul></li>
+</ol><p>No matter the type of function you added or modified, you should only write tests on Polars DataFrames. Those tests will be automatically copied and modified by <code>devtools::test()</code> to run on LazyFrames as well (for instance, the file <code>test-drop_na-lazy.R</code> will be automatically generated).</p>
 </div>
 <div class="section level3">
 <h3 id="pr-title">PR title<a class="anchor" aria-label="anchor" href="#pr-title"></a></h3>
