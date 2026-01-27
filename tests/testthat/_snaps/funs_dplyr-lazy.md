@@ -58,3 +58,39 @@
       
       Error originated in expression: '[(col("x")) - (Series[literal])]'
 
+# dplyr::when_all() and dplyr::when_any() work
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `when_any()` in Polars.
+      x Argument `na_rm` is not supported by tidypolars.
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `when_any()` in Polars.
+      x Argument `size` is not supported by tidypolars.
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `when_all()` in Polars.
+      x Argument `na_rm` is not supported by tidypolars.
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `when_all()` in Polars.
+      x Argument `size` is not supported by tidypolars.
+
