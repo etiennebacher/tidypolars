@@ -1,7 +1,7 @@
 # basic behavior works
 
     Code
-      summary(test)
+      summary(test_pl)
     Output
       shape: (9, 12)
       ┌────────────┬───────────┬──────────┬────────────┬───┬──────────┬──────────┬──────────┬────────┐
@@ -23,7 +23,7 @@
 ---
 
     Code
-      summary(test, percentiles = c(0.2, 0.4))
+      summary(test_pl, percentiles = c(0.2, 0.4))
     Output
       shape: (8, 12)
       ┌────────────┬───────────┬──────────┬────────────┬───┬──────────┬──────────┬──────────┬────────┐
@@ -44,7 +44,7 @@
 ---
 
     Code
-      summary(test, percentiles = c(0.2, 0.4, NULL))
+      summary(test_pl, percentiles = c(0.2, 0.4, NULL))
     Output
       shape: (8, 12)
       ┌────────────┬───────────┬──────────┬────────────┬───┬──────────┬──────────┬──────────┬────────┐
@@ -65,7 +65,7 @@
 # check percentiles
 
     Code
-      summary(test, percentiles = c(0.2, 0.4, NA))
+      summary(test_pl, percentiles = c(0.2, 0.4, NA))
     Condition
       Error in `summary()`:
       ! All values of `percentiles` must be between 0 and 1.
@@ -73,7 +73,7 @@
 ---
 
     Code
-      summary(test, percentiles = -1)
+      summary(test_pl, percentiles = -1)
     Condition
       Error in `summary()`:
       ! All values of `percentiles` must be between 0 and 1.

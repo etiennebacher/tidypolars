@@ -10,11 +10,8 @@ test_that("basic behavior works", {
   )
 
   expect_equal(
-    pl_iris_lazy |>
-      filter(Species == "setosa") |>
-      compute(),
-    pl_iris |>
-      filter(Species == "setosa")
+    pl_iris_lazy |> filter(Species == "setosa") |> compute(),
+    pl_iris |> filter(Species == "setosa")
   )
 
   out <- pl_iris_lazy |>

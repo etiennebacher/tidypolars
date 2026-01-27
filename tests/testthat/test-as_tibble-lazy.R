@@ -11,12 +11,12 @@ test_that("as_tibble() works", {
 
   expect_equal_lazy(
     as_tibble(test),
-    dplyr::tibble(x1 = c("a", "a", "b"), x2 = 1:3)
+    tibble(x1 = c("a", "a", "b"), x2 = 1:3)
   )
 
   expect_equal_lazy(
     as_tibble(test, int64 = "character"),
-    dplyr::tibble(x1 = c("a", "a", "b"), x2 = c("1", "2", "3"))
+    tibble(x1 = c("a", "a", "b"), x2 = c("1", "2", "3"))
   )
 })
 

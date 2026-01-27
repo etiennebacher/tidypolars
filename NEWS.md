@@ -14,8 +14,46 @@
   results across different versions. This function doesn't have a replacement in
   `tidypolars` (#304).
 
+## New features
+
+* Added support for `dplyr::near()` (#311).
+
+* `pivot_wider()` now works with Polars LazyFrames (#318).
+
+* Added support for `dplyr::replace_when()`, added in `dplyr` 1.2.0 (#307).
+
+* Add support for `dplyr::when_any()` and `dplyr::when_all()`, added in `dplyr`
+  1.2.0 (#306).
+
 * Added support for `dplyr::recode_values()` and `dplyr::replace_values()`, added
   in `dplyr` 1.2.0 (#308).
+
+## Other changes
+
+* Several changes to make `tidypolars` more aligned with the `tidyverse` output
+  in general (#316):
+
+  - in `count()`, if `sort = TRUE` and there are some ties, then other variables
+    are sorted in increasing order.
+  - `coalesce()` no longer has a `default` argument. This was an implementation
+    mistake since `dplyr::coalesce()` never had this argument.
+  - `ungroup()` used to remove the group-specific attributes in the original
+    grouped data, even if the result of the operation was not assigned. This is
+    fixed.
+  - `replace_na()` on a Polars DataFrame or LazyFrame now errors if `replacement`
+    is not a list.
+  - `slice_*()` functions on grouped data return columns in the same order as in
+    the input.
+  - `summarize()` with only `NULL` expressions now returns one row per unique
+    group instead of the entire data.
+  - `unite()` now returns columns in the correct order, and doesn't duplicate the
+    `sep` in the output if some values are `NA`.
+
+### Bug fixes
+
+* `bind_rows_polars()` now uses input names in `.id` if not all inputs are named,
+  for example `bind_rows_polars(x1 = x1, x2, .id = "id")` (#317).
+
 
 # tidypolars 0.16.0
 

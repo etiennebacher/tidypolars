@@ -1,3 +1,45 @@
+expect_both_error <- function(object, other, ...) {
+  polars_error <- FALSE
+  polars_res <- tryCatch(
+    if (is_polars_lf(object)) {
+      object$collect()
+    } else {
+      object
+    },
+    error = function(e) {
+      # nolint: implicit_assignment
+      polars_error <<- TRUE
+    }
+  )
+
+  other_error <- FALSE
+  other_res <- suppressWarnings(
+    tryCatch(
+      other,
+      error = function(e) {
+        # nolint: implicit_assignment
+        other_error <<- TRUE
+      }
+    )
+  )
+
+  if (isTRUE(polars_error)) {
+    testthat::expect(
+      isTRUE(other_error),
+      "tidypolars errored but tidyverse didn't."
+    )
+  } else {
+    if (isTRUE(other_error)) {
+      testthat::expect(
+        isTRUE(polars_error),
+        "tidyverse errored but tidypolars didn't."
+      )
+    }
+  }
+
+  invisible(NULL)
+}
+
 expect_equal_or_both_error <- function(object, other, ...) {
   polars_error <- FALSE
   polars_res <- tryCatch(
@@ -60,20 +102,28 @@ expect_dim <- function(x, y) {
 
 expect_equal <- function(x, y, ...) {
   if (is_polars_df(x)) {
-    x <- as.data.frame(x)
+    x <- as_tibble(x)
   }
   if (is_polars_df(y)) {
-    y <- as.data.frame(y)
+    y <- as_tibble(y)
+  }
+  # TODO: this should probably be removed, https://github.com/etiennebacher/tidypolars/issues/314
+  if (inherits(y, "grouped_df")) {
+    y <- as_tibble(y)
   }
   testthat::expect_equal(x, y, ...)
 }
 
 expect_equal_lazy <- function(x, y, ...) {
   if (is_polars_lf(x)) {
-    x <- as.data.frame(x)
+    x <- as_tibble(x)
   }
   if (is_polars_lf(y)) {
-    y <- as.data.frame(y)
+    y <- as_tibble(y)
+  }
+  # TODO: this should probably be removed, https://github.com/etiennebacher/tidypolars/issues/314
+  if (inherits(y, "grouped_df")) {
+    y <- as_tibble(y)
   }
   dots <- get_dots(...)
   if (isTRUE(dots$skip_for_lazy)) {

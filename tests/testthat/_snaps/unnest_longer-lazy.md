@@ -58,15 +58,6 @@
     Condition
       Error in `unnest_longer_polars()`:
       ! Column names in the output must be unique.
-      x These names are duplicated: "z".
-
----
-
-    Code
-      current$collect()
-    Condition
-      Error in `unnest_longer_polars()`:
-      ! Column names in the output must be unique.
       x These names are duplicated: "a".
 
 ---

@@ -3,41 +3,39 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- pl$LazyFrame(
-    x = c(NA, "x.y", "x.z", "y.z")
-  )
+  test <- tibble(x = c(NA, "x.y", "x.z", "y.z"))
+  test_pl <- as_polars_lf(test)
 
-  expect_is_tidypolars(separate(test, x, into = c("foo", "foo2"), sep = "."))
+  expect_is_tidypolars(separate(
+    test_pl,
+    x,
+    into = c("foo", "foo2"),
+    sep = "\\."
+  ))
 
+  # TODO: both should take the same input when https://github.com/pola-rs/polars/pull/26060
+  # is released
   expect_equal_lazy(
-    separate(test, x, into = c("foo", "foo2"), sep = ".") |>
-      pull(foo),
-    c(NA, "x", "x", "y")
-  )
-
-  expect_equal_lazy(
-    separate(test, x, into = c("foo", "foo2"), sep = ".") |>
-      pull(foo2),
-    c(NA, "y", "z", "z")
+    separate(test_pl, x, into = c("foo", "foo2"), sep = "."),
+    separate(test, x, into = c("foo", "foo2"), sep = "\\.")
   )
 })
 
 test_that("default value for sep works", {
-  test2 <- pl$LazyFrame(
-    x = c(NA, "x y", "x z", "y z")
-  )
+  # tidypolars-specific: default sep differs from tidyr
+  test <- tibble(x = c(NA, "x y", "x z", "y z"))
+  test_pl <- as_polars_lf(test)
 
   # TODO: test more extensively regex
   # https://github.com/pola-rs/polars/issues/4819
+  # https://github.com/pola-rs/polars/pull/26060
   expect_equal_lazy(
-    separate(test2, x, into = c("foo", "foo2")) |>
-      pull(foo),
+    separate(test_pl, x, into = c("foo", "foo2")) |> pull(foo),
     c(NA, "x", "x", "y")
   )
 
   expect_equal_lazy(
-    separate(test2, x, into = c("foo", "foo2")) |>
-      pull(foo2),
+    separate(test_pl, x, into = c("foo", "foo2")) |> pull(foo2),
     c(NA, "y", "z", "z")
   )
 })

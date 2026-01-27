@@ -7,16 +7,6 @@
       ! Error while running function `n_distinct()` in Polars.
       x `...` is absent, but must be supplied.
 
-# unique() works
-
-    Code
-      current$collect()
-    Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
-      ! lengths don't match: unable to add a column of length 4 to a DataFrame of height 5
-
 # nth() work
 
     Code
@@ -53,10 +43,23 @@
       ! Evaluation failed in `$collect()`.
       Caused by error:
       ! lengths don't match: cannot evaluate two Series of different lengths (5 and 2)
-      
+
       Error originated in expression: '[(col("x")) == (Series[literal])]'
 
 # replace_values(): basic usage
+# near() works
+
+    Code
+      current$collect()
+    Condition
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! lengths don't match: cannot evaluate two Series of different lengths (3 and 2)
+
+      Error originated in expression: '[(col("x")) - (Series[literal])]'
+
+# dplyr::when_all() and dplyr::when_any() work
 
     Code
       current$collect()
@@ -64,6 +67,8 @@
       Error in `mutate()`:
       ! Error while running function `replace_values()` in Polars.
       x Can't supply both `...` and `from` / `to`.
+      ! Error while running function `when_any()` in Polars.
+      x Argument `na_rm` is not supported by tidypolars.
 
 ---
 
@@ -73,6 +78,8 @@
       Error in `mutate()`:
       ! Error while running function `replace_values()` in Polars.
       x Can't supply both `...` and `from` / `to`.
+      ! Error while running function `when_any()` in Polars.
+      x Argument `size` is not supported by tidypolars.
 
 ---
 
@@ -82,6 +89,8 @@
       Error in `mutate()`:
       ! Error while running function `replace_values()` in Polars.
       x Specified `from` but not `to`.
+      ! Error while running function `when_all()` in Polars.
+      x Argument `na_rm` is not supported by tidypolars.
 
 ---
 
@@ -127,4 +136,6 @@
       Error in `mutate()`:
       ! Error while running function `recode_values()` in Polars.
       x Specified `to` but not `from`.
+      ! Error while running function `when_all()` in Polars.
+      x Argument `size` is not supported by tidypolars.
 

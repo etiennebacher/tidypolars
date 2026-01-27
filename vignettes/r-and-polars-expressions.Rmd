@@ -316,11 +316,15 @@ out <- tribble(
   "`dplyr`", "`last`",
   "`dplyr`", "`min_rank`",
   "`dplyr`", "`n`",
+  "`dplyr`", "`near`",
   "`dplyr`", "`nth`",
   "`dplyr`", "`n_distinct`",
   "`dplyr`", "`recode_values`",
   "`dplyr`", "`replace_values`",
+  "`dplyr`", "`replace_when`",
   "`dplyr`", "`row_number`",
+  "`dplyr`", "`when_all`",
+  "`dplyr`", "`when_any`",
   "`lubridate`", "`am`",
   "`lubridate`", "`day`",
   "`lubridate`", "`days`",
@@ -404,10 +408,16 @@ out <- tribble(
         "`tidypolars` cannot use several timezones in a single column, while `lubridate::with_tz()` can. Unrecognized timezones and/or NULL are not supported and will throw an error.",
       Package == "`lubridate`" & Function == "`force_tz`" ~
         "`tidypolars` cannot use several timezones in a single column, while `lubridate::force_tz()` can.",
+      Package == "`dplyr`" & Function == "`near`" ~
+        "tidypolars errors if `x` and `y` have different lengths, dplyr doesn't.",
       Package == "`dplyr`" & Function == "`row_number`" ~
         "Doesn't work when `x` is missing.",
       Package == "`dplyr`" & Function %in% c("`recode_values`", "`replace_values`") ~
         "The `dplyr` functions will error if the type of the replacement doesn't match the type of the column (for instance trying to replace a character with an integer). This works in `tidypolars`.",
+      Package == "`dplyr`" & Function %in% c("`when_all`", "`when_any`") ~
+        "Arguments `na_rm` and `size` not supported.",
+      Package == "`dplyr`" & Function == "`replace_when`" ~
+        "The `dplyr` function will error if the type of the replacement doesn't match the type of the column (for instance trying to replace a character with an integer). This sometimes works in `tidypolars`.",
       Package == "`stringr`" & Function == "`str_to_title`" ~
         "Letters following apostrophe will be capitalized as well, which differs from the `stringr` implementation.",
       Package == "`tools`" & Function == "`toTitleCase`" ~

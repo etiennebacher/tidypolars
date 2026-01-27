@@ -3,100 +3,99 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  pl_test <- polars::pl$LazyFrame(
+  test <- tibble(
     grp = rep(c("A", "B"), each = 3),
     x = c(NA, 1, NA, NA, 2, NA),
     y = c(3, NA, 4, NA, 3, 1)
   )
+  test_pl <- as_polars_lf(test)
 
-  expect_is_tidypolars(fill(pl_test, everything(), .direction = "down"))
+  expect_is_tidypolars(fill(test_pl, everything(), .direction = "down"))
 
   expect_equal_lazy(
-    fill(pl_test, everything(), .direction = "down") |>
-      pull(x),
-    c(NA, 1, 1, 1, 2, 2)
+    fill(test_pl, everything(), .direction = "down"),
+    fill(test, everything(), .direction = "down")
   )
 
   expect_equal_lazy(
-    fill(pl_test, everything(), .direction = "down"),
-    fill(pl_test, x, y)
+    fill(test_pl, everything(), .direction = "down"),
+    fill(test_pl, x, y)
   )
 
   expect_equal_lazy(
-    fill(pl_test, everything(), .direction = "updown") |>
-      pull(x),
-    c(1, 1, 2, 2, 2, 2)
+    fill(test_pl, everything(), .direction = "updown"),
+    fill(test, everything(), .direction = "updown")
   )
 
   expect_equal_lazy(
-    fill(pl_test, everything(), .direction = "downup") |>
-      pull(x),
-    c(1, 1, 1, 1, 2, 2)
+    fill(test_pl, everything(), .direction = "downup"),
+    fill(test, everything(), .direction = "downup")
   )
 })
 
 test_that("when nothing to fill, input = output", {
-  pl_test <- polars::pl$LazyFrame(
+  test <- tibble(
     grp = rep(c("A", "B"), each = 3),
     x = c(NA, 1, NA, NA, 2, NA),
     y = c(3, NA, 4, NA, 3, 1)
   )
+  test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
-    pl_test |> fill(.direction = "updown"),
-    pl_test
+    test_pl |> fill(.direction = "updown"),
+    test_pl
   )
 })
 
 test_that("works with grouped data", {
-  pl_grouped <- polars::pl$LazyFrame(
+  test <- tibble(
     grp = rep(c("A", "B"), each = 3),
     x = c(NA, 1, NA, NA, 2, NA),
     y = c(3, NA, 4, NA, 3, 1)
-  ) |>
+  )
+  test_pl <- as_polars_lf(test)
+  test_pl_grp <- test_pl |>
     group_by(grp, maintain_order = TRUE)
+  test_grp <- test |>
+    group_by(grp)
 
   expect_equal_lazy(
-    fill(pl_grouped, everything(), .direction = "down") |>
-      pull(x),
-    c(NA, 1, 1, NA, 2, 2)
+    fill(test_pl_grp, everything(), .direction = "down"),
+    fill(test_grp, everything(), .direction = "down")
   )
 
   expect_equal_lazy(
-    fill(pl_grouped, everything(), .direction = "downup") |>
-      pull(y),
-    c(3, 3, 4, 3, 3, 1)
+    fill(test_pl_grp, everything(), .direction = "downup"),
+    fill(test_grp, everything(), .direction = "downup")
   )
 
   expect_equal_lazy(
-    fill(pl_grouped, everything(), .direction = "updown") |>
-      pull(y),
-    c(3, 4, 4, 3, 3, 1)
+    fill(test_pl_grp, everything(), .direction = "updown"),
+    fill(test_grp, everything(), .direction = "updown")
   )
 
   expect_equal_lazy(
-    fill(pl_grouped, everything(), .direction = "down") |>
-      attr("pl_grps"),
+    fill(test_pl_grp, everything(), .direction = "down") |> attr("pl_grps"),
     "grp"
   )
 
   expect_true(
-    fill(pl_grouped, everything(), .direction = "down") |>
+    fill(test_pl_grp, everything(), .direction = "down") |>
       attr("maintain_grp_order")
   )
 })
 
 test_that("argument '.by' works", {
-  dat <- polars::pl$LazyFrame(
+  test <- tibble(
     grp = rep(c("A", "B"), each = 3),
     x = c(NA, 1, NA, NA, 2, NA),
     y = c(3, NA, 4, NA, 3, 1)
   )
+  test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
-    fill(dat, everything(), .direction = "down", .by = grp) |>
-      pull(x),
-    c(NA, 1, 1, NA, 2, 2)
+    fill(test_pl, everything(), .direction = "down", .by = grp),
+    fill(test, everything(), .direction = "down", .by = grp)
   )
 })
 

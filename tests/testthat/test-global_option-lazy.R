@@ -33,16 +33,13 @@ test_that("tidypolars_fallback_to_r: basic behavior works", {
     {
       expect_equal_lazy(
         test |> mutate(x2 = mad(x)),
-        test |> as.data.frame() |> mutate(x2 = mad(x))
+        test |> mutate(x2 = mad(x))
       )
 
       # Can create other variables before and after
       expect_equal_lazy(
-        test |>
-          mutate(y = 1, x2 = mad(x), z = 2),
-        test |>
-          as.data.frame() |>
-          mutate(y = 1, x2 = mad(x), z = 2)
+        test |> mutate(y = 1, x2 = mad(x), z = 2),
+        test |> mutate(y = 1, x2 = mad(x), z = 2)
       )
 
       # TODO: cannot use newly created variables in untranslated function

@@ -55,10 +55,8 @@ unite.polars_data_frame <- function(
     fill <- "NA"
   }
 
-  vars_concat <- pl$col(!!!vars)$fill_null(fill)
-
   out <- data$with_columns(
-    pl$concat_str(vars_concat, separator = sep)$alias(col)
+    pl$concat_str(!!!vars, separator = sep, ignore_nulls = TRUE)$alias(col)
   )
 
   out <- if (isTRUE(remove)) {
@@ -66,6 +64,9 @@ unite.polars_data_frame <- function(
   } else {
     out
   }
+
+  out <- out |>
+    relocate(all_of(col), .before = 1)
 
   add_tidypolars_class(out)
 }
