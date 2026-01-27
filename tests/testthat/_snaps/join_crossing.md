@@ -1,7 +1,7 @@
 # unsupported args throw warning
 
     Code
-      cross_join(test, test2, copy = TRUE)
+      cross_join(test_pl, test2_pl, copy = TRUE)
     Condition
       Error in `cross_join()`:
       ! Argument `copy` is not supported by tidypolars.
@@ -10,7 +10,7 @@
 # dots must be empty
 
     Code
-      cross_join(test, test2, foo = TRUE)
+      cross_join(test_pl, test2_pl, foo = TRUE)
     Condition
       Error in `cross_join()`:
       ! `...` must be empty.
@@ -18,7 +18,7 @@
 ---
 
     Code
-      cross_join(test, test2, copy = TRUE, foo = TRUE)
+      cross_join(test_pl, test2_pl, copy = TRUE, foo = TRUE)
     Condition
       Warning in `cross_join()`:
       Argument `copy` is not supported by tidypolars.

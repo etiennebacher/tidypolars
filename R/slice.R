@@ -23,10 +23,11 @@ slice_tail.polars_data_frame <- function(.data, ..., n, by = NULL) {
   is_grouped <- !is.null(grps)
 
   if (is_grouped) {
+    col_order <- names(.data)
     non_grps <- setdiff(names(.data), grps)
     out <- .data$group_by(grps, .maintain_order = mo)$agg(
       pl$all()$tail(n)
-    )$explode(non_grps)
+    )$explode(non_grps)$select(!!!col_order)
   } else {
     out <- .data$tail(n)
   }
@@ -53,10 +54,11 @@ slice_head.polars_data_frame <- function(.data, ..., n, by = NULL) {
   is_grouped <- !is.null(grps)
 
   if (is_grouped) {
+    col_order <- names(.data)
     non_grps <- setdiff(names(.data), grps)
     out <- .data$group_by(grps, .maintain_order = mo)$agg(
       pl$all()$head(n)
-    )$explode(non_grps)
+    )$explode(non_grps)$select(!!!col_order)
   } else {
     out <- .data$head(n)
   }

@@ -4,94 +4,89 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
   l <- list(
-    polars::pl$LazyFrame(
+    tibble(
       x = sample(letters, 20),
       y = sample.int(100, 20)
     ),
-    polars::pl$LazyFrame(
+    tibble(
       x = sample(letters, 20),
       y = sample.int(100, 20)
     )
   )
+  l_pl <- lapply(l, as_polars_lf)
 
-  expect_is_tidypolars(bind_rows_polars(l))
-
-  expect_dim(
-    bind_rows_polars(l),
-    c(40, 2)
+  expect_is_tidypolars(bind_rows_polars(l_pl))
+  expect_equal_lazy(
+    bind_rows_polars(l_pl),
+    bind_rows(l)
   )
 })
 
 test_that("dots and list are equivalent", {
-  p1 <- pl$LazyFrame(
+  df1 <- tibble(
     x = sample(letters, 20),
     y = sample.int(100, 20)
   )
-  p2 <- pl$LazyFrame(
+  df2 <- tibble(
     x = sample(letters, 20),
     y = sample.int(100, 20)
   )
+  df1_pl <- as_polars_lf(df1)
+  df2_pl <- as_polars_lf(df2)
 
   expect_equal_lazy(
-    bind_rows_polars(p1, p2),
-    bind_rows_polars(list(p1, p2))
+    bind_rows_polars(df1_pl, df2_pl),
+    bind_rows(df1, df2)
+  )
+  expect_equal_lazy(
+    bind_rows_polars(list(df1_pl, df2_pl)),
+    bind_rows(list(df1, df2))
   )
 })
 
 test_that("different dtypes work", {
-  l <- list(
-    polars::pl$LazyFrame(
-      x = c("a", "b"),
-      y = 1:2
-    ),
-    polars::pl$LazyFrame(
-      y = 3:4,
-      z = c("c", "d")
-    )$with_columns(pl$col("y")$cast(pl$Int16))
-  )
+  df1 <- tibble(x = c("a", "b"), y = 1:2)
+  df2 <- tibble(y = 3:4, z = c("c", "d"))
+  df1_pl <- as_polars_lf(df1)
+  df2_pl <- as_polars_lf(df2)
+  l <- list(df1_pl, df2_pl$with_columns(pl$col("y")$cast(pl$Int16)))
 
   expect_equal_lazy(
     bind_rows_polars(l),
-    data.frame(
-      x = c("a", "b", NA, NA),
-      y = 1:4,
-      z = c(NA, NA, "c", "d")
-    )
+    bind_rows(df1, df2)
   )
 })
 
 test_that("arg .id works", {
-  p1 <- pl$LazyFrame(
+  df1 <- tibble(
     x = sample(letters, 20),
     y = sample.int(100, 20)
   )
-  p2 <- pl$LazyFrame(
+  df2 <- tibble(
     x = sample(letters, 20),
     y = sample.int(100, 20)
   )
+  df1_pl <- as_polars_lf(df1)
+  df2_pl <- as_polars_lf(df2)
 
   expect_equal_lazy(
-    bind_rows_polars(p1, p2, .id = "foo") |>
-      pull(foo),
-    as.character(rep(1:2, each = 20))
+    bind_rows_polars(df1_pl, df2_pl, .id = "foo"),
+    bind_rows(df1, df2, .id = "foo")
   )
 
   expect_equal_lazy(
-    bind_rows_polars(p1 = p1, p2 = p2, .id = "foo") |>
-      pull(foo),
-    rep(c("p1", "p2"), each = 20)
+    bind_rows_polars(df1 = df1_pl, df2 = df2_pl, .id = "foo"),
+    bind_rows(df1 = df1, df2 = df2, .id = "foo")
   )
 
   expect_equal_lazy(
-    bind_rows_polars(list(p1 = p1, p2 = p2), .id = "foo") |>
-      pull(foo),
-    rep(c("p1", "p2"), each = 20)
+    bind_rows_polars(list(df1 = df1_pl, df2 = df2_pl), .id = "foo"),
+    bind_rows(list(df1 = df1, df2 = df2), .id = "foo")
   )
 
   expect_equal_lazy(
-    bind_rows_polars(p1 = p1, p2, .id = "foo") |>
-      pull(foo),
-    as.character(rep(1:2, each = 20))
+    bind_rows_polars(df1 = df1_pl, df2_pl, .id = "foo"),
+    bind_rows(df1 = df1, df2, .id = "foo")
   )
 })
 
@@ -100,7 +95,7 @@ test_that("error if not all elements don't have the same class", {
     x = sample(letters, 20),
     y = sample.int(100, 20)
   )
-  p2 <- data.frame(
+  p2 <- tibble(
     x = sample(letters, 20),
     y = sample.int(100, 20)
   )

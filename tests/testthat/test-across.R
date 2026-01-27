@@ -1,14 +1,15 @@
 test_that("single word functions work", {
-  test <- as_polars_df(head(mtcars))
+  test <- head(mtcars)
+  test_pl <- as_polars_df(test)
 
   expect_equal(
     mutate(
-      test,
+      test_pl,
       across(.cols = contains("a"), mean),
       cyl = cyl + 1
     ),
     mutate(
-      test,
+      test_pl,
       drat = mean(drat),
       am = mean(am),
       gear = mean(gear),
@@ -19,16 +20,17 @@ test_that("single word functions work", {
 })
 
 test_that("purrr-style function work", {
-  test <- as_polars_df(head(mtcars))
+  test <- head(mtcars)
+  test_pl <- as_polars_df(test)
 
   expect_equal(
     mutate(
-      test,
+      test_pl,
       across(.cols = contains("a"), ~ mean(.x)),
       cyl = cyl + 1
     ),
     mutate(
-      test,
+      test_pl,
       drat = mean(drat),
       am = mean(am),
       gear = mean(gear),
@@ -39,12 +41,12 @@ test_that("purrr-style function work", {
 
   expect_equal(
     mutate(
-      test,
+      test_pl,
       across(.cols = contains("a"), ~ mean(.)),
       cyl = cyl + 1
     ),
     mutate(
-      test,
+      test_pl,
       drat = mean(drat),
       am = mean(am),
       gear = mean(gear),
@@ -55,15 +57,16 @@ test_that("purrr-style function work", {
 })
 
 test_that("anonymous functions has to return a Polars expression", {
-  test <- as_polars_df(head(mtcars))
+  test <- head(mtcars)
+  test_pl <- as_polars_df(test)
 
   expect_equal(
     mutate(
-      test,
+      test_pl,
       across(.cols = contains("ar"), \(x) x$mean())
     ),
     mutate(
-      test,
+      test_pl,
       gear = mean(gear),
       carb = mean(carb)
     )
@@ -71,7 +74,7 @@ test_that("anonymous functions has to return a Polars expression", {
 
   expect_equal(
     mutate(
-      test,
+      test_pl,
       across(
         .cols = contains("ar"),
         list(
@@ -81,7 +84,7 @@ test_that("anonymous functions has to return a Polars expression", {
       )
     ),
     mutate(
-      test,
+      test_pl,
       gear_mean = mean(gear),
       gear_std = sd(gear),
       carb_mean = mean(carb),
@@ -91,7 +94,7 @@ test_that("anonymous functions has to return a Polars expression", {
 
   expect_colnames(
     mutate(
-      test,
+      test_pl,
       across(
         .cols = contains("ar"),
         list(\(x) x$mean(), \(x) x$std())
@@ -102,7 +105,7 @@ test_that("anonymous functions has to return a Polars expression", {
 
   expect_colnames(
     mutate(
-      test,
+      test_pl,
       across(
         .cols = gear,
         list(mean = \(x) x$mean(), \(x) x$std())
@@ -113,7 +116,7 @@ test_that("anonymous functions has to return a Polars expression", {
 
   expect_snapshot(
     mutate(
-      test,
+      test_pl,
       across(.cols = contains("a"), \(x) mean(x))
     ),
     error = TRUE
@@ -121,7 +124,8 @@ test_that("anonymous functions has to return a Polars expression", {
 })
 
 test_that("custom function works", {
-  test <- as_polars_df(head(mtcars))
+  test <- head(mtcars)
+  test_pl <- as_polars_df(test)
 
   foo <- function(x) {
     tmp <- x$cos()$mean()
@@ -130,7 +134,7 @@ test_that("custom function works", {
 
   expect_equal(
     mutate(
-      test,
+      test_pl,
       across(
         .cols = contains("a"),
         foo
@@ -138,7 +142,7 @@ test_that("custom function works", {
       cyl = cyl + 1
     ),
     mutate(
-      test,
+      test_pl,
       drat = foo(drat),
       am = foo(am),
       gear = foo(gear),
@@ -149,9 +153,18 @@ test_that("custom function works", {
 })
 
 test_that("works with grouped data", {
-  test <- as_polars_df(head(mtcars))
+  test <- head(mtcars)
+  test_pl <- as_polars_df(test)
 
   expect_equal(
+    test_pl |>
+      group_by(am) |>
+      mutate(
+        across(
+          .cols = contains("a"),
+          ~ mean(.x)
+        )
+      ),
     test |>
       group_by(am) |>
       mutate(
@@ -159,19 +172,17 @@ test_that("works with grouped data", {
           .cols = contains("a"),
           ~ mean(.x)
         )
-      ) |>
-      pull(carb),
-    c(3, 3, 3, 1.333, 1.333, 1.333),
-    tolerance = 1e-3
+      )
   )
 })
 
 test_that("argument .names works", {
-  test <- as_polars_df(head(mtcars))
+  test <- head(mtcars)
+  test_pl <- as_polars_df(test)
 
   expect_colnames(
     mutate(
-      test,
+      test_pl,
       across(
         .cols = contains("a"),
         mean,
@@ -200,7 +211,7 @@ test_that("argument .names works", {
 
   expect_colnames(
     mutate(
-      test,
+      test_pl,
       across(
         .cols = contains("a"),
         mean,
@@ -229,7 +240,7 @@ test_that("argument .names works", {
 
   expect_colnames(
     mutate(
-      test,
+      test_pl,
       across(
         .cols = contains("a"),
         ~ mean(.x),
@@ -257,103 +268,111 @@ test_that("argument .names works", {
 })
 
 test_that("passing a list of functions works", {
-  test <- as_polars_df(head(mtcars))
+  test <- head(mtcars)
+  test_pl <- as_polars_df(test)
 
   expect_equal(
     mutate(
-      test,
+      test_pl,
       across(
         .cols = mpg,
         list(mean, median)
       )
     ),
-    mutate(test, mpg_1 = mean(mpg), mpg_2 = median(mpg))
+    mutate(test_pl, mpg_1 = mean(mpg), mpg_2 = median(mpg))
   )
 
   expect_equal(
     mutate(
-      test,
+      test_pl,
       across(
         .cols = mpg,
         list(my_mean = mean, my_median = median)
       )
     ),
-    mutate(test, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg))
+    mutate(test_pl, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg))
   )
 
   expect_equal(
     mutate(
-      test,
+      test_pl,
       across(
         .cols = mpg,
         list(mean = mean, median = median),
         .nms = "{.col}_foo_{.fn}"
       )
     ),
-    mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
+    mutate(test_pl, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
   )
 
   expect_equal(
     mutate(
-      test,
+      test_pl,
       across(
         .cols = mpg,
         list(mean = ~ mean(.x), median = median),
         .nms = "{.col}_foo_{.fn}"
       )
     ),
-    mutate(test, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
+    mutate(test_pl, mpg_foo_mean = mean(mpg), mpg_foo_median = median(mpg))
   )
 })
 
 test_that("single variable in .cols, single function", {
-  test <- as_polars_df(head(mtcars))
+  test <- head(mtcars)
+  test_pl <- as_polars_df(test)
 
   expect_equal(
     mutate(
-      test,
+      test_pl,
       across(.cols = mpg, mean)
     ),
-    mutate(test, mpg = mean(mpg))
+    mutate(test_pl, mpg = mean(mpg))
   )
 })
 
 test_that("also works with summarize()", {
-  test_grp <- as_polars_df(head(mtcars)) |>
+  test <- head(mtcars)
+  test_pl <- as_polars_df(test)
+  test_grp_pl <- test_pl |>
     group_by(cyl, maintain_order = TRUE)
 
   expect_equal(
     summarize(
-      test_grp,
+      test_grp_pl,
       across(
         .cols = mpg,
         list(my_mean = mean, my_median = median)
       )
     ),
-    summarize(test_grp, mpg_my_mean = mean(mpg), mpg_my_median = median(mpg)) |>
-      as.data.frame()
+    summarize(
+      test_grp_pl,
+      mpg_my_mean = mean(mpg),
+      mpg_my_median = median(mpg)
+    )
   )
 })
 
 test_that("sequence of expressions modifying the same vars works", {
-  test <- as_polars_df(head(mtcars)) |>
+  test <- head(mtcars)
+  test_pl <- as_polars_df(test)
+  out <- test_pl |>
     mutate(
       across(contains("a"), mean),
       am = 1,
       gear = NULL
     )
 
-  expect_equal(pull(test, am) |> unique(), 1)
-  expect_colnames(test, setdiff(colnames(mtcars), "gear"))
+  expect_equal(pull(out, am) |> unique(), 1)
+  expect_colnames(out, setdiff(colnames(mtcars), "gear"))
 })
 
-#
-
 test_that("newly created variable is captured in across", {
-  test <- as_polars_df(head(mtcars))
+  test <- head(mtcars)
+  test_pl <- as_polars_df(test)
 
   expect_equal(
-    test |>
+    test_pl |>
       mutate(
         bar = 1,
         across(.cols = contains("a"), \(x) x - 1)
@@ -363,7 +382,7 @@ test_that("newly created variable is captured in across", {
   )
 
   expect_equal(
-    test |>
+    test_pl |>
       mutate(
         bar = 1,
         across(.cols = starts_with("b"), \(x) x - 1)
@@ -373,7 +392,7 @@ test_that("newly created variable is captured in across", {
   )
 
   expect_equal(
-    test |>
+    test_pl |>
       mutate(
         bar = 1,
         across(.cols = ends_with("r"), \(x) x - 1)
@@ -383,7 +402,7 @@ test_that("newly created variable is captured in across", {
   )
 
   expect_equal(
-    test |>
+    test_pl |>
       mutate(
         bar = 1,
         across(.cols = matches("^b"), \(x) x - 1)
@@ -393,7 +412,7 @@ test_that("newly created variable is captured in across", {
   )
 
   expect_equal(
-    test |>
+    test_pl |>
       mutate(
         bar = 1,
         across(.cols = everything(), \(x) x - 1)
@@ -403,7 +422,7 @@ test_that("newly created variable is captured in across", {
   )
 
   expect_equal(
-    test |>
+    test_pl |>
       mutate(
         foo = 1,
         across(.cols = contains("oo"), \(x) x - 1)
@@ -413,7 +432,7 @@ test_that("newly created variable is captured in across", {
   )
 
   expect_warning(
-    test |>
+    test_pl |>
       mutate(
         foo = 1,
         across(.cols = where(is.numeric), \(x) x - 1)
@@ -423,40 +442,47 @@ test_that("newly created variable is captured in across", {
 })
 
 test_that("need to specify .cols (either named or unnamed)", {
-  test <- as_polars_df(head(mtcars))
+  test <- head(mtcars)
+  test_pl <- as_polars_df(test)
 
   expect_snapshot(
-    mutate(test, across(.fns = mean)),
+    mutate(test_pl, across(.fns = mean)),
     error = TRUE
   )
 })
 
 test_that(".by works with across() and everything()", {
-  test <- mtcars |>
-    head(n = 5) |>
-    as_polars_df() |>
+  test <- head(mtcars, n = 5)
+  test_pl <- as_polars_df(test)
+  out <- test_pl |>
+    summarize(across(everything(), .fns = mean), .by = "cyl") |>
+    distinct() |>
+    arrange(cyl)
+
+  expected <- test |>
     summarize(across(everything(), .fns = mean), .by = "cyl") |>
     distinct() |>
     arrange(cyl)
 
   expect_equal(
-    test |> pull(cyl),
-    c(4, 6, 8)
+    out |> pull(cyl),
+    expected |> pull(cyl)
   )
 
   expect_equal(
-    test |> pull(hp),
-    c(93, 110, 175)
+    out |> pull(hp),
+    expected |> pull(hp)
   )
 })
 
 test_that("cannot use external list of functions in across()", {
-  test <- as_polars_df(head(mtcars))
+  test <- head(mtcars)
+  test_pl <- as_polars_df(test)
   my_fns <- list(my_mean = mean, my_median = median)
 
   expect_snapshot(
     mutate(
-      test,
+      test_pl,
       across(.cols = mpg, .fns = my_fns)
     ),
     error = TRUE

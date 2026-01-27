@@ -3,44 +3,50 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("%>% works in expression without '.'", {
-  test <- pl$LazyFrame(x = 1:3)
+  test <- tibble(x = 1:3)
+  test_pl <- as_polars_lf(test)
+
   expect_equal_lazy(
-    test |> mutate(y = x %>% mean()),
-    data.frame(x = 1:3, y = 2)
+    test_pl |> mutate(y = x %>% mean()),
+    test |> mutate(y = x %>% mean())
   )
   expect_equal_lazy(
-    test |> mutate(y = x %>% mean(na.rm = TRUE)),
-    data.frame(x = 1:3, y = 2)
+    test_pl |> mutate(y = x %>% mean(na.rm = TRUE)),
+    test |> mutate(y = x %>% mean(na.rm = TRUE))
   )
 })
 
 test_that("%>% works in expression with '.'", {
-  test <- pl$LazyFrame(x = 1:3)
+  test <- tibble(x = 1:3)
+  test_pl <- as_polars_lf(test)
+
   expect_equal_lazy(
-    test |> mutate(y = x %>% mean(x = .)),
-    data.frame(x = 1:3, y = 2)
+    test_pl |> mutate(y = x %>% mean(x = .)),
+    test |> mutate(y = x %>% mean(x = .))
   )
 })
 
 test_that("%>% works with summarize()", {
-  test <- pl$LazyFrame(x = 1:3)
+  test <- tibble(x = 1:3)
+  test_pl <- as_polars_lf(test)
+
   expect_equal_lazy(
-    test |> summarize(y = x %>% mean(x = .)),
-    data.frame(y = 2)
+    test_pl |> summarize(y = x %>% mean(x = .)),
+    test |> summarize(y = x %>% mean(x = .))
   )
 })
 
 test_that("chaining %>% works", {
-  test <- pl$LazyFrame(x = 1:3)
+  test <- tibble(x = 1:3)
+  test_pl <- as_polars_lf(test)
+
   expect_equal_lazy(
-    test |> mutate(y = x %>% sqrt() %>% mean(na.rm = TRUE)),
-    data.frame(x = 1:3, y = 1.3820),
-    tolerance = 1e-4
+    test_pl |> mutate(y = x %>% sqrt() %>% mean(na.rm = TRUE)),
+    test |> mutate(y = x %>% sqrt() %>% mean(na.rm = TRUE))
   )
   expect_equal_lazy(
-    test |> mutate(y = x %>% sqrt(x = .) %>% mean(x = ., na.rm = TRUE)),
-    data.frame(x = 1:3, y = 1.3820),
-    tolerance = 1e-4
+    test_pl |> mutate(y = x %>% sqrt(x = .) %>% mean(x = ., na.rm = TRUE)),
+    test |> mutate(y = x %>% sqrt(x = .) %>% mean(x = ., na.rm = TRUE))
   )
 })
 

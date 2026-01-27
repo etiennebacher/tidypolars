@@ -6,60 +6,58 @@ test_that("output has custom class", {
   test <- pl$LazyFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample.int(5, )
+    value = sample.int(5)
   )
 
   expect_is_tidypolars(arrange(test, x1))
 })
 
 test_that("basic behavior works", {
-  test <- pl$LazyFrame(
+  test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample.int(5, )
   )
+  test_pl <- as_polars_lf(test)
+
   expect_equal_lazy(
-    arrange(test, x1) |> pull(x1),
-    c("a", "a", "a", "b", "c")
+    arrange(test_pl, x1),
+    arrange(test, x1)
   )
 
   expect_equal_lazy(
-    arrange(test, -x1) |> pull(x1),
-    c("c", "b", "a", "a", "a")
+    arrange(test_pl, -x2),
+    arrange(test, -x2)
   )
 })
 
 test_that("using desc() works", {
-  test <- pl$LazyFrame(
+  test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample.int(5, )
   )
   expect_equal_lazy(
-    arrange(test, desc(x1)),
-    arrange(test, -x1)
+    arrange(test, desc(x2)),
+    arrange(test, -x2)
   )
 
   expect_equal_lazy(
-    arrange(test, desc(x1), desc(x2)),
-    arrange(test, -x1, -x2)
+    arrange(test, desc(x2), desc(value)),
+    arrange(test, -x2, -value)
   )
 })
 
 test_that("sorting by multiple variables works", {
-  test <- pl$LazyFrame(
+  test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample.int(5, )
+    value = sample.int(5)
   )
+  test_pl <- as_polars_lf(test)
   expect_equal_lazy(
-    arrange(test, x1, -x2) |>
-      select(starts_with("x")) |>
-      as.data.frame(),
-    data.frame(
-      x1 = c("a", "a", "a", "b", "c"),
-      x2 = c(3, 2, 1, 5, 1)
-    )
+    arrange(test_pl, x1, -x2),
+    arrange(test, x1, -x2)
   )
 })
 
@@ -85,22 +83,24 @@ test_that("errors with unknown vars", {
 })
 
 test_that("using .by_group = TRUE on grouped data works", {
-  test <- pl$LazyFrame(
+  test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample.int(5, )
   )
   test_grp <- group_by(test, x1)
+  test_pl <- as_polars_lf(test)
+  test_grp_pl <- test_pl |>
+    group_by(x1)
 
   expect_equal_lazy(
-    arrange(test_grp, x2),
-    arrange(test, x2)
+    arrange(test_pl, x2),
+    arrange(test_grp_pl, x2)
   )
 
   expect_equal_lazy(
-    arrange(test_grp, x2, .by_group = TRUE) |>
-      pull(x2),
-    c(1, 2, 3, 5, 1)
+    arrange(test_grp_pl, x2, .by_group = TRUE),
+    arrange(test_grp, x2, .by_group = TRUE)
   )
 })
 
@@ -124,47 +124,54 @@ test_that("returns grouped output if input was grouped", {
 })
 
 test_that("works with expressions", {
-  test <- as_polars_lf(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
   expect_equal_lazy(
-    test |> arrange(-mpg) |> pull(mpg),
-    test |> arrange(1 / mpg) |> pull(mpg)
+    test_pl |> arrange(-mpg),
+    test |> arrange(-mpg)
+  )
+  expect_equal_lazy(
+    test_pl |> arrange(1 / mpg),
+    test |> arrange(1 / mpg)
   )
 })
 
 test_that("NA are placed last", {
-  test <- pl$LazyFrame(
+  test <- tibble(
     x = c(2, 1, 3, NA),
     g = c("a", "b", "a", "b")
   )
+  test_pl <- as_polars_lf(test)
+
   expect_equal_lazy(
-    test |> arrange(x),
-    data.frame(x = c(1, 2, 3, NA), g = c("b", "a", "a", "b"))
+    test_pl |> arrange(x),
+    test |> arrange(x)
   )
   expect_equal_lazy(
-    test |> arrange(g, x),
-    data.frame(x = c(2, 3, 1, NA), g = rep(c("a", "b"), each = 2))
+    test_pl |> arrange(g, x),
+    test |> arrange(g, x)
   )
 })
 
 test_that("arrange() works with literals, #295", {
-  test <- pl$LazyFrame(x = c("a", "b", "c"), grp = c(1, 2, 2))
-  test_df <- data.frame(x = c("a", "b", "c"), grp = c(1, 2, 2))
+  test <- tibble(x = c("a", "b", "c"), grp = c(1, 2, 2))
+  test_pl <- as_polars_lf(test)
 
-  expect_equal_or_both_error(
-    test |> arrange(1),
-    test_df |> arrange(1)
+  expect_equal_lazy(
+    test_pl |> arrange(1),
+    test |> arrange(1)
   )
-  expect_equal_or_both_error(
-    test |> arrange(c(1, 3, 2)),
-    test_df |> arrange(c(1, 3, 2))
+  expect_equal_lazy(
+    test_pl |> arrange(c(1, 3, 2)),
+    test |> arrange(c(1, 3, 2))
   )
-  expect_equal_or_both_error(
-    test |> arrange(c(1, 2)),
-    test_df |> arrange(c(1, 2))
+  expect_both_error(
+    test_pl |> arrange(c(1, 2)),
+    test |> arrange(c(1, 2))
   )
-  expect_equal_or_both_error(
-    test |> group_by(grp) |> arrange(c(1, 2), .by_group = TRUE),
-    test_df |> group_by(grp) |> arrange(c(1, 2), .by_group = TRUE)
+  expect_both_error(
+    test_pl |> group_by(grp) |> arrange(c(1, 2), .by_group = TRUE),
+    test |> group_by(grp) |> arrange(c(1, 2), .by_group = TRUE)
   )
 })
 

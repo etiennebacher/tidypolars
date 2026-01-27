@@ -2,7 +2,8 @@
 % Please edit documentation in R/pivot_wider.R
 \name{pivot_wider.polars_data_frame}
 \alias{pivot_wider.polars_data_frame}
-\title{Pivot a DataFrame from long to wide}
+\alias{pivot_wider.polars_lazy_frame}
+\title{Pivot a Data/LazyFrame from long to wide}
 \usage{
 \method{pivot_wider}{polars_data_frame}(
   data,
@@ -15,9 +16,21 @@
   names_glue = NULL,
   values_fill = NULL
 )
+
+\method{pivot_wider}{polars_lazy_frame}(
+  data,
+  ...,
+  id_cols = NULL,
+  names_from = name,
+  values_from = value,
+  names_prefix = "",
+  names_sep = "_",
+  names_glue = NULL,
+  values_fill = NULL
+)
 }
 \arguments{
-\item{data}{A Polars DataFrame (LazyFrames are not supported).}
+\item{data}{A Polars Data/LazyFrame.}
 
 \item{...}{Dots which should be empty.}
 
@@ -54,7 +67,7 @@ columns. For example, if you provide a character value to fill numeric
 columns, then all these columns will be converted to character.}
 }
 \description{
-Pivot a DataFrame from long to wide
+Pivot a Data/LazyFrame from long to wide
 }
 \section{Unknown arguments}{
 

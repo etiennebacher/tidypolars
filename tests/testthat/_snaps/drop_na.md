@@ -1,7 +1,7 @@
 # error if variable doesn't exist
 
     Code
-      drop_na(pl_tmp, foo)
+      drop_na(tmp_pl, foo)
     Condition
       Error in `drop_na()`:
       ! Can't select columns that don't exist.

@@ -62,9 +62,9 @@ pl_case_when_dplyr <- function(...) {
   out
 }
 
-pl_coalesce_dplyr <- function(..., default = NULL) {
+pl_coalesce_dplyr <- function(...) {
   # pl$coalesce() doesn't accept a list
-  call2(pl$coalesce, !!!clean_dots(...), default) |> eval_bare()
+  call2(pl$coalesce, !!!clean_dots(...)) |> eval_bare()
 }
 
 pl_consecutive_id_dplyr <- function(...) {
@@ -159,6 +159,10 @@ pl_n_distinct_dplyr <- function(..., na.rm = FALSE) {
   } else {
     pl$struct(!!!dots)$n_unique()
   }
+}
+
+pl_near_dplyr <- function(x, y, tol = .Machine$double.eps^0.5) {
+  (x - y)$abs() < tol
 }
 
 pl_nth_dplyr <- function(x, n, ...) {

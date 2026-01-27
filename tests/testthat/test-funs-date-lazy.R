@@ -19,7 +19,7 @@ patrick::with_parameters_test_that(
       ),
       property = function(date, datetime) {
         # date -----------------------------------
-        test_df <- data.frame(x1 = date)
+        test_df <- tibble(x1 = date)
         test <- pl$LazyFrame(x1 = date)
 
         pl_code <- paste0(
@@ -37,7 +37,7 @@ patrick::with_parameters_test_that(
         # datetime -----------------------------------
         # TODO: this should be removed eventually
         if (!fun %in% c("yday", "mday")) {
-          test_df <- data.frame(x1 = datetime)
+          test_df <- tibble(x1 = datetime)
           test <- pl$LazyFrame(x1 = datetime)
 
           pl_code <- paste0(
@@ -67,7 +67,7 @@ test_that("extracting date component", {
       any_na = TRUE
     ),
     property = function(datetime) {
-      test_df <- data.frame(x1 = ymd_hms(datetime))
+      test_df <- tibble(x1 = ymd_hms(datetime))
       test <- as_polars_lf(test_df)
 
       # TODO: lubridate:: needed here otherwise the test_df call uses
@@ -88,7 +88,7 @@ patrick::with_parameters_test_that(
       tests = 20,
       datetime = posixct_(any_na = TRUE),
       property = function(datetime) {
-        test_df <- data.frame(x1 = ymd_hms(datetime, tz = "UTC"))
+        test_df <- tibble(x1 = ymd_hms(datetime, tz = "UTC"))
         test <- pl$LazyFrame(x1 = ymd_hms(datetime, tz = "UTC"))
 
         expect_equal_or_both_error(
@@ -116,7 +116,7 @@ patrick::with_parameters_test_that(
       tests = 20,
       datetime = posixct_(any_na = FALSE),
       property = function(datetime) {
-        test_df <- data.frame(x1 = ymd_hms(datetime, tz = "UTC"))
+        test_df <- tibble(x1 = ymd_hms(datetime, tz = "UTC"))
         test <- pl$LazyFrame(x1 = ymd_hms(datetime, tz = "UTC"))
 
         expect_equal_or_both_error(
@@ -163,7 +163,7 @@ test_that("operations on dates and durations", {
       nanoseconds
     ) {
       datetime[is.na(datetime)] <- NA_POSIXct_
-      test_df <- data.frame(x1 = ymd_hms(datetime))
+      test_df <- tibble(x1 = ymd_hms(datetime))
       test <- as_polars_lf(test_df)
 
       expect_equal_or_both_error(
@@ -204,7 +204,7 @@ test_that("rollbackward and rollforward work - date", {
     preserve_hms = logical_(len = 1, any_na = TRUE),
     property = function(date, roll_to_first, preserve_hms) {
       date[is.na(date)] <- NA_Date_
-      test_df <- data.frame(date = as_date(date))
+      test_df <- tibble(date = as_date(date))
       test <- as_polars_lf(test_df)
 
       # TODO: once the TODO in the implementations is fixed, use `preserve_hms = preserve_hms`
@@ -262,7 +262,7 @@ test_that("rollbackward and rollforward work - datetime", {
       # One of this edge cases (among many):
       # https://github.com/etiennebacher/tidypolars/pull/252/commits/5e2acdcccb912bf034d23534865bce12b755d82b
 
-      test_df <- data.frame(datetime = datetime)
+      test_df <- tibble(datetime = datetime)
       test <- as_polars_lf(test_df)
 
       expect_equal_or_both_error(

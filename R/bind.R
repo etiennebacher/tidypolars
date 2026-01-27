@@ -92,10 +92,10 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
   }
 
   if (!is.null(.id)) {
-    all_named <- !is.null(names(dots)) && all(names(dots) != "")
     dots <- lapply(seq_along(dots), \(x) {
-      val <- if (all_named) {
-        names(dots)[x]
+      name <- names(dots)[x]
+      val <- if (!is.null(name) && name != "") {
+        name
       } else {
         as.character(x)
       }

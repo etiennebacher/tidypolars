@@ -1,7 +1,7 @@
 # error if original values and replacement have no supertype
 
     Code
-      replace_na(pl_test, "a")
+      replace_na(test_pl, list(x = "a"))
     Condition
       Error in `replace_na()`:
       ! Evaluation failed in `$with_columns()`.
@@ -15,7 +15,7 @@
 ---
 
     Code
-      replace_na(pl_test, list(x = 1, y = "unknown"))
+      replace_na(test_pl, list(x = 1, y = "unknown"))
     Condition
       Error in `replace_na()`:
       ! Evaluation failed in `$with_columns()`.

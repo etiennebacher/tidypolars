@@ -1,41 +1,41 @@
 test_that("basic behavior works", {
-  tmp <- mtcars
+  tmp <- as_tibble(mtcars)
   tmp[1:3, "mpg"] <- NA
   tmp[4, "hp"] <- NA
-  pl_tmp <- as_polars_df(tmp)
+  tmp_pl <- as_polars_df(tmp)
 
-  expect_is_tidypolars(drop_na(pl_tmp, drat))
+  expect_is_tidypolars(drop_na(tmp_pl, drat))
 
-  expect_dim(
-    drop_na(pl_tmp, drat),
-    c(32, 11)
+  expect_equal(
+    drop_na(tmp_pl, drat),
+    drop_na(tmp, drat)
   )
 
-  expect_dim(
-    drop_na(pl_tmp, hp),
-    c(31, 11)
+  expect_equal(
+    drop_na(tmp_pl, hp),
+    drop_na(tmp, hp)
   )
 
-  expect_dim(
-    drop_na(pl_tmp, mpg),
-    c(29, 11)
+  expect_equal(
+    drop_na(tmp_pl, mpg),
+    drop_na(tmp, mpg)
   )
 
-  expect_dim(
-    drop_na(pl_tmp, mpg, hp),
-    c(28, 11)
+  expect_equal(
+    drop_na(tmp_pl, mpg, hp),
+    drop_na(tmp, mpg, hp)
   )
 
-  expect_dim(
-    drop_na(pl_tmp),
-    c(28, 11)
+  expect_equal(
+    drop_na(tmp_pl),
+    drop_na(tmp)
   )
 })
 
 test_that("error if variable doesn't exist", {
-  pl_tmp <- polars::as_polars_df(mtcars)
+  tmp_pl <- polars::as_polars_df(mtcars)
   expect_snapshot(
-    drop_na(pl_tmp, foo),
+    drop_na(tmp_pl, foo),
     error = TRUE
   )
 })
