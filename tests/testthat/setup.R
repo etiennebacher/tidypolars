@@ -16,7 +16,6 @@ exceptions <- c(
   "test-fetch.R",
   "test-group_split.R",
   "test-partitioned_output.R",
-  "test-pivot_wider.R",
   "test-read-write.R",
   "test-sink_csv.R",
   "test-sink.R",
@@ -30,7 +29,7 @@ eager <- setdiff(eager, exceptions)
 for (i in eager) {
   tmp <- readLines(test_path(i))
   out <- gsub("pl\\$DataFrame", "pl\\$LazyFrame", tmp)
-  out <- gsub("as_polars_df\\(", "as_polars_lf(", out)
+  out <- gsub("as_polars_df", "as_polars_lf", out, fixed = TRUE)
   out <- gsub("expect_equal\\(", "expect_equal_lazy(", out)
   out <- gsub("expect_error\\(", "expect_error_lazy(", out)
   out <- gsub("expect_snapshot", "expect_snapshot_lazy", out, fixed = TRUE)

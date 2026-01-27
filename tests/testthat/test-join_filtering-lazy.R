@@ -146,14 +146,12 @@ test_that("argument na_matches works", {
   pdf2 <- pl$LazyFrame(a = c(1, 2, NA, NaN), val2 = 5:8)
 
   expect_equal_lazy(
-    semi_join(pdf1, pdf2, "a") |>
-      pull(a),
+    semi_join(pdf1, pdf2, "a") |> pull(a),
     c(1, NA, NA, NaN)
   )
 
   expect_equal_lazy(
-    semi_join(pdf1, pdf2, "a", na_matches = "never") |>
-      pull(a),
+    semi_join(pdf1, pdf2, "a", na_matches = "never") |> pull(a),
     c(1, NaN)
   )
 })
@@ -168,13 +166,13 @@ test_that("unsupported args throw warning", {
     language = c("english", "japanese", "portuguese")
   )
   expect_warning(
-    semi_join(test, test2, copy = TRUE),
+    semi_join(test, test2, by = "country", copy = TRUE),
     "Argument `copy` is not supported by tidypolars"
   )
   withr::with_options(
     list(tidypolars_unknown_args = "error"),
     expect_snapshot_lazy(
-      semi_join(test, test2, copy = TRUE),
+      semi_join(test, test2, by = "country", copy = TRUE),
       error = TRUE
     )
   )

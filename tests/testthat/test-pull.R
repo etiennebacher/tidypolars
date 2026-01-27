@@ -1,31 +1,41 @@
 test_that("basic behavior works", {
-  test <- polars::as_polars_df(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test)
 
   expect_equal(
-    pull(test, mpg),
-    mtcars$mpg
+    pull(test_pl, mpg),
+    pull(test, mpg)
   )
 
   expect_equal(
-    pull(test, "mpg"),
-    mtcars$mpg
+    pull(test_pl, "mpg"),
+    pull(test, "mpg")
   )
 
   expect_equal(
-    pull(test, 1),
-    mtcars$mpg
+    pull(test_pl, 1),
+    pull(test, 1)
   )
 })
 
 test_that("error cases work", {
-  test <- polars::as_polars_df(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test)
 
-  expect_snapshot(
-    pull(test, dplyr::all_of(c("mpg", "drat"))),
-    error = TRUE
+  expect_both_error(
+    pull(test_pl, all_of(c("mpg", "drat"))),
+    pull(test, all_of(c("mpg", "drat")))
   )
   expect_snapshot(
+    pull(test_pl, all_of(c("mpg", "drat"))),
+    error = TRUE
+  )
+  expect_both_error(
+    pull(test_pl, mpg, drat, hp),
     pull(test, mpg, drat, hp),
+  )
+  expect_snapshot(
+    pull(test_pl, mpg, drat, hp),
     error = TRUE
   )
 })

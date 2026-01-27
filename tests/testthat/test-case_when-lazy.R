@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- data.frame(
+  test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample.int(5)
@@ -80,7 +80,7 @@ test_that("basic behavior works", {
 })
 
 test_that("if no .default, NA is used", {
-  test <- data.frame(
+  test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample.int(5)
@@ -100,7 +100,7 @@ test_that("if no .default, NA is used", {
 })
 
 test_that("evaluation of external objects works", {
-  test <- data.frame(
+  test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample.int(5)
@@ -122,42 +122,32 @@ test_that("evaluation of external objects works", {
 })
 
 test_that("some errors", {
-  test <- data.frame(
+  test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample.int(5)
   )
   test_pl <- as_polars_lf(test)
 
-  expect_equal_or_both_error(
-    test_pl |>
-      mutate(y = case_when("a" ~ "b")),
-    test |>
-      mutate(y = case_when("a" ~ "b"))
+  expect_both_error(
+    test_pl |> mutate(y = case_when("a" ~ "b")),
+    test |> mutate(y = case_when("a" ~ "b"))
   )
-  expect_equal_or_both_error(
-    test_pl |>
-      mutate(y = case_when(x1 == "a" ~ NULL)),
-    test |>
-      mutate(y = case_when(x1 == "a" ~ NULL))
+  expect_both_error(
+    test_pl |> mutate(y = case_when(x1 == "a" ~ NULL)),
+    test |> mutate(y = case_when(x1 == "a" ~ NULL))
   )
-  expect_equal_or_both_error(
-    test_pl |>
-      mutate(y = case_when(NULL ~ "a")),
-    test |>
-      mutate(y = case_when(NULL ~ "a"))
+  expect_both_error(
+    test_pl |> mutate(y = case_when(NULL ~ "a")),
+    test |> mutate(y = case_when(NULL ~ "a"))
   )
-  expect_equal_or_both_error(
-    test_pl |>
-      mutate(y = case_when(x1 == "a" ~ character(0))),
-    test |>
-      mutate(y = case_when(x1 == "a" ~ character(0)))
+  expect_both_error(
+    test_pl |> mutate(y = case_when(x1 == "a" ~ character(0))),
+    test |> mutate(y = case_when(x1 == "a" ~ character(0)))
   )
-  expect_equal_or_both_error(
-    test_pl |>
-      mutate(y = case_when(character(0) ~ "a")),
-    test |>
-      mutate(y = case_when(character(0) ~ "a"))
+  expect_both_error(
+    test_pl |> mutate(y = case_when(character(0) ~ "a")),
+    test |> mutate(y = case_when(character(0) ~ "a"))
   )
 })
 

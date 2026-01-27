@@ -1,7 +1,7 @@
 # error when different types
 
     Code
-      mutate(test, y = ifelse(x1 == 1, "foo", "bar"))
+      mutate(test_pl, y = ifelse(x1 == 1, "foo", "bar"))
     Condition
       Error in `.data$with_columns()`:
       ! Evaluation failed in `$with_columns()`.
@@ -13,7 +13,7 @@
 ---
 
     Code
-      mutate(test, y = if_else(x1 == 1, "foo", "bar"))
+      mutate(test_pl, y = if_else(x1 == 1, "foo", "bar"))
     Condition
       Error in `.data$with_columns()`:
       ! Evaluation failed in `$with_columns()`.

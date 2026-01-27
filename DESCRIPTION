@@ -33,7 +33,7 @@ Imports:
     dplyr,
     glue,
     lifecycle,
-    polars (>= 1.6.0),
+    polars (>= 1.8.0),
     rlang (>= 1.1.0),
     tidyr,
     tidyselect,
@@ -55,6 +55,8 @@ Suggests:
     testthat (>= 3.0.0),
     tibble,
     withr
+Remotes:
+    tidyverse/dplyr
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Config/testthat/parallel: true

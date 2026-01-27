@@ -1,48 +1,40 @@
 test_that("basic behavior works", {
-  test <- pl$DataFrame(x = c(1, 1, 1), y = 4:6, z = c("a", "a", "b"))
+  test <- tibble(x = c(1, 1, 1), y = 4:6, z = c("a", "a", "b"))
+  test_pl <- as_polars_df(test)
 
   add_one <- function(data, add_col) {
-    data |>
-      mutate(new_col = {{ add_col }} + 1)
+    data |> mutate(new_col = {{ add_col }} + 1)
   }
 
   add_two <- function(data, add_col) {
-    data |>
-      mutate("{{add_col}}_plus_2" := {{ add_col }} + 2)
+    data |> mutate("{{add_col}}_plus_2" := {{ add_col }} + 2)
   }
+
+  expect_equal(
+    test_pl |> add_one(x),
+    test |> add_one(x)
+  )
+
+  expect_equal(
+    test_pl |> add_two(x),
+    test |> add_two(x)
+  )
+
+  test2 <- as_tibble(mtcars)
+  test2_pl <- as_polars_df(test2)
 
   var_summary <- function(data, var) {
-    data |>
-      summarise(min = min({{ var }}), max = max({{ var }}))
+    data |> summarise(min = min({{ var }}), max = max({{ var }}))
   }
 
   expect_equal(
-    test |>
-      add_one(x) |>
-      pull(new_col),
-    rep(2, 3)
-  )
-
-  expect_equal(
-    test |>
-      add_two(x) |>
-      pull(x_plus_2),
-    rep(3, 3)
-  )
-
-  pl_mtcars <- as_polars_df(mtcars)
-
-  out <- pl_mtcars |>
-    group_by(cyl) |>
-    var_summary(mpg)
-
-  expect_equal(
-    out |> arrange(min) |> pull(min),
-    c(10.4, 17.8, 21.4)
-  )
-
-  expect_equal(
-    out |> arrange(max) |> pull(max),
-    c(19.2, 21.4, 33.9)
+    test2_pl |>
+      group_by(cyl) |>
+      var_summary(mpg) |>
+      arrange(min),
+    test2 |>
+      group_by(cyl) |>
+      var_summary(mpg) |>
+      arrange(min)
   )
 })

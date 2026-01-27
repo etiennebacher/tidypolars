@@ -1,7 +1,7 @@
 # using dollar sign works
 
     Code
-      mutate(test, foo = x * .env$bar)
+      mutate(test_pl, foo = x * .env$bar)
     Condition
       Error in `mutate()`:
       ! object 'bar' not found
@@ -9,7 +9,7 @@
 ---
 
     Code
-      mutate(test, foo = x * .data$bar)
+      mutate(test_pl, foo = x * .data$bar)
     Condition
       Error in `.data$with_columns()`:
       ! Evaluation failed in `$with_columns()`.
@@ -21,7 +21,7 @@
 # using [[ sign works
 
     Code
-      mutate(test, foo = x * .env[["bar"]])
+      mutate(test_pl, foo = x * .env[["bar"]])
     Condition
       Error in `mutate()`:
       ! object 'bar' not found
@@ -29,7 +29,7 @@
 ---
 
     Code
-      mutate(test, foo = x * .data[["bar"]])
+      mutate(test_pl, foo = x * .data[["bar"]])
     Condition
       Error in `.data$with_columns()`:
       ! Evaluation failed in `$with_columns()`.

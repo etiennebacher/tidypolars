@@ -1,7 +1,7 @@
 # error if no common variables and and `by` no provided
 
     Code
-      left_join(test, polars::as_polars_df(iris))
+      left_join(test_pl, polars::as_polars_df(iris))
     Condition
       Error in `left_join()`:
       ! `by` must be supplied when `x` and `y` have no common variables.
@@ -10,7 +10,7 @@
 # argument suffix works
 
     Code
-      left_join(test, test2, by = c("x", "y"), suffix = c(".hi"))
+      left_join(test_pl, test2_pl, by = c("x", "y"), suffix = c(".hi"))
     Condition
       Error in `left_join()`:
       ! `suffix` must be of length 2.
@@ -18,7 +18,7 @@
 # suffix + join_by works
 
     Code
-      left_join(test, test2, by = join_by(x, y), suffix = c(".hi"))
+      left_join(test_pl, test2_pl, by = join_by(x, y), suffix = c(".hi"))
     Condition
       Error in `left_join()`:
       ! `suffix` must be of length 2.
@@ -34,7 +34,7 @@
 ---
 
     Code
-      do.call(i, list(country, country_year, join_by(iso), relationship = "one-to-one"))
+      do.call(i, list(country_pl, country_year_pl, join_by(iso), relationship = "one-to-one"))
     Condition
       Error in `x$join()`:
       ! Evaluation failed in `$join()`.
@@ -46,7 +46,7 @@
 ---
 
     Code
-      do.call(i, list(country, country_year, join_by(iso), relationship = "many-to-one"))
+      do.call(i, list(country_pl, country_year_pl, join_by(iso), relationship = "many-to-one"))
     Condition
       Error in `x$join()`:
       ! Evaluation failed in `$join()`.
@@ -58,7 +58,7 @@
 ---
 
     Code
-      do.call(i, list(country, country_year, join_by(iso), relationship = "one-to-one"))
+      do.call(i, list(country_pl, country_year_pl, join_by(iso), relationship = "one-to-one"))
     Condition
       Error in `x$join()`:
       ! Evaluation failed in `$join()`.
@@ -70,7 +70,7 @@
 ---
 
     Code
-      do.call(i, list(country, country_year, join_by(iso), relationship = "many-to-one"))
+      do.call(i, list(country_pl, country_year_pl, join_by(iso), relationship = "many-to-one"))
     Condition
       Error in `x$join()`:
       ! Evaluation failed in `$join()`.
@@ -82,7 +82,7 @@
 ---
 
     Code
-      do.call(i, list(country, country_year, join_by(iso), relationship = "one-to-one"))
+      do.call(i, list(country_pl, country_year_pl, join_by(iso), relationship = "one-to-one"))
     Condition
       Error in `x$join()`:
       ! Evaluation failed in `$join()`.
@@ -94,7 +94,7 @@
 ---
 
     Code
-      do.call(i, list(country, country_year, join_by(iso), relationship = "many-to-one"))
+      do.call(i, list(country_pl, country_year_pl, join_by(iso), relationship = "many-to-one"))
     Condition
       Error in `x$join()`:
       ! Evaluation failed in `$join()`.
@@ -106,7 +106,7 @@
 ---
 
     Code
-      right_join(country, country_year, join_by(iso), relationship = "one-to-one")
+      right_join(country_pl, country_year_pl, join_by(iso), relationship = "one-to-one")
     Condition
       Error in `y$join()`:
       ! Evaluation failed in `$join()`.
@@ -118,7 +118,7 @@
 ---
 
     Code
-      right_join(country, country_year, join_by(iso), relationship = "one-to-many")
+      right_join(country_pl, country_year_pl, join_by(iso), relationship = "one-to-many")
     Condition
       Error in `y$join()`:
       ! Evaluation failed in `$join()`.
@@ -130,7 +130,7 @@
 # argument na_matches works
 
     Code
-      left_join(pdf1, pdf2, na_matches = "foo")
+      left_join(test_pl, test2_pl, na_matches = "foo")
     Condition
       Error in `left_join()`:
       ! `na_matches` must be one of "na" or "never", not "foo".
@@ -138,7 +138,7 @@
 # error if two inputs don't have the same class
 
     Code
-      left_join(test, iris)
+      left_join(test_pl, iris)
     Condition
       Error in `left_join()`:
       ! `x` and `y` must be either two DataFrames or two LazyFrames.
@@ -146,7 +146,7 @@
 # unsupported args throw warning
 
     Code
-      left_join(test, test2, by = "country", keep = TRUE)
+      left_join(test_pl, test2_pl, by = "country", keep = TRUE)
     Condition
       Error in `left_join()`:
       ! Argument `keep` is not supported by tidypolars.
