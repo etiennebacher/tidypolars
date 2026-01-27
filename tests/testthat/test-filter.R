@@ -379,29 +379,29 @@ test_that("works when using [] on external objects", {
 })
 
 test_that("NA handling is correct", {
-  dat <- tibble(x = c(1, NA))
-  pl_dat <- as_polars_df(dat)
+  test <- tibble(x = c(1, NA))
+  test_pl <- as_polars_df(test)
 
   expect_equal(
-    pl_dat |> filter(x == 1),
-    dat |> filter(x == 1)
+    test_pl |> filter(x == 1),
+    test |> filter(x == 1)
   )
   expect_equal(
-    pl_dat |> filter_out(x == 1),
-    dat |> filter_out(x == 1)
+    test_pl |> filter_out(x == 1),
+    test |> filter_out(x == 1)
   )
 })
 
 test_that("no input is equivalent to all rows being TRUE", {
-  dat <- tibble(x = c(1, NA))
-  pl_dat <- as_polars_df(dat)
+  test <- tibble(x = c(1, NA))
+  test_pl <- as_polars_df(test)
 
   expect_equal(
-    pl_dat |> filter(!!!list()),
-    dat |> filter(!!!list())
+    test_pl |> filter(!!!list()),
+    test |> filter(!!!list())
   )
   expect_equal(
-    pl_dat |> filter_out(!!!list()),
-    dat |> filter_out(!!!list())
+    test_pl |> filter_out(!!!list()),
+    test |> filter_out(!!!list())
   )
 })
