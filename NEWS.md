@@ -25,6 +25,9 @@
 * Add support for `dplyr::when_any()` and `dplyr::when_all()`, added in `dplyr`
   1.2.0 (#306).
 
+* Added support for `dplyr::recode_values()` and `dplyr::replace_values()`, added
+  in `dplyr` 1.2.0 (#308).
+
 ## Other changes
 
 * Several changes to make `tidypolars` more aligned with the `tidyverse` output

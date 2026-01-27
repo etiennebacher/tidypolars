@@ -342,7 +342,7 @@ test_that("row_number() works", {
 })
 
 
-test_that("dplyr::lag() works", {
+test_that("lag() works", {
   test <- tibble(
     g = c(1, 1, 1, 1, 2, 2, 2, 2),
     t = c(1, 2, 3, 4, 4, 1, 2, 3),
@@ -389,7 +389,7 @@ test_that("dplyr::lag() works", {
   )
 })
 
-test_that("dplyr::lead() works", {
+test_that("lead() works", {
   test <- tibble(
     g = c(1, 1, 1, 1, 2, 2, 2, 2),
     t = c(1, 2, 3, 4, 4, 1, 2, 3),
@@ -467,23 +467,23 @@ test_that("near() works", {
 
 test_that("replace_when(): basic usage", {
   # TODO: this should work when `type` is a factor, see examples in dplyr docs
-  dat <- tibble(
+  test <- tibble(
     name = c("Max", "Bella", "Chuck", "Luna", "Cooper"),
     type = c("dog", "dog", "cat", "dog", "cat"),
     age = c(1, 3, 5, 2, 4)
   )
-  dat_pl <- as_polars_lf(dat)
+  test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
-    dat_pl |>
+    test_pl |>
       mutate(y = replace_when(type, type == "dog" & age <= 2 ~ "puppy")),
-    dat |>
+    test |>
       mutate(y = replace_when(type, type == "dog" & age <= 2 ~ "puppy"))
   )
 })
 
 test_that("replace_when() errors if cannot preserve type", {
-  dat <- tibble(
+  test <- tibble(
     name = c("Max", "Bella", "Chuck", "Luna", "Cooper"),
     type = factor(
       c("dog", "dog", "cat", "dog", "cat"),
@@ -491,25 +491,23 @@ test_that("replace_when() errors if cannot preserve type", {
     ),
     age = c(1, 3, 5, 2, 4)
   )
-  dat_pl <- as_polars_lf(dat)
+  test_pl <- as_polars_lf(test)
 
-  expect_equal_or_both_error(
-    dat_pl |>
-      mutate(y = replace_when(type, type == "dog" & age <= 2 ~ 1)),
-    dat |>
-      mutate(y = replace_when(type, type == "dog" & age <= 2 ~ 1))
+  expect_both_error(
+    test_pl |> mutate(y = replace_when(type, type == "dog" & age <= 2 ~ 1)),
+    test |> mutate(y = replace_when(type, type == "dog" & age <= 2 ~ 1))
   )
   # TODO: tidyverse errors here, which is better I think
-  # expect_equal_or_both_error(
-  #   dat_pl |>
+  # expect_both_error(
+  #   test_pl |>
   #     mutate(y = replace_when(name, name == "Max" ~ 1)),
-  #   dat |>
+  #   test |>
   #     mutate(y = replace_when(name, name == "Max" ~ 1))
   # )
 })
 
 test_that("replace_when(): corner cases", {
-  dat <- tibble(
+  test <- tibble(
     name = c("Max", "Bella", "Chuck", "Luna", "Cooper"),
     type = factor(
       c("dog", "dog", "cat", "dog", "cat"),
@@ -517,55 +515,45 @@ test_that("replace_when(): corner cases", {
     ),
     age = c(1, 3, 5, 2, 4)
   )
-  dat_pl <- as_polars_lf(dat)
+  test_pl <- as_polars_lf(test)
 
-  expect_equal_or_both_error(
-    dat_pl |>
-      mutate(y = replace_when(type, type == "dog" ~ character(0))),
-    dat |>
-      mutate(y = replace_when(type, type == "dog" ~ character(0)))
+  expect_both_error(
+    test_pl |> mutate(y = replace_when(type, type == "dog" ~ character(0))),
+    test |> mutate(y = replace_when(type, type == "dog" ~ character(0)))
   )
-  expect_equal_or_both_error(
-    dat_pl |>
-      mutate(y = replace_when(type, type == "dog" ~ NULL)),
-    dat |>
-      mutate(y = replace_when(type, type == "dog" ~ NULL))
+  expect_both_error(
+    test_pl |> mutate(y = replace_when(type, type == "dog" ~ NULL)),
+    test |> mutate(y = replace_when(type, type == "dog" ~ NULL))
   )
-  expect_equal_or_both_error(
-    dat_pl |>
-      mutate(y = replace_when(type, type == "dog" ~ c("a", "b"))),
-    dat |>
-      mutate(y = replace_when(type, type == "dog" ~ c("a", "b")))
+  expect_both_error(
+    test_pl |> mutate(y = replace_when(type, type == "dog" ~ c("a", "b"))),
+    test |> mutate(y = replace_when(type, type == "dog" ~ c("a", "b")))
   )
-  expect_equal_or_both_error(
-    dat_pl |>
-      mutate(y = replace_when(type, logical(0) ~ "a")),
-    dat |>
-      mutate(y = replace_when(type, logical(0) ~ "a"))
+  expect_both_error(
+    test_pl |> mutate(y = replace_when(type, logical(0) ~ "a")),
+    test |> mutate(y = replace_when(type, logical(0) ~ "a"))
   )
-  expect_equal_or_both_error(
-    dat_pl |>
-      mutate(y = replace_when(type, NULL ~ "a")),
-    dat |>
-      mutate(y = replace_when(type, NULL ~ "a"))
+  expect_both_error(
+    test_pl |> mutate(y = replace_when(type, NULL ~ "a")),
+    test |> mutate(y = replace_when(type, NULL ~ "a"))
   )
 })
 
 
-test_that("dplyr::when_all() and dplyr::when_any() work", {
-  dat <- tibble(
+test_that(" when_all() and when_any() work", {
+  test <- tibble(
     x = c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, NA, NA, NA),
     y = c(TRUE, FALSE, NA, TRUE, FALSE, NA, TRUE, FALSE, NA)
   )
-  dat_pl <- as_polars_lf(dat)
+  test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
-    dat_pl |>
+    test_pl |>
       mutate(
         any_propagate = when_any(x, y),
         all_propagate = when_all(x, y),
       ),
-    dat |>
+    test |>
       mutate(
         any_propagate = when_any(x, y),
         all_propagate = when_all(x, y),
@@ -573,20 +561,20 @@ test_that("dplyr::when_all() and dplyr::when_any() work", {
   )
 
   expect_snapshot_lazy(
-    dat_pl |> mutate(any_propagate = when_any(x, y, na_rm = TRUE)),
+    test_pl |> mutate(any_propagate = when_any(x, y, na_rm = TRUE)),
     error = TRUE
   )
   expect_snapshot_lazy(
-    dat_pl |> mutate(any_propagate = when_any(x, y, size = TRUE)),
+    test_pl |> mutate(any_propagate = when_any(x, y, size = TRUE)),
     error = TRUE
   )
 
   expect_snapshot_lazy(
-    dat_pl |> mutate(all_propagate = when_all(x, y, na_rm = TRUE)),
+    test_pl |> mutate(all_propagate = when_all(x, y, na_rm = TRUE)),
     error = TRUE
   )
   expect_snapshot_lazy(
-    dat_pl |> mutate(all_propagate = when_all(x, y, size = TRUE)),
+    test_pl |> mutate(all_propagate = when_all(x, y, size = TRUE)),
     error = TRUE
   )
 
@@ -609,6 +597,259 @@ test_that("dplyr::when_all() and dplyr::when_any() work", {
         name %in% c("US", "CA") & between(score, 200, 300),
         name %in% c("PR", "RU") & between(score, 100, 200)
       ))
+  )
+})
+
+test_that("replace_values() - basic usage", {
+  test <- tibble(x = c("NC", "NYC", "CA", NA, "NYC", "Unknown"))
+  test_pl <- as_polars_lf(test)
+
+  expect_equal_lazy(
+    test_pl |> mutate(y = replace_values(x, "NYC" ~ "NY", "Unknown" ~ "a")),
+    test |> mutate(y = replace_values(x, "NYC" ~ "NY", "Unknown" ~ "a"))
+  )
+  expect_equal_lazy(
+    test_pl |>
+      mutate(
+        y = replace_values(x, from = c("NYC", "Unknown"), to = c("NY", "a"))
+      ),
+    test |>
+      mutate(
+        y = replace_values(x, from = c("NYC", "Unknown"), to = c("NY", "a"))
+      )
+  )
+
+  # broadcasting
+  expect_equal_lazy(
+    test_pl |>
+      mutate(y = replace_values(x, from = c("NYC", "Unknown"), to = "a")),
+    test |>
+      mutate(y = replace_values(x, from = c("NYC", "Unknown"), to = "a"))
+  )
+
+  # basic errors
+  expect_snapshot_lazy(
+    mutate(test_pl, y = replace_values(x, "NYC" ~ "NY", from = "a")),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    mutate(test_pl, y = replace_values(x, "NYC" ~ "NY", to = "a")),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    mutate(test_pl, y = replace_values(x, from = "a")),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    mutate(test_pl, y = replace_values(x, to = "a")),
+    error = TRUE
+  )
+})
+
+test_that("replace_values() - corner cases", {
+  test <- tibble(x = c("NC", "NYC", "CA", NA, "NYC", "Unknown"))
+  test_pl <- as_polars_lf(test)
+
+  # TODO: this errors with tidyverse, which I think is more helpful
+  # expect_both_error(
+  #   test_pl |>
+  #     mutate(y = replace_values(x, "NYC" ~ 1)),
+  #   test |>
+  #     mutate(y = replace_values(x, "NYC" ~ 1))
+  # )
+  # expect_both_error(
+  #   test_pl |>
+  #     mutate(y = replace_values(x, 1 ~ "NYC")),
+  #   test |>
+  #     mutate(y = replace_values(x, 1 ~ "NYC"))
+  # )
+
+  expect_equal_lazy(
+    test_pl |> mutate(y = replace_values(x, "NYC" ~ NA)),
+    test |> mutate(y = replace_values(x, "NYC" ~ NA))
+  )
+  expect_both_error(
+    test_pl |> mutate(y = replace_values(x, "NYC" ~ NULL)),
+    test |> mutate(y = replace_values(x, "NYC" ~ NULL))
+  )
+  expect_both_error(
+    test_pl |> mutate(y = replace_values(x, NULL ~ "NYC")),
+    test |> mutate(y = replace_values(x, NULL ~ "NYC"))
+  )
+  expect_both_error(
+    test_pl |> mutate(y = replace_values(x, "NYC" ~ character(0))),
+    test |> mutate(y = replace_values(x, "NYC" ~ character(0)))
+  )
+  # TODO: tidypolars errors here, not tidyverse, so less impact.
+  # expect_both_error(
+  #   test_pl |>
+  #     mutate(y = replace_values(x, character(0) ~ "NYC")),
+  #   test |>
+  #     mutate(y = replace_values(x, character(0) ~ "NYC"))
+  # )
+  expect_both_error(
+    test_pl |> mutate(y = replace_values(x, "NYC" ~ "NY", 1)),
+    test |> mutate(y = replace_values(x, "NYC" ~ "NY", 1))
+  )
+  expect_both_error(
+    test_pl |>
+      mutate(
+        y = replace_values(
+          x,
+          from = c("NYC", "CA", "Unknown"),
+          to = c("a", "b")
+        )
+      ),
+    test |>
+      mutate(
+        y = replace_values(
+          x,
+          from = c("NYC", "CA", "Unknown"),
+          to = c("a", "b")
+        )
+      )
+  )
+})
+
+test_that("recode_values() - basic usage", {
+  test <- tibble(x = c("NC", "NYC", "CA", NA, "NYC", "Unknown"))
+  test_pl <- as_polars_lf(test)
+
+  # basic usage
+  expect_equal_lazy(
+    test_pl |> mutate(y = recode_values(x, "NYC" ~ "NY", "Unknown" ~ "a")),
+    test |> mutate(y = recode_values(x, "NYC" ~ "NY", "Unknown" ~ "a"))
+  )
+  expect_equal_lazy(
+    test_pl |>
+      mutate(
+        y = recode_values(x, from = c("NYC", "Unknown"), to = c("NY", "a"))
+      ),
+    test |>
+      mutate(
+        y = recode_values(x, from = c("NYC", "Unknown"), to = c("NY", "a"))
+      )
+  )
+  expect_equal_lazy(
+    test_pl |>
+      mutate(
+        y = recode_values(x, "NYC" ~ "NY", "Unknown" ~ "a", default = "foo")
+      ),
+    test |>
+      mutate(
+        y = recode_values(x, "NYC" ~ "NY", "Unknown" ~ "a", default = "foo")
+      )
+  )
+  expect_equal_lazy(
+    test_pl |>
+      mutate(
+        y = recode_values(
+          x,
+          from = c("NYC", "Unknown"),
+          to = c("NY", "a"),
+          default = "foo"
+        )
+      ),
+    test |>
+      mutate(
+        y = recode_values(
+          x,
+          from = c("NYC", "Unknown"),
+          to = c("NY", "a"),
+          default = "foo"
+        )
+      )
+  )
+
+  # broadcasting
+  expect_equal_lazy(
+    test_pl |>
+      mutate(y = recode_values(x, from = c("NYC", "Unknown"), to = "a")),
+    test |>
+      mutate(y = recode_values(x, from = c("NYC", "Unknown"), to = "a"))
+  )
+
+  expect_snapshot_lazy(
+    mutate(test_pl, y = recode_values(x, "NYC" ~ "NY", from = "a")),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    mutate(test_pl, y = recode_values(x, "NYC" ~ "NY", to = "a")),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    mutate(test_pl, y = recode_values(x, from = "a")),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    mutate(test_pl, y = recode_values(x, to = "a")),
+    error = TRUE
+  )
+})
+
+test_that("recode_values() - errors and corner cases", {
+  test <- tibble(x = c("NC", "NYC", "CA", NA, "NYC", "Unknown"))
+  test_pl <- as_polars_lf(test)
+
+  # TODO: this errors with tidyverse, which I think is more helpful
+  # expect_both_error(
+  #   test_pl |>
+  #     mutate(y = recode_values(x, "NYC" ~ 1)),
+  #   test |>
+  #     mutate(y = recode_values(x, "NYC" ~ 1))
+  # )
+  # expect_both_error(
+  #   test_pl |>
+  #     mutate(y = recode_values(x, 1 ~ "NYC")),
+  #   test |>
+  #     mutate(y = recode_values(x, 1 ~ "NYC"))
+  # )
+
+  # corner cases on the LHS/RHS
+  expect_equal_lazy(
+    test_pl |> mutate(y = recode_values(x, "NYC" ~ NA)),
+    test |> mutate(y = recode_values(x, "NYC" ~ NA))
+  )
+  expect_both_error(
+    test_pl |> mutate(y = recode_values(x, "NYC" ~ NULL)),
+    test |> mutate(y = recode_values(x, "NYC" ~ NULL))
+  )
+  expect_both_error(
+    test_pl |> mutate(y = recode_values(x, NULL ~ "NYC")),
+    test |> mutate(y = recode_values(x, NULL ~ "NYC"))
+  )
+  expect_both_error(
+    test_pl |> mutate(y = recode_values(x, "NYC" ~ character(0))),
+    test |> mutate(y = recode_values(x, "NYC" ~ character(0)))
+  )
+  # TODO: tidypolars errors here, not tidyverse, so less impact.
+  # expect_both_error(
+  #   test_pl |>
+  #     mutate(y = recode_values(x, character(0) ~ "NYC")),
+  #   test |>
+  #     mutate(y = recode_values(x, character(0) ~ "NYC"))
+  # )
+  expect_both_error(
+    test_pl |> mutate(y = recode_values(x, "NYC" ~ "NY", 1)),
+    test |> mutate(y = recode_values(x, "NYC" ~ "NY", 1))
+  )
+  expect_both_error(
+    test_pl |>
+      mutate(
+        y = replace_values(
+          x,
+          from = c("NYC", "CA", "Unknown"),
+          to = c("a", "b")
+        )
+      ),
+    test |>
+      mutate(
+        y = replace_values(
+          x,
+          from = c("NYC", "CA", "Unknown"),
+          to = c("a", "b")
+        )
+      )
   )
 })
 

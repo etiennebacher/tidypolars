@@ -181,6 +181,94 @@ pl_nth_dplyr <- function(x, n, ...) {
   x$gather(n)
 }
 
+pl_recode_values_dplyr <- function(
+  x,
+  ...,
+  from = NULL,
+  to = NULL,
+  default = NULL,
+  unmatched,
+  ptype
+) {
+  default <- default %||% NA
+  env <- env_from_dots(...)
+  dots <- clean_dots(...)
+  if (length(dots) > 0 && (!is.null(from) || !is.null(to))) {
+    cli_abort(
+      "Can't supply both {.arg ...} and {.arg from} / {.arg to}.",
+      call = env
+    )
+  }
+  if (!is.null(from) && is.null(to)) {
+    cli_abort(
+      "Specified {.arg from} but not {.arg to}.",
+      call = env
+    )
+  }
+  if (is.null(from) && !is.null(to)) {
+    cli_abort(
+      "Specified {.arg to} but not {.arg from}.",
+      call = env
+    )
+  }
+  if (!missing(unmatched)) {
+    cli_abort(
+      "Argument {.code unmatched} is not supported by {.pkg tidypolars}.",
+      call = env
+    )
+  }
+  if (!missing(ptype)) {
+    cli_abort(
+      "Argument {.code ptype} is not supported by {.pkg tidypolars}.",
+      call = env
+    )
+  }
+
+  if (length(dots) > 0) {
+    from_to <- extract_from_to(dots, env)
+  } else {
+    from_to <- list(from = from, to = to)
+  }
+
+  x$replace_strict(
+    old = from_to$from,
+    new = from_to$to,
+    default = default
+  )
+}
+
+pl_replace_values_dplyr <- function(x, ..., from = NULL, to = NULL) {
+  env <- env_from_dots(...)
+  dots <- clean_dots(...)
+  if (length(dots) > 0 && (!is.null(from) || !is.null(to))) {
+    cli_abort(
+      "Can't supply both {.arg ...} and {.arg from} / {.arg to}.",
+      call = env
+    )
+  }
+
+  if (!is.null(from) && is.null(to)) {
+    cli_abort(
+      "Specified {.arg from} but not {.arg to}.",
+      call = env
+    )
+  }
+  if (is.null(from) && !is.null(to)) {
+    cli_abort(
+      "Specified {.arg to} but not {.arg from}.",
+      call = env
+    )
+  }
+
+  if (length(dots) > 0) {
+    from_to <- extract_from_to(dots, env)
+  } else {
+    from_to <- list(from = from, to = to)
+  }
+
+  x$replace(old = from_to$from, new = from_to$to)
+}
+
 ### Very similar to pl_case_when.
 ### The main difference is that we put $otherwise(x) instead of $otherwise(NA).
 pl_replace_when_dplyr <- function(x, ..., .data) {

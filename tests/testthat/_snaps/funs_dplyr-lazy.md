@@ -58,7 +58,7 @@
       
       Error originated in expression: '[(col("x")) - (Series[literal])]'
 
-# dplyr::when_all() and dplyr::when_any() work
+#  when_all() and when_any() work
 
     Code
       current$collect()
@@ -93,4 +93,76 @@
       Error in `mutate()`:
       ! Error while running function `when_all()` in Polars.
       x Argument `size` is not supported by tidypolars.
+
+# replace_values() - basic usage
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `replace_values()` in Polars.
+      x Can't supply both `...` and `from` / `to`.
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `replace_values()` in Polars.
+      x Can't supply both `...` and `from` / `to`.
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `replace_values()` in Polars.
+      x Specified `from` but not `to`.
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `replace_values()` in Polars.
+      x Specified `to` but not `from`.
+
+# recode_values() - basic usage
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `recode_values()` in Polars.
+      x Can't supply both `...` and `from` / `to`.
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `recode_values()` in Polars.
+      x Can't supply both `...` and `from` / `to`.
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `recode_values()` in Polars.
+      x Specified `from` but not `to`.
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `recode_values()` in Polars.
+      x Specified `to` but not `from`.
 

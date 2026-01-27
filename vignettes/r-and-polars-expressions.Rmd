@@ -319,6 +319,8 @@ out <- tribble(
   "`dplyr`", "`near`",
   "`dplyr`", "`nth`",
   "`dplyr`", "`n_distinct`",
+  "`dplyr`", "`recode_values`",
+  "`dplyr`", "`replace_values`",
   "`dplyr`", "`replace_when`",
   "`dplyr`", "`row_number`",
   "`dplyr`", "`when_all`",
@@ -410,6 +412,8 @@ out <- tribble(
         "tidypolars errors if `x` and `y` have different lengths, dplyr doesn't.",
       Package == "`dplyr`" & Function == "`row_number`" ~
         "Doesn't work when `x` is missing.",
+      Package == "`dplyr`" & Function %in% c("`recode_values`", "`replace_values`") ~
+        "The `dplyr` functions will error if the type of the replacement doesn't match the type of the column (for instance trying to replace a character with an integer). This works in `tidypolars`.",
       Package == "`dplyr`" & Function %in% c("`when_all`", "`when_any`") ~
         "Arguments `na_rm` and `size` not supported.",
       Package == "`dplyr`" & Function == "`replace_when`" ~

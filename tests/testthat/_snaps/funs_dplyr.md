@@ -62,10 +62,10 @@
       
       Error originated in expression: '[(col("x")) - (Series[literal])]'
 
-# dplyr::when_all() and dplyr::when_any() work
+#  when_all() and when_any() work
 
     Code
-      mutate(dat_pl, any_propagate = when_any(x, y, na_rm = TRUE))
+      mutate(test_pl, any_propagate = when_any(x, y, na_rm = TRUE))
     Condition
       Error in `mutate()`:
       ! Error while running function `when_any()` in Polars.
@@ -74,7 +74,7 @@
 ---
 
     Code
-      mutate(dat_pl, any_propagate = when_any(x, y, size = TRUE))
+      mutate(test_pl, any_propagate = when_any(x, y, size = TRUE))
     Condition
       Error in `mutate()`:
       ! Error while running function `when_any()` in Polars.
@@ -83,7 +83,7 @@
 ---
 
     Code
-      mutate(dat_pl, all_propagate = when_all(x, y, na_rm = TRUE))
+      mutate(test_pl, all_propagate = when_all(x, y, na_rm = TRUE))
     Condition
       Error in `mutate()`:
       ! Error while running function `when_all()` in Polars.
@@ -92,9 +92,81 @@
 ---
 
     Code
-      mutate(dat_pl, all_propagate = when_all(x, y, size = TRUE))
+      mutate(test_pl, all_propagate = when_all(x, y, size = TRUE))
     Condition
       Error in `mutate()`:
       ! Error while running function `when_all()` in Polars.
       x Argument `size` is not supported by tidypolars.
+
+# replace_values() - basic usage
+
+    Code
+      mutate(test_pl, y = replace_values(x, "NYC" ~ "NY", from = "a"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `replace_values()` in Polars.
+      x Can't supply both `...` and `from` / `to`.
+
+---
+
+    Code
+      mutate(test_pl, y = replace_values(x, "NYC" ~ "NY", to = "a"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `replace_values()` in Polars.
+      x Can't supply both `...` and `from` / `to`.
+
+---
+
+    Code
+      mutate(test_pl, y = replace_values(x, from = "a"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `replace_values()` in Polars.
+      x Specified `from` but not `to`.
+
+---
+
+    Code
+      mutate(test_pl, y = replace_values(x, to = "a"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `replace_values()` in Polars.
+      x Specified `to` but not `from`.
+
+# recode_values() - basic usage
+
+    Code
+      mutate(test_pl, y = recode_values(x, "NYC" ~ "NY", from = "a"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `recode_values()` in Polars.
+      x Can't supply both `...` and `from` / `to`.
+
+---
+
+    Code
+      mutate(test_pl, y = recode_values(x, "NYC" ~ "NY", to = "a"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `recode_values()` in Polars.
+      x Can't supply both `...` and `from` / `to`.
+
+---
+
+    Code
+      mutate(test_pl, y = recode_values(x, from = "a"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `recode_values()` in Polars.
+      x Specified `from` but not `to`.
+
+---
+
+    Code
+      mutate(test_pl, y = recode_values(x, to = "a"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `recode_values()` in Polars.
+      x Specified `to` but not `from`.
 
