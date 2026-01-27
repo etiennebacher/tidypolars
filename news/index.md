@@ -42,6 +42,13 @@
   added in `dplyr` 1.2.0
   ([\#306](https://github.com/etiennebacher/tidypolars/issues/306)).
 
+- Added support for
+  [`dplyr::recode_values()`](https://dplyr.tidyverse.org/reference/recode-and-replace-values.html)
+  and
+  [`dplyr::replace_values()`](https://dplyr.tidyverse.org/reference/recode-and-replace-values.html),
+  added in `dplyr` 1.2.0
+  ([\#308](https://github.com/etiennebacher/tidypolars/issues/308)).
+
 ### Other changes
 
 - Several changes to make `tidypolars` more aligned with the `tidyverse`
