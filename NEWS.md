@@ -20,15 +20,15 @@
 
 * `pivot_wider()` now works with Polars LazyFrames (#318).
 
-* Added support for `dplyr::replace_when()`, added in `dplyr` 1.2.0 (#307).
+* Added support for several functions implemented in `dplyr` 1.2.0:
 
-* Add support for `dplyr::when_any()` and `dplyr::when_all()`, added in `dplyr`
-  1.2.0 (#306).
+  - `filter_out()` (#280)
+  - `recode_values()` (#308)
+  - `replace_values()` (#308)
+  - `replace_when()` (#307)
+  - `when_any()` (#306)
+  - `when_all()` (#306)
 
-* Added support for `dplyr::recode_values()` and `dplyr::replace_values()`, added
-  in `dplyr` 1.2.0 (#308).
-
-* Added support for `filter_out()`, added in `dplyr` 1.2.0 (#280).
 
 ## Other changes
 
