@@ -1,12 +1,15 @@
 test_that("basic behavior works", {
-  test <- as_polars_df(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test)
 
   expect_equal(
-    test |> group_by(am, cyl) |> ungroup() |> attributes() |> length(),
+    test_pl |> group_by(am, cyl) |> ungroup() |> attributes() |> length(),
     1
   )
+
+  # rowwise returns different number of attributes (tidypolars has 1, tidyverse has more)
   expect_equal(
-    test |> rowwise(am, cyl) |> ungroup() |> attributes() |> length(),
-    1
+    test_pl |> rowwise(am, cyl) |> ungroup() |> group_vars(),
+    test |> rowwise(am, cyl) |> ungroup() |> group_vars()
   )
 })

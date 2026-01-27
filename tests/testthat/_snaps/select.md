@@ -1,7 +1,7 @@
 # select helpers work
 
     Code
-      select(pl_iris, all_of(bad_selection))
+      select(test_pl, all_of(bad_selection))
     Condition
       Error in `select()`:
       i In argument: `all_of(bad_selection)`.
@@ -12,7 +12,7 @@
 ---
 
     Code
-      select(pl_iris, where(~ mean(.x) > 3.5))
+      select(test_pl, where(~ mean(.x) > 3.5))
     Condition
       Error in `select()`:
       ! `where()` can only take `is.*()` functions (like `is.numeric()`).

@@ -21,7 +21,7 @@
 # correct behavior when two expressions are identical but used in a different data context
 
     Code
-      mutate(test, a = "foo", x = agrep("aa", a))
+      mutate(test_pl, a = "foo", x = agrep("aa", a))
     Condition
       Error in `mutate()`:
       ! tidypolars doesn't know how to translate this function: `agrep()` (from package base).
@@ -31,7 +31,7 @@
 ---
 
     Code
-      mutate(test, x = agrep("aa", a), a = "foo", x = agrep("aa", a))
+      mutate(test_pl, x = agrep("aa", a), a = "foo", x = agrep("aa", a))
     Condition
       Error in `mutate()`:
       ! tidypolars doesn't know how to translate this function: `agrep()` (from package base).
@@ -41,7 +41,7 @@
 # correct behavior with nested functions
 
     Code
-      mutate(test, a = "a", x = identity(agrep("a", a)))
+      mutate(test_pl, a = "a", x = identity(agrep("a", a)))
     Condition
       Error in `mutate()`:
       ! tidypolars doesn't know how to translate this function: `agrep()` (from package base).
@@ -51,7 +51,7 @@
 ---
 
     Code
-      mutate(test, a = "a", x = mean(agrep("a", a)))
+      mutate(test_pl, a = "a", x = mean(agrep("a", a)))
     Condition
       Error in `mutate()`:
       ! tidypolars doesn't know how to translate this function: `agrep()` (from package base).
@@ -61,7 +61,7 @@
 ---
 
     Code
-      mutate(test, a = 1, x = agrep("a", mean(a)))
+      mutate(test_pl, a = 1, x = agrep("a", mean(a)))
     Condition
       Error in `mutate()`:
       ! tidypolars doesn't know how to translate this function: `agrep()` (from package base).

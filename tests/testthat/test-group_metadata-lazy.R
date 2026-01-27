@@ -3,66 +3,77 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("group_by() works without any variable", {
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
+
   expect_equal_lazy(
-    as_polars_lf(mtcars) |> group_by(),
-    as_polars_lf(mtcars)
+    test_pl |> group_by(),
+    test_pl
   )
 })
 
 test_that("works with ungrouped data", {
-  test <- pl$LazyFrame(
-    x1 = c("a", "a", "b", "a", "c")
+  test <- tibble(x1 = c("a", "a", "b", "a", "c"))
+  test_pl <- as_polars_lf(test)
+
+  expect_equal_lazy(
+    group_vars(test_pl),
+    group_vars(test)
   )
 
   expect_equal_lazy(
-    group_vars(test),
-    character(0)
-  )
-
-  expect_equal_lazy(
+    group_keys(test_pl),
     group_keys(test),
-    tibble()
+    ignore_attr = TRUE
   )
 })
 
 test_that("works with grouped data", {
-  test2 <- as_polars_lf(mtcars) |>
-    group_by(cyl, am)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
+  test_grp <- group_by(test, cyl, am)
+  test_pl_grp <- group_by(test_pl, cyl, am)
 
   expect_equal_lazy(
-    group_vars(test2),
-    c("cyl", "am")
+    group_vars(test_pl_grp),
+    group_vars(test_grp)
   )
 
   expect_equal_lazy(
-    group_keys(test2),
-    tibble(cyl = rep(c(4, 6, 8), each = 2L), am = rep(c(0, 1), 3))
+    group_keys(test_pl_grp),
+    group_keys(test_grp)
   )
 })
 
 test_that("argument .add works", {
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
+
   expect_equal_lazy(
-    as_polars_lf(mtcars) |>
-      group_by(cyl, am) |>
-      group_by(vs) |>
-      group_vars(),
-    "vs"
+    test_pl |> group_by(cyl, am) |> group_by(vs) |> group_vars(),
+    test |> group_by(cyl, am) |> group_by(vs) |> group_vars()
   )
 
   expect_equal_lazy(
-    as_polars_lf(mtcars) |>
+    test_pl |>
       group_by(cyl, am) |>
       group_by(vs, .add = TRUE) |>
       group_vars(),
-    c("cyl", "am", "vs")
+    test |>
+      group_by(cyl, am) |>
+      group_by(vs, .add = TRUE) |>
+      group_vars()
   )
 
   expect_equal_lazy(
-    as_polars_lf(mtcars) |>
+    test_pl |>
       group_by(cyl, am) |>
       group_by(cyl, .add = TRUE) |>
       group_vars(),
-    c("cyl", "am")
+    test |>
+      group_by(cyl, am) |>
+      group_by(cyl, .add = TRUE) |>
+      group_vars()
   )
 })
 

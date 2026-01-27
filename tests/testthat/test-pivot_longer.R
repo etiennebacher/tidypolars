@@ -1,67 +1,46 @@
 test_that("basic behavior works", {
-  pl_relig_income <- as_polars_df(tidyr::relig_income)
-  out <- pl_relig_income |>
-    pivot_longer(!religion, names_to = "income", values_to = "count")
+  test <- as.data.frame(tidyr::relig_income)
+  test_pl <- as_polars_df(test)
 
-  expect_is_tidypolars(out)
-
-  expect_dim(out, c(180, 3))
-  expect_colnames(out, c("religion", "income", "count"))
-
-  first <- slice_head(out, n = 5)
-
-  expect_equal(
-    pull(first, religion),
-    rep("Agnostic", 5)
+  expect_is_tidypolars(
+    test_pl |> pivot_longer(!religion, names_to = "income", values_to = "count")
   )
 
   expect_equal(
-    pull(first, income),
-    c("<$10k", "$10-20k", "$20-30k", "$30-40k", "$40-50k")
-  )
-
-  expect_equal(
-    pull(first, count),
-    c(27, 34, 60, 81, 76)
-  )
-
-  last <- slice_tail(out, n = 5)
-
-  expect_equal(
-    pull(last, religion),
-    rep("Unaffiliated", 5)
-  )
-
-  expect_equal(
-    pull(last, income),
-    c("$50-75k", "$75-100k", "$100-150k", ">150k", "Don't know/refused")
-  )
-
-  expect_equal(
-    pull(last, count),
-    c(528, 407, 321, 258, 597)
+    test_pl |>
+      pivot_longer(!religion, names_to = "income", values_to = "count"),
+    test |> pivot_longer(!religion, names_to = "income", values_to = "count")
   )
 })
 
 test_that("argument names_prefix works", {
-  pl_billboard <- as_polars_df(tidyr::billboard)
+  test <- as_tibble(tidyr::billboard)
+  test_pl <- as_polars_df(test)
 
+  # All of the differences are just due to differences in sorting (and
+  # .locale = "en" doesn't solve it)
   expect_equal(
-    pl_billboard |>
+    test_pl |>
       pivot_longer(
         cols = starts_with("wk"),
         names_to = "week",
         names_prefix = "wk"
       ) |>
-      arrange(artist, track, date.entered, week) |>
-      head(3) |>
-      pull(week),
-    # polars and dplyr sort strings differently: for polars, "10" comes before "2"
-    c("1", "10", "11")
+      mutate(week = as.numeric(week)) |>
+      arrange(artist, track, date.entered, week, value),
+    test |>
+      pivot_longer(
+        cols = starts_with("wk"),
+        names_to = "week",
+        names_prefix = "wk"
+      ) |>
+      mutate(week = as.numeric(week)) |>
+      arrange(artist, track, date.entered, week, value)
   )
 
+  # This only warns in tidyr
   expect_snapshot(
-    pl_billboard |>
+    test_pl |>
       pivot_longer(
         cols = starts_with("wk"),
         names_to = "week",
@@ -72,20 +51,24 @@ test_that("argument names_prefix works", {
 })
 
 test_that("unsupported args throw warning", {
-  pl_billboard <- as_polars_df(tidyr::billboard)
+  test <- as.data.frame(tidyr::billboard)
+  test_pl <- as_polars_df(test)
 
   expect_warning(
-    pivot_longer(pl_billboard, cols_vary = "fastest", names_ptypes = TRUE)
+    pivot_longer(test_pl, cols_vary = "fastest", names_ptypes = TRUE)
   )
 })
 
 test_that("dots must be empty", {
-  pl_billboard <- as_polars_df(tidyr::billboard)
+  test <- as.data.frame(tidyr::billboard)
+  test_pl <- as_polars_df(test)
 
-  # Also gets the message from rlang because check_dots_used() is called before
-  # dispatching the generic
+  expect_both_error(
+    pivot_longer(test_pl, foo = TRUE),
+    pivot_longer(test, foo = TRUE)
+  )
   expect_snapshot(
-    pivot_longer(pl_billboard, foo = TRUE, cols_vary = "fastest"),
+    pivot_longer(test_pl, foo = TRUE),
     error = TRUE
   )
 })

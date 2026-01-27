@@ -1,7 +1,7 @@
 # anonymous functions has to return a Polars expression
 
     Code
-      mutate(test, across(.cols = contains("a"), function(x) mean(x)))
+      mutate(test_pl, across(.cols = contains("a"), function(x) mean(x)))
     Condition
       Error in `mutate()`:
       ! Could not evaluate an anonymous function in `across()`.
@@ -10,7 +10,7 @@
 # need to specify .cols (either named or unnamed)
 
     Code
-      mutate(test, across(.fns = mean))
+      mutate(test_pl, across(.fns = mean))
     Condition
       Error in `mutate()`:
       ! You must supply the argument `.cols` in `across()`.
@@ -18,7 +18,7 @@
 # cannot use external list of functions in across()
 
     Code
-      mutate(test, across(.cols = mpg, .fns = my_fns))
+      mutate(test_pl, across(.cols = mpg, .fns = my_fns))
     Condition
       Error:
       ! When using `across()` in tidypolars, `.fns` doesn't accept an external list of functions or formulas.

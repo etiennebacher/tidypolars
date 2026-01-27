@@ -3,106 +3,117 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  pl_iris <- polars::as_polars_lf(iris)
-  pl_iris_g <- pl_iris |>
+  test <- as_tibble(iris)
+  test_pl <- as_polars_lf(test)
+  test_pl_grp <- test_pl |>
     group_by(Species, maintain_order = TRUE)
+  test_grp <- test |>
+    group_by(Species)
 
   expect_equal_lazy(
-    summarize(pl_iris_g, x = mean(Sepal.Length)) |>
-      pull(x),
-    c(5.006, 5.936, 6.588)
+    summarize(test_pl_grp, x = mean(Sepal.Length)),
+    summarize(test_grp, x = mean(Sepal.Length))
   )
 
   expect_equal_lazy(
-    summarize(pl_iris, x = mean(Sepal.Length), .by = Species) |>
-      pull(x) |>
-      sort(),
-    summarize(pl_iris_g, x = mean(Sepal.Length)) |>
-      pull(x) |>
-      sort()
+    summarize(test_pl, x = mean(Sepal.Length), .by = Species) |>
+      arrange(Species),
+    summarize(test, x = mean(Sepal.Length), .by = Species) |> arrange(Species)
   )
 
   expect_equal_lazy(
-    summarize(pl_iris_g, x = sum(Sepal.Length), y = mean(Sepal.Length)) |>
-      pull(y),
-    c(5.006, 5.936, 6.588)
+    summarize(test_pl_grp, x = sum(Sepal.Length), y = mean(Sepal.Length)),
+    summarize(test_grp, x = sum(Sepal.Length), y = mean(Sepal.Length))
   )
 
   expect_equal_lazy(
-    summarize(pl_iris_g, x = 1) |>
-      pull(x),
-    rep(1, 3)
+    summarize(test_pl_grp, x = 1),
+    summarize(test_grp, x = 1)
   )
 
   expect_equal_lazy(
-    summarize(pl_iris, x = mean(Petal.Length)) |>
-      pull(x),
-    3.758
+    summarize(test_pl, x = mean(Petal.Length)),
+    summarize(test, x = mean(Petal.Length))
   )
 
-  expect_colnames(
-    summarize(pl_iris_g, Sepal.Length = NULL),
-    names(iris)[2:5]
+  expect_equal_lazy(
+    summarize(test_pl_grp, Sepal.Length = NULL),
+    summarize(test_grp, Sepal.Length = NULL)
+  )
+
+  expect_equal_lazy(
+    summarize(
+      test_pl_grp,
+      Sepal.Length = NULL,
+      Petal.Length = sum(Petal.Length)
+    ),
+    summarize(test_grp, Sepal.Length = NULL, Petal.Length = sum(Petal.Length))
+  )
+
+  expect_equal_lazy(
+    summarize(
+      test_pl_grp,
+      Petal.Length = sum(Petal.Length),
+      Sepal.Length = NULL
+    ),
+    summarize(test_grp, Petal.Length = sum(Petal.Length), Sepal.Length = NULL)
   )
 })
 
 test_that("correctly handles attributes", {
-  pl_mtcars <- polars::as_polars_lf(mtcars)
-  pl_mtcars_g <- pl_mtcars |>
+  # tidypolars-specific attributes tests
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
+  test_pl_grp <- test_pl |>
     group_by(cyl, am, maintain_order = TRUE)
 
   expect_equal_lazy(
-    summarize(pl_mtcars_g, x = mean(mpg)) |>
-      attr("pl_grps"),
+    summarize(test_pl_grp, x = mean(mpg)) |> attr("pl_grps"),
     "cyl"
   )
 
   expect_true(
-    summarize(pl_mtcars_g, x = mean(mpg)) |>
-      attr("maintain_grp_order")
+    summarize(test_pl_grp, x = mean(mpg)) |> attr("maintain_grp_order")
   )
 
   expect_null(
-    summarize(pl_mtcars, x = mean(mpg), .by = c(cyl, am)) |>
-      attr("pl_grps")
+    summarize(test_pl, x = mean(mpg), .by = c(cyl, am)) |> attr("pl_grps")
   )
 
   expect_null(
-    summarize(pl_mtcars, x = mean(mpg), .by = c(cyl, am)) |>
+    summarize(test_pl, x = mean(mpg), .by = c(cyl, am)) |>
       attr("maintain_grp_order")
   )
 
   expect_is_tidypolars(
-    summarize(pl_mtcars, x = mean(mpg), .by = c(cyl, am))
+    summarize(test_pl, x = mean(mpg), .by = c(cyl, am))
   )
 })
 
 test_that("works with a local variable defined in a function", {
-  pl_iris <- polars::as_polars_lf(iris)
-  pl_iris_g <- pl_iris |>
-    group_by(Species, maintain_order = TRUE)
-
   foobar <- function(x) {
     local_var <- "a"
     x |> summarize(foo = local_var)
   }
 
-  test <- polars::pl$LazyFrame(chars = letters[1:3])
+  test <- tibble(chars = letters[1:3])
+  test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
-    foobar(test),
-    data.frame(foo = "a")
+    foobar(test_pl),
+    foobar(test)
   )
 })
 
 test_that("check .add argument of group_by works", {
-  test <- polars::as_polars_lf(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
-    test |>
+    test_pl |>
       group_by(cyl, am, maintain_order = TRUE) |>
       summarize(foo = sum(drat)),
-    test |>
+    test_pl |>
       group_by(cyl, maintain_order = TRUE) |>
       group_by(am, maintain_order = TRUE, .add = TRUE) |>
       summarize(foo = sum(drat))
@@ -110,73 +121,88 @@ test_that("check .add argument of group_by works", {
 })
 
 test_that("argument .groups works", {
-  pl_mtcars <- as_polars_lf(mtcars)
+  test <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test)
 
-  # default is "drop_last"
   expect_equal_lazy(
-    pl_mtcars |>
-      group_by(am, cyl, vs) |>
-      summarise(cyl_n = n()) |>
-      group_vars(),
-    c("am", "cyl")
+    test_pl |> group_by(am, cyl, vs) |> summarise(cyl_n = n()) |> group_vars(),
+    test |> group_by(am, cyl, vs) |> summarise(cyl_n = n()) |> group_vars()
   )
 
-  # other values
   expect_equal_lazy(
-    pl_mtcars |>
+    test_pl |>
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "drop_last") |>
       group_vars(),
-    c("am", "cyl")
+    test |>
+      group_by(am, cyl, vs) |>
+      summarise(cyl_n = n(), .groups = "drop_last") |>
+      group_vars()
   )
   expect_equal_lazy(
-    pl_mtcars |>
+    test_pl |>
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "keep") |>
       group_vars(),
-    c("am", "cyl", "vs")
+    test |>
+      group_by(am, cyl, vs) |>
+      summarise(cyl_n = n(), .groups = "keep") |>
+      group_vars()
   )
   expect_equal_lazy(
-    pl_mtcars |>
+    test_pl |>
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "drop") |>
       group_vars(),
-    character(0)
+    test |>
+      group_by(am, cyl, vs) |>
+      summarise(cyl_n = n(), .groups = "drop") |>
+      group_vars()
   )
   expect_snapshot_lazy(
-    pl_mtcars |>
+    test_pl |>
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "rowwise"),
     error = TRUE
   )
+  expect_both_error(
+    test_pl |>
+      group_by(am, cyl, vs) |>
+      summarise(cyl_n = n(), .groups = "foobar"),
+    test |> group_by(am, cyl, vs) |> summarise(cyl_n = n(), .groups = "foobar")
+  )
   expect_snapshot_lazy(
-    pl_mtcars |>
+    test_pl |>
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "foobar"),
     error = TRUE
   )
 
-  # "drop_last" with one group originally
   expect_equal_lazy(
-    pl_mtcars |>
+    test_pl |>
       group_by(am) |>
       summarise(cyl_n = n(), .groups = "drop_last") |>
       group_vars(),
-    character(0)
+    test |>
+      group_by(am) |>
+      summarise(cyl_n = n(), .groups = "drop_last") |>
+      group_vars()
   )
 })
 
 
 test_that("empty expressions", {
-  test <- pl$LazyFrame(grp = 1:2, x = 1:2)
-  test_df <- data.frame(grp = 1:2, x = 1:2)
+  test <- tibble(grp = 1:2, x = 1:2)
+  test_pl <- as_polars_lf(test)
+
   expect_equal_lazy(
-    test |> summarize() |> ncol(),
-    0
+    test_pl |> summarize(),
+    test |> summarize(),
+    ignore_attr = TRUE
   )
   expect_equal_lazy(
-    test |> summarize(.by = grp) |> arrange(grp),
-    test_df |> summarize(.by = grp)
+    test_pl |> summarize(.by = grp) |> arrange(grp),
+    test |> summarize(.by = grp)
   )
 })
 

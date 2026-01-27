@@ -147,8 +147,12 @@ count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
   }
 
   if (isTRUE(sort)) {
-    out$sort(name, descending = TRUE)
-  } else if (length(vars) > 0) {
+    if (isFALSE(new_col) && length(vars) > 0) {
+      out$sort(name, !!!vars, descending = c(TRUE, rep(FALSE, length(vars))))
+    } else {
+      out$sort(name, descending = TRUE)
+    }
+  } else if (isFALSE(new_col) && length(vars) > 0) {
     out$sort(vars)
   } else {
     out

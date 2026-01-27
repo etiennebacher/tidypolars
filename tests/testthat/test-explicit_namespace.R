@@ -38,7 +38,7 @@ test_that("error message when function exists but has no translation", {
     test |> mutate(y = year(x)),
     error = TRUE
   )
-  detach("package:data.table", unload = TRUE)
+  detach("package:data.table")
 })
 
 test_that("error message when function doesn't exist in environment", {

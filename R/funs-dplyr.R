@@ -62,9 +62,9 @@ pl_case_when_dplyr <- function(...) {
   out
 }
 
-pl_coalesce_dplyr <- function(..., default = NULL) {
+pl_coalesce_dplyr <- function(...) {
   # pl$coalesce() doesn't accept a list
-  call2(pl$coalesce, !!!clean_dots(...), default) |> eval_bare()
+  call2(pl$coalesce, !!!clean_dots(...)) |> eval_bare()
 }
 
 pl_consecutive_id_dplyr <- function(...) {
@@ -161,6 +161,10 @@ pl_n_distinct_dplyr <- function(..., na.rm = FALSE) {
   }
 }
 
+pl_near_dplyr <- function(x, y, tol = .Machine$double.eps^0.5) {
+  (x - y)$abs() < tol
+}
+
 pl_nth_dplyr <- function(x, n, ...) {
   if (length(n) > 1) {
     cli_abort(
@@ -177,12 +181,167 @@ pl_nth_dplyr <- function(x, n, ...) {
   x$gather(n)
 }
 
+pl_recode_values_dplyr <- function(
+  x,
+  ...,
+  from = NULL,
+  to = NULL,
+  default = NULL,
+  unmatched,
+  ptype
+) {
+  default <- default %||% NA
+  env <- env_from_dots(...)
+  dots <- clean_dots(...)
+  if (length(dots) > 0 && (!is.null(from) || !is.null(to))) {
+    cli_abort(
+      "Can't supply both {.arg ...} and {.arg from} / {.arg to}.",
+      call = env
+    )
+  }
+  if (!is.null(from) && is.null(to)) {
+    cli_abort(
+      "Specified {.arg from} but not {.arg to}.",
+      call = env
+    )
+  }
+  if (is.null(from) && !is.null(to)) {
+    cli_abort(
+      "Specified {.arg to} but not {.arg from}.",
+      call = env
+    )
+  }
+  if (!missing(unmatched)) {
+    cli_abort(
+      "Argument {.code unmatched} is not supported by {.pkg tidypolars}.",
+      call = env
+    )
+  }
+  if (!missing(ptype)) {
+    cli_abort(
+      "Argument {.code ptype} is not supported by {.pkg tidypolars}.",
+      call = env
+    )
+  }
+
+  if (length(dots) > 0) {
+    from_to <- extract_from_to(dots, env)
+  } else {
+    from_to <- list(from = from, to = to)
+  }
+
+  x$replace_strict(
+    old = from_to$from,
+    new = from_to$to,
+    default = default
+  )
+}
+
+pl_replace_values_dplyr <- function(x, ..., from = NULL, to = NULL) {
+  env <- env_from_dots(...)
+  dots <- clean_dots(...)
+  if (length(dots) > 0 && (!is.null(from) || !is.null(to))) {
+    cli_abort(
+      "Can't supply both {.arg ...} and {.arg from} / {.arg to}.",
+      call = env
+    )
+  }
+
+  if (!is.null(from) && is.null(to)) {
+    cli_abort(
+      "Specified {.arg from} but not {.arg to}.",
+      call = env
+    )
+  }
+  if (is.null(from) && !is.null(to)) {
+    cli_abort(
+      "Specified {.arg to} but not {.arg from}.",
+      call = env
+    )
+  }
+
+  if (length(dots) > 0) {
+    from_to <- extract_from_to(dots, env)
+  } else {
+    from_to <- list(from = from, to = to)
+  }
+
+  x$replace(old = from_to$from, new = from_to$to)
+}
+
+### Very similar to pl_case_when.
+### The main difference is that we put $otherwise(x) instead of $otherwise(NA).
+pl_replace_when_dplyr <- function(x, ..., .data) {
+  env <- env_from_dots(...)
+  expr_uses_col <- expr_uses_col_from_dots(...)
+  new_vars <- new_vars_from_dots(...)
+  caller <- caller_from_dots(...)
+  dots <- clean_dots(...)
+
+  from_to <- extract_formula_case(dots, env)
+
+  out <- NULL
+  for (i in seq_along(from_to$from)) {
+    lhs <- from_to$from[[i]] |>
+      as_polars_expr(as_lit = TRUE)
+    rhs <- from_to$to[[i]] |>
+      as_polars_expr(as_lit = TRUE)
+
+    if (is.null(out)) {
+      out <- polars::pl$when(lhs)$then(rhs)
+    } else {
+      out <- out$when(lhs)$then(rhs)
+    }
+  }
+  otw <- from_to$default |>
+    as_polars_expr(as_lit = TRUE)
+
+  out <- out$otherwise(x)
+  out
+}
+
 pl_row_number_dplyr <- function(x = NULL) {
   if (is.null(x)) {
     pl$int_range(start = 1, pl$len() + 1)
   } else {
     x$rank(method = "ordinal")
   }
+}
+
+pl_when_all_dplyr <- function(..., na_rm, size) {
+  env <- env_from_dots(...)
+  dots <- clean_dots(...)
+  if (!missing(na_rm)) {
+    cli_abort(
+      "Argument {.code na_rm} is not supported by {.pkg tidypolars}.",
+      call = env
+    )
+  }
+  if (!missing(size)) {
+    cli_abort(
+      "Argument {.code size} is not supported by {.pkg tidypolars}.",
+      call = env
+    )
+  }
+  pl$all_horizontal(!!!dots)
+}
+
+pl_when_any_dplyr <- function(..., na_rm, size) {
+  env <- env_from_dots(...)
+  dots <- clean_dots(...)
+  if (!missing(na_rm)) {
+    cli_abort(
+      "Argument {.code na_rm} is not supported by {.pkg tidypolars}.",
+      call = env
+    )
+  }
+  if (!missing(size)) {
+    cli_abort(
+      "Argument {.code size} is not supported by {.pkg tidypolars}.",
+      call = env
+    )
+  }
+  pl$any_horizontal(!!!dots)
 }
 
 # Utils ---------------------------------------------------
