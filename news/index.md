@@ -30,6 +30,11 @@
   now works with Polars LazyFrames
   ([\#318](https://github.com/etiennebacher/tidypolars/issues/318)).
 
+- Added support for
+  [`dplyr::replace_when()`](https://dplyr.tidyverse.org/reference/case-and-replace-when.html),
+  added in `dplyr` 1.2.0
+  ([\#307](https://github.com/etiennebacher/tidypolars/issues/307)).
+
 ### Other changes
 
 - Several changes to make `tidypolars` more aligned with the `tidyverse`
