@@ -463,7 +463,7 @@ test_that("near() works", {
 
 test_that("replace_when(): basic usage", {
   # TODO: this should work when `type` is a factor, see examples in dplyr docs
-  dat <- data.frame(
+  dat <- tibble(
     name = c("Max", "Bella", "Chuck", "Luna", "Cooper"),
     type = c("dog", "dog", "cat", "dog", "cat"),
     age = c(1, 3, 5, 2, 4)
@@ -479,7 +479,7 @@ test_that("replace_when(): basic usage", {
 })
 
 test_that("replace_when() errors if cannot preserve type", {
-  dat <- data.frame(
+  dat <- tibble(
     name = c("Max", "Bella", "Chuck", "Luna", "Cooper"),
     type = factor(
       c("dog", "dog", "cat", "dog", "cat"),
@@ -505,7 +505,7 @@ test_that("replace_when() errors if cannot preserve type", {
 })
 
 test_that("replace_when(): corner cases", {
-  dat <- data.frame(
+  dat <- tibble(
     name = c("Max", "Bella", "Chuck", "Luna", "Cooper"),
     type = factor(
       c("dog", "dog", "cat", "dog", "cat"),
