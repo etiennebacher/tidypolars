@@ -117,12 +117,13 @@ sort(names(.tp))
 #> [153] "trimws"                  "unique"                 
 #> [155] "unique_counts"           "var"                    
 #> [157] "wday_lubridate"          "week_lubridate"         
-#> [159] "weeks_lubridate"         "which.max"              
-#> [161] "which.min"               "with_tz_lubridate"      
-#> [163] "word_stringr"            "yday_lubridate"         
-#> [165] "ydm_lubridate"           "year_lubridate"         
-#> [167] "ym_lubridate"            "ymd_hms_lubridate"      
-#> [169] "ymd_lubridate"          
+#> [159] "weeks_lubridate"         "when_all_dplyr"         
+#> [161] "when_any_dplyr"          "which.max"              
+#> [163] "which.min"               "with_tz_lubridate"      
+#> [165] "word_stringr"            "yday_lubridate"         
+#> [167] "ydm_lubridate"           "year_lubridate"         
+#> [169] "ym_lubridate"            "ymd_hms_lubridate"      
+#> [171] "ymd_lubridate"          
 
 dat <- polars::pl$DataFrame(x = c("abc12", "def3"))
 dat |>

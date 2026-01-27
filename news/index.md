@@ -35,6 +35,13 @@
   added in `dplyr` 1.2.0
   ([\#307](https://github.com/etiennebacher/tidypolars/issues/307)).
 
+- Add support for
+  [`dplyr::when_any()`](https://dplyr.tidyverse.org/reference/when-any-all.html)
+  and
+  [`dplyr::when_all()`](https://dplyr.tidyverse.org/reference/when-any-all.html),
+  added in `dplyr` 1.2.0
+  ([\#306](https://github.com/etiennebacher/tidypolars/issues/306)).
+
 ### Other changes
 
 - Several changes to make `tidypolars` more aligned with the `tidyverse`
