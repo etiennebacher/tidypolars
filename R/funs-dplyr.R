@@ -181,6 +181,37 @@ pl_nth_dplyr <- function(x, n, ...) {
   x$gather(n)
 }
 
+### Very similar to pl_case_when.
+### The main difference is that we put $otherwise(x) instead of $otherwise(NA).
+pl_replace_when_dplyr <- function(x, ..., .data) {
+  env <- env_from_dots(...)
+  expr_uses_col <- expr_uses_col_from_dots(...)
+  new_vars <- new_vars_from_dots(...)
+  caller <- caller_from_dots(...)
+  dots <- clean_dots(...)
+
+  from_to <- extract_formula_case(dots, env)
+
+  out <- NULL
+  for (i in seq_along(from_to$from)) {
+    lhs <- from_to$from[[i]] |>
+      as_polars_expr(as_lit = TRUE)
+    rhs <- from_to$to[[i]] |>
+      as_polars_expr(as_lit = TRUE)
+
+    if (is.null(out)) {
+      out <- polars::pl$when(lhs)$then(rhs)
+    } else {
+      out <- out$when(lhs)$then(rhs)
+    }
+  }
+  otw <- from_to$default |>
+    as_polars_expr(as_lit = TRUE)
+
+  out <- out$otherwise(x)
+  out
+}
+
 pl_row_number_dplyr <- function(x = NULL) {
   if (is.null(x)) {
     pl$int_range(start = 1, pl$len() + 1)

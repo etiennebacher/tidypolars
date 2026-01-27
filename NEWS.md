@@ -20,6 +20,8 @@
 
 * `pivot_wider()` now works with Polars LazyFrames (#318).
 
+* Added support for `dplyr::replace_when()`, added in `dplyr` 1.2.0 (#307).
+
 ## Other changes
 
 * Several changes to make `tidypolars` more aligned with the `tidyverse` output

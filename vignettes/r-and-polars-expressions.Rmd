@@ -319,6 +319,7 @@ out <- tribble(
   "`dplyr`", "`near`",
   "`dplyr`", "`nth`",
   "`dplyr`", "`n_distinct`",
+  "`dplyr`", "`replace_when`",
   "`dplyr`", "`row_number`",
   "`lubridate`", "`am`",
   "`lubridate`", "`day`",
@@ -407,6 +408,8 @@ out <- tribble(
         "tidypolars errors if `x` and `y` have different lengths, dplyr doesn't.",
       Package == "`dplyr`" & Function == "`row_number`" ~
         "Doesn't work when `x` is missing.",
+      Package == "`dplyr`" & Function == "`replace_when`" ~
+        "The `dplyr` function will error if the type of the replacement doesn't match the type of the column (for instance trying to replace a character with an integer). This sometimes works in `tidypolars`.",
       Package == "`stringr`" & Function == "`str_to_title`" ~
         "Letters following apostrophe will be capitalized as well, which differs from the `stringr` implementation.",
       Package == "`tools`" & Function == "`toTitleCase`" ~

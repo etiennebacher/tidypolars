@@ -465,4 +465,90 @@ test_that("near() works", {
   )
 })
 
+test_that("replace_when(): basic usage", {
+  # TODO: this should work when `type` is a factor, see examples in dplyr docs
+  dat <- tibble(
+    name = c("Max", "Bella", "Chuck", "Luna", "Cooper"),
+    type = c("dog", "dog", "cat", "dog", "cat"),
+    age = c(1, 3, 5, 2, 4)
+  )
+  dat_pl <- as_polars_lf(dat)
+
+  expect_equal_lazy(
+    dat_pl |>
+      mutate(y = replace_when(type, type == "dog" & age <= 2 ~ "puppy")),
+    dat |>
+      mutate(y = replace_when(type, type == "dog" & age <= 2 ~ "puppy"))
+  )
+})
+
+test_that("replace_when() errors if cannot preserve type", {
+  dat <- tibble(
+    name = c("Max", "Bella", "Chuck", "Luna", "Cooper"),
+    type = factor(
+      c("dog", "dog", "cat", "dog", "cat"),
+      levels = c("dog", "cat", "puppy")
+    ),
+    age = c(1, 3, 5, 2, 4)
+  )
+  dat_pl <- as_polars_lf(dat)
+
+  expect_equal_or_both_error(
+    dat_pl |>
+      mutate(y = replace_when(type, type == "dog" & age <= 2 ~ 1)),
+    dat |>
+      mutate(y = replace_when(type, type == "dog" & age <= 2 ~ 1))
+  )
+  # TODO: tidyverse errors here, which is better I think
+  # expect_equal_or_both_error(
+  #   dat_pl |>
+  #     mutate(y = replace_when(name, name == "Max" ~ 1)),
+  #   dat |>
+  #     mutate(y = replace_when(name, name == "Max" ~ 1))
+  # )
+})
+
+test_that("replace_when(): corner cases", {
+  dat <- tibble(
+    name = c("Max", "Bella", "Chuck", "Luna", "Cooper"),
+    type = factor(
+      c("dog", "dog", "cat", "dog", "cat"),
+      levels = c("dog", "cat", "puppy")
+    ),
+    age = c(1, 3, 5, 2, 4)
+  )
+  dat_pl <- as_polars_lf(dat)
+
+  expect_equal_or_both_error(
+    dat_pl |>
+      mutate(y = replace_when(type, type == "dog" ~ character(0))),
+    dat |>
+      mutate(y = replace_when(type, type == "dog" ~ character(0)))
+  )
+  expect_equal_or_both_error(
+    dat_pl |>
+      mutate(y = replace_when(type, type == "dog" ~ NULL)),
+    dat |>
+      mutate(y = replace_when(type, type == "dog" ~ NULL))
+  )
+  expect_equal_or_both_error(
+    dat_pl |>
+      mutate(y = replace_when(type, type == "dog" ~ c("a", "b"))),
+    dat |>
+      mutate(y = replace_when(type, type == "dog" ~ c("a", "b")))
+  )
+  expect_equal_or_both_error(
+    dat_pl |>
+      mutate(y = replace_when(type, logical(0) ~ "a")),
+    dat |>
+      mutate(y = replace_when(type, logical(0) ~ "a"))
+  )
+  expect_equal_or_both_error(
+    dat_pl |>
+      mutate(y = replace_when(type, NULL ~ "a")),
+    dat |>
+      mutate(y = replace_when(type, NULL ~ "a"))
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
