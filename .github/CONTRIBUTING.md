@@ -167,10 +167,26 @@ files. If you added a function in `R/funs-string.R`, then you should add
 tests in `tests/testthat/test-funs_string.R` (same for datetime
 functions, etc.).
 
+A few test rules:
+
+1.  The test data must be always be i) a `tibble` named `test` and ii) a
+    Polars DataFrame named `test_pl`.
+2.  Always compare the `tidypolars` and `tidyverse` code directly, do
+    not compare the `tidypolars` output to hard-coded values.
+3.  Which `expect_*()` to use?
+    - Use `expect_equal()` if the `tidyverse` and `tidypolars` code
+      should give the same output.
+    - Use `expect_both_error()` if the `tidyverse` and `tidypolars` code
+      should error (ensure that the error is actually due to the tested
+      function and not to a typo for instance).
+    - Use `expect_equal_or_both_error()` in property-based testing only
+      since we do not control the input in this case.
+
 No matter the type of function you added or modified, you should only
-write tests on Polars DataFrames. Those will be automatically modified
-when running the tests to run on LazyFrames as well (for instance, the
-file `test-drop_na-lazy.R` will be automatically generated).
+write tests on Polars DataFrames. Those tests will be automatically
+copied and modified by `devtools::test()` to run on LazyFrames as well
+(for instance, the file `test-drop_na-lazy.R` will be automatically
+generated).
 
 ### PR title
 
