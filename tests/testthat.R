@@ -11,3 +11,4 @@ library(testthat)
 library(tidypolars)
 
 test_check("tidypolars")
+options(polars.factor_as_enum = FALSE)
