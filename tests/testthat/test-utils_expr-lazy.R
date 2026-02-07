@@ -6,7 +6,7 @@ test_that("internally, expressions are correctly split in pools", {
   pl_iris <- as_polars_lf(iris)
 
   result <-
-    # jarl-ignore duplicated_arguments: <test case>
+    # jarl-ignore duplicated_arguments: can accept identically named expressions, like mutate()
     translate_dots(
       pl_iris,
 
@@ -39,7 +39,7 @@ test_that("internally, expressions are correctly split in pools", {
   )
 
   result <-
-    # jarl-ignore duplicated_arguments: <test case>
+    # jarl-ignore duplicated_arguments: can accept identically named expressions, like mutate()
     translate_dots(
       pl_iris,
       x = 1,
