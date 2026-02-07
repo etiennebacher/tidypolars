@@ -2,7 +2,7 @@ test_that("internally, expressions are correctly split in pools", {
   pl_iris <- as_polars_df(iris)
 
   result <-
-    # nolint: duplicated_arguments
+    # jarl-ignore duplicated_arguments: <test case>
     translate_dots(
       pl_iris,
 
@@ -35,7 +35,7 @@ test_that("internally, expressions are correctly split in pools", {
   )
 
   result <-
-    # nolint: duplicated_arguments
+    # jarl-ignore duplicated_arguments: <test case>
     translate_dots(
       pl_iris,
       x = 1,
