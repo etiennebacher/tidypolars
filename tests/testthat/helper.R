@@ -7,7 +7,6 @@ expect_both_error <- function(object, other, ...) {
       object
     },
     error = function(e) {
-      # nolint: implicit_assignment
       polars_error <<- TRUE
     }
   )
@@ -17,7 +16,6 @@ expect_both_error <- function(object, other, ...) {
     tryCatch(
       other,
       error = function(e) {
-        # nolint: implicit_assignment
         other_error <<- TRUE
       }
     )
@@ -49,7 +47,6 @@ expect_equal_or_both_error <- function(object, other, ...) {
       object
     },
     error = function(e) {
-      # nolint: implicit_assignment
       polars_error <<- TRUE
     }
   )
@@ -59,7 +56,6 @@ expect_equal_or_both_error <- function(object, other, ...) {
     tryCatch(
       other,
       error = function(e) {
-        # nolint: implicit_assignment
         other_error <<- TRUE
       }
     )
