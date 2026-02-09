@@ -29,6 +29,8 @@
   - `when_any()` (#306)
   - `when_all()` (#306)
 
+* `separate()` now supports regex in the `sep` argument (#320).
+
 
 ## Other changes
 

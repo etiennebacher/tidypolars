@@ -17,22 +17,23 @@
 \item{into}{Character vector containing the names of new variables to create.
 Use \code{NA} to omit the variable in the output.}
 
-\item{sep}{String that is used to split the column. Regular expressions are
-not supported yet.}
+\item{sep}{A regular expression that is used to split the column.}
 
 \item{remove}{If \code{TRUE}, remove input column from output data frame.}
 
 \item{...}{Dots which should be empty.}
 }
 \description{
-Currently, splitting a column on a regular expression or position is not
-possible.
+Currently, splitting a column on a position is not possible.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
-test <- polars::pl$DataFrame(
-  x = c(NA, "x.y", "x.z", "y.z")
-)
-separate(test, x, into = c("foo", "foo2"), sep = ".")
+# Split at each dot
+test <- polars::pl$DataFrame(x = c(NA, "x.y", "x.z", "y.z"))
+separate(test, x, into = c("foo", "foo2"), sep = "\\\\.")
+
+# Split on any number of whitespace
+test <- polars::pl$DataFrame(x = c(NA, "x y", "x  y", "x y  z"))
+separate(test, x, into = c("foo", "foo2"), sep = "\\\\s+")
 \dontshow{\}) # examplesIf}
 }
