@@ -29,15 +29,9 @@ partition_by(
   approximate_bytes_per_file = NULL
 )
 
-partition_by_key(
-  base_path,
-  ...,
-  by,
-  include_key = TRUE,
-  per_partition_sort_by = NULL
-)
+partition_by_key(base_path, ..., by, include_key = TRUE)
 
-partition_by_max_size(base_path, ..., max_size, per_partition_sort_by = NULL)
+partition_by_max_size(base_path, ..., max_size)
 ```
 
 ## Arguments
@@ -79,13 +73,6 @@ partition_by_max_size(base_path, ..., max_size, per_partition_sort_by = NULL)
 
   **\[deprecated\]** Something can be coerced to a list of Polars
   expressions. Used to partition by. Use the `key` property of
-  `partition_by()` instead.
-
-- per_partition_sort_by:
-
-  **\[deprecated\]** Something that can be coerced to a list of Polars
-  expressions, or `NULL` (default). Used to sort over within each
-  partition. Use the `per_partition_sort_by` property of
   `partition_by()` instead.
 
 - max_size:

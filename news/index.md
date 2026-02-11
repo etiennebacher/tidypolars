@@ -20,6 +20,14 @@
   replacement in `tidypolars`
   ([\#304](https://github.com/etiennebacher/tidypolars/issues/304)).
 
+- In
+  [`partition_by_key()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
+  and
+  [`partition_by_max_size()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
+  (both already deprecated in 0.16.0), the argument
+  `per_partition_sort_by` has been removed
+  ([\#322](https://github.com/etiennebacher/tidypolars/issues/322)).
+
 ### New features
 
 - Added support for

@@ -49,6 +49,7 @@
 <code>describe_plan()</code> and <code>describe_optimized_plan()</code>, use <code>explain(optimized = TRUE/FALSE)</code> instead.</li>
 </ul></li>
 <li><p><code><a href="../reference/make_unique_id.html">make_unique_id()</a></code> is deprecated and will be removed in a future version. This is because the underlying Polars function isn’t guaranteed to give the same results across different versions. This function doesn’t have a replacement in <code>tidypolars</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/304" class="external-link">#304</a>).</p></li>
+<li><p>In <code><a href="../reference/partitioned_output.html">partition_by_key()</a></code> and <code><a href="../reference/partitioned_output.html">partition_by_max_size()</a></code> (both already deprecated in 0.16.0), the argument <code>per_partition_sort_by</code> has been removed (<a href="https://github.com/etiennebacher/tidypolars/issues/322" class="external-link">#322</a>).</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>

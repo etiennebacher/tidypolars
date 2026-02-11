@@ -86,15 +86,9 @@ Supports partitioning by key, file size limits, or both.</p></li>
 <span>  approximate_bytes_per_file <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">partition_by_key</span><span class="op">(</span></span>
-<span>  <span class="va">base_path</span>,</span>
-<span>  <span class="va">...</span>,</span>
-<span>  <span class="va">by</span>,</span>
-<span>  include_key <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  per_partition_sort_by <span class="op">=</span> <span class="cn">NULL</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu">partition_by_key</span><span class="op">(</span><span class="va">base_path</span>, <span class="va">...</span>, <span class="va">by</span>, include_key <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">partition_by_max_size</span><span class="op">(</span><span class="va">base_path</span>, <span class="va">...</span>, <span class="va">max_size</span>, per_partition_sort_by <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">partition_by_max_size</span><span class="op">(</span><span class="va">base_path</span>, <span class="va">...</span>, <span class="va">max_size</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -138,13 +132,6 @@ estimated size of the DataFrame in memory. Defaults to approximately 4GB when
 <dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Something can be coerced to a
 list of Polars expressions. Used to partition by. Use the <code>key</code> property of
 <code>partition_by()</code> instead.</p></dd>
-
-
-<dt id="arg-per-partition-sort-by">per_partition_sort_by<a class="anchor" aria-label="anchor" href="#arg-per-partition-sort-by"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Something
-that can be coerced to a list of Polars expressions, or <code>NULL</code> (default).
-Used to sort over within each partition. Use the <code>per_partition_sort_by</code>
-property of <code>partition_by()</code> instead.</p></dd>
 
 
 <dt id="arg-max-size">max_size<a class="anchor" aria-label="anchor" href="#arg-max-size"></a></dt>
