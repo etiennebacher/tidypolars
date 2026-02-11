@@ -16,15 +16,9 @@ partition_by(
   approximate_bytes_per_file = NULL
 )
 
-partition_by_key(
-  base_path,
-  ...,
-  by,
-  include_key = TRUE,
-  per_partition_sort_by = NULL
-)
+partition_by_key(base_path, ..., by, include_key = TRUE)
 
-partition_by_max_size(base_path, ..., max_size, per_partition_sort_by = NULL)
+partition_by_max_size(base_path, ..., max_size)
 }
 \arguments{
 \item{base_path}{The base path for the output files. Use the \code{mkdir} option
@@ -51,11 +45,6 @@ estimated size of the DataFrame in memory. Defaults to approximately 4GB when
 \item{by}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Something can be coerced to a
 list of Polars expressions. Used to partition by. Use the \code{key} property of
 \code{partition_by()} instead.}
-
-\item{per_partition_sort_by}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Something
-that can be coerced to a list of Polars expressions, or \code{NULL} (default).
-Used to sort over within each partition. Use the \code{per_partition_sort_by}
-property of \code{partition_by()} instead.}
 
 \item{max_size}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} An integer-ish value
 indicating the maximum size in rows of each of the generated files. Use the
