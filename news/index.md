@@ -53,6 +53,10 @@
   - [`when_all()`](https://dplyr.tidyverse.org/reference/when-any-all.html)
     ([\#306](https://github.com/etiennebacher/tidypolars/issues/306))
 
+- [`separate()`](https://tidyr.tidyverse.org/reference/separate.html)
+  now supports regex in the `sep` argument
+  ([\#320](https://github.com/etiennebacher/tidypolars/issues/320)).
+
 ### Other changes
 
 - Several changes to make `tidypolars` more aligned with the `tidyverse`

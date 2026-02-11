@@ -1,7 +1,6 @@
 # Separate a character column into multiple columns based on a substring
 
-Currently, splitting a column on a regular expression or position is not
-possible.
+Currently, splitting a column on a position is not possible.
 
 ## Usage
 
@@ -30,8 +29,7 @@ separate(data, col, into, sep = " ", remove = TRUE, ...)
 
 - sep:
 
-  String that is used to split the column. Regular expressions are not
-  supported yet.
+  A regular expression that is used to split the column.
 
 - remove:
 
@@ -44,10 +42,9 @@ separate(data, col, into, sep = " ", remove = TRUE, ...)
 ## Examples
 
 ``` r
-test <- polars::pl$DataFrame(
-  x = c(NA, "x.y", "x.z", "y.z")
-)
-separate(test, x, into = c("foo", "foo2"), sep = ".")
+# Split at each dot
+test <- polars::pl$DataFrame(x = c(NA, "x.y", "x.z", "y.z"))
+separate(test, x, into = c("foo", "foo2"), sep = "\\.")
 #> shape: (4, 2)
 #> ┌──────┬──────┐
 #> │ foo  ┆ foo2 │
@@ -58,5 +55,20 @@ separate(test, x, into = c("foo", "foo2"), sep = ".")
 #> │ x    ┆ y    │
 #> │ x    ┆ z    │
 #> │ y    ┆ z    │
+#> └──────┴──────┘
+
+# Split on any number of whitespace
+test <- polars::pl$DataFrame(x = c(NA, "x y", "x  y", "x y  z"))
+separate(test, x, into = c("foo", "foo2"), sep = "\\s+")
+#> shape: (4, 2)
+#> ┌──────┬──────┐
+#> │ foo  ┆ foo2 │
+#> │ ---  ┆ ---  │
+#> │ str  ┆ str  │
+#> ╞══════╪══════╡
+#> │ null ┆ null │
+#> │ x    ┆ y    │
+#> │ x    ┆ y    │
+#> │ x    ┆ y    │
 #> └──────┴──────┘
 ```
