@@ -68,8 +68,7 @@ partition_by_key <- function(
   base_path,
   ...,
   by,
-  include_key = TRUE,
-  per_partition_sort_by = NULL
+  include_key = TRUE
 ) {
   check_dots_empty()
 
@@ -84,8 +83,7 @@ partition_by_key <- function(
     pl$PartitionByKey(
       base_path = base_path,
       by = by,
-      include_key = include_key,
-      per_partition_sort_by = per_partition_sort_by
+      include_key = include_key
     )
   )
 }
@@ -95,8 +93,7 @@ partition_by_key <- function(
 partition_by_max_size <- function(
   base_path,
   ...,
-  max_size,
-  per_partition_sort_by = NULL
+  max_size
 ) {
   check_dots_empty()
 
@@ -109,8 +106,7 @@ partition_by_max_size <- function(
   suppressWarnings(
     pl$PartitionMaxSize(
       base_path = base_path,
-      max_size = max_size,
-      per_partition_sort_by = per_partition_sort_by
+      max_size = max_size
     )
   )
 }

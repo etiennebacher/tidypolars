@@ -14,6 +14,9 @@
   results across different versions. This function doesn't have a replacement in
   `tidypolars` (#304).
 
+* In `partition_by_key()` and `partition_by_max_size()` (both already deprecated
+  in 0.16.0), the argument `per_partition_sort_by` has been removed (#322).
+
 ## New features
 
 * Added support for `dplyr::near()` (#311).
@@ -28,7 +31,6 @@
   - `replace_when()` (#307)
   - `when_any()` (#306)
   - `when_all()` (#306)
-
 
 ## Other changes
 

@@ -33,7 +33,7 @@ Imports:
     dplyr (> 1.1.4),
     glue,
     lifecycle,
-    polars (>= 1.8.0),
+    polars (>= 1.9.0),
     rlang (>= 1.1.0),
     tidyr,
     tidyselect,
