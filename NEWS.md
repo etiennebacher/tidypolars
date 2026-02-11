@@ -32,6 +32,7 @@
   - `when_any()` (#306)
   - `when_all()` (#306)
 
+
 ## Other changes
 
 * Several changes to make `tidypolars` more aligned with the `tidyverse` output
