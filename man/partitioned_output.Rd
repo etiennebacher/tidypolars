@@ -49,11 +49,6 @@ list of Polars expressions. Used to partition by. Use the \code{key} property of
 \item{max_size}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} An integer-ish value
 indicating the maximum size in rows of each of the generated files. Use the
 \code{max_rows_per_file} property of \code{partition_by()} instead.}
-
-\item{per_partition_sort_by}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Something
-that can be coerced to a list of Polars expressions, or \code{NULL} (default).
-Used to sort over within each partition. Use the \code{per_partition_sort_by}
-property of \code{partition_by()} instead.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

@@ -34,10 +34,6 @@
 #' @param by `r lifecycle::badge("deprecated")` Something can be coerced to a
 #' list of Polars expressions. Used to partition by. Use the `key` property of
 #' `partition_by()` instead.
-#' @param per_partition_sort_by `r lifecycle::badge("deprecated")` Something
-#' that can be coerced to a list of Polars expressions, or `NULL` (default).
-#' Used to sort over within each partition. Use the `per_partition_sort_by`
-#' property of `partition_by()` instead.
 #' @param max_size `r lifecycle::badge("deprecated")` An integer-ish value
 #' indicating the maximum size in rows of each of the generated files. Use the
 #' `max_rows_per_file` property of `partition_by()` instead.
