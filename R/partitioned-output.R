@@ -34,10 +34,6 @@
 #' @param by `r lifecycle::badge("deprecated")` Something can be coerced to a
 #' list of Polars expressions. Used to partition by. Use the `key` property of
 #' `partition_by()` instead.
-#' @param per_partition_sort_by `r lifecycle::badge("deprecated")` Something
-#' that can be coerced to a list of Polars expressions, or `NULL` (default).
-#' Used to sort over within each partition. Use the `per_partition_sort_by`
-#' property of `partition_by()` instead.
 #' @param max_size `r lifecycle::badge("deprecated")` An integer-ish value
 #' indicating the maximum size in rows of each of the generated files. Use the
 #' `max_rows_per_file` property of `partition_by()` instead.
@@ -68,8 +64,7 @@ partition_by_key <- function(
   base_path,
   ...,
   by,
-  include_key = TRUE,
-  per_partition_sort_by = NULL
+  include_key = TRUE
 ) {
   check_dots_empty()
 
@@ -84,8 +79,7 @@ partition_by_key <- function(
     pl$PartitionByKey(
       base_path = base_path,
       by = by,
-      include_key = include_key,
-      per_partition_sort_by = per_partition_sort_by
+      include_key = include_key
     )
   )
 }
@@ -95,8 +89,7 @@ partition_by_key <- function(
 partition_by_max_size <- function(
   base_path,
   ...,
-  max_size,
-  per_partition_sort_by = NULL
+  max_size
 ) {
   check_dots_empty()
 
@@ -109,8 +102,7 @@ partition_by_max_size <- function(
   suppressWarnings(
     pl$PartitionMaxSize(
       base_path = base_path,
-      max_size = max_size,
-      per_partition_sort_by = per_partition_sort_by
+      max_size = max_size
     )
   )
 }
