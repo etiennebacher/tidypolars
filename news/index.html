@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.16.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.17.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,9 +38,10 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="tidypolars-development-version">tidypolars (development version)<a class="anchor" aria-label="anchor" href="#tidypolars-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.17.0" id="tidypolars-0170">tidypolars 0.17.0<a class="anchor" aria-label="anchor" href="#tidypolars-0170"></a></h2>
+<p><code>tidypolars</code> requires <code>polars</code> &gt;= 1.9.0 and <code>dplyr</code> &gt;= 1.2.0.</p>
 <div class="section level3">
-<h3 id="breaking-changes-and-deprecations-development-version">Breaking changes and deprecations<a class="anchor" aria-label="anchor" href="#breaking-changes-and-deprecations-development-version"></a></h3>
+<h3 id="breaking-changes-and-deprecations-0-17-0">Breaking changes and deprecations<a class="anchor" aria-label="anchor" href="#breaking-changes-and-deprecations-0-17-0"></a></h3>
 <ul><li>
 <p>The following functions (deprecated since 0.10.0, August 2024) are now removed (<a href="https://github.com/etiennebacher/tidypolars/issues/303" class="external-link">#303</a>):</p>
 <ul><li>
@@ -52,7 +53,7 @@
 <li><p>In <code><a href="../reference/partitioned_output.html">partition_by_key()</a></code> and <code><a href="../reference/partitioned_output.html">partition_by_max_size()</a></code> (both already deprecated in 0.16.0), the argument <code>per_partition_sort_by</code> has been removed (<a href="https://github.com/etiennebacher/tidypolars/issues/322" class="external-link">#322</a>).</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="new-features-0-17-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-17-0"></a></h3>
 <ul><li><p>Added support for <code><a href="https://dplyr.tidyverse.org/reference/near.html" class="external-link">dplyr::near()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/311" class="external-link">#311</a>).</p></li>
 <li><p><code><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider()</a></code> now works with Polars LazyFrames (<a href="https://github.com/etiennebacher/tidypolars/issues/318" class="external-link">#318</a>).</p></li>
 <li>
@@ -73,7 +74,7 @@
 <li><p><code><a href="https://tidyr.tidyverse.org/reference/separate.html" class="external-link">separate()</a></code> now supports regex in the <code>sep</code> argument (<a href="https://github.com/etiennebacher/tidypolars/issues/320" class="external-link">#320</a>).</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="other-changes-development-version">Other changes<a class="anchor" aria-label="anchor" href="#other-changes-development-version"></a></h3>
+<h3 id="other-changes-0-17-0">Other changes<a class="anchor" aria-label="anchor" href="#other-changes-0-17-0"></a></h3>
 <ul><li>
 <p>Several changes to make <code>tidypolars</code> more aligned with the <code>tidyverse</code> output in general (<a href="https://github.com/etiennebacher/tidypolars/issues/316" class="external-link">#316</a>):</p>
 <ul><li>in <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code>, if <code>sort = TRUE</code> and there are some ties, then other variables are sorted in increasing order.</li>
@@ -91,7 +92,7 @@
 <code><a href="https://tidyr.tidyverse.org/reference/unite.html" class="external-link">unite()</a></code> now returns columns in the correct order, and doesn’t duplicate the <code>sep</code> in the output if some values are <code>NA</code>.</li>
 </ul></li>
 </ul><div class="section level4">
-<h4 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h4>
+<h4 id="bug-fixes-0-17-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-17-0"></a></h4>
 <ul><li>
 <code><a href="../reference/bind_rows_polars.html">bind_rows_polars()</a></code> now uses input names in <code>.id</code> if not all inputs are named, for example <code>bind_rows_polars(x1 = x1, x2, .id = "id")</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/317" class="external-link">#317</a>).</li>
 </ul></div>
