@@ -588,7 +588,6 @@ test_that(" when_all() and when_any() work", {
         name %in% c("PR", "RU") & between(score, 100, 200)
       )),
     countries |>
-      as_polars_df() |>
       filter(when_any(
         name %in% c("US", "CA") & between(score, 200, 300),
         name %in% c("PR", "RU") & between(score, 100, 200)
