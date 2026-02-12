@@ -79,6 +79,10 @@ test_that("is.na() works", {
     filter(test2, is.na(Species))
   )
   expect_equal(
+    filter_out(test2_pl, is.na(Species)),
+    filter_out(test2, is.na(Species))
+  )
+  expect_equal(
     filter(test2_pl, base::is.na(Species)),
     filter(test2, base::is.na(Species))
   )
@@ -87,12 +91,24 @@ test_that("is.na() works", {
     filter(test2, !is.na(Species))
   )
   expect_equal(
+    filter_out(test2_pl, !is.na(Species)),
+    filter_out(test2, !is.na(Species))
+  )
+  expect_equal(
     filter(test2_pl, Species == "setosa", !is.na(Species)),
     filter(test2, Species == "setosa", !is.na(Species))
   )
   expect_equal(
+    filter_out(test2_pl, Species == "setosa", !is.na(Species)),
+    filter_out(test2, Species == "setosa", !is.na(Species))
+  )
+  expect_equal(
     filter(test2_pl, Species == "setosa" | is.na(Species)),
     filter(test2, Species == "setosa" | is.na(Species))
+  )
+  expect_equal(
+    filter_out(test2_pl, Species == "setosa" | is.na(Species)),
+    filter_out(test2, Species == "setosa" | is.na(Species))
   )
 })
 
@@ -296,10 +312,19 @@ test_that("works with .by", {
     test_pl |> filter(all(x), .by = starts_with("g")),
     test |> filter(all(x), .by = starts_with("g"))
   )
+  expect_equal(
+    test_pl |> filter_out(all(x), .by = starts_with("g")),
+    test |> filter_out(all(x), .by = starts_with("g"))
+  )
 
   expect_equal(
     test_pl |> filter(any(x), .by = starts_with("g")),
     test |> filter(any(x), .by = starts_with("g"))
+  )
+
+  expect_equal(
+    test_pl |> filter_out(any(x), .by = starts_with("g")),
+    test |> filter_out(any(x), .by = starts_with("g"))
   )
 
   expect_null(
