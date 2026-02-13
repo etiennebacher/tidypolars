@@ -101,3 +101,15 @@ reference:
     desc: Functions for very specific usage.
     contents:
       - .tp
+
+articles:
+  - title: Reference
+    navbar:
+    contents:
+    - supported-functions
+
+  - title: Advanced
+    navbar: Advanced
+    contents:
+    - how-to-benchmark
+    - r-and-polars-expressions

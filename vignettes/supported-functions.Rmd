@@ -1,0 +1,208 @@
+---
+title: "List of supported functions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{List of supported functions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This document lists base R and `tidyverse` functions fully or partially supported by `tidypolars`.
+It complements the [Reference](https://www.tidypolars.etiennebacher.com/reference/) page: the reference page shows `data.frame`-level functions while this page shows functions that can be used in `filter()`, `mutate()`, etc.
+
+The "Notes" column highlights possible differences in the output of the original functions and of their translation by `tidypolars`.
+
+```{r echo=FALSE, message=FALSE}
+library(dplyr)
+library(knitr)
+# fmt:skip
+out <- tribble(
+  ~Package, ~Function,
+  "`base`", "`abs`",
+  "`base`", "`acos`",
+  "`base`", "`acosh`",
+  "`base`", "`all`",
+  "`base`", "`any`",
+  "`base`", "`asin`",
+  "`base`", "`asinh`",
+  "`base`", "`as.character`",
+  "`base`", "`as.Date`",
+  "`base`", "`as.logical`",
+  "`base`", "`as.numeric`",
+  "`base`", "`atan`",
+  "`base`", "`atanh`",
+  "`base`", "`ceiling`",
+  "`base`", "`cos`",
+  "`base`", "`cosh`",
+  "`base`", "`cummin`",
+  "`base`", "`cumsum`",
+  "`base`", "`diff`",
+  "`base`", "`exp`",
+  "`base`", "`floor`",
+  "`base`", "`grepl`",
+  "`base`", "`gsub`",
+  "`base`", "`ifelse`",
+  "`base`", "`ISOdatetime`",
+  "`base`", "`length`",
+  "`base`", "`log`",
+  "`base`", "`log10`",
+  "`base`", "`max`",
+  "`base`", "`mean`",
+  "`base`", "`min`",
+  "`base`", "`nchar`",
+  "`base`", "`paste0`",
+  "`base`", "`paste`",
+  "`base`", "`rank`",
+  "`base`", "`rev`",
+  "`base`", "`round`",
+  "`base`", "`seq`",
+  "`base`", "`seq_len`",
+  "`base`", "`sin`",
+  "`base`", "`sinh`",
+  "`base`", "`sort`",
+  "`base`", "`sqrt`",
+  "`base`", "`strptime`",
+  "`base`", "`substr`",
+  "`base`", "`tan`",
+  "`base`", "`tanh`",
+  "`base`", "`tolower`",
+  "`base`", "`toupper`",
+  "`base`", "`unique`",
+  "`base`", "`which.min`",
+  "`base`", "`which.max`",
+  "`dplyr`", "`between`",
+  "`dplyr`", "`case_match`",
+  "`dplyr`", "`case_when`",
+  "`dplyr`", "`coalesce`",
+  "`dplyr`", "`consecutive_id`",
+  "`dplyr`", "`dense_rank`",
+  "`dplyr`", "`first`",
+  "`dplyr`", "`group_keys`",
+  "`dplyr`", "`group_vars`",
+  "`dplyr`", "`if_else`",
+  "`dplyr`", "`lag`",
+  "`dplyr`", "`lead`",
+  "`dplyr`", "`last`",
+  "`dplyr`", "`min_rank`",
+  "`dplyr`", "`n`",
+  "`dplyr`", "`near`",
+  "`dplyr`", "`nth`",
+  "`dplyr`", "`n_distinct`",
+  "`dplyr`", "`recode_values`",
+  "`dplyr`", "`replace_values`",
+  "`dplyr`", "`replace_when`",
+  "`dplyr`", "`row_number`",
+  "`dplyr`", "`when_all`",
+  "`dplyr`", "`when_any`",
+  "`lubridate`", "`am`",
+  "`lubridate`", "`day`",
+  "`lubridate`", "`days`",
+  "`lubridate`", "`days_in_month`",
+  "`lubridate`", "`date`",
+  "`lubridate`", "`ddays`",
+  "`lubridate`", "`dhours`",
+  "`lubridate`", "`dmilliseconds`",
+  "`lubridate`", "`dminutes`",
+  "`lubridate`", "`dseconds`",
+  "`lubridate`", "`dweeks`",
+  "`lubridate`", "`force_tz`",
+  "`lubridate`", "`hours`",
+  "`lubridate`", "`leap_year`",
+  "`lubridate`", "`make_date`",
+  "`lubridate`", "`make_datetime`",
+  "`lubridate`", "`mday`",
+  "`lubridate`", "`microseconds`",
+  "`lubridate`", "`milliseconds`",
+  "`lubridate`", "`minutes`",
+  "`lubridate`", "`month`",
+  "`lubridate`", "`nanoseconds`",
+  "`lubridate`", "`now`",
+  "`lubridate`", "`pm`",
+  "`lubridate`", "`quarter`",
+  "`lubridate`", "`rollbackward`",
+  "`lubridate`", "`rollback`",
+  "`lubridate`", "`rollforward`",
+  "`lubridate`", "`seconds`",
+  "`lubridate`", "`today`",
+  "`lubridate`", "`wday`",
+  "`lubridate`", "`weeks`",
+  "`lubridate`", "`with_tz`",
+  "`lubridate`", "`yday`",
+  "`lubridate`", "`year`",
+  "`stats`", "`median`",
+  "`stats`", "`lag`",
+  "`stats`", "`sd`",
+  "`stats`", "`var`",
+  "`stringr`", "`regex`",
+  "`stringr`", "`str_count`",
+  "`stringr`", "`str_detect`",
+  "`stringr`", "`str_dup`",
+  "`stringr`", "`str_ends`",
+  "`stringr`", "`str_equal`",
+  "`stringr`", "`str_extract`",
+  "`stringr`", "`str_extract_all`",
+  "`stringr`", "`str_length`",
+  "`stringr`", "`str_pad`",
+  "`stringr`", "`str_remove`",
+  "`stringr`", "`str_remove_all`",
+  "`stringr`", "`str_replace`",
+  "`stringr`", "`str_replace_all`",
+  "`stringr`", "`str_replace_na`",
+  "`stringr`", "`str_split`",
+  "`stringr`", "`str_split_i`",
+  "`stringr`", "`str_squish`",
+  "`stringr`", "`str_starts`",
+  "`stringr`", "`str_sub`",
+  "`stringr`", "`str_trim`",
+  "`stringr`", "`str_to_lower`",
+  "`stringr`", "`str_to_title`",
+  "`stringr`", "`str_to_upper`",
+  "`stringr`", "`str_trunc`",
+  "`stringr`", "`word`",
+  "`tidyr`", "`replace_na`",
+  "`tools`", "`toTitleCase`"
+) |>
+  mutate(
+    Notes = case_when(
+      Package == "`lubridate`" & Function %in% c("`am`", "`pm`") ~ "Contrarily to `lubridate`, this doesn't work on dates, only datetimes.",
+      Package == "`lubridate`" & Function  %in% c("`make_datetime`", "`make_date`") ~
+        "In `lubridate`, when there is an overflow in some of the components (for example `hours = 25` or `month = 15`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this errors.",
+      Package == "`base`" & Function  == "`ISOdatetime`" ~
+        "In `base`, when there is an overflow in some of the components (for example `hours = 25` or `month = 15`), then it returns `NA`. In Polars, this errors.",
+      Package == "`lubridate`" & Function %in% c("`rollbackward`", "`rollback`", "`rollforward`") ~
+        "While time zone handling should mimick the behaviour of `lubridate` in most cases, it is possible that Polars errors if rolling back/forward leads to am ambiguous datetime. It is also possible to have some differences in hours/minutes/seconds when converting between Polars and R.",
+      Package == "`lubridate`" & Function == "`wday`" ~
+        "`week_start` must be an integer in `tidypolars`. If `label = TRUE`, it returns a string variable and not a factor as in `lubridate`.",
+      Package == "`lubridate`" & Function == "`with_tz`" ~
+        "`tidypolars` cannot use several timezones in a single column, while `lubridate::with_tz()` can. Unrecognized timezones and/or NULL are not supported and will throw an error.",
+      Package == "`lubridate`" & Function == "`force_tz`" ~
+        "`tidypolars` cannot use several timezones in a single column, while `lubridate::force_tz()` can.",
+      Package == "`dplyr`" & Function == "`near`" ~
+        "tidypolars errors if `x` and `y` have different lengths, dplyr doesn't.",
+      Package == "`dplyr`" & Function == "`row_number`" ~
+        "Doesn't work when `x` is missing.",
+      Package == "`dplyr`" & Function %in% c("`recode_values`", "`replace_values`") ~
+        "The `dplyr` functions will error if the type of the replacement doesn't match the type of the column (for instance trying to replace a character with an integer). This works in `tidypolars`.",
+      Package == "`dplyr`" & Function %in% c("`when_all`", "`when_any`") ~
+        "Arguments `na_rm` and `size` not supported.",
+      Package == "`dplyr`" & Function == "`replace_when`" ~
+        "The `dplyr` function will error if the type of the replacement doesn't match the type of the column (for instance trying to replace a character with an integer). This sometimes works in `tidypolars`.",
+      Package == "`stringr`" & Function == "`str_to_title`" ~
+        "Letters following apostrophe will be capitalized as well, which differs from the `stringr` implementation.",
+      Package == "`tools`" & Function == "`toTitleCase`" ~
+        "Letters following apostrophe will be capitalized as well, which differs from the `tools` implementation.",
+      .default = ""
+    )
+  ) |>
+  arrange(Package)
+
+kable(out)
+```
+
