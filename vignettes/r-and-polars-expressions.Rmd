@@ -238,5 +238,3 @@ code from R to `polars` takes about the same time when applied on a dataset of
 1M or 10M observations. Therefore, this drawback should become less and less
 noticeable as the size of the dataset increases since most of the time will then
 be taken by the actual computation performed by `polars`.
-
-
