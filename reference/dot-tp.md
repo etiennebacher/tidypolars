@@ -49,7 +49,7 @@ sort(names(.tp))
 #>  [17] "case_match_dplyr"        "case_when_dplyr"        
 #>  [19] "ceiling"                 "coalesce_dplyr"         
 #>  [21] "consecutive_id_dplyr"    "cos"                    
-#>  [23] "cosh"                    "cumcount"               
+#>  [23] "cosh"                    "cummax"                 
 #>  [25] "cummin"                  "cumprod"                
 #>  [27] "cumsum"                  "date_lubridate"         
 #>  [29] "day_lubridate"           "days_in_month_lubridate"
