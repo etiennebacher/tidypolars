@@ -22,7 +22,10 @@ where operations are performed "by group". ungroup() removes grouping.'><meta pr
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/tidypolars.html">Get started</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/how-to-benchmark.html">How to benchmark tidypolars</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/supported-functions.html">List of supported functions</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Advanced</h6></li>
+    <li><a class="dropdown-item" href="../articles/how-to-benchmark.html">How to benchmark tidypolars</a></li>
     <li><a class="dropdown-item" href="../articles/r-and-polars-expressions.html">R and Polars expressions</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
@@ -135,8 +138,8 @@ if specified by the user.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ ---        ┆ ---        │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64        ┆ f64        │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪════════════╪════════════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 353.1      ┆ 209.214286 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 6.0 ┆ 183.314286 ┆ 122.285714 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 8.0 ┆ 353.1      ┆ 209.214286 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 4.0 ┆ 105.136364 ┆ 82.636364  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴────────────┴────────────┘</span>
 <span class="r-in"><span><span class="va">by_cyl</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">disp</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">disp</span><span class="op">)</span><span class="op">)</span></span></span>

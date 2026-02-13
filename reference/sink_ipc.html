@@ -22,7 +22,10 @@ crashes because of too small memory."><meta property="og:image" content="https:/
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/tidypolars.html">Get started</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/how-to-benchmark.html">How to benchmark tidypolars</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/supported-functions.html">List of supported functions</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Advanced</h6></li>
+    <li><a class="dropdown-item" href="../articles/how-to-benchmark.html">How to benchmark tidypolars</a></li>
     <li><a class="dropdown-item" href="../articles/r-and-polars-expressions.html">R and Polars expressions</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
@@ -196,7 +199,7 @@ number of rows. See <code><a href="partitioned_output.html">partition_by()</a></
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`partition_by_key()` was deprecated in tidypolars 0.16.0.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `partition_by(key = )` instead.</span>
 <span class="r-in"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">out_path</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/Rtmp9xDivD/file1a946826dafa</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/Rtmp3WJvMG/file19401f133fc0</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── <span style="color: #0000BB; font-weight: bold;">am=0.0</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │   ├── <span style="color: #0000BB; font-weight: bold;">cyl=4.0</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │   │   └── 00000000.ipc</span>
@@ -218,7 +221,7 @@ number of rows. See <code><a href="partitioned_output.html">partition_by()</a></
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`partition_by_max_size()` was deprecated in tidypolars 0.16.0.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `partition_by(max_rows_per_file = )` instead.</span>
 <span class="r-in"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">out_path</span><span class="op">)</span> <span class="co"># mtcars has 32 rows so we have 7 output files</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/Rtmp9xDivD/file1a945bfc146b</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/Rtmp3WJvMG/file19406ce9a1f9</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000000.ipc</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000001.ipc</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000002.ipc</span>
