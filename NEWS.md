@@ -2,7 +2,7 @@
 
 ## New features
 
-* Added support for `base::cummax()` (#)
+* Added support for `base::cummax()` (#323).
 
 # tidypolars 0.17.0
 
