@@ -5,6 +5,8 @@ library(stringr)
 library(tidyr)
 library(tools)
 
+options(polars.factor_as_enum = TRUE)
+
 lf <- list.files(test_path(), pattern = "^test")
 eager <- lf[grep("lazy", lf, invert = TRUE, fixed = TRUE)]
 
