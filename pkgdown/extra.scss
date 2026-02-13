@@ -37,6 +37,10 @@ h1,
   color: #444444;
 }
 
+ul.dropdown-menu.show > li > h6.dropdown-header {
+  margin-top: 0rem;
+}
+
 pre {
   padding: 0.9rem 1rem 1rem;
   background-color: #f6f6f6;
