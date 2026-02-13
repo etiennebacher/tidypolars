@@ -42,6 +42,7 @@ out <- tribble(
   "`base`", "`cos`",
   "`base`", "`cosh`",
   "`base`", "`cummin`",
+  "`base`", "`cummax`",
   "`base`", "`cumsum`",
   "`base`", "`diff`",
   "`base`", "`exp`",
