@@ -1,3 +1,9 @@
+# tidypolars (development)
+
+## New features
+
+* Added support for `base::cummax()` (#)
+
 # tidypolars 0.17.0
 
 `tidypolars` requires `polars` >= 1.9.0 and `dplyr` >= 1.2.0.

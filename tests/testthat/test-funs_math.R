@@ -20,6 +20,7 @@ test_that("mathematical functions work", {
     "ceiling",
     "cos",
     "cosh",
+    "cummax",
     "cummin",
     "cumprod",
     "cumsum",

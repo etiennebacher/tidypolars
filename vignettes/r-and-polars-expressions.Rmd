@@ -265,6 +265,7 @@ out <- tribble(
   "`base`", "`ceiling`",
   "`base`", "`cos`",
   "`base`", "`cosh`",
+  "`base`", "`cummax`",
   "`base`", "`cummin`",
   "`base`", "`cumsum`",
   "`base`", "`diff`",

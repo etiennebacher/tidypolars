@@ -101,9 +101,9 @@ pl_cosh <- function(x, ...) {
   x$cosh()
 }
 
-pl_cumcount <- function(x, ...) {
+pl_cummax <- function(x, ...) {
   check_empty_dots(...)
-  x$cum_count()
+  x$cum_max()
 }
 
 pl_cummin <- function(x, ...) {
