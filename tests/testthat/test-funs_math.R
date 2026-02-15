@@ -5,7 +5,6 @@ test_that("mathematical functions work", {
     value = sample(11:15),
     value_trigo = seq(0, 0.4, 0.1),
     value_mix = -2:2,
-    value_with_NA = c(-2, -1, NA, 1, 2)
   )
   test_pl <- as_polars_df(test)
 
@@ -58,6 +57,77 @@ test_that("mathematical functions work", {
       variable <- "value_mix"
     } else {
       variable <- "value"
+    }
+
+    pol <- paste0("mutate(test_pl, foo =", i, "(", variable, "))") |>
+      str2lang() |>
+      eval()
+
+    res <- paste0("mutate(test, foo =", i, "(", variable, "))") |>
+      str2lang() |>
+      eval()
+
+    expect_equal(pol, res, info = i)
+  }
+})
+
+test_that("mathematical functions work with NA", {
+  test <- tibble(
+    value_with_NA = c(11, 12, NA, 14, 15),
+    value_trigo_with_NA = c(0, 0.1, NA, 0.3, 0.4),
+    value_mix_with_NA = c(-2, -1, NA, 1, 2)
+  )
+  test_pl <- as_polars_df(test)
+
+  for (i in c(
+    "abs",
+    "acos",
+    "acosh",
+    "asin",
+    "asinh",
+    "atan",
+    "atanh",
+    "ceiling",
+    "cos",
+    "cosh",
+    "cummax",
+    "cummin",
+    "cumprod",
+    "cumsum",
+    "exp",
+    "first",
+    "floor",
+    "last",
+    "log",
+    "log10",
+    # "rank", inconsistent behavior between R and Polars with NA
+    "sign",
+    "sin",
+    "sinh",
+    # "sort", inconsistent behavior between R and Polars with NA
+    "sqrt",
+    "tan",
+    "tanh"
+  )) {
+    if (
+      i %in%
+        c(
+          "acos",
+          "asin",
+          "atan",
+          "atanh",
+          "ceiling",
+          "cos",
+          "floor",
+          "sin",
+          "tan"
+        )
+    ) {
+      variable <- "value_trigo_with_NA"
+    } else if (i %in% c("abs", "mean")) {
+      variable <- "value_mix_with_NA"
+    } else {
+      variable <- "value_with_NA"
     }
 
     pol <- paste0("mutate(test_pl, foo =", i, "(", variable, "))") |>
