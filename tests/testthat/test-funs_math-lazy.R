@@ -153,10 +153,18 @@ test_that("sort errors when na.last is absent or NA", {
     test_pl |> mutate(foo = sort(x)),
     test |> mutate(foo = sort(x))
   )
+  expect_snapshot_lazy(
+    test_pl |> mutate(foo = sort(x)),
+    error = TRUE
+  )
 
   expect_both_error(
     test_pl |> mutate(foo = sort(x, na.last = NA)),
     test |> mutate(foo = sort(x, na.last = NA))
+  )
+  expect_snapshot_lazy(
+    test_pl |> mutate(foo = sort(x, na.last = NA)),
+    error = TRUE
   )
 })
 
