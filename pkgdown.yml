@@ -6,7 +6,7 @@ articles:
   r-and-polars-expressions: r-and-polars-expressions.html
   supported-functions: supported-functions.html
   tidypolars: tidypolars.html
-last_built: 2026-02-13T14:35Z
+last_built: 2026-02-16T10:54Z
 urls:
   reference: https://tidypolars.etiennebacher.com/reference
   article: https://tidypolars.etiennebacher.com/articles
