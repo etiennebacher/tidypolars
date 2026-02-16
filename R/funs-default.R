@@ -103,22 +103,28 @@ pl_cosh <- function(x, ...) {
 
 pl_cummax <- function(x, ...) {
   check_empty_dots(...)
-  x$cum_max()
+  # Once a missing value is seen, keep a TRUE mask for all following rows.
+  has_seen_na <- x$is_null()$cum_max()
+  # Replace cumulative results with NA from the first missing value onward.
+  pl$when(has_seen_na)$then(pl$lit(NA))$otherwise(x$cum_max())
 }
 
 pl_cummin <- function(x, ...) {
   check_empty_dots(...)
-  x$cum_min()
+  has_seen_na <- x$is_null()$cum_max()
+  pl$when(has_seen_na)$then(pl$lit(NA))$otherwise(x$cum_min())
 }
 
 pl_cumprod <- function(x, ...) {
   check_empty_dots(...)
-  x$cum_prod()
+  has_seen_na <- x$is_null()$cum_max()
+  pl$when(has_seen_na)$then(pl$lit(NA))$otherwise(x$cum_prod())
 }
 
 pl_cumsum <- function(x, ...) {
   check_empty_dots(...)
-  x$cum_sum()
+  has_seen_na <- x$is_null()$cum_max()
+  pl$when(has_seen_na)$then(pl$lit(NA))$otherwise(x$cum_sum())
 }
 
 # TODO: this is not tested anymore because it requires reframe():

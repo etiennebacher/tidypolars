@@ -4,6 +4,10 @@
 
 * Added support for `base::cummax()` (#323).
 
+## Bug fixes
+
+* Fix `NA` handling in `cummin()`, `cumprod()`, `cumsum()` (#Yousa-Mirage, #326).
+
 # tidypolars 0.17.0
 
 `tidypolars` requires `polars` >= 1.9.0 and `dplyr` >= 1.2.0.
