@@ -420,9 +420,12 @@ pl_skew <- function(x, ...) {
   x$skew()
 }
 
-pl_sort <- function(x, ...) {
+pl_sort <- function(x, decreasing = FALSE, na.last, ...) {
   check_empty_dots(...)
-  x$sort()
+  check_bool(decreasing, allow_na = FALSE)
+  check_bool(na.last, allow_na = FALSE)
+
+  x$sort(descending = decreasing, nulls_last = na.last)
 }
 
 pl_sqrt <- function(x, ...) {
