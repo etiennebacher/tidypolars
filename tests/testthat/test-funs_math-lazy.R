@@ -37,7 +37,6 @@ test_that("mathematical functions work", {
     "sign",
     "sin",
     "sinh",
-    "sort",
     "sqrt",
     "tan",
     "tanh"
@@ -146,21 +145,38 @@ test_that("mathematical functions work with NA", {
   }
 })
 
-test_that("sort supports decreasing and na.last", {
+test_that("sort default behavior", {
   test <- tibble(x = c(3, NA, 1, 2, NA))
   test_pl <- as_polars_lf(test)
 
-  # No parameters, the same as base::sort(x, na.last = FALSE)
+  expect_snapshot_lazy({
+    test_pl |> mutate(foo = sort(x))
+  })
+
   expect_equal_lazy(
     test_pl |> mutate(foo = sort(x)),
     test |> mutate(foo = sort(x, na.last = FALSE))
   )
+})
 
-  # na.last = NA is not supported.
+test_that("sort error when na.last = NA", {
+  test <- tibble(x = c(3, NA, 1, 2, NA))
+  test_pl <- as_polars_lf(test)
+
+  expect_snapshot_lazy(
+    test_pl |> mutate(foo = sort(x, na.last = NA)),
+    error = TRUE
+  )
+
   expect_both_error(
     test_pl |> mutate(foo = sort(x, na.last = NA)),
     test |> mutate(foo = sort(x, na.last = NA))
   )
+})
+
+test_that("sort supports decreasing and na.last", {
+  test <- tibble(x = c(3, NA, 1, 2, NA))
+  test_pl <- as_polars_lf(test)
 
   # With different parameters
   for (decreasing in c(TRUE, FALSE)) {
