@@ -104,11 +104,11 @@ test_that("mathematical functions work with NA", {
     "last",
     "log",
     "log10",
+    # TODO:
     # "rank", inconsistent behavior between R and Polars with NA
     "sign",
     "sin",
     "sinh",
-    # "sort", inconsistent behavior between R and Polars with NA
     "sqrt",
     "tan",
     "tanh"
@@ -143,6 +143,50 @@ test_that("mathematical functions work with NA", {
       eval()
 
     expect_equal_lazy(pol, res, info = i)
+  }
+})
+
+test_that("sort supports decreasing and na.last", {
+  test <- tibble(x = c(3, NA, 1, 2, NA))
+  test_pl <- as_polars_lf(test)
+
+  # No parameters, the same as base::sort(x, na.last = FALSE)
+  expect_equal_lazy(
+    test_pl |> mutate(foo = sort(x)),
+    test |> mutate(foo = sort(x, na.last = FALSE))
+  )
+
+  # na.last = NA is not supported.
+  expect_both_error(
+    test_pl |> mutate(foo = sort(x, na.last = NA)),
+    test |> mutate(foo = sort(x, na.last = NA))
+  )
+
+  # With different parameters
+  for (decreasing in c(TRUE, FALSE)) {
+    for (na_last in c(TRUE, FALSE)) {
+      pol <- paste0(
+        "mutate(test_pl, foo = sort(x, decreasing = ",
+        decreasing,
+        ", na.last = ",
+        na_last,
+        "))"
+      ) |>
+        str2lang() |>
+        eval()
+
+      res <- paste0(
+        "mutate(test, foo = sort(x, decreasing = ",
+        decreasing,
+        ", na.last = ",
+        na_last,
+        "))"
+      ) |>
+        str2lang() |>
+        eval()
+
+      expect_equal_lazy(pol, res)
+    }
   }
 })
 

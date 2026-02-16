@@ -3,10 +3,11 @@
 ## New features
 
 * Added support for `base::cummax()` (#323).
+* Added `decreasing` and `na.last` arguments to `sort()` (@Yousa-Mirage, #328).
 
 ## Bug fixes
 
-* Fix `NA` handling in `cummin()`, `cumprod()`, `cumsum()` (#Yousa-Mirage, #326).
+* Fix `NA` handling in `cummin()`, `cumprod()`, `cumsum()` (@Yousa-Mirage, #326).
 
 # tidypolars 0.17.0
 
