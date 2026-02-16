@@ -141,27 +141,13 @@ test_that("mathematical functions work with NA", {
   }
 })
 
-test_that("sort default behavior", {
+test_that("sort errors when na.last is absent or NA", {
   test <- tibble(x = c(3, NA, 1, 2, NA))
   test_pl <- as_polars_df(test)
 
-  expect_snapshot({
-    test_pl |> mutate(foo = sort(x))
-  })
-
-  expect_equal(
+  expect_both_error(
     test_pl |> mutate(foo = sort(x)),
-    test |> mutate(foo = sort(x, na.last = FALSE))
-  )
-})
-
-test_that("sort error when na.last = NA", {
-  test <- tibble(x = c(3, NA, 1, 2, NA))
-  test_pl <- as_polars_df(test)
-
-  expect_snapshot(
-    test_pl |> mutate(foo = sort(x, na.last = NA)),
-    error = TRUE
+    test |> mutate(foo = sort(x))
   )
 
   expect_both_error(

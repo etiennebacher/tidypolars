@@ -420,32 +420,10 @@ pl_skew <- function(x, ...) {
   x$skew()
 }
 
-pl_sort <- function(x, decreasing = FALSE, na.last = FALSE, ...) {
+pl_sort <- function(x, decreasing = FALSE, na.last, ...) {
   check_empty_dots(...)
   check_bool(decreasing, allow_na = FALSE)
-  check_bool(na.last, allow_na = TRUE)
-
-  if (missing(na.last)) {
-    cli::cli_inform(
-      c(
-        "{.fn sort}: using Polars default {.code na.last = FALSE}.",
-        "i" = "base::sort() defaults to {.code na.last = NA} (drops missing values).",
-        "i" = "Set {.code na.last = TRUE/FALSE} explicitly to control behavior."
-      ),
-      .frequency = "once",
-      .frequency_id = "tidypolars_sort_default_na_last"
-    )
-  }
-
-  if (is.na(na.last)) {
-    cli::cli_abort(
-      c(
-        "{.arg na.last} does not support {.code NA} in tidypolars.",
-        "i" = "In {.fn mutate}, dropping missing values would change output length."
-      ),
-      call = env_from_dots(...)
-    )
-  }
+  check_bool(na.last, allow_na = FALSE)
 
   x$sort(descending = decreasing, nulls_last = na.last)
 }
