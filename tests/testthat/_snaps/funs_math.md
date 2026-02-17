@@ -16,3 +16,30 @@
       ! Error while running function `sort()` in Polars.
       x `na.last` must be `TRUE` or `FALSE`, not `NA`.
 
+# rank error when na.last is not in TRUE/FALSE/keep
+
+    Code
+      mutate(test_pl, foo = rank(x, na.last = NA))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `rank()` in Polars.
+      x `na.last` must be `TRUE`, `FALSE`, or `"keep"`.
+
+---
+
+    Code
+      mutate(test_pl, foo = rank(x, na.last = "wrong"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `rank()` in Polars.
+      x `na.last` must be `TRUE`, `FALSE`, or `"keep"`.
+
+---
+
+    Code
+      mutate(test_pl, foo = rank(x, na.last = 5))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `rank()` in Polars.
+      x `na.last` must be `TRUE`, `FALSE`, or `"keep"`.
+

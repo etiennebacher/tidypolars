@@ -331,9 +331,53 @@ pl_mode <- function(x, ...) {
   x$mode()
 }
 
-pl_rank <- function(x, ...) {
+pl_rank <- function(x, na.last = TRUE, ties.method = "average", ...) {
   check_empty_dots(...)
-  x$rank()
+
+  na.last <- polars_expr_to_r(na.last)
+  ties.method <- polars_expr_to_r(ties.method)
+
+  # Validate na.last: only TRUE / FALSE / "keep" are supported.
+  if (!isTRUE(na.last) && !isFALSE(na.last) && !identical(na.last, "keep")) {
+    cli_abort("`na.last` must be `TRUE`, `FALSE`, or `\"keep\"`.")
+  }
+
+  ties.method <- rlang::arg_match0(
+    ties.method,
+    values = c("average", "first", "last", "random", "max", "min")
+  )
+
+  # Core ranking logic
+  out <- NULL
+  if (ties.method == "first") {
+    out <- x$rank(method = "ordinal")
+  } else if (ties.method == "last") {
+    out <- x$rank(method = "max") +
+      x$rank(method = "min") -
+      x$rank(method = "ordinal")
+  } else {
+    out <- x$rank(method = ties.method)
+  }
+
+  # na.last = "keep"
+  if (identical(na.last, "keep")) {
+    return(out)
+  }
+
+  is_null <- x$is_null()
+  null_rank <- is_null$cast(pl$Int64)$cum_sum()
+  n_null <- is_null$cast(pl$Int64)$sum()
+
+  if (isTRUE(na.last)) {
+    # Keep value ranks unchanged and append NAs as distinct ranks at the end.
+    n_non_null <- x$len() - n_null
+    return(pl$when(is_null)$then(n_non_null + null_rank)$otherwise(out))
+  }
+
+  if (isFALSE(na.last)) {
+    # Put NAs first with distinct ranks, then shift value ranks by NA count.
+    return(pl$when(is_null)$then(null_rank)$otherwise(out + n_null))
+  }
 }
 
 pl_rev <- function(x) {

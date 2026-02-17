@@ -29,7 +29,6 @@ test_that("mathematical functions work", {
     "last",
     "log",
     "log10",
-    "rank",
     "sign",
     "sin",
     "sinh",
@@ -99,8 +98,6 @@ test_that("mathematical functions work with NA", {
     "last",
     "log",
     "log10",
-    # TODO:
-    # "rank", inconsistent behavior between R and Polars with NA
     "sign",
     "sin",
     "sinh",
@@ -194,6 +191,87 @@ test_that("sort supports decreasing and na.last", {
       expect_equal(pol, res)
     }
   }
+})
+
+test_that("rank error when na.last is not in TRUE/FALSE/keep", {
+  test <- tibble(x = sample(c(0:9, NA), size = 10000, replace = TRUE))
+  test_pl <- as_polars_df(test)
+
+  expect_snapshot(
+    test_pl |> mutate(foo = rank(x, na.last = NA)),
+    error = TRUE
+  )
+  expect_snapshot(
+    test_pl |> mutate(foo = rank(x, na.last = "wrong")),
+    error = TRUE
+  )
+  expect_snapshot(
+    test_pl |> mutate(foo = rank(x, na.last = 5)),
+    error = TRUE
+  )
+  expect_both_error(
+    test_pl |> mutate(foo = rank(x, na.last = NA)),
+    test |> mutate(foo = rank(x, na.last = NA))
+  )
+})
+
+test_that("rank with default args", {
+  test <- tibble(x = sample(c(0:9, NA), size = 10000, replace = TRUE))
+  test_pl <- as_polars_df(test)
+
+  expect_equal(
+    test_pl |> mutate(foo = rank(x)),
+    test |> mutate(foo = rank(x))
+  )
+})
+
+patrick::with_parameters_test_that(
+  "rank with ties.method={ties_method} and na.last={na_last}",
+  {
+    test <- tibble(x = sample(c(0:9, NA), size = 10000, replace = TRUE))
+    test_pl <- as_polars_df(test)
+
+    na_last <- switch(na_last, "TRUE" = TRUE, "FALSE" = FALSE, na_last)
+
+    r_output <- test |>
+      mutate(foo = rank(x, ties.method = ties_method, na.last = na_last))
+
+    pl_output <- test_pl |>
+      mutate(foo = rank(x, ties.method = ties_method, na.last = na_last))
+
+    if (ties_method == "random") {
+      expect_equal(
+        pl_output |> arrange(x, foo),
+        r_output |> arrange(x, foo)
+      )
+    } else {
+      expect_equal(pl_output, r_output)
+    }
+  },
+  .cases = tidyr::crossing(
+    ties_method = c("average", "first", "last", "random", "max", "min"),
+    na_last = c("TRUE", "FALSE", "keep")
+  )
+)
+
+test_that("rank() works on various input types", {
+  for_all(
+    # TODO: Can't use any_atomic() because the behavior for factors is incorrect
+    num = numeric_(len = 10, any_na = TRUE),
+    str = character_(len = 10, any_na = TRUE),
+    date = date_(len = 10, any_na = TRUE),
+    dt = posixct_(len = 10, any_na = TRUE),
+    property = function(num, str, date, dt) {
+      for (i in c("num", "str", "date", "dt")) {
+        test_df <- tibble(x = eval(parse(text = i)))
+        test <- pl$DataFrame(x = eval(parse(text = i)))
+        expect_equal_or_both_error(
+          mutate(test, y = rank(x)),
+          mutate(test_df, y = rank(x))
+        )
+      }
+    }
+  )
 })
 
 test_that("warns if unknown args", {

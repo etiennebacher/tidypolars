@@ -177,6 +177,8 @@ out <- tribble(
         "In `lubridate`, when there is an overflow in some of the components (for example `hours = 25` or `month = 15`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this errors.",
       Package == "`base`" & Function  == "`ISOdatetime`" ~
         "In `base`, when there is an overflow in some of the components (for example `hours = 25` or `month = 15`), then it returns `NA`. In Polars, this errors.",
+      Package == "`base`" & Function == "`rank`" ~
+        "In `tidypolars`, `na.last = NA` is not supported.",
       Package == "`base`" & Function == "`sort`" ~
         "In `tidypolars`, `na.last` must be explicitly supplied as `TRUE` or `FALSE`.",
       Package == "`lubridate`" & Function %in% c("`rollbackward`", "`rollback`", "`rollforward`") ~
@@ -208,4 +210,3 @@ out <- tribble(
 
 kable(out)
 ```
-
