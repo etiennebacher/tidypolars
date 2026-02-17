@@ -27,25 +27,25 @@ test_that("basic behavior works", {
 })
 
 test_that("deprecated arguments in compute()", {
-  test_df <- as_polars_lf(mtcars)
+  test_pl <- as_polars_lf(mtcars)
   expect_snapshot({
-    x <- compute(test_df, streaming = TRUE)
+    x <- compute(test_pl, streaming = TRUE)
   })
 })
 
 test_that("can't collect non-LazyFrame object", {
-  pl_iris <- as_polars_df(iris)
+  test_pl <- as_polars_df(iris)
   expect_snapshot(
-    compute(pl_iris),
+    compute(test_pl),
     error = TRUE
   )
 })
 
 test_that("error on unknown args", {
-  pl_iris <- as_polars_lf(iris)
+  test_pl <- as_polars_lf(iris)
 
   expect_snapshot(
-    compute(pl_iris, foo = TRUE),
+    compute(test_pl, foo = TRUE),
     error = TRUE
   )
 })
