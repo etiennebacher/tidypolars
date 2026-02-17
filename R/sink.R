@@ -276,7 +276,9 @@ sink_csv <- function(
       what = "sink_csv_polars(null_values)",
       details = "Use `null_value` instead."
     )
-    null_values <- null_values
+    if (!identical(null_value, "")) {
+      null_value <- null_values
+    }
   }
 
   if (isTRUE(no_optimization)) {

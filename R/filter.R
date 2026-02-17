@@ -83,7 +83,7 @@
 #'   )
 filter.polars_data_frame <- function(.data, ..., .by = NULL) {
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
-  mo <- attributes(.data)$maintain_grp_order
+  mo <- attributes(.data)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
 
   polars_exprs <- translate_dots(
