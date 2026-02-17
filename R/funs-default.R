@@ -1,7 +1,6 @@
 # All these functions should be internal, the user doesn't need to access them
 
-pl_abs <- function(x, ...) {
-  check_empty_dots(...)
+pl_abs <- function(x) {
   x$abs()
 }
 
@@ -51,78 +50,64 @@ pl_any <- function(..., na.rm = FALSE) {
   }
 }
 
-pl_floor <- function(x, ...) {
-  check_empty_dots(...)
+pl_floor <- function(x) {
   x$floor()
 }
 
-pl_acos <- function(x, ...) {
-  check_empty_dots(...)
+pl_acos <- function(x) {
   x$arccos()
 }
 
-pl_acosh <- function(x, ...) {
-  check_empty_dots(...)
+pl_acosh <- function(x) {
   x$arccosh()
 }
 
-pl_asin <- function(x, ...) {
-  check_empty_dots(...)
+pl_asin <- function(x) {
   x$arcsin()
 }
 
-pl_asinh <- function(x, ...) {
-  check_empty_dots(...)
+pl_asinh <- function(x) {
   x$arcsinh()
 }
 
-pl_atan <- function(x, ...) {
-  check_empty_dots(...)
+pl_atan <- function(x) {
   x$arctan()
 }
 
-pl_atanh <- function(x, ...) {
-  check_empty_dots(...)
+pl_atanh <- function(x) {
   x$arctanh()
 }
 
-pl_ceiling <- function(x, ...) {
-  check_empty_dots(...)
+pl_ceiling <- function(x) {
   x$ceil()
 }
 
-pl_cos <- function(x, ...) {
-  check_empty_dots(...)
+pl_cos <- function(x) {
   x$cos()
 }
 
-pl_cosh <- function(x, ...) {
-  check_empty_dots(...)
+pl_cosh <- function(x) {
   x$cosh()
 }
 
-pl_cummax <- function(x, ...) {
-  check_empty_dots(...)
+pl_cummax <- function(x) {
   # Once a missing value is seen, keep a TRUE mask for all following rows.
   has_seen_na <- x$is_null()$cum_max()
   # Replace cumulative results with NA from the first missing value onward.
   pl$when(has_seen_na)$then(pl$lit(NA))$otherwise(x$cum_max())
 }
 
-pl_cummin <- function(x, ...) {
-  check_empty_dots(...)
+pl_cummin <- function(x) {
   has_seen_na <- x$is_null()$cum_max()
   pl$when(has_seen_na)$then(pl$lit(NA))$otherwise(x$cum_min())
 }
 
-pl_cumprod <- function(x, ...) {
-  check_empty_dots(...)
+pl_cumprod <- function(x) {
   has_seen_na <- x$is_null()$cum_max()
   pl$when(has_seen_na)$then(pl$lit(NA))$otherwise(x$cum_prod())
 }
 
-pl_cumsum <- function(x, ...) {
-  check_empty_dots(...)
+pl_cumsum <- function(x) {
   has_seen_na <- x$is_null()$cum_max()
   pl$when(has_seen_na)$then(pl$lit(NA))$otherwise(x$cum_sum())
 }
@@ -149,8 +134,7 @@ pl_duplicated <- function(x, ...) {
   x$duplicated()
 }
 
-pl_exp <- function(x, ...) {
-  check_empty_dots(...)
+pl_exp <- function(x) {
   x$exp()
 }
 
@@ -188,57 +172,31 @@ pl_ifelse <- function(test, yes, no, .data, ...) {
   pl$when(test)$then(yes)$otherwise(no)
 }
 
-pl_infinite <- function(x, ...) {
-  check_empty_dots(...)
-  x$infinite()
+pl_is.finite <- function(x) {
+  pl$when(x$is_null())$then(pl$lit(FALSE))$otherwise(x$is_finite())
 }
 
-pl_interpolate <- function(x, ...) {
-  check_empty_dots(...)
-  x$interpolate()
+pl_is.infinite <- function(x) {
+  pl$when(x$is_null())$then(pl$lit(FALSE))$otherwise(x$is_infinite())
 }
 
-pl_is.finite <- function(x, ...) {
-  check_empty_dots(...)
-  x$is_finite()
+pl_is.na <- function(x) {
+  pl$when(x$is_nan())$then(pl$lit(TRUE))$otherwise(x$is_null())
 }
 
-pl_is_first <- function(x, ...) {
-  check_empty_dots(...)
-  x$is_first()
-}
-
-pl_is.infinite <- function(x, ...) {
-  check_empty_dots(...)
-  x$is_infinite()
-}
-
-pl_is.nan <- function(x, ...) {
-  check_empty_dots(...)
-  x$is_nan()
-}
-
-pl_is.null <- function(x, ...) {
-  check_empty_dots(...)
-  x$is_null()
-}
-
-pl_kurtosis <- function(x, ...) {
-  check_empty_dots(...)
-  x$kurtosis()
+pl_is.nan <- function(x) {
+  pl$when(x$is_null())$then(pl$lit(FALSE))$otherwise(x$is_nan())
 }
 
 pl_length <- function(x) {
   x$len()
 }
 
-pl_log <- function(x, ...) {
-  check_empty_dots(...)
-  x$log()
+pl_log <- function(x, base = expr(1)) {
+  x$log(base = base)
 }
 
-pl_log10 <- function(x, ...) {
-  check_empty_dots(...)
+pl_log10 <- function(x) {
   x$log10()
 }
 
@@ -324,11 +282,6 @@ pl_min <- function(x, na.rm = FALSE, ...) {
       pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$min())
     }
   }
-}
-
-pl_mode <- function(x, ...) {
-  check_empty_dots(...)
-  x$mode()
 }
 
 pl_rank <- function(x, na.last = TRUE, ties.method = "average", ...) {
@@ -444,24 +397,16 @@ pl_seq_len <- function(length.out) {
   out
 }
 
-pl_sign <- function(x, ...) {
-  check_empty_dots(...)
+pl_sign <- function(x) {
   x$sign()
 }
 
-pl_sin <- function(x, ...) {
-  check_empty_dots(...)
+pl_sin <- function(x) {
   x$sin()
 }
 
-pl_sinh <- function(x, ...) {
-  check_empty_dots(...)
+pl_sinh <- function(x) {
   x$sinh()
-}
-
-pl_skew <- function(x, ...) {
-  check_empty_dots(...)
-  x$skew()
 }
 
 pl_sort <- function(x, decreasing = FALSE, na.last, ...) {
@@ -472,8 +417,7 @@ pl_sort <- function(x, decreasing = FALSE, na.last, ...) {
   x$sort(descending = decreasing, nulls_last = na.last)
 }
 
-pl_sqrt <- function(x, ...) {
-  check_empty_dots(...)
+pl_sqrt <- function(x) {
   x$sqrt()
 }
 
@@ -496,24 +440,17 @@ pl_sum <- function(..., na.rm = FALSE) {
   }
 }
 
-pl_tan <- function(x, ...) {
-  check_empty_dots(...)
+pl_tan <- function(x) {
   x$tan()
 }
 
-pl_tanh <- function(x, ...) {
-  check_empty_dots(...)
+pl_tanh <- function(x) {
   x$tanh()
 }
 
 pl_unique <- function(x, ...) {
   check_empty_dots(...)
   x$unique()
-}
-
-pl_unique_counts <- function(x, ...) {
-  check_empty_dots(...)
-  x$unique_counts()
 }
 
 pl_var <- function(x, na.rm = FALSE, ...) {
@@ -525,13 +462,11 @@ pl_var <- function(x, na.rm = FALSE, ...) {
   }
 }
 
-pl_which.max <- function(x, ...) {
-  check_empty_dots(...)
+pl_which.max <- function(x) {
   (x$arg_max() + 1)$first()
 }
 
-pl_which.min <- function(x, ...) {
-  check_empty_dots(...)
+pl_which.min <- function(x) {
   (x$arg_min() + 1)$first()
 }
 

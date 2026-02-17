@@ -540,44 +540,6 @@ translate <- function(
           }
           return(do.call(pl_ifelse, args))
         },
-        "base::is.na" = ,
-        "is.na" = {
-          out <- tryCatch(
-            {
-              inside <- translate(
-                expr[[2]],
-                .data = .data,
-                new_vars = new_vars,
-                env = env,
-                caller = caller,
-                call_is_function = call_is_function,
-                expr_uses_col = expr_uses_col
-              )
-              inside$is_null()
-            },
-            error = identity
-          )
-          return(out)
-        },
-        "base::is.nan" = ,
-        "is.nan" = {
-          out <- tryCatch(
-            {
-              inside <- translate(
-                expr[[2]],
-                .data = .data,
-                new_vars = new_vars,
-                env = env,
-                caller = caller,
-                call_is_function = call_is_function,
-                expr_uses_col = expr_uses_col
-              )
-              inside$is_nan()
-            },
-            error = identity
-          )
-          return(out)
-        },
 
         ### stringr functions
         "stringr::fixed" = ,

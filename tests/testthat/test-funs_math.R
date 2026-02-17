@@ -138,6 +138,24 @@ test_that("mathematical functions work with NA", {
   }
 })
 
+test_that("log() works with base", {
+  test <- tibble(x = c(3, NA, 1, 2, NA))
+  test_pl <- as_polars_df(test)
+
+  expect_equal(
+    test_pl |> mutate(y = log(x, base = 3)),
+    test |> mutate(y = log(x, base = 3))
+  )
+  expect_both_error(
+    test_pl |> mutate(y = log(x, base = "3")),
+    test |> mutate(y = log(x, base = "3"))
+  )
+  expect_snapshot(
+    test_pl |> mutate(y = log(x, base = "3")),
+    error = TRUE
+  )
+})
+
 test_that("sort errors when na.last is absent or NA", {
   test <- tibble(x = c(3, NA, 1, 2, NA))
   test_pl <- as_polars_df(test)
