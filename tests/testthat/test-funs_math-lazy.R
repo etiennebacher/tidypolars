@@ -200,6 +200,54 @@ test_that("sort supports decreasing and na.last", {
   }
 })
 
+test_that("rank with na.last and ties.method", {
+  test <- tibble(x = sample(c(0:9, NA), size = 10000, replace = TRUE))
+  test_pl <- as_polars_lf(test)
+
+  # Default Behavior
+  expect_equal_lazy(
+    test_pl |> mutate(foo = rank(x)),
+    test |> mutate(foo = rank(x))
+  )
+
+  # Error when na.last = NA
+  expect_snapshot_lazy(
+    test_pl |> mutate(foo = rank(x, na.last = NA)),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    test_pl |> mutate(foo = rank(x, na.last = "wrong")),
+    error = TRUE
+  )
+  expect_both_error(
+    test_pl |> mutate(foo = rank(x, na.last = NA)),
+    test |> mutate(foo = rank(x, na.last = NA))
+  )
+
+  # Test with different ties.method and na.last
+  for (ties_method in c("average", "first", "last", "random", "max", "min")) {
+    for (na_last in list(TRUE, FALSE, "keep")) {
+      pol <- mutate(
+        test_pl,
+        foo = rank(x, ties.method = !!ties_method, na.last = !!na_last)
+      )
+      res <- mutate(
+        test,
+        foo = rank(x, ties.method = !!ties_method, na.last = !!na_last)
+      )
+
+      if (ties_method == "random") {
+        expect_equal_lazy(
+          pol |> arrange(x, foo),
+          res |> arrange(x, foo)
+        )
+      } else {
+        expect_equal_lazy(pol, res)
+      }
+    }
+  }
+})
+
 test_that("warns if unknown args", {
   test <- tibble(
     x1 = c("a", "a", "b", "a", "c"),

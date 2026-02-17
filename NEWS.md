@@ -3,7 +3,8 @@
 ## New features
 
 * Added support for `base::cummax()` (#323).
-* Added `decreasing` and `na.last` arguments to `sort()` (@Yousa-Mirage, #328).
+* Added `decreasing` and `na.last` arguments support to `sort()` (@Yousa-Mirage, #328).
+* Added `na.last` and `ties.method` arguments support to `rank()` (@Yousa-Mirage, #329).
 
 ## Bug fixes
 
