@@ -52,6 +52,10 @@ out <- tribble(
   "`base`", "`gsub`",
   "`base`", "`ifelse`",
   "`base`", "`ISOdatetime`",
+  "`base`", "`is.finite`",
+  "`base`", "`is.infinite`",
+  "`base`", "`is.na`",
+  "`base`", "`is.nan`",
   "`base`", "`length`",
   "`base`", "`log`",
   "`base`", "`log10`",
@@ -174,6 +178,7 @@ out <- tribble(
   mutate(
     Notes = case_when(
       Package == "`lubridate`" & Function %in% c("`am`", "`pm`") ~ "Contrarily to `lubridate`, this doesn't work on dates, only datetimes.",
+      Package == "`base`" & Function == "is.na" ~ "In R, `is.na(NaN)` returns `TRUE`, but this returns `FALSE` in tidypolars.",
       Package == "`lubridate`" & Function  %in% c("`make_datetime`", "`make_date`") ~
         "In `lubridate`, when there is an overflow in some of the components (for example `hours = 25` or `month = 15`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this errors.",
       Package == "`base`" & Function  == "`ISOdatetime`" ~

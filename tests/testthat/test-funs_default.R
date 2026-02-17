@@ -249,3 +249,32 @@ test_that("anyNA() works", {
     error = TRUE
   )
 })
+
+test_that("is.finite, is.infinite, is.nan", {
+  test <- tibble(x = c(-Inf, 1, NA, NaN, Inf))
+  test_pl <- as_polars_df(test)
+
+  expect_equal(
+    mutate(test_pl, y = is.infinite(x)),
+    mutate(test, y = is.infinite(x))
+  )
+  expect_equal(
+    mutate(test_pl, y = is.finite(x)),
+    mutate(test, y = is.finite(x))
+  )
+  expect_equal(
+    mutate(test_pl, y = is.nan(x)),
+    mutate(test, y = is.nan(x))
+  )
+})
+
+test_that("is.na", {
+  # This test doesn't have NaN (see note in pl_is.na())
+  test <- tibble(x = c(-Inf, 1, NA, Inf))
+  test_pl <- as_polars_df(test)
+
+  expect_equal(
+    mutate(test_pl, y = is.na(x)),
+    mutate(test, y = is.na(x))
+  )
+})

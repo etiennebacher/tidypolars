@@ -1,3 +1,15 @@
+# log() works with base
+
+    Code
+      mutate(test_pl, y = log(x, base = "3"))
+    Condition
+      Error in `.data$with_columns()`:
+      ! Evaluation failed in `$with_columns()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! Column(s) not found: unable to find column "3"; valid columns: ["x"]
+
 # sort errors when na.last is absent or NA
 
     Code

@@ -1,3 +1,18 @@
+# log() works with base
+
+    Code
+      current$collect()
+    Condition
+      Error in `current$collect()`:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! Column(s) not found: unable to find column "3"; valid columns: ["x"]
+      
+      Resolved plan until failure:
+      
+      	---> FAILED HERE RESOLVING 'sink' <---
+      DF ["x"]; PROJECT */1 COLUMNS
+
 # sort errors when na.last is absent or NA
 
     Code

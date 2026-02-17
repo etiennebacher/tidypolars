@@ -314,10 +314,13 @@ translate <- function(
           call_is_function = call_is_function,
           expr_uses_col = expr_uses_col
         )
-        args[["__tidypolars__new_vars"]] <- as.list(new_vars)
-        args[["__tidypolars__env"]] <- env
-        args[["__tidypolars__caller"]] <- caller
-        args[["__tidypolars__expr_uses_col"]] <- expr_uses_col
+        accepted_args <- names(formals(name))
+        if ("..." %in% accepted_args) {
+          args[["__tidypolars__new_vars"]] <- as.list(new_vars)
+          args[["__tidypolars__env"]] <- env
+          args[["__tidypolars__caller"]] <- caller
+          args[["__tidypolars__expr_uses_col"]] <- expr_uses_col
+        }
         return(do.call(name, args))
       }
 
@@ -539,44 +542,6 @@ translate <- function(
             names(args)[idx] <- "no"
           }
           return(do.call(pl_ifelse, args))
-        },
-        "base::is.na" = ,
-        "is.na" = {
-          out <- tryCatch(
-            {
-              inside <- translate(
-                expr[[2]],
-                .data = .data,
-                new_vars = new_vars,
-                env = env,
-                caller = caller,
-                call_is_function = call_is_function,
-                expr_uses_col = expr_uses_col
-              )
-              inside$is_null()
-            },
-            error = identity
-          )
-          return(out)
-        },
-        "base::is.nan" = ,
-        "is.nan" = {
-          out <- tryCatch(
-            {
-              inside <- translate(
-                expr[[2]],
-                .data = .data,
-                new_vars = new_vars,
-                env = env,
-                caller = caller,
-                call_is_function = call_is_function,
-                expr_uses_col = expr_uses_col
-              )
-              inside$is_nan()
-            },
-            error = identity
-          )
-          return(out)
         },
 
         ### stringr functions
