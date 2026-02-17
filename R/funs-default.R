@@ -334,6 +334,9 @@ pl_mode <- function(x, ...) {
 pl_rank <- function(x, na.last = TRUE, ties.method = "average", ...) {
   check_empty_dots(...)
 
+  na.last <- polars_expr_to_r(na.last)
+  ties.method <- polars_expr_to_r(ties.method)
+
   # Validate na.last: only TRUE / FALSE / "keep" are supported.
   if (!isTRUE(na.last) && !isFALSE(na.last) && !identical(na.last, "keep")) {
     cli_abort("`na.last` must be `TRUE`, `FALSE`, or `\"keep\"`.")
