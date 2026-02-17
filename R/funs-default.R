@@ -190,7 +190,9 @@ pl_is.infinite <- function(x) {
 }
 
 pl_is.na <- function(x) {
-  pl$when(x$is_nan())$then(pl$lit(TRUE))$otherwise(x$is_null())
+  # Note: in R, is.na(NaN) is true, but I can't do the same here because polars
+  # doesn't accept non-numeric inputs for $is_nan().
+  x$is_null()
 }
 
 pl_is.nan <- function(x) {

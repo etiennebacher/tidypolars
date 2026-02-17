@@ -314,10 +314,13 @@ translate <- function(
           call_is_function = call_is_function,
           expr_uses_col = expr_uses_col
         )
-        args[["__tidypolars__new_vars"]] <- as.list(new_vars)
-        args[["__tidypolars__env"]] <- env
-        args[["__tidypolars__caller"]] <- caller
-        args[["__tidypolars__expr_uses_col"]] <- expr_uses_col
+        accepted_args <- names(formals(name))
+        if ("..." %in% accepted_args) {
+          args[["__tidypolars__new_vars"]] <- as.list(new_vars)
+          args[["__tidypolars__env"]] <- env
+          args[["__tidypolars__caller"]] <- caller
+          args[["__tidypolars__expr_uses_col"]] <- expr_uses_col
+        }
         return(do.call(name, args))
       }
 

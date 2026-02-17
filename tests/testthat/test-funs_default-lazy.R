@@ -254,7 +254,7 @@ test_that("anyNA() works", {
   )
 })
 
-test_that("is.finite, is.infinite, is.na, is.nan", {
+test_that("is.finite, is.infinite, is.nan", {
   test <- tibble(x = c(-Inf, 1, NA, NaN, Inf))
   test_pl <- as_polars_lf(test)
 
@@ -267,12 +267,19 @@ test_that("is.finite, is.infinite, is.na, is.nan", {
     mutate(test, y = is.finite(x))
   )
   expect_equal_lazy(
-    mutate(test_pl, y = is.na(x)),
-    mutate(test, y = is.na(x))
-  )
-  expect_equal_lazy(
     mutate(test_pl, y = is.nan(x)),
     mutate(test, y = is.nan(x))
+  )
+})
+
+test_that("is.na", {
+  # This test doesn't have NaN (see note in pl_is.na())
+  test <- tibble(x = c(-Inf, 1, NA, Inf))
+  test_pl <- as_polars_lf(test)
+
+  expect_equal_lazy(
+    mutate(test_pl, y = is.na(x)),
+    mutate(test, y = is.na(x))
   )
 })
 
