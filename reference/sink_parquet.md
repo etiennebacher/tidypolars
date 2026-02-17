@@ -173,7 +173,7 @@ sink_parquet(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRU
 #> Warning: `partition_by_key()` was deprecated in tidypolars 0.16.0.
 #> ℹ Please use `partition_by(key = )` instead.
 fs::dir_tree(out_path)
-#> /tmp/RtmpE4D5A0/file193d2fb53ae7
+#> /tmp/RtmpcXk2pa/file194f53715869
 #> ├── am=0.0
 #> │   ├── cyl=4.0
 #> │   │   └── 00000000.parquet
@@ -195,7 +195,7 @@ sink_parquet(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
 #> Warning: `partition_by_max_size()` was deprecated in tidypolars 0.16.0.
 #> ℹ Please use `partition_by(max_rows_per_file = )` instead.
 fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-#> /tmp/RtmpE4D5A0/file193d2eed1679
+#> /tmp/RtmpcXk2pa/file194f663e0853
 #> ├── 00000000.parquet
 #> ├── 00000001.parquet
 #> ├── 00000002.parquet
