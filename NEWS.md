@@ -15,7 +15,10 @@
 
 * Fix `NA` handling in `cummin()`, `cumprod()`, `cumsum()` (@Yousa-Mirage, #326).
 
-* Fix `NA` handling in `is.finite()`, `is.infinite()`, and `is.nan()` (#331.
+* Fix `NA` handling in `is.finite()`, `is.infinite()`, and `is.nan()` (#331).
+
+* In `arrange()`, if the data was grouped, the order was never maintained even if
+  `maintain_order = TRUE` was passed in `group_by()`. This is now fixed (#332).
 
 # tidypolars 0.17.0
 
