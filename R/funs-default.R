@@ -51,6 +51,15 @@ pl_any <- function(..., na.rm = FALSE) {
   }
 }
 
+pl_anyNA <- function(x, recursive = FALSE) {
+  if (!missing(recursive)) {
+    cli_abort(
+      "Argument {.code recursive} is not supported by {.pkg tidypolars}."
+    )
+  }
+  x$has_nulls()
+}
+
 pl_floor <- function(x, ...) {
   check_empty_dots(...)
   x$floor()

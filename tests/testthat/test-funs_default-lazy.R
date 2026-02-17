@@ -235,4 +235,23 @@ test_that("seq_len() works", {
   )
 })
 
+test_that("anyNA() works", {
+  test <- tibble(x = 1:4, y = c(1:3, NA))
+  test_pl <- as_polars_lf(test)
+
+  expect_equal_lazy(
+    mutate(test_pl, y = anyNA(x)),
+    mutate(test, y = anyNA(x))
+  )
+  expect_equal_lazy(
+    mutate(test_pl, y = anyNA(y)),
+    mutate(test, y = anyNA(y))
+  )
+
+  expect_snapshot_lazy(
+    mutate(test_pl, y = anyNA(x, recursive = TRUE)),
+    error = TRUE
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
