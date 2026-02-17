@@ -36,7 +36,7 @@ count.polars_data_frame <- function(
     check_unsupported_arg(wt = quo_text(enquo(wt)))
   }
   grps <- attributes(x)$pl_grps
-  mo <- attributes(x)$maintain_grp_order
+  mo <- attributes(x)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
 
   disallow_named_expressions(...)
@@ -60,7 +60,7 @@ tally.polars_data_frame <- function(x, wt = NULL, sort = FALSE, name = "n") {
     check_unsupported_arg(wt = quo_text(enquo(wt)))
   }
   grps <- attributes(x)$pl_grps
-  mo <- attributes(x)$maintain_grp_order
+  mo <- attributes(x)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
   out <- count_(x, grps, sort = sort, name = name, new_col = FALSE)
 
@@ -93,7 +93,7 @@ add_count.polars_data_frame <- function(
     check_unsupported_arg(wt = quo_text(enquo(wt)))
   }
   grps <- attributes(x)$pl_grps
-  mo <- attributes(x)$maintain_grp_order
+  mo <- attributes(x)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
 
   vars <- tidyselect_dots(x, ...)

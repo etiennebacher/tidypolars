@@ -85,7 +85,7 @@ compute.polars_lazy_frame <- function(
 ) {
   check_dots_empty()
   grps <- attributes(x)$pl_grps
-  mo <- attributes(x)$maintain_grp_order
+  mo <- attributes(x)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
 
   if (!missing(streaming)) {
