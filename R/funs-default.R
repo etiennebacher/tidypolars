@@ -201,7 +201,7 @@ pl_length <- function(x) {
   x$len()
 }
 
-pl_log <- function(x, base = expr(1)) {
+pl_log <- function(x, base = exp(1)) {
   x$log(base = base)
 }
 
