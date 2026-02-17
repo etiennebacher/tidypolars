@@ -231,6 +231,25 @@ test_that("seq_len() works", {
   )
 })
 
+test_that("anyNA() works", {
+  test <- tibble(x = 1:4, y = c(1:3, NA))
+  test_pl <- as_polars_df(test)
+
+  expect_equal(
+    mutate(test_pl, y = anyNA(x)),
+    mutate(test, y = anyNA(x))
+  )
+  expect_equal(
+    mutate(test_pl, y = anyNA(y)),
+    mutate(test, y = anyNA(y))
+  )
+
+  expect_snapshot(
+    mutate(test_pl, y = anyNA(x, recursive = TRUE)),
+    error = TRUE
+  )
+})
+
 test_that("is.finite, is.infinite, is.na, is.nan", {
   test <- tibble(x = c(-Inf, 1, NA, NaN, Inf))
   test_pl <- as_polars_df(test)

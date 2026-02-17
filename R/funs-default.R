@@ -50,8 +50,13 @@ pl_any <- function(..., na.rm = FALSE) {
   }
 }
 
-pl_floor <- function(x) {
-  x$floor()
+pl_anyNA <- function(x, recursive = FALSE) {
+  if (!missing(recursive)) {
+    cli_abort(
+      "Argument {.code recursive} is not supported by {.pkg tidypolars}."
+    )
+  }
+  x$has_nulls()
 }
 
 pl_acos <- function(x) {
@@ -136,6 +141,10 @@ pl_duplicated <- function(x, ...) {
 
 pl_exp <- function(x) {
   x$exp()
+}
+
+pl_floor <- function(x) {
+  x$floor()
 }
 
 pl_ifelse <- function(test, yes, no, .data, ...) {

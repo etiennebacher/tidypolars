@@ -30,6 +30,7 @@ out <- tribble(
   "`base`", "`acosh`",
   "`base`", "`all`",
   "`base`", "`any`",
+  "`base`", "`anyNA`",
   "`base`", "`asin`",
   "`base`", "`asinh`",
   "`base`", "`as.character`",
