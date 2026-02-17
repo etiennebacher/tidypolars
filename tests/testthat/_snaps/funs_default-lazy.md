@@ -17,3 +17,12 @@
       ! Error while running function `seq_len()` in Polars.
       x `length.out` must be a non-negative integer.
 
+# anyNA() works
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `anyNA()` in Polars.
+      x Argument `recursive` is not supported by tidypolars.
+
