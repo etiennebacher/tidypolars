@@ -33,7 +33,6 @@ test_that("mathematical functions work", {
     "last",
     "log",
     "log10",
-    "rank",
     "sign",
     "sin",
     "sinh",
@@ -103,8 +102,6 @@ test_that("mathematical functions work with NA", {
     "last",
     "log",
     "log10",
-    # TODO:
-    # "rank", inconsistent behavior between R and Polars with NA
     "sign",
     "sin",
     "sinh",
@@ -200,17 +197,10 @@ test_that("sort supports decreasing and na.last", {
   }
 })
 
-test_that("rank with na.last and ties.method", {
+test_that("rank error when na.last is not in TRUE/FALSE/keep", {
   test <- tibble(x = sample(c(0:9, NA), size = 10000, replace = TRUE))
   test_pl <- as_polars_lf(test)
 
-  # Default Behavior
-  expect_equal_lazy(
-    test_pl |> mutate(foo = rank(x)),
-    test |> mutate(foo = rank(x))
-  )
-
-  # Error when na.last = NA
   expect_snapshot_lazy(
     test_pl |> mutate(foo = rank(x, na.last = NA)),
     error = TRUE
@@ -219,9 +209,24 @@ test_that("rank with na.last and ties.method", {
     test_pl |> mutate(foo = rank(x, na.last = "wrong")),
     error = TRUE
   )
+  expect_snapshot_lazy(
+    test_pl |> mutate(foo = rank(x, na.last = 5)),
+    error = TRUE
+  )
   expect_both_error(
     test_pl |> mutate(foo = rank(x, na.last = NA)),
     test |> mutate(foo = rank(x, na.last = NA))
+  )
+})
+
+test_that("rank with na.last and ties.method", {
+  test <- tibble(x = sample(c(0:9, NA), size = 10000, replace = TRUE))
+  test_pl <- as_polars_lf(test)
+
+  # Default Behavior
+  expect_equal_lazy(
+    test_pl |> mutate(foo = rank(x)),
+    test |> mutate(foo = rank(x))
   )
 
   # Test with different ties.method and na.last
