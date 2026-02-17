@@ -1,7 +1,7 @@
 # tidypolars_unknown_args: basic behavior works
 
     Code
-      mutate(test, x2 = sample(x, prob = 0.5))
+      mutate(test_pl, x2 = sample(x, prob = 0.5))
     Condition
       Error in `mutate()`:
       ! Error while running function `sample()` in Polars.
@@ -11,7 +11,7 @@
 # tidypolars_fallback_to_r: basic behavior works
 
     Code
-      mutate(test, y = 1, x2 = mad(x), z = mad(y))
+      mutate(test_pl, y = 1, x2 = mad(x), z = mad(y))
     Condition
       Error:
       ! object 'y' not found

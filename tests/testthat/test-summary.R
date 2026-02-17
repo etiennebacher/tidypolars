@@ -1,7 +1,7 @@
 test_that("basic behavior works", {
   # tidypolars-specific (summary() for polars DataFrames is different from base R)
-  test <- as_tibble(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test_df)
 
   expect_is_tidypolars(summary(test_pl))
 
@@ -12,8 +12,8 @@ test_that("basic behavior works", {
 
 test_that("check percentiles", {
   # tidypolars-specific errors
-  test <- as_tibble(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test_df)
 
   expect_snapshot(
     summary(test_pl, percentiles = c(0.2, 0.4, NA)),

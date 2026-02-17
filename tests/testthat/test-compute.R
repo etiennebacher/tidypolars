@@ -27,9 +27,9 @@ test_that("basic behavior works", {
 })
 
 test_that("deprecated arguments in compute()", {
-  test <- as_polars_lf(mtcars)
+  test_df <- as_polars_lf(mtcars)
   expect_snapshot({
-    x <- compute(test, streaming = TRUE)
+    x <- compute(test_df, streaming = TRUE)
   })
 })
 

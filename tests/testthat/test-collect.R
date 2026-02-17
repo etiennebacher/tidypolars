@@ -18,9 +18,9 @@ test_that("basic behavior works", {
 })
 
 test_that("deprecated arguments in collect()", {
-  test <- as_polars_lf(mtcars)
+  test_pl <- as_polars_lf(mtcars)
   expect_snapshot({
-    x <- collect(test, streaming = TRUE)
+    x <- collect(test_pl, streaming = TRUE)
   })
 })
 

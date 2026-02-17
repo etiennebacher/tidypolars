@@ -3,9 +3,9 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior with statistical functions works", {
-  test <- tibble(x = c(2, 2), y = c(2, 3), z = c(5, NA)) |>
+  test_df <- tibble(x = c(2, 2), y = c(2, 3), z = c(5, NA)) |>
     rowwise()
-  test_pl <- as_polars_lf(test) |>
+  test_pl <- as_polars_lf(test_df) |>
     rowwise()
 
   expect_is_tidypolars(test_pl)
@@ -24,7 +24,7 @@ test_that("basic behavior with statistical functions works", {
         min2 = min(c(x, y, z), na.rm = TRUE),
         max2 = max(c(x, y, z), na.rm = TRUE)
       ),
-    test |>
+    test_df |>
       mutate(
         mean = mean(c(x, y, z)),
         sum = sum(c(x, y, z)),
@@ -49,48 +49,48 @@ test_that("basic behavior with all() and any() works", {
   # Therefore the tests below compare only non-NA rows and use hardcoded values
   # for the NA-only rows.
 
-  test <- tibble(
+  test_df <- tibble(
     x = c(TRUE, TRUE),
     y = c(TRUE, FALSE),
     z = c(TRUE, NA)
   ) |>
     rowwise()
-  test_pl <- as_polars_lf(test) |>
+  test_pl <- as_polars_lf(test_df) |>
     rowwise()
 
   expect_equal_lazy(
     test_pl |> mutate(m = all(c(x, y, z))),
-    test |> mutate(m = all(c(x, y, z))),
+    test_df |> mutate(m = all(c(x, y, z))),
     ignore_attr = TRUE
   )
 
   expect_equal_lazy(
     test_pl |> mutate(m = all(c(x, y, !z))),
-    test |> mutate(m = all(c(x, y, !z))),
+    test_df |> mutate(m = all(c(x, y, !z))),
     ignore_attr = TRUE
   )
 
   expect_equal_lazy(
     test_pl |> mutate(m = any(c(x, y, z))),
-    test |> mutate(m = any(c(x, y, z))),
+    test_df |> mutate(m = any(c(x, y, z))),
     ignore_attr = TRUE
   )
 
   expect_equal_lazy(
     test_pl |> mutate(m = any(c(x, y, !z))),
-    test |> mutate(m = any(c(x, y, !z))),
+    test_df |> mutate(m = any(c(x, y, !z))),
     ignore_attr = TRUE
   )
 })
 
 test_that("can only use rowwise() on a subset of functions", {
   # tidypolars-specific error (tidyverse handles range() differently in rowwise)
-  test <- tibble(
+  test_df <- tibble(
     x = c(TRUE, TRUE, NA),
     y = c(TRUE, FALSE, NA),
     z = c(TRUE, NA, NA)
   )
-  test_pl <- as_polars_lf(test) |>
+  test_pl <- as_polars_lf(test_df) |>
     rowwise()
   expect_snapshot_lazy(
     test_pl |> mutate(m = range(c(x, y, !z))),
@@ -99,12 +99,12 @@ test_that("can only use rowwise() on a subset of functions", {
 })
 
 test_that("rowwise mode is kept after operations", {
-  test <- tibble(
+  test_df <- tibble(
     x = c(TRUE, TRUE, NA),
     y = c(TRUE, FALSE, NA),
     z = c(TRUE, NA, NA)
   )
-  test_pl <- as_polars_lf(test) |>
+  test_pl <- as_polars_lf(test_df) |>
     rowwise()
 
   expect_equal_lazy(
@@ -119,8 +119,8 @@ test_that("rowwise mode is kept after operations", {
 })
 
 test_that("can't apply rowwise on grouped data, and vice versa", {
-  test <- as_tibble(mtcars)
-  test_pl <- as_polars_lf(test)
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test_df)
 
   expect_snapshot_lazy(
     test_pl |> group_by(cyl) |> rowwise(),

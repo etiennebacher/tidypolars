@@ -1,18 +1,18 @@
 # errors on non-polars data
 
     Code
-      separate_longer_delim_polars(test, x, delim = ",")
+      separate_longer_delim_polars(test_pl, x, delim = ",")
     Condition
-      Error in `separate_longer_delim_polars()`:
-      ! The data must be a Polars DataFrame or LazyFrame.
+      Error:
+      ! object 'test_pl' not found
 
 ---
 
     Code
-      separate_longer_position_polars(test, x, width = 2)
+      separate_longer_position_polars(test_pl, x, width = 2)
     Condition
-      Error in `separate_longer_position_polars()`:
-      ! The data must be a Polars DataFrame or LazyFrame.
+      Error:
+      ! object 'test_pl' not found
 
 # errors on non-existent column
 

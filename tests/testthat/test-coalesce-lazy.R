@@ -3,26 +3,26 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- tibble(
+  test_df <- tibble(
     a = c(1, NA, NA, NA),
     b = c(1, 2, NA, NA),
     c = c(5, NA, 3, NA)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |> mutate(d = coalesce(a, b, c)),
-    test |> mutate(d = coalesce(a, b, c))
+    test_df |> mutate(d = coalesce(a, b, c))
   )
 })
 
 test_that("convert all new column to supertype", {
-  test <- tibble(
+  test_df <- tibble(
     a = c(1, NA, NA, NA),
     b = c("1", "2", NA, NA),
     c = c(5, NA, 3, NA)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   # TODO? dplyr errors because of coercion
   expect_equal_lazy(

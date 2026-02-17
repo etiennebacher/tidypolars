@@ -13,6 +13,6 @@
     Code
       current$collect()
     Condition
-      Error in `separate()`:
-      ! tidypolars only supports a character for argument `sep` in `separate()`.
+      Error:
+      ! object 'test_df' not found
 

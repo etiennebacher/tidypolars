@@ -3,8 +3,8 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- as_tibble(tidyr::fish_encounters)
-  test_pl <- as_polars_lf(test)
+  test_df <- as_tibble(tidyr::fish_encounters)
+  test_pl <- as_polars_lf(test_df)
 
   expect_is_tidypolars(
     test_pl |> pivot_wider(names_from = station, values_from = seen)
@@ -14,13 +14,13 @@ test_that("basic behavior works", {
     test_pl |>
       pivot_wider(names_from = station, values_from = seen) |>
       arrange(fish),
-    test |> pivot_wider(names_from = station, values_from = seen)
+    test_df |> pivot_wider(names_from = station, values_from = seen)
   )
 })
 
 test_that("names_prefix works", {
-  test <- as_tibble(tidyr::fish_encounters)
-  test_pl <- as_polars_lf(test)
+  test_df <- as_tibble(tidyr::fish_encounters)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |>
@@ -30,7 +30,7 @@ test_that("names_prefix works", {
         names_prefix = "foo_"
       ) |>
       arrange(fish),
-    test |>
+    test_df |>
       pivot_wider(
         names_from = station,
         values_from = seen,
@@ -45,7 +45,7 @@ test_that("names_prefix works", {
         values_from = seen,
         names_prefix = c("foo1", "foo2")
       ),
-    test |>
+    test_df |>
       pivot_wider(
         names_from = station,
         values_from = seen,
@@ -64,8 +64,8 @@ test_that("names_prefix works", {
 })
 
 test_that("names_sep works", {
-  test <- as_tibble(tidyr::us_rent_income)
-  test_pl <- as_polars_lf(test)
+  test_df <- as_tibble(tidyr::us_rent_income)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |>
@@ -75,7 +75,7 @@ test_that("names_sep works", {
         values_from = c(estimate, moe)
       ) |>
       arrange(GEOID, NAME),
-    test |>
+    test_df |>
       pivot_wider(
         names_from = variable,
         names_sep = ".",
@@ -85,27 +85,27 @@ test_that("names_sep works", {
 })
 
 test_that("values_fill works", {
-  test <- as_tibble(tidyr::fish_encounters)
-  test_pl <- as_polars_lf(test)
+  test_df <- as_tibble(tidyr::fish_encounters)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |>
       pivot_wider(names_from = station, values_from = seen, values_fill = 0) |>
       arrange(fish),
-    test |>
+    test_df |>
       pivot_wider(names_from = station, values_from = seen, values_fill = 0)
   )
 })
 
 test_that("several columns in names_from works", {
-  test <- expand.grid(
+  test_df <- expand.grid(
     product = c("A", "B"),
     country = c("AI", "EI"),
     year = 2000:2014
   ) |>
     filter((product == "A" & country == "AI") | product == "B") |>
     mutate(production = 1:45)
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |>
@@ -116,7 +116,7 @@ test_that("several columns in names_from works", {
         names_prefix = "prod."
       ) |>
       arrange(year),
-    test |>
+    test_df |>
       pivot_wider(
         names_from = c(product, country),
         values_from = production,
@@ -127,14 +127,14 @@ test_that("several columns in names_from works", {
 })
 
 test_that("names_glue works", {
-  test <- expand.grid(
+  test_df <- expand.grid(
     product = c("A", "B"),
     country = c("AI", "EI"),
     year = 2000:2014
   ) |>
     filter((product == "A" & country == "AI") | product == "B") |>
     mutate(production = 1:45)
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |>
@@ -144,7 +144,7 @@ test_that("names_glue works", {
         names_glue = "prod_{product}_{country}"
       ) |>
       arrange(year),
-    test |>
+    test_df |>
       pivot_wider(
         names_from = c(product, country),
         values_from = production,
@@ -160,7 +160,7 @@ test_that("names_glue works", {
         names_glue = "prod_{product}"
       ) |>
       arrange(year, country),
-    test |>
+    test_df |>
       pivot_wider(
         names_from = product,
         values_from = production,
@@ -170,16 +170,16 @@ test_that("names_glue works", {
 })
 
 test_that("error when overwriting existing column", {
-  test <- tibble(
+  test_df <- tibble(
     a = c(1, 1),
     key = c("a", "b"),
     val = c(1, 2)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_both_error(
     pivot_wider(test_pl, names_from = key, values_from = val),
-    pivot_wider(test, names_from = key, values_from = val)
+    pivot_wider(test_df, names_from = key, values_from = val)
   )
   expect_snapshot_lazy(
     pivot_wider(test_pl, names_from = key, values_from = val),
@@ -187,17 +187,17 @@ test_that("error when overwriting existing column", {
   )
 
   # With multiple columns in names_from
-  test <- tibble(
+  test_df <- tibble(
     a_c = c(1, 1),
     key = c("a", "b"),
     key_2 = c("c", "d"),
     val = c(1, 2)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_both_error(
     pivot_wider(test_pl, names_from = c(key, key_2), values_from = val),
-    pivot_wider(test, names_from = c(key, key_2), values_from = val)
+    pivot_wider(test_df, names_from = c(key, key_2), values_from = val)
   )
   expect_snapshot_lazy(
     pivot_wider(test_pl, names_from = c(key, key_2), values_from = val),
@@ -206,11 +206,11 @@ test_that("error when overwriting existing column", {
 })
 
 test_that("`names_from` must be supplied if `name` isn't in data", {
-  test <- tibble(key = "x", val = 1)
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(key = "x", val = 1)
+  test_pl <- as_polars_lf(test_df)
   expect_both_error(
     pivot_wider(test_pl, values_from = val),
-    pivot_wider(test, values_from = val)
+    pivot_wider(test_df, values_from = val)
   )
   expect_snapshot_lazy(
     pivot_wider(test_pl, values_from = val),
@@ -219,11 +219,11 @@ test_that("`names_from` must be supplied if `name` isn't in data", {
 })
 
 test_that("`values_from` must be supplied if `value` isn't in data", {
-  test <- tibble(key = "x", val = 1)
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(key = "x", val = 1)
+  test_pl <- as_polars_lf(test_df)
   expect_both_error(
     pivot_wider(test_pl, names_from = key),
-    pivot_wider(test, names_from = key)
+    pivot_wider(test_df, names_from = key)
   )
   expect_snapshot_lazy(
     pivot_wider(test_pl, names_from = key),
@@ -232,11 +232,11 @@ test_that("`values_from` must be supplied if `value` isn't in data", {
 })
 
 test_that("`names_from` must identify at least 1 column", {
-  test <- tibble(key = "x", val = 1)
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(key = "x", val = 1)
+  test_pl <- as_polars_lf(test_df)
   expect_both_error(
     pivot_wider(test_pl, names_from = starts_with("foo"), values_from = val),
-    pivot_wider(test, names_from = starts_with("foo"), values_from = val)
+    pivot_wider(test_df, names_from = starts_with("foo"), values_from = val)
   )
   expect_snapshot_lazy(
     pivot_wider(test_pl, names_from = starts_with("foo"), values_from = val),
@@ -245,11 +245,11 @@ test_that("`names_from` must identify at least 1 column", {
 })
 
 test_that("`values_from` must identify at least 1 column", {
-  test <- tibble(key = "x", val = 1)
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(key = "x", val = 1)
+  test_pl <- as_polars_lf(test_df)
   expect_both_error(
     pivot_wider(test_pl, names_from = key, values_from = starts_with("foo")),
-    pivot_wider(test, names_from = key, values_from = starts_with("foo"))
+    pivot_wider(test_df, names_from = key, values_from = starts_with("foo"))
   )
   expect_snapshot_lazy(
     pivot_wider(test_pl, names_from = key, values_from = starts_with("foo")),
@@ -258,17 +258,17 @@ test_that("`values_from` must identify at least 1 column", {
 })
 
 test_that("`id_cols = everything()` excludes `names_from` and `values_from`", {
-  test <- tibble(key = "x", name = "a", value = 1L)
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(key = "x", name = "a", value = 1L)
+  test_pl <- as_polars_lf(test_df)
   expect_equal_lazy(
     pivot_wider(test_pl, id_cols = everything()),
-    pivot_wider(test, id_cols = everything())
+    pivot_wider(test_df, id_cols = everything())
   )
 })
 
 test_that("`id_cols` can't select columns from `names_from` or `values_from`", {
-  test <- tibble(name = c("x", "y"), value = c(1, 2))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(name = c("x", "y"), value = c(1, 2))
+  test_pl <- as_polars_lf(test_df)
   expect_both_error(
     pivot_wider(
       test_pl,
@@ -276,7 +276,7 @@ test_that("`id_cols` can't select columns from `names_from` or `values_from`", {
       names_from = name,
       values_from = value
     ),
-    pivot_wider(test, id_cols = name, names_from = name, values_from = value)
+    pivot_wider(test_df, id_cols = name, names_from = name, values_from = value)
   )
   expect_snapshot_lazy(
     pivot_wider(
@@ -294,7 +294,12 @@ test_that("`id_cols` can't select columns from `names_from` or `values_from`", {
       names_from = name,
       values_from = value
     ),
-    pivot_wider(test, id_cols = value, names_from = name, values_from = value)
+    pivot_wider(
+      test_df,
+      id_cols = value,
+      names_from = name,
+      values_from = value
+    )
   )
   expect_snapshot_lazy(
     pivot_wider(
@@ -308,8 +313,8 @@ test_that("`id_cols` can't select columns from `names_from` or `values_from`", {
 })
 
 test_that("unsupported args throw warning", {
-  test <- as_tibble(tidyr::fish_encounters)
-  test_pl <- as_polars_lf(test)
+  test_df <- as_tibble(tidyr::fish_encounters)
+  test_pl <- as_polars_lf(test_df)
 
   expect_warning(
     pivot_wider(
@@ -323,8 +328,8 @@ test_that("unsupported args throw warning", {
 })
 
 test_that("dots must be empty", {
-  test <- as_tibble(tidyr::fish_encounters)
-  test_pl <- as_polars_lf(test)
+  test_df <- as_tibble(tidyr::fish_encounters)
+  test_pl <- as_polars_lf(test_df)
 
   expect_both_error(
     pivot_wider(

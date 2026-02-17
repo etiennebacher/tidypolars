@@ -3,46 +3,46 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("count works", {
-  test <- as_tibble(mtcars)
-  test_pl <- as_polars_lf(test)
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test_df)
 
   expect_is_tidypolars(count(test_pl))
 
   expect_equal_lazy(
     count(test_pl),
-    count(test)
+    count(test_df)
   )
 
   expect_equal_lazy(
     count(test_pl, cyl),
-    count(test, cyl)
+    count(test_df, cyl)
   )
 
   expect_equal_lazy(
     count(test_pl, cyl, am),
-    count(test, cyl, am)
+    count(test_df, cyl, am)
   )
 })
 
 test_that("arguments name and sort work", {
-  test <- as_tibble(mtcars)
-  test_pl <- as_polars_lf(test)
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     count(test_pl, cyl, am, sort = TRUE, name = "count"),
-    count(test, cyl, am, sort = TRUE, name = "count")
+    count(test_df, cyl, am, sort = TRUE, name = "count")
   )
 
   expect_equal_lazy(
     count(test_pl, name = "count"),
-    count(test, name = "count")
+    count(test_df, name = "count")
   )
 })
 
 test_that("count works on grouped data", {
-  test <- as_tibble(mtcars)
-  test_g <- group_by(test, am)
-  test_pl <- as_polars_lf(test)
+  test_df <- as_tibble(mtcars)
+  test_g <- group_by(test_df, am)
+  test_pl <- as_polars_lf(test_df)
   test_g_pl <- group_by(test_pl, am)
 
   expect_equal_lazy(
@@ -57,39 +57,39 @@ test_that("count works on grouped data", {
 })
 
 test_that("add_count works", {
-  test <- as_tibble(mtcars)
-  test_pl <- as_polars_lf(test)
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     add_count(test_pl, cyl),
-    add_count(test, cyl)
+    add_count(test_df, cyl)
   )
 })
 
 test_that("arguments name and sort work", {
-  test <- as_tibble(mtcars)
-  test_pl <- as_polars_lf(test)
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     add_count(test_pl, cyl, am, sort = TRUE, name = "count"),
-    add_count(test, cyl, am, sort = TRUE, name = "count")
+    add_count(test_df, cyl, am, sort = TRUE, name = "count")
   )
 
   expect_equal_lazy(
     add_count(test_pl, cyl, am, sort = TRUE, name = "count"),
-    add_count(test, cyl, am, sort = TRUE, name = "count")
+    add_count(test_df, cyl, am, sort = TRUE, name = "count")
   )
 
   expect_equal_lazy(
     add_count(test_pl, name = "count"),
-    add_count(test, name = "count")
+    add_count(test_df, name = "count")
   )
 })
 
 test_that("add_count works on grouped data", {
-  test <- as_tibble(mtcars)
-  test_g <- group_by(test, am)
-  test_pl <- as_polars_lf(test)
+  test_df <- as_tibble(mtcars)
+  test_g <- group_by(test_df, am)
+  test_pl <- as_polars_lf(test_df)
   test_g_pl <- group_by(test_pl, am, maintain_order = TRUE)
 
   expect_equal_lazy(
@@ -114,13 +114,13 @@ test_that("add_count works on grouped data", {
 })
 
 test_that("message if overwriting variable", {
-  test <- as_tibble(mtcars)
-  test_pl <- as_polars_lf(test)
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test_df)
 
   expect_message(
     expect_equal_lazy(
       test_pl |> mutate(n = 1) |> count(n),
-      test |> mutate(n = 1) |> count(n) |> suppressMessages()
+      test_df |> mutate(n = 1) |> count(n) |> suppressMessages()
     ),
     "Storing counts in `nn`, as `n` already present in input."
   )
@@ -128,7 +128,7 @@ test_that("message if overwriting variable", {
   expect_message(
     expect_equal_lazy(
       test_pl |> mutate(n = 1) |> add_count(n),
-      test |> mutate(n = 1) |> add_count(n) |> suppressMessages()
+      test_df |> mutate(n = 1) |> add_count(n) |> suppressMessages()
     ),
     "Storing counts in `nn`, as `n` already present in input."
   )
@@ -136,7 +136,7 @@ test_that("message if overwriting variable", {
   expect_message(
     expect_equal_lazy(
       test_pl |> mutate(n = 1, nn = 1) |> count(n, nn),
-      test |> mutate(n = 1, nn = 1) |> count(n, nn) |> suppressMessages()
+      test_df |> mutate(n = 1, nn = 1) |> count(n, nn) |> suppressMessages()
     ),
     "Storing counts in `nnn`, as `n` already present in input."
   )
@@ -144,7 +144,7 @@ test_that("message if overwriting variable", {
   expect_message(
     expect_equal_lazy(
       test_pl |> mutate(n = 1, nn = 1) |> add_count(cyl),
-      test |> mutate(n = 1, nn = 1) |> add_count(cyl) |> suppressMessages()
+      test_df |> mutate(n = 1, nn = 1) |> add_count(cyl) |> suppressMessages()
     ),
     "Storing counts in `nnn`, as `n` already present in input."
   )

@@ -1,7 +1,7 @@
 # errors with unknown vars
 
     Code
-      arrange(test, foo)
+      arrange(test_pl, foo)
     Condition
       Error:
       ! object 'foo' not found
@@ -9,7 +9,7 @@
 ---
 
     Code
-      arrange(test, foo, x1)
+      arrange(test_pl, foo, x1)
     Condition
       Error:
       ! object 'foo' not found
@@ -17,7 +17,7 @@
 ---
 
     Code
-      arrange(test, desc(foo))
+      arrange(test_pl, desc(foo))
     Condition
       Error:
       ! object 'foo' not found

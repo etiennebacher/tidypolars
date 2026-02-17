@@ -1,7 +1,7 @@
 # deprecated arguments in compute()
 
     Code
-      x <- compute(test, streaming = TRUE)
+      x <- compute(test_df, streaming = TRUE)
     Condition
       Warning:
       The `streaming` argument of `compute()` is deprecated as of tidypolars 0.14.0.

@@ -9,25 +9,25 @@ test_that("paste() and paste0() work", {
     separator = character_(len = 1),
     property = function(string, separator) {
       test_df <- tibble(x1 = string)
-      test <- pl$LazyFrame(x1 = string)
+      test_pl <- pl$LazyFrame(x1 = string)
 
       expect_equal_lazy(
-        mutate(test, foo = paste(x1, "he")) |> pull(foo),
+        mutate(test_df, foo = paste(x1, "he")) |> pull(foo),
         mutate(test_df, foo = paste(x1, "he")) |> pull(foo)
       )
 
       expect_equal_lazy(
-        mutate(test, foo = paste(x1, "he", sep = separator)) |> pull(foo),
+        mutate(test_df, foo = paste(x1, "he", sep = separator)) |> pull(foo),
         mutate(test_df, foo = paste(x1, "he", sep = separator)) |> pull(foo)
       )
 
       expect_equal_lazy(
-        mutate(test, foo = paste0(x1, "he")) |> pull(foo),
+        mutate(test_df, foo = paste0(x1, "he")) |> pull(foo),
         mutate(test_df, foo = paste0(x1, "he")) |> pull(foo)
       )
 
       expect_equal_lazy(
-        mutate(test, foo = paste0(x1, "he", x1)) |> pull(foo),
+        mutate(test_df, foo = paste0(x1, "he", x1)) |> pull(foo),
         mutate(test_df, foo = paste0(x1, "he", x1)) |> pull(foo)
       )
     }
@@ -42,9 +42,13 @@ patrick::with_parameters_test_that(
       string = character_(any_na = TRUE),
       property = function(string) {
         test_df <- tibble(x1 = string)
-        test <- pl$LazyFrame(x1 = string)
+        test_pl <- pl$LazyFrame(x1 = string)
 
-        pl_code <- paste0("mutate(test, foo = ", fun, "(string)) |> pull(foo)")
+        pl_code <- paste0(
+          "mutate(test_df, foo = ",
+          fun,
+          "(string)) |> pull(foo)"
+        )
         tv_code <- paste0(
           "mutate(test_df, foo = ",
           fun,
@@ -72,15 +76,15 @@ test_that("str_trim() works", {
     ),
     property = function(string, side) {
       test_df <- tibble(x1 = string)
-      test <- pl$LazyFrame(x1 = string)
+      test_pl <- pl$LazyFrame(x1 = string)
 
       expect_equal_lazy(
-        mutate(test, foo = str_trim(x1)) |> pull(foo),
+        mutate(test_df, foo = str_trim(x1)) |> pull(foo),
         mutate(test_df, foo = str_trim(x1)) |> pull(foo)
       )
 
       expect_equal_lazy(
-        mutate(test, foo = str_trim(x1, side = side)) |> pull(foo),
+        mutate(test_df, foo = str_trim(x1, side = side)) |> pull(foo),
         mutate(test_df, foo = str_trim(x1, side = side)) |> pull(foo)
       )
     }
@@ -101,17 +105,17 @@ test_that("str_trim() works", {
 #     side = quickcheck::one_of(constant("left"), constant("right")),
 #     property = function(string, side, pad, width) {
 #       test_df <- tibble(x1 = string)
-#       test <- pl$LazyFrame(x1 = string)
+#       test_pl <- pl$LazyFrame(x1 = string)
 #
 #       # Might work in the future but for now width must have length 1
 #       if (length(width) > 1) {
 #         expect_error_lazy(
-#           mutate(test, foo = str_pad(x1, side = side, pad = pad, width = width)),
+#           mutate(test_df, foo = str_pad(x1, side = side, pad = pad, width = width)),
 #           "doesn't work in a Polars DataFrame when `width` has a length greater than 1"
 #         )
 #       } else {
 #         expect_equal_or_both_error(
-#           mutate(test, foo = str_pad(x1, side = side, pad = pad, width = width)) |>
+#           mutate(test_df, foo = str_pad(x1, side = side, pad = pad, width = width)) |>
 #             pull(foo),
 #           mutate(test_df, foo = str_pad(x1, side = side, pad = pad, width = width)) |>
 #             pull(foo)
@@ -129,10 +133,10 @@ test_that("str_dup() works", {
     times = numeric_bounded(-10000, 10000, any_na = TRUE),
     property = function(string, times) {
       test_df <- tibble(x1 = string)
-      test <- pl$LazyFrame(x1 = string)
+      test_pl <- pl$LazyFrame(x1 = string)
 
       expect_equal_or_both_error(
-        mutate(test, foo = str_dup(x1, times = times)) |> pull(foo),
+        mutate(test_pl, foo = str_dup(x1, times = times)) |> pull(foo),
         mutate(test_df, foo = str_dup(x1, times = times)) |> pull(foo)
       )
     }
@@ -147,10 +151,10 @@ test_that("str_sub() works", {
     end = numeric_(any_na = TRUE),
     property = function(string, start, end) {
       test_df <- tibble(x1 = string)
-      test <- pl$LazyFrame(x1 = string)
+      test_pl <- pl$LazyFrame(x1 = string)
 
       expect_equal_or_both_error(
-        mutate(test, foo = str_sub(x1, start, end)) |> pull(foo),
+        mutate(test_pl, foo = str_sub(x1, start, end)) |> pull(foo),
         mutate(test_df, foo = str_sub(x1, start, end)) |> pull(foo)
       )
     }
@@ -170,10 +174,10 @@ test_that("substr() works", {
     end = numeric_(any_na = TRUE, len = length),
     property = function(string, start, end) {
       test_df <- tibble(x1 = string)
-      test <- pl$LazyFrame(x1 = string)
+      test_pl <- pl$LazyFrame(x1 = string)
 
       expect_equal_or_both_error(
-        mutate(test, foo = substr(x1, start, end)) |> pull(foo),
+        mutate(test_pl, foo = substr(x1, start, end)) |> pull(foo),
         mutate(test_df, foo = substr(x1, start, end)) |> pull(foo)
       )
     }
@@ -190,10 +194,10 @@ test_that("str_equal() works", {
     y = character_(any_na = TRUE, len = length),
     property = function(x, y) {
       test_df <- tibble(x = x, y = y)
-      test <- as_polars_lf(test_df)
+      test_pl <- as_polars_lf(test_df)
 
       expect_equal_or_both_error(
-        mutate(test, foo = str_equal(x, y)) |> pull(foo),
+        mutate(test_pl, foo = str_equal(x, y)) |> pull(foo),
         mutate(test_df, foo = str_equal(x, y)) |> pull(foo)
       )
     }

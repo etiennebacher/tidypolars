@@ -1,7 +1,7 @@
 # deprecated arguments in collect()
 
     Code
-      x <- collect(test, streaming = TRUE)
+      x <- collect(test_pl, streaming = TRUE)
     Condition
       Warning:
       The `streaming` argument of `collect()` is deprecated as of tidypolars 0.14.0.

@@ -1,30 +1,30 @@
 test_that("basic behavior works", {
-  test <- tibble(
+  test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     x3 = 1:5
   )
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_df(test_df)
 
   expect_equal(
     test_pl |> summarize(n_obs = n()),
-    test |> summarize(n_obs = n())
+    test_df |> summarize(n_obs = n())
   )
 })
 
 test_that("works with grouped data", {
-  test <- tibble(
+  test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     x3 = 1:5
   )
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_df(test_df)
 
   expect_equal(
     test_pl |>
       summarize(n_obs = n(), .by = x1) |>
       arrange(x1),
-    test |>
+    test_df |>
       summarize(n_obs = n(), .by = x1) |>
       arrange(x1)
   )
@@ -34,7 +34,7 @@ test_that("works with grouped data", {
       group_by(x1) |>
       summarize(n_obs = n()) |>
       arrange(x1),
-    test |>
+    test_df |>
       group_by(x1) |>
       summarize(n_obs = n()) |>
       arrange(x1)
@@ -42,19 +42,19 @@ test_that("works with grouped data", {
 })
 
 test_that("works in computation", {
-  test <- tibble(
+  test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     x3 = 1:5
   )
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_df(test_df)
 
   expect_equal(
     test_pl |>
       group_by(x1) |>
       summarize(foo = mean(x3) / n()) |>
       arrange(x1),
-    test |>
+    test_df |>
       group_by(x1) |>
       summarize(foo = mean(x3) / n()) |>
       arrange(x1)

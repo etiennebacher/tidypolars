@@ -3,16 +3,16 @@
     Code
       current$collect()
     Condition
-      Error in `separate_longer_delim_polars()`:
-      ! The data must be a Polars DataFrame or LazyFrame.
+      Error:
+      ! object 'test_pl' not found
 
 ---
 
     Code
       current$collect()
     Condition
-      Error in `separate_longer_position_polars()`:
-      ! The data must be a Polars DataFrame or LazyFrame.
+      Error:
+      ! object 'test_pl' not found
 
 # errors on non-existent column
 

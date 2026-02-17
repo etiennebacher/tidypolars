@@ -3,7 +3,7 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior with common column names", {
-  test <- polars::pl$LazyFrame(
+  test_pl <- pl$LazyFrame(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
@@ -14,11 +14,11 @@ test_that("basic behavior with common column names", {
     z2 = c(1, 2, 4)
   )
 
-  expect_is_tidypolars(semi_join(test, test2, join_by(x, y)))
-  expect_is_tidypolars(anti_join(test, test2, join_by(x, y)))
+  expect_is_tidypolars(semi_join(test_pl, test2, join_by(x, y)))
+  expect_is_tidypolars(anti_join(test_pl, test2, join_by(x, y)))
 
   expect_equal_lazy(
-    semi_join(test, test2, by = c("x", "y")),
+    semi_join(test_pl, test2, by = c("x", "y")),
     pl$LazyFrame(
       x = c(1, 2),
       y = c(1, 2),
@@ -27,7 +27,7 @@ test_that("basic behavior with common column names", {
   )
 
   expect_equal_lazy(
-    anti_join(test, test2, by = c("x", "y")),
+    anti_join(test_pl, test2, by = c("x", "y")),
     pl$LazyFrame(
       x = 3,
       y = 3,
@@ -37,7 +37,7 @@ test_that("basic behavior with common column names", {
 })
 
 test_that("basic behavior with different column names", {
-  test <- polars::pl$LazyFrame(
+  test_pl <- pl$LazyFrame(
     x = c(1, 2, 3),
     y1 = c(1, 2, 3),
     z = c(1, 2, 3)
@@ -49,7 +49,7 @@ test_that("basic behavior with different column names", {
   )
 
   expect_equal_lazy(
-    semi_join(test, test2, by = c("x", "y1" = "y2")),
+    semi_join(test_pl, test2, by = c("x", "y1" = "y2")),
     pl$LazyFrame(
       x = c(1, 2),
       y1 = c(1, 2),
@@ -58,7 +58,7 @@ test_that("basic behavior with different column names", {
   )
 
   expect_equal_lazy(
-    anti_join(test, test2, by = c("x", "y1" = "y2")),
+    anti_join(test_pl, test2, by = c("x", "y1" = "y2")),
     pl$LazyFrame(
       x = 3,
       y1 = 3,
@@ -68,7 +68,7 @@ test_that("basic behavior with different column names", {
 })
 
 test_that("join_by() with strict equality", {
-  test <- polars::pl$LazyFrame(
+  test_pl <- pl$LazyFrame(
     x = c(1, 2, 3),
     y1 = c(1, 2, 3),
     z = c(1, 2, 3)
@@ -80,7 +80,7 @@ test_that("join_by() with strict equality", {
   )
 
   expect_equal_lazy(
-    semi_join(test, test2, by = join_by(x, y1 == y2)),
+    semi_join(test_pl, test2, by = join_by(x, y1 == y2)),
     pl$LazyFrame(
       x = c(1, 2),
       y1 = c(1, 2),
@@ -89,7 +89,7 @@ test_that("join_by() with strict equality", {
   )
 
   expect_equal_lazy(
-    anti_join(test, test2, by = join_by(x, y1 == y2)),
+    anti_join(test_pl, test2, by = join_by(x, y1 == y2)),
     pl$LazyFrame(
       x = 3,
       y1 = 3,
@@ -99,7 +99,7 @@ test_that("join_by() with strict equality", {
 })
 
 test_that("join_by() doesn't work with inequality", {
-  test <- polars::pl$LazyFrame(
+  test_pl <- pl$LazyFrame(
     x = c(1, 2, 3),
     y1 = c(1, 2, 3),
     z = c(1, 2, 3)
@@ -111,17 +111,17 @@ test_that("join_by() doesn't work with inequality", {
   )
 
   expect_snapshot_lazy(
-    semi_join(test, test2, by = join_by(x, y1 > y2)),
+    semi_join(test_pl, test2, by = join_by(x, y1 > y2)),
     error = TRUE
   )
   expect_snapshot_lazy(
-    anti_join(test, test2, by = join_by(x, y1 > y2)),
+    anti_join(test_pl, test2, by = join_by(x, y1 > y2)),
     error = TRUE
   )
 })
 
 test_that("fallback on dplyr error if wrong join_by specification", {
-  test <- polars::pl$LazyFrame(
+  test_pl <- pl$LazyFrame(
     x = c(1, 2, 3),
     y1 = c(1, 2, 3),
     z = c(1, 2, 3)
@@ -132,11 +132,11 @@ test_that("fallback on dplyr error if wrong join_by specification", {
     z2 = c(1, 2, 4)
   )
   expect_snapshot_lazy(
-    semi_join(test, test2, by = join_by(x, y1 = y2)),
+    semi_join(test_pl, test2, by = join_by(x, y1 = y2)),
     error = TRUE
   )
   expect_snapshot_lazy(
-    anti_join(test, test2, by = join_by(x, y1 = y2)),
+    anti_join(test_pl, test2, by = join_by(x, y1 = y2)),
     error = TRUE
   )
 })
@@ -157,7 +157,7 @@ test_that("argument na_matches works", {
 })
 
 test_that("unsupported args throw warning", {
-  test <- polars::pl$LazyFrame(
+  test_pl <- pl$LazyFrame(
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
@@ -166,20 +166,20 @@ test_that("unsupported args throw warning", {
     language = c("english", "japanese", "portuguese")
   )
   expect_warning(
-    semi_join(test, test2, by = "country", copy = TRUE),
+    semi_join(test_pl, test2, by = "country", copy = TRUE),
     "Argument `copy` is not supported by tidypolars"
   )
   withr::with_options(
     list(tidypolars_unknown_args = "error"),
     expect_snapshot_lazy(
-      semi_join(test, test2, by = "country", copy = TRUE),
+      semi_join(test_pl, test2, by = "country", copy = TRUE),
       error = TRUE
     )
   )
 })
 
 test_that("dots must be empty", {
-  test <- polars::pl$LazyFrame(
+  test_pl <- pl$LazyFrame(
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
@@ -188,11 +188,11 @@ test_that("dots must be empty", {
     language = c("english", "japanese", "portuguese")
   )
   expect_snapshot_lazy(
-    semi_join(test, test2, foo = TRUE),
+    semi_join(test_pl, test2, foo = TRUE),
     error = TRUE
   )
   expect_snapshot_lazy(
-    semi_join(test, test2, copy = TRUE, foo = TRUE),
+    semi_join(test_pl, test2, copy = TRUE, foo = TRUE),
     error = TRUE
   )
 })

@@ -3,18 +3,18 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- tibble(
+  test_df <- tibble(
     grp = rep(c("A", "B"), each = 3),
     x = c(NA, 1, NA, NA, 2, NA),
     y = c(3, NA, 4, NA, 3, 1)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_is_tidypolars(fill(test_pl, everything(), .direction = "down"))
 
   expect_equal_lazy(
     fill(test_pl, everything(), .direction = "down"),
-    fill(test, everything(), .direction = "down")
+    fill(test_df, everything(), .direction = "down")
   )
 
   expect_equal_lazy(
@@ -24,22 +24,22 @@ test_that("basic behavior works", {
 
   expect_equal_lazy(
     fill(test_pl, everything(), .direction = "updown"),
-    fill(test, everything(), .direction = "updown")
+    fill(test_df, everything(), .direction = "updown")
   )
 
   expect_equal_lazy(
     fill(test_pl, everything(), .direction = "downup"),
-    fill(test, everything(), .direction = "downup")
+    fill(test_df, everything(), .direction = "downup")
   )
 })
 
 test_that("when nothing to fill, input = output", {
-  test <- tibble(
+  test_df <- tibble(
     grp = rep(c("A", "B"), each = 3),
     x = c(NA, 1, NA, NA, 2, NA),
     y = c(3, NA, 4, NA, 3, 1)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |> fill(.direction = "updown"),
@@ -48,15 +48,15 @@ test_that("when nothing to fill, input = output", {
 })
 
 test_that("works with grouped data", {
-  test <- tibble(
+  test_df <- tibble(
     grp = rep(c("A", "B"), each = 3),
     x = c(NA, 1, NA, NA, 2, NA),
     y = c(3, NA, 4, NA, 3, 1)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
   test_pl_grp <- test_pl |>
     group_by(grp, maintain_order = TRUE)
-  test_grp <- test |>
+  test_grp <- test_df |>
     group_by(grp)
 
   expect_equal_lazy(
@@ -86,16 +86,16 @@ test_that("works with grouped data", {
 })
 
 test_that("argument '.by' works", {
-  test <- tibble(
+  test_df <- tibble(
     grp = rep(c("A", "B"), each = 3),
     x = c(NA, 1, NA, NA, 2, NA),
     y = c(3, NA, 4, NA, 3, 1)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     fill(test_pl, everything(), .direction = "down", .by = grp),
-    fill(test, everything(), .direction = "down", .by = grp)
+    fill(test_df, everything(), .direction = "down", .by = grp)
   )
 })
 
