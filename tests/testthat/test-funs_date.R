@@ -31,7 +31,7 @@ test_that("extracting components of date works", {
   test_pl <- as_polars_df(test_df)
 
   for (i in c("year", "month", "day", "quarter", "week", "mday", "yday")) {
-    pol <- paste0("mutate(test_df, foo = ", i, "(YMD))") |>
+    pol <- paste0("mutate(test_pl, foo = ", i, "(YMD))") |>
       str2lang() |>
       eval() |>
       pull(foo)
@@ -45,7 +45,7 @@ test_that("extracting components of date works", {
   }
 
   for (i in c("hour", "minute", "second")) {
-    pol <- paste0("mutate(test_df, foo = ", i, "(YMD_HMS))") |>
+    pol <- paste0("mutate(test_pl, foo = ", i, "(YMD_HMS))") |>
       str2lang() |>
       eval() |>
       pull(foo)
@@ -60,7 +60,7 @@ test_that("extracting components of date works", {
 
   # TODO: fix timezone attributes
   # for (i in c("ymd_hms", "ymd_hm")) {
-  #   pol <- paste0("mutate(test_df, to_", i, "  = ", i, "(to_", i, "))") |>
+  #   pol <- paste0("mutate(test_pl, to_", i, "  = ", i, "(to_", i, "))") |>
   #     str2lang() |>
   #     eval() |>
   #     as.data.frame()

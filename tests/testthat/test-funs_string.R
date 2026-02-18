@@ -15,7 +15,7 @@ test_that("case functions work", {
   test_pl <- as_polars_df(test_df)
 
   for (i in c("toupper", "tolower", "str_to_lower", "str_to_upper")) {
-    pol <- paste0("mutate(test_df, foo = ", i, "(x1))") |>
+    pol <- paste0("mutate(test_pl, foo = ", i, "(x1))") |>
       str2lang() |>
       eval() |>
       pull(foo)
