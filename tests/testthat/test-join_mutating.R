@@ -21,13 +21,13 @@ test_that("basic behavior works", {
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- tibble(
+  test2_df <- tibble(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z2 = c(4, 5, 7)
   )
   test_pl <- as_polars_df(test_df)
-  test2_pl <- as_polars_df(test2)
+  test2_pl <- as_polars_df(test2_df)
 
   expect_is_tidypolars(left_join(test_pl, test2_pl))
   expect_is_tidypolars(right_join(test_pl, test2_pl))
@@ -64,22 +64,22 @@ test_that("works if join by different variable names", {
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- tibble(
+  test2_df <- tibble(
     x2 = c(1, 2, 4),
     y2 = c(1, 2, 4),
     z3 = c(4, 5, 7)
   )
   test_pl <- as_polars_df(test_df)
-  test2_pl <- as_polars_df(test2)
+  test2_pl <- as_polars_df(test2_df)
 
   expect_equal(
     left_join(test_pl, test2_pl, join_by(x == x2, y == y2)),
-    left_join(test_df, test2, join_by(x == x2, y == y2))
+    left_join(test_df, test2_df, join_by(x == x2, y == y2))
   )
 
   expect_equal(
     left_join(test_pl, test2_pl, c("x" = "x2", "y" = "y2")),
-    left_join(test_df, test2, c("x" = "x2", "y" = "y2"))
+    left_join(test_df, test2_df, c("x" = "x2", "y" = "y2"))
   )
 })
 
@@ -89,27 +89,27 @@ test_that("argument suffix works", {
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- tibble(
+  test2_df <- tibble(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z = c(4, 5, 7)
   )
   test_pl <- as_polars_df(test_df)
-  test2_pl <- as_polars_df(test2)
+  test2_pl <- as_polars_df(test2_df)
 
   expect_equal(
     left_join(test_pl, test2_pl, by = c("x", "y")),
-    left_join(test_df, test2, by = c("x", "y"))
+    left_join(test_df, test2_df, by = c("x", "y"))
   )
 
   expect_equal(
     left_join(test_pl, test2_pl, by = c("x", "y"), suffix = c(".hi", ".hello")),
-    left_join(test_df, test2, by = c("x", "y"), suffix = c(".hi", ".hello"))
+    left_join(test_df, test2_df, by = c("x", "y"), suffix = c(".hi", ".hello"))
   )
 
   expect_both_error(
     left_join(test_pl, test2_pl, by = c("x", "y"), suffix = c(".hi")),
-    left_join(test_df, test2, by = c("x", "y"), suffix = c(".hi"))
+    left_join(test_df, test2_df, by = c("x", "y"), suffix = c(".hi"))
   )
   expect_snapshot(
     left_join(test_pl, test2_pl, by = c("x", "y"), suffix = c(".hi")),
@@ -123,17 +123,17 @@ test_that("suffix + join_by works", {
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- tibble(
+  test2_df <- tibble(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z = c(4, 5, 7)
   )
   test_pl <- as_polars_df(test_df)
-  test2_pl <- as_polars_df(test2)
+  test2_pl <- as_polars_df(test2_df)
 
   expect_equal(
     left_join(test_pl, test2_pl, by = join_by(x, y)),
-    left_join(test_df, test2, by = join_by(x, y))
+    left_join(test_df, test2_df, by = join_by(x, y))
   )
   expect_equal(
     left_join(
@@ -142,11 +142,16 @@ test_that("suffix + join_by works", {
       by = join_by(x, y),
       suffix = c(".hi", ".hello")
     ),
-    left_join(test_df, test2, by = join_by(x, y), suffix = c(".hi", ".hello"))
+    left_join(
+      test_df,
+      test2_df,
+      by = join_by(x, y),
+      suffix = c(".hi", ".hello")
+    )
   )
   expect_both_error(
     left_join(test_pl, test2_pl, by = join_by(x, y), suffix = c(".hi")),
-    left_join(test_df, test2, by = join_by(x, y), suffix = c(".hi"))
+    left_join(test_df, test2_df, by = join_by(x, y), suffix = c(".hi"))
   )
   expect_snapshot(
     left_join(test_pl, test2_pl, by = join_by(x, y), suffix = c(".hi")),
@@ -160,16 +165,16 @@ test_that("argument relationship works", {
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- tibble(
+  test2_df <- tibble(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z = c(4, 5, 7)
   )
   test_pl <- as_polars_df(test_df)
-  test2_pl <- as_polars_df(test2)
+  test2_pl <- as_polars_df(test2_df)
 
   expect_snapshot(
-    left_join(test_pl, test2, by = join_by(x, y), relationship = "foo"),
+    left_join(test_pl, test2_pl, by = join_by(x, y), relationship = "foo"),
     error = TRUE
   )
 
@@ -324,9 +329,9 @@ test_that("argument relationship works", {
 
 test_that("argument na_matches works", {
   test_df <- tibble(a = c(1, NA, NA, NaN), val = 1:4)
-  test2 <- tibble(a = c(1, 2, NA, NaN), val2 = 5:8)
+  test2_df <- tibble(a = c(1, 2, NA, NaN), val2 = 5:8)
   test_pl <- as_polars_df(test_df)
-  test2_pl <- as_polars_df(test2)
+  test2_pl <- as_polars_df(test2_df)
 
   expect_snapshot(
     left_join(test_pl, test2_pl, na_matches = "foo"),
@@ -335,7 +340,7 @@ test_that("argument na_matches works", {
 
   expect_equal(
     left_join(test_pl, test2_pl, "a"),
-    left_join(test_df, test2, "a")
+    left_join(test_df, test2_df, "a")
   )
 
   # This cannot be compared to dplyr because polars always matches on NaN (this
@@ -391,17 +396,17 @@ test_that("unsupported args throw warning", {
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-  test2 <- tibble(
+  test2_df <- tibble(
     country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )
   test_pl <- as_polars_df(test_df)
-  test2_pl <- as_polars_df(test2)
+  test2_pl <- as_polars_df(test2_df)
 
   expect_warning(
     expect_equal(
       left_join(test_pl, test2_pl, by = "country", copy = TRUE),
-      left_join(test_df, test2, by = "country", copy = TRUE)
+      left_join(test_df, test2_df, by = "country", copy = TRUE)
     ),
     "Argument `copy` is not supported by"
   )
@@ -424,16 +429,16 @@ test_that("dots must be empty", {
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-  test2 <- polars::pl$DataFrame(
+  test2_pl <- polars::pl$DataFrame(
     country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )
   expect_snapshot(
-    left_join(test_pl, test2, by = "country", foo = TRUE),
+    left_join(test_pl, test2_pl, by = "country", foo = TRUE),
     error = TRUE
   )
   expect_snapshot(
-    left_join(test_pl, test2, by = "country", copy = TRUE, foo = TRUE),
+    left_join(test_pl, test2_pl, by = "country", copy = TRUE, foo = TRUE),
     error = TRUE
   )
 })
