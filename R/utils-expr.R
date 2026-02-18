@@ -762,6 +762,9 @@ translate <- function(
               args[["__tidypolars__env"]] <- env
               args[["__tidypolars__expr_uses_col"]] <- expr_uses_col
             }
+            if (endsWith(name, "_forcats")) {
+              args[[".data"]] <- .data
+            }
             do.call(name, args)
           }
         },
@@ -854,6 +857,7 @@ clean_dots <- function(...) {
   dots[["__tidypolars__env"]] <- NULL
   dots[["__tidypolars__expr_uses_col"]] <- NULL
   dots[["__tidypolars__caller"]] <- NULL
+  dots[[".data"]] <- NULL
   caller_call <- deparse(rlang::caller_call()[[1]])
   called_from_pl_paste <- length(caller_call) == 1 &&
     caller_call %in% c("pl_paste", "pl_paste0")

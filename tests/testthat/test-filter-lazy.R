@@ -5,7 +5,7 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 test_that("basic behavior works", {
   test <- as_tibble(iris)
   # TODO: this shouldn't be necessary
-  test$Species <- as.character(test$Species)
+  # test$Species <- as.character(test$Species)
   test_pl <- as_polars_lf(test)
 
   expect_is_tidypolars(filter(test_pl, Species == "setosa"))
@@ -23,7 +23,7 @@ test_that("basic behavior works", {
 test_that("combining combinations", {
   test <- as_tibble(iris)
   # TODO: this shouldn't be necessary
-  test$Species <- as.character(test$Species)
+  # test$Species <- as.character(test$Species)
   test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
@@ -57,7 +57,7 @@ test_that("combining combinations", {
 test_that("expressions work", {
   test <- as_tibble(iris)
   # TODO: this shouldn't be necessary
-  test$Species <- as.character(test$Species)
+  # test$Species <- as.character(test$Species)
   test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
@@ -182,7 +182,7 @@ test_that("%in% works", {
 
   test <- as_tibble(iris)
   # TODO: this shouldn't be necessary
-  test$Species <- as.character(test$Species)
+  # test$Species <- as.character(test$Species)
   test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
@@ -217,7 +217,7 @@ test_that("%in% works with NA", {
 test_that("between() works", {
   test <- as_tibble(iris)
   # TODO: this shouldn't be necessary
-  test$Species <- as.character(test$Species)
+  # test$Species <- as.character(test$Species)
   test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
@@ -261,7 +261,7 @@ test_that("works with grouped data", {
 
   test <- as_tibble(iris)
   # TODO: this shouldn't be necessary
-  test$Species <- as.character(test$Species)
+  # test$Species <- as.character(test$Species)
   test_pl <- as_polars_lf(test)
 
   expect_equal_lazy(
