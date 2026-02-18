@@ -283,7 +283,7 @@ test_that("no errors when col isn't list or array and return unchanged", {
 })
 
 test_that("errors on non-polars data", {
-  test_df <- data.frame(id = 1:2, values = I(list(1:2, 3:4)))
+  test_pl <- data.frame(id = 1:2, values = I(list(1:2, 3:4)))
 
   expect_snapshot_lazy(
     test_pl |> unnest_longer_polars(values),

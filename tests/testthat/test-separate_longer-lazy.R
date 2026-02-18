@@ -292,7 +292,7 @@ test_that("non-string columns are coerced to string (like tidyr)", {
 
 # Error tests
 test_that("errors on non-polars data", {
-  test_df <- tibble(id = 1:2, x = c("a,b", "c,d"))
+  test_pl <- tibble(id = 1:2, x = c("a,b", "c,d"))
 
   expect_snapshot_lazy(
     test_pl |> separate_longer_delim_polars(x, delim = ","),

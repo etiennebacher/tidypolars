@@ -36,25 +36,25 @@ test_that("basic behavior works", {
 
   expect_equal(
     left_join(test_pl, test2_pl),
-    left_join(test_df, test2)
+    left_join(test_df, test2_df)
   )
 
   # TODO? I don't think this is a big deal
   expect_equal(
     right_join(test_pl, test2_pl) |> select(x, y, z, z2),
-    right_join(test_df, test2)
+    right_join(test_df, test2_df)
   )
 
   # TODO? I don't think this is a big deal and not specifying the row order in
   # polars join can improve performance.
   expect_equal(
     full_join(test_pl, test2_pl) |> arrange(x),
-    full_join(test_df, test2)
+    full_join(test_df, test2_df)
   )
 
   expect_equal(
     inner_join(test_pl, test2_pl),
-    inner_join(test_df, test2)
+    inner_join(test_df, test2_df)
   )
 })
 
