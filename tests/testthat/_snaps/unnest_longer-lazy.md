@@ -21,8 +21,8 @@
     Code
       current$collect()
     Condition
-      Error:
-      ! object 'test_pl' not found
+      Error in `unnest_longer_polars()`:
+      ! The data must be a Polars DataFrame or LazyFrame.
 
 # errors on non-existent column
 
