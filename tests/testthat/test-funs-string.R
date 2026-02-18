@@ -8,22 +8,22 @@ test_that("paste() and paste0() work", {
       test_pl <- pl$DataFrame(x1 = string)
 
       expect_equal(
-        mutate(test_df, foo = paste(x1, "he")) |> pull(foo),
+        mutate(test_pl, foo = paste(x1, "he")) |> pull(foo),
         mutate(test_df, foo = paste(x1, "he")) |> pull(foo)
       )
 
       expect_equal(
-        mutate(test_df, foo = paste(x1, "he", sep = separator)) |> pull(foo),
+        mutate(test_pl, foo = paste(x1, "he", sep = separator)) |> pull(foo),
         mutate(test_df, foo = paste(x1, "he", sep = separator)) |> pull(foo)
       )
 
       expect_equal(
-        mutate(test_df, foo = paste0(x1, "he")) |> pull(foo),
+        mutate(test_pl, foo = paste0(x1, "he")) |> pull(foo),
         mutate(test_df, foo = paste0(x1, "he")) |> pull(foo)
       )
 
       expect_equal(
-        mutate(test_df, foo = paste0(x1, "he", x1)) |> pull(foo),
+        mutate(test_pl, foo = paste0(x1, "he", x1)) |> pull(foo),
         mutate(test_df, foo = paste0(x1, "he", x1)) |> pull(foo)
       )
     }
@@ -41,7 +41,7 @@ patrick::with_parameters_test_that(
         test_pl <- pl$DataFrame(x1 = string)
 
         pl_code <- paste0(
-          "mutate(test_df, foo = ",
+          "mutate(test_pl, foo = ",
           fun,
           "(string)) |> pull(foo)"
         )
@@ -75,12 +75,12 @@ test_that("str_trim() works", {
       test_pl <- pl$DataFrame(x1 = string)
 
       expect_equal(
-        mutate(test_df, foo = str_trim(x1)) |> pull(foo),
+        mutate(test_pl, foo = str_trim(x1)) |> pull(foo),
         mutate(test_df, foo = str_trim(x1)) |> pull(foo)
       )
 
       expect_equal(
-        mutate(test_df, foo = str_trim(x1, side = side)) |> pull(foo),
+        mutate(test_pl, foo = str_trim(x1, side = side)) |> pull(foo),
         mutate(test_df, foo = str_trim(x1, side = side)) |> pull(foo)
       )
     }

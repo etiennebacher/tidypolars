@@ -98,7 +98,6 @@ test_that("basic behavior works", {
 })
 
 test_that("some errors", {
-  withr::local_options(list(lifecycle.verbosity = "quiet"))
   test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),

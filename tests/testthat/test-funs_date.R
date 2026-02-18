@@ -545,7 +545,7 @@ test_that("days_in_month() works", {
   )
   test_pl <- as_polars_df(test_df)
   expect_equal(
-    mutate(test_df, x = days_in_month(x)),
+    mutate(test_pl, x = days_in_month(x)),
     mutate(test_df, x = days_in_month(x)),
     # lubridate output is a named integer vector
     ignore_attr = TRUE
@@ -565,11 +565,11 @@ test_that("leap_year() works", {
   )
   test_pl <- as_polars_df(test_df)
   expect_equal(
-    mutate(test_df, date = leap_year(date)),
+    mutate(test_pl, date = leap_year(date)),
     mutate(test_df, date = leap_year(date))
   )
   expect_equal(
-    mutate(test_df, datetime = leap_year(datetime)),
+    mutate(test_pl, datetime = leap_year(datetime)),
     mutate(test_df, datetime = leap_year(datetime))
   )
 })

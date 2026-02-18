@@ -19,11 +19,11 @@ patrick::with_parameters_test_that(
         test_pl <- pl$DataFrame(x1 = date)
 
         pl_code <- paste0(
-          "mutate(test_df, foo = ",
+          "mutate(test_pl, foo = ",
           fun,
-          "(x1)) |> pull(foo) |> as.numeric()"
+          "(x1))"
         )
-        tv_code <- paste0("mutate(test_df, foo = ", fun, "(x1)) |> pull(foo)")
+        tv_code <- paste0("mutate(test_df, foo = ", fun, "(x1))")
 
         expect_equal(
           eval(parse(text = pl_code)),

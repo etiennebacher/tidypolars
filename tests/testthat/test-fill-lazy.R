@@ -43,7 +43,7 @@ test_that("when nothing to fill, input = output", {
 
   expect_equal_lazy(
     test_pl |> fill(.direction = "updown"),
-    test_pl
+    test_df |> fill(.direction = "updown")
   )
 })
 
