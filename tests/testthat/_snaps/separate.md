@@ -13,8 +13,8 @@
 # tidypolars only supports character separator
 
     Code
-      separate(test_df, x, into = c("foo", "foo2"), sep = 1)
+      separate(test_pl, x, into = c("foo", "foo2"), sep = 1)
     Condition
-      Error:
-      ! object 'test_df' not found
+      Error in `separate()`:
+      ! tidypolars only supports a character for argument `sep` in `separate()`.
 

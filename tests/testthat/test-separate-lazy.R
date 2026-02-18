@@ -56,7 +56,7 @@ test_that("tidypolars only supports character separator", {
   test_pl <- pl$LazyFrame(x = c(NA, "x y", "x  z", "y   z"))
 
   expect_snapshot_lazy(
-    separate(test_df, x, into = c("foo", "foo2"), sep = 1),
+    separate(test_pl, x, into = c("foo", "foo2"), sep = 1),
     error = TRUE
   )
 })
