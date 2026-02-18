@@ -29,7 +29,7 @@
       current$collect()
     Condition
       Error in `left_join()`:
-      ! `x` and `y` must be either two DataFrames or two LazyFrames.
+      ! `relationship` must be one of "one-to-one", "one-to-many", "many-to-one", or "many-to-many", not "foo".
 
 ---
 
