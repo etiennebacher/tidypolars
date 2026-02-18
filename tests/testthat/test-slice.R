@@ -1,24 +1,24 @@
 test_that("basic behavior works", {
-  test <- as_tibble(iris)
+  test_df <- as_tibble(iris)
   # TODO: shouldn't be needed
-  test$Species <- as.character(test$Species)
-  test_pl <- as_polars_df(test)
+  test_df$Species <- as.character(test_df$Species)
+  test_pl <- as_polars_df(test_df)
 
   expect_is_tidypolars(slice_head(test_pl, n = 1))
   expect_is_tidypolars(slice_tail(test_pl, n = 1))
 
   expect_equal(
     slice_head(test_pl, n = 5),
-    slice_head(test, n = 5)
+    slice_head(test_df, n = 5)
   )
 })
 
 test_that("slice_head works with grouped data", {
-  test <- as_tibble(iris)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(iris)
+  test_pl <- as_polars_df(test_df)
   test_pl_grp <- test_pl |>
     group_by(Species, maintain_order = TRUE)
-  test_grp <- test |>
+  test_grp <- test_df |>
     group_by(Species)
 
   expect_equal(
@@ -30,7 +30,7 @@ test_that("slice_head works with grouped data", {
     test_pl |>
       slice_head(n = 2, by = Species) |>
       arrange(Species, Sepal.Length),
-    test |> slice_head(n = 2, by = Species) |> arrange(Species, Sepal.Length)
+    test_df |> slice_head(n = 2, by = Species) |> arrange(Species, Sepal.Length)
   )
 
   # tidypolars-specific attributes
@@ -43,11 +43,11 @@ test_that("slice_head works with grouped data", {
 })
 
 test_that("slice_tail works on grouped data", {
-  test <- as_tibble(iris)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(iris)
+  test_pl <- as_polars_df(test_df)
   test_pl_grp <- test_pl |>
     group_by(Species, maintain_order = TRUE)
-  test_grp <- test |>
+  test_grp <- test_df |>
     group_by(Species)
 
   expect_equal(
@@ -59,7 +59,7 @@ test_that("slice_tail works on grouped data", {
     test_pl |>
       slice_tail(n = 2, by = Species) |>
       arrange(Species, Sepal.Length),
-    test |> slice_tail(n = 2, by = Species) |> arrange(Species, Sepal.Length)
+    test_df |> slice_tail(n = 2, by = Species) |> arrange(Species, Sepal.Length)
   )
 
   # tidypolars-specific attributes
@@ -72,30 +72,30 @@ test_that("slice_tail works on grouped data", {
 })
 
 test_that("basic slice_sample works", {
-  test <- as_tibble(iris)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(iris)
+  test_pl <- as_polars_df(test_df)
   skip_if_not(is_polars_df(test_pl))
 
   expect_is_tidypolars(slice_sample(test_pl, prop = 0.1))
 
   expect_equal(
     slice_sample(test_pl) |> nrow(),
-    slice_sample(test) |> nrow()
+    slice_sample(test_df) |> nrow()
   )
 
   expect_equal(
     slice_sample(test_pl, n = 5) |> nrow(),
-    slice_sample(test, n = 5) |> nrow()
+    slice_sample(test_df, n = 5) |> nrow()
   )
 
   expect_equal(
     slice_sample(test_pl, prop = 0.1) |> nrow(),
-    slice_sample(test, prop = 0.1) |> nrow()
+    slice_sample(test_df, prop = 0.1) |> nrow()
   )
 
   expect_both_error(
     slice_sample(test_pl, n = 2, prop = 0.1),
-    slice_sample(test, n = 2, prop = 0.1)
+    slice_sample(test_df, n = 2, prop = 0.1)
   )
   expect_snapshot(
     slice_sample(test_pl, n = 2, prop = 0.1),
@@ -104,7 +104,7 @@ test_that("basic slice_sample works", {
 
   expect_equal(
     slice_sample(test_pl, n = 200, replace = TRUE) |> nrow(),
-    slice_sample(test, n = 200, replace = TRUE) |> nrow()
+    slice_sample(test_df, n = 200, replace = TRUE) |> nrow()
   )
 
   # TODO? dplyr chooses to take n_rows(data) if n > n_rows(data)
@@ -116,7 +116,7 @@ test_that("basic slice_sample works", {
 
   expect_equal(
     slice_sample(test_pl, prop = 2, replace = TRUE) |> nrow(),
-    slice_sample(test, prop = 2, replace = TRUE) |> nrow()
+    slice_sample(test_df, prop = 2, replace = TRUE) |> nrow()
   )
 
   # TODO? dplyr chooses to take n_rows(data) if prop > 1
@@ -126,8 +126,8 @@ test_that("basic slice_sample works", {
   )
 
   # slice_sample keeps rows consistent
-  test <- tibble(x = 1:3, y = letters[1:3], z = 4:6)
-  test_pl <- as_polars_df(test)
+  test_df <- tibble(x = 1:3, y = letters[1:3], z = 4:6)
+  test_pl <- as_polars_df(test_df)
   foo <- slice_sample(test_pl, n = 1)
 
   if (pull(foo, x) == 1) {
@@ -143,13 +143,13 @@ test_that("basic slice_sample works", {
 })
 
 test_that("slice_sample works with grouped data", {
-  test <- as_tibble(iris)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(iris)
+  test_pl <- as_polars_df(test_df)
   skip_if_not(is_polars_df(test_pl))
 
   expect_equal(
     test_pl |> group_by(Species) |> slice_sample(n = 5) |> nrow(),
-    test |> group_by(Species) |> slice_sample(n = 5) |> nrow()
+    test_df |> group_by(Species) |> slice_sample(n = 5) |> nrow()
   )
 
   # tidypolars-specific attributes
@@ -167,12 +167,12 @@ test_that("slice_sample works with grouped data", {
 
   expect_equal(
     test_pl |> slice_sample(n = 5, by = Species) |> nrow(),
-    test |> slice_sample(n = 5, by = Species) |> nrow()
+    test_df |> slice_sample(n = 5, by = Species) |> nrow()
   )
 
   expect_equal(
     test_pl |> slice_sample(prop = 0.1, by = Species) |> nrow(),
-    test |> slice_sample(prop = 0.1, by = Species) |> nrow()
+    test_df |> slice_sample(prop = 0.1, by = Species) |> nrow()
   )
 
   # tidypolars-specific attributes
@@ -188,8 +188,8 @@ test_that("slice_sample works with grouped data", {
 })
 
 test_that("unsupported args throw warning", {
-  test <- as_tibble(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test_df)
   skip_if_not(is_polars_df(test_pl))
   expect_warning(
     slice_sample(test_pl, weight_by = cyl > 5, n = 5)
@@ -197,12 +197,12 @@ test_that("unsupported args throw warning", {
 })
 
 test_that("dots must be empty", {
-  test <- as_tibble(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test_df)
   skip_if_not(is_polars_df(test_pl))
   expect_both_error(
     test_pl |> slice_sample(foo = 1, n = 5),
-    test |> slice_sample(foo = 1, n = 5)
+    test_df |> slice_sample(foo = 1, n = 5)
   )
   expect_snapshot(
     test_pl |> slice_sample(foo = 1, n = 5),

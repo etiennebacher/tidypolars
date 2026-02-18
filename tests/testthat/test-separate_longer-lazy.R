@@ -11,123 +11,123 @@ test_that("separate_longer_delim_polars returns custom class", {
 })
 
 test_that("separate_longer_delim_polars basic functionality", {
-  test <- tibble(
+  test_df <- tibble(
     id = 1:3,
     x = c("a,b,c", "d,e", "f")
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |> separate_longer_delim_polars(x, delim = ","),
-    test |> separate_longer_delim(x, delim = ",")
+    test_df |> separate_longer_delim(x, delim = ",")
   )
   expect_equal_lazy(
     test_pl |> separate_longer_delim_polars(x, delim = "."),
-    test |> separate_longer_delim(x, delim = ".")
+    test_df |> separate_longer_delim(x, delim = ".")
   )
 })
 
 test_that("separate_longer_delim_polars multiple delims in text", {
-  test <- tibble(
+  test_df <- tibble(
     id = 1:3,
     x = c(",a,,b,,c", "d,,,e,", "f,,,")
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |> separate_longer_delim_polars(x, delim = ","),
-    test |> separate_longer_delim(x, delim = ",")
+    test_df |> separate_longer_delim(x, delim = ",")
   )
 })
 
 test_that("separate_longer_delim_polars with empty string as delim", {
-  test <- tibble(
+  test_df <- tibble(
     id = 1:3,
     x = c("abc", "de", "f"),
     y = c("123", "45", "6")
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   # tidyr returns all NAs with empty delimiter with warning
   expect_equal_lazy(
     test_pl |> separate_longer_delim_polars(x, delim = ""),
-    suppressWarnings(test |> separate_longer_delim(x, delim = ""))
+    suppressWarnings(test_df |> separate_longer_delim(x, delim = ""))
   )
 
   expect_equal_lazy(
     test_pl |> separate_longer_delim_polars(c(x, y), delim = ""),
     suppressWarnings(
-      test |> separate_longer_delim(c(x, y), delim = "")
+      test_df |> separate_longer_delim(c(x, y), delim = "")
     )
   )
 })
 
 test_that("separate_longer_delim_polars works with multiple columns", {
-  test <- tibble(
+  test_df <- tibble(
     id = 1:2,
     x = c("a,b", "c,d"),
     y = c("1,2", "3,4")
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |> separate_longer_delim_polars(c(x, y), delim = ","),
-    test |> separate_longer_delim(c(x, y), delim = ",")
+    test_df |> separate_longer_delim(c(x, y), delim = ",")
   )
 })
 
 test_that("separate_longer_delim_polars supports tidyselect", {
-  test <- tibble(
+  test_df <- tibble(
     id = 1:2,
     x1 = c("a,b", "c"),
     x2 = c("1,2", "3,4"),
     y = c("u", "v")
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |> separate_longer_delim_polars(c("x1", "x2"), delim = ","),
-    test |> separate_longer_delim(c("x1", "x2"), delim = ",")
+    test_df |> separate_longer_delim(c("x1", "x2"), delim = ",")
   )
 
   expect_equal_lazy(
     test_pl |>
       separate_longer_delim_polars(tidyselect::starts_with("x"), delim = ","),
-    test |> separate_longer_delim(tidyselect::starts_with("x"), delim = ",")
+    test_df |> separate_longer_delim(tidyselect::starts_with("x"), delim = ",")
   )
 })
 
 test_that("separate_longer_delim_polars works with 1 to n and n to 1 broadcasting", {
-  test <- tibble(
+  test_df <- tibble(
     id = 1:6,
     x = c("a", "", "b", "c,d,e", "f,g,h", "i"),
     y = c("", "0", "1,2,3", "3", "4,5,6", "7")
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |> separate_longer_delim_polars(c(x, y), delim = ","),
-    test |> separate_longer_delim(c(x, y), delim = ",")
+    test_df |> separate_longer_delim(c(x, y), delim = ",")
   )
 })
 
 test_that("separate_longer_delim_polars handles NA and empty strings", {
-  test <- tibble(id = 1:3, x = c("a,b", NA, ""))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(id = 1:3, x = c("a,b", NA, ""))
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |> separate_longer_delim_polars(x, delim = ","),
-    test |> separate_longer_delim(x, delim = ",")
+    test_df |> separate_longer_delim(x, delim = ",")
   )
 })
 
 test_that("separate_longer_delim_polars broadcasting works with NA and empty strings on multiple columns", {
-  test <- tibble(
+  test_df <- tibble(
     id = 1:5,
     x = c("a,b", NA, "", "c", ""),
     y = c("1", "2,3", "4,5", NA, "")
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   # tidyr::separate_longer_delim(c(x, y), delim = ","):
   #   id    x    y
@@ -142,87 +142,87 @@ test_that("separate_longer_delim_polars broadcasting works with NA and empty str
 
   expect_equal_lazy(
     test_pl |> separate_longer_delim_polars(c(x, y), delim = ","),
-    test |> separate_longer_delim(c(x, y), delim = ",")
+    test_df |> separate_longer_delim(c(x, y), delim = ",")
   )
 })
 
 test_that("separate_longer_position_polars returns custom class", {
-  test <- pl$LazyFrame(id = 1:3, x = c("abcd", "efgh", "ij"))
-  expect_is_tidypolars(test |> separate_longer_position_polars(x, width = 2))
+  test_pl <- pl$LazyFrame(id = 1:3, x = c("abcd", "efgh", "ij"))
+  expect_is_tidypolars(test_pl |> separate_longer_position_polars(x, width = 2))
 })
 
 test_that("separate_longer_position_polars basic functionality", {
-  test <- tibble(id = 1:3, x = c("abcd", "efg", "ij"))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(id = 1:3, x = c("abcd", "efg", "ij"))
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |> separate_longer_position_polars(x, width = 2),
-    test |> separate_longer_position(x, width = 2)
+    test_df |> separate_longer_position(x, width = 2)
   )
 })
 
 test_that("separate_longer_position_polars works with width=1", {
-  test <- tibble(id = 1:3, x = c("abc", "de", "f"))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(id = 1:3, x = c("abc", "de", "f"))
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |> separate_longer_position_polars(x, width = 1),
-    test |> separate_longer_position(x, width = 1)
+    test_df |> separate_longer_position(x, width = 1)
   )
 })
 
 test_that("separate_longer_position_polars handles empty strings", {
-  test <- tibble(id = 1:2, x = c("abc", ""))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(id = 1:2, x = c("abc", ""))
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |> separate_longer_position_polars(x, width = 2),
-    test |> separate_longer_position(x, width = 2)
+    test_df |> separate_longer_position(x, width = 2)
   )
 })
 
 test_that("separate_longer_position_polars works with multiple columns", {
-  test <- tibble(
+  test_df <- tibble(
     id = 1:5,
     x = c("abcd", "efg", "hi", "j", ""),
     y = c("1234", "567", "89", "0", "")
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |> separate_longer_position_polars(c(x, y), width = 2),
-    test |> separate_longer_position(c(x, y), width = 2)
+    test_df |> separate_longer_position(c(x, y), width = 2)
   )
 })
 
 test_that("separate_longer_position_polars supports tidyselect", {
-  test <- tibble(
+  test_df <- tibble(
     id = 1:2,
     x1 = c("abcd", "ef"),
     x2 = c("12", "3456"),
     y = c("u", "v")
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |> separate_longer_position_polars(c("x1", "x2"), width = 2),
-    test |> separate_longer_position(c("x1", "x2"), width = 2)
+    test_df |> separate_longer_position(c("x1", "x2"), width = 2)
   )
 
   expect_equal_lazy(
     test_pl |>
       separate_longer_position_polars(tidyselect::starts_with("x"), width = 2),
-    test |> separate_longer_position(tidyselect::starts_with("x"), width = 2)
+    test_df |> separate_longer_position(tidyselect::starts_with("x"), width = 2)
   )
 })
 
 test_that("separate_longer_position_polars works with broadcasting on multiple columns", {
-  test <- tibble(
+  test_df <- tibble(
     id = 1:4,
     x = c("a", "bc", "def", "gh"),
     y = c("12", "345", "67", "")
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   # tidyr::separate_longer_position(c(x, y), width = 2) will get:
   #   id  x  y
@@ -234,7 +234,7 @@ test_that("separate_longer_position_polars works with broadcasting on multiple c
 
   expect_equal_lazy(
     test_pl |> separate_longer_position_polars(c(x, y), width = 2),
-    test |> separate_longer_position(c(x, y), width = 2)
+    test_df |> separate_longer_position(c(x, y), width = 2)
   )
 
   test2 <- tibble(
@@ -258,59 +258,59 @@ test_that("separate_longer_position_polars works with broadcasting on multiple c
 })
 
 test_that("non-string columns are coerced to string (like tidyr)", {
-  test <- tibble(
+  test_df <- tibble(
     id = 1:3,
     x = c("a,b", "c,d", "e"),
     y = c("abcd", "efg", "hi"),
     z = c(1.4, 2.5, 3.6)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   # Numeric column is coerced to string, then split by delimiter
   expect_equal_lazy(
     test_pl |> separate_longer_delim_polars(z, delim = "."),
-    test |> separate_longer_delim(z, delim = ".")
+    test_df |> separate_longer_delim(z, delim = ".")
   )
 
   # Multi-column with string and numeric: both processed
   expect_equal_lazy(
     test_pl |> separate_longer_delim_polars(c(x, z), delim = "."),
-    test |> separate_longer_delim(c(x, z), delim = ".")
+    test_df |> separate_longer_delim(c(x, z), delim = ".")
   )
 
   # separate_longer_position_polars also coerces to string
   expect_equal_lazy(
     test_pl |> separate_longer_position_polars(z, width = 1),
-    test |> separate_longer_position(z, width = 1)
+    test_df |> separate_longer_position(z, width = 1)
   )
 
   expect_equal_lazy(
     test_pl |> separate_longer_position_polars(c(y, z), width = 2),
-    test |> separate_longer_position(c(y, z), width = 2)
+    test_df |> separate_longer_position(c(y, z), width = 2)
   )
 })
 
 # Error tests
 test_that("errors on non-polars data", {
-  test <- tibble(id = 1:2, x = c("a,b", "c,d"))
+  test_pl <- tibble(id = 1:2, x = c("a,b", "c,d"))
 
   expect_snapshot_lazy(
-    test |> separate_longer_delim_polars(x, delim = ","),
+    test_pl |> separate_longer_delim_polars(x, delim = ","),
     error = TRUE
   )
   expect_snapshot_lazy(
-    test |> separate_longer_position_polars(x, width = 2),
+    test_pl |> separate_longer_position_polars(x, width = 2),
     error = TRUE
   )
 })
 
 test_that("errors on non-existent column", {
-  test <- tibble(id = 1:2, x = c("a,b", "c,d"))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(id = 1:2, x = c("a,b", "c,d"))
+  test_pl <- as_polars_lf(test_df)
 
   expect_both_error(
     test_pl |> separate_longer_delim_polars(nonexistent, delim = ","),
-    test |> separate_longer_delim(nonexistent, delim = ",")
+    test_df |> separate_longer_delim(nonexistent, delim = ",")
   )
   expect_snapshot_lazy(
     test_pl |> separate_longer_delim_polars(nonexistent, delim = ","),
@@ -318,7 +318,7 @@ test_that("errors on non-existent column", {
   )
   expect_both_error(
     test_pl |> separate_longer_position_polars(nonexistent, delim = ","),
-    test |> separate_longer_position(nonexistent, delim = ",")
+    test_df |> separate_longer_position(nonexistent, delim = ",")
   )
   expect_snapshot_lazy(
     test_pl |> separate_longer_position_polars(nonexistent, width = 2),
@@ -327,12 +327,12 @@ test_that("errors on non-existent column", {
 })
 
 test_that("errors when cols is missing", {
-  test <- tibble(id = 1:2, x = c("a,b", "c,d"))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(id = 1:2, x = c("a,b", "c,d"))
+  test_pl <- as_polars_lf(test_df)
 
   expect_both_error(
     test_pl |> separate_longer_delim_polars(delim = ","),
-    test |> separate_longer_delim(delim = ",")
+    test_df |> separate_longer_delim(delim = ",")
   )
   expect_snapshot_lazy(
     test_pl |> separate_longer_delim_polars(delim = ","),
@@ -340,7 +340,7 @@ test_that("errors when cols is missing", {
   )
   expect_both_error(
     test_pl |> separate_longer_position_polars(delim = ","),
-    test |> separate_longer_position(delim = ",")
+    test_df |> separate_longer_position(delim = ",")
   )
   expect_snapshot_lazy(
     test_pl |> separate_longer_position_polars(width = 2),
@@ -349,12 +349,12 @@ test_that("errors when cols is missing", {
 })
 
 test_that("errors when delim is missing", {
-  test <- tibble(id = 1:2, x = c("a,b", "c,d"))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(id = 1:2, x = c("a,b", "c,d"))
+  test_pl <- as_polars_lf(test_df)
 
   expect_both_error(
     test_pl |> separate_longer_delim_polars(x),
-    test |> separate_longer_delim(x)
+    test_df |> separate_longer_delim(x)
   )
   expect_snapshot_lazy(
     test_pl |> separate_longer_delim_polars(x),
@@ -363,12 +363,12 @@ test_that("errors when delim is missing", {
 })
 
 test_that("errors when width is missing", {
-  test <- tibble(id = 1:2, x = c("a,b", "c,d"))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(id = 1:2, x = c("a,b", "c,d"))
+  test_pl <- as_polars_lf(test_df)
 
   expect_both_error(
     test_pl |> separate_longer_position_polars(x),
-    test |> separate_longer_position(x)
+    test_df |> separate_longer_position(x)
   )
   expect_snapshot_lazy(
     test_pl |> separate_longer_position_polars(x),
@@ -377,12 +377,12 @@ test_that("errors when width is missing", {
 })
 
 test_that("errors when width is invalid", {
-  test <- tibble(id = 1:2, x = c("ab", "cd"))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(id = 1:2, x = c("ab", "cd"))
+  test_pl <- as_polars_lf(test_df)
 
   expect_both_error(
     test_pl |> separate_longer_position_polars(x, width = 0),
-    test |> separate_longer_position(x, width = 0)
+    test_df |> separate_longer_position(x, width = 0)
   )
   expect_snapshot_lazy(
     test_pl |> separate_longer_position_polars(x, width = 0),
@@ -390,7 +390,7 @@ test_that("errors when width is invalid", {
   )
   expect_both_error(
     test_pl |> separate_longer_position_polars(x, width = 1.5),
-    test |> separate_longer_position(x, width = 1.5)
+    test_df |> separate_longer_position(x, width = 1.5)
   )
   expect_snapshot_lazy(
     test_pl |> separate_longer_position_polars(x, width = 1.5),
@@ -399,12 +399,12 @@ test_that("errors when width is invalid", {
 })
 
 test_that("errors when ... is not empty", {
-  test <- tibble(id = 1:2, x = c("a,b", "c,d"))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(id = 1:2, x = c("a,b", "c,d"))
+  test_pl <- as_polars_lf(test_df)
 
   expect_both_error(
     test_pl |> separate_longer_delim_polars(x, delim = ",", extra = TRUE),
-    test |> separate_longer_delim(x, delim = ",", extra = TRUE)
+    test_df |> separate_longer_delim(x, delim = ",", extra = TRUE)
   )
   expect_snapshot_lazy(
     test_pl |> separate_longer_delim_polars(x, delim = ",", extra = TRUE),
@@ -412,7 +412,7 @@ test_that("errors when ... is not empty", {
   )
   expect_both_error(
     test_pl |> separate_longer_position_polars(x, width = 2, extra = TRUE),
-    test |> separate_longer_position(x, width = 2, extra = TRUE)
+    test_df |> separate_longer_position(x, width = 2, extra = TRUE)
   )
   expect_snapshot_lazy(
     test_pl |> separate_longer_position_polars(x, width = 2, extra = TRUE),
@@ -422,16 +422,16 @@ test_that("errors when ... is not empty", {
 
 # Error when n to m (n, m >= 2, n != m) - incompatible lengths
 test_that("separate_longer_delim_polars errors on incompatible lengths", {
-  test <- tibble(
+  test_df <- tibble(
     id = 1:2,
     x = c("a,b,c", "d,e"),
     y = c("1,2", "3,4,5,6")
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_both_error(
     test_pl |> separate_longer_delim_polars(c(x, y), delim = ","),
-    test |> separate_longer_delim(c(x, y), delim = ",")
+    test_df |> separate_longer_delim(c(x, y), delim = ",")
   )
   expect_snapshot_lazy(
     test_pl |> separate_longer_delim_polars(c(x, y), delim = ","),
@@ -441,16 +441,16 @@ test_that("separate_longer_delim_polars errors on incompatible lengths", {
 
 # Error when n to m (n, m >= 2, n != m) - incompatible lengths
 test_that("separate_longer_position_polars errors on incompatible lengths", {
-  test <- tibble(
+  test_df <- tibble(
     id = 1:4,
     x = c("a", "bc", "def", "gh"),
     y = c("12", "345", "6789012", "")
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_both_error(
     test_pl |> separate_longer_position_polars(c(x, y), width = 2),
-    test |> separate_longer_position(c(x, y), width = 2)
+    test_df |> separate_longer_position(c(x, y), width = 2)
   )
   expect_snapshot_lazy(
     test_pl |> separate_longer_position_polars(c(x, y), width = 2),
@@ -461,12 +461,12 @@ test_that("separate_longer_position_polars errors on incompatible lengths", {
 # tidypolars handles NA correctly
 # (tidyr has a bug: tidyverse/tidyr#1625)
 test_that("separate_longer_position_polars handles NA values correctly", {
-  test <- tibble(
+  test_df <- tibble(
     id = 1:3,
     x = c("abcd", NA, "gh"),
     y = c("1234", "5678", NA)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   result <- test_pl |> separate_longer_position_polars(x, width = 2)
   expected <- pl$LazyFrame(
@@ -486,8 +486,8 @@ test_that("separate_longer_position_polars handles NA values correctly", {
 })
 
 test_that("separate_longer_position_polars handles NA with keep_empty", {
-  test <- tibble(id = 1:3, x = c("ab", NA, ""))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(id = 1:3, x = c("ab", NA, ""))
+  test_pl <- as_polars_lf(test_df)
 
   # keep_empty = FALSE (default)
   expect_equal_lazy(

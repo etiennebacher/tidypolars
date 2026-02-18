@@ -3,14 +3,14 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("mathematical functions work", {
-  test <- tibble(
+  test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample(11:15),
     value_trigo = seq(0, 0.4, 0.1),
     value_mix = -2:2,
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   for (i in c(
     "abs",
@@ -65,7 +65,7 @@ test_that("mathematical functions work", {
       str2lang() |>
       eval()
 
-    res <- paste0("mutate(test, foo =", i, "(", variable, "))") |>
+    res <- paste0("mutate(test_df, foo =", i, "(", variable, "))") |>
       str2lang() |>
       eval()
 
@@ -74,12 +74,12 @@ test_that("mathematical functions work", {
 })
 
 test_that("mathematical functions work with NA", {
-  test <- tibble(
+  test_df <- tibble(
     value_with_NA = c(11, 12, NA, 14, 15),
     value_trigo_with_NA = c(0, 0.1, NA, 0.3, 0.4),
     value_mix_with_NA = c(-2, -1, NA, 1, 2)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   for (i in c(
     "abs",
@@ -134,7 +134,7 @@ test_that("mathematical functions work with NA", {
       str2lang() |>
       eval()
 
-    res <- paste0("mutate(test, foo =", i, "(", variable, "))") |>
+    res <- paste0("mutate(test_df, foo =", i, "(", variable, "))") |>
       str2lang() |>
       eval()
 
@@ -143,16 +143,16 @@ test_that("mathematical functions work with NA", {
 })
 
 test_that("log() works with base", {
-  test <- tibble(x = c(3, NA, 1, 2, NA))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(x = c(3, NA, 1, 2, NA))
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |> mutate(y = log(x, base = 3)),
-    test |> mutate(y = log(x, base = 3))
+    test_df |> mutate(y = log(x, base = 3))
   )
   expect_both_error(
     test_pl |> mutate(y = log(x, base = "3")),
-    test |> mutate(y = log(x, base = "3"))
+    test_df |> mutate(y = log(x, base = "3"))
   )
   expect_snapshot_lazy(
     test_pl |> mutate(y = log(x, base = "3")),
@@ -161,12 +161,12 @@ test_that("log() works with base", {
 })
 
 test_that("sort errors when na.last is absent or NA", {
-  test <- tibble(x = c(3, NA, 1, 2, NA))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(x = c(3, NA, 1, 2, NA))
+  test_pl <- as_polars_lf(test_df)
 
   expect_both_error(
     test_pl |> mutate(foo = sort(x)),
-    test |> mutate(foo = sort(x))
+    test_df |> mutate(foo = sort(x))
   )
   expect_snapshot_lazy(
     test_pl |> mutate(foo = sort(x)),
@@ -175,7 +175,7 @@ test_that("sort errors when na.last is absent or NA", {
 
   expect_both_error(
     test_pl |> mutate(foo = sort(x, na.last = NA)),
-    test |> mutate(foo = sort(x, na.last = NA))
+    test_df |> mutate(foo = sort(x, na.last = NA))
   )
   expect_snapshot_lazy(
     test_pl |> mutate(foo = sort(x, na.last = NA)),
@@ -184,8 +184,8 @@ test_that("sort errors when na.last is absent or NA", {
 })
 
 test_that("sort supports decreasing and na.last", {
-  test <- tibble(x = c(3, NA, 1, 2, NA))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(x = c(3, NA, 1, 2, NA))
+  test_pl <- as_polars_lf(test_df)
 
   # With different parameters
   for (decreasing in c(TRUE, FALSE)) {
@@ -201,7 +201,7 @@ test_that("sort supports decreasing and na.last", {
         eval()
 
       res <- paste0(
-        "mutate(test, foo = sort(x, decreasing = ",
+        "mutate(test_df, foo = sort(x, decreasing = ",
         decreasing,
         ", na.last = ",
         na_last,
@@ -216,8 +216,8 @@ test_that("sort supports decreasing and na.last", {
 })
 
 test_that("rank error when na.last is not in TRUE/FALSE/keep", {
-  test <- tibble(x = sample(c(0:9, NA), size = 10000, replace = TRUE))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(x = sample(c(0:9, NA), size = 10000, replace = TRUE))
+  test_pl <- as_polars_lf(test_df)
 
   expect_snapshot_lazy(
     test_pl |> mutate(foo = rank(x, na.last = NA)),
@@ -233,29 +233,29 @@ test_that("rank error when na.last is not in TRUE/FALSE/keep", {
   )
   expect_both_error(
     test_pl |> mutate(foo = rank(x, na.last = NA)),
-    test |> mutate(foo = rank(x, na.last = NA))
+    test_df |> mutate(foo = rank(x, na.last = NA))
   )
 })
 
 test_that("rank with default args", {
-  test <- tibble(x = sample(c(0:9, NA), size = 10000, replace = TRUE))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(x = sample(c(0:9, NA), size = 10000, replace = TRUE))
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |> mutate(foo = rank(x)),
-    test |> mutate(foo = rank(x))
+    test_df |> mutate(foo = rank(x))
   )
 })
 
 patrick::with_parameters_test_that(
   "rank with ties.method={ties_method} and na.last={na_last}",
   {
-    test <- tibble(x = sample(c(0:9, NA), size = 10000, replace = TRUE))
-    test_pl <- as_polars_lf(test)
+    test_df <- tibble(x = sample(c(0:9, NA), size = 10000, replace = TRUE))
+    test_pl <- as_polars_lf(test_df)
 
     na_last <- switch(na_last, "TRUE" = TRUE, "FALSE" = FALSE, na_last)
 
-    r_output <- test |>
+    r_output <- test_df |>
       mutate(foo = rank(x, ties.method = ties_method, na.last = na_last))
 
     pl_output <- test_pl |>
@@ -286,9 +286,9 @@ test_that("rank() works on various input types", {
     property = function(num, str, date, dt) {
       for (i in c("num", "str", "date", "dt")) {
         test_df <- tibble(x = eval(parse(text = i)))
-        test <- pl$LazyFrame(x = eval(parse(text = i)))
+        test_pl <- pl$LazyFrame(x = eval(parse(text = i)))
         expect_equal_or_both_error(
-          mutate(test, y = rank(x)),
+          mutate(test_pl, y = rank(x)),
           mutate(test_df, y = rank(x))
         )
       }
@@ -297,7 +297,7 @@ test_that("rank() works on various input types", {
 })
 
 test_that("warns if unknown args", {
-  test <- tibble(
+  test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample(11:15),
@@ -305,7 +305,7 @@ test_that("warns if unknown args", {
     value_mix = -2:2,
     value_with_NA = c(-2, -1, NA, 1, 2)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
   foo <- test_pl |>
     mutate(x = sample(x2)) |>
     pull(x)
@@ -319,7 +319,7 @@ test_that("warns if unknown args", {
 })
 
 test_that("%% and %/% work", {
-  test <- tibble(
+  test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample(11:15),
@@ -327,21 +327,21 @@ test_that("%% and %/% work", {
     value_mix = -2:2,
     value_with_NA = c(-2, -1, NA, 1, 2)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |> mutate(foo = value %% 10),
-    test |> mutate(foo = value %% 10)
+    test_df |> mutate(foo = value %% 10)
   )
 
   expect_equal_lazy(
     test_pl |> mutate(foo = value %/% 10),
-    test |> mutate(foo = value %/% 10)
+    test_df |> mutate(foo = value %/% 10)
   )
 })
 
 test_that("ensure na.rm works fine", {
-  test <- tibble(
+  test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample(11:15),
@@ -349,7 +349,7 @@ test_that("ensure na.rm works fine", {
     value_mix = -2:2,
     value_with_NA = c(-2, -1, NA, 1, 2)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   for (i in c("max", "mean", "median", "min", "sd", "sum", "var")) {
     for (remove_na in c(TRUE, FALSE)) {
@@ -364,7 +364,7 @@ test_that("ensure na.rm works fine", {
         eval()
 
       res <- paste0(
-        "mutate(test, foo =",
+        "mutate(test_df, foo =",
         i,
         "(value_with_NA, na.rm = ",
         remove_na,

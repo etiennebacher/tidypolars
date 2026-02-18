@@ -20,14 +20,14 @@ patrick::with_parameters_test_that(
       property = function(date, datetime) {
         # date -----------------------------------
         test_df <- tibble(x1 = date)
-        test <- pl$LazyFrame(x1 = date)
+        test_pl <- pl$LazyFrame(x1 = date)
 
         pl_code <- paste0(
-          "mutate(test, foo = ",
+          "mutate(test_pl, foo = ",
           fun,
-          "(x1)) |> pull(foo) |> as.numeric()"
+          "(x1))"
         )
-        tv_code <- paste0("mutate(test_df, foo = ", fun, "(x1)) |> pull(foo)")
+        tv_code <- paste0("mutate(test_df, foo = ", fun, "(x1))")
 
         expect_equal_lazy(
           eval(parse(text = pl_code)),
@@ -38,10 +38,10 @@ patrick::with_parameters_test_that(
         # TODO: this should be removed eventually
         if (!fun %in% c("yday", "mday")) {
           test_df <- tibble(x1 = datetime)
-          test <- pl$LazyFrame(x1 = datetime)
+          test_pl <- pl$LazyFrame(x1 = datetime)
 
           pl_code <- paste0(
-            "mutate(test, foo = ",
+            "mutate(test_df, foo = ",
             fun,
             "(x1)) |> pull(foo) |> as.numeric()"
           )
@@ -68,13 +68,13 @@ test_that("extracting date component", {
     ),
     property = function(datetime) {
       test_df <- tibble(x1 = ymd_hms(datetime))
-      test <- as_polars_lf(test_df)
+      test_pl <- as_polars_lf(test_df)
 
       # TODO: lubridate:: needed here otherwise the test_df call uses
       # base::date(), which errors. Why is lubridate::date() not overwriting
       # base::date()?
       expect_equal_or_both_error(
-        mutate(test, x1 = lubridate::date(x1)),
+        mutate(test_pl, x1 = lubridate::date(x1)),
         mutate(test_df, x1 = lubridate::date(x1))
       )
     }
@@ -89,11 +89,11 @@ patrick::with_parameters_test_that(
       datetime = posixct_(any_na = TRUE),
       property = function(datetime) {
         test_df <- tibble(x1 = ymd_hms(datetime, tz = "UTC"))
-        test <- pl$LazyFrame(x1 = ymd_hms(datetime, tz = "UTC"))
+        test_pl <- pl$LazyFrame(x1 = ymd_hms(datetime, tz = "UTC"))
 
         expect_equal_or_both_error(
           mutate(
-            test,
+            test_pl,
             x1 = force_tz(x1, tz)
           ),
           mutate(
@@ -117,11 +117,11 @@ patrick::with_parameters_test_that(
       datetime = posixct_(any_na = FALSE),
       property = function(datetime) {
         test_df <- tibble(x1 = ymd_hms(datetime, tz = "UTC"))
-        test <- pl$LazyFrame(x1 = ymd_hms(datetime, tz = "UTC"))
+        test_pl <- pl$LazyFrame(x1 = ymd_hms(datetime, tz = "UTC"))
 
         expect_equal_or_both_error(
           mutate(
-            test,
+            test_pl,
             x1 = with_tz(x1, tz)
           ),
           mutate(
@@ -164,11 +164,11 @@ test_that("operations on dates and durations", {
     ) {
       datetime[is.na(datetime)] <- NA_POSIXct_
       test_df <- tibble(x1 = ymd_hms(datetime))
-      test <- as_polars_lf(test_df)
+      test_pl <- as_polars_lf(test_df)
 
       expect_equal_or_both_error(
         mutate(
-          test,
+          test_df,
           x1 = x1 +
             weeks(weeks) +
             days(days) +
@@ -205,12 +205,12 @@ test_that("rollbackward and rollforward work - date", {
     property = function(date, roll_to_first, preserve_hms) {
       date[is.na(date)] <- NA_Date_
       test_df <- tibble(date = as_date(date))
-      test <- as_polars_lf(test_df)
+      test_pl <- as_polars_lf(test_df)
 
       # TODO: once the TODO in the implementations is fixed, use `preserve_hms = preserve_hms`
       expect_equal_or_both_error(
         mutate(
-          test,
+          test_df,
           date_rb = rollbackward(
             date,
             roll_to_first = roll_to_first,
@@ -263,11 +263,11 @@ test_that("rollbackward and rollforward work - datetime", {
       # https://github.com/etiennebacher/tidypolars/pull/252/commits/5e2acdcccb912bf034d23534865bce12b755d82b
 
       test_df <- tibble(datetime = datetime)
-      test <- as_polars_lf(test_df)
+      test_pl <- as_polars_lf(test_df)
 
       expect_equal_or_both_error(
         mutate(
-          test,
+          test_df,
           datetime_rb = rollbackward(
             datetime,
             roll_to_first = roll_to_first,

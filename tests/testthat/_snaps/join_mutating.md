@@ -26,7 +26,7 @@
 # argument relationship works
 
     Code
-      left_join(test, test2, by = join_by(x, y), relationship = "foo")
+      left_join(test_pl, test2_pl, by = join_by(x, y), relationship = "foo")
     Condition
       Error in `left_join()`:
       ! `relationship` must be one of "one-to-one", "one-to-many", "many-to-one", or "many-to-many", not "foo".
@@ -155,7 +155,7 @@
 # dots must be empty
 
     Code
-      left_join(test, test2, by = "country", foo = TRUE)
+      left_join(test_pl, test2_pl, by = "country", foo = TRUE)
     Condition
       Error in `left_join()`:
       ! `...` must be empty.
@@ -165,7 +165,7 @@
 ---
 
     Code
-      left_join(test, test2, by = "country", copy = TRUE, foo = TRUE)
+      left_join(test_pl, test2_pl, by = "country", copy = TRUE, foo = TRUE)
     Condition
       Warning in `left_join()`:
       Argument `copy` is not supported by tidypolars.

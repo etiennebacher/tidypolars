@@ -1,7 +1,7 @@
 # non-translated functions error if they use data context
 
     Code
-      mutate(test, x = agrep("a", a))
+      mutate(test_pl, x = agrep("a", a))
     Condition
       Error in `mutate()`:
       ! tidypolars doesn't know how to translate this function: `agrep()` (from package base).
@@ -11,7 +11,7 @@
 ---
 
     Code
-      filter(test, a >= agrep("a", a))
+      filter(test_pl, a >= agrep("a", a))
     Condition
       Error in `filter()`:
       ! tidypolars doesn't know how to translate this function: `agrep()` (from package base).

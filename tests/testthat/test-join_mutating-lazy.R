@@ -20,18 +20,18 @@ test_that("error if no common variables and and `by` no provided", {
 test_that("basic behavior works", {
   skip_if_not_installed("withr")
   withr::local_options(list(rlib_message_verbosity = "quiet"))
-  test <- tibble(
+  test_df <- tibble(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- tibble(
+  test2_df <- tibble(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z2 = c(4, 5, 7)
   )
-  test_pl <- as_polars_lf(test)
-  test2_pl <- as_polars_lf(test2)
+  test_pl <- as_polars_lf(test_df)
+  test2_pl <- as_polars_lf(test2_df)
 
   expect_is_tidypolars(left_join(test_pl, test2_pl))
   expect_is_tidypolars(right_join(test_pl, test2_pl))
@@ -40,80 +40,80 @@ test_that("basic behavior works", {
 
   expect_equal_lazy(
     left_join(test_pl, test2_pl),
-    left_join(test, test2)
+    left_join(test_df, test2_df)
   )
 
   # TODO? I don't think this is a big deal
   expect_equal_lazy(
     right_join(test_pl, test2_pl) |> select(x, y, z, z2),
-    right_join(test, test2)
+    right_join(test_df, test2_df)
   )
 
   # TODO? I don't think this is a big deal and not specifying the row order in
   # polars join can improve performance.
   expect_equal_lazy(
     full_join(test_pl, test2_pl) |> arrange(x),
-    full_join(test, test2)
+    full_join(test_df, test2_df)
   )
 
   expect_equal_lazy(
     inner_join(test_pl, test2_pl),
-    inner_join(test, test2)
+    inner_join(test_df, test2_df)
   )
 })
 
 test_that("works if join by different variable names", {
-  test <- tibble(
+  test_df <- tibble(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- tibble(
+  test2_df <- tibble(
     x2 = c(1, 2, 4),
     y2 = c(1, 2, 4),
     z3 = c(4, 5, 7)
   )
-  test_pl <- as_polars_lf(test)
-  test2_pl <- as_polars_lf(test2)
+  test_pl <- as_polars_lf(test_df)
+  test2_pl <- as_polars_lf(test2_df)
 
   expect_equal_lazy(
     left_join(test_pl, test2_pl, join_by(x == x2, y == y2)),
-    left_join(test, test2, join_by(x == x2, y == y2))
+    left_join(test_df, test2_df, join_by(x == x2, y == y2))
   )
 
   expect_equal_lazy(
     left_join(test_pl, test2_pl, c("x" = "x2", "y" = "y2")),
-    left_join(test, test2, c("x" = "x2", "y" = "y2"))
+    left_join(test_df, test2_df, c("x" = "x2", "y" = "y2"))
   )
 })
 
 test_that("argument suffix works", {
-  test <- tibble(
+  test_df <- tibble(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- tibble(
+  test2_df <- tibble(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z = c(4, 5, 7)
   )
-  test_pl <- as_polars_lf(test)
-  test2_pl <- as_polars_lf(test2)
+  test_pl <- as_polars_lf(test_df)
+  test2_pl <- as_polars_lf(test2_df)
 
   expect_equal_lazy(
     left_join(test_pl, test2_pl, by = c("x", "y")),
-    left_join(test, test2, by = c("x", "y"))
+    left_join(test_df, test2_df, by = c("x", "y"))
   )
 
   expect_equal_lazy(
     left_join(test_pl, test2_pl, by = c("x", "y"), suffix = c(".hi", ".hello")),
-    left_join(test, test2, by = c("x", "y"), suffix = c(".hi", ".hello"))
+    left_join(test_df, test2_df, by = c("x", "y"), suffix = c(".hi", ".hello"))
   )
 
   expect_both_error(
     left_join(test_pl, test2_pl, by = c("x", "y"), suffix = c(".hi")),
-    left_join(test, test2, by = c("x", "y"), suffix = c(".hi"))
+    left_join(test_df, test2_df, by = c("x", "y"), suffix = c(".hi"))
   )
   expect_snapshot_lazy(
     left_join(test_pl, test2_pl, by = c("x", "y"), suffix = c(".hi")),
@@ -122,22 +122,22 @@ test_that("argument suffix works", {
 })
 
 test_that("suffix + join_by works", {
-  test <- tibble(
+  test_df <- tibble(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- tibble(
+  test2_df <- tibble(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z = c(4, 5, 7)
   )
-  test_pl <- as_polars_lf(test)
-  test2_pl <- as_polars_lf(test2)
+  test_pl <- as_polars_lf(test_df)
+  test2_pl <- as_polars_lf(test2_df)
 
   expect_equal_lazy(
     left_join(test_pl, test2_pl, by = join_by(x, y)),
-    left_join(test, test2, by = join_by(x, y))
+    left_join(test_df, test2_df, by = join_by(x, y))
   )
   expect_equal_lazy(
     left_join(
@@ -146,11 +146,16 @@ test_that("suffix + join_by works", {
       by = join_by(x, y),
       suffix = c(".hi", ".hello")
     ),
-    left_join(test, test2, by = join_by(x, y), suffix = c(".hi", ".hello"))
+    left_join(
+      test_df,
+      test2_df,
+      by = join_by(x, y),
+      suffix = c(".hi", ".hello")
+    )
   )
   expect_both_error(
     left_join(test_pl, test2_pl, by = join_by(x, y), suffix = c(".hi")),
-    left_join(test, test2, by = join_by(x, y), suffix = c(".hi"))
+    left_join(test_df, test2_df, by = join_by(x, y), suffix = c(".hi"))
   )
   expect_snapshot_lazy(
     left_join(test_pl, test2_pl, by = join_by(x, y), suffix = c(".hi")),
@@ -159,21 +164,21 @@ test_that("suffix + join_by works", {
 })
 
 test_that("argument relationship works", {
-  test <- tibble(
+  test_df <- tibble(
     x = c(1, 2, 3),
     y = c(1, 2, 3),
     z = c(1, 2, 3)
   )
-  test2 <- tibble(
+  test2_df <- tibble(
     x = c(1, 2, 4),
     y = c(1, 2, 4),
     z = c(4, 5, 7)
   )
-  test_pl <- as_polars_lf(test)
-  test2_pl <- as_polars_lf(test2)
+  test_pl <- as_polars_lf(test_df)
+  test2_pl <- as_polars_lf(test2_df)
 
   expect_snapshot_lazy(
-    left_join(test, test2, by = join_by(x, y), relationship = "foo"),
+    left_join(test_pl, test2_pl, by = join_by(x, y), relationship = "foo"),
     error = TRUE
   )
 
@@ -327,10 +332,10 @@ test_that("argument relationship works", {
 })
 
 test_that("argument na_matches works", {
-  test <- tibble(a = c(1, NA, NA, NaN), val = 1:4)
-  test2 <- tibble(a = c(1, 2, NA, NaN), val2 = 5:8)
-  test_pl <- as_polars_lf(test)
-  test2_pl <- as_polars_lf(test2)
+  test_df <- tibble(a = c(1, NA, NA, NaN), val = 1:4)
+  test2_df <- tibble(a = c(1, 2, NA, NaN), val2 = 5:8)
+  test_pl <- as_polars_lf(test_df)
+  test2_pl <- as_polars_lf(test2_df)
 
   expect_snapshot_lazy(
     left_join(test_pl, test2_pl, na_matches = "foo"),
@@ -339,7 +344,7 @@ test_that("argument na_matches works", {
 
   expect_equal_lazy(
     left_join(test_pl, test2_pl, "a"),
-    left_join(test, test2, "a")
+    left_join(test_df, test2_df, "a")
   )
 
   # This cannot be compared to dplyr because polars always matches on NaN (this
@@ -391,21 +396,21 @@ test_that("error if two inputs don't have the same class", {
 })
 
 test_that("unsupported args throw warning", {
-  test <- tibble(
+  test_df <- tibble(
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-  test2 <- tibble(
+  test2_df <- tibble(
     country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )
-  test_pl <- as_polars_lf(test)
-  test2_pl <- as_polars_lf(test2)
+  test_pl <- as_polars_lf(test_df)
+  test2_pl <- as_polars_lf(test2_df)
 
   expect_warning(
     expect_equal_lazy(
       left_join(test_pl, test2_pl, by = "country", copy = TRUE),
-      left_join(test, test2, by = "country", copy = TRUE)
+      left_join(test_df, test2_df, by = "country", copy = TRUE)
     ),
     "Argument `copy` is not supported by"
   )
@@ -424,20 +429,20 @@ test_that("unsupported args throw warning", {
 })
 
 test_that("dots must be empty", {
-  test <- polars::pl$LazyFrame(
+  test_pl <- pl$LazyFrame(
     country = c("ALG", "FRA", "GER"),
     year = c(2020, 2020, 2021)
   )
-  test2 <- polars::pl$LazyFrame(
+  test2_pl <- polars::pl$LazyFrame(
     country = c("USA", "JPN", "BRA"),
     language = c("english", "japanese", "portuguese")
   )
   expect_snapshot_lazy(
-    left_join(test, test2, by = "country", foo = TRUE),
+    left_join(test_pl, test2_pl, by = "country", foo = TRUE),
     error = TRUE
   )
   expect_snapshot_lazy(
-    left_join(test, test2, by = "country", copy = TRUE, foo = TRUE),
+    left_join(test_pl, test2_pl, by = "country", copy = TRUE, foo = TRUE),
     error = TRUE
   )
 })

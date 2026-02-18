@@ -1,6 +1,6 @@
 test_that("single word functions work", {
-  test <- head(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(head(mtcars))
+  test_pl <- as_polars_df(test_df)
 
   expect_equal(
     mutate(
@@ -20,8 +20,8 @@ test_that("single word functions work", {
 })
 
 test_that("purrr-style function work", {
-  test <- head(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(head(mtcars))
+  test_pl <- as_polars_df(test_df)
 
   expect_equal(
     mutate(
@@ -57,8 +57,8 @@ test_that("purrr-style function work", {
 })
 
 test_that("anonymous functions has to return a Polars expression", {
-  test <- head(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(head(mtcars))
+  test_pl <- as_polars_df(test_df)
 
   expect_equal(
     mutate(
@@ -124,8 +124,8 @@ test_that("anonymous functions has to return a Polars expression", {
 })
 
 test_that("custom function works", {
-  test <- head(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(head(mtcars))
+  test_pl <- as_polars_df(test_df)
 
   foo <- function(x) {
     tmp <- x$cos()$mean()
@@ -153,8 +153,8 @@ test_that("custom function works", {
 })
 
 test_that("works with grouped data", {
-  test <- head(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(head(mtcars))
+  test_pl <- as_polars_df(test_df)
 
   expect_equal(
     test_pl |>
@@ -165,7 +165,7 @@ test_that("works with grouped data", {
           ~ mean(.x)
         )
       ),
-    test |>
+    test_df |>
       group_by(am) |>
       mutate(
         across(
@@ -177,8 +177,8 @@ test_that("works with grouped data", {
 })
 
 test_that("argument .names works", {
-  test <- head(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(head(mtcars))
+  test_pl <- as_polars_df(test_df)
 
   expect_colnames(
     mutate(
@@ -268,8 +268,8 @@ test_that("argument .names works", {
 })
 
 test_that("passing a list of functions works", {
-  test <- head(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(head(mtcars))
+  test_pl <- as_polars_df(test_df)
 
   expect_equal(
     mutate(
@@ -319,8 +319,8 @@ test_that("passing a list of functions works", {
 })
 
 test_that("single variable in .cols, single function", {
-  test <- head(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(head(mtcars))
+  test_pl <- as_polars_df(test_df)
 
   expect_equal(
     mutate(
@@ -332,8 +332,8 @@ test_that("single variable in .cols, single function", {
 })
 
 test_that("also works with summarize()", {
-  test <- head(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(head(mtcars))
+  test_pl <- as_polars_df(test_df)
   test_grp_pl <- test_pl |>
     group_by(cyl, maintain_order = TRUE)
 
@@ -354,8 +354,8 @@ test_that("also works with summarize()", {
 })
 
 test_that("sequence of expressions modifying the same vars works", {
-  test <- head(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(head(mtcars))
+  test_pl <- as_polars_df(test_df)
   out <- test_pl |>
     mutate(
       across(contains("a"), mean),
@@ -368,17 +368,20 @@ test_that("sequence of expressions modifying the same vars works", {
 })
 
 test_that("newly created variable is captured in across", {
-  test <- head(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(head(mtcars))
+  test_pl <- as_polars_df(test_df)
 
   expect_equal(
     test_pl |>
       mutate(
         bar = 1,
         across(.cols = contains("a"), \(x) x - 1)
-      ) |>
-      pull(bar),
-    rep(0, 6)
+      ),
+    test_df |>
+      mutate(
+        bar = 1,
+        across(.cols = contains("a"), \(x) x - 1)
+      )
   )
 
   expect_equal(
@@ -386,9 +389,12 @@ test_that("newly created variable is captured in across", {
       mutate(
         bar = 1,
         across(.cols = starts_with("b"), \(x) x - 1)
-      ) |>
-      pull(bar),
-    rep(0, 6)
+      ),
+    test_df |>
+      mutate(
+        bar = 1,
+        across(.cols = starts_with("b"), \(x) x - 1)
+      )
   )
 
   expect_equal(
@@ -396,9 +402,12 @@ test_that("newly created variable is captured in across", {
       mutate(
         bar = 1,
         across(.cols = ends_with("r"), \(x) x - 1)
-      ) |>
-      pull(bar),
-    rep(0, 6)
+      ),
+    test_df |>
+      mutate(
+        bar = 1,
+        across(.cols = ends_with("r"), \(x) x - 1)
+      )
   )
 
   expect_equal(
@@ -406,9 +415,12 @@ test_that("newly created variable is captured in across", {
       mutate(
         bar = 1,
         across(.cols = matches("^b"), \(x) x - 1)
-      ) |>
-      pull(bar),
-    rep(0, 6)
+      ),
+    test_df |>
+      mutate(
+        bar = 1,
+        across(.cols = matches("^b"), \(x) x - 1)
+      )
   )
 
   expect_equal(
@@ -416,9 +428,12 @@ test_that("newly created variable is captured in across", {
       mutate(
         bar = 1,
         across(.cols = everything(), \(x) x - 1)
-      ) |>
-      pull(bar),
-    rep(0, 6)
+      ),
+    test_df |>
+      mutate(
+        bar = 1,
+        across(.cols = everything(), \(x) x - 1)
+      )
   )
 
   expect_equal(
@@ -426,9 +441,12 @@ test_that("newly created variable is captured in across", {
       mutate(
         foo = 1,
         across(.cols = contains("oo"), \(x) x - 1)
-      ) |>
-      pull(foo),
-    rep(0, 6)
+      ),
+    test_df |>
+      mutate(
+        foo = 1,
+        across(.cols = contains("oo"), \(x) x - 1)
+      )
   )
 
   expect_warning(
@@ -442,8 +460,8 @@ test_that("newly created variable is captured in across", {
 })
 
 test_that("need to specify .cols (either named or unnamed)", {
-  test <- head(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(head(mtcars))
+  test_pl <- as_polars_df(test_df)
 
   expect_snapshot(
     mutate(test_pl, across(.fns = mean)),
@@ -452,14 +470,14 @@ test_that("need to specify .cols (either named or unnamed)", {
 })
 
 test_that(".by works with across() and everything()", {
-  test <- head(mtcars, n = 5)
-  test_pl <- as_polars_df(test)
+  test_df <- head(mtcars, n = 5)
+  test_pl <- as_polars_df(test_df)
   out <- test_pl |>
     summarize(across(everything(), .fns = mean), .by = "cyl") |>
     distinct() |>
     arrange(cyl)
 
-  expected <- test |>
+  expected <- test_df |>
     summarize(across(everything(), .fns = mean), .by = "cyl") |>
     distinct() |>
     arrange(cyl)
@@ -476,8 +494,8 @@ test_that(".by works with across() and everything()", {
 })
 
 test_that("cannot use external list of functions in across()", {
-  test <- head(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(head(mtcars))
+  test_pl <- as_polars_df(test_df)
   my_fns <- list(my_mean = mean, my_median = median)
 
   expect_snapshot(

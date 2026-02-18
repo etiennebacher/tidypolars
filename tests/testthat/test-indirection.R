@@ -1,6 +1,6 @@
 test_that("basic behavior works", {
-  test <- tibble(x = c(1, 1, 1), y = 4:6, z = c("a", "a", "b"))
-  test_pl <- as_polars_df(test)
+  test_df <- tibble(x = c(1, 1, 1), y = 4:6, z = c("a", "a", "b"))
+  test_pl <- as_polars_df(test_df)
 
   add_one <- function(data, add_col) {
     data |> mutate(new_col = {{ add_col }} + 1)
@@ -12,12 +12,12 @@ test_that("basic behavior works", {
 
   expect_equal(
     test_pl |> add_one(x),
-    test |> add_one(x)
+    test_df |> add_one(x)
   )
 
   expect_equal(
     test_pl |> add_two(x),
-    test |> add_two(x)
+    test_df |> add_two(x)
   )
 
   test2 <- as_tibble(mtcars)

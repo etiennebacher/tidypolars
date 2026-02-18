@@ -1,7 +1,7 @@
 # weekday works
 
     Code
-      mutate(test, foo = wday(YMD, week_start = 0))
+      mutate(test_pl, foo = wday(YMD, week_start = 0))
     Condition
       Error in `mutate()`:
       ! Error while running function `wday()` in Polars.
@@ -10,7 +10,7 @@
 ---
 
     Code
-      mutate(test, foo = wday(YMD, week_start = 8))
+      mutate(test_pl, foo = wday(YMD, week_start = 8))
     Condition
       Error in `mutate()`:
       ! Error while running function `wday()` in Polars.
@@ -19,7 +19,7 @@
 ---
 
     Code
-      mutate(test, foo = wday(YMD, week_start = 1.5))
+      mutate(test_pl, foo = wday(YMD, week_start = 1.5))
     Condition
       Error in `mutate()`:
       ! Error while running function `wday()` in Polars.
@@ -28,7 +28,7 @@
 ---
 
     Code
-      mutate(test, foo = wday(YMD, week_start = "Monday"))
+      mutate(test_pl, foo = wday(YMD, week_start = "Monday"))
     Condition
       Error in `mutate()`:
       ! Error while running function `wday()` in Polars.
@@ -37,7 +37,7 @@
 # errors for durations
 
     Code
-      mutate(test, x = weeks(1.2))
+      mutate(test_pl, x = weeks(1.2))
     Condition
       Error in `mutate()`:
       ! Error while running function `weeks()` in Polars.
@@ -46,7 +46,7 @@
 ---
 
     Code
-      mutate(test, x = days(1.2))
+      mutate(test_pl, x = days(1.2))
     Condition
       Error in `mutate()`:
       ! Error while running function `days()` in Polars.
@@ -55,7 +55,7 @@
 ---
 
     Code
-      mutate(test, x = hours(1.2))
+      mutate(test_pl, x = hours(1.2))
     Condition
       Error in `mutate()`:
       ! Error while running function `hours()` in Polars.
@@ -64,7 +64,7 @@
 ---
 
     Code
-      mutate(test, x = minutes(1.2))
+      mutate(test_pl, x = minutes(1.2))
     Condition
       Error in `mutate()`:
       ! Error while running function `minutes()` in Polars.
@@ -73,7 +73,7 @@
 # errors for rolling functions
 
     Code
-      mutate(test, x = rollbackward(x, roll_to_first = "a"))
+      mutate(test_pl, x = rollbackward(x, roll_to_first = "a"))
     Condition
       Error in `mutate()`:
       ! Error while running function `rollbackward()` in Polars.
@@ -82,7 +82,7 @@
 ---
 
     Code
-      mutate(test, x = rollbackward(x, preserve_hms = "a"))
+      mutate(test_pl, x = rollbackward(x, preserve_hms = "a"))
     Condition
       Error in `mutate()`:
       ! Error while running function `rollbackward()` in Polars.
@@ -91,7 +91,7 @@
 ---
 
     Code
-      mutate(test, x = rollforward(x, roll_to_first = "a"))
+      mutate(test_pl, x = rollforward(x, roll_to_first = "a"))
     Condition
       Error in `mutate()`:
       ! Error while running function `rollforward()` in Polars.
@@ -100,7 +100,7 @@
 ---
 
     Code
-      mutate(test, x = rollforward(x, preserve_hms = "a"))
+      mutate(test_pl, x = rollforward(x, preserve_hms = "a"))
     Condition
       Error in `mutate()`:
       ! Error while running function `rollforward()` in Polars.

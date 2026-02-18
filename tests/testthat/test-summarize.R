@@ -1,9 +1,9 @@
 test_that("basic behavior works", {
-  test <- as_tibble(iris)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(iris)
+  test_pl <- as_polars_df(test_df)
   test_pl_grp <- test_pl |>
     group_by(Species, maintain_order = TRUE)
-  test_grp <- test |>
+  test_grp <- test_df |>
     group_by(Species)
 
   expect_equal(
@@ -14,7 +14,8 @@ test_that("basic behavior works", {
   expect_equal(
     summarize(test_pl, x = mean(Sepal.Length), .by = Species) |>
       arrange(Species),
-    summarize(test, x = mean(Sepal.Length), .by = Species) |> arrange(Species)
+    summarize(test_df, x = mean(Sepal.Length), .by = Species) |>
+      arrange(Species)
   )
 
   expect_equal(
@@ -29,7 +30,7 @@ test_that("basic behavior works", {
 
   expect_equal(
     summarize(test_pl, x = mean(Petal.Length)),
-    summarize(test, x = mean(Petal.Length))
+    summarize(test_df, x = mean(Petal.Length))
   )
 
   expect_equal(
@@ -58,8 +59,8 @@ test_that("basic behavior works", {
 
 test_that("correctly handles attributes", {
   # tidypolars-specific attributes tests
-  test <- as_tibble(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test_df)
   test_pl_grp <- test_pl |>
     group_by(cyl, am, maintain_order = TRUE)
 
@@ -92,18 +93,18 @@ test_that("works with a local variable defined in a function", {
     x |> summarize(foo = local_var)
   }
 
-  test <- tibble(chars = letters[1:3])
-  test_pl <- as_polars_df(test)
+  test_df <- tibble(chars = letters[1:3])
+  test_pl <- as_polars_df(test_df)
 
   expect_equal(
     foobar(test_pl),
-    foobar(test)
+    foobar(test_df)
   )
 })
 
 test_that("check .add argument of group_by works", {
-  test <- as_tibble(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test_df)
 
   expect_equal(
     test_pl |>
@@ -117,12 +118,12 @@ test_that("check .add argument of group_by works", {
 })
 
 test_that("argument .groups works", {
-  test <- as_tibble(mtcars)
-  test_pl <- as_polars_df(test)
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test_df)
 
   expect_equal(
     test_pl |> group_by(am, cyl, vs) |> summarise(cyl_n = n()) |> group_vars(),
-    test |> group_by(am, cyl, vs) |> summarise(cyl_n = n()) |> group_vars()
+    test_df |> group_by(am, cyl, vs) |> summarise(cyl_n = n()) |> group_vars()
   )
 
   expect_equal(
@@ -130,7 +131,7 @@ test_that("argument .groups works", {
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "drop_last") |>
       group_vars(),
-    test |>
+    test_df |>
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "drop_last") |>
       group_vars()
@@ -140,7 +141,7 @@ test_that("argument .groups works", {
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "keep") |>
       group_vars(),
-    test |>
+    test_df |>
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "keep") |>
       group_vars()
@@ -150,7 +151,7 @@ test_that("argument .groups works", {
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "drop") |>
       group_vars(),
-    test |>
+    test_df |>
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "drop") |>
       group_vars()
@@ -165,7 +166,9 @@ test_that("argument .groups works", {
     test_pl |>
       group_by(am, cyl, vs) |>
       summarise(cyl_n = n(), .groups = "foobar"),
-    test |> group_by(am, cyl, vs) |> summarise(cyl_n = n(), .groups = "foobar")
+    test_df |>
+      group_by(am, cyl, vs) |>
+      summarise(cyl_n = n(), .groups = "foobar")
   )
   expect_snapshot(
     test_pl |>
@@ -179,7 +182,7 @@ test_that("argument .groups works", {
       group_by(am) |>
       summarise(cyl_n = n(), .groups = "drop_last") |>
       group_vars(),
-    test |>
+    test_df |>
       group_by(am) |>
       summarise(cyl_n = n(), .groups = "drop_last") |>
       group_vars()
@@ -188,16 +191,16 @@ test_that("argument .groups works", {
 
 
 test_that("empty expressions", {
-  test <- tibble(grp = 1:2, x = 1:2)
-  test_pl <- as_polars_df(test)
+  test_df <- tibble(grp = 1:2, x = 1:2)
+  test_pl <- as_polars_df(test_df)
 
   expect_equal(
     test_pl |> summarize(),
-    test |> summarize(),
+    test_df |> summarize(),
     ignore_attr = TRUE
   )
   expect_equal(
     test_pl |> summarize(.by = grp) |> arrange(grp),
-    test |> summarize(.by = grp)
+    test_df |> summarize(.by = grp)
   )
 })

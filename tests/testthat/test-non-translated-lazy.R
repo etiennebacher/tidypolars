@@ -3,13 +3,13 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("non-translated functions do not error if they don't use data context", {
-  test <- tibble(a = c("a", "b", "c"), b = 1:3)
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(a = c("a", "b", "c"), b = 1:3)
+  test_pl <- as_polars_lf(test_df)
 
   # no column at all in the expression
   expect_equal_lazy(
     test_pl |> mutate(x = agrep("a", "b")),
-    test |> mutate(x = agrep("a", "b"))
+    test_df |> mutate(x = agrep("a", "b"))
   )
   expect_equal_lazy(
     test_pl |>
@@ -19,7 +19,7 @@ test_that("non-translated functions do not error if they don't use data context"
           function(y) agrep("a", "b")
         )
       ),
-    test |>
+    test_df |>
       mutate(
         across(
           starts_with("x"),
@@ -31,32 +31,32 @@ test_that("non-translated functions do not error if they don't use data context"
   # also works with "pkg::" prefix
   expect_equal_lazy(
     test_pl |> mutate(x = base::agrep("a", "b")),
-    test |> mutate(x = base::agrep("a", "b"))
+    test_df |> mutate(x = base::agrep("a", "b"))
   )
 
   # column in parts of the expression
   expect_equal_lazy(
     test_pl |> filter(b >= agrep("a", "b")),
-    test |> filter(b >= agrep("a", "b"))
+    test_df |> filter(b >= agrep("a", "b"))
   )
 })
 
 test_that("non-translated functions error if they use data context", {
-  test <- pl$LazyFrame(a = c("a", "b", "c"), b = 1:3)
+  test_pl <- pl$LazyFrame(a = c("a", "b", "c"), b = 1:3)
 
   expect_snapshot_lazy(
-    test |> mutate(x = agrep("a", a)),
+    test_pl |> mutate(x = agrep("a", a)),
     error = TRUE
   )
   expect_snapshot_lazy(
-    test |> filter(a >= agrep("a", a)),
+    test_pl |> filter(a >= agrep("a", a)),
     error = TRUE
   )
 })
 
 test_that("correct behavior when two expressions are identical but used in a different data context", {
-  test <- tibble(foo = c("bla", "ble", "bli"))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(foo = c("bla", "ble", "bli"))
+  test_pl <- as_polars_lf(test_df)
 
   a <- c("bla", "ble", "bli")
 
@@ -64,7 +64,7 @@ test_that("correct behavior when two expressions are identical but used in a dif
   # environment
   expect_equal_lazy(
     test_pl |> mutate(x = agrep("aa", a)),
-    test |> mutate(x = agrep("aa", a))
+    test_df |> mutate(x = agrep("aa", a))
   )
 
   # But if we create the column "a" then this should error because we now use
@@ -91,15 +91,15 @@ test_that("correct behavior when two expressions are identical but used in a dif
 })
 
 test_that("correct behavior with nested functions", {
-  test <- tibble(foo = c("a", "b", "c"), bar = 1:3)
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(foo = c("a", "b", "c"), bar = 1:3)
+  test_pl <- as_polars_lf(test_df)
 
   a <- c("a", "b", "c")
 
   ### Two unknown functions
   expect_equal_lazy(
     test_pl |> mutate(x = identity(agrep("a", a))),
-    test |> mutate(x = identity(agrep("a", a)))
+    test_df |> mutate(x = identity(agrep("a", a)))
   )
   expect_snapshot_lazy(
     test_pl |> mutate(a = "a", x = identity(agrep("a", a))),
@@ -109,7 +109,7 @@ test_that("correct behavior with nested functions", {
   ### One known function wrapping an unknown one
   expect_equal_lazy(
     test_pl |> mutate(x = mean(agrep("a", a))),
-    test |> mutate(x = mean(agrep("a", a)))
+    test_df |> mutate(x = mean(agrep("a", a)))
   )
   expect_snapshot_lazy(
     test_pl |> mutate(a = "a", x = mean(agrep("a", a))),
@@ -120,7 +120,7 @@ test_that("correct behavior with nested functions", {
   a <- 1:3
   expect_equal_lazy(
     test_pl |> mutate(x = agrep("a", mean(a))),
-    test |> mutate(x = agrep("a", mean(a)))
+    test_df |> mutate(x = agrep("a", mean(a)))
   )
   expect_snapshot_lazy(
     test_pl |> mutate(a = 1, x = agrep("a", mean(a))),

@@ -19,7 +19,7 @@
 # errors on non-polars data
 
     Code
-      unnest_longer_polars(test, values)
+      unnest_longer_polars(test_pl, values)
     Condition
       Error in `unnest_longer_polars()`:
       ! The data must be a Polars DataFrame or LazyFrame.

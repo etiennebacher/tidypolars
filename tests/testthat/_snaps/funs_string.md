@@ -1,7 +1,7 @@
 # paste with groups and collapse
 
     Code
-      mutate(test, foo = paste(x, collapse = 1:2))
+      mutate(test_pl, foo = paste(x, collapse = 1:2))
     Condition
       Error in `mutate()`:
       ! Error while running function `paste()` in Polars.
@@ -10,7 +10,7 @@
 # length functions work
 
     Code
-      mutate(test, foo = nchar(x4, "foo"))
+      mutate(test_pl, foo = nchar(x4, "foo"))
     Condition
       Error in `mutate()`:
       ! Error while running function `nchar()` in Polars.

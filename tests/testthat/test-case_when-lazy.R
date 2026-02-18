@@ -3,19 +3,19 @@
 Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 
 test_that("basic behavior works", {
-  test <- tibble(
+  test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample.int(5)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |>
       mutate(
         y = case_when(x1 == 'a' ~ "foo", x2 == 3 ~ "bar", .default = "hi there")
       ),
-    test |>
+    test_df |>
       mutate(
         y = case_when(x1 == 'a' ~ "foo", x2 == 3 ~ "bar", .default = "hi there")
       )
@@ -30,7 +30,7 @@ test_that("basic behavior works", {
           .default = "hi there"
         )
       ),
-    test |>
+    test_df |>
       mutate(
         y = dplyr::case_when(
           x1 == 'a' ~ "foo",
@@ -49,7 +49,7 @@ test_that("basic behavior works", {
           .default = "hi there"
         )
       ),
-    test |>
+    test_df |>
       mutate(
         y = case_when(
           x1 %in% 'a' ~ "foo",
@@ -68,7 +68,7 @@ test_that("basic behavior works", {
           .default = "hi there"
         )
       ),
-    test |>
+    test_df |>
       mutate(
         y = case_when(
           x1 %in% 'a' & x2 == 2 ~ "foo",
@@ -80,19 +80,19 @@ test_that("basic behavior works", {
 })
 
 test_that("if no .default, NA is used", {
-  test <- tibble(
+  test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample.int(5)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
     test_pl |>
       mutate(
         y = case_when(x1 == 'a' ~ "foo", x2 == 3 ~ "bar")
       ),
-    test |>
+    test_df |>
       mutate(
         y = case_when(x1 == 'a' ~ "foo", x2 == 3 ~ "bar")
       )
@@ -100,12 +100,12 @@ test_that("if no .default, NA is used", {
 })
 
 test_that("evaluation of external objects works", {
-  test <- tibble(
+  test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample.int(5)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
   foo <- "a"
   foo2 <- "b"
 
@@ -114,7 +114,7 @@ test_that("evaluation of external objects works", {
       mutate(
         y = case_when(x1 %in% foo ~ "foo", x1 %in% foo2 ~ "foo2", .default = x1)
       ),
-    test |>
+    test_df |>
       mutate(
         y = case_when(x1 %in% foo ~ "foo", x1 %in% foo2 ~ "foo2", .default = x1)
       )
@@ -122,32 +122,32 @@ test_that("evaluation of external objects works", {
 })
 
 test_that("some errors", {
-  test <- tibble(
+  test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
     value = sample.int(5)
   )
-  test_pl <- as_polars_lf(test)
+  test_pl <- as_polars_lf(test_df)
 
   expect_both_error(
     test_pl |> mutate(y = case_when("a" ~ "b")),
-    test |> mutate(y = case_when("a" ~ "b"))
+    test_df |> mutate(y = case_when("a" ~ "b"))
   )
   expect_both_error(
     test_pl |> mutate(y = case_when(x1 == "a" ~ NULL)),
-    test |> mutate(y = case_when(x1 == "a" ~ NULL))
+    test_df |> mutate(y = case_when(x1 == "a" ~ NULL))
   )
   expect_both_error(
     test_pl |> mutate(y = case_when(NULL ~ "a")),
-    test |> mutate(y = case_when(NULL ~ "a"))
+    test_df |> mutate(y = case_when(NULL ~ "a"))
   )
   expect_both_error(
     test_pl |> mutate(y = case_when(x1 == "a" ~ character(0))),
-    test |> mutate(y = case_when(x1 == "a" ~ character(0)))
+    test_df |> mutate(y = case_when(x1 == "a" ~ character(0)))
   )
   expect_both_error(
     test_pl |> mutate(y = case_when(character(0) ~ "a")),
-    test |> mutate(y = case_when(character(0) ~ "a"))
+    test_df |> mutate(y = case_when(character(0) ~ "a"))
   )
 })
 

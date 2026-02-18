@@ -32,10 +32,10 @@ test_that("extracting components of date works", {
     min = 24:27,
     s = 55:58
   )
-  test <- as_polars_lf(test_df)
+  test_pl <- as_polars_lf(test_df)
 
   for (i in c("year", "month", "day", "quarter", "week", "mday", "yday")) {
-    pol <- paste0("mutate(test, foo = ", i, "(YMD))") |>
+    pol <- paste0("mutate(test_pl, foo = ", i, "(YMD))") |>
       str2lang() |>
       eval() |>
       pull(foo)
@@ -49,7 +49,7 @@ test_that("extracting components of date works", {
   }
 
   for (i in c("hour", "minute", "second")) {
-    pol <- paste0("mutate(test, foo = ", i, "(YMD_HMS))") |>
+    pol <- paste0("mutate(test_pl, foo = ", i, "(YMD_HMS))") |>
       str2lang() |>
       eval() |>
       pull(foo)
@@ -64,7 +64,7 @@ test_that("extracting components of date works", {
 
   # TODO: fix timezone attributes
   # for (i in c("ymd_hms", "ymd_hm")) {
-  #   pol <- paste0("mutate(test, to_", i, "  = ", i, "(to_", i, "))") |>
+  #   pol <- paste0("mutate(test_pl, to_", i, "  = ", i, "(to_", i, "))") |>
   #     str2lang() |>
   #     eval() |>
   #     as.data.frame()
@@ -88,47 +88,47 @@ test_that("weekday works", {
       "2025-01-01"
     ))
   )
-  test <- as_polars_lf(test_df)
+  test_pl <- as_polars_lf(test_df)
 
   for (i in 1:7) {
     expect_equal_lazy(
-      test |> mutate(foo = wday(YMD, week_start = i)),
+      test_pl |> mutate(foo = wday(YMD, week_start = i)),
       test_df |> mutate(foo = wday(YMD, week_start = i))
     )
   }
 
   # Test with label = TRUE (returns character, not ordered factor)
   expect_equal_lazy(
-    test |> mutate(foo = wday(YMD, label = TRUE)),
+    test_pl |> mutate(foo = wday(YMD, label = TRUE)),
     test_df |> mutate(foo = as.character(wday(YMD, label = TRUE)))
   )
   expect_equal_lazy(
-    test |> mutate(foo = wday(YMD, label = TRUE, abbr = FALSE)),
+    test_pl |> mutate(foo = wday(YMD, label = TRUE, abbr = FALSE)),
     test_df |> mutate(foo = as.character(wday(YMD, label = TRUE, abbr = FALSE)))
   )
 
   # Test with variable for week_start (not a literal)
   ws <- 3
   expect_equal_lazy(
-    test |> mutate(foo = wday(YMD, week_start = ws)),
+    test_pl |> mutate(foo = wday(YMD, week_start = ws)),
     test_df |> mutate(foo = wday(YMD, week_start = ws))
   )
 
   # Errors
   expect_snapshot_lazy(
-    test |> mutate(foo = wday(YMD, week_start = 0)),
+    test_pl |> mutate(foo = wday(YMD, week_start = 0)),
     error = TRUE
   )
   expect_snapshot_lazy(
-    test |> mutate(foo = wday(YMD, week_start = 8)),
+    test_pl |> mutate(foo = wday(YMD, week_start = 8)),
     error = TRUE
   )
   expect_snapshot_lazy(
-    test |> mutate(foo = wday(YMD, week_start = 1.5)),
+    test_pl |> mutate(foo = wday(YMD, week_start = 1.5)),
     error = TRUE
   )
   expect_snapshot_lazy(
-    test |> mutate(foo = wday(YMD, week_start = "Monday")),
+    test_pl |> mutate(foo = wday(YMD, week_start = "Monday")),
     error = TRUE
   )
 })
@@ -163,10 +163,10 @@ test_that("strptime() works", {
     min = 24:27,
     s = 55:58
   )
-  test <- as_polars_lf(test_df)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
-    test |> mutate(foo = strptime(somedate, "%b %d %Y")) |> pull(foo),
+    test_pl |> mutate(foo = strptime(somedate, "%b %d %Y")) |> pull(foo),
     as.Date(c("2014-07-24", "2015-12-24", "2016-01-21", NA))
   )
 })
@@ -242,30 +242,32 @@ test_that("handling durations work", {
     min = 24:27,
     s = 55:58
   )
-  test <- as_polars_lf(test_df)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
-    test |> mutate(foo = YMD + dweeks(3) + ddays(5)) |> pull(foo),
+    test_pl |> mutate(foo = YMD + dweeks(3) + ddays(5)) |> pull(foo),
     test_df |> mutate(foo = YMD + dweeks(3) + ddays(5)) |> pull(foo)
   )
 
   expect_equal_lazy(
-    test |> mutate(foo = YMD_tz + dweeks(3) + ddays(5)) |> pull(foo),
+    test_pl |> mutate(foo = YMD_tz + dweeks(3) + ddays(5)) |> pull(foo),
     test_df |> mutate(foo = YMD_tz + dweeks(3) + ddays(5)) |> pull(foo)
   )
 
   # TODO: should return NAs
   expect_error_lazy(
-    test |> mutate(foo = NA + dweeks(3) + ddays(5)) |> pull(foo)
+    test_pl |> mutate(foo = NA + dweeks(3) + ddays(5)) |> pull(foo)
   )
 
   expect_equal_lazy(
-    test |> mutate(foo = YMD_HMS + dhours(3) + dminutes(5)) |> pull(foo),
+    test_pl |> mutate(foo = YMD_HMS + dhours(3) + dminutes(5)) |> pull(foo),
     test_df |> mutate(foo = YMD_HMS + dhours(3) + dminutes(5)) |> pull(foo)
   )
 
   expect_equal_lazy(
-    test |> mutate(foo = YMD_HMS + dseconds(3) + dmilliseconds(5)) |> pull(foo),
+    test_pl |>
+      mutate(foo = YMD_HMS + dseconds(3) + dmilliseconds(5)) |>
+      pull(foo),
     test_df |>
       mutate(foo = YMD_HMS + dseconds(3) + dmilliseconds(5)) |>
       pull(foo)
@@ -304,25 +306,25 @@ test_that("make_date() works", {
     min = 24:27,
     s = 55:58
   )
-  test <- as_polars_lf(test_df)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
-    test |> mutate(foo = make_date(year = y, m, d)) |> pull(foo),
+    test_pl |> mutate(foo = make_date(year = y, m, d)) |> pull(foo),
     test_df |> mutate(foo = make_date(year = y, m, d)) |> pull(foo)
   )
 
   expect_equal_lazy(
-    test |> mutate(foo = make_date(year = y)) |> pull(foo),
+    test_pl |> mutate(foo = make_date(year = y)) |> pull(foo),
     test_df |> mutate(foo = make_date(year = y)) |> pull(foo)
   )
 
   expect_equal_lazy(
-    test |> mutate(foo = make_date(year = y, m, d)) |> pull(foo),
+    test_pl |> mutate(foo = make_date(year = y, m, d)) |> pull(foo),
     test_df |> mutate(foo = make_date(year = y, m, d)) |> pull(foo)
   )
 
   expect_error_lazy(
-    test |> mutate(foo = make_date(year = y, 30, 1)),
+    test_pl |> mutate(foo = make_date(year = y, 30, 1)),
     "Invalid date components"
   )
 })
@@ -357,13 +359,13 @@ test_that("make_datetime() works", {
     min = 24:27,
     s = 55:58
   )
-  test <- as_polars_lf(test_df)
+  test_pl <- as_polars_lf(test_df)
 
   # setting hour = 25 adds 1 day + 1 hour, which is not the behavior of
   # ISOdatetime() or pl$datetime()
 
   expect_equal_lazy(
-    test |>
+    test_pl |>
       mutate(foo = make_datetime(hour = h, min = min, sec = s)) |>
       pull(foo),
     test_df |>
@@ -372,7 +374,7 @@ test_that("make_datetime() works", {
   )
 
   expect_equal_lazy(
-    test |>
+    test_pl |>
       mutate(
         foo = make_datetime(
           hour = 6,
@@ -395,12 +397,12 @@ test_that("make_datetime() works", {
   )
 
   expect_error_lazy(
-    test |> mutate(foo = make_datetime(year = y, 30, 1)),
+    test_pl |> mutate(foo = make_datetime(year = y, 30, 1)),
     "Invalid date components"
   )
 
   expect_error_lazy(
-    test |> mutate(foo = make_datetime(year = y, 1, 1, hour = 25)),
+    test_pl |> mutate(foo = make_datetime(year = y, 1, 1, hour = 25)),
     "Invalid time components"
   )
 })
@@ -435,10 +437,10 @@ test_that("ISOdatetime() works", {
     min = 24:27,
     s = 55:58
   )
-  test <- as_polars_lf(test_df)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
-    test |>
+    test_pl |>
       mutate(
         foo = ISOdatetime(
           year = 0,
@@ -466,7 +468,7 @@ test_that("ISOdatetime() works", {
   )
 
   expect_equal_lazy(
-    test |>
+    test_pl |>
       mutate(
         foo = ISOdatetime(
           year = 0,
@@ -496,7 +498,7 @@ test_that("ISOdatetime() works", {
   )
 
   expect_error_lazy(
-    test |> mutate(foo = ISOdatetime(year = y, 1, 1, hour = 25)),
+    test_pl |> mutate(foo = ISOdatetime(year = y, 1, 1, hour = 25)),
     "Invalid time components"
   )
 })
@@ -513,9 +515,9 @@ test_that("am/pm work", {
       )
     )
   )
-  test <- as_polars_lf(test_df)
+  test_pl <- as_polars_lf(test_df)
   expect_equal_lazy(
-    test |>
+    test_pl |>
       mutate(
         am = am(datetime),
         pm = pm(datetime)
@@ -545,9 +547,9 @@ test_that("days_in_month() works", {
       )
     )
   )
-  test <- as_polars_lf(test_df)
+  test_pl <- as_polars_lf(test_df)
   expect_equal_lazy(
-    mutate(test, x = days_in_month(x)),
+    mutate(test_pl, x = days_in_month(x)),
     mutate(test_df, x = days_in_month(x)),
     # lubridate output is a named integer vector
     ignore_attr = TRUE
@@ -565,13 +567,13 @@ test_that("leap_year() works", {
       )
     )
   )
-  test <- as_polars_lf(test_df)
+  test_pl <- as_polars_lf(test_df)
   expect_equal_lazy(
-    mutate(test, date = leap_year(date)),
+    mutate(test_pl, date = leap_year(date)),
     mutate(test_df, date = leap_year(date))
   )
   expect_equal_lazy(
-    mutate(test, datetime = leap_year(datetime)),
+    mutate(test_pl, datetime = leap_year(datetime)),
     mutate(test_df, datetime = leap_year(datetime))
   )
 })
@@ -589,7 +591,7 @@ test_that("force_tz() works", {
       tz = "UTC"
     )
   )
-  test <- as_polars_lf(test_df) |>
+  test_pl <- as_polars_lf(test_df) |>
     mutate(
       dt_utc = force_tz(dt_utc, "Pacific/Auckland"),
       dt_na = force_tz(dt_utc, "")
@@ -602,25 +604,25 @@ test_that("force_tz() works", {
 
   # Existing timezone
   expect_equal_lazy(
-    pull(test, dt_utc),
+    pull(test_pl, dt_utc),
     test_df$dt_utc
   )
   # Empty timezone
   expect_equal_lazy(
-    pull(test, dt_na),
+    pull(test_pl, dt_na),
     test_df$dt_na
   )
   # Unrecognized timezone, multiple timezones or NULL
   expect_error_lazy(
-    test |> mutate(t = force_tz(dt_utc, "bla")),
+    test_pl |> mutate(t = force_tz(dt_utc, "bla")),
     "Unrecognized time zone: \"bla\""
   )
   expect_error_lazy(
-    test |> mutate(t = force_tz(dt_utc, NULL)),
+    test_pl |> mutate(t = force_tz(dt_utc, NULL)),
     "Unrecognized time zone: NULL"
   )
   expect_error_lazy(
-    test |> mutate(t = force_tz(dt_utc, c("bla", "bla"))),
+    test_pl |> mutate(t = force_tz(dt_utc, c("bla", "bla"))),
     "cannot use several timezones in a single column"
   )
 })
@@ -637,7 +639,7 @@ test_that("with_tz() works", {
       tz = "UTC"
     )
   )
-  test <- as_polars_lf(test_df) |>
+  test_pl <- as_polars_lf(test_df) |>
     mutate(
       dt_utc = with_tz(dt_utc, "Pacific/Auckland")
     )
@@ -648,25 +650,25 @@ test_that("with_tz() works", {
 
   # Existing timezone
   expect_equal_lazy(
-    pull(test, dt_utc),
+    pull(test_pl, dt_utc),
     test_df$dt_utc
   )
 
   # Unrecognized timezone or NULL
   expect_error_lazy(
-    test |> mutate(t = with_tz(dt_utc, "bla")),
+    test_pl |> mutate(t = with_tz(dt_utc, "bla")),
     "Unrecognized time zone: \"bla\""
   )
   expect_error_lazy(
-    test |> mutate(t = with_tz(dt_utc, c("bla", "bla"))),
+    test_pl |> mutate(t = with_tz(dt_utc, c("bla", "bla"))),
     "cannot use several timezones in a single"
   )
   expect_error_lazy(
-    test |> mutate(t = with_tz(dt_utc, "")),
+    test_pl |> mutate(t = with_tz(dt_utc, "")),
     "doesn't support empty timezone"
   )
   expect_error_lazy(
-    test |> mutate(t = with_tz(dt_utc, NULL)),
+    test_pl |> mutate(t = with_tz(dt_utc, NULL)),
     "Unrecognized time zone: NULL"
   )
 })
@@ -683,11 +685,11 @@ test_that("check_timezone() throws expected errors", {
       tz = "UTC"
     )
   )
-  test <- as_polars_lf(test_df)
+  test_pl <- as_polars_lf(test_df)
 
   # Multiple timezones
   expect_error_lazy(
-    test |>
+    test_pl |>
       mutate(
         dt_utc = with_tz(dt_utc, c("Pacific/Auckland", "Pacific/Auckland"))
       ),
@@ -696,7 +698,7 @@ test_that("check_timezone() throws expected errors", {
 
   # Unrecognized timezone
   expect_error_lazy(
-    test |>
+    test_pl |>
       mutate(
         dt_utc = with_tz(dt_utc, "foo")
       ),
@@ -705,7 +707,7 @@ test_that("check_timezone() throws expected errors", {
 
   # NULL timezone
   expect_error_lazy(
-    test |>
+    test_pl |>
       mutate(
         dt_utc = with_tz(dt_utc, "")
       ),
@@ -714,7 +716,7 @@ test_that("check_timezone() throws expected errors", {
 
   # NA timezone
   expect_error_lazy(
-    test |>
+    test_pl |>
       mutate(
         dt_utc = with_tz(dt_utc, NA)
       ),
@@ -723,7 +725,7 @@ test_that("check_timezone() throws expected errors", {
 
   # Column as a timezone
   expect_error_lazy(
-    test |>
+    test_pl |>
       mutate(
         tzone = "Pacific/Auckland",
         dt_utc = with_tz(dt_utc, tzone)
@@ -737,38 +739,38 @@ test_that("today() works", {
     id = 1:6,
     date = lubridate::now(tzone = "") + lubridate::days(-5:0)
   )
-  test <- as_polars_lf(test_df)
+  test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
-    filter(test, date >= lubridate::today()),
+    filter(test_pl, date >= lubridate::today()),
     filter(test_df, date >= lubridate::today())
   )
 })
 
 test_that("errors for durations", {
-  test <- pl$LazyFrame(x = 1)
-  expect_snapshot_lazy(mutate(test, x = weeks(1.2)), error = TRUE)
-  expect_snapshot_lazy(mutate(test, x = days(1.2)), error = TRUE)
-  expect_snapshot_lazy(mutate(test, x = hours(1.2)), error = TRUE)
-  expect_snapshot_lazy(mutate(test, x = minutes(1.2)), error = TRUE)
+  test_pl <- pl$LazyFrame(x = 1)
+  expect_snapshot_lazy(mutate(test_pl, x = weeks(1.2)), error = TRUE)
+  expect_snapshot_lazy(mutate(test_pl, x = days(1.2)), error = TRUE)
+  expect_snapshot_lazy(mutate(test_pl, x = hours(1.2)), error = TRUE)
+  expect_snapshot_lazy(mutate(test_pl, x = minutes(1.2)), error = TRUE)
 })
 
 test_that("errors for rolling functions", {
-  test <- pl$LazyFrame(x = 1)
+  test_pl <- pl$LazyFrame(x = 1)
   expect_snapshot_lazy(
-    mutate(test, x = rollbackward(x, roll_to_first = "a")),
+    mutate(test_pl, x = rollbackward(x, roll_to_first = "a")),
     error = TRUE
   )
   expect_snapshot_lazy(
-    mutate(test, x = rollbackward(x, preserve_hms = "a")),
+    mutate(test_pl, x = rollbackward(x, preserve_hms = "a")),
     error = TRUE
   )
   expect_snapshot_lazy(
-    mutate(test, x = rollforward(x, roll_to_first = "a")),
+    mutate(test_pl, x = rollforward(x, roll_to_first = "a")),
     error = TRUE
   )
   expect_snapshot_lazy(
-    mutate(test, x = rollforward(x, preserve_hms = "a")),
+    mutate(test_pl, x = rollforward(x, preserve_hms = "a")),
     error = TRUE
   )
 })
