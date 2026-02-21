@@ -887,11 +887,6 @@ expr_uses_col_from_dots <- function(...) {
   dots[["__tidypolars__expr_uses_col"]]
 }
 
-expr_uses_col_from_dots <- function(...) {
-  dots <- get_dots(...)
-  dots[["__tidypolars__expr_uses_col"]]
-}
-
 caller_from_dots <- function(...) {
   dots <- get_dots(...)
   dots[["__tidypolars__caller"]]
