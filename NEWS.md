@@ -20,6 +20,11 @@
 * In `arrange()`, if the data was grouped, the order was never maintained even if
   `maintain_order = TRUE` was passed in `group_by()`. This is now fixed (#332).
 
+* When exporting to CSV, `null_values` alone did not apply and could override explicitly
+  provided `null_value`. This is now fixed (@Yousa-Mirage, #334).
+
+* Fix `sample()` to make it work correctly (@Yousa-Mirage, #338).
+
 # tidypolars 0.17.0
 
 `tidypolars` requires `polars` >= 1.9.0 and `dplyr` >= 1.2.0.
