@@ -355,9 +355,20 @@ pl_round <- function(x, digits = 0, ...) {
 
 pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
   check_empty_dots(...)
-  # TODO: how should I handle seed, given that R sample() doesn't have this arg
+  # WARNING: random seed is not supported and cannot take effect.
+  if (missing(size)) {
+    size <- x$len()
+  }
+  if (!is_polars_expr(size)) {
+    if (!is.numeric(size) || size <= 0 || size %% 1 != 0) {
+      cli_abort("{.code size} must be a positive integer.")
+    }
+    size <- as.integer(size)
+  }
+
   out <- x$sample(n = size, with_replacement = replace, shuffle = TRUE)
-  if (is.null(size) || size == 1) {
+
+  if (!is_polars_expr(size) && size == 1L) {
     out <- out$first()
   }
   out

@@ -10,6 +10,15 @@
       Caused by error:
       ! lengths don't match: unable to add a column of length 4 to a DataFrame of height 5
 
+# sample() validates size
+
+    Code
+      mutate(test_pl, y = sample(x, size = 1.5))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `sample()` in Polars.
+      x `size` must be a positive integer.
+
 # seq_len() works
 
     Code

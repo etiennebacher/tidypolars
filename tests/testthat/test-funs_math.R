@@ -292,28 +292,6 @@ test_that("rank() works on various input types", {
   )
 })
 
-test_that("warns if unknown args", {
-  test_df <- tibble(
-    x1 = c("a", "a", "b", "a", "c"),
-    x2 = c(2, 1, 5, 3, 1),
-    value = sample(11:15),
-    value_trigo = seq(0, 0.4, 0.1),
-    value_mix = -2:2,
-    value_with_NA = c(-2, -1, NA, 1, 2)
-  )
-  test_pl <- as_polars_df(test_df)
-  foo <- test_pl |>
-    mutate(x = sample(x2)) |>
-    pull(x)
-
-  expect_true(all(foo %in% c(1, 2, 3, 5)))
-
-  expect_warning(
-    test_pl |> mutate(x = sample(x2, prob = 0.5)),
-    "doesn't know how to use some arguments"
-  )
-})
-
 test_that("%% and %/% work", {
   test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
