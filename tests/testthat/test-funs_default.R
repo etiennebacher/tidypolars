@@ -184,6 +184,16 @@ test_that("sample() works with default size and n() size", {
 
   expect_equal(sort(foo), sort(res))
 
+  foo_replace <- test_pl |>
+    mutate(y = sample(x, replace = TRUE)) |>
+    pull(y)
+  res_replace <- test_df |>
+    mutate(y = sample(x, replace = TRUE)) |>
+    pull(y)
+
+  expect_true(all(foo_replace %in% 1:5))
+  expect_true(all(res_replace %in% 1:5))
+
   foo_1 <- test_pl |>
     mutate(y = sample(x, size = 1)) |>
     pull(y)
@@ -236,6 +246,11 @@ test_that("sample() validates size", {
   expect_both_error(
     mutate(test_pl, y = sample(x, size = 3)),
     mutate(test_df, y = sample(x, size = 3))
+  )
+
+  expect_both_error(
+    mutate(test_pl, y = sample(x, size = 100, replace = FALSE)),
+    mutate(test_df, y = sample(x, size = 100, replace = FALSE))
   )
 
   # `mutate(test_df, y = sample(x, size = 1.5))` has a weird behavior
