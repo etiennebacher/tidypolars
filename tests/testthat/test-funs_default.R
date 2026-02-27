@@ -171,6 +171,81 @@ test_that("round() works", {
   )
 })
 
+test_that("sample() works with default size and n() size", {
+  test_df <- tibble(x = 1:5)
+  test_pl <- as_polars_df(test_df)
+
+  foo <- test_pl |>
+    mutate(y = sample(x)) |>
+    pull(y)
+  res <- test_df |>
+    mutate(y = sample(x)) |>
+    pull(y)
+
+  expect_equal(sort(foo), sort(res))
+
+  foo_1 <- test_pl |>
+    mutate(y = sample(x, size = 1)) |>
+    pull(y)
+  res_1 <- test_df |>
+    mutate(y = sample(x, size = 1)) |>
+    pull(y)
+
+  expect_true(unique(foo_1) %in% 1:5)
+  expect_true(unique(res_1) %in% 1:5)
+
+  foo_n <- test_pl |>
+    mutate(y = sample(x, size = n())) |>
+    pull(y)
+  res_n <- test_df |>
+    mutate(y = sample(x, size = n())) |>
+    pull(y)
+
+  expect_equal(sort(foo_n), sort(res_n))
+})
+
+test_that("sample() warns on unsupported args", {
+  test_df <- tibble(x = 1:5)
+  test_pl <- as_polars_df(test_df)
+
+  expect_warning(
+    mutate(test_pl, y = sample(x, prob = 0.5)),
+    "doesn't know how to use some arguments"
+  )
+})
+
+test_that("sample() validates size", {
+  test_df <- tibble(x = 1:5)
+  test_pl <- as_polars_df(test_df)
+
+  expect_both_error(
+    mutate(test_pl, y = sample(x, size = -1)),
+    mutate(test_df, y = sample(x, size = -1))
+  )
+
+  expect_both_error(
+    mutate(test_pl, y = sample(x, size = 0)),
+    mutate(test_df, y = sample(x, size = 0))
+  )
+
+  expect_both_error(
+    mutate(test_pl, y = sample(x, size = NULL)),
+    mutate(test_df, y = sample(x, size = NULL))
+  )
+
+  expect_both_error(
+    mutate(test_pl, y = sample(x, size = 3)),
+    mutate(test_df, y = sample(x, size = 3))
+  )
+
+  # `mutate(test_df, y = sample(x, size = 1.5))` has a weird behavior
+  # when size is a double in [1, 2)
+  expect_snapshot(
+    mutate(test_pl, y = sample(x, size = 1.5)),
+    error = TRUE
+  )
+})
+
 test_that("stats::lag() is not supported", {
   test_df <- tibble(x = c(10, 20, 30, 40, 10, 20, 30, 40))
   test_pl <- as_polars_df(test_df)
