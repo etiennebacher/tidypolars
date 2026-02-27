@@ -355,7 +355,7 @@ pl_round <- function(x, digits = 0, ...) {
 
 pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
   check_empty_dots(...)
-  # TODO: how should I handle seed, given that R sample() doesn't have this arg
+  # WARNING: random seed is not supported and cannot take effect.
   if (missing(size)) {
     size <- x$len()
   }
