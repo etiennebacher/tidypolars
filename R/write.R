@@ -88,7 +88,7 @@ write_csv_polars <- function(
       what = "write_csv_polars(null_values)",
       details = "Use `null_value` instead."
     )
-    if (!identical(null_value, "")) {
+    if (missing(null_value)) {
       null_value <- null_values
     }
   }
