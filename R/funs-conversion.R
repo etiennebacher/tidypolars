@@ -23,9 +23,5 @@ pl_as.Date <- function(x, format, ...) {
   if (length(format) > 1) {
     cli_abort("{.pkg tidypolars} only supports `format` of length 1.")
   }
-  # TODO: shouldn't be needed
-  if (is.character(x)) {
-    x <- pl$lit(x)
-  }
   x$str$strptime(pl$Date, format = format, strict = FALSE)
 }

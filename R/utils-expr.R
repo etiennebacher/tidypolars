@@ -740,16 +740,37 @@ translate <- function(
         }
       }
 
-      args <- lapply(
-        as.list(expr[-1]),
-        translate,
-        .data = .data,
-        new_vars = new_vars,
-        env = env,
-        caller = caller,
-        call_is_function = call_is_function,
-        expr_uses_col = expr_uses_col
-      )
+      raw_args <- as.list(expr[-1])
+      args <- lapply(seq_along(raw_args), function(i) {
+        arg_call_is_function <- call_is_function
+
+        # For conversion helpers, the first argument is the value/expression to
+        # convert. If this value is a literal (e.g. as.Date("2020-01-01")),
+        # we must translate it as a Polars literal expression.
+        if (
+          name %in%
+            c(
+              "pl_as.Date",
+              "pl_as.numeric",
+              "pl_as.logical",
+              "pl_as.character"
+            ) &&
+            i == 1
+        ) {
+          arg_call_is_function <- FALSE
+        }
+
+        translate(
+          raw_args[[i]],
+          .data = .data,
+          new_vars = new_vars,
+          env = env,
+          caller = caller,
+          call_is_function = arg_call_is_function,
+          expr_uses_col = expr_uses_col
+        )
+      })
+      names(args) <- names(raw_args)
 
       tryCatch(
         {
