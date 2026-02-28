@@ -101,4 +101,29 @@ test_that("as.Date() works for character columns", {
   )
 })
 
+test_that("conversion helpers work with literal first argument", {
+  test_df <- tibble(x = 1:2)
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |> mutate(d = as.Date("2020-01-01")),
+    test_df |> mutate(d = as.Date("2020-01-01"))
+  )
+
+  expect_equal_lazy(
+    test_pl |> mutate(num = as.numeric("1")),
+    test_df |> mutate(num = as.numeric("1"))
+  )
+
+  expect_equal_lazy(
+    test_pl |> mutate(chr = as.character(1L)),
+    test_df |> mutate(chr = as.character(1L))
+  )
+
+  expect_equal_lazy(
+    test_pl |> mutate(lgl = as.logical(1)),
+    test_df |> mutate(lgl = as.logical(1))
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

@@ -1,4 +1,6 @@
 pl_between_dplyr <- function(x, left, right, ...) {
+  left <- polars_expr_to_r(left)
+  right <- polars_expr_to_r(right)
   check_empty_dots(...)
   x$is_between(lower_bound = left, upper_bound = right, closed = "both")
 }
@@ -96,6 +98,9 @@ pl_first_dplyr <- function(x, ...) {
 
 pl_lag_dplyr <- function(x, n = 1, default = NULL, order_by = NULL, ...) {
   check_empty_dots(...)
+  n <- polars_expr_to_r(n)
+  default <- polars_expr_to_r(default)
+  order_by <- polars_expr_to_r(order_by)
   if (!is.null(default)) {
     out <- x$shift(n, fill_value = default)
   } else {
@@ -114,6 +119,9 @@ pl_last_dplyr <- function(x, ...) {
 
 pl_lead_dplyr <- function(x, n = 1, default = NULL, order_by = NULL, ...) {
   check_empty_dots(...)
+  n <- polars_expr_to_r(n)
+  default <- polars_expr_to_r(default)
+  order_by <- polars_expr_to_r(order_by)
   if (!is.null(default)) {
     out <- x$shift(-n, fill_value = default)
   } else {
@@ -129,8 +137,7 @@ pl_min_rank_dplyr <- function(x) {
   x$rank(method = "min")
 }
 
-pl_n_dplyr <- function(...) {
-  check_empty_dots()
+pl_n_dplyr <- function() {
   pl$len()
 }
 
@@ -144,6 +151,7 @@ pl_na_if_dplyr <- function(x, y) {
 
 pl_n_distinct_dplyr <- function(..., na.rm = FALSE) {
   dots <- clean_dots(...)
+  na.rm <- polars_expr_to_r(na.rm)
   if (length(dots) == 0) {
     cli_abort(
       "{.code ...} is absent, but must be supplied.",
@@ -162,10 +170,12 @@ pl_n_distinct_dplyr <- function(..., na.rm = FALSE) {
 }
 
 pl_near_dplyr <- function(x, y, tol = .Machine$double.eps^0.5) {
+  tol <- polars_expr_to_r(tol)
   (x - y)$abs() < tol
 }
 
 pl_nth_dplyr <- function(x, n, ...) {
+  n <- polars_expr_to_r(n)
   if (length(n) > 1) {
     cli_abort(
       paste0("{.code n} must have size 1, not size {length(n)}."),
@@ -190,6 +200,7 @@ pl_recode_values_dplyr <- function(
   unmatched,
   ptype
 ) {
+  default <- polars_expr_to_r(default)
   default <- default %||% NA
   env <- env_from_dots(...)
   dots <- clean_dots(...)
