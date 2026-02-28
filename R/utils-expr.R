@@ -724,6 +724,26 @@ translate <- function(
       tryCatch(
         {
           if (name %in% c(known_ops, user_defined)) {
+            # If all args are literal constants, evaluate in R and preserve
+            # the original value so that polars_expr_to_r() can recover it.
+            if (name %in% known_ops) {
+              all_literal <- TRUE
+              r_args <- lapply(args, function(a) {
+                if (is_polars_expr(a)) {
+                  orig <- attributes(a)[["original_value"]]
+                  if (is.null(orig)) {
+                    all_literal <<- FALSE
+                  }
+                  orig
+                } else {
+                  a
+                }
+              })
+              if (all_literal) {
+                r_result <- call2(name, !!!r_args) |> eval_bare()
+                return(polars_constant(r_result))
+              }
+            }
             call2(name, !!!args) |> eval_bare(env = caller)
           } else {
             accepted_args <- names(formals(name))
@@ -1043,6 +1063,7 @@ check_rowwise_dots <- function(...) {
 check_pattern <- function(x) {
   is_fixed <- isTRUE(attr(x, "stringr_attr") == "fixed")
   is_case_insensitive <- isTRUE(attr(x, "case_insensitive"))
+  x <- polars_expr_to_r(x)
   if (is_case_insensitive) {
     x <- paste0("(?i)", x)
   }
@@ -1061,7 +1082,16 @@ polars_constant <- function(x) {
 
 polars_expr_to_r <- function(x) {
   if (is_polars_expr(x)) {
-    attributes(x)[["original_value"]] %||% x
+    out <- attributes(x)[["original_value"]] %||% x
+    # Keep other attributes, such as "case_insensitive"
+    for (att in seq_along(attributes(x))) {
+      nm <- names(attributes(x))[att]
+      if (nm %in% c("class", "original_value")) {
+        next
+      }
+      attr(out, nm) <- attr(x, nm)
+    }
+    out
   } else {
     x
   }

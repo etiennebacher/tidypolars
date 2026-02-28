@@ -176,7 +176,6 @@ pl_near_dplyr <- function(x, y, tol = .Machine$double.eps^0.5) {
 
 pl_nth_dplyr <- function(x, n, ...) {
   n <- polars_expr_to_r(n)
-  print(n)
   if (length(n) > 1) {
     cli_abort(
       paste0("{.code n} must have size 1, not size {length(n)}."),

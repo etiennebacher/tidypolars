@@ -1,4 +1,6 @@
 pl_grepl <- function(pattern, x, ignore.case = FALSE, fixed = FALSE, ...) {
+  ignore.case <- polars_expr_to_r(ignore.case)
+  fixed <- polars_expr_to_r(fixed)
   if (isTRUE(fixed)) {
     attr(pattern, "stringr_attr") <- "fixed"
   }
@@ -16,6 +18,8 @@ pl_gsub <- function(
   fixed = FALSE,
   ...
 ) {
+  ignore.case <- polars_expr_to_r(ignore.case)
+  fixed <- polars_expr_to_r(fixed)
   if (isTRUE(fixed)) {
     attr(pattern, "stringr_attr") <- "fixed"
   }
@@ -36,6 +40,7 @@ pl_paste0 <- function(..., collapse = NULL) {
 
 pl_paste <- function(..., sep = " ", collapse = NULL) {
   sep <- polars_expr_to_r(sep)
+  collapse <- polars_expr_to_r(collapse)
   dots <- clean_dots(...)
   check_string(sep)
   check_string(collapse, allow_null = TRUE)
@@ -66,6 +71,7 @@ pl_str_count_stringr <- function(string, pattern = "", ...) {
 
 pl_str_detect_stringr <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
+  negate <- polars_expr_to_r(negate)
   pattern <- check_pattern(pattern)
   out <- string$str$contains(pattern$pattern, literal = pattern$is_fixed)
   if (isTRUE(negate)) {
@@ -93,6 +99,7 @@ pl_str_dup_stringr <- function(string, times) {
 
 pl_str_ends_stringr <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
+  negate <- polars_expr_to_r(negate)
   pattern <- check_pattern(pattern)
 
   # ends_with doesn't accept a regex
@@ -114,6 +121,7 @@ pl_str_equal_stringr <- function(x, y, ...) {
 # group = 0 means the whole match
 pl_str_extract_stringr <- function(string, pattern, group = 0, ...) {
   check_empty_dots(...)
+  group <- polars_expr_to_r(group)
   pattern <- check_pattern(pattern)
   # if pattern wasn't passed to pl$col() at this point then it must be parsed
   # as a literal otherwise extract() will error because can't find a column
@@ -140,6 +148,7 @@ pl_str_length_stringr <- function(string, ...) {
 
 pl_nchar <- function(x, type = "chars", ...) {
   check_empty_dots(...)
+  type <- polars_expr_to_r(type)
   type <- arg_match0(type, c("chars", "bytes"))
   switch(
     type,
@@ -162,6 +171,7 @@ pl_str_pad_stringr <- function(
   width <- polars_expr_to_r(width)
   pad <- polars_expr_to_r(pad)
 
+  use_width <- polars_expr_to_r(use_width)
   if (isFALSE(use_width)) {
     cli_abort(
       "{.fn str_pad} doesn't work with a Polars object when {.code use_width = FALSE}",
@@ -210,6 +220,7 @@ pl_str_remove_all_stringr <- function(string, pattern, ...) {
 
 pl_str_replace_stringr <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
+  replacement <- polars_expr_to_r(replacement)
   pattern <- check_pattern(pattern)
   if (is.character(replacement)) {
     replacement <- parse_replacement(replacement)
@@ -220,14 +231,22 @@ pl_str_replace_stringr <- function(string, pattern, replacement, ...) {
 pl_str_replace_all_stringr <- function(string, pattern, replacement, ...) {
   check_empty_dots(...)
   # named pattern means that names are patterns and values are replacements
-  names_pattern <- names(pattern)
+  # pattern may be a named list of polars expressions from c()
+  if (is.list(pattern)) {
+    names_pattern <- names(pattern)
+  } else {
+    pattern <- polars_expr_to_r(pattern)
+    names_pattern <- names(pattern)
+  }
   if (!is.null(names_pattern)) {
+    pattern <- lapply(pattern, polars_expr_to_r)
     out <- string
     for (i in seq_along(pattern)) {
       pattern[[i]] <- parse_replacement(pattern[[i]])
       out <- out$str$replace_all(names_pattern[i], pattern[[i]])
     }
   } else {
+    replacement <- polars_expr_to_r(replacement)
     pattern <- check_pattern(pattern)
     replacement <- parse_replacement(replacement)
     out <- string$str$replace_all(
@@ -247,6 +266,7 @@ pl_str_squish_stringr <- function(string, ...) {
 
 pl_str_starts_stringr <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
+  negate <- polars_expr_to_r(negate)
   pattern <- check_pattern(pattern)
 
   # starts_with doesn't accept a regex
@@ -481,11 +501,14 @@ pl_substr <- function(x, start, stop) {
 # https://github.com/pola-rs/polars/issues/13649
 pl_str_split_stringr <- function(string, pattern, ...) {
   check_empty_dots(...)
+  pattern <- polars_expr_to_r(pattern)
   string$str$split(by = pattern, inclusive = FALSE)
 }
 
 pl_str_split_i_stringr <- function(string, pattern, i, ...) {
   check_empty_dots(...)
+  pattern <- polars_expr_to_r(pattern)
+  i <- polars_expr_to_r(i)
   if (i == 0) {
     cli_abort("{.code i} must not be 0.", call = env_from_dots(...))
   } else if (i >= 1) {
@@ -550,6 +573,9 @@ pl_str_trunc_stringr <- function(
   side = "right",
   ellipsis = "..."
 ) {
+  width <- polars_expr_to_r(width)
+  side <- polars_expr_to_r(side)
+  ellipsis <- polars_expr_to_r(ellipsis)
   if (width < nchar(ellipsis)) {
     cli_abort(
       paste0(
@@ -574,5 +600,8 @@ pl_str_trunc_stringr <- function(
 
 pl_word_stringr <- function(string, start = 1L, end = start, sep = " ", ...) {
   check_empty_dots(...)
+  start <- polars_expr_to_r(start)
+  end <- polars_expr_to_r(end)
+  sep <- polars_expr_to_r(sep)
   string$str$split(sep)$list$gather(list((start:end) - 1L))$list$join(sep)
 }

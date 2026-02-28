@@ -78,6 +78,7 @@ pl_date_lubridate <- function(x, ...) {
 }
 
 pl_now_lubridate <- function(tzone = "") {
+  tzone <- polars_expr_to_r(tzone)
   pl$lit(lubridate::now(tzone = tzone))
 }
 
@@ -91,38 +92,49 @@ pl_now_lubridate <- function(tzone = "") {
 # }
 
 pl_dweeks_lubridate <- function(x, ...) {
+  x <- polars_expr_to_r(x)
   pl$duration(weeks = x)
 }
 
 pl_ddays_lubridate <- function(x, ...) {
+  x <- polars_expr_to_r(x)
   pl$duration(days = x)
 }
 
 pl_dhours_lubridate <- function(x, ...) {
+  x <- polars_expr_to_r(x)
   pl$duration(hours = x)
 }
 
 pl_dminutes_lubridate <- function(x, ...) {
+  x <- polars_expr_to_r(x)
   pl$duration(minutes = x)
 }
 
 pl_dseconds_lubridate <- function(x, ...) {
+  x <- polars_expr_to_r(x)
   pl$duration(seconds = x)
 }
 
 pl_dmilliseconds_lubridate <- function(x, ...) {
+  x <- polars_expr_to_r(x)
   pl$duration(milliseconds = x)
 }
 
 pl_dmicroseconds_lubridate <- function(x, ...) {
+  x <- polars_expr_to_r(x)
   pl$duration(microseconds = x)
 }
 
 pl_dnanoseconds_lubridate <- function(x, ...) {
+  x <- polars_expr_to_r(x)
   pl$duration(nanoseconds = x)
 }
 
 pl_make_date_lubridate <- function(year = 1970, month = 1, day = 1) {
+  year <- polars_expr_to_r(year)
+  month <- polars_expr_to_r(month)
+  day <- polars_expr_to_r(day)
   pl$date(year = year, month = month, day = day)
 }
 
@@ -286,6 +298,7 @@ pl_rollforward_lubridate <- function(
 # `convert_time_zone()` doesn't support NULL timezone
 pl_with_tz_lubridate <- function(time, tzone = "UTC", ...) {
   check_empty_dots(...)
+  tzone <- polars_expr_to_r(tzone)
   tzone <- check_timezone(tzone, empty_allowed = FALSE)
 
   time$dt$convert_time_zone(tzone)
@@ -300,6 +313,9 @@ pl_with_tz_lubridate <- function(time, tzone = "UTC", ...) {
 
 pl_strptime <- function(string, format, tz = "", strict = TRUE, ...) {
   check_empty_dots(...)
+  format <- polars_expr_to_r(format)
+  tz <- polars_expr_to_r(tz)
+  strict <- polars_expr_to_r(strict)
   if (grepl("%(I|H|c|T|M|p|r|R|S|X|z)", format)) {
     dtype <- pl$Datetime("us", tz = tz)
   } else {
@@ -334,6 +350,8 @@ pl_wday_lubridate <- function(
 ) {
   check_empty_dots(...)
   env <- env_from_dots(...)
+  label <- polars_expr_to_r(label)
+  abbr <- polars_expr_to_r(abbr)
   week_start <- polars_expr_to_r(week_start)
   check_number_whole(
     week_start,

@@ -208,6 +208,7 @@ pl_length <- function(x) {
 }
 
 pl_log <- function(x, base = exp(1)) {
+  base <- polars_expr_to_r(base)
   x$log(base = base)
 }
 
@@ -217,6 +218,7 @@ pl_log10 <- function(x) {
 
 pl_max <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
+  na.rm <- polars_expr_to_r(na.rm)
   x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
     if (isTRUE(na.rm)) {
@@ -237,6 +239,7 @@ pl_max <- function(x, na.rm = FALSE, ...) {
 
 pl_mean <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
+  na.rm <- polars_expr_to_r(na.rm)
   x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
     if (isTRUE(na.rm)) {
@@ -259,6 +262,7 @@ pl_mean <- function(x, na.rm = FALSE, ...) {
 
 pl_median <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
+  na.rm <- polars_expr_to_r(na.rm)
   x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
     if (isTRUE(na.rm)) {
@@ -281,6 +285,7 @@ pl_median <- function(x, na.rm = FALSE, ...) {
 
 pl_min <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
+  na.rm <- polars_expr_to_r(na.rm)
   x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
     if (isTRUE(na.rm)) {
@@ -445,7 +450,9 @@ pl_sinh <- function(x) {
 pl_sort <- function(x, decreasing = FALSE, na.last, ...) {
   check_empty_dots(...)
   decreasing <- polars_expr_to_r(decreasing)
-  na.last <- polars_expr_to_r(na.last)
+  if (!missing(na.last)) {
+    na.last <- polars_expr_to_r(na.last)
+  }
   check_bool(decreasing, allow_na = FALSE)
   check_bool(na.last, allow_na = FALSE)
 
@@ -523,6 +530,7 @@ extract_from_to <- function(dots, env) {
 
   # Extract LHS and RHS and ensure there is no NULL on either side
   from <- lapply(dots, `[[`, 1)
+  from <- lapply(from, polars_expr_to_r)
   any_null_from <- any(vapply(
     from,
     function(x) identical(x, list(NULL)),
@@ -537,6 +545,7 @@ extract_from_to <- function(dots, env) {
   from <- unlist(from, use.names = FALSE)
 
   to <- lapply(dots, `[[`, 2)
+  to <- lapply(to, polars_expr_to_r)
   any_null_to <- any(vapply(
     to,
     function(x) identical(x, list(NULL)),
