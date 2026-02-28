@@ -135,6 +135,13 @@ pl_make_datetime_lubridate <- function(
   sec = 0,
   tz = "UTC"
 ) {
+  year <- polars_expr_to_r(year)
+  month <- polars_expr_to_r(month)
+  day <- polars_expr_to_r(day)
+  hour <- polars_expr_to_r(hour)
+  min <- polars_expr_to_r(min)
+  sec <- polars_expr_to_r(sec)
+  tz <- polars_expr_to_r(tz)
   pl$datetime(
     year = year,
     month = month,
@@ -155,6 +162,13 @@ pl_ISOdatetime <- function(
   sec = 0,
   tz = ""
 ) {
+  year <- polars_expr_to_r(year)
+  month <- polars_expr_to_r(month)
+  day <- polars_expr_to_r(day)
+  hour <- polars_expr_to_r(hour)
+  min <- polars_expr_to_r(min)
+  sec <- polars_expr_to_r(sec)
+  tz <- polars_expr_to_r(tz)
   if (tz == "") {
     tz <- Sys.timezone()
   }
@@ -194,15 +208,19 @@ pl_minutes_lubridate <- function(x = 1) {
 
 # Those don't have the integer check
 pl_seconds_lubridate <- function(x = 1) {
+  x <- polars_expr_to_r(x)
   pl$duration(seconds = x)
 }
 pl_milliseconds_lubridate <- function(x = 1) {
+  x <- polars_expr_to_r(x)
   pl$duration(milliseconds = x)
 }
 pl_microseconds_lubridate <- function(x = 1) {
+  x <- polars_expr_to_r(x)
   pl$duration(microseconds = x)
 }
 pl_nanoseconds_lubridate <- function(x = 1) {
+  x <- polars_expr_to_r(x)
   pl$duration(nanoseconds = x)
 }
 
@@ -211,6 +229,7 @@ pl_nanoseconds_lubridate <- function(x = 1) {
 # Other modification functions -------------------------------------------
 pl_force_tz_lubridate <- function(time, tzone = "", ...) {
   check_empty_dots(...)
+  tzone <- polars_expr_to_r(tzone)
   tzone <- check_timezone(tzone, empty_allowed = TRUE)
 
   time$dt$replace_time_zone(tzone)

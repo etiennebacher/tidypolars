@@ -8,6 +8,7 @@ pl_all <- function(..., na.rm = FALSE) {
   dots <- clean_dots(...)
   env <- env_from_dots(...)
   x <- check_rowwise(...)
+  na.rm <- polars_expr_to_r(na.rm)
   if (length(dots) == 0) {
     cli_abort(
       "{.code ...} is absent, but must be supplied.",
@@ -31,6 +32,7 @@ pl_any <- function(..., na.rm = FALSE) {
   dots <- clean_dots(...)
   env <- env_from_dots(...)
   x <- check_rowwise(...)
+  na.rm <- polars_expr_to_r(na.rm)
   if (length(dots) == 0) {
     cli_abort(
       "{.code ...} is absent, but must be supplied.",
@@ -125,6 +127,8 @@ pl_cumsum <- function(x) {
 
 pl_diff <- function(x, lag = 1, differences = 1, ...) {
   check_empty_dots(...)
+  lag <- polars_expr_to_r(lag)
+  differences <- polars_expr_to_r(differences)
   if (!is.null(differences) && length(differences) == 1 && differences != 1) {
     cli_abort(
       "polars doesn't support {.code diff()} if argument `differences` is not equal to 1.",
@@ -350,13 +354,16 @@ pl_rev <- function(x) {
 
 pl_round <- function(x, digits = 0, ...) {
   check_empty_dots(...)
+  digits <- polars_expr_to_r(digits)
   x$round(decimals = digits)
 }
 
 pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
   check_empty_dots(...)
+  size <- polars_expr_to_r(size)
+  replace <- polars_expr_to_r(replace)
   # WARNING: random seed is not supported and cannot take effect.
-  if (missing(size)) {
+  if (missing(size) || is.null(size)) {
     size <- x$len()
   }
   if (!is_polars_expr(size)) {
@@ -375,6 +382,7 @@ pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
 }
 
 pl_sd <- function(x, na.rm = FALSE) {
+  na.rm <- polars_expr_to_r(na.rm)
   x <- check_rowwise(x)
   if (isTRUE(x$is_rowwise)) {
     if (isTRUE(na.rm)) {
@@ -397,6 +405,9 @@ pl_sd <- function(x, na.rm = FALSE) {
 
 pl_seq <- function(from = 1, to = 1, by = NULL, ...) {
   check_empty_dots(...)
+  by <- polars_expr_to_r(by)
+  to <- polars_expr_to_r(to)
+  from <- polars_expr_to_r(from)
   by <- by %||% 1
   out <- pl$int_range(start = from, end = to + 1, step = by)
   if ((to - from) == 1) {
@@ -433,6 +444,8 @@ pl_sinh <- function(x) {
 
 pl_sort <- function(x, decreasing = FALSE, na.last, ...) {
   check_empty_dots(...)
+  decreasing <- polars_expr_to_r(decreasing)
+  na.last <- polars_expr_to_r(na.last)
   check_bool(decreasing, allow_na = FALSE)
   check_bool(na.last, allow_na = FALSE)
 
@@ -444,6 +457,7 @@ pl_sqrt <- function(x) {
 }
 
 pl_sum <- function(..., na.rm = FALSE) {
+  na.rm <- polars_expr_to_r(na.rm)
   x <- check_rowwise_dots(...)
   if (isTRUE(x$is_rowwise)) {
     if (isTRUE(na.rm)) {
@@ -477,6 +491,7 @@ pl_unique <- function(x, ...) {
 
 pl_var <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
+  na.rm <- polars_expr_to_r(na.rm)
   if (isTRUE(na.rm)) {
     x$var(ddof = 1)
   } else {

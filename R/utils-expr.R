@@ -153,11 +153,6 @@ translate_expr <- function(
     expr <- quo_get_expr(quo)
   }
 
-  # we want to distinguish literals that are passed as-is and should be put in
-  # pl$lit() (e.g "x = TRUE") from those who are passed as a function argument
-  # e.g ("x = mean(y, TRUE)").
-  call_is_function <- typeof(expr) == "language"
-
   # split across() call early
   if (length(expr) > 1 && safe_deparse(expr[[1]]) == "across") {
     expr <- unpack_across(
@@ -178,7 +173,6 @@ translate_expr <- function(
       new_vars = new_vars,
       env = env,
       caller = caller,
-      call_is_function = call_is_function,
       expr_uses_col = expr_uses_col
     )
   } else {
@@ -188,7 +182,6 @@ translate_expr <- function(
       new_vars = new_vars,
       env = env,
       caller = caller,
-      call_is_function = call_is_function,
       expr_uses_col = expr_uses_col
     )
   }
@@ -211,8 +204,6 @@ translate_expr <- function(
 #' @param env Environment of the function from which this expression is called
 #' (`filter()`, `mutate()` or `summarize()`).
 #' @param caller User environment in which the function is called.
-#' @param call_is_function Is the call a function? Needed to handle separately
-#' literals and argument values.
 #'
 #' @return A single component translated to polars syntax
 #' @noRd
@@ -223,7 +214,6 @@ translate <- function(
   new_vars,
   env,
   caller = NULL,
-  call_is_function = NULL,
   expr_uses_col
 ) {
   names_data <- attr(.data, "colnames")
@@ -271,14 +261,7 @@ translate <- function(
     character = ,
     logical = ,
     integer = ,
-    double = {
-      # if call is a function, then the single value is a param, not a literal
-      if (call_is_function) {
-        return(expr)
-      } else {
-        pl$lit(expr)
-      }
-    },
+    double = polars_constant(expr),
     symbol = {
       expr_char <- as.character(expr)
       if (expr_char %in% names_data || expr_char %in% unlist(new_vars)) {
@@ -286,7 +269,7 @@ translate <- function(
         pl$col(expr_char)
       } else {
         val <- eval_tidy(expr, env = caller)
-        pl$lit(val)
+        polars_constant(val)
       }
     },
     language = {
@@ -311,7 +294,6 @@ translate <- function(
           new_vars = new_vars,
           env = env,
           caller = caller,
-          call_is_function = call_is_function,
           expr_uses_col = expr_uses_col
         )
         accepted_args <- names(formals(name))
@@ -339,7 +321,6 @@ translate <- function(
             new_vars = new_vars,
             env = env,
             caller = caller,
-            call_is_function = call_is_function,
             expr_uses_col = expr_uses_col
           )
           return(out)
@@ -376,7 +357,6 @@ translate <- function(
               new_vars = new_vars,
               env = env,
               caller = caller,
-              call_is_function = call_is_function,
               expr_uses_col = expr_uses_col
             )
           }
@@ -413,7 +393,6 @@ translate <- function(
               new_vars = new_vars,
               env = env,
               caller = caller,
-              call_is_function = call_is_function,
               expr_uses_col = expr_uses_col
             )
           }
@@ -427,7 +406,6 @@ translate <- function(
               new_vars = new_vars,
               env = env,
               caller = caller,
-              call_is_function = call_is_function,
               expr_uses_col = expr_uses_col
             )
           )
@@ -441,7 +419,6 @@ translate <- function(
             new_vars = new_vars,
             env = env,
             caller = caller,
-            call_is_function = call_is_function,
             expr_uses_col = expr_uses_col
           )
           return(args)
@@ -462,7 +439,6 @@ translate <- function(
                 new_vars = new_vars,
                 env = env,
                 caller = caller,
-                call_is_function = call_is_function,
                 expr_uses_col = expr_uses_col
               )
             )
@@ -481,7 +457,7 @@ translate <- function(
             })
           }
 
-          return(pl$lit(unlist(expr)))
+          return(polars_constant(unlist(expr)))
         },
         ":" = {
           out <- tryCatch(eval_tidy(expr, env = caller_env()), error = identity)
@@ -496,7 +472,6 @@ translate <- function(
                 new_vars = new_vars,
                 env = env,
                 caller = caller,
-                call_is_function = call_is_function,
                 expr_uses_col = expr_uses_col
               ) |>
                 as_polars_expr(as_lit = TRUE)
@@ -506,7 +481,6 @@ translate <- function(
                 new_vars = new_vars,
                 env = env,
                 caller = caller,
-                call_is_function = call_is_function,
                 expr_uses_col = expr_uses_col
               ) |>
                 as_polars_expr(as_lit = TRUE)
@@ -623,7 +597,6 @@ translate <- function(
             new_vars = new_vars,
             env = env,
             caller = caller,
-            call_is_function = call_is_function,
             expr_uses_col = expr_uses_col
           )
           return(out)
@@ -663,7 +636,6 @@ translate <- function(
           new_vars = new_vars,
           env = env,
           caller = caller,
-          call_is_function = call_is_function,
           expr_uses_col = expr_uses_col
         )
         latest_expr_id <- paste0("id", expr_uses_col[["counter"]])
@@ -673,7 +645,7 @@ translate <- function(
           # must be called only in summarize(), etc.
           out <- try(eval_bare(expr, env = caller), silent = TRUE)
           if (!inherits(out, "try-error")) {
-            return(pl$lit(out))
+            return(polars_constant(out))
           }
         }
       }
@@ -692,7 +664,6 @@ translate <- function(
             env = env,
             new_vars = new_vars,
             caller = caller,
-            call_is_function = call_is_function,
             expr_uses_col = expr_uses_col
           )
 
@@ -714,7 +685,7 @@ translate <- function(
           if (isTRUE(getOption("tidypolars_fallback_to_r", FALSE))) {
             data_df <- as.data.frame(.data)
             out <- eval_tidy(expr, data = data_df)
-            return(pl$lit(out))
+            return(polars_constant(out))
           }
           if (!is.null(fn_names$pkg)) {
             msg <- "{.pkg tidypolars} doesn't know how to translate this function: {.fn {fn_names$orig_name}} (from package {.pkg {fn_names$pkg}})."
@@ -747,7 +718,6 @@ translate <- function(
         new_vars = new_vars,
         env = env,
         caller = caller,
-        call_is_function = call_is_function,
         expr_uses_col = expr_uses_col
       )
 
@@ -857,16 +827,16 @@ clean_dots <- function(...) {
   caller_call <- deparse(rlang::caller_call()[[1]])
   called_from_pl_paste <- length(caller_call) == 1 &&
     caller_call %in% c("pl_paste", "pl_paste0")
-  dots <- lapply(dots, function(x) {
-    if (
-      called_from_pl_paste &&
-        inherits(x, c("character", "logical", "double", "integer", "complex"))
-    ) {
-      pl$lit(x)
-    } else {
-      x
-    }
-  })
+  # dots <- lapply(dots, function(x) {
+  #   if (
+  #     called_from_pl_paste &&
+  #       inherits(x, c("character", "logical", "double", "integer", "complex"))
+  #   ) {
+  #     pl$lit(x)
+  #   } else {
+  #     x
+  #   }
+  # })
   dots
 }
 
@@ -1083,14 +1053,18 @@ check_pattern <- function(x) {
   )
 }
 
+polars_constant <- function(x) {
+  out <- pl$lit(x)
+  attr(out, "original_value") <- x
+  out
+}
+
 polars_expr_to_r <- function(x) {
   if (is_polars_expr(x)) {
-    is_col <- length(x$meta$root_names()) > 0
-    if (!is_col) {
-      x <- pl$select(x)$to_series()$to_r_vector()
-    }
+    attributes(x)[["original_value"]] %||% x
+  } else {
+    x
   }
-  x
 }
 
 #' Timezone assertion
