@@ -1080,6 +1080,13 @@ polars_constant <- function(x) {
   out
 }
 
+# When we translate components of a call, we cannot tell in advance what should
+# be a Polars expression and what shouldn't, so we translate everything and then
+# let "pl_" functions call polars_expr_to_r() where needed.
+#
+# Previously, this was building a DataFrame and then converting it to series, and
+# then to a vector. Now, polars_constant() stores the original value as an
+# attribute that we can just recover here, which should be way faster.
 polars_expr_to_r <- function(x) {
   if (is_polars_expr(x)) {
     out <- attributes(x)[["original_value"]] %||% x
