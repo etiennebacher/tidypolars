@@ -837,26 +837,13 @@ check_empty_dots <- function(...) {
 }
 
 # Drop elements I added myself in translate_expr(). Used only in functions that
-# apply directly `...`, such as paste()
+# apply directly `...`.
 clean_dots <- function(...) {
   dots <- get_dots(...)
   dots[["__tidypolars__new_vars"]] <- NULL
   dots[["__tidypolars__env"]] <- NULL
   dots[["__tidypolars__expr_uses_col"]] <- NULL
   dots[["__tidypolars__caller"]] <- NULL
-  caller_call <- deparse(rlang::caller_call()[[1]])
-  called_from_pl_paste <- length(caller_call) == 1 &&
-    caller_call %in% c("pl_paste", "pl_paste0")
-  # dots <- lapply(dots, function(x) {
-  #   if (
-  #     called_from_pl_paste &&
-  #       inherits(x, c("character", "logical", "double", "integer", "complex"))
-  #   ) {
-  #     pl$lit(x)
-  #   } else {
-  #     x
-  #   }
-  # })
   dots
 }
 
