@@ -1,5 +1,7 @@
 # tidypolars (development)
 
+`tidypolars` requires `polars` >= 1.10.0.
+
 ## New features
 
 * Added support for the following functions:
