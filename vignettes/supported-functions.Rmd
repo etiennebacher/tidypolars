@@ -81,6 +81,7 @@ out <- tribble(
   "`base`", "`tanh`",
   "`base`", "`tolower`",
   "`base`", "`toupper`",
+  "`base`", "`trunc`",
   "`base`", "`unique`",
   "`base`", "`which.min`",
   "`base`", "`which.max`",
@@ -190,6 +191,8 @@ out <- tribble(
         "In `tidypolars`, `na.last` must be explicitly supplied as `TRUE` or `FALSE`.",
       Package == "`base`" & Function == "`sample`" ~
         "`set.seed()` is not supported. Randomness is handled by Polars and does not use R's RNG state.",
+      Package == "`base`" & Function == "`trunc`" ~
+        "This only works with numeric data in `tidypolars`, while it works with other types (such as dates) in base R.",
       Package == "`lubridate`" & Function %in% c("`rollbackward`", "`rollback`", "`rollforward`") ~
         "While time zone handling should mimick the behaviour of `lubridate` in most cases, it is possible that Polars errors if rolling back/forward leads to am ambiguous datetime. It is also possible to have some differences in hours/minutes/seconds when converting between Polars and R.",
       Package == "`lubridate`" & Function == "`wday`" ~

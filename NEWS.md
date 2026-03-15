@@ -6,6 +6,7 @@
 
   - `anyNA()` (#330)
   - `cummax()` (#323)
+  - `trunc()` (#343)
 
 * Added `decreasing` and `na.last` arguments support to `sort()` (@Yousa-Mirage, #328).
 
