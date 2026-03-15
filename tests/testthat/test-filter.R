@@ -354,10 +354,36 @@ test_that("works with a local variable defined in a function", {
 })
 
 test_that("error message when using =", {
-  test_pl <- pl$DataFrame(chars = letters[1:3])
+  test_df <- tibble(x = 1, y = 2)
+  test_pl <- as_polars_df(test_df)
 
+  expect_both_error(
+    test_pl |> filter(x = 1),
+    test_df |> filter(x = 1)
+  )
   expect_snapshot(
-    test_pl |> filter(chars = "a"),
+    test_pl |> filter(x = 1),
+    error = TRUE
+  )
+
+  expect_both_error(
+    test_pl |> filter(!is.na(y), x = 1),
+    test_df |> filter(!is.na(y), x = 1)
+  )
+  expect_snapshot(
+    test_pl |> filter(!is.na(y), x = 1),
+    error = TRUE
+  )
+
+  f_pl <- function(x) {
+    filter(test_pl, "a" = {{ x }})
+  }
+  f_df <- function(x) {
+    filter(test_df, "a" = {{ x }})
+  }
+  expect_both_error(f_pl(mpg), f_df(mpg))
+  expect_snapshot(
+    f_pl(mpg),
     error = TRUE
   )
 })

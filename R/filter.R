@@ -86,6 +86,24 @@ filter.polars_data_frame <- function(.data, ..., .by = NULL) {
   mo <- attributes(.data)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
 
+  # Check whether user passed "=" instead of "=="
+  dots <- enquos(...)
+  elems_with_assignment <- dots[!is.null(names(dots)) & nzchar(names(dots))]
+  if (length(elems_with_assignment) > 0) {
+    msg <- paste0(
+      names(elems_with_assignment)[1],
+      " == ",
+      quo_text(elems_with_assignment[[1]])
+    )
+    cli_abort(
+      c(
+        "!" = "We detected a named input.",
+        "i" = "This usually means that you've used {.code =} instead of {.code ==}.",
+        "i" = "Did you mean {.code {msg}}?"
+      )
+    )
+  }
+
   polars_exprs <- translate_dots(
     .data,
     ...,
