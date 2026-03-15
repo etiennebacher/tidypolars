@@ -11,7 +11,7 @@
 
 * Added `na.last` and `ties.method` arguments support to `rank()` (@Yousa-Mirage, #329).
 
-* Better error message in `filter()` when a condition uses `=` instead of `==` (#340).
+* Better error message in `filter()` when a condition uses `=` instead of `==` (#341).
 
 ## Bug fixes
 
