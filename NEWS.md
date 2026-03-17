@@ -1,11 +1,15 @@
 # tidypolars (development)
 
+`tidypolars` requires `polars` >= 1.10.0.
+
 ## New features
 
 * Added support for the following functions:
 
   - `anyNA()` (#330)
   - `cummax()` (#323)
+  - `trunc()` (#343)
+
 
 * Added `decreasing` and `na.last` arguments support to `sort()` (@Yousa-Mirage, #328).
 

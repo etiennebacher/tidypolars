@@ -175,6 +175,24 @@ test_that("round() works", {
   )
 })
 
+test_that("trunc() works", {
+  test_df <- tibble(x = c(0.33, 0.5212, NA))
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |> mutate(foo = trunc(x)),
+    test_df |> mutate(foo = trunc(x))
+  )
+  expect_both_error(
+    test_pl |> mutate(foo = trunc("a")),
+    test_df |> mutate(foo = trunc("a"))
+  )
+  expect_snapshot_lazy(
+    test_pl |> mutate(foo = trunc("a")),
+    error = TRUE
+  )
+})
+
 test_that("sample() works with default size and n() size", {
   test_df <- tibble(x = 1:5)
   test_pl <- as_polars_lf(test_df)
