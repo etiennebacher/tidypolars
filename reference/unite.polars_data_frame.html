@@ -127,15 +127,15 @@ prior to uniting each value.</p></dd>
 <span class="r-in"><span><span class="co"># By default, NA values are kept in the character output</span></span></span>
 <span class="r-in"><span><span class="fu">unite</span><span class="op">(</span><span class="va">test2</span>, col <span class="op">=</span> <span class="st">"full_name"</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">" "</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 1)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────────────────┐</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ full_name       │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---             │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ str             │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════════════════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ John T. Smith   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ Jack Thompson   │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ Thomas F. Jones │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> └─────────────────┘</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────────────────┐</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ full_name        │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ ---              │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ str              │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ╞══════════════════╡</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ John T. Smith    │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ Jack NA Thompson │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ Thomas F. Jones  │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └──────────────────┘</span>
 <span class="r-in"><span><span class="fu">unite</span><span class="op">(</span><span class="va">test2</span>, col <span class="op">=</span> <span class="st">"full_name"</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">" "</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (3, 1)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────────────────┐</span>

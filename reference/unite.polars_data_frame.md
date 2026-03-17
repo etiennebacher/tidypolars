@@ -84,15 +84,15 @@ test2 <- polars::pl$DataFrame(
 # By default, NA values are kept in the character output
 unite(test2, col = "full_name", everything(), sep = " ")
 #> shape: (3, 1)
-#> ┌─────────────────┐
-#> │ full_name       │
-#> │ ---             │
-#> │ str             │
-#> ╞═════════════════╡
-#> │ John T. Smith   │
-#> │ Jack Thompson   │
-#> │ Thomas F. Jones │
-#> └─────────────────┘
+#> ┌──────────────────┐
+#> │ full_name        │
+#> │ ---              │
+#> │ str              │
+#> ╞══════════════════╡
+#> │ John T. Smith    │
+#> │ Jack NA Thompson │
+#> │ Thomas F. Jones  │
+#> └──────────────────┘
 unite(test2, col = "full_name", everything(), sep = " ", na.rm = TRUE)
 #> shape: (3, 1)
 #> ┌─────────────────┐
