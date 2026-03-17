@@ -6,12 +6,12 @@
       Error in `current$collect()`:
       ! Evaluation failed in `$collect()`.
       Caused by error:
-      ! Column(s) not found: unable to find column "3"; valid columns: ["x"]
+      ! not found: unable to find column "3"; valid columns: ["x"]
       
       Resolved plan until failure:
       
-      	---> FAILED HERE RESOLVING 'sink' <---
-      DF ["x"]; PROJECT */1 COLUMNS
+      	---> FAILED HERE RESOLVING 'with_columns' <---
+      DF ["x"]; PROJECT */1 COLUMNS: 'with_columns'
 
 # sort errors when na.last is absent or NA
 

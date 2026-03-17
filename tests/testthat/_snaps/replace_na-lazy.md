@@ -6,7 +6,7 @@
       Error in `current$collect()`:
       ! Evaluation failed in `$collect()`.
       Caused by error:
-      ! Invalid operation: conversion from `str` to `f64` failed in column 'literal' for 1 out of 1 values: ["a"]
+      ! conversion from `str` to `f64` failed in column 'literal' for 1 out of 1 values: ["a"]
 
 ---
 
@@ -16,5 +16,5 @@
       Error in `current$collect()`:
       ! Evaluation failed in `$collect()`.
       Caused by error:
-      ! Invalid operation: conversion from `str` to `f64` failed in column 'literal' for 1 out of 1 values: ["unknown"]
+      ! conversion from `str` to `f64` failed in column 'literal' for 1 out of 1 values: ["unknown"]
 

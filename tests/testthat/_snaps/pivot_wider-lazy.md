@@ -26,7 +26,7 @@
       
       Resolved plan until failure:
       
-      	---> FAILED HERE RESOLVING 'sink' <---
+      	---> FAILED HERE RESOLVING THIS_NODE <---
       AGGREGATE[maintain_order: false]
         [col("val").filter([(col("key")) == ("a")].all_horizontal([[(col("key_2")) == ("c")]])).item(allow_empty=true).alias("{"a","c"}"), col("val").filter([(col("key")) == ("b")].all_horizontal([[(col("key_2")) == ("d")]])).item(allow_empty=true).alias("{"b","d"}")] BY [col("a_c")]
         FROM
