@@ -17,7 +17,7 @@ test_that("basic behavior works", {
   )
 })
 
-test_that("argument remove works", {
+test_that("argument 'remove' works", {
   test_df <- tibble(
     year = 2009:2011,
     month = 10:12,
@@ -48,6 +48,28 @@ test_that("argument remove works", {
   )
 })
 
+test_that("argument 'na.rm' works", {
+  test_df <- tibble(
+    name = c(NA, "Jack", "Thomas"),
+    middle = c("T.", NA, "F."),
+    surname = c(NA, "Thompson", "Jones")
+  )
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    unite(test_pl, col = "out", name, middle, surname, sep = "-"),
+    unite(test_df, col = "out", name, middle, surname, sep = "-")
+  )
+  expect_equal(
+    unite(test_pl, col = "out", name, middle, surname, na.rm = FALSE),
+    unite(test_df, col = "out", name, middle, surname, na.rm = FALSE)
+  )
+  expect_equal(
+    unite(test_pl, col = "out", name, middle, surname, na.rm = TRUE),
+    unite(test_df, col = "out", name, middle, surname, na.rm = TRUE)
+  )
+})
+
 test_that("tidy selection works", {
   test_df <- tibble(
     name = c("John", "Jack", "Thomas"),
@@ -57,20 +79,8 @@ test_that("tidy selection works", {
   test_pl <- as_polars_df(test_df)
 
   expect_equal(
-    unite(
-      test_pl,
-      col = "full_name",
-      everything(),
-      sep = " ",
-      na.rm = TRUE
-    ),
-    unite(
-      test_df,
-      col = "full_name",
-      everything(),
-      sep = " ",
-      na.rm = TRUE
-    )
+    unite(test_pl, col = "full_name", everything(), sep = " "),
+    unite(test_df, col = "full_name", everything(), sep = " ")
   )
 })
 
