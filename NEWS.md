@@ -27,6 +27,8 @@
 
 * Fix `sample()` to make it work correctly (@Yousa-Mirage, #338).
 
+* Fix `unite()` behavior when `na.rm = TRUE` (#344).
+
 # tidypolars 0.17.0
 
 `tidypolars` requires `polars` >= 1.9.0 and `dplyr` >= 1.2.0.

@@ -49,14 +49,18 @@ unite.polars_data_frame <- function(
   # can be a character or symbol
   col <- rlang::as_string(rlang::ensym(col))
 
-  if (isTRUE(na.rm)) {
-    fill <- ""
+  if (!isTRUE(na.rm)) {
+    vars_to_concat <- list(pl$col(!!!vars)$fill_null("NA"))
   } else {
-    fill <- "NA"
+    vars_to_concat <- vars
   }
 
   out <- data$with_columns(
-    pl$concat_str(!!!vars, separator = sep, ignore_nulls = TRUE)$alias(col)
+    pl$concat_str(
+      !!!vars_to_concat,
+      separator = sep,
+      ignore_nulls = TRUE
+    )$alias(col)
   )
 
   out <- if (isTRUE(remove)) {
