@@ -56,6 +56,29 @@ test_that("count works on grouped data", {
   )
 })
 
+test_that("count works with expressions", {
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test_df)
+
+  # only unnamed expressions
+  expect_equal_lazy(
+    test_pl |> count(mpg > 20, vs == 1),
+    test_df |> count(mpg > 20, vs == 1)
+  )
+
+  # only named expressions
+  expect_equal_lazy(
+    test_pl |> count(foo = mpg > 20, bar = vs == 1),
+    test_df |> count(foo = mpg > 20, bar = vs == 1)
+  )
+
+  # doesn't work with mix of named and unnamed
+  expect_snapshot_lazy(
+    test_pl |> count(foo = mpg > 20, vs == 1),
+    error = TRUE
+  )
+})
+
 test_that("add_count works", {
   test_df <- as_tibble(mtcars)
   test_pl <- as_polars_lf(test_df)
@@ -207,13 +230,6 @@ test_that("count() and add_count() explicitly do not support 'wt'", {
         "Argument `wt` is not supported by tidypolars"
       )
     }
-  )
-})
-
-test_that("count() doesn't support named expressions, #233", {
-  expect_snapshot_lazy(
-    iris |> as_polars_lf() |> count(is_present = !is.na(Sepal.Length)),
-    error = TRUE
   )
 })
 

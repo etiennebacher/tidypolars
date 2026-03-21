@@ -537,7 +537,6 @@ eval_inequality_join <- function(x, y, how, by, suffix) {
 
   by3 <- lapply(seq_along(by$condition), function(i) {
     if (by$condition[i] == "==") {
-      # flir-ignore
       to_drop <<- append(to_drop, by2$y[[i]])
       by2$x[[i]]$eq(by2$y[[i]])
     } else if (by$condition[i] == ">") {

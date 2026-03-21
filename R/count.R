@@ -39,10 +39,73 @@ count.polars_data_frame <- function(
   mo <- attributes(x)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
 
-  disallow_named_expressions(...)
-  vars <- tidyselect_dots(x, ...)
-  vars <- c(grps, vars)
-  out <- count_(x, vars, sort = sort, name = name, new_col = FALSE)
+  polars_exprs <- translate_dots(
+    x,
+    ...,
+    env = rlang::current_env(),
+    caller = rlang::caller_env()
+  )
+
+  # Only unnamed inputs
+  if (!is.null(names(polars_exprs))) {
+    polars_exprs <- lapply(polars_exprs, \(x) {
+      lapply(x, function(y) {
+        if (length(y) == 0) {
+          cli_abort(
+            "{.pkg tidypolars} doesn't support both named and unnamed inputs in {.fn count}.",
+            call = rlang::caller_env(4)
+          )
+        }
+        y
+      })
+    })
+    names(polars_exprs) <- NULL
+    polars_exprs <- unlist(polars_exprs, recursive = FALSE)
+  }
+
+  if (length(polars_exprs) == 0) {
+    if (is_grouped) {
+      out <- x$group_by(grps)$len()$rename(len = name)
+      if (isTRUE(sort)) {
+        out <- out$sort(
+          name,
+          grps,
+          descending = c(TRUE, rep(FALSE, length(grps)))
+        )
+      } else {
+        out <- out$sort(grps)
+      }
+    } else {
+      out <- x$group_by(`__tidypolars_grp__` = pl$lit(1))$len()$drop(
+        "__tidypolars_grp__"
+      )$rename(len = name)
+    }
+
+    return(add_tidypolars_class(out))
+  }
+
+  if (is.null(names(polars_exprs))) {
+    new_names <- enexprs(...)
+    new_names <- lapply(new_names, expr_deparse)
+    names(polars_exprs) <- unlist(new_names, use.names = FALSE)
+  }
+
+  if (is_grouped) {
+    out <- x$group_by(grps, !!!polars_exprs)$len()$rename(len = name)
+  } else {
+    out <- x$group_by(!!!polars_exprs)$len()$rename(len = name)
+  }
+
+  if (isTRUE(sort)) {
+    out <- out$sort(
+      name,
+      grps,
+      !!!names(polars_exprs),
+      descending = c(TRUE, rep(FALSE, length(grps) + length(polars_exprs)))
+    )
+  } else {
+    out <- out$sort(grps, !!!names(polars_exprs))
+  }
 
   out <- if (is_grouped) {
     group_by(out, all_of(grps), maintain_order = mo)
