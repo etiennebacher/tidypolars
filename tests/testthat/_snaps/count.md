@@ -1,8 +1,8 @@
-# count() doesn't support named expressions, #233
+# count works with expressions
 
     Code
-      count(as_polars_df(iris), is_present = !is.na(Sepal.Length))
+      count(test_pl, foo = mpg > 20, vs == 1)
     Condition
       Error in `count()`:
-      ! tidypolars doesn't support named expressions in `count()`.
+      ! tidypolars doesn't support both named and unnamed inputs in `count()`.
 

@@ -56,8 +56,11 @@ count.polars_data_frame <- function(
             call = rlang::caller_env(4)
           )
         }
+        y
       })
     })
+    names(polars_exprs) <- NULL
+    polars_exprs <- unlist(polars_exprs, recursive = FALSE)
   }
 
   if (length(polars_exprs) == 0) {
@@ -87,7 +90,11 @@ count.polars_data_frame <- function(
     names(polars_exprs) <- unlist(new_names, use.names = FALSE)
   }
 
-  out <- x$group_by(grps, !!!polars_exprs)$len()$rename(len = name)
+  if (is_grouped) {
+    out <- x$group_by(grps, !!!polars_exprs)$len()$rename(len = name)
+  } else {
+    out <- x$group_by(!!!polars_exprs)$len()$rename(len = name)
+  }
 
   if (isTRUE(sort)) {
     out <- out$sort(
