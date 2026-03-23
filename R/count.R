@@ -195,7 +195,7 @@ add_count.polars_data_frame <- function(
       lapply(x, function(y) {
         if (length(y) == 0) {
           cli_abort(
-            "{.pkg tidypolars} doesn't support both named and unnamed inputs in {.fn count}.",
+            "{.pkg tidypolars} doesn't support both named and unnamed inputs in {.fn add_count}.",
             call = rlang::caller_env(4)
           )
         }
