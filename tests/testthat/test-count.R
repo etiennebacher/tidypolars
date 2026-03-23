@@ -50,6 +50,34 @@ test_that("count works on grouped data", {
     count(test_g_pl, cyl),
     count(test_g, cyl)
   )
+
+  expect_equal(
+    attr(count(test_g_pl), "pl_grps"),
+    "am"
+  )
+})
+
+test_that("count works with expressions", {
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test_df)
+
+  # only unnamed expressions
+  expect_equal(
+    test_pl |> count(mpg > 20, vs == 1),
+    test_df |> count(mpg > 20, vs == 1)
+  )
+
+  # only named expressions
+  expect_equal(
+    test_pl |> count(foo = mpg > 20, bar = vs == 1),
+    test_df |> count(foo = mpg > 20, bar = vs == 1)
+  )
+
+  # doesn't work with mix of named and unnamed
+  expect_snapshot(
+    test_pl |> count(foo = mpg > 20, vs == 1),
+    error = TRUE
+  )
 })
 
 test_that("add_count works", {
@@ -72,8 +100,8 @@ test_that("arguments name and sort work", {
   )
 
   expect_equal(
-    add_count(test_pl, cyl, am, sort = TRUE, name = "count"),
-    add_count(test_df, cyl, am, sort = TRUE, name = "count")
+    add_count(test_pl, cyl, am, name = "foo"),
+    add_count(test_df, cyl, am, name = "foo")
   )
 
   expect_equal(
@@ -93,20 +121,39 @@ test_that("add_count works on grouped data", {
     add_count(test_g, cyl, am)
   )
   expect_equal(
-    count(test_g_pl, cyl, am),
-    count(test_g, cyl, am)
+    add_count(test_g_pl),
+    add_count(test_g)
   )
 
-  expect_equal(
-    attr(count(test_g_pl), "pl_grps"),
-    "am"
-  )
   expect_equal(
     attr(add_count(test_g_pl), "pl_grps"),
     "am"
   )
   expect_true(attr(count(test_g_pl), "maintain_grp_order"))
   expect_true(attr(add_count(test_g_pl), "maintain_grp_order"))
+})
+
+test_that("add_count works with expressions", {
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test_df)
+
+  # only unnamed expressions
+  expect_equal(
+    test_pl |> add_count(mpg > 20, vs == 1),
+    test_df |> add_count(mpg > 20, vs == 1)
+  )
+
+  # only named expressions
+  expect_equal(
+    test_pl |> add_count(foo = mpg > 20, bar = vs == 1),
+    test_df |> add_count(foo = mpg > 20, bar = vs == 1)
+  )
+
+  # doesn't work with mix of named and unnamed
+  expect_snapshot(
+    test_pl |> add_count(foo = mpg > 20, vs == 1),
+    error = TRUE
+  )
 })
 
 test_that("message if overwriting variable", {
@@ -203,12 +250,5 @@ test_that("count() and add_count() explicitly do not support 'wt'", {
         "Argument `wt` is not supported by tidypolars"
       )
     }
-  )
-})
-
-test_that("count() doesn't support named expressions, #233", {
-  expect_snapshot(
-    iris |> as_polars_df() |> count(is_present = !is.na(Sepal.Length)),
-    error = TRUE
   )
 })
