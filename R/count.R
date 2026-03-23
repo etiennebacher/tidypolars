@@ -231,15 +231,19 @@ add_count.polars_data_frame <- function(
 
   name <- check_count_name(x, names(x), name)
 
+  x <- x$with_columns(!!!polars_exprs)
+
   if (is_grouped) {
     grps2 <- grps[!(grps %in% names(polars_exprs))]
     if (length(grps2) > 0) {
-      out <- x$with_columns(pl$len()$over(grps2, !!!polars_exprs)$alias(name))
+      out <- x$with_columns(pl$len()$over(grps2, !!!names(polars_exprs))$alias(
+        name
+      ))
     } else {
-      out <- x$with_columns(pl$len()$over(!!!polars_exprs)$alias(name))
+      out <- x$with_columns(pl$len()$over(!!!names(polars_exprs))$alias(name))
     }
   } else {
-    out <- x$with_columns(pl$len()$over(!!!polars_exprs)$alias(name))
+    out <- x$with_columns(pl$len()$over(!!!names(polars_exprs))$alias(name))
   }
 
   if (isTRUE(sort)) {

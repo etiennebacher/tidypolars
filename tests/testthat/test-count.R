@@ -133,6 +133,29 @@ test_that("add_count works on grouped data", {
   expect_true(attr(add_count(test_g_pl), "maintain_grp_order"))
 })
 
+test_that("add_count works with expressions", {
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_df(test_df)
+
+  # only unnamed expressions
+  expect_equal(
+    test_pl |> add_count(mpg > 20, vs == 1),
+    test_df |> add_count(mpg > 20, vs == 1)
+  )
+
+  # only named expressions
+  expect_equal(
+    test_pl |> add_count(foo = mpg > 20, bar = vs == 1),
+    test_df |> add_count(foo = mpg > 20, bar = vs == 1)
+  )
+
+  # doesn't work with mix of named and unnamed
+  expect_snapshot(
+    test_pl |> add_count(foo = mpg > 20, vs == 1),
+    error = TRUE
+  )
+})
+
 test_that("message if overwriting variable", {
   test_df <- as_tibble(mtcars)
   test_pl <- as_polars_df(test_df)
