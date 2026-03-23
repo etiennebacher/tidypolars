@@ -75,6 +75,7 @@ count.polars_data_frame <- function(
       } else {
         out <- out$sort(grps)
       }
+      out <- group_by(out, all_of(grps), maintain_order = mo)
     } else {
       out <- x$group_by(`__tidypolars_grp__` = pl$lit(1))$len()$drop(
         "__tidypolars_grp__"
@@ -90,27 +91,44 @@ count.polars_data_frame <- function(
     names(polars_exprs) <- unlist(new_names, use.names = FALSE)
   }
 
+  name <- check_count_name(x, names(x), name)
+
   if (is_grouped) {
-    out <- x$group_by(grps, !!!polars_exprs)$len()$rename(len = name)
+    # If there are some duplicates in grps and names(polars_exprs), we want to
+    # favor the value in names(polars_exprs), but the column order of the
+    # output should follow the order of grps and then names(polars_exprs).
+    grps2 <- grps[!(grps %in% names(polars_exprs))]
+    names_polars_exprs2 <- names(polars_exprs)[!(names(polars_exprs) %in% grps)]
+    if (length(grps2) > 0) {
+      out <- x$group_by(grps2, !!!polars_exprs)$len()$rename(len = name)$select(
+        grps,
+        names_polars_exprs2,
+        name
+      )
+    } else {
+      out <- x$group_by(!!!polars_exprs)$len()$rename(len = name)
+    }
   } else {
     out <- x$group_by(!!!polars_exprs)$len()$rename(len = name)
   }
 
   if (isTRUE(sort)) {
-    out <- out$sort(
-      name,
-      grps,
-      !!!names(polars_exprs),
-      descending = c(TRUE, rep(FALSE, length(grps) + length(polars_exprs)))
-    )
+    if (is_grouped) {
+      out <- out$sort(
+        name,
+        grps,
+        !!!names(polars_exprs),
+        descending = c(TRUE, rep(FALSE, length(grps) + length(polars_exprs)))
+      )
+    } else {
+      out <- out$sort(name, descending = TRUE)
+    }
   } else {
     out <- out$sort(grps, !!!names(polars_exprs))
   }
 
-  out <- if (is_grouped) {
-    group_by(out, all_of(grps), maintain_order = mo)
-  } else {
-    out
+  if (is_grouped) {
+    out <- group_by(out, all_of(grps), maintain_order = mo)
   }
 
   add_tidypolars_class(out)
@@ -159,21 +177,82 @@ add_count.polars_data_frame <- function(
   mo <- attributes(x)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
 
-  vars <- tidyselect_dots(x, ...)
-  vars <- c(grps, vars)
-  out <- count_(
+  polars_exprs <- translate_dots(
     x,
-    vars,
-    sort = sort,
-    name = name,
-    new_col = TRUE,
-    missing_name = missing(name)
+    ...,
+    env = rlang::current_env(),
+    caller = rlang::caller_env()
   )
 
-  out <- if (is_grouped) {
-    group_by(out, all_of(grps), maintain_order = mo)
+  # Only unnamed inputs
+  if (!is.null(names(polars_exprs))) {
+    polars_exprs <- lapply(polars_exprs, \(x) {
+      lapply(x, function(y) {
+        if (length(y) == 0) {
+          cli_abort(
+            "{.pkg tidypolars} doesn't support both named and unnamed inputs in {.fn count}.",
+            call = rlang::caller_env(4)
+          )
+        }
+        y
+      })
+    })
+    names(polars_exprs) <- NULL
+    polars_exprs <- unlist(polars_exprs, recursive = FALSE)
+  }
+
+  if (length(polars_exprs) == 0) {
+    if (is_grouped) {
+      out <- x$with_columns(pl$len()$over(!!!grps)$alias(name))
+      if (isTRUE(sort)) {
+        out <- out$sort(
+          name,
+          grps,
+          descending = c(TRUE, rep(FALSE, length(grps)))
+        )
+      }
+      out <- group_by(out, all_of(grps), maintain_order = mo)
+    } else {
+      out <- x$with_columns(pl$len()$alias(name))
+    }
+
+    return(add_tidypolars_class(out))
+  }
+
+  if (is.null(names(polars_exprs))) {
+    new_names <- enexprs(...)
+    new_names <- lapply(new_names, expr_deparse)
+    names(polars_exprs) <- unlist(new_names, use.names = FALSE)
+  }
+
+  name <- check_count_name(x, names(x), name)
+
+  if (is_grouped) {
+    grps2 <- grps[!(grps %in% names(polars_exprs))]
+    if (length(grps2) > 0) {
+      out <- x$with_columns(pl$len()$over(grps2, !!!polars_exprs)$alias(name))
+    } else {
+      out <- x$with_columns(pl$len()$over(!!!polars_exprs)$alias(name))
+    }
   } else {
-    out
+    out <- x$with_columns(pl$len()$over(!!!polars_exprs)$alias(name))
+  }
+
+  if (isTRUE(sort)) {
+    if (is_grouped) {
+      out <- out$sort(
+        name,
+        grps,
+        !!!names(polars_exprs),
+        descending = c(TRUE, rep(FALSE, length(grps) + length(polars_exprs)))
+      )
+    } else {
+      out <- out$sort(name, descending = TRUE)
+    }
+  }
+
+  if (is_grouped) {
+    out <- group_by(out, all_of(grps), maintain_order = mo)
   }
 
   add_tidypolars_class(out)
@@ -222,32 +301,19 @@ count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
   }
 }
 
-check_count_name <- function(x, vars, name, missing_name) {
+check_count_name <- function(x, vars, name) {
   new_name <- name
-  if (isTRUE(missing_name)) {
-    while (new_name %in% names(x)) {
-      new_name <- paste0(new_name, "n")
-    }
-    if (new_name != name) {
-      cli_inform(
-        c(
-          "Storing counts in {.code {new_name}}, as {.code n} already present in input.",
-          "i" = "Use {.code name = \"new_name\"} to pick a new name."
-        )
+
+  while (new_name %in% vars) {
+    new_name <- paste0(new_name, "n")
+  }
+  if (new_name != name) {
+    cli_inform(
+      c(
+        "Storing counts in {.code {new_name}}, as {.code n} already present in input.",
+        "i" = "Use {.code name = \"new_name\"} to pick a new name."
       )
-    }
-  } else {
-    while (new_name %in% vars) {
-      new_name <- paste0(new_name, "n")
-    }
-    if (new_name != name) {
-      cli_inform(
-        c(
-          "Storing counts in {.code {new_name}}, as {.code n} already present in input.",
-          "i" = "Use {.code name = \"new_name\"} to pick a new name."
-        )
-      )
-    }
+    )
   }
 
   new_name

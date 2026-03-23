@@ -50,6 +50,11 @@ test_that("count works on grouped data", {
     count(test_g_pl, cyl),
     count(test_g, cyl)
   )
+
+  expect_equal(
+    attr(count(test_g_pl), "pl_grps"),
+    "am"
+  )
 })
 
 test_that("count works with expressions", {
@@ -95,8 +100,8 @@ test_that("arguments name and sort work", {
   )
 
   expect_equal(
-    add_count(test_pl, cyl, am, sort = TRUE, name = "count"),
-    add_count(test_df, cyl, am, sort = TRUE, name = "count")
+    add_count(test_pl, cyl, am, name = "foo"),
+    add_count(test_df, cyl, am, name = "foo")
   )
 
   expect_equal(
@@ -116,14 +121,10 @@ test_that("add_count works on grouped data", {
     add_count(test_g, cyl, am)
   )
   expect_equal(
-    count(test_g_pl, cyl, am),
-    count(test_g, cyl, am)
+    add_count(test_g_pl),
+    add_count(test_g)
   )
 
-  expect_equal(
-    attr(count(test_g_pl), "pl_grps"),
-    "am"
-  )
   expect_equal(
     attr(add_count(test_g_pl), "pl_grps"),
     "am"
