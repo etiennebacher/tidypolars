@@ -63,13 +63,15 @@ count.polars_data_frame <- function(
     polars_exprs <- unlist(polars_exprs, recursive = FALSE)
   }
 
+  name <- check_count_name(x, names(x), name)
+
   if (length(polars_exprs) == 0) {
     if (is_grouped) {
       out <- x$group_by(grps)$len()$rename(len = name)
       if (isTRUE(sort)) {
         out <- out$sort(
           name,
-          grps,
+          !!!grps,
           descending = c(TRUE, rep(FALSE, length(grps)))
         )
       } else {
@@ -90,8 +92,6 @@ count.polars_data_frame <- function(
     new_names <- lapply(new_names, expr_deparse)
     names(polars_exprs) <- unlist(new_names, use.names = FALSE)
   }
-
-  name <- check_count_name(x, names(x), name)
 
   if (is_grouped) {
     # If there are some duplicates in grps and names(polars_exprs), we want to
@@ -144,14 +144,15 @@ tally.polars_data_frame <- function(x, wt = NULL, sort = FALSE, name = "n") {
   if (!missing(wt)) {
     check_unsupported_arg(wt = quo_text(enquo(wt)))
   }
-  grps <- attributes(x)$pl_grps
-  mo <- attributes(x)$maintain_grp_order %||% FALSE
-  is_grouped <- !is.null(grps)
-  out <- count_(x, grps, sort = sort, name = name, new_col = FALSE)
+  out <- count(x, sort = sort, name = name)
+  grps <- attributes(out)$pl_grps
+  mo <- attributes(out)$maintain_grp_order %||% FALSE
 
   if (length(grps) > 1) {
     grps <- grps[-length(grps)]
     out <- group_by(out, all_of(grps), maintain_order = mo)
+  } else if (length(grps) == 1) {
+    out <- ungroup(out)
   }
 
   add_tidypolars_class(out)
@@ -270,44 +271,6 @@ add_count.polars_data_frame <- function(
 #' @export
 add_count.polars_lazy_frame <- add_count.polars_data_frame
 
-count_ <- function(x, vars, sort, name, new_col = FALSE, missing_name = FALSE) {
-  name <- check_count_name(x, vars, name, missing_name)
-  if (isTRUE(new_col)) {
-    if (length(vars) == 0) {
-      out <- x$with_columns(
-        pl$len()$alias(name)
-      )
-    } else {
-      out <- x$with_columns(
-        pl$len()$alias(name)$over(!!!vars)
-      )
-    }
-  } else {
-    if (length(vars) == 0) {
-      out <- x$select(
-        pl$len()$alias(name)
-      )
-    } else {
-      # https://github.com/etiennebacher/tidypolars/issues/193
-      vars <- unique(vars)
-      out <- x$group_by(vars, .maintain_order = FALSE)$agg(
-        pl$len()$alias(name)
-      )
-    }
-  }
-
-  if (isTRUE(sort)) {
-    if (isFALSE(new_col) && length(vars) > 0) {
-      out$sort(name, !!!vars, descending = c(TRUE, rep(FALSE, length(vars))))
-    } else {
-      out$sort(name, descending = TRUE)
-    }
-  } else if (isFALSE(new_col) && length(vars) > 0) {
-    out$sort(vars)
-  } else {
-    out
-  }
-}
 
 check_count_name <- function(x, vars, name) {
   new_name <- name
