@@ -121,7 +121,11 @@ count.polars_data_frame <- function(
         descending = c(TRUE, rep(FALSE, length(grps) + length(polars_exprs)))
       )
     } else {
-      out <- out$sort(name, descending = TRUE)
+      out <- out$sort(
+        name,
+        !!!names(polars_exprs),
+        descending = c(TRUE, rep(FALSE, length(polars_exprs)))
+      )
     }
   } else {
     out <- out$sort(grps, !!!names(polars_exprs))
