@@ -111,9 +111,10 @@ Polars. Otherwise, show the initial query.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   SORT BY [nulls_last: [true]] [col("__TIDYPOLARS_TEMP_SORT__1")]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      WITH_COLUMNS:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      [col("drat").alias("__TIDYPOLARS_TEMP_SORT__1")] </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       FILTER [(col("cyl")) == (3.0)]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       FROM</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         DF ["mpg", "cyl", "disp", "hp", ...]; PROJECT["mpg", "cyl", "drat"] 3/11 COLUMNS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       simple π 2/2 ["mpg", "drat"]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         FILTER [(col("cyl")) == (3.0)]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         FROM</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           DF ["mpg", "cyl", "disp", "hp", ...]; PROJECT["mpg", "drat", "cyl"] 3/11 COLUMNS</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
