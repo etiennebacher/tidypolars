@@ -1,2 +1,5 @@
 [lint]
 extend-select = ["TESTTHAT"]
+
+[lint.unused_function]
+skipped-functions = ["^pl"]
