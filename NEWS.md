@@ -13,6 +13,9 @@
 
 * Better error message in `filter()` when a condition uses `=` instead of `==` (#341).
 
+* `count()` and `add_count()` now work with expressions, e.g. `count(mtcars, mpg + 1)`
+  (#346).
+
 ## Bug fixes
 
 * Fix `NA` handling in `cummin()`, `cumprod()`, `cumsum()` (@Yousa-Mirage, #326).
