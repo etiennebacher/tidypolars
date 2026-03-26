@@ -65,7 +65,7 @@ fill.polars_data_frame <- function(
     expr <- expr$over(!!!grps)
   }
 
-  out <- if (is_grouped) {
+  out <- if (is_grouped && missing(.by)) {
     data$with_columns(expr) |>
       group_by(all_of(grps), maintain_order = mo)
   } else {
