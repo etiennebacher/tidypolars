@@ -193,6 +193,21 @@ test_that("trunc() works", {
   )
 })
 
+test_that("trunc() in tidypolars doesn't support Date/datetime", {
+  test_pl <- pl$LazyFrame(
+    date = as.Date("2020-01-01"),
+    datetime = as.POSIXct("2020-01-01")
+  )
+  expect_snapshot_lazy(
+    test_pl |> mutate(x = trunc(date, units = "secs")),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    test_pl |> mutate(x = trunc(datetime, units = "secs")),
+    error = TRUE
+  )
+})
+
 test_that("sample() works with default size and n() size", {
   test_df <- tibble(x = 1:5)
   test_pl <- as_polars_lf(test_df)

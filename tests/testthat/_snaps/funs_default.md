@@ -10,6 +10,48 @@
       Caused by error:
       ! lengths don't match: unable to add a column of length 4 to a DataFrame of height 5
 
+# trunc() works
+
+    Code
+      mutate(test_pl, foo = trunc("a"))
+    Condition
+      Error in `.data$with_columns()`:
+      ! Evaluation failed in `$with_columns()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! truncation ('to_zero') can only be used on numeric types
+
+# trunc() in tidypolars doesn't support Date/datetime
+
+    Code
+      mutate(test_pl, x = trunc(date, units = "secs"))
+    Condition
+      Warning:
+      tidypolars doesn't know how to use some arguments of `trunc()`.
+      i The following argument(s) will be ignored: "units".
+      Error in `.data$with_columns()`:
+      ! Evaluation failed in `$with_columns()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! truncation ('to_zero') can only be used on numeric types
+
+---
+
+    Code
+      mutate(test_pl, x = trunc(datetime, units = "secs"))
+    Condition
+      Warning:
+      tidypolars doesn't know how to use some arguments of `trunc()`.
+      i The following argument(s) will be ignored: "units".
+      Error in `.data$with_columns()`:
+      ! Evaluation failed in `$with_columns()`.
+      Caused by error:
+      ! Evaluation failed in `$collect()`.
+      Caused by error:
+      ! truncation ('to_zero') can only be used on numeric types
+
 # sample() validates size
 
     Code

@@ -10,7 +10,6 @@
   - `cummax()` (#323)
   - `trunc()` (#343)
 
-
 * Added `decreasing` and `na.last` arguments support to `sort()` (@Yousa-Mirage, #328).
 
 * Added `na.last` and `ties.method` arguments support to `rank()` (@Yousa-Mirage, #329).
