@@ -89,22 +89,11 @@ expect_colnames <- function(x, y) {
   testthat::expect_equal(x$columns, y)
 }
 
-expect_dim <- function(x, y) {
-  if (is_polars_lf(x)) {
-    x <- x$collect()
-  }
-  testthat::expect_equal(dim(x), y)
-}
-
 expect_equal <- function(x, y, ...) {
   if (is_polars_df(x)) {
     x <- as_tibble(x)
   }
   if (is_polars_df(y)) {
-    y <- as_tibble(y)
-  }
-  # TODO: this should probably be removed, https://github.com/etiennebacher/tidypolars/issues/314
-  if (inherits(y, "grouped_df")) {
     y <- as_tibble(y)
   }
   testthat::expect_equal(x, y, ...)
@@ -115,10 +104,6 @@ expect_equal_lazy <- function(x, y, ...) {
     x <- as_tibble(x)
   }
   if (is_polars_lf(y)) {
-    y <- as_tibble(y)
-  }
-  # TODO: this should probably be removed, https://github.com/etiennebacher/tidypolars/issues/314
-  if (inherits(y, "grouped_df")) {
     y <- as_tibble(y)
   }
   dots <- get_dots(...)
@@ -138,15 +123,6 @@ expect_snapshot <- function(...) {
 }
 expect_snapshot_lazy <- function(current, ...) {
   testthat::expect_snapshot(current$collect(), ...)
-}
-
-test_this_file <- function() {
-  file <- rstudioapi::getSourceEditorContext()$path
-  if (!grepl("testthat/", file, fixed = TRUE)) {
-    message("Must run this when the active window is a test file.")
-    return(invisible())
-  }
-  testthat::run_test_file(file)
 }
 
 expect_is_tidypolars <- function(x) {

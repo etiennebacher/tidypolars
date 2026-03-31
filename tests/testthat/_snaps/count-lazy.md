@@ -1,8 +1,16 @@
-# count() doesn't support named expressions, #233
+# count works with expressions
 
     Code
       current$collect()
     Condition
       Error in `count()`:
-      ! tidypolars doesn't support named expressions in `count()`.
+      ! tidypolars doesn't support both named and unnamed inputs in `count()`.
+
+# add_count works with expressions
+
+    Code
+      current$collect()
+    Condition
+      Error in `add_count()`:
+      ! tidypolars doesn't support both named and unnamed inputs in `add_count()`.
 

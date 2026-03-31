@@ -50,13 +50,17 @@ unite.polars_data_frame <- function(
   col <- rlang::as_string(rlang::ensym(col))
 
   if (isTRUE(na.rm)) {
-    fill <- ""
+    vars_to_concat <- vars
   } else {
-    fill <- "NA"
+    vars_to_concat <- list(pl$col(!!!vars)$fill_null("NA"))
   }
 
   out <- data$with_columns(
-    pl$concat_str(!!!vars, separator = sep, ignore_nulls = TRUE)$alias(col)
+    pl$concat_str(
+      !!!vars_to_concat,
+      separator = sep,
+      ignore_nulls = TRUE
+    )$alias(col)
   )
 
   out <- if (isTRUE(remove)) {

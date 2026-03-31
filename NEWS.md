@@ -17,6 +17,12 @@
 
 * Better error message in `filter()` when a condition uses `=` instead of `==` (#341).
 
+* `count()` and `add_count()` now work with expressions, e.g. `count(mtcars, mpg + 1)`
+  (#346).
+
+* `as_tibble()` on grouped Polars DataFrames or LazyFrames now returns a grouped
+  tibble (#348).
+
 ## Bug fixes
 
 * Fix `NA` handling in `cummin()`, `cumprod()`, `cumsum()` (@Yousa-Mirage, #326).
@@ -30,6 +36,11 @@
   provided `null_value`. This is now fixed (@Yousa-Mirage, #334).
 
 * Fix `sample()` to make it work correctly (@Yousa-Mirage, #338).
+
+* Fix `unite()` behavior when `na.rm = TRUE` (#344).
+
+* Fix a bug in `fill()` where groups set in `.by` would be preserved after the
+  operation (hence returning a grouped output) (#348).
 
 # tidypolars 0.17.0
 
