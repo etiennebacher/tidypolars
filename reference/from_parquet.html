@@ -9,7 +9,7 @@ scan_parquet_polars() imports the data as a Polars LazyFrame."><meta property="o
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.17.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.18.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,7 +39,7 @@ scan_parquet_polars() imports the data as a Polars LazyFrame."><meta property="o
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Import data from Parquet file(s)</h1>
-      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/tidypolars/blob/main/R/read_scan.R" class="external-link"><code>R/read_scan.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/tidypolars/blob/v0.18.0/R/read_scan.R" class="external-link"><code>R/read_scan.R</code></a></small>
       <div class="d-none name"><code>from_parquet.Rd</code></div>
     </div>
 
@@ -295,17 +295,17 @@ with this name.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---                             │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ str                             │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═════════════════════════════════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8.0 ┆ 472.0 ┆ 205.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 4.0  ┆ output/file1c453359090f/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8.0 ┆ 460.0 ┆ 215.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 4.0  ┆ output/file1c453359090f/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 13.3 ┆ 8.0 ┆ 350.0 ┆ 245.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 4.0  ┆ output/file1c453359090f/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.3 ┆ 8.0 ┆ 360.0 ┆ 245.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 4.0  ┆ output/file1c453359090f/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.7 ┆ 8.0 ┆ 440.0 ┆ 230.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 4.0  ┆ output/file1c453359090f/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8.0 ┆ 472.0 ┆ 205.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 4.0  ┆ output/file1d7c48006ff2/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8.0 ┆ 460.0 ┆ 215.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 4.0  ┆ output/file1d7c48006ff2/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 13.3 ┆ 8.0 ┆ 350.0 ┆ 245.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 4.0  ┆ output/file1d7c48006ff2/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.3 ┆ 8.0 ┆ 360.0 ┆ 245.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 4.0  ┆ output/file1d7c48006ff2/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.7 ┆ 8.0 ┆ 440.0 ┆ 230.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 4.0  ┆ output/file1d7c48006ff2/output… │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …                               │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 27.3 ┆ 4.0 ┆ 79.0  ┆ 66.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ output/file1c453359090f/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4.0 ┆ 75.7  ┆ 52.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ output/file1c453359090f/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ output/file1c453359090f/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 32.4 ┆ 4.0 ┆ 78.7  ┆ 66.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ output/file1c453359090f/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 33.9 ┆ 4.0 ┆ 71.1  ┆ 65.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ output/file1c453359090f/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 27.3 ┆ 4.0 ┆ 79.0  ┆ 66.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ output/file1d7c48006ff2/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4.0 ┆ 75.7  ┆ 52.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ output/file1d7c48006ff2/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ output/file1d7c48006ff2/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 32.4 ┆ 4.0 ┆ 78.7  ┆ 66.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ output/file1d7c48006ff2/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 33.9 ┆ 4.0 ┆ 71.1  ┆ 65.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ output/file1d7c48006ff2/output… │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴─────────────────────────────────┘</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>

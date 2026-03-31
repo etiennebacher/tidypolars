@@ -1,5 +1,85 @@
 # Changelog
 
+## tidypolars 0.18.0
+
+`tidypolars` requires `polars` \>= 1.10.0.
+
+### New features
+
+- Added support for the following functions:
+
+  - [`anyNA()`](https://rdrr.io/r/base/NA.html)
+    ([\#330](https://github.com/etiennebacher/tidypolars/issues/330))
+  - [`cummax()`](https://rdrr.io/r/base/cumsum.html)
+    ([\#323](https://github.com/etiennebacher/tidypolars/issues/323))
+  - [`trunc()`](https://rdrr.io/r/base/Round.html)
+    ([\#343](https://github.com/etiennebacher/tidypolars/issues/343))
+
+- Added `decreasing` and `na.last` arguments support to
+  [`sort()`](https://rdrr.io/r/base/sort.html)
+  ([@Yousa-Mirage](https://github.com/Yousa-Mirage),
+  [\#328](https://github.com/etiennebacher/tidypolars/issues/328)).
+
+- Added `na.last` and `ties.method` arguments support to
+  [`rank()`](https://rdrr.io/r/base/rank.html)
+  ([@Yousa-Mirage](https://github.com/Yousa-Mirage),
+  [\#329](https://github.com/etiennebacher/tidypolars/issues/329)).
+
+- Better error message in
+  [`filter()`](https://dplyr.tidyverse.org/reference/filter.html) when a
+  condition uses `=` instead of `==`
+  ([\#341](https://github.com/etiennebacher/tidypolars/issues/341)).
+
+- [`count()`](https://dplyr.tidyverse.org/reference/count.html) and
+  [`add_count()`](https://dplyr.tidyverse.org/reference/count.html) now
+  work with expressions, e.g. `count(mtcars, mpg + 1)`
+  ([\#346](https://github.com/etiennebacher/tidypolars/issues/346)).
+
+- [`as_tibble()`](https://tibble.tidyverse.org/reference/as_tibble.html)
+  on grouped Polars DataFrames or LazyFrames now returns a grouped
+  tibble
+  ([\#348](https://github.com/etiennebacher/tidypolars/issues/348)).
+
+### Bug fixes
+
+- Fix `NA` handling in [`cummin()`](https://rdrr.io/r/base/cumsum.html),
+  [`cumprod()`](https://rdrr.io/r/base/cumsum.html),
+  [`cumsum()`](https://rdrr.io/r/base/cumsum.html)
+  ([@Yousa-Mirage](https://github.com/Yousa-Mirage),
+  [\#326](https://github.com/etiennebacher/tidypolars/issues/326)).
+
+- Fix `NA` handling in
+  [`is.finite()`](https://rdrr.io/r/base/is.finite.html),
+  [`is.infinite()`](https://rdrr.io/r/base/is.finite.html), and
+  [`is.nan()`](https://rdrr.io/r/base/is.finite.html)
+  ([\#331](https://github.com/etiennebacher/tidypolars/issues/331)).
+
+- In [`arrange()`](https://dplyr.tidyverse.org/reference/arrange.html),
+  if the data was grouped, the order was never maintained even if
+  `maintain_order = TRUE` was passed in
+  [`group_by()`](https://dplyr.tidyverse.org/reference/group_by.html).
+  This is now fixed
+  ([\#332](https://github.com/etiennebacher/tidypolars/issues/332)).
+
+- When exporting to CSV, `null_values` alone did not apply and could
+  override explicitly provided `null_value`. This is now fixed
+  ([@Yousa-Mirage](https://github.com/Yousa-Mirage),
+  [\#334](https://github.com/etiennebacher/tidypolars/issues/334)).
+
+- Fix [`sample()`](https://rdrr.io/r/base/sample.html) to make it work
+  correctly ([@Yousa-Mirage](https://github.com/Yousa-Mirage),
+  [\#338](https://github.com/etiennebacher/tidypolars/issues/338)).
+
+- Fix [`unite()`](https://tidyr.tidyverse.org/reference/unite.html)
+  behavior when `na.rm = TRUE`
+  ([\#344](https://github.com/etiennebacher/tidypolars/issues/344)).
+
+- Fix a bug in
+  [`fill()`](https://tidyr.tidyverse.org/reference/fill.html) where
+  groups set in `.by` would be preserved after the operation (hence
+  returning a grouped output)
+  ([\#348](https://github.com/etiennebacher/tidypolars/issues/348)).
+
 ## tidypolars 0.17.0
 
 `tidypolars` requires `polars` \>= 1.9.0 and `dplyr` \>= 1.2.0.

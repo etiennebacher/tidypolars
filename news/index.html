@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.17.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.18.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,9 +37,40 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/etiennebacher/tidypolars/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/etiennebacher/tidypolars/blob/v0.18.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.18.0" id="tidypolars-0180">tidypolars 0.18.0<a class="anchor" aria-label="anchor" href="#tidypolars-0180"></a></h2>
+<p><code>tidypolars</code> requires <code>polars</code> &gt;= 1.10.0.</p>
+<div class="section level3">
+<h3 id="new-features-0-18-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-18-0"></a></h3>
+<ul><li>
+<p>Added support for the following functions:</p>
+<ul><li>
+<code><a href="https://rdrr.io/r/base/NA.html" class="external-link">anyNA()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/330" class="external-link">#330</a>)</li>
+<li>
+<code><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cummax()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/323" class="external-link">#323</a>)</li>
+<li>
+<code><a href="https://rdrr.io/r/base/Round.html" class="external-link">trunc()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/343" class="external-link">#343</a>)</li>
+</ul></li>
+<li><p>Added <code>decreasing</code> and <code>na.last</code> arguments support to <code><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort()</a></code> (<a href="https://github.com/Yousa-Mirage" class="external-link">@Yousa-Mirage</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/328" class="external-link">#328</a>).</p></li>
+<li><p>Added <code>na.last</code> and <code>ties.method</code> arguments support to <code><a href="https://rdrr.io/r/base/rank.html" class="external-link">rank()</a></code> (<a href="https://github.com/Yousa-Mirage" class="external-link">@Yousa-Mirage</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/329" class="external-link">#329</a>).</p></li>
+<li><p>Better error message in <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter()</a></code> when a condition uses <code>=</code> instead of <code>==</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/341" class="external-link">#341</a>).</p></li>
+<li><p><code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">add_count()</a></code> now work with expressions, e.g. <code>count(mtcars, mpg + 1)</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/346" class="external-link">#346</a>).</p></li>
+<li><p><code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble()</a></code> on grouped Polars DataFrames or LazyFrames now returns a grouped tibble (<a href="https://github.com/etiennebacher/tidypolars/issues/348" class="external-link">#348</a>).</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-18-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-18-0"></a></h3>
+<ul><li><p>Fix <code>NA</code> handling in <code><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cummin()</a></code>, <code><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumprod()</a></code>, <code><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum()</a></code> (<a href="https://github.com/Yousa-Mirage" class="external-link">@Yousa-Mirage</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/326" class="external-link">#326</a>).</p></li>
+<li><p>Fix <code>NA</code> handling in <code><a href="https://rdrr.io/r/base/is.finite.html" class="external-link">is.finite()</a></code>, <code><a href="https://rdrr.io/r/base/is.finite.html" class="external-link">is.infinite()</a></code>, and <code><a href="https://rdrr.io/r/base/is.finite.html" class="external-link">is.nan()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/331" class="external-link">#331</a>).</p></li>
+<li><p>In <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange()</a></code>, if the data was grouped, the order was never maintained even if <code>maintain_order = TRUE</code> was passed in <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by()</a></code>. This is now fixed (<a href="https://github.com/etiennebacher/tidypolars/issues/332" class="external-link">#332</a>).</p></li>
+<li><p>When exporting to CSV, <code>null_values</code> alone did not apply and could override explicitly provided <code>null_value</code>. This is now fixed (<a href="https://github.com/Yousa-Mirage" class="external-link">@Yousa-Mirage</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/334" class="external-link">#334</a>).</p></li>
+<li><p>Fix <code><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample()</a></code> to make it work correctly (<a href="https://github.com/Yousa-Mirage" class="external-link">@Yousa-Mirage</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/338" class="external-link">#338</a>).</p></li>
+<li><p>Fix <code><a href="https://tidyr.tidyverse.org/reference/unite.html" class="external-link">unite()</a></code> behavior when <code>na.rm = TRUE</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/344" class="external-link">#344</a>).</p></li>
+<li><p>Fix a bug in <code><a href="https://tidyr.tidyverse.org/reference/fill.html" class="external-link">fill()</a></code> where groups set in <code>.by</code> would be preserved after the operation (hence returning a grouped output) (<a href="https://github.com/etiennebacher/tidypolars/issues/348" class="external-link">#348</a>).</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.17.0" id="tidypolars-0170">tidypolars 0.17.0<a class="anchor" aria-label="anchor" href="#tidypolars-0170"></a></h2>
 <p><code>tidypolars</code> requires <code>polars</code> &gt;= 1.9.0 and <code>dplyr</code> &gt;= 1.2.0.</p>
