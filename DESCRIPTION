@@ -1,7 +1,7 @@
 Package: tidypolars
 Type: Package
 Title: More Efficient Tidyverse Code, Using Polars in the Background
-Version: 0.17.0.9000
+Version: 0.18.0
 Authors@R:
     c(person(given = "Etienne",
              family = "Bacher",
@@ -33,7 +33,7 @@ Imports:
     dplyr (> 1.1.4),
     glue,
     lifecycle,
-    polars (>= 1.9.0),
+    polars (>= 1.10.0),
     rlang (>= 1.1.0),
     tidyr,
     tidyselect,
