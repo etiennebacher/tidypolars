@@ -491,6 +491,11 @@ pl_tanh <- function(x) {
   x$tanh()
 }
 
+pl_trunc <- function(x, ...) {
+  check_empty_dots(...)
+  x$truncate(decimals = 0)
+}
+
 pl_unique <- function(x, ...) {
   check_empty_dots(...)
   x$unique()
