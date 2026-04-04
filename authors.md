@@ -15,7 +15,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/etiennebacher/tidypolars/blob/v0.18.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/etiennebacher/tidypolars/blob/main/DESCRIPTION)
 
 Bacher E (2026). *tidypolars: More Efficient Tidyverse Code, Using
 Polars in the Background*. R package version 0.18.0,
