@@ -3,3 +3,6 @@ extend-select = ["TESTTHAT"]
 
 [lint.unused_function]
 skipped-functions = ["^pl"]
+
+[lint.duplicated_arguments]
+extend-skipped-functions = ["translate_dots"]

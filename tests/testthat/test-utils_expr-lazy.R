@@ -5,19 +5,17 @@ Sys.setenv('TIDYPOLARS_TEST' = TRUE)
 test_that("internally, expressions are correctly split in pools", {
   pl_iris <- as_polars_lf(iris)
 
-  result <-
-    # jarl-ignore duplicated_arguments: can accept identically named expressions, like mutate()
-    translate_dots(
-      pl_iris,
+  result <- translate_dots(
+    pl_iris,
 
-      x = Sepal.Length * 3,
-      Petal.Length = Petal.Length / x,
-      x = NULL,
-      mean_pl = mean(Petal.Length),
-      foo = Sepal.Width + Petal.Width,
-      env = rlang::current_env(),
-      caller = rlang::current_env()
-    )
+    x = Sepal.Length * 3,
+    Petal.Length = Petal.Length / x,
+    x = NULL,
+    mean_pl = mean(Petal.Length),
+    foo = Sepal.Width + Petal.Width,
+    env = rlang::current_env(),
+    caller = rlang::current_env()
+  )
   expected <- list(
     pool_exprs_1 = list(
       x = pl$col("Sepal.Length") * 3,
@@ -38,16 +36,14 @@ test_that("internally, expressions are correctly split in pools", {
     result$pool_exprs_2$Petal.Length$meta$eq(expected$pool_exprs_2$Petal.Length)
   )
 
-  result <-
-    # jarl-ignore duplicated_arguments: can accept identically named expressions, like mutate()
-    translate_dots(
-      pl_iris,
-      x = 1,
-      x = "a",
-      x = NULL,
-      env = rlang::current_env(),
-      caller = rlang::current_env()
-    )
+  result <- translate_dots(
+    pl_iris,
+    x = 1,
+    x = "a",
+    x = NULL,
+    env = rlang::current_env(),
+    caller = rlang::current_env()
+  )
   expected <- list(
     pool_exprs_1 = list(x = pl$lit(1)),
     pool_exprs_2 = list(x = pl$lit("a")),
