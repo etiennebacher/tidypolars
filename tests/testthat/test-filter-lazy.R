@@ -190,11 +190,6 @@ test_that("%in% works", {
     test_df |> filter(Species %in% c("setosa", "virginica"))
   )
 
-  expect_equal_lazy(
-    test_pl |> filter(Species %in% c("setosa", "virginica")),
-    test_df |> filter(Species %in% c("setosa", "virginica"))
-  )
-
   test_df <- tibble(x = c(1, 2, 3), y = c(1, 3, 2))
   test_pl <- pl$LazyFrame(x = c(1, 2, 3), y = c(1, 3, 2))
 
@@ -211,6 +206,69 @@ test_that("%in% works with NA", {
   expect_equal_lazy(
     test_pl |> filter(x %in% c(1, NA)),
     test_df |> filter(x %in% c(1, NA))
+  )
+})
+
+test_that("%notin% works", {
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    filter(test_pl, cyl %notin% 4:5),
+    filter(test_df, cyl %notin% 4:5)
+  )
+
+  expect_equal_lazy(
+    filter(test_pl, cyl %notin% 4:5 & am %notin% 1),
+    filter(test_df, cyl %notin% 4:5 & am %notin% 1)
+  )
+
+  expect_equal_lazy(
+    filter(test_pl, cyl %notin% 4:5, am %notin% 1),
+    filter(test_df, cyl %notin% 4:5, am %notin% 1)
+  )
+
+  expect_equal_lazy(
+    filter(test_pl, cyl %notin% 4:5 | am %notin% 1),
+    filter(test_df, cyl %notin% 4:5 | am %notin% 1)
+  )
+
+  expect_equal_lazy(
+    filter(test_pl, cyl %notin% 4:5, vs == 1),
+    filter(test_df, cyl %notin% 4:5, vs == 1)
+  )
+
+  expect_equal_lazy(
+    filter(test_pl, cyl %notin% 4:5 | carb == 4),
+    filter(test_df, cyl %notin% 4:5 | carb == 4)
+  )
+
+  test_df <- as_tibble(iris)
+  # TODO: this shouldn't be necessary
+  test_df$Species <- as.character(test_df$Species)
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |> filter(Species %notin% c("setosa", "virginica")),
+    test_df |> filter(Species %notin% c("setosa", "virginica"))
+  )
+
+  test_df <- tibble(x = c(1, 2, 3), y = c(1, 3, 2))
+  test_pl <- pl$LazyFrame(x = c(1, 2, 3), y = c(1, 3, 2))
+
+  expect_equal_lazy(
+    test_pl |> filter(x %notin% y),
+    test_df |> filter(x %notin% y)
+  )
+})
+
+test_that("%notin% works with NA", {
+  test_df <- tibble(x = c(1, 2, NA))
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |> filter(x %notin% c(1, NA)),
+    test_df |> filter(x %notin% c(1, NA))
   )
 })
 

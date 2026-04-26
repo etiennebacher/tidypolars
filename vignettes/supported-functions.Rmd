@@ -85,6 +85,8 @@ out <- tribble(
   "`base`", "`unique`",
   "`base`", "`which.min`",
   "`base`", "`which.max`",
+  "`base`", "`%in%`",
+  "`base`", "`%notin%`",
   "`dplyr`", "`between`",
   "`dplyr`", "`case_match`",
   "`dplyr`", "`case_when`",
