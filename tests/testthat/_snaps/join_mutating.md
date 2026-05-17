@@ -115,18 +115,6 @@
       Caused by error:
       ! join keys did not fulfill 1:1 validation
 
----
-
-    Code
-      right_join(country_pl, country_year_pl, join_by(iso), relationship = "one-to-many")
-    Condition
-      Error in `y$join()`:
-      ! Evaluation failed in `$join()`.
-      Caused by error:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
-      ! join keys did not fulfill 1:m validation
-
 # argument na_matches works
 
     Code

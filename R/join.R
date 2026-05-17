@@ -458,19 +458,27 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
     right_on <- by
   }
 
-  dupes <- intersect(
-    setdiff(names(x), by),
-    setdiff(names(y), by)
-  )
+  x_non_keys <- setdiff(names(x), left_on)
+  y_non_keys <- setdiff(names(y), right_on)
+  dupes <- intersect(x_non_keys, y_non_keys)
 
   if (how == "right") {
+    validate_right <- switch(
+      validate,
+      "1:1" = "1:1",
+      "1:m" = "m:1",
+      "m:1" = "1:m",
+      "m:m" = "m:m",
+      cli_abort("Unreachable")
+    )
     out <- y$join(
       other = x,
-      left_on = left_on,
-      right_on = right_on,
+      left_on = right_on,
+      right_on = left_on,
       how = "left",
       nulls_equal = nulls_equal,
-      validate = validate
+      validate = validate_right,
+      coalesce = TRUE
     )
   } else {
     out <- x$join(
@@ -484,13 +492,38 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
     )
   }
 
-  out <- if (length(dupes) > 0) {
-    mapping <- as.list(c(paste0(dupes, suffix[1]), paste0(dupes, suffix[2])))
+  if (how == "right" && !identical(left_on, right_on)) {
+    key_mapping <- as.list(left_on)
+    names(key_mapping) <- right_on
+    out <- out$rename(!!!key_mapping)
+  }
+
+  out <- if (!is.null(suffix) && length(dupes) > 0) {
+    if (how == "right") {
+      mapping <- as.list(c(paste0(dupes, suffix[2]), paste0(dupes, suffix[1])))
+    } else {
+      mapping <- as.list(c(paste0(dupes, suffix[1]), paste0(dupes, suffix[2])))
+    }
     names(mapping) <- c(dupes, paste0(dupes, "_right"))
     out$rename(!!!mapping)
   } else {
     out
   }
+
+  if (!how %in% c("semi", "anti")) {
+    x_out <- ifelse(
+      x_non_keys %in% dupes,
+      paste0(x_non_keys, suffix[1]),
+      x_non_keys
+    )
+    y_out <- ifelse(
+      y_non_keys %in% dupes,
+      paste0(y_non_keys, suffix[2]),
+      y_non_keys
+    )
+    out <- out$select(!!!c(left_on, x_out, y_out))
+  }
+
   add_tidypolars_class(out)
 }
 

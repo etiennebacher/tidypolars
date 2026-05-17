@@ -85,6 +85,117 @@ test_that("works if join by different variable names", {
     left_join(test_pl, test2_pl, c("x" = "x2", "y" = "y2")),
     left_join(test_df, test2_df, c("x" = "x2", "y" = "y2"))
   )
+
+  expect_equal_lazy(
+    right_join(test_pl, test2_pl, join_by(x == x2, y == y2)),
+    right_join(test_df, test2_df, join_by(x == x2, y == y2))
+  )
+
+  expect_equal_lazy(
+    right_join(test_pl, test2_pl, c("x" = "x2", "y" = "y2")),
+    right_join(test_df, test2_df, c("x" = "x2", "y" = "y2"))
+  )
+})
+
+test_that("right_join preserves key names and suffix ownership, #350", {
+  test_df <- tibble(
+    x = c(1, 2),
+    z = c("a", "b")
+  )
+  test2_df <- tibble(
+    x = c(1, 3),
+    z = c("c", "d")
+  )
+  test_pl <- as_polars_lf(test_df)
+  test2_pl <- as_polars_lf(test2_df)
+
+  expect_equal_lazy(
+    right_join(test_pl, test2_pl, by = "x"),
+    right_join(test_df, test2_df, by = "x")
+  )
+
+  expect_equal_lazy(
+    right_join(
+      test_pl,
+      test2_pl,
+      by = join_by(x),
+      suffix = c(".left", ".right")
+    ),
+    right_join(
+      test_df,
+      test2_df,
+      by = join_by(x),
+      suffix = c(".left", ".right")
+    )
+  )
+
+  test3_df <- tibble(
+    y = c(1, 3),
+    z = c("c", "d")
+  )
+  test3_pl <- as_polars_lf(test3_df)
+
+  expect_equal_lazy(
+    right_join(test_pl, test3_pl, by = c("x" = "y")),
+    right_join(test_df, test3_df, by = c("x" = "y"))
+  )
+
+  expect_equal_lazy(
+    right_join(test_pl, test3_pl, by = join_by(x == y)),
+    right_join(test_df, test3_df, by = join_by(x == y))
+  )
+})
+
+test_that("mutating joins match dplyr with different key names and duplicate columns", {
+  test_df <- tibble(
+    id = c(1, 2),
+    shared = c("left-1", "left-2"),
+    left_only = c("a", "b")
+  )
+  test2_df <- tibble(
+    key = c(1, 3),
+    shared = c("right-1", "right-3"),
+    right_only = c("c", "d")
+  )
+  test_pl <- as_polars_lf(test_df)
+  test2_pl <- as_polars_lf(test2_df)
+
+  join_fns <- list(left_join, right_join, full_join, inner_join)
+  for (join_fn in join_fns) {
+    expect_equal_lazy(
+      join_fn(
+        test_pl,
+        test2_pl,
+        by = c("id" = "key"),
+        suffix = c(".left", ".right")
+      ) |>
+        arrange(id),
+      join_fn(
+        test_df,
+        test2_df,
+        by = c("id" = "key"),
+        suffix = c(".left", ".right")
+      ) |>
+        arrange(id)
+    )
+
+    expect_equal_lazy(
+      join_fn(
+        test_pl,
+        test2_pl,
+        by = join_by(id == key),
+        suffix = c(".left", ".right")
+      ) |>
+        arrange(id),
+      join_fn(
+        test_df,
+        test2_df,
+        by = join_by(id == key),
+        suffix = c(".left", ".right")
+      ) |>
+        arrange(id)
+    )
+  }
 })
 
 test_that("argument suffix works", {
@@ -285,19 +396,19 @@ test_that("argument relationship works", {
     error = TRUE
   )
 
-  # TODO? tidypolars errors here, not tidyverse. This is because tidyverse
-  # considers that in a right join with "one-to-many", the "one" is for the
-  # first table and the "many" for the second table, while in polars, right-joining
-  # "a" and "b" is equivalent to left joining "b" and "a". So in polars, the "one"
-  # refers to "b" (the right table) and "many" refers to "a" (the left table).
-  expect_snapshot_lazy(
+  expect_equal_lazy(
     right_join(
       country_pl,
       country_year_pl,
       join_by(iso),
       relationship = "one-to-many"
     ),
-    error = TRUE
+    right_join(
+      country,
+      country_year,
+      join_by(iso),
+      relationship = "one-to-many"
+    )
   )
 
   expect_equal_lazy(
