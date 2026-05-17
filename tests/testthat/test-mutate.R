@@ -157,6 +157,7 @@ test_that("dropping columns works", {
     mutate(test_df, missing = NULL)
   )
 
+  # Ensure correct column order, https://github.com/etiennebacher/tidypolars/issues/355
   expect_equal(
     mutate(test_pl, Sepal.Length = NULL, Sepal.Length = Sepal.Width + 1),
     mutate(test_df, Sepal.Length = NULL, Sepal.Length = Sepal.Width + 1)
