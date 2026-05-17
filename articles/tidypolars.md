@@ -80,6 +80,7 @@ Polars `DataFrame` so that we can easily compare `dplyr` and
 `tidypolars` functions.
 
 ``` r
+
 library(polars)
 library(tidypolars)
 library(dplyr, warn.conflicts = FALSE)
@@ -100,6 +101,7 @@ Here’s an example of some `dplyr` and `tidyr` code on the classic R
 `data.frame`:
 
 ``` r
+
 who_df |>
   filter(year > 1990) |>
   drop_na(newrel_f3544) |>
@@ -122,6 +124,7 @@ who_df |>
 We can simply use our Polars dataset instead:
 
 ``` r
+
 who_pl |>
   filter(year > 1990) |>
   drop_na(newrel_f3544) |>
@@ -150,6 +153,7 @@ If you use a Polars `LazyFrame`, you need to call
 end of the chained expression to evaluate the query:
 
 ``` r
+
 who_pl_lazy <- as_polars_lf(tidyr::who)
 
 who_pl_lazy |>

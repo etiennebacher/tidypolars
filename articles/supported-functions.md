@@ -11,158 +11,158 @@ shows functions that can be used in
 The “Notes” column highlights possible differences in the output of the
 original functions and of their translation by `tidypolars`.
 
-| Package     | Function          | Notes                                                                                                                                                                                                                                                                                    |
-|:------------|:------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `base`      | `abs`             |                                                                                                                                                                                                                                                                                          |
-| `base`      | `acos`            |                                                                                                                                                                                                                                                                                          |
-| `base`      | `acosh`           |                                                                                                                                                                                                                                                                                          |
-| `base`      | `all`             |                                                                                                                                                                                                                                                                                          |
-| `base`      | `any`             |                                                                                                                                                                                                                                                                                          |
-| `base`      | `anyNA`           |                                                                                                                                                                                                                                                                                          |
-| `base`      | `asin`            |                                                                                                                                                                                                                                                                                          |
-| `base`      | `asinh`           |                                                                                                                                                                                                                                                                                          |
-| `base`      | `as.character`    |                                                                                                                                                                                                                                                                                          |
-| `base`      | `as.Date`         |                                                                                                                                                                                                                                                                                          |
-| `base`      | `as.logical`      |                                                                                                                                                                                                                                                                                          |
-| `base`      | `as.numeric`      |                                                                                                                                                                                                                                                                                          |
-| `base`      | `atan`            |                                                                                                                                                                                                                                                                                          |
-| `base`      | `atanh`           |                                                                                                                                                                                                                                                                                          |
-| `base`      | `ceiling`         |                                                                                                                                                                                                                                                                                          |
-| `base`      | `cos`             |                                                                                                                                                                                                                                                                                          |
-| `base`      | `cosh`            |                                                                                                                                                                                                                                                                                          |
-| `base`      | `cummin`          |                                                                                                                                                                                                                                                                                          |
-| `base`      | `cummax`          |                                                                                                                                                                                                                                                                                          |
-| `base`      | `cumsum`          |                                                                                                                                                                                                                                                                                          |
-| `base`      | `diff`            |                                                                                                                                                                                                                                                                                          |
-| `base`      | `exp`             |                                                                                                                                                                                                                                                                                          |
-| `base`      | `floor`           |                                                                                                                                                                                                                                                                                          |
-| `base`      | `grepl`           |                                                                                                                                                                                                                                                                                          |
-| `base`      | `gsub`            |                                                                                                                                                                                                                                                                                          |
-| `base`      | `ifelse`          |                                                                                                                                                                                                                                                                                          |
-| `base`      | `ISOdatetime`     | In `base`, when there is an overflow in some of the components (for example `hours = 25` or `month = 15`), then it returns `NA`. In Polars, this errors.                                                                                                                                 |
-| `base`      | `is.finite`       |                                                                                                                                                                                                                                                                                          |
-| `base`      | `is.infinite`     |                                                                                                                                                                                                                                                                                          |
-| `base`      | `is.na`           |                                                                                                                                                                                                                                                                                          |
-| `base`      | `is.nan`          |                                                                                                                                                                                                                                                                                          |
-| `base`      | `length`          |                                                                                                                                                                                                                                                                                          |
-| `base`      | `log`             |                                                                                                                                                                                                                                                                                          |
-| `base`      | `log10`           |                                                                                                                                                                                                                                                                                          |
-| `base`      | `max`             |                                                                                                                                                                                                                                                                                          |
-| `base`      | `mean`            |                                                                                                                                                                                                                                                                                          |
-| `base`      | `min`             |                                                                                                                                                                                                                                                                                          |
-| `base`      | `nchar`           |                                                                                                                                                                                                                                                                                          |
-| `base`      | `paste0`          |                                                                                                                                                                                                                                                                                          |
-| `base`      | `paste`           |                                                                                                                                                                                                                                                                                          |
-| `base`      | `rank`            | In `tidypolars`, `na.last = NA` is not supported.                                                                                                                                                                                                                                        |
-| `base`      | `rev`             |                                                                                                                                                                                                                                                                                          |
-| `base`      | `round`           |                                                                                                                                                                                                                                                                                          |
-| `base`      | `sample`          | [`set.seed()`](https://rdrr.io/r/base/Random.html) is not supported. Randomness is handled by Polars and does not use R’s RNG state.                                                                                                                                                     |
-| `base`      | `seq`             |                                                                                                                                                                                                                                                                                          |
-| `base`      | `seq_len`         |                                                                                                                                                                                                                                                                                          |
-| `base`      | `sin`             |                                                                                                                                                                                                                                                                                          |
-| `base`      | `sinh`            |                                                                                                                                                                                                                                                                                          |
-| `base`      | `sort`            | In `tidypolars`, `na.last` must be explicitly supplied as `TRUE` or `FALSE`.                                                                                                                                                                                                             |
-| `base`      | `sqrt`            |                                                                                                                                                                                                                                                                                          |
-| `base`      | `strptime`        |                                                                                                                                                                                                                                                                                          |
-| `base`      | `substr`          |                                                                                                                                                                                                                                                                                          |
-| `base`      | `tan`             |                                                                                                                                                                                                                                                                                          |
-| `base`      | `tanh`            |                                                                                                                                                                                                                                                                                          |
-| `base`      | `tolower`         |                                                                                                                                                                                                                                                                                          |
-| `base`      | `toupper`         |                                                                                                                                                                                                                                                                                          |
-| `base`      | `trunc`           | This only works with numeric data in `tidypolars`, while it works with other types (such as dates) in base R.                                                                                                                                                                            |
-| `base`      | `unique`          |                                                                                                                                                                                                                                                                                          |
-| `base`      | `which.min`       |                                                                                                                                                                                                                                                                                          |
-| `base`      | `which.max`       |                                                                                                                                                                                                                                                                                          |
-| `base`      | `%in%`            |                                                                                                                                                                                                                                                                                          |
-| `base`      | `%notin%`         |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `between`         |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `case_match`      |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `case_when`       |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `coalesce`        |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `consecutive_id`  |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `dense_rank`      |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `first`           |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `group_keys`      |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `group_vars`      |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `if_else`         |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `lag`             |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `lead`            |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `last`            |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `min_rank`        |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `n`               |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `near`            | tidypolars errors if `x` and `y` have different lengths, dplyr doesn’t.                                                                                                                                                                                                                  |
-| `dplyr`     | `nth`             |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `n_distinct`      |                                                                                                                                                                                                                                                                                          |
-| `dplyr`     | `recode_values`   | The `dplyr` functions will error if the type of the replacement doesn’t match the type of the column (for instance trying to replace a character with an integer). This works in `tidypolars`.                                                                                           |
-| `dplyr`     | `replace_values`  | The `dplyr` functions will error if the type of the replacement doesn’t match the type of the column (for instance trying to replace a character with an integer). This works in `tidypolars`.                                                                                           |
-| `dplyr`     | `replace_when`    | The `dplyr` function will error if the type of the replacement doesn’t match the type of the column (for instance trying to replace a character with an integer). This sometimes works in `tidypolars`.                                                                                  |
-| `dplyr`     | `row_number`      | Doesn’t work when `x` is missing.                                                                                                                                                                                                                                                        |
-| `dplyr`     | `when_all`        | Arguments `na_rm` and `size` not supported.                                                                                                                                                                                                                                              |
-| `dplyr`     | `when_any`        | Arguments `na_rm` and `size` not supported.                                                                                                                                                                                                                                              |
-| `lubridate` | `am`              | Contrarily to `lubridate`, this doesn’t work on dates, only datetimes.                                                                                                                                                                                                                   |
-| `lubridate` | `day`             |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `days`            |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `days_in_month`   |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `date`            |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `ddays`           |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `dhours`          |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `dmilliseconds`   |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `dminutes`        |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `dseconds`        |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `dweeks`          |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `force_tz`        | `tidypolars` cannot use several timezones in a single column, while [`lubridate::force_tz()`](https://lubridate.tidyverse.org/reference/force_tz.html) can.                                                                                                                              |
-| `lubridate` | `hours`           |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `leap_year`       |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `make_date`       | In `lubridate`, when there is an overflow in some of the components (for example `hours = 25` or `month = 15`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this errors.                                                                |
-| `lubridate` | `make_datetime`   | In `lubridate`, when there is an overflow in some of the components (for example `hours = 25` or `month = 15`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this errors.                                                                |
-| `lubridate` | `mday`            |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `microseconds`    |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `milliseconds`    |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `minutes`         |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `month`           |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `nanoseconds`     |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `now`             |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `pm`              | Contrarily to `lubridate`, this doesn’t work on dates, only datetimes.                                                                                                                                                                                                                   |
-| `lubridate` | `quarter`         |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `rollbackward`    | While time zone handling should mimick the behaviour of `lubridate` in most cases, it is possible that Polars errors if rolling back/forward leads to am ambiguous datetime. It is also possible to have some differences in hours/minutes/seconds when converting between Polars and R. |
-| `lubridate` | `rollback`        | While time zone handling should mimick the behaviour of `lubridate` in most cases, it is possible that Polars errors if rolling back/forward leads to am ambiguous datetime. It is also possible to have some differences in hours/minutes/seconds when converting between Polars and R. |
-| `lubridate` | `rollforward`     | While time zone handling should mimick the behaviour of `lubridate` in most cases, it is possible that Polars errors if rolling back/forward leads to am ambiguous datetime. It is also possible to have some differences in hours/minutes/seconds when converting between Polars and R. |
-| `lubridate` | `seconds`         |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `today`           |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `wday`            | `week_start` must be an integer in `tidypolars`. If `label = TRUE`, it returns a string variable and not a factor as in `lubridate`.                                                                                                                                                     |
-| `lubridate` | `weeks`           |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `with_tz`         | `tidypolars` cannot use several timezones in a single column, while [`lubridate::with_tz()`](https://lubridate.tidyverse.org/reference/with_tz.html) can. Unrecognized timezones and/or NULL are not supported and will throw an error.                                                  |
-| `lubridate` | `yday`            |                                                                                                                                                                                                                                                                                          |
-| `lubridate` | `year`            |                                                                                                                                                                                                                                                                                          |
-| `stats`     | `median`          |                                                                                                                                                                                                                                                                                          |
-| `stats`     | `lag`             |                                                                                                                                                                                                                                                                                          |
-| `stats`     | `sd`              |                                                                                                                                                                                                                                                                                          |
-| `stats`     | `var`             |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `regex`           |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_count`       |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_detect`      |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_dup`         |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_ends`        |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_equal`       |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_extract`     |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_extract_all` |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_length`      |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_pad`         |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_remove`      |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_remove_all`  |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_replace`     |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_replace_all` |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_replace_na`  |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_split`       |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_split_i`     |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_squish`      |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_starts`      |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_sub`         |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_trim`        |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_to_lower`    |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_to_title`    | Letters following apostrophe will be capitalized as well, which differs from the `stringr` implementation.                                                                                                                                                                               |
-| `stringr`   | `str_to_upper`    |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `str_trunc`       |                                                                                                                                                                                                                                                                                          |
-| `stringr`   | `word`            |                                                                                                                                                                                                                                                                                          |
-| `tidyr`     | `replace_na`      |                                                                                                                                                                                                                                                                                          |
-| `tools`     | `toTitleCase`     | Letters following apostrophe will be capitalized as well, which differs from the `tools` implementation.                                                                                                                                                                                 |
+| Package | Function | Notes |
+|:---|:---|:---|
+| `base` | `abs` |  |
+| `base` | `acos` |  |
+| `base` | `acosh` |  |
+| `base` | `all` |  |
+| `base` | `any` |  |
+| `base` | `anyNA` |  |
+| `base` | `asin` |  |
+| `base` | `asinh` |  |
+| `base` | `as.character` |  |
+| `base` | `as.Date` |  |
+| `base` | `as.logical` |  |
+| `base` | `as.numeric` |  |
+| `base` | `atan` |  |
+| `base` | `atanh` |  |
+| `base` | `ceiling` |  |
+| `base` | `cos` |  |
+| `base` | `cosh` |  |
+| `base` | `cummin` |  |
+| `base` | `cummax` |  |
+| `base` | `cumsum` |  |
+| `base` | `diff` |  |
+| `base` | `exp` |  |
+| `base` | `floor` |  |
+| `base` | `grepl` |  |
+| `base` | `gsub` |  |
+| `base` | `ifelse` |  |
+| `base` | `ISOdatetime` | In `base`, when there is an overflow in some of the components (for example `hours = 25` or `month = 15`), then it returns `NA`. In Polars, this errors. |
+| `base` | `is.finite` |  |
+| `base` | `is.infinite` |  |
+| `base` | `is.na` |  |
+| `base` | `is.nan` |  |
+| `base` | `length` |  |
+| `base` | `log` |  |
+| `base` | `log10` |  |
+| `base` | `max` |  |
+| `base` | `mean` |  |
+| `base` | `min` |  |
+| `base` | `nchar` |  |
+| `base` | `paste0` |  |
+| `base` | `paste` |  |
+| `base` | `rank` | In `tidypolars`, `na.last = NA` is not supported. |
+| `base` | `rev` |  |
+| `base` | `round` |  |
+| `base` | `sample` | [`set.seed()`](https://rdrr.io/r/base/Random.html) is not supported. Randomness is handled by Polars and does not use R’s RNG state. |
+| `base` | `seq` |  |
+| `base` | `seq_len` |  |
+| `base` | `sin` |  |
+| `base` | `sinh` |  |
+| `base` | `sort` | In `tidypolars`, `na.last` must be explicitly supplied as `TRUE` or `FALSE`. |
+| `base` | `sqrt` |  |
+| `base` | `strptime` |  |
+| `base` | `substr` |  |
+| `base` | `tan` |  |
+| `base` | `tanh` |  |
+| `base` | `tolower` |  |
+| `base` | `toupper` |  |
+| `base` | `trunc` | This only works with numeric data in `tidypolars`, while it works with other types (such as dates) in base R. |
+| `base` | `unique` |  |
+| `base` | `which.min` |  |
+| `base` | `which.max` |  |
+| `base` | `%in%` |  |
+| `base` | `%notin%` |  |
+| `dplyr` | `between` |  |
+| `dplyr` | `case_match` |  |
+| `dplyr` | `case_when` |  |
+| `dplyr` | `coalesce` |  |
+| `dplyr` | `consecutive_id` |  |
+| `dplyr` | `dense_rank` |  |
+| `dplyr` | `first` |  |
+| `dplyr` | `group_keys` |  |
+| `dplyr` | `group_vars` |  |
+| `dplyr` | `if_else` |  |
+| `dplyr` | `lag` |  |
+| `dplyr` | `lead` |  |
+| `dplyr` | `last` |  |
+| `dplyr` | `min_rank` |  |
+| `dplyr` | `n` |  |
+| `dplyr` | `near` | tidypolars errors if `x` and `y` have different lengths, dplyr doesn’t. |
+| `dplyr` | `nth` |  |
+| `dplyr` | `n_distinct` |  |
+| `dplyr` | `recode_values` | The `dplyr` functions will error if the type of the replacement doesn’t match the type of the column (for instance trying to replace a character with an integer). This works in `tidypolars`. |
+| `dplyr` | `replace_values` | The `dplyr` functions will error if the type of the replacement doesn’t match the type of the column (for instance trying to replace a character with an integer). This works in `tidypolars`. |
+| `dplyr` | `replace_when` | The `dplyr` function will error if the type of the replacement doesn’t match the type of the column (for instance trying to replace a character with an integer). This sometimes works in `tidypolars`. |
+| `dplyr` | `row_number` | Doesn’t work when `x` is missing. |
+| `dplyr` | `when_all` | Arguments `na_rm` and `size` not supported. |
+| `dplyr` | `when_any` | Arguments `na_rm` and `size` not supported. |
+| `lubridate` | `am` | Contrarily to `lubridate`, this doesn’t work on dates, only datetimes. |
+| `lubridate` | `day` |  |
+| `lubridate` | `days` |  |
+| `lubridate` | `days_in_month` |  |
+| `lubridate` | `date` |  |
+| `lubridate` | `ddays` |  |
+| `lubridate` | `dhours` |  |
+| `lubridate` | `dmilliseconds` |  |
+| `lubridate` | `dminutes` |  |
+| `lubridate` | `dseconds` |  |
+| `lubridate` | `dweeks` |  |
+| `lubridate` | `force_tz` | `tidypolars` cannot use several timezones in a single column, while [`lubridate::force_tz()`](https://lubridate.tidyverse.org/reference/force_tz.html) can. |
+| `lubridate` | `hours` |  |
+| `lubridate` | `leap_year` |  |
+| `lubridate` | `make_date` | In `lubridate`, when there is an overflow in some of the components (for example `hours = 25` or `month = 15`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this errors. |
+| `lubridate` | `make_datetime` | In `lubridate`, when there is an overflow in some of the components (for example `hours = 25` or `month = 15`), then it is automatically converted to the higher unit (for example 1 day and 1h). In Polars, this errors. |
+| `lubridate` | `mday` |  |
+| `lubridate` | `microseconds` |  |
+| `lubridate` | `milliseconds` |  |
+| `lubridate` | `minutes` |  |
+| `lubridate` | `month` |  |
+| `lubridate` | `nanoseconds` |  |
+| `lubridate` | `now` |  |
+| `lubridate` | `pm` | Contrarily to `lubridate`, this doesn’t work on dates, only datetimes. |
+| `lubridate` | `quarter` |  |
+| `lubridate` | `rollbackward` | While time zone handling should mimick the behaviour of `lubridate` in most cases, it is possible that Polars errors if rolling back/forward leads to am ambiguous datetime. It is also possible to have some differences in hours/minutes/seconds when converting between Polars and R. |
+| `lubridate` | `rollback` | While time zone handling should mimick the behaviour of `lubridate` in most cases, it is possible that Polars errors if rolling back/forward leads to am ambiguous datetime. It is also possible to have some differences in hours/minutes/seconds when converting between Polars and R. |
+| `lubridate` | `rollforward` | While time zone handling should mimick the behaviour of `lubridate` in most cases, it is possible that Polars errors if rolling back/forward leads to am ambiguous datetime. It is also possible to have some differences in hours/minutes/seconds when converting between Polars and R. |
+| `lubridate` | `seconds` |  |
+| `lubridate` | `today` |  |
+| `lubridate` | `wday` | `week_start` must be an integer in `tidypolars`. If `label = TRUE`, it returns a string variable and not a factor as in `lubridate`. |
+| `lubridate` | `weeks` |  |
+| `lubridate` | `with_tz` | `tidypolars` cannot use several timezones in a single column, while [`lubridate::with_tz()`](https://lubridate.tidyverse.org/reference/with_tz.html) can. Unrecognized timezones and/or NULL are not supported and will throw an error. |
+| `lubridate` | `yday` |  |
+| `lubridate` | `year` |  |
+| `stats` | `median` |  |
+| `stats` | `lag` |  |
+| `stats` | `sd` |  |
+| `stats` | `var` |  |
+| `stringr` | `regex` |  |
+| `stringr` | `str_count` |  |
+| `stringr` | `str_detect` |  |
+| `stringr` | `str_dup` |  |
+| `stringr` | `str_ends` |  |
+| `stringr` | `str_equal` |  |
+| `stringr` | `str_extract` |  |
+| `stringr` | `str_extract_all` |  |
+| `stringr` | `str_length` |  |
+| `stringr` | `str_pad` |  |
+| `stringr` | `str_remove` |  |
+| `stringr` | `str_remove_all` |  |
+| `stringr` | `str_replace` |  |
+| `stringr` | `str_replace_all` |  |
+| `stringr` | `str_replace_na` |  |
+| `stringr` | `str_split` |  |
+| `stringr` | `str_split_i` |  |
+| `stringr` | `str_squish` |  |
+| `stringr` | `str_starts` |  |
+| `stringr` | `str_sub` |  |
+| `stringr` | `str_trim` |  |
+| `stringr` | `str_to_lower` |  |
+| `stringr` | `str_to_title` | Letters following apostrophe will be capitalized as well, which differs from the `stringr` implementation. |
+| `stringr` | `str_to_upper` |  |
+| `stringr` | `str_trunc` |  |
+| `stringr` | `word` |  |
+| `tidyr` | `replace_na` |  |
+| `tools` | `toTitleCase` | Letters following apostrophe will be capitalized as well, which differs from the `tools` implementation. |

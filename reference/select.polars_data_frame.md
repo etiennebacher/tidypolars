@@ -28,6 +28,7 @@ select(.data, ...)
 ## Examples
 
 ``` r
+
 pl_iris <- polars::as_polars_df(iris)
 
 select(pl_iris, c("Sepal.Length", "Sepal.Width"))

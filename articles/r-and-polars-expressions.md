@@ -6,6 +6,7 @@ places: [`filter()`](https://dplyr.tidyverse.org/reference/filter.html),
 [`summarize()`](https://dplyr.tidyverse.org/reference/summarise.html).
 
 ``` r
+
 library(dplyr, warn.conflicts = FALSE)
 
 filter(mtcars, am + gear > carb)
@@ -82,6 +83,7 @@ in Polars. This is the case for the argument `trim` here. In this case,
 `tidypolars` ignores this argument and warns the user:
 
 ``` r
+
 library(tidypolars)
 library(polars)
 
@@ -124,6 +126,7 @@ syntax so that it returns a Polars expression. For example, we could
 make a function to standardize a column like this:
 
 ``` r
+
 pl_standardize <- function(x) {
   (x - x$mean()) / x$std()
 }
@@ -134,6 +137,7 @@ Remember that the column name used as `x` will end up wrapped into
 you have to provide a `pl$col()` call:
 
 ``` r
+
 pl_standardize(pl$col("mpg"))
 #> [([(col("mpg")) - (col("mpg").mean())]) / (col("mpg").std())]
 ```
@@ -142,6 +146,7 @@ This function correctly returns a Polars expression, so we can now use
 it like any other function:
 
 ``` r
+
 mtcars |>
   as_polars_df() |>
   mutate(x = pl_standardize(mpg))
@@ -173,6 +178,7 @@ a selection of columns. It accepts built-in functions, UDFs, and
 anonymous functions.
 
 ``` r
+
 mtcars |>
   as_polars_df() |>
   mutate(
@@ -205,6 +211,7 @@ Similarly, UDFs and anonymous functions will error if they don’t return
 a Polars expression:
 
 ``` r
+
 mtcars |>
   as_polars_df() |>
   mutate(
@@ -232,6 +239,7 @@ understand what [`agrep()`](https://rdrr.io/r/base/agrep.html) does
 here, you should only know that it is not translated by `tidypolars`):
 
 ``` r
+
 dat <- pl$DataFrame(a = c("d", "e", "f"), foo = c(2, 1, 2))
 
 dat |>
@@ -253,6 +261,7 @@ This is because `foo >= agrep("a", a)` uses the values from the columns
 Now, let’s assume that we have this data instead:
 
 ``` r
+
 dat <- pl$DataFrame(foo = c(2, 1, 2))
 a <- c("d", "e", "f")
 

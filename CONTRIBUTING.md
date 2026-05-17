@@ -48,6 +48,7 @@ is not yet supported (it actually is). We first define a simple test
 `data.frame` and its `DataFrame` counterpart in `polars`:
 
 ``` r
+
 library(dplyr, warn.conflicts = FALSE)
 library(stringr)
 library(polars)
@@ -61,6 +62,7 @@ Then, find the `polars` syntax that gives the same output as
 In this case, `polars` has a string methods `$ends_with()`:
 
 ``` r
+
 test |>
   mutate(ends_with_c = str_ends(x, "c"))
 ```
@@ -75,6 +77,7 @@ test |>
 ```
 
 ``` r
+
 test_pl$with_columns(
   ends_with_c = pl$col("x")$str$ends_with("c")
 )
@@ -106,6 +109,7 @@ Once we add support for the `negate` argument, this is what it will look
 like:
 
 ``` r
+
 pl_str_ends_stringr <- function(string, pattern, negate = FALSE, ...) {
   check_empty_dots(...)
   out <- string$str$ends_with(pattern)
@@ -137,6 +141,7 @@ Once the package is reloaded, we can use this function in a `tidypolars`
 workflow:
 
 ``` r
+
 library(tidypolars, warn.conflicts = FALSE)
 
 test_pl |>

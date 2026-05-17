@@ -223,6 +223,7 @@
   without loading `stringr` in the session:
 
   ``` r
+
   data |>
     mutate(y = .tp$str_extract_stringr(x, "\\d+"))
   ```
@@ -495,6 +496,7 @@
   Example:
 
   ``` r
+
   dat <- pl$DataFrame(foo = c(2, 1, 2))
   a <- c("d", "e", "f")
   dat |>
@@ -838,6 +840,7 @@
   now work when using a column from another data.frame, e.g.
 
   ``` r
+
   my_polars_df |>
     filter(x %in% some_data_frame$y)
   ```
@@ -1017,6 +1020,7 @@
   function is not supported here. For example:
 
   ``` r
+
   as_polars_df(mtcars) |>
     mutate(
       foo = 1,

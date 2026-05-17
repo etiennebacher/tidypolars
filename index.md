@@ -30,6 +30,7 @@ thorough, representative benchmarks about `polars`, take a look at
 [DuckDB benchmarks](https://duckdblabs.github.io/db-benchmark/) instead.
 
 ``` r
+
 library(collapse, warn.conflicts = FALSE)
 #> collapse 2.1.5, see ?`collapse-package` or ?`collapse-documentation`
 library(dplyr, warn.conflicts = FALSE)
@@ -122,6 +123,7 @@ means that `tidypolars` also can’t be on CRAN. However, you can install
 it from R-universe.
 
 ``` r
+
 Sys.setenv(NOT_CRAN = "true")
 install.packages("tidypolars", repos = c("https://community.r-multiverse.org", 'https://cloud.r-project.org'))
 ```
@@ -129,6 +131,7 @@ install.packages("tidypolars", repos = c("https://community.r-multiverse.org", '
 The development version contains the latest improvements and bug fixes:
 
 ``` r
+
 # install.packages("remotes")
 remotes::install_github(
   "etiennebacher/tidypolars",
