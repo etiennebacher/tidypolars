@@ -28,7 +28,7 @@
       
       	---> FAILED HERE RESOLVING THIS_NODE <---
       AGGREGATE[maintain_order: false]
-        [col("val").filter([(col("key")) == ("a")].all_horizontal([[(col("key_2")) == ("c")]])).item(allow_empty=true).alias("{"a","c"}"), col("val").filter([(col("key")) == ("b")].all_horizontal([[(col("key_2")) == ("d")]])).item(allow_empty=true).alias("{"b","d"}")] BY [col("a_c")]
+        [col("val").filter([(col("key")) ==v ("a")].all_horizontal([[(col("key_2")) ==v ("c")]])).item(allow_empty=true).alias("{"a","c"}"), col("val").filter([(col("key")) ==v ("b")].all_horizontal([[(col("key_2")) ==v ("d")]])).item(allow_empty=true).alias("{"b","d"}")] BY [col("a_c")]
         FROM
         DF ["a_c", "key", "key_2", "val"]; PROJECT */4 COLUMNS
 
