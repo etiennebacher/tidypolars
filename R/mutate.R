@@ -123,6 +123,7 @@ mutate.polars_data_frame <- function(
 
   used <- c()
   orig_names <- names(.data)
+  current_names <- orig_names
   grp_names <- grps
 
   for (i in seq_along(polars_exprs)) {
@@ -142,7 +143,7 @@ mutate.polars_data_frame <- function(
           modified_grps,
           "__"
         )
-        while (any(new_grp_names %in% c(names(.data), grp_names))) {
+        while (any(new_grp_names %in% c(current_names, grp_names))) {
           new_grp_names <- paste0("_", new_grp_names)
         }
         grp_exprs <- unname(Map(
@@ -151,6 +152,10 @@ mutate.polars_data_frame <- function(
           new_grp_names
         ))
         .data <- .data$with_columns(!!!grp_exprs)
+        current_names <- c(
+          current_names,
+          setdiff(new_grp_names, current_names)
+        )
         grp_names[modified_grps] <- new_grp_names
       }
     }
@@ -177,30 +182,33 @@ mutate.polars_data_frame <- function(
         })
       }
       .data <- .data$with_columns(!!!sub)
+      current_names <- c(current_names, setdiff(names(sub), current_names))
     }
 
-    to_drop <- intersect(to_drop, names(.data))
+    to_drop <- intersect(to_drop, current_names)
     if (length(to_drop) > 0) {
       .data <- .data$drop(to_drop)
+      current_names <- setdiff(current_names, to_drop)
     }
   }
 
   extra_grps <- setdiff(grp_names, grps)
   if (length(extra_grps) > 0) {
     .data <- .data$drop(extra_grps)
+    current_names <- setdiff(current_names, extra_grps)
   }
 
-  current_names <- names(.data)
   ordered_names <- c(
     intersect(orig_names, current_names),
     setdiff(current_names, orig_names)
   )
   if (!identical(current_names, ordered_names)) {
     .data <- .data$select(!!!ordered_names)
+    current_names <- ordered_names
   }
 
   if (.keep != "all") {
-    new_vars <- setdiff(names(.data), orig_names)
+    new_vars <- setdiff(current_names, orig_names)
     not_used <- setdiff(orig_names, used)
     not_used <- setdiff(not_used, grps)
     if (.keep == "used") {
