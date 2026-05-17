@@ -123,11 +123,13 @@ mutate.polars_data_frame <- function(
 
   used <- c()
   orig_names <- names(.data)
+  mutated_vars <- c()
 
   for (i in seq_along(polars_exprs)) {
     sub <- polars_exprs[[i]]
     to_drop <- names(empty_elems(sub))
     sub <- compact(sub)
+    mutated_vars <- c(mutated_vars, names(sub))
 
     used <- c(
       used,
@@ -159,15 +161,17 @@ mutate.polars_data_frame <- function(
   }
 
   if (.keep != "all") {
-    new_vars <- setdiff(names(.data), orig_names)
+    current_names <- names(.data)
+    always_keep <- unique(c(grps, mutated_vars))
     not_used <- setdiff(orig_names, used)
-    not_used <- setdiff(not_used, grps)
+    not_used <- setdiff(not_used, always_keep)
+    used <- setdiff(used, always_keep)
     if (.keep == "used") {
-      .data <- .data$drop(not_used)
+      .data <- .data$drop(intersect(not_used, current_names))
     } else if (.keep == "unused") {
-      .data <- .data$drop(used)
+      .data <- .data$drop(intersect(used, current_names))
     } else if (.keep == "none") {
-      .data <- .data$drop(c(not_used, used))
+      .data <- .data$drop(intersect(c(not_used, used), current_names))
     }
   }
 

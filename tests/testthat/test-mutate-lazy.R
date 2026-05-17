@@ -390,6 +390,84 @@ test_that("argument .keep works", {
   )
 })
 
+test_that("argument .keep preserves overwritten columns", {
+  test_df <- tibble(
+    x = c(1, 2, 3),
+    y = c(4, 5, 6)
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    mutate(test_pl, x = x + 1, .keep = "unused"),
+    mutate(test_df, x = x + 1, .keep = "unused")
+  )
+
+  expect_equal_lazy(
+    mutate(test_pl, x = y + 1, .keep = "used"),
+    mutate(test_df, x = y + 1, .keep = "used")
+  )
+
+  expect_equal_lazy(
+    mutate(test_pl, x = 1, .keep = "used"),
+    mutate(test_df, x = 1, .keep = "used")
+  )
+
+  expect_equal_lazy(
+    mutate(test_pl, x = x + 1, .keep = "none"),
+    mutate(test_df, x = x + 1, .keep = "none")
+  )
+})
+
+test_that("argument .keep works when columns are removed", {
+  test_df <- tibble(
+    x = c(1, 2, 3),
+    y = c(4, 5, 6),
+    z = c(7, 8, 9)
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    mutate(test_pl, y = NULL, new = x + z, .keep = "used"),
+    mutate(test_df, y = NULL, new = x + z, .keep = "used")
+  )
+
+  expect_equal_lazy(
+    mutate(test_pl, new = x + y, y = NULL, .keep = "unused"),
+    mutate(test_df, new = x + y, y = NULL, .keep = "unused")
+  )
+
+  expect_equal_lazy(
+    mutate(test_pl, y = NULL, new = x + z, .keep = "none"),
+    mutate(test_df, y = NULL, new = x + z, .keep = "none")
+  )
+})
+
+test_that("argument .keep preserves overwritten grouping columns", {
+  test_df <- tibble(
+    x = c(1, 2, 3),
+    y = c(4, 5, 6)
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |>
+      group_by(x) |>
+      mutate(x = x + 1, .keep = "unused") |>
+      ungroup(),
+    test_df |>
+      group_by(x) |>
+      mutate(x = x + 1, .keep = "unused") |>
+      ungroup()
+  )
+
+  expect_equal_lazy(
+    test_pl |>
+      mutate(x = x + 1, .by = x, .keep = "none"),
+    test_df |>
+      mutate(x = x + 1, .by = x, .keep = "none")
+  )
+})
+
 test_that("works with a local variable defined in a function", {
   foobar <- function(x) {
     local_var <- "a"
