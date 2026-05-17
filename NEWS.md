@@ -5,6 +5,11 @@
 * Added support for `%notin%` (#349).
 * Added support for `.before` and `.after` in `mutate()` (@Yousa-Mirage, #357).
 
+## Bug fixes
+
+* Fix `relocate()` to handle `<tidy-select>` helpers consistently with `dplyr`
+  (@Yousa-Mirage, #357).
+
 # tidypolars 0.18.0
 
 `tidypolars` requires `polars` >= 1.10.0.
