@@ -123,11 +123,31 @@ mutate.polars_data_frame <- function(
 
   used <- c()
   orig_names <- names(.data)
+  grp_names <- grps
 
   for (i in seq_along(polars_exprs)) {
     sub <- polars_exprs[[i]]
     to_drop <- names(empty_elems(sub))
     sub <- compact(sub)
+
+    if (is_grouped) {
+      modified_grps <- intersect(c(names(sub), to_drop), grps)
+      modified_grps <- match(modified_grps, grps)
+      modified_grps <- modified_grps[grp_names[modified_grps] == grps[modified_grps]]
+      if (length(modified_grps) > 0) {
+        new_grp_names <- paste0("__tidypolars_mutate_group_", modified_grps, "__")
+        while (any(new_grp_names %in% c(names(.data), grp_names))) {
+          new_grp_names <- paste0("_", new_grp_names)
+        }
+        grp_exprs <- unname(Map(
+          \(old, new) pl$col(old)$alias(new),
+          grps[modified_grps],
+          new_grp_names
+        ))
+        .data <- .data$with_columns(!!!grp_exprs)
+        grp_names[modified_grps] <- new_grp_names
+      }
+    }
 
     used <- c(
       used,
@@ -144,9 +164,9 @@ mutate.polars_data_frame <- function(
             if (!is.list(order_by)) {
               order_by <- list(order_by)
             }
-            x$over(!!!grps, order_by = order_by)
+            x$over(!!!grp_names, order_by = order_by)
           } else {
-            x$over(!!!grps)
+            x$over(!!!grp_names)
           }
         })
       }
@@ -157,6 +177,11 @@ mutate.polars_data_frame <- function(
     if (length(to_drop) > 0) {
       .data <- .data$drop(to_drop)
     }
+  }
+
+  extra_grps <- setdiff(grp_names, grps)
+  if (length(extra_grps) > 0) {
+    .data <- .data$drop(extra_grps)
   }
 
   current_names <- names(.data)

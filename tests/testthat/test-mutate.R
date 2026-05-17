@@ -203,6 +203,28 @@ test_that("operations on grouped data work", {
       attr("maintain_grp_order")
   )
 
+  expect_equal(
+    test_pl |>
+      mutate(Species = NULL, Species = Sepal.Width + 1, .by = Species),
+    test_df |>
+      mutate(Species = NULL, Species = Sepal.Width + 1, .by = Species)
+  )
+
+  expect_equal(
+    test_pl |>
+      mutate(
+        Species = Sepal.Width + 1,
+        foo = mean(Sepal.Length),
+        .by = Species,
+      ),
+    test_df |>
+      mutate(
+        Species = Sepal.Width + 1,
+        foo = mean(Sepal.Length),
+        .by = Species,
+      )
+  )
+
   test_df <- as_tibble(mtcars)
   test_pl <- as_polars_df(test_df)
 
@@ -218,12 +240,58 @@ test_that("operations on grouped data work", {
     tolerance = 1e-5
   )
 
+  expect_equal(
+    test_pl |>
+      group_by(cyl, am) |>
+      mutate(
+        cyl = NULL,
+        cyl = disp + 1,
+        hp2 = mean(hp),
+        am = NULL,
+        am = gear + 1
+      ) |>
+      ungroup(),
+    test_df |>
+      group_by(cyl, am) |>
+      mutate(
+        cyl = NULL,
+        cyl = disp + 1,
+        hp2 = mean(hp),
+        am = NULL,
+        am = gear + 1
+      ) |>
+      ungroup(),
+    tolerance = 1e-5
+  )
+
   test_df <- as_tibble(iris)
   test_pl <- as_polars_df(test_df)
 
   expect_colnames(
     test_pl |> group_by(Species) |> mutate(Sepal.Length = NULL),
     names(test_df)[2:5]
+  )
+
+  expect_equal(
+    test_pl |>
+      group_by(Species) |>
+      mutate(Species = NULL, Species = Sepal.Width + 1) |>
+      ungroup(),
+    test_df |>
+      group_by(Species) |>
+      mutate(Species = NULL, Species = Sepal.Width + 1) |>
+      ungroup()
+  )
+
+  expect_equal(
+    test_pl |>
+      group_by(Species) |>
+      mutate(Species = Sepal.Width + 1, foo = mean(Sepal.Length)) |>
+      ungroup(),
+    test_df |>
+      group_by(Species) |>
+      mutate(Species = Sepal.Width + 1, foo = mean(Sepal.Length)) |>
+      ungroup()
   )
 
   test_df <- as_tibble(mtcars)
