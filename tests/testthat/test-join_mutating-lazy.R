@@ -62,6 +62,28 @@ test_that("basic behavior works", {
   )
 })
 
+test_that("natural joins preserve x column order", {
+  skip_if_not_installed("withr")
+  withr::local_options(list(rlib_message_verbosity = "quiet"))
+  test_df <- tibble(
+    id = c(1, 2, 3),
+    value = c("a", "b", "c"),
+    shared = c("sx1", "sx2", "sx3")
+  )
+  test2_df <- tibble(
+    id = c(1, 3, 4),
+    extra = c("u", "v", "w"),
+    shared = c("sy1", "sy3", "sy4")
+  )
+  test_pl <- as_polars_lf(test_df)
+  test2_pl <- as_polars_lf(test2_df)
+
+  expect_equal_lazy(
+    left_join(test_pl, test2_pl),
+    left_join(test_df, test2_df)
+  )
+})
+
 test_that("works if join by different variable names", {
   test_df <- tibble(
     x = c(1, 2, 3),

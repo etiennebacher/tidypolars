@@ -512,16 +512,16 @@ join_ <- function(x, y, by = NULL, how, suffix, na_matches, relationship) {
 
   if (!how %in% c("semi", "anti")) {
     x_out <- ifelse(
-      x_non_keys %in% dupes,
-      paste0(x_non_keys, suffix[1]),
-      x_non_keys
+      names(x) %in% dupes,
+      paste0(names(x), suffix[1]),
+      names(x)
     )
     y_out <- ifelse(
       y_non_keys %in% dupes,
       paste0(y_non_keys, suffix[2]),
       y_non_keys
     )
-    out <- out$select(!!!c(left_on, x_out, y_out))
+    out <- out$select(!!!c(x_out, y_out))
   }
 
   add_tidypolars_class(out)
