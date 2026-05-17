@@ -29,6 +29,8 @@
 #'   used to generate them.
 #' * `"none"` doesn't retain any extra columns from `.data`. Only the grouping
 #'   variables and columns created by `...` are kept.
+#' @param .before,.after <[`tidy-select`][dplyr::dplyr_tidy_select]>
+#'   Optionally, control where new columns should appear.
 #'
 #' @details
 #'
@@ -104,9 +106,13 @@ mutate.polars_data_frame <- function(
   .data,
   ...,
   .by = NULL,
-  .keep = c("all", "used", "unused", "none")
+  .keep = c("all", "used", "unused", "none"),
+  .before = NULL,
+  .after = NULL
 ) {
   .keep <- rlang::arg_match0(.keep, values = c("all", "used", "unused", "none"))
+  .before <- rlang::enquo(.before)
+  .after <- rlang::enquo(.after)
 
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order %||% FALSE
@@ -158,8 +164,22 @@ mutate.polars_data_frame <- function(
     }
   }
 
+  new_vars <- setdiff(names(.data), orig_names)
+  if (!rlang::quo_is_null(.before) && !rlang::quo_is_null(.after)) {
+    .data <- rlang::inject(
+      relocate(.data, all_of(new_vars), .before = !!.before, .after = !!.after)
+    )
+  } else if (!rlang::quo_is_null(.before)) {
+    .data <- rlang::inject(
+      relocate(.data, all_of(new_vars), .before = !!.before)
+    )
+  } else if (!rlang::quo_is_null(.after)) {
+    .data <- rlang::inject(
+      relocate(.data, all_of(new_vars), .after = !!.after)
+    )
+  }
+
   if (.keep != "all") {
-    new_vars <- setdiff(names(.data), orig_names)
     not_used <- setdiff(orig_names, used)
     not_used <- setdiff(not_used, grps)
     if (.keep == "used") {

@@ -3,6 +3,7 @@
 ## New features
 
 * Added support for `%notin%` (#349).
+* Added support for `.before` and `.after` in `mutate()` (@Yousa-Mirage, #357).
 
 # tidypolars 0.18.0
 

@@ -5,9 +5,23 @@
 \alias{mutate.polars_lazy_frame}
 \title{Create, modify, and delete columns}
 \usage{
-\method{mutate}{polars_data_frame}(.data, ..., .by = NULL, .keep = c("all", "used", "unused", "none"))
+\method{mutate}{polars_data_frame}(
+  .data,
+  ...,
+  .by = NULL,
+  .keep = c("all", "used", "unused", "none"),
+  .before = NULL,
+  .after = NULL
+)
 
-\method{mutate}{polars_lazy_frame}(.data, ..., .by = NULL, .keep = c("all", "used", "unused", "none"))
+\method{mutate}{polars_lazy_frame}(
+  .data,
+  ...,
+  .by = NULL,
+  .keep = c("all", "used", "unused", "none"),
+  .before = NULL,
+  .after = NULL
+)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
@@ -41,6 +55,9 @@ used to generate them.
 \item \code{"none"} doesn't retain any extra columns from \code{.data}. Only the grouping
 variables and columns created by \code{...} are kept.
 }}
+
+\item{.before, .after}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}>
+Optionally, control where new columns should appear.}
 }
 \description{
 This creates new columns that are functions of existing variables. It

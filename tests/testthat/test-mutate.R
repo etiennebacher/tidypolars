@@ -386,6 +386,70 @@ test_that("argument .keep works", {
   )
 })
 
+test_that("arguments .before and .after work", {
+  test_df <- as_tibble(iris)
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    mutate(test_pl, x = Sepal.Length + Sepal.Width, .before = Sepal.Width),
+    mutate(test_df, x = Sepal.Length + Sepal.Width, .before = Sepal.Width)
+  )
+
+  expect_equal(
+    mutate(test_pl, x = Sepal.Length, y = Sepal.Width, .after = Sepal.Width),
+    mutate(test_df, x = Sepal.Length, y = Sepal.Width, .after = Sepal.Width)
+  )
+
+  expect_equal(
+    mutate(test_pl, Sepal.Width = Sepal.Width * 2, .before = Sepal.Length),
+    mutate(test_df, Sepal.Width = Sepal.Width * 2, .before = Sepal.Length)
+  )
+
+  expect_equal(
+    mutate(
+      test_pl,
+      x = Sepal.Length,
+      y = Species,
+      .keep = "used",
+      .before = Species
+    ),
+    mutate(
+      test_df,
+      x = Sepal.Length,
+      y = Species,
+      .keep = "used",
+      .before = Species
+    )
+  )
+
+  expect_equal(
+    mutate(
+      test_pl,
+      x = Sepal.Length,
+      y = Species,
+      .keep = "unused",
+      .before = Petal.Length
+    ),
+    mutate(
+      test_df,
+      x = Sepal.Length,
+      y = Species,
+      .keep = "unused",
+      .before = Petal.Length
+    )
+  )
+
+  expect_equal(
+    mutate(test_pl, x = Sepal.Length, .before = NULL, .after = Sepal.Width),
+    mutate(test_df, x = Sepal.Length, .before = NULL, .after = Sepal.Width)
+  )
+
+  expect_equal(
+    mutate(test_pl, x = Sepal.Length, .before = Sepal.Width, .after = NULL),
+    mutate(test_df, x = Sepal.Length, .before = Sepal.Width, .after = NULL)
+  )
+})
+
 test_that("works with a local variable defined in a function", {
   foobar <- function(x) {
     local_var <- "a"
