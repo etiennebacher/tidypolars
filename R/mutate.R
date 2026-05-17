@@ -133,9 +133,15 @@ mutate.polars_data_frame <- function(
     if (is_grouped) {
       modified_grps <- intersect(c(names(sub), to_drop), grps)
       modified_grps <- match(modified_grps, grps)
-      modified_grps <- modified_grps[grp_names[modified_grps] == grps[modified_grps]]
+      modified_grps <- modified_grps[
+        grp_names[modified_grps] == grps[modified_grps]
+      ]
       if (length(modified_grps) > 0) {
-        new_grp_names <- paste0("__tidypolars_mutate_group_", modified_grps, "__")
+        new_grp_names <- paste0(
+          "__tidypolars_mutate_group_",
+          modified_grps,
+          "__"
+        )
         while (any(new_grp_names %in% c(names(.data), grp_names))) {
           new_grp_names <- paste0("_", new_grp_names)
         }
