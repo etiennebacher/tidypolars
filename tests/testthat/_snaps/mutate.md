@@ -39,3 +39,38 @@
       Error in `mutate()`:
       ! `.keep` must be one of "all", "used", "unused", or "none", not "foo".
 
+# arguments .before and .after error consistently
+
+    Code
+      mutate(test_pl, x = Sepal.Length, .before = missing_col)
+    Condition
+      Error in `relocate()`:
+      ! Can't select columns that don't exist.
+      x Column `missing_col` doesn't exist.
+
+---
+
+    Code
+      mutate(test_pl, x = Sepal.Length, .after = missing_col)
+    Condition
+      Error in `relocate()`:
+      ! Can't select columns that don't exist.
+      x Column `missing_col` doesn't exist.
+
+---
+
+    Code
+      mutate(test_pl, x = Sepal.Length, .before = Sepal.Width, .after = Species)
+    Condition
+      Error in `relocate()`:
+      ! You can specify either `.before` or `.after` but not both.
+
+---
+
+    Code
+      mutate(test_pl, Sepal.Width = Sepal.Width * 2, .before = missing_col)
+    Condition
+      Error in `relocate()`:
+      ! Can't select columns that don't exist.
+      x Column `missing_col` doesn't exist.
+

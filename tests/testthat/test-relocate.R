@@ -54,6 +54,26 @@ test_that("select helpers are also available", {
     test_pl |> relocate(hp, vs, .before = last_col()),
     test_df |> relocate(hp, vs, .before = last_col())
   )
+
+  expect_equal(
+    test_pl |> relocate(hp, .before = starts_with("c")),
+    test_df |> relocate(hp, .before = starts_with("c"))
+  )
+
+  expect_equal(
+    test_pl |> relocate(hp, .after = starts_with("c")),
+    test_df |> relocate(hp, .after = starts_with("c"))
+  )
+
+  expect_equal(
+    test_pl |> relocate(hp, .before = starts_with("not found")),
+    test_df |> relocate(hp, .before = starts_with("not found"))
+  )
+
+  expect_equal(
+    test_pl |> relocate(hp, .after = starts_with("not found")),
+    test_df |> relocate(hp, .after = starts_with("not found"))
+  )
 })
 
 test_that("error cases work", {

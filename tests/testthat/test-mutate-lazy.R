@@ -454,6 +454,76 @@ test_that("arguments .before and .after work", {
   )
 })
 
+test_that("arguments .before and .after work for tidy-select", {
+  test_df <- as_tibble(iris)
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    mutate(test_pl, x = Sepal.Length, .before = "Species"),
+    mutate(test_df, x = Sepal.Length, .before = "Species")
+  )
+
+  expect_equal_lazy(
+    mutate(test_pl, x = Sepal.Length, .before = 3),
+    mutate(test_df, x = Sepal.Length, .before = 3)
+  )
+
+  expect_equal_lazy(
+    mutate(test_pl, x = Sepal.Length, .after = last_col()),
+    mutate(test_df, x = Sepal.Length, .after = last_col())
+  )
+
+  expect_equal_lazy(
+    mutate(test_pl, x = Sepal.Length, .before = starts_with("Petal")),
+    mutate(test_df, x = Sepal.Length, .before = starts_with("Petal"))
+  )
+
+  expect_equal_lazy(
+    mutate(test_pl, x = Sepal.Length, .after = where(is.numeric)),
+    mutate(test_df, x = Sepal.Length, .after = where(is.numeric))
+  )
+
+  expect_equal_lazy(
+    mutate(test_pl, x = Sepal.Length, .before = starts_with("not found")),
+    mutate(test_df, x = Sepal.Length, .before = starts_with("not found"))
+  )
+
+  expect_equal_lazy(
+    mutate(test_pl, x = Sepal.Length, .after = starts_with("not found")),
+    mutate(test_df, x = Sepal.Length, .after = starts_with("not found"))
+  )
+})
+
+test_that("arguments .before and .after error consistently", {
+  test_df <- as_tibble(iris)
+  test_pl <- as_polars_lf(test_df)
+
+  expect_snapshot_lazy(
+    mutate(test_pl, x = Sepal.Length, .before = missing_col),
+    error = TRUE
+  )
+
+  expect_snapshot_lazy(
+    mutate(test_pl, x = Sepal.Length, .after = missing_col),
+    error = TRUE
+  )
+
+  expect_snapshot_lazy(
+    mutate(
+      test_pl,
+      x = Sepal.Length,
+      .before = Sepal.Width,
+      .after = Species
+    ),
+    error = TRUE
+  )
+
+  expect_snapshot_lazy(
+    mutate(test_pl, Sepal.Width = Sepal.Width * 2, .before = missing_col),
+    error = TRUE
+  )
+})
+
 test_that("works with a local variable defined in a function", {
   foobar <- function(x) {
     local_var <- "a"
