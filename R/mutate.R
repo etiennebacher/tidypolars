@@ -153,9 +153,19 @@ mutate.polars_data_frame <- function(
       .data <- .data$with_columns(!!!sub)
     }
 
+    to_drop <- intersect(to_drop, names(.data))
     if (length(to_drop) > 0) {
       .data <- .data$drop(to_drop)
     }
+  }
+
+  current_names <- names(.data)
+  ordered_names <- c(
+    intersect(orig_names, current_names),
+    setdiff(current_names, orig_names)
+  )
+  if (!identical(current_names, ordered_names)) {
+    .data <- .data$select(!!!ordered_names)
   }
 
   if (.keep != "all") {

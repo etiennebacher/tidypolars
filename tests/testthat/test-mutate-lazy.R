@@ -155,6 +155,16 @@ test_that("dropping columns works", {
     mutate(test_pl, Sepal.Length = 1, Species = NULL),
     names(test_df)[1:4]
   )
+
+  expect_equal_lazy(
+    mutate(test_pl, missing = NULL),
+    mutate(test_df, missing = NULL)
+  )
+
+  expect_equal_lazy(
+    mutate(test_pl, Sepal.Length = NULL, Sepal.Length = Sepal.Width + 1),
+    mutate(test_df, Sepal.Length = NULL, Sepal.Length = Sepal.Width + 1)
+  )
 })
 
 test_that("operations on grouped data work", {

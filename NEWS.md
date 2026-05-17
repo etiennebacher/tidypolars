@@ -4,6 +4,11 @@
 
 * Added support for `%notin%` (#349).
 
+## Bug fixes
+
+* Fix `mutate()` when removing columns to be consistent with `dplyr`
+  (@Yousa-Mirage, #355).
+
 # tidypolars 0.18.0
 
 `tidypolars` requires `polars` >= 1.10.0.
