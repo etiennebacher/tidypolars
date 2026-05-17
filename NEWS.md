@@ -6,7 +6,7 @@
 
 ## Bug fixes
 
-* Fix `mutate()` when removing columns to be consistent with `dplyr`
+* Better consistency with `dplyr` when using `NULL` in `mutate()` to drop columns
   (@Yousa-Mirage, #355).
 
 # tidypolars 0.18.0
