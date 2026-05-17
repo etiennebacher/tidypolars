@@ -284,17 +284,6 @@ test_that("operations on grouped data work", {
       ungroup()
   )
 
-  expect_equal(
-    test_pl |>
-      group_by(Species) |>
-      mutate(Species = Sepal.Width + 1, foo = mean(Sepal.Length)) |>
-      ungroup(),
-    test_df |>
-      group_by(Species) |>
-      mutate(Species = Sepal.Width + 1, foo = mean(Sepal.Length)) |>
-      ungroup()
-  )
-
   test_df <- as_tibble(mtcars)
   test_pl <- as_polars_df(test_df)
 

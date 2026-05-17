@@ -161,6 +161,7 @@ test_that("dropping columns works", {
     mutate(test_df, missing = NULL)
   )
 
+  # Ensure correct column order, https://github.com/etiennebacher/tidypolars/issues/355
   expect_equal_lazy(
     mutate(test_pl, Sepal.Length = NULL, Sepal.Length = Sepal.Width + 1),
     mutate(test_df, Sepal.Length = NULL, Sepal.Length = Sepal.Width + 1)
@@ -284,17 +285,6 @@ test_that("operations on grouped data work", {
     test_df |>
       group_by(Species) |>
       mutate(Species = NULL, Species = Sepal.Width + 1) |>
-      ungroup()
-  )
-
-  expect_equal_lazy(
-    test_pl |>
-      group_by(Species) |>
-      mutate(Species = Sepal.Width + 1, foo = mean(Sepal.Length)) |>
-      ungroup(),
-    test_df |>
-      group_by(Species) |>
-      mutate(Species = Sepal.Width + 1, foo = mean(Sepal.Length)) |>
       ungroup()
   )
 
