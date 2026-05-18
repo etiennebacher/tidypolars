@@ -155,6 +155,17 @@ test_that("dropping columns works", {
     mutate(test_pl, Sepal.Length = 1, Species = NULL),
     names(test_df)[1:4]
   )
+
+  expect_equal_lazy(
+    mutate(test_pl, missing = NULL),
+    mutate(test_df, missing = NULL)
+  )
+
+  # Ensure correct column order, https://github.com/etiennebacher/tidypolars/issues/355
+  expect_equal_lazy(
+    mutate(test_pl, Sepal.Length = NULL, Sepal.Length = Sepal.Width + 1),
+    mutate(test_df, Sepal.Length = NULL, Sepal.Length = Sepal.Width + 1)
+  )
 })
 
 test_that("operations on grouped data work", {
@@ -197,6 +208,28 @@ test_that("operations on grouped data work", {
       attr("maintain_grp_order")
   )
 
+  expect_equal_lazy(
+    test_pl |>
+      mutate(Species = NULL, Species = Sepal.Width + 1, .by = Species),
+    test_df |>
+      mutate(Species = NULL, Species = Sepal.Width + 1, .by = Species)
+  )
+
+  expect_equal_lazy(
+    test_pl |>
+      mutate(
+        Species = Sepal.Width + 1,
+        foo = mean(Sepal.Length),
+        .by = Species,
+      ),
+    test_df |>
+      mutate(
+        Species = Sepal.Width + 1,
+        foo = mean(Sepal.Length),
+        .by = Species,
+      )
+  )
+
   test_df <- as_tibble(mtcars)
   test_pl <- as_polars_lf(test_df)
 
@@ -212,12 +245,47 @@ test_that("operations on grouped data work", {
     tolerance = 1e-5
   )
 
+  expect_equal_lazy(
+    test_pl |>
+      group_by(cyl, am) |>
+      mutate(
+        cyl = NULL,
+        cyl = disp + 1,
+        hp2 = mean(hp),
+        am = NULL,
+        am = gear + 1
+      ) |>
+      ungroup(),
+    test_df |>
+      group_by(cyl, am) |>
+      mutate(
+        cyl = NULL,
+        cyl = disp + 1,
+        hp2 = mean(hp),
+        am = NULL,
+        am = gear + 1
+      ) |>
+      ungroup(),
+    tolerance = 1e-5
+  )
+
   test_df <- as_tibble(iris)
   test_pl <- as_polars_lf(test_df)
 
   expect_colnames(
     test_pl |> group_by(Species) |> mutate(Sepal.Length = NULL),
     names(test_df)[2:5]
+  )
+
+  expect_equal_lazy(
+    test_pl |>
+      group_by(Species) |>
+      mutate(Species = NULL, Species = Sepal.Width + 1) |>
+      ungroup(),
+    test_df |>
+      group_by(Species) |>
+      mutate(Species = NULL, Species = Sepal.Width + 1) |>
+      ungroup()
   )
 
   test_df <- as_tibble(mtcars)
