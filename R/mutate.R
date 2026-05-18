@@ -29,6 +29,9 @@
 #'   used to generate them.
 #' * `"none"` doesn't retain any extra columns from `.data`. Only the grouping
 #'   variables and columns created by `...` are kept.
+#' @param .before,.after <[`tidy-select`][dplyr::dplyr_tidy_select]>
+#'   Optionally, control where new columns should appear (the default is to add
+#'   to the right hand side). See [relocate()] for more details.
 #'
 #' @details
 #'
@@ -104,9 +107,13 @@ mutate.polars_data_frame <- function(
   .data,
   ...,
   .by = NULL,
-  .keep = c("all", "used", "unused", "none")
+  .keep = c("all", "used", "unused", "none"),
+  .before = NULL,
+  .after = NULL
 ) {
   .keep <- rlang::arg_match0(.keep, values = c("all", "used", "unused", "none"))
+  .before <- rlang::enquo(.before)
+  .after <- rlang::enquo(.after)
 
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order %||% FALSE
@@ -125,11 +132,13 @@ mutate.polars_data_frame <- function(
   orig_names <- names(.data)
   current_names <- orig_names
   grp_names <- grps
+  mutated_vars <- c()
 
   for (i in seq_along(polars_exprs)) {
     sub <- polars_exprs[[i]]
     to_drop <- names(empty_elems(sub))
     sub <- compact(sub)
+    mutated_vars <- c(mutated_vars, names(sub))
 
     if (is_grouped) {
       modified_grps <- intersect(c(names(sub), to_drop), grps)
@@ -207,16 +216,34 @@ mutate.polars_data_frame <- function(
     current_names <- ordered_names
   }
 
+  new_vars <- intersect(
+    setdiff(unique(mutated_vars), orig_names),
+    current_names
+  )
+  if (!rlang::quo_is_null(.before) && !rlang::quo_is_null(.after)) {
+    .data <- relocate(
+      .data,
+      all_of(new_vars),
+      .before = !!.before,
+      .after = !!.after
+    )
+  } else if (!rlang::quo_is_null(.before)) {
+    .data <- relocate(.data, all_of(new_vars), .before = !!.before)
+  } else if (!rlang::quo_is_null(.after)) {
+    .data <- relocate(.data, all_of(new_vars), .after = !!.after)
+  }
+
   if (.keep != "all") {
-    new_vars <- setdiff(current_names, orig_names)
+    always_keep <- unique(c(grps, mutated_vars))
     not_used <- setdiff(orig_names, used)
-    not_used <- setdiff(not_used, grps)
+    not_used <- setdiff(not_used, always_keep)
+    used <- setdiff(used, always_keep)
     if (.keep == "used") {
-      .data <- .data$drop(not_used)
+      .data <- .data$drop(intersect(not_used, current_names))
     } else if (.keep == "unused") {
-      .data <- .data$drop(used)
+      .data <- .data$drop(intersect(used, current_names))
     } else if (.keep == "none") {
-      .data <- .data$drop(c(not_used, used))
+      .data <- .data$drop(intersect(c(not_used, used), current_names))
     }
   }
 

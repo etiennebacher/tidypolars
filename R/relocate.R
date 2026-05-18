@@ -64,14 +64,22 @@ relocate.polars_data_frame <- function(
   not_moving <- setdiff(names_data, vars)
 
   if (where == "BEFORE") {
-    limit <- which(names_data == .before) - 1
+    limit <- if (is.null(.before)) {
+      0
+    } else {
+      which(names_data == .before[1]) - 1
+    }
     lhs <- names_data[seq_len(limit)]
     lhs <- lhs[which(lhs %in% not_moving)]
     rhs <- names_data[seq(limit + 1, ncol(.data))]
     rhs <- rhs[which(rhs %in% not_moving)]
     new_order <- c(lhs, vars, rhs)
   } else if (where == "AFTER") {
-    limit <- which(names_data == .after)
+    limit <- if (is.null(.after)) {
+      ncol(.data)
+    } else {
+      which(names_data == .after[length(.after)])
+    }
     lhs <- names_data[seq_len(limit)]
     lhs <- lhs[which(lhs %in% not_moving)]
     # we don't have RHS if we relocate columns to be in the last position
