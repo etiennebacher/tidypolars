@@ -8,10 +8,24 @@ delete columns (by setting their value to NULL).
 
 ``` r
 # S3 method for class 'polars_data_frame'
-mutate(.data, ..., .by = NULL, .keep = c("all", "used", "unused", "none"))
+mutate(
+  .data,
+  ...,
+  .by = NULL,
+  .keep = c("all", "used", "unused", "none"),
+  .before = NULL,
+  .after = NULL
+)
 
 # S3 method for class 'polars_lazy_frame'
-mutate(.data, ..., .by = NULL, .keep = c("all", "used", "unused", "none"))
+mutate(
+  .data,
+  ...,
+  .by = NULL,
+  .keep = c("all", "used", "unused", "none"),
+  .before = NULL,
+  .after = NULL
+)
 ```
 
 ## Arguments
@@ -63,6 +77,14 @@ mutate(.data, ..., .by = NULL, .keep = c("all", "used", "unused", "none"))
 
   - `"none"` doesn't retain any extra columns from `.data`. Only the
     grouping variables and columns created by `...` are kept.
+
+- .before, .after:
+
+  \<[`tidy-select`](https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html)\>
+  Optionally, control where new columns should appear (the default is to
+  add to the right hand side). See
+  [`dplyr::relocate()`](https://dplyr.tidyverse.org/reference/relocate.html)
+  for more details.
 
 ## Details
 
