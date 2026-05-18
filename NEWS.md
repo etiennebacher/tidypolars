@@ -9,13 +9,10 @@
 
 * Fix `.keep` in `mutate()` to avoid accidentally dropping columns
   (@Yousa-Mirage, #353).
+* Better consistency with `dplyr` when using `NULL` in `mutate()` to drop
+  columns (@Yousa-Mirage, #355).
 * Fix `relocate()` to handle `<tidy-select>` helpers consistently with `dplyr`
   (@Yousa-Mirage, #357).
-
-## Bug fixes
-
-* Better consistency with `dplyr` when using `NULL` in `mutate()` to drop columns
-  (@Yousa-Mirage, #355).
 
 # tidypolars 0.18.0
 
