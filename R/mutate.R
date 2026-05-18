@@ -129,11 +129,14 @@ mutate.polars_data_frame <- function(
 
   used <- c()
   orig_names <- names(.data)
+  current_names <- orig_names
+  mutated_vars <- c()
 
   for (i in seq_along(polars_exprs)) {
     sub <- polars_exprs[[i]]
     to_drop <- names(empty_elems(sub))
     sub <- compact(sub)
+    mutated_vars <- c(mutated_vars, names(sub))
 
     used <- c(
       used,
@@ -157,14 +160,17 @@ mutate.polars_data_frame <- function(
         })
       }
       .data <- .data$with_columns(!!!sub)
+      current_names <- c(current_names, setdiff(names(sub), current_names))
     }
 
+    to_drop <- intersect(to_drop, current_names)
     if (length(to_drop) > 0) {
       .data <- .data$drop(to_drop)
+      current_names <- setdiff(current_names, to_drop)
     }
   }
 
-  new_vars <- setdiff(names(.data), orig_names)
+  new_vars <- intersect(setdiff(unique(mutated_vars), orig_names), current_names)
   if (!rlang::quo_is_null(.before) && !rlang::quo_is_null(.after)) {
     .data <- rlang::inject(
       relocate(.data, all_of(new_vars), .before = !!.before, .after = !!.after)
@@ -180,14 +186,16 @@ mutate.polars_data_frame <- function(
   }
 
   if (.keep != "all") {
+    always_keep <- unique(c(grps, mutated_vars))
     not_used <- setdiff(orig_names, used)
-    not_used <- setdiff(not_used, grps)
+    not_used <- setdiff(not_used, always_keep)
+    used <- setdiff(used, always_keep)
     if (.keep == "used") {
-      .data <- .data$drop(not_used)
+      .data <- .data$drop(intersect(not_used, current_names))
     } else if (.keep == "unused") {
-      .data <- .data$drop(used)
+      .data <- .data$drop(intersect(used, current_names))
     } else if (.keep == "none") {
-      .data <- .data$drop(c(not_used, used))
+      .data <- .data$drop(intersect(c(not_used, used), current_names))
     }
   }
 

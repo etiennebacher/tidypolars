@@ -10,6 +10,10 @@
 * Fix `relocate()` to handle `<tidy-select>` helpers consistently with `dplyr`
   (@Yousa-Mirage, #357).
 
+## Bug fixes
+
+- Fix `.keep` in `mutate()` to avoid accidentally dropping columns (@Yousa-Mirage, #353).
+
 # tidypolars 0.18.0
 
 `tidypolars` requires `polars` >= 1.10.0.
