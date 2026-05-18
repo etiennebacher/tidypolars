@@ -108,5 +108,5 @@ during the query can lead to an output that has more rows than `n_rows`.
 
 ## See also
 
-[`dplyr::collect()`](https://dplyr.tidyverse.org/reference/compute.html)
-for applying a lazy query on the full data.
+[`collect()`](https://dplyr.tidyverse.org/reference/compute.html) for
+applying a lazy query on the full data.

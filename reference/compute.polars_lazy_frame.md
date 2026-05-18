@@ -15,8 +15,8 @@ These two functions differ in their output type:
 
 - [`collect()`](https://dplyr.tidyverse.org/reference/compute.html)
   returns a
-  [tibble::tibble](https://tibble.tidyverse.org/reference/tibble.html).
-  This operation consumes more memory and takes longer than
+  [tibble](https://tibble.tidyverse.org/reference/tibble.html). This
+  operation consumes more memory and takes longer than
   [`compute()`](https://dplyr.tidyverse.org/reference/compute.html)
   because it also needs to convert the data from Polars to R.
 

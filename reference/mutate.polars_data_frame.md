@@ -83,7 +83,7 @@ mutate(
   \<[`tidy-select`](https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html)\>
   Optionally, control where new columns should appear (the default is to
   add to the right hand side). See
-  [`dplyr::relocate()`](https://dplyr.tidyverse.org/reference/relocate.html)
+  [`relocate()`](https://dplyr.tidyverse.org/reference/relocate.html)
   for more details.
 
 ## Details

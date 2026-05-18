@@ -5,7 +5,7 @@ would be applied on a numeric column), optimize it in the background, and
 perform computations.
 These two functions differ in their output type:
 compute() returns a Polars DataFrame;
-collect() returns a tibble::tibble. This operation consumes more memory and
+collect() returns a tibble. This operation consumes more memory and
 takes longer than compute() because it also needs to convert the data
 from Polars to R.
 
@@ -15,7 +15,7 @@ would be applied on a numeric column), optimize it in the background, and
 perform computations.
 These two functions differ in their output type:
 compute() returns a Polars DataFrame;
-collect() returns a tibble::tibble. This operation consumes more memory and
+collect() returns a tibble. This operation consumes more memory and
 takes longer than compute() because it also needs to convert the data
 from Polars to R.
 
@@ -67,7 +67,7 @@ check the validity of the query (for instance raising an error if a string opera
 would be applied on a numeric column), optimize it in the background, and
 perform computations.</p>
 <p>These two functions differ in their output type:</p><ul><li><p><code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code> returns a <a href="https://pola-rs.github.io/r-polars/man/pl__DataFrame.html" class="external-link">Polars DataFrame</a>;</p></li>
-<li><p><code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code> returns a <a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble::tibble</a>. This operation consumes more memory and
+<li><p><code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code> returns a <a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a>. This operation consumes more memory and
 takes longer than <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code> because it also needs to convert the data
 from Polars to R.</p></li>
 </ul></div>
