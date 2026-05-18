@@ -92,5 +92,5 @@ separate_longer_position_polars(df6, c(x, y), width = 2)
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-\code{\link[tidyr:separate_longer_delim]{tidyr::separate_longer_delim()}}, \code{\link[tidyr:separate_longer_delim]{tidyr::separate_longer_position()}}
+\code{\link[tidyr:separate_longer_delim]{tidyr::separate_longer_delim()}}, \code{\link[tidyr:separate_longer_position]{tidyr::separate_longer_position()}}
 }

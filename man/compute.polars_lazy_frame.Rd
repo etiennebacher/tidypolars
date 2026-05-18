@@ -109,7 +109,7 @@ perform computations.
 These two functions differ in their output type:
 \itemize{
 \item \code{compute()} returns a \link[polars:pl__DataFrame]{Polars DataFrame};
-\item \code{collect()} returns a \link[tibble:tibble]{tibble::tibble}. This operation consumes more memory and
+\item \code{collect()} returns a \link[tibble:tibble]{tibble}. This operation consumes more memory and
 takes longer than \code{compute()} because it also needs to convert the data
 from Polars to R.
 }
