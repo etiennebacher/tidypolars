@@ -101,16 +101,6 @@
       Caused by error:
       ! join keys did not fulfill 1:1 validation
 
----
-
-    Code
-      current$collect()
-    Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
-      ! join keys did not fulfill 1:m validation
-
 # argument na_matches works
 
     Code
