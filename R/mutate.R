@@ -30,7 +30,8 @@
 #' * `"none"` doesn't retain any extra columns from `.data`. Only the grouping
 #'   variables and columns created by `...` are kept.
 #' @param .before,.after <[`tidy-select`][dplyr::dplyr_tidy_select]>
-#'   Optionally, control where new columns should appear.
+#'   Optionally, control where new columns should appear (the default is to add
+#'   to the right hand side). See [relocate()] for more details.
 #'
 #' @details
 #'
@@ -170,19 +171,21 @@ mutate.polars_data_frame <- function(
     }
   }
 
-  new_vars <- intersect(setdiff(unique(mutated_vars), orig_names), current_names)
+  new_vars <- intersect(
+    setdiff(unique(mutated_vars), orig_names),
+    current_names
+  )
   if (!rlang::quo_is_null(.before) && !rlang::quo_is_null(.after)) {
-    .data <- rlang::inject(
-      relocate(.data, all_of(new_vars), .before = !!.before, .after = !!.after)
+    .data <- relocate(
+      .data,
+      all_of(new_vars),
+      .before = !!.before,
+      .after = !!.after
     )
   } else if (!rlang::quo_is_null(.before)) {
-    .data <- rlang::inject(
-      relocate(.data, all_of(new_vars), .before = !!.before)
-    )
+    .data <- relocate(.data, all_of(new_vars), .before = !!.before)
   } else if (!rlang::quo_is_null(.after)) {
-    .data <- rlang::inject(
-      relocate(.data, all_of(new_vars), .after = !!.after)
-    )
+    .data <- relocate(.data, all_of(new_vars), .after = !!.after)
   }
 
   if (.keep != "all") {
