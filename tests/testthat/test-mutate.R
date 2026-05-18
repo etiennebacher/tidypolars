@@ -464,6 +464,140 @@ test_that("argument .keep preserves overwritten grouping columns", {
   )
 })
 
+test_that("arguments .before and .after work", {
+  test_df <- as_tibble(iris)
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    mutate(test_pl, x = Sepal.Length + Sepal.Width, .before = Sepal.Width),
+    mutate(test_df, x = Sepal.Length + Sepal.Width, .before = Sepal.Width)
+  )
+
+  expect_equal(
+    mutate(test_pl, x = Sepal.Length, y = Sepal.Width, .after = Sepal.Width),
+    mutate(test_df, x = Sepal.Length, y = Sepal.Width, .after = Sepal.Width)
+  )
+
+  expect_equal(
+    mutate(test_pl, Sepal.Width = Sepal.Width * 2, .before = Sepal.Length),
+    mutate(test_df, Sepal.Width = Sepal.Width * 2, .before = Sepal.Length)
+  )
+
+  expect_equal(
+    mutate(
+      test_pl,
+      x = Sepal.Length,
+      y = Species,
+      .keep = "used",
+      .before = Species
+    ),
+    mutate(
+      test_df,
+      x = Sepal.Length,
+      y = Species,
+      .keep = "used",
+      .before = Species
+    )
+  )
+
+  expect_equal(
+    mutate(
+      test_pl,
+      x = Sepal.Length,
+      y = Species,
+      .keep = "unused",
+      .before = Petal.Length
+    ),
+    mutate(
+      test_df,
+      x = Sepal.Length,
+      y = Species,
+      .keep = "unused",
+      .before = Petal.Length
+    )
+  )
+
+  expect_equal(
+    mutate(test_pl, x = Sepal.Length, .before = NULL, .after = Sepal.Width),
+    mutate(test_df, x = Sepal.Length, .before = NULL, .after = Sepal.Width)
+  )
+
+  expect_equal(
+    mutate(test_pl, x = Sepal.Length, .before = Sepal.Width, .after = NULL),
+    mutate(test_df, x = Sepal.Length, .before = Sepal.Width, .after = NULL)
+  )
+})
+
+test_that("arguments .before and .after work for tidy-select", {
+  test_df <- as_tibble(iris)
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    mutate(test_pl, x = Sepal.Length, .before = "Species"),
+    mutate(test_df, x = Sepal.Length, .before = "Species")
+  )
+
+  expect_equal(
+    mutate(test_pl, x = Sepal.Length, .before = 3),
+    mutate(test_df, x = Sepal.Length, .before = 3)
+  )
+
+  expect_equal(
+    mutate(test_pl, x = Sepal.Length, .after = last_col()),
+    mutate(test_df, x = Sepal.Length, .after = last_col())
+  )
+
+  expect_equal(
+    mutate(test_pl, x = Sepal.Length, .before = starts_with("Petal")),
+    mutate(test_df, x = Sepal.Length, .before = starts_with("Petal"))
+  )
+
+  expect_equal(
+    mutate(test_pl, x = Sepal.Length, .after = where(is.numeric)),
+    mutate(test_df, x = Sepal.Length, .after = where(is.numeric))
+  )
+
+  expect_equal(
+    mutate(test_pl, x = Sepal.Length, .before = starts_with("not found")),
+    mutate(test_df, x = Sepal.Length, .before = starts_with("not found"))
+  )
+
+  expect_equal(
+    mutate(test_pl, x = Sepal.Length, .after = starts_with("not found")),
+    mutate(test_df, x = Sepal.Length, .after = starts_with("not found"))
+  )
+})
+
+test_that("arguments .before and .after error consistently", {
+  test_df <- as_tibble(iris)
+  test_pl <- as_polars_df(test_df)
+
+  expect_snapshot(
+    mutate(test_pl, x = Sepal.Length, .before = missing_col),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    mutate(test_pl, x = Sepal.Length, .after = missing_col),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    mutate(
+      test_pl,
+      x = Sepal.Length,
+      .before = Sepal.Width,
+      .after = Species
+    ),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    mutate(test_pl, Sepal.Width = Sepal.Width * 2, .before = missing_col),
+    error = TRUE
+  )
+})
+
 test_that("works with a local variable defined in a function", {
   foobar <- function(x) {
     local_var <- "a"

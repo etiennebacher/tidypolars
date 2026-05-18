@@ -3,10 +3,14 @@
 ## New features
 
 * Added support for `%notin%` (#349).
+* Added support for `.before` and `.after` in `mutate()` (@Yousa-Mirage, #357).
 
 ## Bug fixes
 
-- Fix `.keep` in `mutate()` to avoid accidentally dropping columns (@Yousa-Mirage, #353).
+* Fix `.keep` in `mutate()` to avoid accidentally dropping columns
+  (@Yousa-Mirage, #353).
+* Fix `relocate()` to handle `<tidy-select>` helpers consistently with `dplyr`
+  (@Yousa-Mirage, #357).
 
 # tidypolars 0.18.0
 
