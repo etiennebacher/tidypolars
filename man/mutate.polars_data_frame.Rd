@@ -58,7 +58,7 @@ variables and columns created by \code{...} are kept.
 
 \item{.before, .after}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}>
 Optionally, control where new columns should appear (the default is to add
-to the right hand side). See \code{\link[dplyr:relocate]{dplyr::relocate()}} for more details.}
+to the right hand side). See \code{\link[dplyr:relocate]{relocate()}} for more details.}
 }
 \description{
 This creates new columns that are functions of existing variables. It
