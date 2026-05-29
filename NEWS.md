@@ -4,6 +4,7 @@
 
 * Added support for `%notin%` (#349).
 * Added support for `.before` and `.after` in `mutate()` (@Yousa-Mirage, #357).
+* Added support for `as.integer()` (#360).
 
 ## Bug fixes
 
