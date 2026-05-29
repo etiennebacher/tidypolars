@@ -23,6 +23,7 @@ original functions and of their translation by `tidypolars`.
 | `base` | `asinh` |  |
 | `base` | `as.character` |  |
 | `base` | `as.Date` |  |
+| `base` | `as.integer` | `tidypolars` errors if it cannot convert values to integers. This differs from `base` which returns `NA` in this case. This is to avoid silent differences when converting `'1.5'` for instance. |
 | `base` | `as.logical` |  |
 | `base` | `as.numeric` |  |
 | `base` | `atan` |  |

@@ -127,7 +127,7 @@ sink_ndjson(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE
 #> Warning: `partition_by_key()` was deprecated in tidypolars 0.16.0.
 #> ℹ Please use `partition_by(key = )` instead.
 fs::dir_tree(out_path)
-#> /tmp/RtmpOiZIcV/file19bf2165e756
+#> /tmp/Rtmpy6wsRY/file1b537a63a38c
 #> ├── am=0.0
 #> │   ├── cyl=4.0
 #> │   │   └── 00000000.jsonl
@@ -149,7 +149,7 @@ sink_ndjson(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
 #> Warning: `partition_by_max_size()` was deprecated in tidypolars 0.16.0.
 #> ℹ Please use `partition_by(max_rows_per_file = )` instead.
 fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-#> /tmp/RtmpOiZIcV/file19bf1e783065
+#> /tmp/Rtmpy6wsRY/file1b53538d3328
 #> ├── 00000000.jsonl
 #> ├── 00000001.jsonl
 #> ├── 00000002.jsonl
