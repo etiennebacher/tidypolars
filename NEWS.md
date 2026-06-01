@@ -15,7 +15,7 @@
 
 ## Bug fixes
 
-- Fix the issue that `right_join()`/`semi_join()`/`anti_join()` look up key name
+- Fix a bug leading `right_join()`/`semi_join()`/`anti_join()` to look up key name
   wrongly and set incorrect column name (@Yousa-Mirage, #350).
 
 # tidypolars 0.18.0
