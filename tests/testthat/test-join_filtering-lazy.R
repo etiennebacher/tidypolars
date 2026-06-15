@@ -98,6 +98,76 @@ test_that("join_by() with strict equality", {
   )
 })
 
+test_that("filtering joins match dplyr with duplicate non-key columns", {
+  test_df <- tibble(
+    id = c(1, 2),
+    shared = c("left-1", "left-2"),
+    left_only = c("a", "b")
+  )
+  test2_df <- tibble(
+    id = c(1, 3),
+    shared = c("right-1", "right-3"),
+    right_only = c("c", "d")
+  )
+  test_pl <- as_polars_lf(test_df)
+  test2_pl <- as_polars_lf(test2_df)
+
+  expect_equal_lazy(
+    semi_join(test_pl, test2_pl, by = "id"),
+    semi_join(test_df, test2_df, by = "id")
+  )
+
+  expect_equal_lazy(
+    semi_join(test_pl, test2_pl, by = join_by(id)),
+    semi_join(test_df, test2_df, by = join_by(id))
+  )
+
+  expect_equal_lazy(
+    anti_join(test_pl, test2_pl, by = "id"),
+    anti_join(test_df, test2_df, by = "id")
+  )
+
+  expect_equal_lazy(
+    anti_join(test_pl, test2_pl, by = join_by(id)),
+    anti_join(test_df, test2_df, by = join_by(id))
+  )
+})
+
+test_that("filtering joins match dplyr with different key names and duplicate columns", {
+  test_df <- tibble(
+    id = c(1, 2),
+    shared = c("left-1", "left-2"),
+    left_only = c("a", "b")
+  )
+  test2_df <- tibble(
+    key = c(1, 3),
+    shared = c("right-1", "right-3"),
+    right_only = c("c", "d")
+  )
+  test_pl <- as_polars_lf(test_df)
+  test2_pl <- as_polars_lf(test2_df)
+
+  expect_equal_lazy(
+    semi_join(test_pl, test2_pl, by = c("id" = "key")),
+    semi_join(test_df, test2_df, by = c("id" = "key"))
+  )
+
+  expect_equal_lazy(
+    semi_join(test_pl, test2_pl, by = join_by(id == key)),
+    semi_join(test_df, test2_df, by = join_by(id == key))
+  )
+
+  expect_equal_lazy(
+    anti_join(test_pl, test2_pl, by = c("id" = "key")),
+    anti_join(test_df, test2_df, by = c("id" = "key"))
+  )
+
+  expect_equal_lazy(
+    anti_join(test_pl, test2_pl, by = join_by(id == key)),
+    anti_join(test_df, test2_df, by = join_by(id == key))
+  )
+})
+
 test_that("join_by() doesn't work with inequality", {
   test_pl <- pl$LazyFrame(
     x = c(1, 2, 3),

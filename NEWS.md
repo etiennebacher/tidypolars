@@ -4,6 +4,7 @@
 
 * Added support for `%notin%` (#349).
 * Added support for `.before` and `.after` in `mutate()` (@Yousa-Mirage, #357).
+* Added support for `as.integer()` (#360).
 
 ## Bug fixes
 
@@ -13,6 +14,11 @@
   columns (@Yousa-Mirage, #355).
 * Fix `relocate()` to handle `<tidy-select>` helpers consistently with `dplyr`
   (@Yousa-Mirage, #357).
+
+## Bug fixes
+
+- Fix a bug leading `right_join()`/`semi_join()`/`anti_join()` to look up key name
+  wrongly and set incorrect column name (@Yousa-Mirage, #350).
 
 # tidypolars 0.18.0
 

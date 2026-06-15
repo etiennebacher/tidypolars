@@ -16,6 +16,18 @@ test_that("basic behavior works", {
     mutate(test_pl, char2 = as.numeric(char2)),
     mutate(test_df, char2 = as.numeric(char2))
   )
+  expect_snapshot(
+    mutate(test_pl, char1 = as.integer(char1)),
+    error = TRUE
+  )
+  expect_snapshot(
+    mutate(test_pl, char2 = as.integer(char2)),
+    error = TRUE
+  )
+  expect_equal(
+    mutate(test_pl, num2 = as.integer(num2)),
+    mutate(test_df, num2 = as.integer(num2))
+  )
   expect_equal(
     mutate(test_pl, num1 = as.logical(num1)),
     mutate(test_df, num1 = as.logical(num1))
