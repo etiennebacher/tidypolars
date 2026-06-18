@@ -311,17 +311,19 @@ pl_with_tz_lubridate <- function(time, tzone = "UTC", ...) {
 #   x$dt$strftime()
 # }
 
-pl_strptime <- function(string, format, tz = "", strict = TRUE, ...) {
+pl_strptime <- function(string, format, tz = "", ...) {
   check_empty_dots(...)
   format <- polars_expr_to_r(format)
   tz <- polars_expr_to_r(tz)
-  strict <- polars_expr_to_r(strict)
-  if (grepl("%(I|H|c|T|M|p|r|R|S|X|z)", format)) {
-    dtype <- pl$Datetime("us", tz = tz)
-  } else {
-    dtype <- pl$Date
+  if (identical(tz, "")) {
+    tz <- Sys.timezone()
   }
-  string$str$strptime(dtype = dtype, format = format, strict = strict)
+  dtype <- pl$Datetime("us", time_zone = tz)
+  string$cast(pl$String)$str$strptime(
+    dtype = dtype,
+    format = format,
+    strict = FALSE
+  )
 }
 
 # pl_timestamp <- function(x, ...) {
