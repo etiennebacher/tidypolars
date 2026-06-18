@@ -64,7 +64,7 @@ original functions and of their translation by `tidypolars`.
 | `base` | `sinh` |  |
 | `base` | `sort` | In `tidypolars`, `na.last` must be explicitly supplied as `TRUE` or `FALSE`. |
 | `base` | `sqrt` |  |
-| `base` | `strptime` |  |
+| `base` | `strptime` | [`strptime()`](https://rdrr.io/r/base/strptime.html) in base R returns a `POSIXlt` vector while `polars` converts the output to `POSIXct`. Use [`as.POSIXct()`](https://rdrr.io/r/base/as.POSIXlt.html) on the base R output to get the same result. |
 | `base` | `substr` |  |
 | `base` | `tan` |  |
 | `base` | `tanh` |  |

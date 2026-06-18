@@ -363,7 +363,11 @@ be explicitly supplied as <code>TRUE</code> or <code>FALSE</code>.</td>
 <tr class="even">
 <td align="left"><code>base</code></td>
 <td align="left"><code>strptime</code></td>
-<td align="left"></td>
+<td align="left">
+<code><a href="https://rdrr.io/r/base/strptime.html" class="external-link">strptime()</a></code> in base R returns a
+<code>POSIXlt</code> vector while <code>polars</code> converts the
+output to <code>POSIXct</code>. Use <code><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct()</a></code> on the
+base R output to get the same result.</td>
 </tr>
 <tr class="odd">
 <td align="left"><code>base</code></td>
