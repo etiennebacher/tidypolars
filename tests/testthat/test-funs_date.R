@@ -162,8 +162,53 @@ test_that("strptime() works", {
   test_pl <- as_polars_df(test_df)
 
   expect_equal(
-    test_pl |> mutate(foo = strptime(somedate, "%b %d %Y")) |> pull(foo),
-    as.Date(c("2014-07-24", "2015-12-24", "2016-01-21", NA))
+    test_pl |> mutate(foo = strptime(somedate, "%b %d %Y")),
+    test_df |>
+      mutate(foo = as.POSIXct(strptime(somedate, "%b %d %Y")))
+  )
+
+  # Polars converts to POSIXct and not to POSIXlt
+  expect_equal(
+    test_pl |>
+      mutate(foo = strptime(to_ymd_hms, "%Y-%m-%d %H:%M:%S", tz = "UTC")),
+    test_df |>
+      mutate(
+        foo = as.POSIXct(
+          strptime(to_ymd_hms, "%Y-%m-%d %H:%M:%S", tz = "UTC"),
+          tz = "UTC"
+        )
+      )
+  )
+  expect_equal(
+    test_pl |>
+      mutate(
+        foo = strptime(to_ymd_hms, "%Y-%m-%d %H:%M:%S", tz = "Pacific/Auckland")
+      ),
+    test_df |>
+      mutate(
+        foo = as.POSIXct(strptime(
+          to_ymd_hms,
+          "%Y-%m-%d %H:%M:%S",
+          tz = "Pacific/Auckland"
+        ))
+      )
+  )
+  # returns only NAs
+  expect_equal(
+    test_pl |>
+      mutate(foo = strptime(y, "%Y-%m-%d %H:%M:%S", tz = "UTC")),
+    test_df |>
+      mutate(
+        foo = as.POSIXct(strptime(y, "%Y-%m-%d %H:%M:%S", tz = "UTC"))
+      )
+  )
+  expect_equal(
+    test_pl |>
+      mutate(foo = strptime(TRUE, "%Y-%m-%d %H:%M:%S", tz = "UTC")),
+    test_df |>
+      mutate(
+        foo = as.POSIXct(strptime(TRUE, "%Y-%m-%d %H:%M:%S", tz = "UTC"))
+      )
   )
 })
 

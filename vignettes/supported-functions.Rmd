@@ -194,6 +194,8 @@ out <- tribble(
         "In `tidypolars`, `na.last` must be explicitly supplied as `TRUE` or `FALSE`.",
       Package == "`base`" & Function == "`sample`" ~
         "`set.seed()` is not supported. Randomness is handled by Polars and does not use R's RNG state.",
+      Package == "`base`" & Function == "`strptime`" ~
+        "`strptime()` in base R returns a `POSIXlt` vector while `polars` converts the output to `POSIXct`. Use `as.POSIXct()` on the base R output to get the same result.",
       Package == "`base`" & Function == "`trunc`" ~
         "This only works with numeric data in `tidypolars`, while it works with other types (such as dates) in base R.",
       Package == "`lubridate`" & Function %in% c("`rollbackward`", "`rollback`", "`rollforward`") ~
