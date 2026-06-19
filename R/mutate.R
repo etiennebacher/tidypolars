@@ -131,7 +131,35 @@ mutate.polars_data_frame <- function(
   used <- c()
   orig_names <- names(.data)
   current_names <- orig_names
+  grp_names <- grps
   mutated_vars <- c()
+
+  # If a grouping column is itself modified or dropped (e.g.
+  # `mutate(foo = sum(foo), .by = foo)`), window functions (`over()`) must still
+  # group by the *original* values. Snapshot those groups into temporary columns
+  # once, up front, and group by them instead. They are dropped again at the end.
+  if (is_grouped) {
+    targets <- unlist(lapply(polars_exprs, \(sub) {
+      c(names(compact(sub)), names(empty_elems(sub)))
+    }))
+    shadowed <- which(grps %in% targets)
+    if (length(shadowed) > 0) {
+      new_grp_names <- paste0("__tidypolars_mutate_group_", shadowed, "__")
+      # Keep adding underscores until all temp names are absent from the data.
+      # Unlikely but would return wrong results if it happened.
+      while (any(new_grp_names %in% current_names)) {
+        new_grp_names <- paste0("_", new_grp_names)
+      }
+      grp_exprs <- unname(Map(
+        \(old, new) pl$col(old)$alias(new),
+        grps[shadowed],
+        new_grp_names
+      ))
+      .data <- .data$with_columns(!!!grp_exprs)
+      current_names <- c(current_names, new_grp_names)
+      grp_names[shadowed] <- new_grp_names
+    }
+  }
 
   for (i in seq_along(polars_exprs)) {
     sub <- polars_exprs[[i]]
@@ -154,9 +182,9 @@ mutate.polars_data_frame <- function(
             if (!is.list(order_by)) {
               order_by <- list(order_by)
             }
-            x$over(!!!grps, order_by = order_by)
+            x$over(!!!grp_names, order_by = order_by)
           } else {
-            x$over(!!!grps)
+            x$over(!!!grp_names)
           }
         })
       }
@@ -169,6 +197,22 @@ mutate.polars_data_frame <- function(
       .data <- .data$drop(to_drop)
       current_names <- setdiff(current_names, to_drop)
     }
+  }
+
+  # Drop the temporary group snapshots created above, if any.
+  extra_grps <- setdiff(grp_names, grps)
+  if (length(extra_grps) > 0) {
+    .data <- .data$drop(extra_grps)
+    current_names <- setdiff(current_names, extra_grps)
+  }
+
+  ordered_names <- c(
+    intersect(orig_names, current_names),
+    setdiff(current_names, orig_names)
+  )
+  if (!identical(current_names, ordered_names)) {
+    .data <- .data$select(!!!ordered_names)
+    current_names <- ordered_names
   }
 
   new_vars <- intersect(
