@@ -134,40 +134,38 @@ mutate.polars_data_frame <- function(
   grp_names <- grps
   mutated_vars <- c()
 
+  # If a grouping column is itself modified or dropped (e.g.
+  # `mutate(foo = sum(foo), .by = foo)`), window functions (`over()`) must still
+  # group by the *original* values. Snapshot those groups into temporary columns
+  # once, up front, and group by them instead. They are dropped again at the end.
+  if (is_grouped) {
+    targets <- unlist(lapply(polars_exprs, \(sub) {
+      c(names(compact(sub)), names(empty_elems(sub)))
+    }))
+    shadowed <- which(grps %in% targets)
+    if (length(shadowed) > 0) {
+      new_grp_names <- paste0("__tidypolars_mutate_group_", shadowed, "__")
+      # Keep adding underscores until all temp names are absent from the data.
+      # Unlikely but would return wrong results if it happened.
+      while (any(new_grp_names %in% current_names)) {
+        new_grp_names <- paste0("_", new_grp_names)
+      }
+      grp_exprs <- unname(Map(
+        \(old, new) pl$col(old)$alias(new),
+        grps[shadowed],
+        new_grp_names
+      ))
+      .data <- .data$with_columns(!!!grp_exprs)
+      current_names <- c(current_names, new_grp_names)
+      grp_names[shadowed] <- new_grp_names
+    }
+  }
+
   for (i in seq_along(polars_exprs)) {
     sub <- polars_exprs[[i]]
     to_drop <- names(empty_elems(sub))
     sub <- compact(sub)
     mutated_vars <- c(mutated_vars, names(sub))
-
-    if (is_grouped) {
-      modified_grps <- intersect(c(names(sub), to_drop), grps)
-      modified_grps <- match(modified_grps, grps)
-      modified_grps <- modified_grps[
-        grp_names[modified_grps] == grps[modified_grps]
-      ]
-      if (length(modified_grps) > 0) {
-        new_grp_names <- paste0(
-          "__tidypolars_mutate_group_",
-          modified_grps,
-          "__"
-        )
-        while (any(new_grp_names %in% c(current_names, grp_names))) {
-          new_grp_names <- paste0("_", new_grp_names)
-        }
-        grp_exprs <- unname(Map(
-          \(old, new) pl$col(old)$alias(new),
-          grps[modified_grps],
-          new_grp_names
-        ))
-        .data <- .data$with_columns(!!!grp_exprs)
-        current_names <- c(
-          current_names,
-          setdiff(new_grp_names, current_names)
-        )
-        grp_names[modified_grps] <- new_grp_names
-      }
-    }
 
     used <- c(
       used,
@@ -201,10 +199,7 @@ mutate.polars_data_frame <- function(
     }
   }
 
-  # We hit this case if some of the groups were also modified, e.g.
-  # mutate(foo = sum(foo), .by = foo).
-  # We created a temp new group name above, so we now need to resolve this
-  # situation here.
+  # Drop the temporary group snapshots created above, if any.
   extra_grps <- setdiff(grp_names, grps)
   if (length(extra_grps) > 0) {
     .data <- .data$drop(extra_grps)
