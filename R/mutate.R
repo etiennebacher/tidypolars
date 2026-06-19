@@ -201,6 +201,10 @@ mutate.polars_data_frame <- function(
     }
   }
 
+  # We hit this case if some of the groups were also modified, e.g.
+  # mutate(foo = sum(foo), .by = foo).
+  # We created a temp new group name above, so we now need to resolve this
+  # situation here.
   extra_grps <- setdiff(grp_names, grps)
   if (length(extra_grps) > 0) {
     .data <- .data$drop(extra_grps)
