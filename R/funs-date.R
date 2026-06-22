@@ -3,19 +3,43 @@
 
 # Date/time parsing --------------------------------------
 
-pl_ymd_lubridate <- function(x, ...) {
-  check_empty_dots(...)
+datetime_dtype_for_parsing <- function(tz, time_unit = "us") {
+  tz <- polars_expr_to_r(tz)
+
+  if (is.null(tz) || identical(tz, "")) {
+    tz <- Sys.timezone()
+  }
+
+  tz <- check_timezone(tz, empty_allowed = FALSE)
+  pl$Datetime(time_unit, time_zone = tz)
+}
+
+pl_ymd_lubridate <- function(x, tz = NULL, ...) {
   # I can't specify a particular format: lubridate::ymd() can detect "2009/01/01"
   # and "2009-01-01" for example. I have to rely on polars' guessing, even if
   # it is less performant
-  x$str$strptime(pl$Date, format = NULL, strict = FALSE)
+
+  check_empty_dots(...)
+  if (is.null(tz)) {
+    return(x$str$strptime(pl$Date, format = NULL, strict = FALSE))
+  }
+
+  x$str$strptime(
+    dtype = datetime_dtype_for_parsing(tz, time_unit = "ms"),
+    format = NULL,
+    strict = FALSE
+  )
 }
 
 pl_ydm_lubridate <- pl_mdy_lubridate <- pl_myd_lubridate <- pl_dmy_lubridate <- pl_dym_lubridate <- pl_ym_lubridate <- pl_my_lubridate <- pl_ymd_lubridate
 
-pl_ymd_hms_lubridate <- function(x, ...) {
+pl_ymd_hms_lubridate <- function(x, tz = "UTC", ...) {
   check_empty_dots(...)
-  x$str$strptime(pl$Datetime("ms"), format = NULL, strict = FALSE)
+  x$str$strptime(
+    datetime_dtype_for_parsing(tz, time_unit = "ms"),
+    format = NULL,
+    strict = FALSE
+  )
 }
 
 # Setting/getting/rounding --------------------------------------
@@ -314,11 +338,7 @@ pl_with_tz_lubridate <- function(time, tzone = "UTC", ...) {
 pl_strptime <- function(string, format, tz = "", ...) {
   check_empty_dots(...)
   format <- polars_expr_to_r(format)
-  tz <- polars_expr_to_r(tz)
-  if (identical(tz, "")) {
-    tz <- Sys.timezone()
-  }
-  dtype <- pl$Datetime("us", time_zone = tz)
+  dtype <- datetime_dtype_for_parsing(tz, time_unit = "us")
   string$cast(pl$String)$str$strptime(
     dtype = dtype,
     format = format,

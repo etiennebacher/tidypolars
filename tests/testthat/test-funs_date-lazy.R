@@ -168,7 +168,12 @@ test_that("strptime() works", {
   expect_equal_lazy(
     test_pl |> mutate(foo = strptime(somedate, "%b %d %Y")),
     test_df |>
-      mutate(foo = as.POSIXct(strptime(somedate, "%b %d %Y")))
+      mutate(
+        foo = as.POSIXct(
+          strptime(somedate, "%b %d %Y"),
+          tz = Sys.timezone()
+        )
+      )
   )
 
   # Polars converts to POSIXct and not to POSIXlt
@@ -213,6 +218,38 @@ test_that("strptime() works", {
       mutate(
         foo = as.POSIXct(strptime(TRUE, "%Y-%m-%d %H:%M:%S", tz = "UTC"))
       )
+  )
+})
+
+test_that("date parsers respect timezone arguments", {
+  test_df <- tibble(
+    value = c("2020-01-02", NA)
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    mutate(test_pl, out = ymd(value, tz = "UTC")) |> pull(out),
+    mutate(test_df, out = ymd(value, tz = "UTC")) |> pull(out)
+  )
+  expect_equal_lazy(
+    mutate(test_pl, out = ymd(value, tz = "America/New_York")) |> pull(out),
+    mutate(test_df, out = ymd(value, tz = "America/New_York")) |> pull(out)
+  )
+})
+
+test_that("ymd_hms() respects timezone arguments", {
+  test_df <- tibble(
+    value = c("2020-01-02 12:34:56", NA)
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    mutate(test_pl, out = ymd_hms(value)) |> pull(out),
+    mutate(test_df, out = ymd_hms(value)) |> pull(out)
+  )
+  expect_equal_lazy(
+    mutate(test_pl, out = ymd_hms(value, tz = "America/New_York")) |> pull(out),
+    mutate(test_df, out = ymd_hms(value, tz = "America/New_York")) |> pull(out)
   )
 })
 
