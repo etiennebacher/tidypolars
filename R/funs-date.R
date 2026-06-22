@@ -4,8 +4,6 @@
 # Date/time parsing --------------------------------------
 
 datetime_dtype_for_parsing <- function(tz, time_unit = "us") {
-  tz <- polars_expr_to_r(tz)
-
   if (is.null(tz) || identical(tz, "")) {
     tz <- Sys.timezone()
   }
@@ -338,7 +336,22 @@ pl_with_tz_lubridate <- function(time, tzone = "UTC", ...) {
 pl_strptime <- function(string, format, tz = "", ...) {
   check_empty_dots(...)
   format <- polars_expr_to_r(format)
-  dtype <- datetime_dtype_for_parsing(tz, time_unit = "us")
+
+  if (is.null(tz)) {
+    cli_abort("`tz` must be a time zone name, not `NULL`.")
+  }
+
+  if (identical(tz, "")) {
+    tz_env <- Sys.getenv("TZ")
+    dtype <- if (identical(tz_env, "")) {
+      pl$Datetime("us")
+    } else {
+      datetime_dtype_for_parsing(tz_env, time_unit = "us")
+    }
+  } else {
+    dtype <- datetime_dtype_for_parsing(tz, time_unit = "us")
+  }
+
   string$cast(pl$String)$str$strptime(
     dtype = dtype,
     format = format,

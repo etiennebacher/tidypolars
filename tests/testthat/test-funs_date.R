@@ -164,12 +164,7 @@ test_that("strptime() works", {
   expect_equal(
     test_pl |> mutate(foo = strptime(somedate, "%b %d %Y")),
     test_df |>
-      mutate(
-        foo = as.POSIXct(
-          strptime(somedate, "%b %d %Y"),
-          tz = Sys.timezone()
-        )
-      )
+      mutate(foo = as.POSIXct(strptime(somedate, "%b %d %Y")))
   )
 
   # Polars converts to POSIXct and not to POSIXlt
@@ -215,6 +210,39 @@ test_that("strptime() works", {
         foo = as.POSIXct(strptime(TRUE, "%Y-%m-%d %H:%M:%S", tz = "UTC"))
       )
   )
+})
+
+test_that("strptime() respects TZ environment variable when tz is empty", {
+  test_df <- tibble(
+    somedate = c("Jul 24 2014", "Jan 21 2016", NA)
+  )
+  test_pl <- as_polars_df(test_df)
+
+  for (tz in c("UTC", "Europe/London")) {
+    withr::local_envvar(c(TZ = tz))
+
+    expect_equal(
+      test_pl |> mutate(foo = strptime(somedate, "%b %d %Y")),
+      test_df |> mutate(foo = as.POSIXct(strptime(somedate, "%b %d %Y"))),
+      info = tz
+    )
+
+    expect_equal(
+      attr(
+        test_pl |>
+          mutate(foo = strptime(somedate, "%b %d %Y")) |>
+          pull(foo),
+        "tzone"
+      ),
+      attr(
+        test_df |>
+          mutate(foo = as.POSIXct(strptime(somedate, "%b %d %Y"))) |>
+          pull(foo),
+        "tzone"
+      ),
+      info = tz
+    )
+  }
 })
 
 test_that("date parsers respect timezone arguments", {

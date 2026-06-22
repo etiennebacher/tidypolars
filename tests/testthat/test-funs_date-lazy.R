@@ -168,12 +168,7 @@ test_that("strptime() works", {
   expect_equal_lazy(
     test_pl |> mutate(foo = strptime(somedate, "%b %d %Y")),
     test_df |>
-      mutate(
-        foo = as.POSIXct(
-          strptime(somedate, "%b %d %Y"),
-          tz = Sys.timezone()
-        )
-      )
+      mutate(foo = as.POSIXct(strptime(somedate, "%b %d %Y")))
   )
 
   # Polars converts to POSIXct and not to POSIXlt
@@ -221,9 +216,42 @@ test_that("strptime() works", {
   )
 })
 
+test_that("strptime() respects TZ environment variable when tz is empty", {
+  test_df <- tibble(
+    somedate = c("Jul 24 2014", "Jan 21 2016", NA)
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  for (tz in c("UTC", "Europe/London")) {
+    withr::local_envvar(c(TZ = tz))
+
+    expect_equal_lazy(
+      test_pl |> mutate(foo = strptime(somedate, "%b %d %Y")),
+      test_df |> mutate(foo = as.POSIXct(strptime(somedate, "%b %d %Y"))),
+      info = tz
+    )
+
+    expect_equal_lazy(
+      attr(
+        test_pl |>
+          mutate(foo = strptime(somedate, "%b %d %Y")) |>
+          pull(foo),
+        "tzone"
+      ),
+      attr(
+        test_df |>
+          mutate(foo = as.POSIXct(strptime(somedate, "%b %d %Y"))) |>
+          pull(foo),
+        "tzone"
+      ),
+      info = tz
+    )
+  }
+})
+
 test_that("date parsers respect timezone arguments", {
   test_df <- tibble(
-    value = c("2020-01-02", NA)
+    value = c("2020-01-02", "2026-12-31")
   )
   test_pl <- as_polars_lf(test_df)
 
@@ -237,9 +265,9 @@ test_that("date parsers respect timezone arguments", {
   )
 })
 
-test_that("ymd_hms() respects timezone arguments", {
+test_that("datetime parsers respect timezone arguments", {
   test_df <- tibble(
-    value = c("2020-01-02 12:34:56", NA)
+    value = c("2020-01-02 12:34:56", "2026-12-31 23:59:59")
   )
   test_pl <- as_polars_lf(test_df)
 
