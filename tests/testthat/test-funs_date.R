@@ -210,6 +210,15 @@ test_that("strptime() works", {
         foo = as.POSIXct(strptime(TRUE, "%Y-%m-%d %H:%M:%S", tz = "UTC"))
       )
   )
+
+  expect_snapshot(
+    mutate(test_pl, foo = strptime(somedate, "%b %d %Y", tz = NULL)),
+    error = TRUE
+  )
+  expect_snapshot(
+    mutate(test_pl, foo = strptime(somedate, "%b %d %Y", tz = "Not/A_Zone")),
+    error = TRUE
+  )
 })
 
 test_that("strptime() respects TZ environment variable when tz is empty", {
@@ -226,22 +235,6 @@ test_that("strptime() respects TZ environment variable when tz is empty", {
       test_df |> mutate(foo = as.POSIXct(strptime(somedate, "%b %d %Y"))),
       info = tz
     )
-
-    expect_equal(
-      attr(
-        test_pl |>
-          mutate(foo = strptime(somedate, "%b %d %Y")) |>
-          pull(foo),
-        "tzone"
-      ),
-      attr(
-        test_df |>
-          mutate(foo = as.POSIXct(strptime(somedate, "%b %d %Y"))) |>
-          pull(foo),
-        "tzone"
-      ),
-      info = tz
-    )
   }
 })
 
@@ -252,12 +245,16 @@ test_that("date parsers respect timezone arguments", {
   test_pl <- as_polars_df(test_df)
 
   expect_equal(
-    mutate(test_pl, out = ymd(value, tz = "UTC")) |> pull(out),
-    mutate(test_df, out = ymd(value, tz = "UTC")) |> pull(out)
+    mutate(test_pl, out = ymd(value, tz = "UTC")),
+    mutate(test_df, out = ymd(value, tz = "UTC"))
   )
   expect_equal(
-    mutate(test_pl, out = ymd(value, tz = "America/New_York")) |> pull(out),
-    mutate(test_df, out = ymd(value, tz = "America/New_York")) |> pull(out)
+    mutate(test_pl, out = ymd(value, tz = "America/New_York")),
+    mutate(test_df, out = ymd(value, tz = "America/New_York"))
+  )
+  expect_equal_or_both_error(
+    mutate(test_pl, out = ymd(value, tz = "Not/A_Zone")),
+    mutate(test_df, out = ymd(value, tz = "Not/A_Zone"))
   )
 })
 
@@ -268,12 +265,16 @@ test_that("datetime parsers respect timezone arguments", {
   test_pl <- as_polars_df(test_df)
 
   expect_equal(
-    mutate(test_pl, out = ymd_hms(value)) |> pull(out),
-    mutate(test_df, out = ymd_hms(value)) |> pull(out)
+    mutate(test_pl, out = ymd_hms(value)),
+    mutate(test_df, out = ymd_hms(value))
   )
   expect_equal(
-    mutate(test_pl, out = ymd_hms(value, tz = "America/New_York")) |> pull(out),
-    mutate(test_df, out = ymd_hms(value, tz = "America/New_York")) |> pull(out)
+    mutate(test_pl, out = ymd_hms(value, tz = "America/New_York")),
+    mutate(test_df, out = ymd_hms(value, tz = "America/New_York"))
+  )
+  expect_equal_or_both_error(
+    mutate(test_pl, out = ymd_hms(value, tz = "Not/A_Zone")),
+    mutate(test_df, out = ymd_hms(value, tz = "Not/A_Zone"))
   )
 })
 

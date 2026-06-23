@@ -338,7 +338,7 @@ pl_strptime <- function(string, format, tz = "", ...) {
   format <- polars_expr_to_r(format)
 
   if (is.null(tz)) {
-    cli_abort("`tz` must be a time zone name, not `NULL`.")
+    cli_abort("{.arg tz} must be a time zone name, not {.code NULL}.")
   }
 
   if (identical(tz, "")) {

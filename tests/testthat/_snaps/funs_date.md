@@ -34,6 +34,24 @@
       ! Error while running function `wday()` in Polars.
       x `week_start` must be a whole number, not the string "Monday".
 
+# strptime() works
+
+    Code
+      mutate(test_pl, foo = strptime(somedate, "%b %d %Y", tz = NULL))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `strptime()` in Polars.
+      x Unrecognized time zone: NULL
+
+---
+
+    Code
+      mutate(test_pl, foo = strptime(somedate, "%b %d %Y", tz = "Not/A_Zone"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `strptime()` in Polars.
+      x Unrecognized time zone: "Not/A_Zone"
+
 # errors for durations
 
     Code
