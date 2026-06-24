@@ -512,6 +512,19 @@ test_that("make_datetime() works", {
     test_pl |> mutate(foo = make_datetime(year = y, 1, 1, hour = 25)),
     "Invalid time components"
   )
+
+  expect_snapshot(
+    test_pl |>
+      mutate(
+        foo = make_datetime(
+          year = 2020,
+          month = 1,
+          day = 2,
+          tz = "Not/A_Zone"
+        )
+      ),
+    error = TRUE
+  )
 })
 
 test_that("ISOdatetime() works", {
@@ -607,6 +620,19 @@ test_that("ISOdatetime() works", {
   expect_error(
     test_pl |> mutate(foo = ISOdatetime(year = y, 1, 1, hour = 25)),
     "Invalid time components"
+  )
+
+  expect_snapshot(
+    test_pl |>
+      mutate(
+        foo = ISOdatetime(
+          year = 2020,
+          month = 1,
+          day = 2,
+          tz = "Not/A_Zone"
+        )
+      ),
+    error = TRUE
   )
 })
 
@@ -851,6 +877,16 @@ test_that("today() works", {
   expect_equal(
     filter(test_pl, date >= lubridate::today()),
     filter(test_df, date >= lubridate::today())
+  )
+})
+
+test_that("now() errors on invalid timezones", {
+  test_df <- tibble(x = 1)
+  test_pl <- as_polars_df(test_df)
+
+  expect_snapshot(
+    suppressWarnings(mutate(test_pl, foo = now(tzone = "Not/A_Zone"))),
+    error = TRUE
   )
 })
 

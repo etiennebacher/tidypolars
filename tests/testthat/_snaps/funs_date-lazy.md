@@ -52,6 +52,33 @@
       ! Error while running function `strptime()` in Polars.
       x Unrecognized time zone: "Not/A_Zone"
 
+# make_datetime() works
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `make_datetime()` in Polars.
+      x Evaluation failed in `$datetime()`.
+
+# ISOdatetime() works
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `ISOdatetime()` in Polars.
+      x Evaluation failed in `$datetime()`.
+
+# now() errors on invalid timezones
+
+    Code
+      current$collect()
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `now()` in Polars.
+      x Evaluation failed.
+
 # errors for durations
 
     Code
