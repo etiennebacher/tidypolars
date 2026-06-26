@@ -15,6 +15,8 @@
 * Fix `relocate()` to handle `<tidy-select>` helpers consistently with `dplyr`
   (@Yousa-Mirage, #357).
 * Using the `tz` argument in `strptime()` no longer errors (@dejse, #361)
+* Fix regression in column names after `count()` or `add_count()` with `{{ }}`
+  (#366).
 
 ## Bug fixes
 
