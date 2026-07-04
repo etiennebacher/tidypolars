@@ -34,6 +34,51 @@
       ! Error while running function `wday()` in Polars.
       x `week_start` must be a whole number, not the string "Monday".
 
+# strptime() works
+
+    Code
+      mutate(test_pl, foo = strptime(somedate, "%b %d %Y", tz = NULL))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `strptime()` in Polars.
+      x Unrecognized time zone: NULL
+
+---
+
+    Code
+      mutate(test_pl, foo = strptime(somedate, "%b %d %Y", tz = "Not/A_Zone"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `strptime()` in Polars.
+      x Unrecognized time zone: "Not/A_Zone"
+
+# make_datetime() works
+
+    Code
+      mutate(test_pl, foo = make_datetime(year = 2020, month = 1, day = 2, tz = "Not/A_Zone"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `make_datetime()` in Polars.
+      x Evaluation failed in `$datetime()`.
+
+# ISOdatetime() works
+
+    Code
+      mutate(test_pl, foo = ISOdatetime(year = 2020, month = 1, day = 2, tz = "Not/A_Zone"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `ISOdatetime()` in Polars.
+      x Evaluation failed in `$datetime()`.
+
+# now() errors on invalid timezones
+
+    Code
+      suppressWarnings(mutate(test_pl, foo = now(tzone = "Not/A_Zone")))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `now()` in Polars.
+      x Evaluation failed.
+
 # errors for durations
 
     Code

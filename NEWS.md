@@ -7,6 +7,7 @@
 * Added support for `%notin%` (#349).
 * Added support for `.before` and `.after` in `mutate()` (@Yousa-Mirage, #357).
 * Added support for `as.integer()` (#360).
+* Added time zone support for datetime parsing functions (@Yousa-Mirage, #364).
 
 ## Bug fixes
 
@@ -16,7 +17,8 @@
   columns (@Yousa-Mirage, #355).
 * Fix `relocate()` to handle `<tidy-select>` helpers consistently with `dplyr`
   (@Yousa-Mirage, #357).
-* Using the `tz` argument in `strptime()` no longer errors (@dejse, #361)
+* Using the `tz` argument in `strptime()` no longer errors (@dejse, @Yousa-Mirage,
+  #361)
 * Fix regression in column names after `count()` or `add_count()` with `{{ }}`
   (#366).
 
