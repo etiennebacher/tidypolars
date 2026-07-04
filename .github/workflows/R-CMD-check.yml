@@ -35,14 +35,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        include:
-          - os: ubuntu-latest
-            platform: "linux"
-          - os: macos-latest
-            platform: "mac"
-          - os: windows-latest
-            platform: "windows"
+        config:
+          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-latest,  r: 'release'}
+          - {os: windows-latest, r: 'release'}
+          - {os: macOS-latest,   r: 'release'}
+          - {os: macOS-latest,  r: 'oldrel-1'}
+          - {os: macOS-latest,  r: 'oldrel-2'}
+          - {os: macOS-latest,  r: 'oldrel-3'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
