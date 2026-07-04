@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.18.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.19.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,6 +40,26 @@
       <small>Source: <a href="https://github.com/etiennebacher/tidypolars/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.19.0" id="tidypolars-0190">tidypolars 0.19.0<a class="anchor" aria-label="anchor" href="#tidypolars-0190"></a></h2>
+<p><code>tidypolars</code> requires <code>polars</code> &gt;= 1.13.0.</p>
+<div class="section level3">
+<h3 id="new-features-0-19-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-19-0"></a></h3>
+<ul><li>Added support for <code>%notin%</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/349" class="external-link">#349</a>).</li>
+<li>Added support for <code>.before</code> and <code>.after</code> in <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code> (<a href="https://github.com/Yousa-Mirage" class="external-link">@Yousa-Mirage</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/357" class="external-link">#357</a>).</li>
+<li>Added support for <code><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer()</a></code> (<a href="https://github.com/etiennebacher/tidypolars/issues/360" class="external-link">#360</a>).</li>
+<li>Added time zone support for datetime parsing functions (<a href="https://github.com/Yousa-Mirage" class="external-link">@Yousa-Mirage</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/364" class="external-link">#364</a>).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-19-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-19-0"></a></h3>
+<ul><li>Fix <code>.keep</code> in <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code> to avoid accidentally dropping columns (<a href="https://github.com/Yousa-Mirage" class="external-link">@Yousa-Mirage</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/353" class="external-link">#353</a>).</li>
+<li>Better consistency with <code>dplyr</code> when using <code>NULL</code> in <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code> to drop columns (<a href="https://github.com/Yousa-Mirage" class="external-link">@Yousa-Mirage</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/355" class="external-link">#355</a>).</li>
+<li>Fix <code><a href="https://dplyr.tidyverse.org/reference/relocate.html" class="external-link">relocate()</a></code> to handle <code>&lt;tidy-select&gt;</code> helpers consistently with <code>dplyr</code> (<a href="https://github.com/Yousa-Mirage" class="external-link">@Yousa-Mirage</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/357" class="external-link">#357</a>).</li>
+<li>Using the <code>tz</code> argument in <code><a href="https://rdrr.io/r/base/strptime.html" class="external-link">strptime()</a></code> no longer errors (<a href="https://github.com/dejse" class="external-link">@dejse</a>, <a href="https://github.com/Yousa-Mirage" class="external-link">@Yousa-Mirage</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/361" class="external-link">#361</a>)</li>
+<li>Fix regression in column names after <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code> or <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">add_count()</a></code> with <code>{{ }}</code> (<a href="https://github.com/etiennebacher/tidypolars/issues/366" class="external-link">#366</a>).</li>
+<li>Fix a bug leading <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">right_join()</a></code>/<code><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">semi_join()</a></code>/<code><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">anti_join()</a></code> to look up key name wrongly and set incorrect column name (<a href="https://github.com/Yousa-Mirage" class="external-link">@Yousa-Mirage</a>, <a href="https://github.com/etiennebacher/tidypolars/issues/350" class="external-link">#350</a>).</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.18.0" id="tidypolars-0180">tidypolars 0.18.0<a class="anchor" aria-label="anchor" href="#tidypolars-0180"></a></h2>
 <p><code>tidypolars</code> requires <code>polars</code> &gt;= 1.10.0.</p>

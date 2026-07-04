@@ -1,5 +1,56 @@
 # Changelog
 
+## tidypolars 0.19.0
+
+`tidypolars` requires `polars` \>= 1.13.0.
+
+### New features
+
+- Added support for `%notin%`
+  ([\#349](https://github.com/etiennebacher/tidypolars/issues/349)).
+- Added support for `.before` and `.after` in
+  [`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html)
+  ([@Yousa-Mirage](https://github.com/Yousa-Mirage),
+  [\#357](https://github.com/etiennebacher/tidypolars/issues/357)).
+- Added support for
+  [`as.integer()`](https://rdrr.io/r/base/integer.html)
+  ([\#360](https://github.com/etiennebacher/tidypolars/issues/360)).
+- Added time zone support for datetime parsing functions
+  ([@Yousa-Mirage](https://github.com/Yousa-Mirage),
+  [\#364](https://github.com/etiennebacher/tidypolars/issues/364)).
+
+### Bug fixes
+
+- Fix `.keep` in
+  [`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html) to
+  avoid accidentally dropping columns
+  ([@Yousa-Mirage](https://github.com/Yousa-Mirage),
+  [\#353](https://github.com/etiennebacher/tidypolars/issues/353)).
+- Better consistency with `dplyr` when using `NULL` in
+  [`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html) to
+  drop columns ([@Yousa-Mirage](https://github.com/Yousa-Mirage),
+  [\#355](https://github.com/etiennebacher/tidypolars/issues/355)).
+- Fix
+  [`relocate()`](https://dplyr.tidyverse.org/reference/relocate.html) to
+  handle `<tidy-select>` helpers consistently with `dplyr`
+  ([@Yousa-Mirage](https://github.com/Yousa-Mirage),
+  [\#357](https://github.com/etiennebacher/tidypolars/issues/357)).
+- Using the `tz` argument in
+  [`strptime()`](https://rdrr.io/r/base/strptime.html) no longer errors
+  ([@dejse](https://github.com/dejse),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage),
+  [\#361](https://github.com/etiennebacher/tidypolars/issues/361))
+- Fix regression in column names after
+  [`count()`](https://dplyr.tidyverse.org/reference/count.html) or
+  [`add_count()`](https://dplyr.tidyverse.org/reference/count.html) with
+  `{{ }}`
+  ([\#366](https://github.com/etiennebacher/tidypolars/issues/366)).
+- Fix a bug leading
+  [`right_join()`](https://dplyr.tidyverse.org/reference/mutate-joins.html)/[`semi_join()`](https://dplyr.tidyverse.org/reference/filter-joins.html)/[`anti_join()`](https://dplyr.tidyverse.org/reference/filter-joins.html)
+  to look up key name wrongly and set incorrect column name
+  ([@Yousa-Mirage](https://github.com/Yousa-Mirage),
+  [\#350](https://github.com/etiennebacher/tidypolars/issues/350)).
+
 ## tidypolars 0.18.0
 
 `tidypolars` requires `polars` \>= 1.10.0.
