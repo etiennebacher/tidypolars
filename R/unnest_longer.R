@@ -184,7 +184,7 @@ unnest_longer_polars <- function(
     out <- data$with_row_index(name = temp_row_id)
 
     # Explode the value columns
-    out <- out$explode(col_names)
+    out <- out$explode(col_names, empty_as_null = TRUE)
 
     # For each value column, convert to struct and add index field, then unnest
     for (i in seq_along(col_names)) {
@@ -210,7 +210,7 @@ unnest_longer_polars <- function(
     out <- out$drop(temp_row_id)
   } else {
     # Simply explode without indices
-    out <- data$explode(col_names)
+    out <- data$explode(col_names, empty_as_null = TRUE)
   }
 
   # Handle keep_empty

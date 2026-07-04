@@ -8,6 +8,8 @@
       Caused by error:
       ! not found: unable to find column "3"; valid columns: ["x"]
       
+      Did you mean "x"?
+      
       Resolved plan until failure:
       
       	---> FAILED HERE RESOLVING 'with_columns' <---
