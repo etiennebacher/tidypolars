@@ -31,7 +31,7 @@ concurrency:
 
 jobs:
   R-CMD-check:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.config.os }}
     strategy:
       fail-fast: false
       matrix:
