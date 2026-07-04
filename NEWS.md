@@ -21,9 +21,6 @@
   #361)
 * Fix regression in column names after `count()` or `add_count()` with `{{ }}`
   (#366).
-
-## Bug fixes
-
 - Fix a bug leading `right_join()`/`semi_join()`/`anti_join()` to look up key name
   wrongly and set incorrect column name (@Yousa-Mirage, #350).
 
