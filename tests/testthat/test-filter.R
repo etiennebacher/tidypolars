@@ -206,6 +206,8 @@ test_that("%in% works with NA", {
 })
 
 test_that("%notin% works", {
+  skip_if(getRversion() < "4.6.0")
+
   test_df <- as_tibble(mtcars)
   test_pl <- as_polars_df(test_df)
 
@@ -259,6 +261,8 @@ test_that("%notin% works", {
 })
 
 test_that("%notin% works with NA", {
+  skip_if(getRversion() < "4.6.0")
+
   test_df <- tibble(x = c(1, 2, NA))
   test_pl <- as_polars_df(test_df)
 
