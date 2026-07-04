@@ -17,6 +17,8 @@
   (@Yousa-Mirage, #357).
 * Using the `tz` argument in `strptime()` no longer errors (@dejse, @Yousa-Mirage,
   #361)
+* Fix regression in column names after `count()` or `add_count()` with `{{ }}`
+  (#366).
 
 ## Bug fixes
 
