@@ -63,8 +63,8 @@ cat(explain(query))
 #>     simple π 2/2 ["mpg", ... 1 other column]
 #>        WITH_COLUMNS:
 #>        [col("drat").alias("__TIDYPOLARS_TEMP_SORT__1")] 
-#>         simple π 2/2 ["drat", "mpg"]
+#>         simple π 2/2 ["mpg", "drat"]
 #>           FILTER [(col("cyl")) == (3.0)]
 #>           FROM
-#>             DF ["mpg", "cyl", "disp", "hp", ...]; PROJECT["drat", "mpg", "cyl"] 3/11 COLUMNS
+#>             DF ["mpg", "cyl", "disp", "hp", ...]; PROJECT["mpg", "drat", "cyl"] 3/11 COLUMNS
 ```
