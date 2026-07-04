@@ -125,7 +125,7 @@ separate_longer_delim_polars <- function(
 
   # Explode all columns together, catching polars errors for incompatible lengths
   tryCatch(
-    add_tidypolars_class(out$explode(col_names)),
+    add_tidypolars_class(out$explode(col_names, empty_as_null = TRUE)),
     error = function(e) {
       abort(conditionMessage(e), call = caller_env(4))
     }
@@ -172,7 +172,7 @@ separate_longer_position_polars <- function(
 
   # Explode all columns together, catching polars errors for incompatible lengths
   tryCatch(
-    add_tidypolars_class(out$explode(col_names)),
+    add_tidypolars_class(out$explode(col_names, empty_as_null = TRUE)),
     error = function(e) {
       abort(conditionMessage(e), call = caller_env(4))
     }

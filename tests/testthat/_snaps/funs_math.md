@@ -9,6 +9,8 @@
       ! Evaluation failed in `$collect()`.
       Caused by error:
       ! Column(s) not found: unable to find column "3"; valid columns: ["x"]
+      
+      Did you mean "x"?
 
 # sort errors when na.last is absent or NA
 

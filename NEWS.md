@@ -1,5 +1,7 @@
 # tidypolars (development)
 
+`tidypolars` requires `polars` >= 1.13.0.
+
 ## New features
 
 * Added support for `%notin%` (#349).

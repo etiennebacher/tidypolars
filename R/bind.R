@@ -68,7 +68,7 @@ bind_cols_polars <- function(
     .name_repair,
     values = c("unique", "universal", "check_unique", "minimal")
   )
-  concat_(..., how = "horizontal", .name_repair = .name_repair)
+  concat_(..., how = "horizontal_extend", .name_repair = .name_repair)
 }
 
 concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
@@ -108,7 +108,7 @@ concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
 
   out <- switch(
     how,
-    "horizontal" = {
+    "horizontal_extend" = {
       all_names <- unlist(lapply(dots, names), use.names = FALSE)
       if (anyDuplicated(all_names) > 0) {
         dupes <- get_dupes(all_names)
