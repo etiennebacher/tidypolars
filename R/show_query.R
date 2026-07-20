@@ -332,6 +332,97 @@ deparse_query_arg <- function(x) {
 }
 
 # ------------------------------------------------------------------------
+# Operator rewriting:
+# polars maps R operators to binary expression methods (e.g. `a * b` calls
+# `a$mul(b)`), so a recorded query is full of method calls like
+# `pl$col("x")$mul(pl$lit(2))`. Rewriting those back to the operators
+# (`pl$col("x") * pl$lit(2)`) is safe: the operators dispatch to the exact
+# same methods, so the printed query stays valid, copy-pasteable polars code.
+# The recorded query is always valid R, so we rewrite at the AST level, which
+# gives correct precedence and minimal parenthesization for free.
+# ------------------------------------------------------------------------
+
+# Method name (as recorded by polars' `Ops` dispatch) -> R operator.
+tp_binary_ops <- c(
+  add = "+",
+  sub = "-",
+  mul = "*",
+  true_div = "/",
+  floor_div = "%/%",
+  mod = "%%",
+  pow = "^",
+  eq = "==",
+  ne = "!=",
+  gt = ">",
+  ge = ">=",
+  lt = "<",
+  le = "<=",
+  and = "&",
+  or = "|"
+)
+
+rewrite_query_operators <- function(text) {
+  node <- tryCatch(
+    parse(text = text, keep.source = FALSE)[[1]],
+    error = function(e) NULL
+  )
+  if (is.null(node)) {
+    return(text)
+  }
+  # Rewriting must never turn a working display into an error: any failure
+  # degrades to the original (method-call) text.
+  out <- tryCatch(
+    paste(deparse(rewrite_op_node(node), width.cutoff = 500L), collapse = ""),
+    error = function(e) NULL
+  )
+  out %||% text
+}
+
+rewrite_op_node <- function(node) {
+  if (!is.call(node)) {
+    return(node)
+  }
+  op <- match_binary_op(node)
+  if (!is.null(op)) {
+    # `lhs$method(rhs)`: the receiver is `node[[1]][[2]]`, the argument is
+    # `node[[2]]`.
+    lhs <- rewrite_op_node(node[[1]][[2]])
+    rhs <- rewrite_op_node(node[[2]])
+    return(call(op, lhs, rhs))
+  }
+  for (i in seq_along(node)) {
+    node[[i]] <- rewrite_op_node(node[[i]])
+  }
+  node
+}
+
+# Return the R operator for a `lhs$method(rhs)` node whose method is a known
+# binary operator called with a single unnamed argument, or NULL otherwise.
+match_binary_op <- function(node) {
+  if (length(node) != 2L) {
+    return(NULL)
+  }
+  nms <- names(node)
+  if (!is.null(nms) && nzchar(nms[[2]])) {
+    return(NULL)
+  }
+  head <- node[[1]]
+  if (
+    !is.call(head) ||
+      length(head) != 3L ||
+      !identical(head[[1]], as.symbol("$")) ||
+      !is.symbol(head[[3]])
+  ) {
+    return(NULL)
+  }
+  method <- as.character(head[[3]])
+  if (!method %in% names(tp_binary_ops)) {
+    return(NULL)
+  }
+  unname(tp_binary_ops[[method]])
+}
+
+# ------------------------------------------------------------------------
 # Formatting:
 # - one line per method called on the Data/LazyFrame (lines end with "$" so
 #   that the printed block can be copy-pasted as is);
@@ -345,6 +436,7 @@ deparse_query_arg <- function(x) {
 tp_query_width <- 80L
 
 format_polars_query <- function(text) {
+  text <- rewrite_query_operators(text)
   parts <- split_chain_merged(text)
   parts <- vapply(
     seq_along(parts),

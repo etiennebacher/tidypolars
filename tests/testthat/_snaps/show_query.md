@@ -84,9 +84,7 @@
     Output
       as_polars_df(mtcars)$
         with_columns(
-          mpg_std = pl$col("mpg")$
-            sub(pl$col("mpg")$mean())$
-            true_div(pl$col("mpg")$std())
+          mpg_std = (pl$col("mpg") - pl$col("mpg")$mean())/pl$col("mpg")$std()
         )$
         select("mpg_std")
 
