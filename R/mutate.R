@@ -111,6 +111,7 @@ mutate.polars_data_frame <- function(
   .before = NULL,
   .after = NULL
 ) {
+  .data <- tag_frame(.data, substitute(.data))
   .keep <- rlang::arg_match0(.keep, values = c("all", "used", "unused", "none"))
   .before <- rlang::enquo(.before)
   .after <- rlang::enquo(.after)

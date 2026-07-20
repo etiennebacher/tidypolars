@@ -815,3 +815,20 @@ test_that("errors for rolling functions", {
     error = TRUE
   )
 })
+
+as_polars_lf(mtcars)$select(
+  "cyl",
+  "mpg"
+)$join(
+  other = as_polars_lf(mtcars)$group_by("cyl", .maintain_order = FALSE)$agg(
+    mean_mpg = pl$when(pl$col("mpg")$has_nulls())$then(NA)$otherwise(pl$col(
+      "mpg"
+    )$mean())
+  ),
+  left_on = "cyl",
+  right_on = "cyl",
+  how = "left",
+  nulls_equal = TRUE,
+  validate = "m:m",
+  coalesce = TRUE
+)$select("cyl", "mpg", "mean_mpg")

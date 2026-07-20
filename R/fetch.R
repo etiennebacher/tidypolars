@@ -34,6 +34,7 @@ fetch <- function(
   engine = c("auto", "in-memory", "streaming"),
   streaming = FALSE
 ) {
+  .data <- tag_frame(.data, substitute(.data))
   if (!is_polars_lf(.data)) {
     cli_abort("{.code fetch()} can only be used on a LazyFrame.")
   }
@@ -54,9 +55,9 @@ fetch <- function(
   }
 
   if (isTRUE(no_optimization)) {
-    optimizations <- polars::pl$QueryOptFlags()$no_optimizations()
+    optimizations <- pl$QueryOptFlags()$no_optimizations()
   } else {
-    optimizations <- polars::pl$QueryOptFlags(
+    optimizations <- pl$QueryOptFlags(
       predicate_pushdown = predicate_pushdown,
       projection_pushdown = projection_pushdown,
       simplify_expression = simplify_expression,

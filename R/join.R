@@ -126,6 +126,8 @@ left_join.polars_data_frame <- function(
   na_matches = "na",
   relationship = NULL
 ) {
+  x <- tag_frame(x, substitute(x))
+  y <- tag_frame(y, substitute(y))
   check_unsupported_arg(copy = copy, keep = keep)
   check_dots_empty()
   join_(
@@ -152,6 +154,8 @@ right_join.polars_data_frame <- function(
   na_matches = "na",
   relationship = NULL
 ) {
+  x <- tag_frame(x, substitute(x))
+  y <- tag_frame(y, substitute(y))
   check_unsupported_arg(copy = copy, keep = keep)
   check_dots_empty()
   join_(
@@ -178,6 +182,8 @@ full_join.polars_data_frame <- function(
   na_matches = "na",
   relationship = NULL
 ) {
+  x <- tag_frame(x, substitute(x))
+  y <- tag_frame(y, substitute(y))
   check_unsupported_arg(copy = copy, keep = keep)
   check_dots_empty()
   join_(
@@ -204,6 +210,8 @@ inner_join.polars_data_frame <- function(
   na_matches = "na",
   relationship = NULL
 ) {
+  x <- tag_frame(x, substitute(x))
+  y <- tag_frame(y, substitute(y))
   check_unsupported_arg(copy = copy, keep = keep)
   check_dots_empty()
   join_(
@@ -275,6 +283,8 @@ semi_join.polars_data_frame <- function(
   ...,
   na_matches = "na"
 ) {
+  x <- tag_frame(x, substitute(x))
+  y <- tag_frame(y, substitute(y))
   check_dots_empty_ignore(..., .unsupported = "copy")
   join_(
     x = x,
@@ -297,6 +307,8 @@ anti_join.polars_data_frame <- function(
   ...,
   na_matches = "na"
 ) {
+  x <- tag_frame(x, substitute(x))
+  y <- tag_frame(y, substitute(y))
   check_dots_empty_ignore(..., .unsupported = "copy")
   join_(
     x = x,
@@ -344,6 +356,8 @@ anti_join.polars_lazy_frame <- anti_join.polars_data_frame
 #'
 #' cross_join(test, test2)
 cross_join.polars_data_frame <- function(x, y, ..., suffix = c(".x", ".y")) {
+  x <- tag_frame(x, substitute(x))
+  y <- tag_frame(y, substitute(y))
   check_dots_empty_ignore(..., .unsupported = "copy")
   join_(
     x = x,

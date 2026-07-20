@@ -56,6 +56,7 @@ complete.polars_data_frame <- function(
   fill = list(),
   explicit = TRUE
 ) {
+  data <- tag_frame(data, substitute(data))
   # Determine the dots names for the relocate() call at the end. Seems like
   # the simplest way to get this info and shouldn't be too expensive.
   all_dots <- names(enquos(..., .named = TRUE))

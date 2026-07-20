@@ -8,6 +8,7 @@
 \alias{is_polars_lf}
 \alias{is_polars_df}
 \alias{is_polars_expr}
+\alias{show_query}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -15,6 +16,8 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
+  \item{dplyr}{\code{\link[dplyr:show_query]{show_query()}}}
+
   \item{polars}{\code{\link[polars:as_polars_df]{as_polars_df()}}, \code{\link[polars:as_polars_lf]{as_polars_lf()}}, \code{\link[polars:is_polars_df]{is_polars_df()}}, \code{\link[polars:is_polars_expr]{is_polars_expr()}}, \code{\link[polars:is_polars_lf]{is_polars_lf()}}}
 }}
 

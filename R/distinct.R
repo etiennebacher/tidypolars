@@ -35,6 +35,7 @@ distinct.polars_data_frame <- function(
   keep = "first",
   maintain_order = TRUE
 ) {
+  .data <- tag_frame(.data, substitute(.data))
   vars <- tidyselect_dots(.data, ...)
   if (length(vars) == 0) {
     vars <- names(.data)
@@ -58,6 +59,7 @@ distinct.polars_lazy_frame <- distinct.polars_data_frame
 #' @export
 
 duplicated_rows <- function(.data, ...) {
+  .data <- tag_frame(.data, substitute(.data))
   vars <- tidyselect_dots(.data, ...)
   if (length(vars) == 0) {
     vars <- names(.data)

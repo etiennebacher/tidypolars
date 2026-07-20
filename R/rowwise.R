@@ -24,6 +24,7 @@
 #'  rowwise() |>
 #'  mutate(min = min(c(x, y)), max = max(c(x, y)))
 rowwise.polars_data_frame <- function(data, ...) {
+  data <- tag_frame(data, substitute(data))
   if (!is.null(attributes(data)$pl_grps)) {
     cli_abort("Cannot use {.fn rowwise} on grouped data.")
   }

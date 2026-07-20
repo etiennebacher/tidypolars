@@ -1110,7 +1110,7 @@ polars_expr_to_r <- function(x) {
     # Keep other attributes, such as "case_insensitive"
     for (att in seq_along(attributes(x))) {
       nm <- names(attributes(x))[att]
-      if (nm %in% c("class", "original_value")) {
+      if (nm %in% c("class", "original_value", "tp_query")) {
         next
       }
       attr(out, nm) <- attr(x, nm)

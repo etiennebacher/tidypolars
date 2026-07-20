@@ -32,6 +32,7 @@ uncount.polars_data_frame <- function(
   .remove = TRUE,
   .id = NULL
 ) {
+  data <- tag_frame(data, substitute(data))
   check_dots_empty()
   weights_quo <- enquo(weights)
   repeat_expr <- translate_expr(

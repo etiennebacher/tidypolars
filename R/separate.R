@@ -27,6 +27,7 @@ separate.polars_data_frame <- function(
   remove = TRUE,
   ...
 ) {
+  data <- tag_frame(data, substitute(data))
   if (!is_character(sep)) {
     cli_abort(
       "{.pkg tidypolars} only supports a character for argument {.arg sep} in {.fn separate}."

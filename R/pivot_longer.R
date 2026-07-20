@@ -39,6 +39,7 @@ pivot_longer.polars_data_frame <- function(
   names_prefix = NULL,
   values_to = "value"
 ) {
+  data <- tag_frame(data, substitute(data))
   check_dots_empty_ignore(
     ...,
     .unsupported = c(

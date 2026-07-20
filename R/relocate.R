@@ -37,6 +37,7 @@ relocate.polars_data_frame <- function(
   .before = NULL,
   .after = NULL
 ) {
+  .data <- tag_frame(.data, substitute(.data))
   if (!missing(.before) && !missing(.after)) {
     cli_abort(
       "You can specify either {.code .before} or {.code .after} but not both."

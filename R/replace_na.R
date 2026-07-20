@@ -13,6 +13,7 @@
 #' replace_na(pl_test, list(x = 0, y = 999))
 
 replace_na.polars_data_frame <- function(data, replace, ...) {
+  data <- tag_frame(data, substitute(data))
   if (!is.list(replace)) {
     cli_abort(
       "{.arg replace} must be a list, not {obj_type_friendly(replace, value= FALSE)}",

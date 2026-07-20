@@ -82,6 +82,7 @@
 #'     .data[[vars[[2]]]] > cond[[2]]
 #'   )
 filter.polars_data_frame <- function(.data, ..., .by = NULL) {
+  .data <- tag_frame(.data, substitute(.data))
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
@@ -148,6 +149,7 @@ filter.polars_lazy_frame <- filter.polars_data_frame
 #' @rdname filter.polars_data_frame
 #' @export
 filter_out.polars_data_frame <- function(.data, ..., .by = NULL) {
+  .data <- tag_frame(.data, substitute(.data))
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)

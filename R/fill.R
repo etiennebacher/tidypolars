@@ -38,6 +38,7 @@ fill.polars_data_frame <- function(
   .by = NULL,
   .direction = c("down", "up", "downup", "updown")
 ) {
+  data <- tag_frame(data, substitute(data))
   vars <- tidyselect_dots(data, ...)
   if (length(vars) == 0) {
     return(data)
