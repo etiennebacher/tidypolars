@@ -3,7 +3,7 @@
     Code
       show_query(query)
     Output
-      as_polars_lf(mtcars)$
+      as_polars_df(mtcars)$
         filter(pl$col("cyl")$eq(pl$lit(4)))$
         with_columns(mpg2 = pl$col("mpg")$mul(pl$lit(2))$over("am"))$
         select("mpg", "mpg2")
@@ -37,10 +37,10 @@
     Code
       show_query(query)
     Output
-      as_polars_lf(mtcars)$
+      as_polars_df(mtcars)$
         group_by(
           "cyl",
-          .maintain_order = FALSE
+          .maintain_order = TRUE
         )$
         agg(
           mean_mpg = pl$when(pl$col("mpg")$has_nulls())$
@@ -53,10 +53,10 @@
     Code
       show_query(query)
     Output
-      as_polars_lf(mtcars)$
+      as_polars_df(mtcars)$
         select("cyl", "mpg")$
         join(
-          other = as_polars_lf(mtcars)$
+          other = as_polars_df(mtcars)$
             group_by("cyl", .maintain_order = FALSE)$
             agg(
               mean_mpg = pl$when(pl$col("mpg")$has_nulls())$
@@ -77,7 +77,7 @@
     Code
       show_query(query)
     Output
-      as_polars_lf(mtcars)$
+      as_polars_df(mtcars)$
         with_columns(
           mpg = pl$when(pl$col("mpg")$has_nulls())$
             then(NA)$
@@ -92,7 +92,7 @@
     Code
       show_query(query)
     Output
-      as_polars_lf(mtcars)$
+      as_polars_df(mtcars)$
         with_columns(
           mpg_std = pl$col("mpg")$
             sub(pl$col("mpg")$mean())$

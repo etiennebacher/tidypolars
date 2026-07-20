@@ -17,7 +17,6 @@ exceptions <- c(
   "test-group_split.R",
   "test-partitioned_output.R",
   "test-read-write.R",
-  "test-show_query.R",
   "test-sink_csv.R",
   "test-sink.R",
   "test-summary.R",
