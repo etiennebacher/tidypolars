@@ -437,6 +437,17 @@ scan_code <- function(chars) {
   list(depth = depth, in_string = in_string)
 }
 
+# A "plain" argument is an unnamed literal (a string, number, logical, ...)
+# with no nested call: it carries no structure that would be clearer split
+# over its own line. Named arguments (top-level "=") and expressions
+# (containing "(") are not plain.
+is_plain_arg <- function(arg) {
+  chars <- strsplit(arg, "", fixed = TRUE)[[1]]
+  info <- scan_code(chars)
+  !any(chars == "(" & !info$in_string) &&
+    !any(chars == "=" & info$depth == 0L & !info$in_string)
+}
+
 split_at_positions <- function(chars, breaks) {
   starts <- c(1L, breaks + 1L)
   ends <- c(breaks - 1L, length(chars))
@@ -481,15 +492,22 @@ format_call_segment <- function(part, indent, force_explode) {
   commas <- which(chars == "," & info$depth == 1L & !info$in_string)
   commas <- commas[commas > open & commas < close]
 
-  too_long <- indent + nchar(part) > tp_query_width
-  if (!too_long && !(force_explode && length(commas) > 0)) {
-    return(part)
-  }
-
   args <- trimws(split_at_positions(
     chars[(open + 1):(close - 1)],
     commas - open
   ))
+
+  # `force_explode` puts each argument on its own line, but only compound
+  # arguments (named ones, or nested expressions like `pl$col("a")`) benefit
+  # from that. A call made solely of plain unnamed values, e.g.
+  # `select("a", "b")`, stays inline as long as it fits on the line.
+  too_long <- indent + nchar(part) > tp_query_width
+  explode <- too_long ||
+    (force_explode && length(commas) > 0 && !all(vapply(args, is_plain_arg, logical(1))))
+  if (!explode) {
+    return(part)
+  }
+
   args <- vapply(args, format_query_value, character(1), indent = indent + 2L)
   pad_args <- strrep(" ", indent + 2L)
   pad_close <- strrep(" ", indent)

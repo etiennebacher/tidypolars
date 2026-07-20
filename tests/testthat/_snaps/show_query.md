@@ -6,10 +6,7 @@
       as_polars_lf(mtcars)$
         filter(pl$col("cyl")$eq(pl$lit(4)))$
         with_columns(mpg2 = pl$col("mpg")$mul(pl$lit(2))$over("am"))$
-        select(
-          "mpg",
-          "mpg2"
-        )
+        select("mpg", "mpg2")
 
 # show_query() works on a DataFrame
 
@@ -27,10 +24,7 @@
           descending = c(FALSE, TRUE),
           nulls_last = TRUE
         )$
-        drop(
-          "__TIDYPOLARS_TEMP_SORT__1",
-          "__TIDYPOLARS_TEMP_SORT__2"
-        )$
+        drop("__TIDYPOLARS_TEMP_SORT__1", "__TIDYPOLARS_TEMP_SORT__2")$
         unique(
           "cyl",
           "am",
@@ -60,10 +54,7 @@
       show_query(query)
     Output
       as_polars_lf(mtcars)$
-        select(
-          "cyl",
-          "mpg"
-        )$
+        select("cyl", "mpg")$
         join(
           other = as_polars_lf(mtcars)$
             group_by("cyl", .maintain_order = FALSE)$
@@ -79,11 +70,7 @@
           validate = "m:m",
           coalesce = TRUE
         )$
-        select(
-          "cyl",
-          "mpg",
-          "mean_mpg"
-        )
+        select("cyl", "mpg", "mean_mpg")
 
 # show_query() works with across()
 
