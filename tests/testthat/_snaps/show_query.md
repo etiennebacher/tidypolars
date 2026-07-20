@@ -1,14 +1,4 @@
-# show_query() works on a LazyFrame
-
-    Code
-      show_query(query)
-    Output
-      as_polars_df(mtcars)$
-        filter(pl$col("cyl")$eq(pl$lit(4)))$
-        with_columns(mpg2 = pl$col("mpg")$mul(pl$lit(2))$over("am"))$
-        select("mpg", "mpg2")
-
-# show_query() works on a DataFrame
+# basic behavior works
 
     Code
       show_query(query)

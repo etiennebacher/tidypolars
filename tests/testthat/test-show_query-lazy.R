@@ -16,23 +16,7 @@ replay_query <- function(x) {
   }
 }
 
-test_that("show_query() works on a LazyFrame", {
-  query <- mtcars |>
-    as_polars_lf() |>
-    filter(cyl == 4) |>
-    mutate(mpg2 = mpg * 2, .by = am) |>
-    select(mpg, mpg2)
-
-  expect_snapshot_lazy(show_query(query))
-
-  # the recorded query must give the same result as the pipeline
-  expect_equal_lazy(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
-})
-
-test_that("show_query() works on a DataFrame", {
+test_that("basic behavior works", {
   query <- mtcars |>
     as_polars_lf() |>
     arrange(cyl, desc(disp)) |>

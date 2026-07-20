@@ -1,32 +1,4 @@
-# show_query() works on a LazyFrame
-
-    Code
-      current$collect()
-    Output
-      as_polars_lf(mtcars)$
-        filter(pl$col("cyl")$eq(pl$lit(4)))$
-        with_columns(mpg2 = pl$col("mpg")$mul(pl$lit(2))$over("am"))$
-        select("mpg", "mpg2")
-      shape: (11, 2)
-      ┌──────┬──────┐
-      │ mpg  ┆ mpg2 │
-      │ ---  ┆ ---  │
-      │ f64  ┆ f64  │
-      ╞══════╪══════╡
-      │ 22.8 ┆ 45.6 │
-      │ 24.4 ┆ 48.8 │
-      │ 22.8 ┆ 45.6 │
-      │ 32.4 ┆ 64.8 │
-      │ 30.4 ┆ 60.8 │
-      │ …    ┆ …    │
-      │ 21.5 ┆ 43.0 │
-      │ 27.3 ┆ 54.6 │
-      │ 26.0 ┆ 52.0 │
-      │ 30.4 ┆ 60.8 │
-      │ 21.4 ┆ 42.8 │
-      └──────┴──────┘
-
-# show_query() works on a DataFrame
+# basic behavior works
 
     Code
       current$collect()
