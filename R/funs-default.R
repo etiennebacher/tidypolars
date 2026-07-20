@@ -16,7 +16,7 @@ pl_all <- function(..., na.rm = FALSE) {
     )
   }
   if (isTRUE(x$is_rowwise)) {
-    return(x$expr$list$eval(pl$element()$all())$explode())
+    return(x$expr$list$eval(pl$element()$all())$explode(empty_as_null = TRUE))
   }
   if (length(dots) == 1) {
     dots[[1]]$all(ignore_nulls = na.rm)
@@ -40,7 +40,7 @@ pl_any <- function(..., na.rm = FALSE) {
     )
   }
   if (isTRUE(x$is_rowwise)) {
-    return(x$expr$list$eval(pl$element()$any())$explode())
+    return(x$expr$list$eval(pl$element()$any())$explode(empty_as_null = TRUE))
   }
   if (length(dots) == 1) {
     dots[[1]]$any(ignore_nulls = na.rm)
@@ -222,11 +222,11 @@ pl_max <- function(x, na.rm = FALSE, ...) {
   x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
     if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$max())$explode()
+      x$expr$list$eval(pl$element()$max())$explode(empty_as_null = TRUE)
     } else {
       x$expr$list$eval(
         pl$when(pl$element()$has_nulls())$then(NA)$otherwise(pl$element()$max())
-      )$explode()
+      )$explode(empty_as_null = TRUE)
     }
   } else {
     if (isTRUE(na.rm)) {
@@ -243,13 +243,13 @@ pl_mean <- function(x, na.rm = FALSE, ...) {
   x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
     if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$mean())$explode()
+      x$expr$list$eval(pl$element()$mean())$explode(empty_as_null = TRUE)
     } else {
       x$expr$list$eval(
         pl$when(pl$element()$has_nulls())$then(NA)$otherwise(
           pl$element()$mean()
         )
-      )$explode()
+      )$explode(empty_as_null = TRUE)
     }
   } else {
     if (isTRUE(na.rm)) {
@@ -266,13 +266,13 @@ pl_median <- function(x, na.rm = FALSE, ...) {
   x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
     if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$median())$explode()
+      x$expr$list$eval(pl$element()$median())$explode(empty_as_null = TRUE)
     } else {
       x$expr$list$eval(
         pl$when(pl$element()$has_nulls())$then(NA)$otherwise(
           pl$element()$median()
         )
-      )$explode()
+      )$explode(empty_as_null = TRUE)
     }
   } else {
     if (isTRUE(na.rm)) {
@@ -289,11 +289,11 @@ pl_min <- function(x, na.rm = FALSE, ...) {
   x <- check_rowwise(x, ...)
   if (isTRUE(x$is_rowwise)) {
     if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$min())$explode()
+      x$expr$list$eval(pl$element()$min())$explode(empty_as_null = TRUE)
     } else {
       x$expr$list$eval(
         pl$when(pl$element()$has_nulls())$then(NA)$otherwise(pl$element()$min())
-      )$explode()
+      )$explode(empty_as_null = TRUE)
     }
   } else {
     if (isTRUE(na.rm)) {
@@ -391,13 +391,13 @@ pl_sd <- function(x, na.rm = FALSE) {
   x <- check_rowwise(x)
   if (isTRUE(x$is_rowwise)) {
     if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$std(ddof = 1))$explode()
+      x$expr$list$eval(pl$element()$std(ddof = 1))$explode(empty_as_null = TRUE)
     } else {
       x$expr$list$eval(
         pl$when(pl$element()$has_nulls())$then(NA)$otherwise(
           pl$element()$std(ddof = 1)
         )
-      )$explode()
+      )$explode(empty_as_null = TRUE)
     }
   } else {
     if (isTRUE(na.rm)) {
@@ -468,11 +468,11 @@ pl_sum <- function(..., na.rm = FALSE) {
   x <- check_rowwise_dots(...)
   if (isTRUE(x$is_rowwise)) {
     if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$sum())$explode()
+      x$expr$list$eval(pl$element()$sum())$explode(empty_as_null = TRUE)
     } else {
       x$expr$list$eval(
         pl$when(pl$element()$has_nulls())$then(NA)$otherwise(pl$element()$sum())
-      )$explode()
+      )$explode(empty_as_null = TRUE)
     }
   } else {
     if (isTRUE(na.rm)) {

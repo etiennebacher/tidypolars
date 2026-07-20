@@ -43,7 +43,8 @@ uncount.polars_data_frame <- function(
   )
 
   out <- data$with_columns(pl$col("x")$repeat_by(repeat_expr))$explode(
-    pl$col("x")
+    pl$col("x"),
+    empty_as_null = TRUE
   )
 
   if (isTRUE(.remove) && repeat_expr$meta$output_name() != "literal") {

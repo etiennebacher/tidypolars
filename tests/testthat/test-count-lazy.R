@@ -257,4 +257,25 @@ test_that("count() and add_count() explicitly do not support 'wt'", {
   )
 })
 
+test_that("no ANSI code in column names when using `{{ }}`, #365", {
+  test_df <- as_tibble(mtcars)
+  test_pl <- as_polars_lf(test_df)
+
+  my_count <- function(data, col1, col2) {
+    data |> count({{ col1 }}, {{ col2 }})
+  }
+  my_add_count <- function(data, col1, col2) {
+    data |> add_count({{ col1 }}, {{ col2 }})
+  }
+
+  expect_equal_lazy(
+    test_pl |> my_count(drat, cyl),
+    test_df |> my_count(drat, cyl)
+  )
+  expect_equal_lazy(
+    test_pl |> my_add_count(drat, cyl),
+    test_df |> my_add_count(drat, cyl)
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

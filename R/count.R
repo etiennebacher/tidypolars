@@ -89,9 +89,10 @@ count.polars_data_frame <- function(
   }
 
   if (is.null(names(polars_exprs))) {
-    new_names <- enexprs(...)
-    new_names <- lapply(new_names, expr_deparse)
-    names(polars_exprs) <- unlist(new_names, use.names = FALSE)
+    new_names <- enexprs(...) |>
+      exprs_auto_name() |>
+      names()
+    names(polars_exprs) <- new_names
   }
 
   if (is_grouped) {
@@ -228,9 +229,10 @@ add_count.polars_data_frame <- function(
   }
 
   if (is.null(names(polars_exprs))) {
-    new_names <- enexprs(...)
-    new_names <- lapply(new_names, expr_deparse)
-    names(polars_exprs) <- unlist(new_names, use.names = FALSE)
+    new_names <- enexprs(...) |>
+      exprs_auto_name() |>
+      names()
+    names(polars_exprs) <- new_names
   }
 
   name <- check_count_name(x, names(x), name)

@@ -214,6 +214,72 @@ test_that("strptime() works", {
         foo = as.POSIXct(strptime(TRUE, "%Y-%m-%d %H:%M:%S", tz = "UTC"))
       )
   )
+
+  expect_snapshot_lazy(
+    mutate(test_pl, foo = strptime(somedate, "%b %d %Y", tz = NULL)),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    mutate(test_pl, foo = strptime(somedate, "%b %d %Y", tz = "Not/A_Zone")),
+    error = TRUE
+  )
+})
+
+test_that("strptime() respects TZ environment variable when tz is empty", {
+  test_df <- tibble(
+    somedate = c("Jul 24 2014", "Jan 21 2016", NA)
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  for (tz in c("UTC", "Europe/London")) {
+    withr::local_envvar(c(TZ = tz))
+
+    expect_equal_lazy(
+      test_pl |> mutate(foo = strptime(somedate, "%b %d %Y")),
+      test_df |> mutate(foo = as.POSIXct(strptime(somedate, "%b %d %Y"))),
+      info = tz
+    )
+  }
+})
+
+test_that("date parsers respect timezone arguments", {
+  test_df <- tibble(
+    value = c("2020-01-02", "2026-12-31")
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    mutate(test_pl, out = ymd(value, tz = "UTC")),
+    mutate(test_df, out = ymd(value, tz = "UTC"))
+  )
+  expect_equal_lazy(
+    mutate(test_pl, out = ymd(value, tz = "America/New_York")),
+    mutate(test_df, out = ymd(value, tz = "America/New_York"))
+  )
+  expect_equal_or_both_error(
+    mutate(test_pl, out = ymd(value, tz = "Not/A_Zone")),
+    mutate(test_df, out = ymd(value, tz = "Not/A_Zone"))
+  )
+})
+
+test_that("datetime parsers respect timezone arguments", {
+  test_df <- tibble(
+    value = c("2020-01-02 12:34:56", "2026-12-31 23:59:59")
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    mutate(test_pl, out = ymd_hms(value)),
+    mutate(test_df, out = ymd_hms(value))
+  )
+  expect_equal_lazy(
+    mutate(test_pl, out = ymd_hms(value, tz = "America/New_York")),
+    mutate(test_df, out = ymd_hms(value, tz = "America/New_York"))
+  )
+  expect_equal_or_both_error(
+    mutate(test_pl, out = ymd_hms(value, tz = "Not/A_Zone")),
+    mutate(test_df, out = ymd_hms(value, tz = "Not/A_Zone"))
+  )
 })
 
 test_that("isoyear (test taken from the lubridate test suite)", {
@@ -450,6 +516,19 @@ test_that("make_datetime() works", {
     test_pl |> mutate(foo = make_datetime(year = y, 1, 1, hour = 25)),
     "Invalid time components"
   )
+
+  expect_snapshot_lazy(
+    test_pl |>
+      mutate(
+        foo = make_datetime(
+          year = 2020,
+          month = 1,
+          day = 2,
+          tz = "Not/A_Zone"
+        )
+      ),
+    error = TRUE
+  )
 })
 
 test_that("ISOdatetime() works", {
@@ -545,6 +624,19 @@ test_that("ISOdatetime() works", {
   expect_error_lazy(
     test_pl |> mutate(foo = ISOdatetime(year = y, 1, 1, hour = 25)),
     "Invalid time components"
+  )
+
+  expect_snapshot_lazy(
+    test_pl |>
+      mutate(
+        foo = ISOdatetime(
+          year = 2020,
+          month = 1,
+          day = 2,
+          tz = "Not/A_Zone"
+        )
+      ),
+    error = TRUE
   )
 })
 
@@ -789,6 +881,16 @@ test_that("today() works", {
   expect_equal_lazy(
     filter(test_pl, date >= lubridate::today()),
     filter(test_df, date >= lubridate::today())
+  )
+})
+
+test_that("now() errors on invalid timezones", {
+  test_df <- tibble(x = 1)
+  test_pl <- as_polars_lf(test_df)
+
+  expect_snapshot_lazy(
+    suppressWarnings(mutate(test_pl, foo = now(tzone = "Not/A_Zone"))),
+    error = TRUE
   )
 })
 
