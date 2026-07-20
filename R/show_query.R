@@ -204,7 +204,9 @@ wrap_polars_member <- function(holder, member, parent_text, name) {
           assign(lhs_name, holder, envir = eval_env)
           cl[[1]][[2]] <- as.name(lhs_name)
           tp_recorder$skip_next <- TRUE
-          on.exit(tp_recorder$skip_next <- FALSE)
+          on.exit({
+            tp_recorder$skip_next <- FALSE
+          })
           eval(cl, eval_env)
         } else {
           member(...)
