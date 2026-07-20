@@ -11,9 +11,16 @@
 #' errors (see [tidypolars_options]). Objects created while recording was
 #' disabled cannot show their query.
 #'
-#' Some values cannot be displayed in a copy-pasteable way, for example long
-#' vectors coming from the calling environment (those are truncated and shown
-#' as a placeholder like `` `<numeric of length 200>` ``).
+#' To keep the output readable and close to hand-written polars code, R
+#' operators are used instead of their method equivalent (e.g. `a$add(b)` is
+#' shown as `a + b`), and user-defined functions are displayed as a call
+#' rather than expanded into the operations they perform internally.
+#'
+#' Long values coming from the calling environment are referred to by the name
+#' of the object they come from, so that the printed code stays copy-pasteable.
+#' Values that are too long to display and are not bound to a name, such as a
+#' long inline vector, are shown as a placeholder like
+#' `` `<numeric of length 200>` ``.
 #'
 #' @param x A Polars Data/LazyFrame that went through `tidypolars` functions.
 #' @param ... Not used.
@@ -261,6 +268,23 @@ record_udf_query <- function(out, fn_name, args) {
   tag_polars(out, text)
 }
 
+# Refer to a constant by the name of the caller-environment object it came
+# from, but only when its value is too long to display faithfully: short
+# values are clearer shown literally, and long ones would otherwise become an
+# unusable placeholder like `` `<numeric of length 200>` ``.
+record_named_literal <- function(out, name, value) {
+  if (!query_recording_enabled() || !inherits(out, "tp_recorded")) {
+    return(out)
+  }
+  # A leading "`<" marks a placeholder produced by deparse_query_arg() for
+  # values that cannot be displayed as usable, copy-pasteable code.
+  if (!startsWith(deparse_query_arg(value), "`<")) {
+    return(out)
+  }
+  attr(out, "tp_query") <- paste0("pl$lit(", name, ")")
+  out
+}
+
 deparse_query_dots <- function(...) {
   # dots_list() is required to handle `!!!` splicing, which polars methods
   # support in their own dots collection. Polars methods also internally
@@ -456,8 +480,10 @@ match_binary_op <- function(node) {
 # Formatting:
 # - one line per method called on the Data/LazyFrame (lines end with "$" so
 #   that the printed block can be copy-pasted as is);
-# - those calls get one argument per line when they have several arguments,
-#   or when they don't fit on the line;
+# - those calls get one argument per line when they don't fit on the line, or
+#   when they have several compound arguments (named ones or nested
+#   expressions); a call made only of plain unnamed values, like
+#   `select("a", "b")`, stays inline as long as it fits;
 # - inside arguments, the same rules apply recursively but only when the
 #   line is too long, so that short values like `c(FALSE, TRUE)` stay
 #   inline.

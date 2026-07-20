@@ -86,6 +86,16 @@
         with_columns(mpg_std = pl_standardize(pl$col("mpg")))$
         select("mpg_std")
 
+# long vectors are truncated in the query
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          foo = pl$col("mpg")$is_in(pl$lit(large)$implode(), nulls_equal = TRUE)
+        )
+
 # the input data is not modified by the recording
 
     Code

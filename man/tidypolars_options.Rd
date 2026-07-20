@@ -22,6 +22,11 @@ unknown function, and convert the output back to polars.
 \item the session may crash or experience a severe slowdown when the data is
 converted to R (especially if the input is a LazyFrame).
 }
+\item \code{tidypolars_record_query} controls whether the polars query performed in
+the background is recorded so that it can be displayed with
+\code{\link[=show_query]{show_query()}}. The default is \code{TRUE}. Setting this option to \code{FALSE}
+removes the (small) overhead of recording the query, but \code{\link[=show_query]{show_query()}}
+will then error on objects created while the option was \code{FALSE}.
 }
 
 The package \code{polars} also contains several global options that may be useful,

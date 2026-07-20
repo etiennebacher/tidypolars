@@ -109,7 +109,7 @@ test_that("long vectors are truncated in the query", {
     as_polars_lf() |>
     mutate(foo = mpg %in% large)
 
-  expect_match(get_query(query), "<numeric of length 200>", fixed = TRUE)
+  expect_snapshot_lazy(show_query(query))
 })
 
 test_that("the input data is not modified by the recording", {

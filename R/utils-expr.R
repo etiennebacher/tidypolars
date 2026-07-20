@@ -268,7 +268,11 @@ translate <- function(
         pl$col(expr_char)
       } else {
         val <- eval_tidy(expr, env = caller)
-        polars_constant(val)
+        # Refer to the object by its name in the recorded query when its value
+        # would otherwise be displayed as an unusable truncated placeholder
+        # (e.g. a long vector). The name is both clearer and copy-pasteable
+        # since the object lives in the caller environment.
+        record_named_literal(polars_constant(val), expr_char, val)
       }
     },
     language = {
