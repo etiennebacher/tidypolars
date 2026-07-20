@@ -142,9 +142,7 @@
       current$collect()
     Output
       as_polars_lf(mtcars)$
-        with_columns(
-          mpg_std = (pl$col("mpg") - pl$col("mpg")$mean())/pl$col("mpg")$std()
-        )$
+        with_columns(mpg_std = pl_standardize(pl$col("mpg")))$
         select("mpg_std")
       shape: (32, 1)
       ┌───────────┐

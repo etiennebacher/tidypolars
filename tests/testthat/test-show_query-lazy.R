@@ -8,7 +8,7 @@ get_query <- function(x) {
 
 replay_query <- function(x) {
   pl <- polars::pl
-  out <- eval(parse(text = get_query(x)))
+  out <- eval(parse(text = get_query(x)), envir = caller_env())
   if (is_polars_lf(out)) {
     out$collect()
   } else {

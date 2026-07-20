@@ -231,6 +231,36 @@ wrap_polars_member <- function(holder, member, parent_text, name) {
   }
 }
 
+# Re-tag the result of a user-defined function so that the recorded query
+# shows the opaque call (e.g. `pl_standardize(pl$col("x"))`) instead of the
+# polars operations performed inside the function body. `args` are the
+# (already translated) arguments the function was called with.
+record_udf_query <- function(out, fn_name, args) {
+  if (!query_recording_enabled() || !inherits(out, "polars_object")) {
+    return(out)
+  }
+  text <- tryCatch(
+    {
+      n <- length(args)
+      nms <- names(args) %||% character(n)
+      nms[is.na(nms)] <- ""
+      dep <- vapply(args, deparse_query_arg, character(1))
+      pieces <- ifelse(nms == "", dep, paste0(nms, " = ", dep))
+      paste0(fn_name, "(", paste(pieces, collapse = ", "), ")")
+    },
+    error = function(e) NULL
+  )
+  if (is.null(text)) {
+    return(out)
+  }
+  # `out` may be one of the (already tagged) inputs: cloning avoids corrupting
+  # the input's own query.
+  if (inherits(out, "tp_recorded") && is.environment(out)) {
+    out <- clone_env_with_attrs(out)
+  }
+  tag_polars(out, text)
+}
+
 deparse_query_dots <- function(...) {
   # dots_list() is required to handle `!!!` splicing, which polars methods
   # support in their own dots collection. Polars methods also internally

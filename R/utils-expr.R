@@ -774,7 +774,15 @@ translate <- function(
                 return(polars_constant(r_result))
               }
             }
-            call2(name, !!!args) |> eval_bare(env = caller)
+            out <- call2(name, !!!args) |> eval_bare(env = caller)
+            if (name %in% user_defined && !name %in% known_ops) {
+              # User-defined functions are opaque: record the call itself
+              # (e.g. `pl_standardize(pl$col("x"))`) rather than the individual
+              # polars operations it performs internally, which we should not
+              # inspect.
+              out <- record_udf_query(out, fn_names$orig_name, args)
+            }
+            out
           } else {
             accepted_args <- names(formals(name))
             if ("..." %in% accepted_args) {
