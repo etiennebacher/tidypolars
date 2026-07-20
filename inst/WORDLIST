@@ -35,7 +35,6 @@ chrono
 csv
 datatypes
 deprecations
-devtools
 downup
 dplyr
 dtypes
@@ -54,11 +53,11 @@ ndjson
 nows
 occurence
 ofccurences
+pasteable
 polars
 pre
 prefiltered
 regexes
-roxygen
 subplans
 tibble
 tidyr
@@ -66,10 +65,8 @@ tidyselect
 tidyverse
 timeunit
 ungrouped
-unlicense
 unnest
 unnested
 upcast
 updown
-vctrs
 zstd
