@@ -89,7 +89,8 @@ test_that("user-defined functions returning polars expressions are recorded", {
 })
 
 test_that("compute() records the $collect() call", {
-  skip_if(!nzchar(Sys.getenv('TIDYPOLARS_TEST')))
+  print(Sys.getenv('TIDYPOLARS_TEST'))
+  skip_if(Sys.getenv('TIDYPOLARS_TEST') %in% c("", "FALSE"))
   query <- mtcars |>
     as_polars_lf() |>
     filter(cyl == 4) |>

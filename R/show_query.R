@@ -227,7 +227,9 @@ wrap_polars_member <- function(holder, member, parent_text, name) {
           assign(lhs_name, holder, envir = eval_env)
           cl[[1]][[2]] <- as.name(lhs_name)
           tp_recorder$skip_next <- TRUE
-          on.exit(tp_recorder$skip_next <- FALSE)
+          on.exit({
+            tp_recorder$skip_next <- FALSE
+          })
           eval(cl, eval_env)
         } else {
           member(...)
@@ -674,7 +676,9 @@ format_call_segment <- function(part, indent, force_explode) {
   # `select("a", "b")`, stays inline as long as it fits on the line.
   too_long <- indent + nchar(part) > tp_query_width
   explode <- too_long ||
-    (force_explode && length(commas) > 0 && !all(vapply(args, is_plain_arg, logical(1))))
+    (force_explode &&
+      length(commas) > 0 &&
+      !all(vapply(args, is_plain_arg, logical(1))))
   if (!explode) {
     return(part)
   }
