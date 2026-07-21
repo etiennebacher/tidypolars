@@ -49,24 +49,14 @@ show_query.polars_data_frame <- function(x, ...) {
   invisible(x)
 }
 
-# Colorize the polars code with ANSI syntax highlighting, but only when the
-# optional prettycode package is installed and the output supports colors.
-# Any failure (e.g. code prettycode can't parse) degrades to the plain text.
+# Colorize the polars code produced.
 highlight_query <- function(text) {
   if (num_ansi_colors() <= 1L) {
     return(text)
   }
-  if (!is_installed("prettycode")) {
-    cli_inform(
-      c(i = "Install the {.pkg prettycode} package to enable syntax highlighting of the query."),
-      .frequency = "once",
-      .frequency_id = "tidypolars_prettycode_hint"
-    )
-    return(text)
-  }
   lines <- strsplit(text, "\n", fixed = TRUE)[[1]]
   out <- tryCatch(
-    prettycode::highlight(lines),
+    cli::code_highlight(lines, code_theme = "Solarized Light"),
     error = function(e) lines
   )
   paste(out, collapse = "\n")
