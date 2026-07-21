@@ -45,8 +45,31 @@ show_query.polars_data_frame <- function(x, ...) {
       )
     )
   }
-  cat(format_polars_query(text), "\n", sep = "")
+  cat(highlight_query(format_polars_query(text)), "\n", sep = "")
   invisible(x)
+}
+
+# Colorize the polars code with ANSI syntax highlighting, but only when the
+# optional prettycode package is installed and the output supports colors.
+# Any failure (e.g. code prettycode can't parse) degrades to the plain text.
+highlight_query <- function(text) {
+  if (num_ansi_colors() <= 1L) {
+    return(text)
+  }
+  if (!is_installed("prettycode")) {
+    cli_inform(
+      c(i = "Install the {.pkg prettycode} package to enable syntax highlighting of the query."),
+      .frequency = "once",
+      .frequency_id = "tidypolars_prettycode_hint"
+    )
+    return(text)
+  }
+  lines <- strsplit(text, "\n", fixed = TRUE)[[1]]
+  out <- tryCatch(
+    prettycode::highlight(lines),
+    error = function(e) lines
+  )
+  paste(out, collapse = "\n")
 }
 
 #' @rdname show_query.polars_data_frame

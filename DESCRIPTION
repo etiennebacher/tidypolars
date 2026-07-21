@@ -47,6 +47,7 @@ Suggests:
     lubridate,
     nanoparquet,
     patrick,
+    prettycode,
     quickcheck,
     rmarkdown,
     rstudioapi,
