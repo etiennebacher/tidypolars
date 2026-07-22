@@ -27,7 +27,7 @@ with_polars_errors <- function(expr, call = caller_env()) {
         e <- e$parent
       }
       error <- paste(c(conditionMessage(e), e$body), collapse = "\n")
-      # Use cli's hard line breaks (\f)
+      # cli collapses newlines into spaces, so we use cli's hard line breaks instead (\f)
       error <- gsub("\n+", "\f", error)
       cli_abort("{error}", call = call)
     }
