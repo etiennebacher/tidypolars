@@ -124,14 +124,7 @@ filter.polars_data_frame <- function(.data, ..., .by = NULL) {
   # in the filter() call. So it won't replace the "|" call.
   polars_exprs <- Reduce(`&`, polars_exprs)
 
-  tryCatch(
-    {
-      out <- .data$filter(polars_exprs)
-    },
-    error = function(e) {
-      cli_abort(e$message, call = caller_env(4))
-    }
-  )
+  out <- with_polars_errors(.data$filter(polars_exprs))
   out <- if (is_grouped && missing(.by)) {
     group_by(out, all_of(grps), maintain_order = mo)
   } else {
@@ -172,14 +165,7 @@ filter_out.polars_data_frame <- function(.data, ..., .by = NULL) {
   # in the filter() call. So it won't replace the "|" call.
   polars_exprs <- Reduce(`&`, polars_exprs)
 
-  tryCatch(
-    {
-      out <- .data$remove(polars_exprs)
-    },
-    error = function(e) {
-      cli_abort(e$message, call = caller_env(4))
-    }
-  )
+  out <- with_polars_errors(.data$remove(polars_exprs))
   out <- if (is_grouped && missing(.by)) {
     group_by(out, all_of(grps), maintain_order = mo)
   } else {

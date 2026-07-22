@@ -31,7 +31,7 @@ rename.polars_data_frame <- function(.data, ...) {
   # polars wants a list with old names as names and new names as values
   new_names <- as.list(names(dots))
   names(new_names) <- dots
-  out <- .data$rename(!!!new_names)
+  out <- with_polars_errors(.data$rename(!!!new_names))
   add_tidypolars_class(out)
 }
 
@@ -53,7 +53,7 @@ rename_with.polars_data_frame <- function(
   # polars wants a list with old names as names and new names as values
   mapping <- as.list(new)
   names(mapping) <- to_replace
-  out <- .data$rename(!!!mapping)
+  out <- with_polars_errors(.data$rename(!!!mapping))
   add_tidypolars_class(out)
 }
 

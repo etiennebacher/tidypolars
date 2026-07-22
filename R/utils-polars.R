@@ -13,3 +13,23 @@ add_tidypolars_class <- function(x) {
   }
   x
 }
+
+# Run a Polars operation, replacing its nested error chain by the root message
+# so that users see the actionable error and not the "Evaluation failed in
+# `$...()`" wrappers.
+with_polars_errors <- function(expr, call = caller_env()) {
+  tryCatch(
+    expr,
+    error = function(e) {
+      # Get the innermost error message, the one reported by rust-polars and not
+      # all the r-polars wrappers.
+      while (!is.null(e$parent)) {
+        e <- e$parent
+      }
+      error <- paste(c(conditionMessage(e), e$body), collapse = "\n")
+      # cli collapses newlines into spaces, so we use cli's hard line breaks instead (\f)
+      error <- gsub("\n+", "\f", error)
+      cli_abort("{error}", call = call)
+    }
+  )
+}

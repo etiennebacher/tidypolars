@@ -3,11 +3,7 @@
     Code
       mutate(test_pl, foo = unique(y))
     Condition
-      Error in `.data$with_columns()`:
-      ! Evaluation failed in `$with_columns()`.
-      Caused by error:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `mutate()`:
       ! lengths don't match: unable to add a column of length 4 to a DataFrame of height 5
 
 # trunc() works
@@ -15,11 +11,7 @@
     Code
       mutate(test_pl, foo = trunc("a"))
     Condition
-      Error in `.data$with_columns()`:
-      ! Evaluation failed in `$with_columns()`.
-      Caused by error:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `mutate()`:
       ! truncation ('to_zero') can only be used on numeric types
 
 # trunc() in tidypolars doesn't support Date/datetime
@@ -30,11 +22,7 @@
       Warning:
       tidypolars doesn't know how to use some arguments of `trunc()`.
       i The following argument(s) will be ignored: "units".
-      Error in `.data$with_columns()`:
-      ! Evaluation failed in `$with_columns()`.
-      Caused by error:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `mutate()`:
       ! truncation ('to_zero') can only be used on numeric types
 
 ---
@@ -45,11 +33,7 @@
       Warning:
       tidypolars doesn't know how to use some arguments of `trunc()`.
       i The following argument(s) will be ignored: "units".
-      Error in `.data$with_columns()`:
-      ! Evaluation failed in `$with_columns()`.
-      Caused by error:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `mutate()`:
       ! truncation ('to_zero') can only be used on numeric types
 
 # sample() validates size
