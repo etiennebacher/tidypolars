@@ -66,11 +66,7 @@
     Code
       pivot_wider(test_pl, id_cols = name, names_from = name, values_from = value)
     Condition
-      Error in `data$pivot()`:
-      ! Evaluation failed in `$pivot()`.
-      Caused by error:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `pivot_wider()`:
       ! at least one key is required in a group_by operation
 
 ---
@@ -78,11 +74,7 @@
     Code
       pivot_wider(test_pl, id_cols = value, names_from = name, values_from = value)
     Condition
-      Error in `data$pivot()`:
-      ! Evaluation failed in `$pivot()`.
-      Caused by error:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `pivot_wider()`:
       ! at least one key is required in a group_by operation
 
 # dots must be empty

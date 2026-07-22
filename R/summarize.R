@@ -88,9 +88,11 @@ summarize.polars_data_frame <- function(
 
     if (length(sub) > 0) {
       if (is_grouped) {
-        .data <- .data$group_by(grps, .maintain_order = mo)$agg(!!!sub)
+        .data <- with_polars_errors(
+          .data$group_by(grps, .maintain_order = mo)$agg(!!!sub)
+        )
       } else {
-        .data <- .data$select(!!!sub)
+        .data <- with_polars_errors(.data$select(!!!sub))
       }
     }
 

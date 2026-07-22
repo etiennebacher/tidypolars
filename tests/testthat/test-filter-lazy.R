@@ -523,4 +523,13 @@ test_that("no input is equivalent to all rows being TRUE", {
   )
 })
 
+test_that("Polars runtime errors only show the root message", {
+  test_pl <- as_polars_lf(tibble(x = "a"))
+
+  expect_snapshot_lazy(filter(test_pl, x > 1), error = TRUE)
+  expect_snapshot_lazy(filter_out(test_pl, x > 1), error = TRUE)
+  # The error message can contain braces
+  expect_snapshot_lazy(filter(test_pl, grepl("a{2,1}", x)), error = TRUE)
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
