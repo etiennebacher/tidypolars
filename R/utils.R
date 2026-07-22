@@ -51,30 +51,19 @@ get_grps <- function(.data, .by, env) {
   if (is_null(x)) y else x
 }
 
-# Polars wraps runtime errors in several nested "Evaluation failed in `$...()`"
-# conditions. Those wrappers are noise to tidypolars users; only the innermost
-# (root) condition carries the actionable message (e.g. "cannot compare string
-# with numeric type"). Walk the `parent` chain to that root and return its
-# message.
-#
-# The result is meant to be interpolated as a *value* (`cli_abort("{msg}")`),
-# never as a glue template, because Polars messages can contain braces (regex
-# patterns, struct dtypes, ...) that would otherwise be parsed as cli code.
-polars_root_error_message <- function(e) {
-  while (!is.null(e$parent)) {
-    e <- e$parent
-  }
-  paste(c(conditionMessage(e), e$body), collapse = "\n")
-}
-
 # Run a Polars operation, replacing its nested error chain by the root message
 # so that users see the actionable error and not the "Evaluation failed in
-# `$...()`" wrappers. Only wrap the Polars call itself: tidypolars' own errors
-# (raised during translation) are already formatted and should not be flattened.
+# `$...()`" wrappers.
 with_polars_errors <- function(expr, call = caller_env()) {
   tryCatch(
     expr,
     error = function(e) {
+      # Get the innermost error message, the one reported by rust-polars and not
+      # all the r-polars wrappers.
+      while (!is.null(e$parent)) {
+        e <- e$parent
+      }
+      paste(c(conditionMessage(e), e$body), collapse = "\n")
       cli_abort("{polars_root_error_message(e)}", call = call)
     }
   )
