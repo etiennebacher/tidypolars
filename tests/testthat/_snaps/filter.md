@@ -50,5 +50,8 @@
       filter(test_pl, grepl("a{2,1}", x))
     Condition
       Error in `filter()`:
-      ! regex error: regex parse error: a{2,1} ^^^^^ error: invalid repetition count range, the start must be <= the end
+      ! regex error: regex parse error:
+      a{2,1}
+      ^^^^^
+      error: invalid repetition count range, the start must be <= the end
 

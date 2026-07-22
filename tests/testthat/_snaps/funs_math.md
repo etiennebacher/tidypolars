@@ -4,7 +4,8 @@
       mutate(test_pl, y = log(x, base = "3"))
     Condition
       Error in `mutate()`:
-      ! Column(s) not found: unable to find column "3"; valid columns: ["x"] Did you mean "x"?
+      ! Column(s) not found: unable to find column "3"; valid columns: ["x"]
+      Did you mean "x"?
 
 # sort errors when na.last is absent or NA
 

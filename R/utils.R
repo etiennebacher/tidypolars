@@ -51,24 +51,6 @@ get_grps <- function(.data, .by, env) {
   if (is_null(x)) y else x
 }
 
-# Run a Polars operation, replacing its nested error chain by the root message
-# so that users see the actionable error and not the "Evaluation failed in
-# `$...()`" wrappers.
-with_polars_errors <- function(expr, call = caller_env()) {
-  tryCatch(
-    expr,
-    error = function(e) {
-      # Get the innermost error message, the one reported by rust-polars and not
-      # all the r-polars wrappers.
-      while (!is.null(e$parent)) {
-        e <- e$parent
-      }
-      error <- paste(c(conditionMessage(e), e$body), collapse = "\n")
-      cli_abort("{error}", call = call)
-    }
-  )
-}
-
 # takes a character vector, returns a named list where the name is the duplicated
 # value and the values are its positions
 get_dupes <- function(x) {

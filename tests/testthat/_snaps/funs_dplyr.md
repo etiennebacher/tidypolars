@@ -40,7 +40,8 @@
       mutate(test_pl, foo = na_if(x, 1:2))
     Condition
       Error in `mutate()`:
-      ! lengths don't match: cannot evaluate two Series of different lengths (5 and 2) Error originated in expression: '[(col("x")) == (Series[literal])]'
+      ! lengths don't match: cannot evaluate two Series of different lengths (5 and 2)
+      Error originated in expression: '[(col("x")) == (Series[literal])]'
 
 # near() works
 
@@ -48,7 +49,8 @@
       mutate(test_pl, z = near(x, 1:2))
     Condition
       Error in `mutate()`:
-      ! lengths don't match: cannot evaluate two Series of different lengths (3 and 2) Error originated in expression: '[(col("x")) - (Series[literal])]'
+      ! lengths don't match: cannot evaluate two Series of different lengths (3 and 2)
+      Error originated in expression: '[(col("x")) - (Series[literal])]'
 
 #  when_all() and when_any() work
 
