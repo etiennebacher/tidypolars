@@ -48,13 +48,12 @@ rename_with.polars_data_frame <- function(
   .cols = tidyselect::everything(),
   ...
 ) {
-  env <- rlang::current_env()
   to_replace <- tidyselect_named_arg(.data, rlang::enquo(.cols))
   new <- do.call(.fn, list(to_replace, ...))
   # polars wants a list with old names as names and new names as values
   mapping <- as.list(new)
   names(mapping) <- to_replace
-  out <- with_polars_errors(.data$rename(!!!mapping), call = env)
+  out <- with_polars_errors(.data$rename(!!!mapping))
   add_tidypolars_class(out)
 }
 
