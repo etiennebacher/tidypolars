@@ -124,3 +124,74 @@
       i The query is only recorded when the option `tidypolars_record_query` is `TRUE` (the default) while the tidypolars functions are applied.
       i See `?tidypolars_options`.
 
+# vignette 'Getting started': who pipeline
+
+    Code
+      show_query(query)
+    Output
+      who_pl$filter(pl$col("year") > pl$lit(1990))$
+        drop_nulls("newrel_f3544")$
+        select(
+          "iso3",
+          "year",
+          "newrel_f014",
+          "newrel_f1524",
+          "newrel_f2534",
+          "newrel_f3544",
+          "newrel_f4554",
+          "newrel_f5564",
+          "newrel_f65"
+        )$
+        with_columns(
+          pl$col("iso3")$alias("__TIDYPOLARS_TEMP_SORT__1"),
+          pl$col("year")$alias("__TIDYPOLARS_TEMP_SORT__2")
+        )$
+        sort(
+          "__TIDYPOLARS_TEMP_SORT__1",
+          "__TIDYPOLARS_TEMP_SORT__2",
+          descending = c(FALSE, FALSE),
+          nulls_last = TRUE
+        )$
+        drop("__TIDYPOLARS_TEMP_SORT__1", "__TIDYPOLARS_TEMP_SORT__2")$
+        rename(
+          iso3 = "ISO3",
+          year = "YEAR",
+          newrel_f014 = "NEWREL_F014",
+          newrel_f1524 = "NEWREL_F1524",
+          newrel_f2534 = "NEWREL_F2534",
+          newrel_f3544 = "NEWREL_F3544",
+          newrel_f4554 = "NEWREL_F4554",
+          newrel_f5564 = "NEWREL_F5564",
+          newrel_f65 = "NEWREL_F65"
+        )$
+        head(n = 6L)
+
+# vignette 'R and Polars expressions': unsupported argument is dropped
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          x = pl$when(pl$col("mpg")$has_nulls())$
+            then(NA)$
+            otherwise(pl$col("mpg")$mean())
+        )
+
+# vignette 'R and Polars expressions': external object in filter
+
+    Code
+      show_query(query)
+    Output
+      pl$DataFrame(foo = c(2, 1, 2))$
+        filter(pl$col("foo") >= pl$lit(1:3))
+
+# show_query() example: grouped mutate with .by
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        filter(pl$col("cyl") == pl$lit(4))$
+        with_columns(mpg2 = (pl$col("mpg") * pl$lit(2))$over("am"))
+

@@ -85,7 +85,6 @@ test_that("user-defined functions returning polars expressions are recorded", {
 })
 
 test_that("compute() records the $collect() call", {
-  print(Sys.getenv('TIDYPOLARS_TEST'))
   skip_if(Sys.getenv('TIDYPOLARS_TEST') %in% c("", "FALSE"))
   query <- mtcars |>
     as_polars_df() |>
@@ -135,4 +134,69 @@ test_that("option tidypolars_record_query = FALSE disables the recording", {
 
   expect_null(get_query(query))
   expect_snapshot(show_query(query), error = TRUE)
+})
+
+# Test code from vignettes and examples
+
+test_that("vignette 'Getting started': who pipeline", {
+  who_pl <- as_polars_df(tidyr::who)
+
+  query <- who_pl |>
+    filter(year > 1990) |>
+    drop_na(newrel_f3544) |>
+    select(iso3, year, matches("^newrel(.*)_f")) |>
+    arrange(iso3, year) |>
+    rename_with(.fn = toupper) |>
+    head()
+
+  expect_snapshot(show_query(query))
+
+  expect_equal(
+    as_tibble(replay_query(query)),
+    as_tibble(query)
+  )
+})
+
+test_that("vignette 'R and Polars expressions': unsupported argument is dropped", {
+  query <- suppressWarnings(
+    mtcars |>
+      as_polars_df() |>
+      mutate(x = mean(mpg, trim = 2))
+  )
+
+  expect_snapshot(show_query(query))
+
+  expect_equal(
+    as_tibble(replay_query(query)),
+    as_tibble(query)
+  )
+})
+
+test_that("vignette 'R and Polars expressions': external object in filter", {
+  dat <- pl$DataFrame(foo = c(2, 1, 2))
+  a <- c("d", "e", "f")
+
+  query <- dat |>
+    filter(foo >= agrep("a", a))
+
+  expect_snapshot(show_query(query))
+
+  expect_equal(
+    as_tibble(replay_query(query)),
+    as_tibble(query)
+  )
+})
+
+test_that("show_query() example: grouped mutate with .by", {
+  query <- mtcars |>
+    as_polars_df() |>
+    filter(cyl == 4) |>
+    mutate(mpg2 = mpg * 2, .by = am)
+
+  expect_snapshot(show_query(query))
+
+  expect_equal(
+    as_tibble(replay_query(query)),
+    as_tibble(query)
+  )
 })

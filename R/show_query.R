@@ -139,12 +139,18 @@ tp_recorder$skip_next <- FALSE
     tp_recorder$skip_next <- FALSE
     return(NextMethod())
   }
-  # Frame methods called by polars internally (e.g. the eager `$unique()`
-  # calls `self$lazy()$unique()$collect()`) must not be recorded: only the
-  # user-facing call is part of the query, and wrapping internal calls would
-  # alter the calls displayed in polars error messages. This must not apply
-  # to expressions: methods like `$eq()` are legitimately called from the
-  # polars namespace via group generics (e.g. `Ops.polars_expr` for `==`).
+  # Frame `$` calls originating from the polars namespace are polars' own
+  # doing, not user-facing query steps, and must not be recorded: internal
+  # plumbing (e.g. the eager `$unique()` calling `self$lazy()$unique()$
+  # collect()`) and conversion/sink methods (`as_tibble()`, `to_r_vector()`,
+  # `print()`, ...) both reach this method from the polars namespace. Recording
+  # them would add spurious steps and alter the calls shown in polars error
+  # messages. User-facing passthrough verbs polars implements as S3 methods
+  # (`head()`/`tail()`) are handled by tidypolars' own methods further down, so
+  # they reach this method from the tidypolars namespace instead. The check is
+  # restricted to frames because expression methods like `$eq()` are
+  # legitimately called from the polars namespace via group generics (e.g.
+  # `Ops.polars_expr` for `==`).
   if (
     (is_polars_df(x) || is_polars_lf(x)) &&
       identical(topenv(parent.frame()), asNamespace("polars"))
@@ -175,6 +181,17 @@ pl <- structure(new.env(parent = emptyenv()), class = "tidypolars_pl")
     return(member)
   }
   wrap_polars_member(x, member, "pl", name)
+}
+
+# Needed for show_query()
+#' @export
+head.tp_recorded <- function(x, n = 6L, ...) {
+  x$head(n = n)
+}
+
+#' @export
+tail.tp_recorded <- function(x, n = 6L, ...) {
+  x$tail(n = n)
 }
 
 # Wrap a member (`member`) accessed as `holder$name` so that using it keeps
