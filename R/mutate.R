@@ -114,7 +114,6 @@ mutate.polars_data_frame <- function(
   .keep <- rlang::arg_match0(.keep, values = c("all", "used", "unused", "none"))
   .before <- rlang::enquo(.before)
   .after <- rlang::enquo(.after)
-  env <- rlang::current_env()
 
   grps <- get_grps(.data, rlang::enquo(.by), env = env)
   mo <- attributes(.data)$maintain_grp_order %||% FALSE
@@ -189,7 +188,10 @@ mutate.polars_data_frame <- function(
           }
         })
       }
-      .data <- with_polars_errors(.data$with_columns(!!!sub), call = env)
+      .data <- with_polars_errors(
+        .data$with_columns(!!!sub),
+        call = rlang::current_env()
+      )
       current_names <- c(current_names, setdiff(names(sub), current_names))
     }
 

@@ -82,7 +82,6 @@ separate_longer_delim_polars <- function(
   delim,
   ...
 ) {
-  env <- rlang::current_env()
   check_polars_data(data)
   rlang::check_dots_empty()
   rlang::check_required(cols)
@@ -127,7 +126,7 @@ separate_longer_delim_polars <- function(
   # Explode all columns together, catching polars errors for incompatible lengths
   out <- with_polars_errors(
     out$explode(col_names, empty_as_null = TRUE),
-    call = env
+    call = rlang::current_env()
   )
   add_tidypolars_class(out)
 }
@@ -142,7 +141,6 @@ separate_longer_position_polars <- function(
   ...,
   keep_empty = FALSE
 ) {
-  env <- rlang::current_env()
   check_polars_data(data)
   rlang::check_dots_empty()
   rlang::check_required(cols)
@@ -174,7 +172,7 @@ separate_longer_position_polars <- function(
   # Explode all columns together, catching polars errors for incompatible lengths
   out <- with_polars_errors(
     out$explode(col_names, empty_as_null = TRUE),
-    call = env
+    call = rlang::current_env()
   )
   add_tidypolars_class(out)
 }

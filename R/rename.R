@@ -26,13 +26,15 @@
 #'
 #' rename_with(pl_test_2, \(x) tolower(gsub(".", "_", x, fixed = TRUE)))
 rename.polars_data_frame <- function(.data, ...) {
-  env <- rlang::current_env()
   dots <- get_dots(...)
   dots <- lapply(dots, rlang::as_name)
   # polars wants a list with old names as names and new names as values
   new_names <- as.list(names(dots))
   names(new_names) <- dots
-  out <- with_polars_errors(.data$rename(!!!new_names), call = env)
+  out <- with_polars_errors(
+    .data$rename(!!!new_names),
+    call = rlang::current_env()
+  )
   add_tidypolars_class(out)
 }
 

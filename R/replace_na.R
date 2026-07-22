@@ -13,7 +13,6 @@
 #' replace_na(pl_test, list(x = 0, y = 999))
 
 replace_na.polars_data_frame <- function(data, replace, ...) {
-  env <- rlang::current_env()
   if (!is.list(replace)) {
     cli_abort(
       "{.arg replace} must be a list, not {obj_type_friendly(replace, value= FALSE)}",
@@ -45,7 +44,10 @@ replace_na.polars_data_frame <- function(data, replace, ...) {
   if (is_polars_expr(exprs)) {
     exprs <- list(exprs)
   }
-  out <- with_polars_errors(data$with_columns(!!!exprs), call = env)
+  out <- with_polars_errors(
+    data$with_columns(!!!exprs),
+    call = rlang::current_env()
+  )
 
   add_tidypolars_class(out)
 }
