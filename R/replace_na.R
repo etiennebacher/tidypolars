@@ -44,10 +44,7 @@ replace_na.polars_data_frame <- function(data, replace, ...) {
   if (is_polars_expr(exprs)) {
     exprs <- list(exprs)
   }
-  out <- with_polars_errors(
-    data$with_columns(!!!exprs),
-    call = rlang::current_env()
-  )
+  out <- with_polars_errors(data$with_columns(!!!exprs))
 
   add_tidypolars_class(out)
 }

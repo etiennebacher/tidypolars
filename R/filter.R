@@ -124,10 +124,7 @@ filter.polars_data_frame <- function(.data, ..., .by = NULL) {
   # in the filter() call. So it won't replace the "|" call.
   polars_exprs <- Reduce(`&`, polars_exprs)
 
-  out <- with_polars_errors(
-    .data$filter(polars_exprs),
-    call = rlang::current_env()
-  )
+  out <- with_polars_errors(.data$filter(polars_exprs))
   out <- if (is_grouped && missing(.by)) {
     group_by(out, all_of(grps), maintain_order = mo)
   } else {
@@ -168,10 +165,7 @@ filter_out.polars_data_frame <- function(.data, ..., .by = NULL) {
   # in the filter() call. So it won't replace the "|" call.
   polars_exprs <- Reduce(`&`, polars_exprs)
 
-  out <- with_polars_errors(
-    .data$remove(polars_exprs),
-    call = rlang::current_env()
-  )
+  out <- with_polars_errors(.data$remove(polars_exprs))
   out <- if (is_grouped && missing(.by)) {
     group_by(out, all_of(grps), maintain_order = mo)
   } else {

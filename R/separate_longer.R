@@ -124,10 +124,7 @@ separate_longer_delim_polars <- function(
   }
 
   # Explode all columns together, catching polars errors for incompatible lengths
-  out <- with_polars_errors(
-    out$explode(col_names, empty_as_null = TRUE),
-    call = rlang::current_env()
-  )
+  out <- with_polars_errors(out$explode(col_names, empty_as_null = TRUE))
   add_tidypolars_class(out)
 }
 
@@ -170,10 +167,7 @@ separate_longer_position_polars <- function(
   }
 
   # Explode all columns together, catching polars errors for incompatible lengths
-  out <- with_polars_errors(
-    out$explode(col_names, empty_as_null = TRUE),
-    call = rlang::current_env()
-  )
+  out <- with_polars_errors(out$explode(col_names, empty_as_null = TRUE))
   add_tidypolars_class(out)
 }
 

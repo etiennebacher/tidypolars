@@ -188,10 +188,7 @@ mutate.polars_data_frame <- function(
           }
         })
       }
-      .data <- with_polars_errors(
-        .data$with_columns(!!!sub),
-        call = rlang::current_env()
-      )
+      .data <- with_polars_errors(.data$with_columns(!!!sub))
       current_names <- c(current_names, setdiff(names(sub), current_names))
     }
 
