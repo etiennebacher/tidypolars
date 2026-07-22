@@ -35,7 +35,8 @@ summarize.polars_data_frame <- function(
   .by = NULL,
   .groups = "drop_last"
 ) {
-  grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
+  env <- rlang::current_env()
+  grps <- get_grps(.data, rlang::enquo(.by), env = env)
   mo <- attributes(.data)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
   is_rowwise <- attributes(.data)$grp_type == "rowwise"
@@ -87,9 +88,12 @@ summarize.polars_data_frame <- function(
 
     if (length(sub) > 0) {
       if (is_grouped) {
-        .data <- .data$group_by(grps, .maintain_order = mo)$agg(!!!sub)
+        .data <- with_polars_errors(
+          .data$group_by(grps, .maintain_order = mo)$agg(!!!sub),
+          call = env
+        )
       } else {
-        .data <- .data$select(!!!sub)
+        .data <- with_polars_errors(.data$select(!!!sub), call = env)
       }
     }
 

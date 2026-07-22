@@ -710,3 +710,16 @@ test_that("empty expressions", {
     test_df |> mutate(.by = grp)
   )
 })
+
+test_that("Polars runtime errors only show the root message", {
+  # Eager-only: on a LazyFrame the error is raised by the user's `$collect()`,
+  # outside tidypolars, so the message cannot be cleaned up there.
+  skip_if(Sys.getenv("TIDYPOLARS_TEST") == "TRUE")
+  # Type error surfaced by Polars at `$with_columns()` execution: the output
+  # should be the single root message, not the nested "Evaluation failed" chain.
+  test_pl <- as_polars_df(tibble(x = "a"))
+  expect_snapshot(
+    mutate(test_pl, y = x + 1),
+    error = TRUE
+  )
+})

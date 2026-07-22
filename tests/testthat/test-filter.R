@@ -518,3 +518,27 @@ test_that("no input is equivalent to all rows being TRUE", {
     test_df |> filter_out(!!!list())
   )
 })
+
+test_that("Polars runtime errors only show the root message", {
+  test_pl <- as_polars_df(tibble(x = "a"))
+
+  # Type mismatch: comparing a string column to a number. The output should be
+  # the single root message, not the nested "Evaluation failed in ..." chain.
+  expect_snapshot(
+    filter(test_pl, x > 1),
+    error = TRUE
+  )
+
+  # filter_out() goes through the same handler.
+  expect_snapshot(
+    filter_out(test_pl, x > 1),
+    error = TRUE
+  )
+
+  # The root message can contain braces (here an invalid regex quantifier).
+  # These must be shown verbatim, not interpreted as cli/glue code.
+  expect_snapshot(
+    filter(test_pl, grepl("a{2,1}", x)),
+    error = TRUE
+  )
+})

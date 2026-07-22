@@ -60,4 +60,15 @@ test_that("rename_with works with custom function", {
   )
 })
 
+test_that("Polars runtime errors only show the root message", {
+  # Eager-only: on a LazyFrame the error is raised by the user's `$collect()`,
+  # outside tidypolars, so the message cannot be cleaned up there.
+  skip_if(Sys.getenv("TIDYPOLARS_TEST") == "TRUE")
+  test_pl <- as_polars_lf(tibble(x = 1))
+  expect_snapshot_lazy(
+    rename(test_pl, y = nonexist),
+    error = TRUE
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

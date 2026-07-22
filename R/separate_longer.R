@@ -82,6 +82,7 @@ separate_longer_delim_polars <- function(
   delim,
   ...
 ) {
+  env <- rlang::current_env()
   check_polars_data(data)
   rlang::check_dots_empty()
   rlang::check_required(cols)
@@ -124,12 +125,11 @@ separate_longer_delim_polars <- function(
   }
 
   # Explode all columns together, catching polars errors for incompatible lengths
-  tryCatch(
-    add_tidypolars_class(out$explode(col_names, empty_as_null = TRUE)),
-    error = function(e) {
-      abort(conditionMessage(e), call = caller_env(4))
-    }
+  out <- with_polars_errors(
+    out$explode(col_names, empty_as_null = TRUE),
+    call = env
   )
+  add_tidypolars_class(out)
 }
 
 
@@ -142,6 +142,7 @@ separate_longer_position_polars <- function(
   ...,
   keep_empty = FALSE
 ) {
+  env <- rlang::current_env()
   check_polars_data(data)
   rlang::check_dots_empty()
   rlang::check_required(cols)
@@ -171,12 +172,11 @@ separate_longer_position_polars <- function(
   }
 
   # Explode all columns together, catching polars errors for incompatible lengths
-  tryCatch(
-    add_tidypolars_class(out$explode(col_names, empty_as_null = TRUE)),
-    error = function(e) {
-      abort(conditionMessage(e), call = caller_env(4))
-    }
+  out <- with_polars_errors(
+    out$explode(col_names, empty_as_null = TRUE),
+    call = env
   )
+  add_tidypolars_class(out)
 }
 
 #' Helper function to handle multi-column explode with broadcasting

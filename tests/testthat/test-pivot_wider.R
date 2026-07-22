@@ -351,3 +351,14 @@ test_that("dots must be empty", {
     error = TRUE
   )
 })
+
+test_that("Polars runtime errors only show the root message", {
+  # Eager-only: on a LazyFrame the error is raised by the user's `$collect()`,
+  # outside tidypolars, so the message cannot be cleaned up there.
+  skip_if(Sys.getenv("TIDYPOLARS_TEST") == "TRUE")
+  test_pl <- as_polars_df(tibble(g = c(1L, 1L), x = c(1, 2)))
+  expect_snapshot(
+    pivot_wider(test_pl, names_from = g, values_from = x),
+    error = TRUE
+  )
+})

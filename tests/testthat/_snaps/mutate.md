@@ -3,11 +3,7 @@
     Code
       mutate(test_pl, Sepal.Width = 1:2)
     Condition
-      Error in `.data$with_columns()`:
-      ! Evaluation failed in `$with_columns()`.
-      Caused by error:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `mutate()`:
       ! lengths don't match: unable to add a column of length 2 to a DataFrame of height 150
 
 ---
@@ -15,11 +11,7 @@
     Code
       mutate(test_pl, Sepal.Width = letters[1:2])
     Condition
-      Error in `.data$with_columns()`:
-      ! Evaluation failed in `$with_columns()`.
-      Caused by error:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `mutate()`:
       ! lengths don't match: unable to add a column of length 2 to a DataFrame of height 150
 
 # custom function that doesn't return Polars expression
@@ -73,4 +65,12 @@
       Error in `relocate()`:
       ! Can't select columns that don't exist.
       x Column `missing_col` doesn't exist.
+
+# Polars runtime errors only show the root message
+
+    Code
+      mutate(test_pl, y = x + 1)
+    Condition
+      Error in `mutate()`:
+      ! Invalid operation: arithmetic on dtypes str and f64 is not allowed (lhs: column 'x', rhs: expression `1.0`); try an explicit cast first
 

@@ -82,7 +82,8 @@
 #'     .data[[vars[[2]]]] > cond[[2]]
 #'   )
 filter.polars_data_frame <- function(.data, ..., .by = NULL) {
-  grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
+  env <- rlang::current_env()
+  grps <- get_grps(.data, rlang::enquo(.by), env = env)
   mo <- attributes(.data)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
 
@@ -124,14 +125,7 @@ filter.polars_data_frame <- function(.data, ..., .by = NULL) {
   # in the filter() call. So it won't replace the "|" call.
   polars_exprs <- Reduce(`&`, polars_exprs)
 
-  tryCatch(
-    {
-      out <- .data$filter(polars_exprs)
-    },
-    error = function(e) {
-      cli_abort(e$message, call = caller_env(4))
-    }
-  )
+  out <- with_polars_errors(.data$filter(polars_exprs), call = env)
   out <- if (is_grouped && missing(.by)) {
     group_by(out, all_of(grps), maintain_order = mo)
   } else {
@@ -148,7 +142,8 @@ filter.polars_lazy_frame <- filter.polars_data_frame
 #' @rdname filter.polars_data_frame
 #' @export
 filter_out.polars_data_frame <- function(.data, ..., .by = NULL) {
-  grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
+  env <- rlang::current_env()
+  grps <- get_grps(.data, rlang::enquo(.by), env = env)
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
@@ -172,14 +167,7 @@ filter_out.polars_data_frame <- function(.data, ..., .by = NULL) {
   # in the filter() call. So it won't replace the "|" call.
   polars_exprs <- Reduce(`&`, polars_exprs)
 
-  tryCatch(
-    {
-      out <- .data$remove(polars_exprs)
-    },
-    error = function(e) {
-      cli_abort(e$message, call = caller_env(4))
-    }
-  )
+  out <- with_polars_errors(.data$remove(polars_exprs), call = env)
   out <- if (is_grouped && missing(.by)) {
     group_by(out, all_of(grps), maintain_order = mo)
   } else {
