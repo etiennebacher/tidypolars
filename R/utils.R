@@ -63,8 +63,8 @@ with_polars_errors <- function(expr, call = caller_env()) {
       while (!is.null(e$parent)) {
         e <- e$parent
       }
-      paste(c(conditionMessage(e), e$body), collapse = "\n")
-      cli_abort("{polars_root_error_message(e)}", call = call)
+      error <- paste(c(conditionMessage(e), e$body), collapse = "\n")
+      cli_abort("{error}", call = call)
     }
   )
 }
