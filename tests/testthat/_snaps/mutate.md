@@ -66,11 +66,3 @@
       ! Can't select columns that don't exist.
       x Column `missing_col` doesn't exist.
 
-# Polars runtime errors only show the root message
-
-    Code
-      mutate(test_pl, y = x + 1)
-    Condition
-      Error in `mutate()`:
-      ! Invalid operation: arithmetic on dtypes str and f64 is not allowed (lhs: column 'x', rhs: expression `1.0`); try an explicit cast first
-

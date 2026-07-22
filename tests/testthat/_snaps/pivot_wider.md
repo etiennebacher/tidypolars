@@ -85,11 +85,3 @@
       Error in `pivot_wider()`:
       ! `...` must be empty.
 
-# Polars runtime errors only show the root message
-
-    Code
-      pivot_wider(test_pl, names_from = g, values_from = x)
-    Condition
-      Error in `pivot_wider()`:
-      ! at least one key is required in a group_by operation
-

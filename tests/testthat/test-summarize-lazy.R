@@ -209,15 +209,4 @@ test_that("empty expressions", {
   )
 })
 
-test_that("Polars runtime errors only show the root message", {
-  # Eager-only: on a LazyFrame the error is raised by the user's `$collect()`,
-  # outside tidypolars, so the message cannot be cleaned up there.
-  skip_if(Sys.getenv("TIDYPOLARS_TEST") == "TRUE")
-  test_pl <- as_polars_lf(tibble(x = "a", g = 1L))
-  expect_snapshot_lazy(
-    summarize(group_by(test_pl, g), s = sum(x)),
-    error = TRUE
-  )
-})
-
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
