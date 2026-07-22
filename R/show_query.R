@@ -146,7 +146,7 @@ tp_recorder$skip_next <- FALSE
   # to expressions: methods like `$eq()` are legitimately called from the
   # polars namespace via group generics (e.g. `Ops.polars_expr` for `==`).
   if (
-    inherits(x, c("polars_data_frame", "polars_lazy_frame")) &&
+    (is_polars_df(x) || is_polars_lf(x)) &&
       identical(topenv(parent.frame()), asNamespace("polars"))
   ) {
     return(NextMethod())
