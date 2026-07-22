@@ -166,14 +166,7 @@ pl <- structure(new.env(parent = emptyenv()), class = "tidypolars_pl")
 
 #' @export
 `$.tidypolars_pl` <- function(x, name) {
-  if (!exists(name, envir = polars::pl, inherits = FALSE)) {
-    # Same error as `polars:::$.polars_object`
-    abort(sprintf(
-      "$ - syntax error: `%s` is not a member of this polars object",
-      name
-    ))
-  }
-  member <- polars::pl[[name]]
+  member <- eval_bare(call2("$", expr(polars::pl), sym(name)))
   if (tp_recorder$skip_next) {
     tp_recorder$skip_next <- FALSE
     return(member)
@@ -184,6 +177,17 @@ pl <- structure(new.env(parent = emptyenv()), class = "tidypolars_pl")
   wrap_polars_member(x, member, "pl", name)
 }
 
+# Wrap a member (`member`) accessed as `holder$name` so that using it keeps
+# recording the query. Depending on what the member is, the wrapper either
+# records the call and tags its result (methods), or tags the member itself
+# (sub-namespaces and datatypes). `parent_text` is the recorded code of
+# `holder`, onto which "$name" and the eventual call are appended.
+#
+# Examples (`holder$name` -> what the wrapper returns):
+# - method: `pl$col` with parent_text "pl", name "col" -> a function that,
+#   called as `...("x")`, returns the expression tagged `pl$col("x")`.
+# - sub-namespace: `<expr>$str` on an expression tagged `pl$col("x")`, name
+#   "str" -> the `str` namespace tagged `pl$col("x")$str`.
 wrap_polars_member <- function(holder, member, parent_text, name) {
   if (is.function(member)) {
     if (name == "clone") {
@@ -300,6 +304,8 @@ record_named_literal <- function(out, name, value) {
   out
 }
 
+# Capture the arguments of a call and return them as a single string, e.g.
+# `"a", n = 2, pl$col("b")`.
 deparse_query_dots <- function(...) {
   # dots_list() is required to handle `!!!` splicing, which polars methods
   # support in their own dots collection. Polars methods also internally
@@ -326,7 +332,7 @@ deparse_query_dots <- function(...) {
       character(1)
     )
     pieces <- ifelse(nms == "", dep, paste0(nms, " = ", dep))
-    return(paste(drop_trailing_empty_args(pieces), collapse = ", "))
+    return(paste(pieces, collapse = ", "))
   }
 
   # dots_list() errored, e.g. because forcing a forwarded argument failed:
@@ -348,16 +354,7 @@ deparse_query_dots <- function(...) {
     )
     out[i] <- if (nms[i] == "") dep else paste0(nms[i], " = ", dep)
   }
-  paste(drop_trailing_empty_args(out), collapse = ", ")
-}
-
-# A trailing comma in a call (accepted by polars methods collecting dots)
-# would be recorded as a dangling empty argument.
-drop_trailing_empty_args <- function(pieces) {
-  while (length(pieces) > 0 && pieces[length(pieces)] == "") {
-    pieces <- pieces[-length(pieces)]
-  }
-  pieces
+  paste(out, collapse = ", ")
 }
 
 deparse_query_arg <- function(x) {
@@ -382,22 +379,24 @@ deparse_query_arg <- function(x) {
     dep <- deparse1(x)
     if (nchar(dep) > 300) {
       dep <- paste0("`<", class(x)[1], " value too long to display>`")
-    } else if (
-      is.object(x) &&
-        !tryCatch(
-          {
-            parse(text = dep)
-            TRUE
-          },
-          error = function(e) FALSE
-        )
-    ) {
+    } else if (is.object(x) && !is_parseable(dep)) {
       # Objects whose deparse isn't valid R code, e.g. S7 objects created
       # outside of tidypolars deparse to "<object>".
       dep <- paste0("`<", class(x)[1], ">`")
     }
     dep
   }
+}
+
+# Whether `text` parses as valid R code.
+is_parseable <- function(text) {
+  tryCatch(
+    {
+      parse(text = text)
+      TRUE
+    },
+    error = function(e) FALSE
+  )
 }
 
 # ------------------------------------------------------------------------
@@ -429,6 +428,9 @@ tp_binary_ops <- c(
   and = "&",
   or = "|"
 )
+
+# Used in utils-expr.R
+known_ops <- c(unname(tp_binary_ops), "**", "!")
 
 rewrite_query_operators <- function(text) {
   node <- tryCatch(
@@ -475,16 +477,16 @@ match_binary_op <- function(node) {
   if (!is.null(nms) && nzchar(nms[[2]])) {
     return(NULL)
   }
-  head <- node[[1]]
+  first_node <- node[[1]]
   if (
-    !is.call(head) ||
-      length(head) != 3L ||
-      !identical(head[[1]], as.symbol("$")) ||
-      !is.symbol(head[[3]])
+    !is.call(first_node) ||
+      length(first_node) != 3L ||
+      !identical(first_node[[1]], as.symbol("$")) ||
+      !is.symbol(first_node[[3]])
   ) {
     return(NULL)
   }
-  method <- as.character(head[[3]])
+  method <- as.character(first_node[[3]])
   if (!method %in% names(tp_binary_ops)) {
     return(NULL)
   }
