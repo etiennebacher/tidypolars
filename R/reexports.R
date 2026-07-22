@@ -17,7 +17,3 @@ polars::is_polars_df
 #' @export
 #' @importFrom polars is_polars_expr
 polars::is_polars_expr
-
-#' @export
-#' @importFrom dplyr show_query
-dplyr::show_query

@@ -111,11 +111,7 @@
     Code
       mutate(test_pl, char1 = as.integer(char1))
     Condition
-      Error in `.data$with_columns()`:
-      ! Evaluation failed in `$with_columns()`.
-      Caused by error:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `mutate()`:
       ! conversion from `str` to `i32` failed in column 'char1' for 2 out of 2 values: ["a", "b"]
 
 # option tidypolars_record_query = FALSE disables the recording
