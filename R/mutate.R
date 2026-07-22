@@ -115,7 +115,7 @@ mutate.polars_data_frame <- function(
   .before <- rlang::enquo(.before)
   .after <- rlang::enquo(.after)
 
-  grps <- get_grps(.data, rlang::enquo(.by), env = env)
+  grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
   is_rowwise <- attributes(.data)$grp_type == "rowwise"
