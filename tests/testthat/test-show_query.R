@@ -4,12 +4,7 @@ get_query <- function(x) {
 
 replay_query <- function(x) {
   pl <- polars::pl
-  out <- eval(parse(text = get_query(x)), envir = caller_env())
-  if (is_polars_lf(out)) {
-    out$collect()
-  } else {
-    out
-  }
+  eval(parse(text = get_query(x)), envir = caller_env())
 }
 
 # A small frame with numeric, integer, string, logical, date and datetime
@@ -49,11 +44,7 @@ test_that("basic behavior works", {
     distinct(cyl, am, .keep_all = TRUE)
 
   expect_snapshot(show_query(query))
-
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("show_query() works with group_by() and summarize()", {
@@ -64,11 +55,7 @@ test_that("show_query() works with group_by() and summarize()", {
     ungroup()
 
   expect_snapshot(show_query(query))
-
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("show_query() works with joins and shows the query of both inputs", {
@@ -77,11 +64,7 @@ test_that("show_query() works with joins and shows the query of both inputs", {
   query <- left_join(lhs, rhs, by = "cyl")
 
   expect_snapshot(show_query(query))
-
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("show_query() works with across()", {
@@ -90,11 +73,7 @@ test_that("show_query() works with across()", {
     mutate(across(contains("m"), mean))
 
   expect_snapshot(show_query(query))
-
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("user-defined functions returning polars expressions are recorded", {
@@ -107,11 +86,7 @@ test_that("user-defined functions returning polars expressions are recorded", {
     select(mpg_std)
 
   expect_snapshot(show_query(query))
-
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("compute() records the $collect() call", {
@@ -123,10 +98,7 @@ test_that("compute() records the $collect() call", {
 
   expect_match(get_query(query), "$collect(", fixed = TRUE)
 
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("long vectors are truncated in the query", {
@@ -180,11 +152,7 @@ test_that("vignette 'Getting started': who pipeline", {
     head()
 
   expect_snapshot(show_query(query))
-
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("vignette 'R and Polars expressions': unsupported argument is dropped", {
@@ -195,11 +163,7 @@ test_that("vignette 'R and Polars expressions': unsupported argument is dropped"
   )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("vignette 'R and Polars expressions': external object in filter", {
@@ -210,11 +174,7 @@ test_that("vignette 'R and Polars expressions': external object in filter", {
     filter(foo >= agrep("a", a))
 
   expect_snapshot(show_query(query))
-
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("show_query() example: grouped mutate with .by", {
@@ -224,11 +184,7 @@ test_that("show_query() example: grouped mutate with .by", {
     mutate(mpg2 = mpg * 2, .by = am)
 
   expect_snapshot(show_query(query))
-
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("mutate() example: logical operation and overwriting a column", {
@@ -237,11 +193,7 @@ test_that("mutate() example: logical operation and overwriting a column", {
     mutate(big = Sepal.Width > Sepal.Length, Sepal.Width = Sepal.Width * 2)
 
   expect_snapshot(show_query(query))
-
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("mutate() example: across() with a list of functions and .names", {
@@ -256,11 +208,7 @@ test_that("mutate() example: across() with a list of functions and .names", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("filter() example: grouped filter with .by", {
@@ -270,11 +218,7 @@ test_that("filter() example: grouped filter with .by", {
     filter(mass > mean(mass, na.rm = TRUE), .by = gender)
 
   expect_snapshot(show_query(query))
-
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("pivot_longer() example: relig_income", {
@@ -283,11 +227,7 @@ test_that("pivot_longer() example: relig_income", {
     pivot_longer(!religion, names_to = "income", values_to = "count")
 
   expect_snapshot(show_query(query))
-
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("separate() example: split on a dot", {
@@ -295,11 +235,7 @@ test_that("separate() example: split on a dot", {
     separate(x, into = c("foo", "foo2"), sep = "\\.")
 
   expect_snapshot(show_query(query))
-
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("unite() example: combine columns with a separator", {
@@ -311,11 +247,7 @@ test_that("unite() example: combine columns with a separator", {
     unite(col = "date", year, month, day, sep = "-")
 
   expect_snapshot(show_query(query))
-
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("relocate() example: move columns with .after", {
@@ -324,11 +256,7 @@ test_that("relocate() example: move columns with .after", {
     relocate(hp, vs, .after = "gear")
 
   expect_snapshot(show_query(query))
-
-  expect_equal(
-    as_tibble(replay_query(query)),
-    as_tibble(query)
-  )
+  expect_equal(replay_query(query), query)
 })
 
 test_that("slice example: slice_head() and slice_tail()", {
@@ -342,8 +270,8 @@ test_that("slice example: slice_head() and slice_tail()", {
   expect_snapshot(show_query(query_head))
   expect_snapshot(show_query(query_tail))
 
-  expect_equal(as_tibble(replay_query(query_head)), as_tibble(query_head))
-  expect_equal(as_tibble(replay_query(query_tail)), as_tibble(query_tail))
+  expect_equal(replay_query(query_head), query_head)
+  expect_equal(replay_query(query_tail), query_tail)
 })
 
 # Translated functions (see the "List of supported functions" vignette). Each
@@ -366,8 +294,7 @@ test_that("translated base functions: maths and rounding", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated base functions: trigonometry", {
@@ -386,8 +313,7 @@ test_that("translated base functions: trigonometry", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated base functions: cumulative and diff", {
@@ -398,12 +324,11 @@ test_that("translated base functions: cumulative and diff", {
       cmin = cummin(int),
       cmax = cummax(int),
       rv = rev(int),
-      df = int - lag(int)
+      df = int - dplyr::lag(int)
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated base functions: aggregations in summarize()", {
@@ -418,8 +343,7 @@ test_that("translated base functions: aggregations in summarize()", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated base functions: string manipulation", {
@@ -434,8 +358,7 @@ test_that("translated base functions: string manipulation", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated base functions: type conversions", {
@@ -448,8 +371,7 @@ test_that("translated base functions: type conversions", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated base functions: is.* checks", {
@@ -463,8 +385,7 @@ test_that("translated base functions: is.* checks", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated base functions: %in% and %notin%", {
@@ -473,8 +394,7 @@ test_that("translated base functions: %in% and %notin%", {
     mutate(ins = grp %in% c("a"), notin = grp %notin% c("a"))
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated dplyr functions: between, coalesce, near, if_else", {
@@ -488,8 +408,7 @@ test_that("translated dplyr functions: between, coalesce, near, if_else", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated dplyr functions: case_when (with and without default)", {
@@ -501,8 +420,7 @@ test_that("translated dplyr functions: case_when (with and without default)", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated dplyr functions: case_match (with and without default)", {
@@ -514,8 +432,7 @@ test_that("translated dplyr functions: case_match (with and without default)", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated dplyr functions: recode_values, replace_values, replace_when", {
@@ -528,8 +445,7 @@ test_that("translated dplyr functions: recode_values, replace_values, replace_wh
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated dplyr functions: when_all and when_any", {
@@ -538,15 +454,14 @@ test_that("translated dplyr functions: when_all and when_any", {
     mutate(wall = when_all(lgl1, lgl2), wany = when_any(lgl1, lgl2))
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated dplyr functions: window functions", {
   dat <- tp_test_frame()
   query <- dat |>
     mutate(
-      lg = lag(int),
+      lg = dplyr::lag(int),
       ld = lead(int, 2),
       rn = row_number(),
       dr = dense_rank(int),
@@ -555,8 +470,7 @@ test_that("translated dplyr functions: window functions", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated dplyr functions: reducers in summarize()", {
@@ -571,8 +485,7 @@ test_that("translated dplyr functions: reducers in summarize()", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated stats functions: median, sd, var", {
@@ -581,8 +494,7 @@ test_that("translated stats functions: median, sd, var", {
     summarize(md = median(num, na.rm = TRUE), s = sd(int), v = var(int))
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated stringr functions: detection", {
@@ -597,8 +509,7 @@ test_that("translated stringr functions: detection", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated stringr functions: replacement", {
@@ -611,8 +522,7 @@ test_that("translated stringr functions: replacement", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated stringr functions: case", {
@@ -625,8 +535,7 @@ test_that("translated stringr functions: case", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated stringr functions: padding and trimming", {
@@ -635,8 +544,7 @@ test_that("translated stringr functions: padding and trimming", {
     mutate(pd = str_pad(txt, 10), tr = str_trim(txt), sq = str_squish(txt))
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated stringr functions: extraction", {
@@ -649,8 +557,7 @@ test_that("translated stringr functions: extraction", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated lubridate functions: date components", {
@@ -670,8 +577,7 @@ test_that("translated lubridate functions: date components", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("translated lubridate functions: datetime handling", {
@@ -686,6 +592,5 @@ test_that("translated lubridate functions: datetime handling", {
     )
 
   expect_snapshot(show_query(query))
-
-  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+  expect_equal(replay_query(query), query)
 })
