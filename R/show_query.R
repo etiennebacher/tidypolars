@@ -408,14 +408,7 @@ is_parseable <- function(text) {
 }
 
 # ------------------------------------------------------------------------
-# Operator rewriting:
-# polars maps R operators to binary expression methods (e.g. `a * b` calls
-# `a$mul(b)`), so a recorded query is full of method calls like
-# `pl$col("x")$mul(pl$lit(2))`. Rewriting those back to the operators
-# (`pl$col("x") * pl$lit(2)`) is safe: the operators dispatch to the exact
-# same methods, so the printed query stays valid, copy-pasteable polars code.
-# The recorded query is always valid R, so we rewrite at the AST level, which
-# gives correct precedence and minimal parenthesization for free.
+# Use standard R operators instead of Polars methods (e.g. `$mul()`).
 # ------------------------------------------------------------------------
 
 # Method name (as recorded by polars' `Ops` dispatch) -> R operator.
