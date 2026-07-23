@@ -6,7 +6,7 @@
 
 * Added support for `show_query()` to print the pure `polars` code that is equivalent to the
   query (#369).
-  
+
 
 # tidypolars 0.19.0
 
@@ -14,11 +14,6 @@
 
 ## New features
 
-* New function `show_query()` to display the polars query that `tidypolars`
-  runs in the background. The output is valid R code using `polars` only and
-  can be copy-pasted to reproduce the pipeline without `tidypolars`. The
-  recording of the query can be disabled with
-  `options(tidypolars_record_query = FALSE)`, see `?tidypolars_options`.
 * Added support for `%notin%` (#349).
 * Added support for `.before` and `.after` in `mutate()` (@Yousa-Mirage, #357).
 * Added support for `as.integer()` (#360).
