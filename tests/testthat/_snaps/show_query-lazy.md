@@ -1180,7 +1180,7 @@
           then(31)$
           when(pl$col("date")$dt$month()$is_in(list(c(4, 6, 9, 11))))$
           then(30)$
-          when(pl$col("date")$dt$month() ==     2 & pl$col("date")$dt$is_leap_year())$
+          when(pl$col("date")$dt$month() == 2 & pl$col("date")$dt$is_leap_year())$
           then(29)$
           otherwise(28)$
           cast(pl$Int32),

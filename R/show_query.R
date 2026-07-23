@@ -444,10 +444,27 @@ rewrite_query_operators <- function(text) {
   # Rewriting must never turn a working display into an error: any failure
   # degrades to the original (method-call) text.
   out <- tryCatch(
-    paste(deparse(rewrite_op_node(node), width.cutoff = 500L), collapse = ""),
+    collapse_deparse(deparse(rewrite_op_node(node), width.cutoff = 500L)),
     error = function(e) NULL
   )
   out %||% text
+}
+
+# `deparse()` wraps its output onto several lines when the code is longer than
+# `width.cutoff` (capped at 500). The continuation lines carry alignment
+# indentation, so pasting them with `collapse = ""` would embed that whitespace
+# in the middle of the code (e.g. `month() ==     2`). Rebuild the single-line
+# form instead: drop each continuation line's leading indentation and add a
+# single separating space only when the break didn't already leave one. Breaks
+# never fall inside a string literal, so stripping this whitespace is safe.
+collapse_deparse <- function(lines) {
+  out <- lines[1]
+  for (line in lines[-1]) {
+    cont <- sub("^ +", "", line)
+    sep <- if (cont == "" || grepl(" $", out)) "" else " "
+    out <- paste0(out, sep, cont)
+  }
+  out
 }
 
 rewrite_op_node <- function(node) {
