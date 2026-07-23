@@ -4,6 +4,10 @@
 
 * Clearer error messages in many cases (#370).
 
+* Added support for `show_query()` to print the pure `polars` code that is equivalent to the
+  query (#369).
+  
+
 # tidypolars 0.19.0
 
 `tidypolars` requires `polars` >= 1.13.0.
