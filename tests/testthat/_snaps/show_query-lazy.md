@@ -350,3 +350,908 @@
       │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ 42.8 │
       └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴──────┘
 
+# mutate() example: logical operation and overwriting a column
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(iris)$
+        with_columns(
+          big = pl$col("Sepal.Width") > pl$col("Sepal.Length"),
+          Sepal.Width = pl$col("Sepal.Width") * pl$lit(2)
+        )
+      shape: (150, 6)
+      ┌──────────────┬─────────────┬──────────────┬─────────────┬───────────┬───────┐
+      │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ Species   ┆ big   │
+      │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---       ┆ ---   │
+      │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ cat       ┆ bool  │
+      ╞══════════════╪═════════════╪══════════════╪═════════════╪═══════════╪═══════╡
+      │ 5.1          ┆ 7.0         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ false │
+      │ 4.9          ┆ 6.0         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ false │
+      │ 4.7          ┆ 6.4         ┆ 1.3          ┆ 0.2         ┆ setosa    ┆ false │
+      │ 4.6          ┆ 6.2         ┆ 1.5          ┆ 0.2         ┆ setosa    ┆ false │
+      │ 5.0          ┆ 7.2         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ false │
+      │ …            ┆ …           ┆ …            ┆ …           ┆ …         ┆ …     │
+      │ 6.7          ┆ 6.0         ┆ 5.2          ┆ 2.3         ┆ virginica ┆ false │
+      │ 6.3          ┆ 5.0         ┆ 5.0          ┆ 1.9         ┆ virginica ┆ false │
+      │ 6.5          ┆ 6.0         ┆ 5.2          ┆ 2.0         ┆ virginica ┆ false │
+      │ 6.2          ┆ 6.8         ┆ 5.4          ┆ 2.3         ┆ virginica ┆ false │
+      │ 5.9          ┆ 6.0         ┆ 5.1          ┆ 1.8         ┆ virginica ┆ false │
+      └──────────────┴─────────────┴──────────────┴─────────────┴───────────┴───────┘
+
+# mutate() example: across() with a list of functions and .names
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(iris)$
+        with_columns(
+          mean_of_Sepal.Length = pl$when(pl$col("Sepal.Length")$has_nulls())$
+            then(NA)$
+            otherwise(pl$col("Sepal.Length")$mean()),
+          sd_of_Sepal.Length = pl$when(pl$col("Sepal.Length")$has_nulls())$
+            then(NA)$
+            otherwise(pl$col("Sepal.Length")$std(ddof = 1)),
+          mean_of_Sepal.Width = pl$when(pl$col("Sepal.Width")$has_nulls())$
+            then(NA)$
+            otherwise(pl$col("Sepal.Width")$mean()),
+          sd_of_Sepal.Width = pl$when(pl$col("Sepal.Width")$has_nulls())$
+            then(NA)$
+            otherwise(pl$col("Sepal.Width")$std(ddof = 1))
+        )
+      shape: (150, 9)
+      ┌───────────┬───────────┬───────────┬───────────┬───┬───────────┬───────────┬───────────┬──────────┐
+      │ Sepal.Len ┆ Sepal.Wid ┆ Petal.Len ┆ Petal.Wid ┆ … ┆ mean_of_S ┆ sd_of_Sep ┆ mean_of_S ┆ sd_of_Se │
+      │ gth       ┆ th        ┆ gth       ┆ th        ┆   ┆ epal.Leng ┆ al.Length ┆ epal.Widt ┆ pal.Widt │
+      │ ---       ┆ ---       ┆ ---       ┆ ---       ┆   ┆ th        ┆ ---       ┆ h         ┆ h        │
+      │ f64       ┆ f64       ┆ f64       ┆ f64       ┆   ┆ ---       ┆ f64       ┆ ---       ┆ ---      │
+      │           ┆           ┆           ┆           ┆   ┆ f64       ┆           ┆ f64       ┆ f64      │
+      ╞═══════════╪═══════════╪═══════════╪═══════════╪═══╪═══════════╪═══════════╪═══════════╪══════════╡
+      │ 5.1       ┆ 3.5       ┆ 1.4       ┆ 0.2       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ 4.9       ┆ 3.0       ┆ 1.4       ┆ 0.2       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ 4.7       ┆ 3.2       ┆ 1.3       ┆ 0.2       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ 4.6       ┆ 3.1       ┆ 1.5       ┆ 0.2       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ 5.0       ┆ 3.6       ┆ 1.4       ┆ 0.2       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ …         ┆ …         ┆ …         ┆ …         ┆ … ┆ …         ┆ …         ┆ …         ┆ …        │
+      │ 6.7       ┆ 3.0       ┆ 5.2       ┆ 2.3       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ 6.3       ┆ 2.5       ┆ 5.0       ┆ 1.9       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ 6.5       ┆ 3.0       ┆ 5.2       ┆ 2.0       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ 6.2       ┆ 3.4       ┆ 5.4       ┆ 2.3       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ 5.9       ┆ 3.0       ┆ 5.1       ┆ 1.8       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      └───────────┴───────────┴───────────┴───────────┴───┴───────────┴───────────┴───────────┴──────────┘
+
+# filter() example: grouped filter with .by
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(dplyr::starwars)$
+        select("name", "mass", "gender")$
+        filter((pl$col("mass") > pl$col("mass")$mean())$over("gender"))
+      shape: (15, 3)
+      ┌───────────────────────┬────────┬───────────┐
+      │ name                  ┆ mass   ┆ gender    │
+      │ ---                   ┆ ---    ┆ ---       │
+      │ str                   ┆ f64    ┆ str       │
+      ╞═══════════════════════╪════════╪═══════════╡
+      │ Darth Vader           ┆ 136.0  ┆ masculine │
+      │ Owen Lars             ┆ 120.0  ┆ masculine │
+      │ Beru Whitesun Lars    ┆ 75.0   ┆ feminine  │
+      │ Chewbacca             ┆ 112.0  ┆ masculine │
+      │ Jabba Desilijic Tiure ┆ 1358.0 ┆ masculine │
+      │ …                     ┆ …      ┆ …         │
+      │ Luminara Unduli       ┆ 56.2   ┆ feminine  │
+      │ Zam Wesell            ┆ 55.0   ┆ feminine  │
+      │ Shaak Ti              ┆ 57.0   ┆ feminine  │
+      │ Grievous              ┆ 159.0  ┆ masculine │
+      │ Tarfful               ┆ 136.0  ┆ masculine │
+      └───────────────────────┴────────┴───────────┘
+
+# pivot_longer() example: relig_income
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(tidyr::relig_income)$
+        unpivot(
+          index = "religion",
+          on = c(
+            "<$10k",
+            "$10-20k",
+            "$20-30k",
+            "$30-40k",
+            "$40-50k",
+            "$50-75k",
+            "$75-100k",
+            "$100-150k",
+            ">150k",
+            "Don't know/refused"
+          ),
+          variable_name = "income",
+          value_name = "count"
+        )$
+        sort("religion")
+      shape: (180, 3)
+      ┌──────────────┬────────────────────┬───────┐
+      │ religion     ┆ income             ┆ count │
+      │ ---          ┆ ---                ┆ ---   │
+      │ str          ┆ str                ┆ f64   │
+      ╞══════════════╪════════════════════╪═══════╡
+      │ Agnostic     ┆ <$10k              ┆ 27.0  │
+      │ Agnostic     ┆ $10-20k            ┆ 34.0  │
+      │ Agnostic     ┆ $20-30k            ┆ 60.0  │
+      │ Agnostic     ┆ $30-40k            ┆ 81.0  │
+      │ Agnostic     ┆ $40-50k            ┆ 76.0  │
+      │ …            ┆ …                  ┆ …     │
+      │ Unaffiliated ┆ $50-75k            ┆ 528.0 │
+      │ Unaffiliated ┆ $75-100k           ┆ 407.0 │
+      │ Unaffiliated ┆ $100-150k          ┆ 321.0 │
+      │ Unaffiliated ┆ >150k              ┆ 258.0 │
+      │ Unaffiliated ┆ Don't know/refused ┆ 597.0 │
+      └──────────────┴────────────────────┴───────┘
+
+# separate() example: split on a dot
+
+    Code
+      current$collect()
+    Output
+      polars::pl$LazyFrame(x = c(NA, "x.y", "x.z", "y.z"))$
+        with_columns(
+          pl$col("x")$
+            cast(pl$String)$
+            str$split("\\.", literal = FALSE)$
+            list$to_struct(upper_bound = 2L)$
+            struct$rename_fields(c("foo", "foo2"))$
+            struct$unnest()
+        )$
+        drop("x")
+      shape: (4, 2)
+      ┌──────┬──────┐
+      │ foo  ┆ foo2 │
+      │ ---  ┆ ---  │
+      │ str  ┆ str  │
+      ╞══════╪══════╡
+      │ null ┆ null │
+      │ x    ┆ y    │
+      │ x    ┆ z    │
+      │ y    ┆ z    │
+      └──────┴──────┘
+
+# unite() example: combine columns with a separator
+
+    Code
+      current$collect()
+    Output
+      polars::pl$LazyFrame(
+        year = 2009:2011,
+        month = 10:12,
+        day = c(11L, 22L, 28L)
+      )$
+        with_columns(
+          pl$concat_str(
+            pl$col("year", "month", "day")$fill_null("NA"),
+            separator = "-",
+            ignore_nulls = TRUE
+          )$
+            alias("date")
+        )$
+        drop(c("year", "month", "day"))$
+        select("date")
+      shape: (3, 1)
+      ┌────────────┐
+      │ date       │
+      │ ---        │
+      │ str        │
+      ╞════════════╡
+      │ 2009-10-11 │
+      │ 2010-11-22 │
+      │ 2011-12-28 │
+      └────────────┘
+
+# relocate() example: move columns with .after
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(mtcars)$
+        select(
+          "mpg",
+          "cyl",
+          "disp",
+          "drat",
+          "wt",
+          "qsec",
+          "am",
+          "gear",
+          "hp",
+          "vs",
+          "carb"
+        )
+      shape: (32, 11)
+      ┌──────┬─────┬───────┬──────┬───┬──────┬───────┬─────┬──────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ drat ┆ … ┆ gear ┆ hp    ┆ vs  ┆ carb │
+      │ ---  ┆ --- ┆ ---   ┆ ---  ┆   ┆ ---  ┆ ---   ┆ --- ┆ ---  │
+      │ f64  ┆ f64 ┆ f64   ┆ f64  ┆   ┆ f64  ┆ f64   ┆ f64 ┆ f64  │
+      ╞══════╪═════╪═══════╪══════╪═══╪══════╪═══════╪═════╪══════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 3.9  ┆ … ┆ 4.0  ┆ 110.0 ┆ 0.0 ┆ 4.0  │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 3.9  ┆ … ┆ 4.0  ┆ 110.0 ┆ 0.0 ┆ 4.0  │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 3.85 ┆ … ┆ 4.0  ┆ 93.0  ┆ 1.0 ┆ 1.0  │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 3.08 ┆ … ┆ 3.0  ┆ 110.0 ┆ 1.0 ┆ 1.0  │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 3.15 ┆ … ┆ 3.0  ┆ 175.0 ┆ 0.0 ┆ 2.0  │
+      │ …    ┆ …   ┆ …     ┆ …    ┆ … ┆ …    ┆ …     ┆ …   ┆ …    │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 3.77 ┆ … ┆ 5.0  ┆ 113.0 ┆ 1.0 ┆ 2.0  │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 4.22 ┆ … ┆ 5.0  ┆ 264.0 ┆ 0.0 ┆ 4.0  │
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 3.62 ┆ … ┆ 5.0  ┆ 175.0 ┆ 0.0 ┆ 6.0  │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 3.54 ┆ … ┆ 5.0  ┆ 335.0 ┆ 0.0 ┆ 8.0  │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 4.11 ┆ … ┆ 4.0  ┆ 109.0 ┆ 1.0 ┆ 2.0  │
+      └──────┴─────┴───────┴──────┴───┴──────┴───────┴─────┴──────┘
+
+# slice example: slice_head() and slice_tail()
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(iris)$
+        head(3)
+      shape: (3, 5)
+      ┌──────────────┬─────────────┬──────────────┬─────────────┬─────────┐
+      │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ Species │
+      │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---     │
+      │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ cat     │
+      ╞══════════════╪═════════════╪══════════════╪═════════════╪═════════╡
+      │ 5.1          ┆ 3.5         ┆ 1.4          ┆ 0.2         ┆ setosa  │
+      │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ setosa  │
+      │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ setosa  │
+      └──────────────┴─────────────┴──────────────┴─────────────┴─────────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(iris)$
+        tail(3)
+      shape: (3, 5)
+      ┌──────────────┬─────────────┬──────────────┬─────────────┬───────────┐
+      │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ Species   │
+      │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---       │
+      │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ cat       │
+      ╞══════════════╪═════════════╪══════════════╪═════════════╪═══════════╡
+      │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ virginica │
+      │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ virginica │
+      │ 5.9          ┆ 3.0         ┆ 5.1          ┆ 1.8         ┆ virginica │
+      └──────────────┴─────────────┴──────────────┴─────────────┴───────────┘
+
+# translated base functions: maths and rounding
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        a = pl$col("num")$abs(),
+        b = pl$col("int")$sqrt(),
+        c = pl$col("num")$exp(),
+        d = pl$col("int")$log(base = 2.71828182845905),
+        e = pl$col("int")$log10(),
+        f = pl$col("num")$round(decimals = 1),
+        g = pl$col("num")$ceil(),
+        h = pl$col("num")$floor(),
+        i = pl$col("num")$truncate(decimals = 0)
+      )
+      shape: (5, 17)
+      ┌──────┬─────┬─────┬─────────────┬───┬──────┬──────┬──────┬──────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ f    ┆ g    ┆ h    ┆ i    │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---  ┆ ---  ┆ ---  ┆ ---  │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ f64  ┆ f64  ┆ f64  ┆ f64  │
+      ╞══════╪═════╪═════╪═════════════╪═══╪══════╪══════╪══════╪══════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 1.5  ┆ 2.0  ┆ 1.0  ┆ 1.0  │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ -2.3 ┆ -2.0 ┆ -3.0 ┆ -2.0 │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 4.0  ┆ 4.0  ┆ 4.0  ┆ 4.0  │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ null ┆ null ┆ null ┆ null │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 6.7  ┆ 7.0  ┆ 6.0  ┆ 6.0  │
+      └──────┴─────┴─────┴─────────────┴───┴──────┴──────┴──────┴──────┘
+
+# translated base functions: trigonometry
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        a = pl$col("num")$cos(),
+        b = pl$col("num")$sin(),
+        c = pl$col("num")$tan(),
+        d = (pl$col("num")/pl$lit(10))$arccos(),
+        e = (pl$col("num")/pl$lit(10))$arcsin(),
+        f = pl$col("num")$arctan(),
+        g = pl$col("num")$cosh(),
+        h = pl$col("num")$sinh(),
+        i = pl$col("num")$tanh()
+      )
+      shape: (5, 17)
+      ┌──────┬─────┬─────┬─────────────┬───┬───────────┬────────────┬────────────┬───────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ f         ┆ g          ┆ h          ┆ i         │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---       ┆ ---        ┆ ---        ┆ ---       │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ f64       ┆ f64        ┆ f64        ┆ f64       │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═══════════╪════════════╪════════════╪═══════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 0.982794  ┆ 2.35241    ┆ 2.129279   ┆ 0.905148  │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ -1.160669 ┆ 5.037221   ┆ -4.936962  ┆ -0.980096 │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 1.325818  ┆ 27.308233  ┆ 27.289917  ┆ 0.999329  │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ null      ┆ null       ┆ null       ┆ null      │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 1.422636  ┆ 406.203528 ┆ 406.202297 ┆ 0.999997  │
+      └──────┴─────┴─────┴─────────────┴───┴───────────┴────────────┴────────────┴───────────┘
+
+# translated base functions: cumulative and diff
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        cs = pl$when(pl$col("int")$is_null()$cum_max())$
+          then(pl$lit(NA))$
+          otherwise(pl$col("int")$cum_sum()),
+        cmin = pl$when(pl$col("int")$is_null()$cum_max())$
+          then(pl$lit(NA))$
+          otherwise(pl$col("int")$cum_min()),
+        cmax = pl$when(pl$col("int")$is_null()$cum_max())$
+          then(pl$lit(NA))$
+          otherwise(pl$col("int")$cum_max()),
+        rv = pl$col("int")$reverse(),
+        df = pl$col("int") - pl$col("int")$shift(1)
+      )
+      shape: (5, 13)
+      ┌──────┬─────┬─────┬─────────────┬───┬──────┬──────┬─────┬──────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ cmin ┆ cmax ┆ rv  ┆ df   │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---  ┆ ---  ┆ --- ┆ ---  │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ i32  ┆ i32  ┆ i32 ┆ i32  │
+      ╞══════╪═════╪═════╪═════════════╪═══╪══════╪══════╪═════╪══════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2    ┆ 2    ┆ 4   ┆ null │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2    ┆ 3    ┆ 5   ┆ 1    │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 1    ┆ 3    ┆ 1   ┆ -2   │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 1    ┆ 5    ┆ 3   ┆ 4    │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 1    ┆ 5    ┆ 2   ┆ -1   │
+      └──────┴─────┴─────┴─────────────┴───┴──────┴──────┴─────┴──────┘
+
+# translated base functions: aggregations in summarize()
+
+    Code
+      current$collect()
+    Output
+      dat$select(
+        al = (pl$col("int") > pl$lit(0))$all(ignore_nulls = FALSE),
+        an = (pl$col("int") > pl$lit(4))$any(ignore_nulls = FALSE),
+        na = pl$col("num")$has_nulls(),
+        wmn = (pl$col("num")$arg_min() + 1)$first(),
+        wmx = (pl$col("num")$arg_max() + 1)$first()
+      )
+      shape: (1, 5)
+      ┌──────┬──────┬──────┬─────┬─────┐
+      │ al   ┆ an   ┆ na   ┆ wmn ┆ wmx │
+      │ ---  ┆ ---  ┆ ---  ┆ --- ┆ --- │
+      │ bool ┆ bool ┆ bool ┆ f64 ┆ f64 │
+      ╞══════╪══════╪══════╪═════╪═════╡
+      │ true ┆ true ┆ true ┆ 2.0 ┆ 5.0 │
+      └──────┴──────┴──────┴─────┴─────┘
+
+# translated base functions: string manipulation
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        n = pl$col("txt")$str$len_chars(),
+        up = pl$col("txt")$str$to_uppercase(),
+        lo = pl$col("txt")$str$to_lowercase(),
+        p0 = pl$concat_str(
+          pl$col("grp")$fill_null(pl$lit("NA")),
+          pl$lit("_")$fill_null(pl$lit("NA")),
+          pl$col("int")$fill_null(pl$lit("NA")),
+          separator = ""
+        ),
+        p = pl$concat_str(
+          pl$col("grp")$fill_null(pl$lit("NA")),
+          pl$col("int")$fill_null(pl$lit("NA")),
+          separator = "-"
+        )
+      )
+      shape: (5, 13)
+      ┌──────┬─────┬─────┬─────────────┬───┬─────────────┬─────────────┬─────┬─────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ up          ┆ lo          ┆ p0  ┆ p   │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---         ┆ ---         ┆ --- ┆ --- │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ str         ┆ str         ┆ str ┆ str │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═════════════╪═════════════╪═════╪═════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ HELLO WORLD ┆ hello world ┆ a_2 ┆ a-2 │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ FOO BAR     ┆ foo bar     ┆ a_3 ┆ a-3 │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ BAZ         ┆ baz         ┆ b_1 ┆ b-1 │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ null        ┆ null        ┆ b_5 ┆ b-5 │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ A1B2        ┆ a1b2        ┆ a_4 ┆ a-4 │
+      └──────┴─────┴─────┴─────────────┴───┴─────────────┴─────────────┴─────┴─────┘
+
+# translated base functions: type conversions
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        ch = pl$col("int")$cast(pl$String, strict = FALSE),
+        nu = (pl$col("grp") == pl$lit("a"))$cast(pl$Float64, strict = FALSE),
+        lg = (pl$col("int") - pl$lit(1))$cast(pl$Boolean, strict = FALSE)
+      )
+      shape: (5, 11)
+      ┌──────┬─────┬─────┬─────────────┬───┬─────────────────────────┬─────┬─────┬───────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ time                    ┆ ch  ┆ nu  ┆ lg    │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---                     ┆ --- ┆ --- ┆ ---   │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ datetime[ms, UTC]       ┆ str ┆ f64 ┆ bool  │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═════════════════════════╪═════╪═════╪═══════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 08:30:00 UTC ┆ 2   ┆ 1.0 ┆ true  │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 14:00:00 UTC ┆ 3   ┆ 1.0 ┆ true  │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 23:59:00 UTC ┆ 1   ┆ 0.0 ┆ false │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 00:00:00 UTC ┆ 5   ┆ 0.0 ┆ true  │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 12:15:00 UTC ┆ 4   ┆ 1.0 ┆ true  │
+      └──────┴─────┴─────┴─────────────┴───┴─────────────────────────┴─────┴─────┴───────┘
+
+# translated base functions: is.* checks
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        na = pl$col("num")$is_null(),
+        fin = pl$when(pl$col("num")$is_null())$
+          then(pl$lit(FALSE))$
+          otherwise(pl$col("num")$is_finite()),
+        inf = pl$when(pl$col("num")$is_null())$
+          then(pl$lit(FALSE))$
+          otherwise(pl$col("num")$is_infinite()),
+        nan = pl$when(pl$col("num")$is_null())$
+          then(pl$lit(FALSE))$
+          otherwise(pl$col("num")$is_nan())
+      )
+      shape: (5, 12)
+      ┌──────┬─────┬─────┬─────────────┬───┬───────┬───────┬───────┬───────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ na    ┆ fin   ┆ inf   ┆ nan   │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---   ┆ ---   ┆ ---   ┆ ---   │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ bool  ┆ bool  ┆ bool  ┆ bool  │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═══════╪═══════╪═══════╪═══════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ false ┆ true  ┆ false ┆ false │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ false ┆ true  ┆ false ┆ false │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ false ┆ true  ┆ false ┆ false │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ true  ┆ false ┆ false ┆ false │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ false ┆ true  ┆ false ┆ false │
+      └──────┴─────┴─────┴─────────────┴───┴───────┴───────┴───────┴───────┘
+
+# translated base functions: %in% and %notin%
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        ins = pl$col("grp")$is_in(pl$lit("a")$implode(), nulls_equal = TRUE),
+        notin = pl$col("grp")$is_in(pl$lit("a")$implode(), nulls_equal = TRUE)$not()
+      )
+      shape: (5, 10)
+      ┌──────┬─────┬─────┬─────────────┬───┬────────────┬─────────────────────────┬───────┬───────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ date       ┆ time                    ┆ ins   ┆ notin │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---        ┆ ---                     ┆ ---   ┆ ---   │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ date       ┆ datetime[ms, UTC]       ┆ bool  ┆ bool  │
+      ╞══════╪═════╪═════╪═════════════╪═══╪════════════╪═════════════════════════╪═══════╪═══════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 ┆ 2020-01-15 08:30:00 UTC ┆ true  ┆ false │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 ┆ 2021-06-30 14:00:00 UTC ┆ true  ┆ false │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 ┆ 2019-12-01 23:59:00 UTC ┆ false ┆ true  │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 ┆ 2022-03-10 00:00:00 UTC ┆ false ┆ true  │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 ┆ 2020-07-04 12:15:00 UTC ┆ true  ┆ false │
+      └──────┴─────┴─────┴─────────────┴───┴────────────┴─────────────────────────┴───────┴───────┘
+
+# translated dplyr functions: between, coalesce, near, if_else
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        bt = pl$col("int")$
+          is_between(lower_bound = 2, upper_bound = 4, closed = "both"),
+        co = pl$coalesce(pl$col("num"), pl$lit(0)),
+        nr = (pl$col("num") - pl$lit(4))$abs() < 1.49011611938477e-08,
+        ie = pl$when(pl$col("num") > pl$lit(0))$
+          then(pl$lit("pos"))$
+          otherwise(pl$lit("neg"))
+      )
+      shape: (5, 12)
+      ┌──────┬─────┬─────┬─────────────┬───┬───────┬──────┬───────┬─────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ bt    ┆ co   ┆ nr    ┆ ie  │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---   ┆ ---  ┆ ---   ┆ --- │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ bool  ┆ f64  ┆ bool  ┆ str │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═══════╪══════╪═══════╪═════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ true  ┆ 1.5  ┆ false ┆ pos │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ true  ┆ -2.3 ┆ false ┆ neg │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ false ┆ 4.0  ┆ true  ┆ pos │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ false ┆ 0.0  ┆ null  ┆ neg │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ true  ┆ 6.7  ┆ false ┆ pos │
+      └──────┴─────┴─────┴─────────────┴───┴───────┴──────┴───────┴─────┘
+
+# translated dplyr functions: case_when (with and without default)
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        with_default = pl$when(pl$col("int") > pl$lit(3))$
+          then(pl$lit("hi"))$
+          otherwise(pl$lit("lo")),
+        no_default = pl$when(pl$col("int") > pl$lit(3))$
+          then(pl$lit("hi"))$
+          when(pl$col("int") > pl$lit(1))$
+          then(pl$lit("mid"))$
+          otherwise(pl$lit(NA))
+      )
+      shape: (5, 10)
+      ┌──────┬─────┬─────┬─────────────┬───┬────────────┬────────────────────┬──────────────┬────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ date       ┆ time               ┆ with_default ┆ no_default │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---        ┆ ---                ┆ ---          ┆ ---        │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ date       ┆ datetime[ms, UTC]  ┆ str          ┆ str        │
+      ╞══════╪═════╪═════╪═════════════╪═══╪════════════╪════════════════════╪══════════════╪════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 ┆ 2020-01-15         ┆ lo           ┆ mid        │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 08:30:00 UTC       ┆              ┆            │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 ┆ 2021-06-30         ┆ lo           ┆ mid        │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 14:00:00 UTC       ┆              ┆            │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 ┆ 2019-12-01         ┆ lo           ┆ null       │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 23:59:00 UTC       ┆              ┆            │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 ┆ 2022-03-10         ┆ hi           ┆ hi         │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 00:00:00 UTC       ┆              ┆            │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 ┆ 2020-07-04         ┆ hi           ┆ hi         │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 12:15:00 UTC       ┆              ┆            │
+      └──────┴─────┴─────┴─────────────┴───┴────────────┴────────────────────┴──────────────┴────────────┘
+
+# translated dplyr functions: case_match (with and without default)
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        with_default = pl$when(pl$col("grp")$is_in(pl$lit("a")$implode()))$
+          then(pl$lit("A"))$
+          otherwise(pl$lit("Z")),
+        no_default = pl$when(pl$col("grp")$is_in(pl$lit("a")$implode()))$
+          then(pl$lit("A"))$
+          when(pl$col("grp")$is_in(pl$lit("b")$implode()))$
+          then(pl$lit("B"))$
+          otherwise(pl$lit(NA))
+      )
+      shape: (5, 10)
+      ┌──────┬─────┬─────┬─────────────┬───┬────────────┬────────────────────┬──────────────┬────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ date       ┆ time               ┆ with_default ┆ no_default │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---        ┆ ---                ┆ ---          ┆ ---        │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ date       ┆ datetime[ms, UTC]  ┆ str          ┆ str        │
+      ╞══════╪═════╪═════╪═════════════╪═══╪════════════╪════════════════════╪══════════════╪════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 ┆ 2020-01-15         ┆ A            ┆ A          │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 08:30:00 UTC       ┆              ┆            │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 ┆ 2021-06-30         ┆ A            ┆ A          │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 14:00:00 UTC       ┆              ┆            │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 ┆ 2019-12-01         ┆ Z            ┆ B          │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 23:59:00 UTC       ┆              ┆            │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 ┆ 2022-03-10         ┆ Z            ┆ B          │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 00:00:00 UTC       ┆              ┆            │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 ┆ 2020-07-04         ┆ A            ┆ A          │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 12:15:00 UTC       ┆              ┆            │
+      └──────┴─────┴─────┴─────────────┴───┴────────────┴────────────────────┴──────────────┴────────────┘
+
+# translated dplyr functions: recode_values, replace_values, replace_when
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        rc = pl$col("grp")$replace_strict(old = "a", new = "AA", default = NA),
+        rv = pl$col("grp")$replace(old = "b", new = "BB"),
+        rw = pl$when(pl$col("int") > pl$lit(3))$
+          then(pl$lit(0L))$
+          otherwise(pl$col("int"))
+      )
+      shape: (5, 11)
+      ┌──────┬─────┬─────┬─────────────┬───┬─────────────────────────┬──────┬─────┬─────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ time                    ┆ rc   ┆ rv  ┆ rw  │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---                     ┆ ---  ┆ --- ┆ --- │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ datetime[ms, UTC]       ┆ str  ┆ str ┆ i32 │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═════════════════════════╪══════╪═════╪═════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 08:30:00 UTC ┆ AA   ┆ a   ┆ 2   │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 14:00:00 UTC ┆ AA   ┆ a   ┆ 3   │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 23:59:00 UTC ┆ null ┆ BB  ┆ 1   │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 00:00:00 UTC ┆ null ┆ BB  ┆ 0   │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 12:15:00 UTC ┆ AA   ┆ a   ┆ 0   │
+      └──────┴─────┴─────┴─────────────┴───┴─────────────────────────┴──────┴─────┴─────┘
+
+# translated dplyr functions: when_all and when_any
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        wall = pl$all_horizontal(pl$col("lgl1"), pl$col("lgl2")),
+        wany = pl$any_horizontal(pl$col("lgl1"), pl$col("lgl2"))
+      )
+      shape: (5, 10)
+      ┌──────┬─────┬─────┬─────────────┬───┬────────────┬─────────────────────────┬───────┬──────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ date       ┆ time                    ┆ wall  ┆ wany │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---        ┆ ---                     ┆ ---   ┆ ---  │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ date       ┆ datetime[ms, UTC]       ┆ bool  ┆ bool │
+      ╞══════╪═════╪═════╪═════════════╪═══╪════════════╪═════════════════════════╪═══════╪══════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 ┆ 2020-01-15 08:30:00 UTC ┆ true  ┆ true │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 ┆ 2021-06-30 14:00:00 UTC ┆ false ┆ true │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 ┆ 2019-12-01 23:59:00 UTC ┆ false ┆ true │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 ┆ 2022-03-10 00:00:00 UTC ┆ false ┆ null │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 ┆ 2020-07-04 12:15:00 UTC ┆ false ┆ true │
+      └──────┴─────┴─────┴─────────────┴───┴────────────┴─────────────────────────┴───────┴──────┘
+
+# translated dplyr functions: window functions
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        lg = pl$col("int")$shift(1),
+        ld = pl$col("int")$shift(-2),
+        rn = pl$int_range(start = 1, pl$len() + 1),
+        dr = pl$col("int")$rank(method = "dense"),
+        mr = pl$col("int")$rank(method = "min"),
+        ci = pl$struct(pl$col("grp"))$rle_id() + 1
+      )
+      shape: (5, 14)
+      ┌──────┬─────┬─────┬─────────────┬───┬─────┬─────┬─────┬─────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ rn  ┆ dr  ┆ mr  ┆ ci  │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ --- ┆ --- ┆ --- ┆ --- │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ i64 ┆ u32 ┆ u32 ┆ f64 │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═════╪═════╪═════╪═════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 1   ┆ 2   ┆ 2   ┆ 1.0 │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2   ┆ 3   ┆ 3   ┆ 1.0 │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 3   ┆ 1   ┆ 1   ┆ 2.0 │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 4   ┆ 5   ┆ 5   ┆ 2.0 │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 5   ┆ 4   ┆ 4   ┆ 3.0 │
+      └──────┴─────┴─────┴─────────────┴───┴─────┴─────┴─────┴─────┘
+
+# translated dplyr functions: reducers in summarize()
+
+    Code
+      current$collect()
+    Output
+      dat$select(
+        f = pl$col("grp")$first(),
+        l = pl$col("grp")$last(),
+        nt = pl$col("grp")$gather(1),
+        cnt = pl$len(),
+        nd = pl$struct(pl$col("grp"))$n_unique()
+      )
+      shape: (1, 5)
+      ┌─────┬─────┬─────┬─────┬─────┐
+      │ f   ┆ l   ┆ nt  ┆ cnt ┆ nd  │
+      │ --- ┆ --- ┆ --- ┆ --- ┆ --- │
+      │ str ┆ str ┆ str ┆ u32 ┆ u32 │
+      ╞═════╪═════╪═════╪═════╪═════╡
+      │ a   ┆ a   ┆ a   ┆ 5   ┆ 2   │
+      └─────┴─────┴─────┴─────┴─────┘
+
+# translated stats functions: median, sd, var
+
+    Code
+      current$collect()
+    Output
+      dat$select(
+        md = pl$col("num")$median(),
+        s = pl$when(pl$col("int")$has_nulls())$
+          then(NA)$
+          otherwise(pl$col("int")$std(ddof = 1)),
+        v = pl$when(pl$col("int")$has_nulls())$
+          then(NA)$
+          otherwise(pl$col("int")$var(ddof = 1))
+      )
+      shape: (1, 3)
+      ┌──────┬──────────┬─────┐
+      │ md   ┆ s        ┆ v   │
+      │ ---  ┆ ---      ┆ --- │
+      │ f64  ┆ f64      ┆ f64 │
+      ╞══════╪══════════╪═════╡
+      │ 2.75 ┆ 1.581139 ┆ 2.5 │
+      └──────┴──────────┴─────┘
+
+# translated stringr functions: detection
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        det = pl$col("txt")$str$contains("o", literal = FALSE),
+        len = pl$col("txt")$str$len_chars(),
+        ct = pl$col("txt")$str$count_matches("o", literal = FALSE),
+        st = pl$col("txt")$str$contains("^(H)"),
+        en = pl$col("txt")$str$contains("(d)$")
+      )
+      shape: (5, 13)
+      ┌──────┬─────┬─────┬─────────────┬───┬──────┬──────┬───────┬───────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ len  ┆ ct   ┆ st    ┆ en    │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---  ┆ ---  ┆ ---   ┆ ---   │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ u32  ┆ u32  ┆ bool  ┆ bool  │
+      ╞══════╪═════╪═════╪═════════════╪═══╪══════╪══════╪═══════╪═══════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 11   ┆ 2    ┆ true  ┆ true  │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 7    ┆ 2    ┆ false ┆ false │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 3    ┆ 0    ┆ false ┆ false │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ null ┆ null ┆ null  ┆ null  │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 4    ┆ 0    ┆ false ┆ false │
+      └──────┴─────┴─────┴─────────────┴───┴──────┴──────┴───────┴───────┘
+
+# translated stringr functions: replacement
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        rp = pl$col("txt")$str$replace("o", "0", literal = FALSE),
+        rpa = pl$col("txt")$str$replace_all("o", "0", literal = FALSE),
+        rm = pl$col("txt")$str$replace("o", "")
+      )
+      shape: (5, 11)
+      ┌──────┬─────┬─────┬─────────────┬───┬────────────────────┬─────────────┬─────────────┬────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ time               ┆ rp          ┆ rpa         ┆ rm         │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---                ┆ ---         ┆ ---         ┆ ---        │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ datetime[ms, UTC]  ┆ str         ┆ str         ┆ str        │
+      ╞══════╪═════╪═════╪═════════════╪═══╪════════════════════╪═════════════╪═════════════╪════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15         ┆ Hell0 World ┆ Hell0 W0rld ┆ Hell World │
+      │      ┆     ┆     ┆             ┆   ┆ 08:30:00 UTC       ┆             ┆             ┆            │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30         ┆ f0o bar     ┆ f00 bar     ┆ fo bar     │
+      │      ┆     ┆     ┆             ┆   ┆ 14:00:00 UTC       ┆             ┆             ┆            │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01         ┆ BAZ         ┆ BAZ         ┆ BAZ        │
+      │      ┆     ┆     ┆             ┆   ┆ 23:59:00 UTC       ┆             ┆             ┆            │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10         ┆ null        ┆ null        ┆ null       │
+      │      ┆     ┆     ┆             ┆   ┆ 00:00:00 UTC       ┆             ┆             ┆            │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04         ┆ a1b2        ┆ a1b2        ┆ a1b2       │
+      │      ┆     ┆     ┆             ┆   ┆ 12:15:00 UTC       ┆             ┆             ┆            │
+      └──────┴─────┴─────┴─────────────┴───┴────────────────────┴─────────────┴─────────────┴────────────┘
+
+# translated stringr functions: case
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        up = pl$col("txt")$str$to_uppercase(),
+        lo = pl$col("txt")$str$to_lowercase(),
+        ti = pl$col("txt")$str$to_titlecase()
+      )
+      shape: (5, 11)
+      ┌──────┬─────┬─────┬─────────────┬───┬───────────────────┬─────────────┬─────────────┬─────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ time              ┆ up          ┆ lo          ┆ ti          │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---               ┆ ---         ┆ ---         ┆ ---         │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ datetime[ms, UTC] ┆ str         ┆ str         ┆ str         │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═══════════════════╪═════════════╪═════════════╪═════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15        ┆ HELLO WORLD ┆ hello world ┆ Hello World │
+      │      ┆     ┆     ┆             ┆   ┆ 08:30:00 UTC      ┆             ┆             ┆             │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30        ┆ FOO BAR     ┆ foo bar     ┆ Foo Bar     │
+      │      ┆     ┆     ┆             ┆   ┆ 14:00:00 UTC      ┆             ┆             ┆             │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01        ┆ BAZ         ┆ baz         ┆ Baz         │
+      │      ┆     ┆     ┆             ┆   ┆ 23:59:00 UTC      ┆             ┆             ┆             │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10        ┆ null        ┆ null        ┆ null        │
+      │      ┆     ┆     ┆             ┆   ┆ 00:00:00 UTC      ┆             ┆             ┆             │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04        ┆ A1B2        ┆ a1b2        ┆ A1B2        │
+      │      ┆     ┆     ┆             ┆   ┆ 12:15:00 UTC      ┆             ┆             ┆             │
+      └──────┴─────┴─────┴─────────────┴───┴───────────────────┴─────────────┴─────────────┴─────────────┘
+
+# translated stringr functions: padding and trimming
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        pd = pl$col("txt")$str$pad_start(length = 10, fill_char = " "),
+        tr = pl$col("txt")$str$strip_chars(),
+        sq = pl$col("txt")$str$replace_all("\\s+", " ")$str$strip_chars()
+      )
+      shape: (5, 11)
+      ┌──────┬─────┬─────┬─────────────┬───┬───────────────────┬─────────────┬─────────────┬─────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ time              ┆ pd          ┆ tr          ┆ sq          │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---               ┆ ---         ┆ ---         ┆ ---         │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ datetime[ms, UTC] ┆ str         ┆ str         ┆ str         │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═══════════════════╪═════════════╪═════════════╪═════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15        ┆ Hello World ┆ Hello World ┆ Hello World │
+      │      ┆     ┆     ┆             ┆   ┆ 08:30:00 UTC      ┆             ┆             ┆             │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30        ┆    foo bar  ┆ foo bar     ┆ foo bar     │
+      │      ┆     ┆     ┆             ┆   ┆ 14:00:00 UTC      ┆             ┆             ┆             │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01        ┆        BAZ  ┆ BAZ         ┆ BAZ         │
+      │      ┆     ┆     ┆             ┆   ┆ 23:59:00 UTC      ┆             ┆             ┆             │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10        ┆ null        ┆ null        ┆ null        │
+      │      ┆     ┆     ┆             ┆   ┆ 00:00:00 UTC      ┆             ┆             ┆             │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04        ┆       a1b2  ┆ a1b2        ┆ a1b2        │
+      │      ┆     ┆     ┆             ┆   ┆ 12:15:00 UTC      ┆             ┆             ┆             │
+      └──────┴─────┴─────┴─────────────┴───┴───────────────────┴─────────────┴─────────────┴─────────────┘
+
+# translated stringr functions: extraction
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        ex = pl$col("txt")$str$extract(pl$lit("[a-z]+"), group_index = 0),
+        spi = pl$col("txt")$
+          str$split(by = " ", inclusive = FALSE)$
+          list$get(0, null_on_oob = TRUE),
+        wd = pl$col("txt")$str$split(" ")$list$gather(list(0L))$list$join(" ")
+      )
+      shape: (5, 11)
+      ┌──────┬─────┬─────┬─────────────┬───┬─────────────────────────┬──────┬───────┬───────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ time                    ┆ ex   ┆ spi   ┆ wd    │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---                     ┆ ---  ┆ ---   ┆ ---   │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ datetime[ms, UTC]       ┆ str  ┆ str   ┆ str   │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═════════════════════════╪══════╪═══════╪═══════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 08:30:00 UTC ┆ ello ┆ Hello ┆ Hello │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 14:00:00 UTC ┆ foo  ┆ foo   ┆ foo   │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 23:59:00 UTC ┆ null ┆ BAZ   ┆ BAZ   │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 00:00:00 UTC ┆ null ┆ null  ┆ null  │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 12:15:00 UTC ┆ a    ┆ a1b2  ┆ a1b2  │
+      └──────┴─────┴─────┴─────────────┴───┴─────────────────────────┴──────┴───────┴───────┘
+
+# translated lubridate functions: date components
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        yr = pl$col("date")$dt$year(),
+        mo = pl$col("date")$dt$month(),
+        dy = pl$col("date")$dt$day(),
+        md = pl$col("date")$dt$day(),
+        wd = (pl$col("date")$dt$weekday() - 7L + 7L)%%7L + 1L,
+        yd = pl$col("date")$dt$ordinal_day(),
+        q = pl$col("date")$dt$quarter(),
+        ly = pl$col("date")$dt$is_leap_year(),
+        dim = pl$when(pl$col("date")$is_null())$
+          then(NA)$
+          when(pl$col("date")$dt$month()$is_in(list(c(1, 3, 5, 7, 8, 10, 12))))$
+          then(31)$
+          when(pl$col("date")$dt$month()$is_in(list(c(4, 6, 9, 11))))$
+          then(30)$
+          when(pl$col("date")$dt$month() ==     2 & pl$col("date")$dt$is_leap_year())$
+          then(29)$
+          otherwise(28)$
+          cast(pl$Int32),
+        nd = pl$date(year = 2020, month = pl$col("int"), day = 1)
+      )
+      shape: (5, 18)
+      ┌──────┬─────┬─────┬─────────────┬───┬─────┬───────┬─────┬────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ q   ┆ ly    ┆ dim ┆ nd         │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ --- ┆ ---   ┆ --- ┆ ---        │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ i8  ┆ bool  ┆ i32 ┆ date       │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═════╪═══════╪═════╪════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 1   ┆ true  ┆ 31  ┆ 2020-02-01 │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2   ┆ false ┆ 30  ┆ 2020-03-01 │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 4   ┆ false ┆ 31  ┆ 2020-01-01 │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 1   ┆ false ┆ 31  ┆ 2020-05-01 │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 3   ┆ true  ┆ 31  ┆ 2020-04-01 │
+      └──────┴─────┴─────┴─────────────┴───┴─────┴───────┴─────┴────────────┘
+
+# translated lubridate functions: datetime handling
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        dte = pl$col("time")$dt$date(),
+        am_ = pl$col("time")$dt$hour() < 12,
+        pm_ = pl$col("time")$dt$hour() >= 12,
+        w = pl$col("time")$dt$convert_time_zone("Europe/Paris"),
+        f = pl$col("time")$dt$replace_time_zone("Europe/Paris")
+      )
+      shape: (5, 13)
+      ┌──────┬─────┬─────┬─────────────┬───┬───────┬───────┬──────────────────────┬──────────────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ am_   ┆ pm_   ┆ w                    ┆ f                    │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---   ┆ ---   ┆ ---                  ┆ ---                  │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ bool  ┆ bool  ┆ datetime[ms,         ┆ datetime[ms,         │
+      │      ┆     ┆     ┆             ┆   ┆       ┆       ┆ Europe/Paris]        ┆ Europe/Paris]        │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═══════╪═══════╪══════════════════════╪══════════════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ true  ┆ false ┆ 2020-01-15 09:30:00  ┆ 2020-01-15 08:30:00  │
+      │      ┆     ┆     ┆             ┆   ┆       ┆       ┆ CET                  ┆ CET                  │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ false ┆ true  ┆ 2021-06-30 16:00:00  ┆ 2021-06-30 14:00:00  │
+      │      ┆     ┆     ┆             ┆   ┆       ┆       ┆ CEST                 ┆ CEST                 │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ false ┆ true  ┆ 2019-12-02 00:59:00  ┆ 2019-12-01 23:59:00  │
+      │      ┆     ┆     ┆             ┆   ┆       ┆       ┆ CET                  ┆ CET                  │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ true  ┆ false ┆ 2022-03-10 01:00:00  ┆ 2022-03-10 00:00:00  │
+      │      ┆     ┆     ┆             ┆   ┆       ┆       ┆ CET                  ┆ CET                  │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ false ┆ true  ┆ 2020-07-04 14:15:00  ┆ 2020-07-04 12:15:00  │
+      │      ┆     ┆     ┆             ┆   ┆       ┆       ┆ CEST                 ┆ CEST                 │
+      └──────┴─────┴─────┴─────────────┴───┴───────┴───────┴──────────────────────┴──────────────────────┘
+

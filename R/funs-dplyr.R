@@ -22,7 +22,7 @@ pl_case_match_dplyr <- function(x, ...) {
       as_polars_expr(as_lit = TRUE)
 
     if (is.null(out)) {
-      out <- polars::pl$when(x$is_in(lhs$implode()))$then(rhs)
+      out <- pl$when(x$is_in(lhs$implode()))$then(rhs)
     } else {
       out <- out$when(x$is_in(lhs$implode()))$then(rhs)
     }
@@ -52,7 +52,7 @@ pl_case_when_dplyr <- function(...) {
       as_polars_expr(as_lit = TRUE)
 
     if (is.null(out)) {
-      out <- polars::pl$when(lhs)$then(rhs)
+      out <- pl$when(lhs)$then(rhs)
     } else {
       out <- out$when(lhs)$then(rhs)
     }
@@ -299,7 +299,7 @@ pl_replace_when_dplyr <- function(x, ..., .data) {
       as_polars_expr(as_lit = TRUE)
 
     if (is.null(out)) {
-      out <- polars::pl$when(lhs)$then(rhs)
+      out <- pl$when(lhs)$then(rhs)
     } else {
       out <- out$when(lhs)$then(rhs)
     }
@@ -360,7 +360,7 @@ pl_when_any_dplyr <- function(..., na_rm, size) {
 # Extract the "from" and "to" components from the dots in case_*()
 extract_formula_case <- function(dots, env) {
   # Extract the default early to avoid error "subscript out of bounds" later
-  default <- dots[[".default"]] %||% NA
+  default <- dots[[".default"]] %||% pl$lit(NA)
   dots[[".default"]] <- NULL
 
   # Extract LHS and RHS and ensure there is no NULL on either side
