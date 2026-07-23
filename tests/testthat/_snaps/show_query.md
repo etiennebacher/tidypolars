@@ -132,15 +132,8 @@
       who_pl$filter(pl$col("year") > pl$lit(1990))$
         drop_nulls("newrel_f3544")$
         select(
-          "iso3",
-          "year",
-          "newrel_f014",
-          "newrel_f1524",
-          "newrel_f2534",
-          "newrel_f3544",
-          "newrel_f4554",
-          "newrel_f5564",
-          "newrel_f65"
+          "iso3", "year", "newrel_f014", "newrel_f1524", "newrel_f2534",
+          "newrel_f3544", "newrel_f4554", "newrel_f5564", "newrel_f65"
         )$
         with_columns(
           pl$col("iso3")$alias("__TIDYPOLARS_TEMP_SORT__1"),
@@ -245,16 +238,8 @@
         unpivot(
           index = "religion",
           on = c(
-            "<$10k",
-            "$10-20k",
-            "$20-30k",
-            "$30-40k",
-            "$40-50k",
-            "$50-75k",
-            "$75-100k",
-            "$100-150k",
-            ">150k",
-            "Don't know/refused"
+            "<$10k", "$10-20k", "$20-30k", "$30-40k", "$40-50k", "$50-75k",
+            "$75-100k", "$100-150k", ">150k", "Don't know/refused"
           ),
           variable_name = "income",
           value_name = "count"
@@ -305,17 +290,7 @@
     Output
       as_polars_df(mtcars)$
         select(
-          "mpg",
-          "cyl",
-          "disp",
-          "drat",
-          "wt",
-          "qsec",
-          "am",
-          "gear",
-          "hp",
-          "vs",
-          "carb"
+          "mpg", "cyl", "disp", "drat", "wt", "qsec", "am", "gear", "hp", "vs", "carb"
         )
 
 # slice example: slice_head() and slice_tail()

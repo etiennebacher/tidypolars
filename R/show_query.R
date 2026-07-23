@@ -692,10 +692,20 @@ format_call_segment <- function(part, indent, force_explode) {
   args <- vapply(args, format_query_value, character(1), indent = indent + 2L)
   pad_args <- strrep(" ", indent + 2L)
   pad_close <- strrep(" ", indent)
+
+  # A call made solely of plain unnamed values (e.g. a long `c("a", "b", ...)`
+  # vector) reads better with the values packed to fill each line rather than
+  # one value per line. Compound arguments keep one per line so their structure
+  # stays visible.
+  if (all(vapply(args, is_plain_arg, logical(1)))) {
+    body_lines <- fill_query_args(args, indent + 2L)
+  } else {
+    body_lines <- args
+  }
   paste0(
     paste(chars[1:open], collapse = ""),
     "\n",
-    paste0(pad_args, args, collapse = ",\n"),
+    paste0(pad_args, body_lines, collapse = ",\n"),
     "\n",
     pad_close,
     ")",
@@ -703,4 +713,33 @@ format_call_segment <- function(part, indent, force_explode) {
       paste(chars[(close + 1):length(chars)], collapse = "")
     }
   )
+}
+
+# Pack plain arguments so that each line holds as many comma-separated values
+# as fit within `tp_query_width`, instead of one value per line. Returns the
+# lines without their leading indentation (`indent` is only used to measure the
+# available width) and without trailing commas: those are added by the caller
+# when the lines are joined.
+fill_query_args <- function(args, indent) {
+  lines <- character(0)
+  current <- ""
+  for (i in seq_along(args)) {
+    piece <- args[[i]]
+    trailing_comma <- if (i < length(args)) 1L else 0L
+    if (current == "") {
+      candidate <- piece
+    } else {
+      candidate <- paste0(current, ", ", piece)
+    }
+    if (
+      current != "" &&
+        indent + nchar(candidate) + trailing_comma > tp_query_width
+    ) {
+      lines <- c(lines, current)
+      current <- piece
+    } else {
+      current <- candidate
+    }
+  }
+  c(lines, current)
 }
