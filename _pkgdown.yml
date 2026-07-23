@@ -61,7 +61,6 @@ reference:
       - rowwise.polars_data_frame
       - select.polars_data_frame
       - semi_join.polars_data_frame
-      - separate.polars_data_frame
       - show_query.polars_data_frame
       - slice_head.polars_data_frame
       - slice_tail.polars_data_frame
