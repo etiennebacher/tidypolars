@@ -32,7 +32,11 @@
 #' mtcars |>
 #'   as_polars_lf() |>
 #'   filter(cyl == 4) |>
-#'   mutate(mpg2 = mpg * 2, .by = am) |>
+#'   mutate(
+#'     mpg2 = mpg * 2,
+#'     mpg2_max = max(mpg2),
+#'    .by = am
+#'   ) |>
 #'   show_query()
 show_query.polars_data_frame <- function(x, ...) {
   text <- tp_query_text(x)

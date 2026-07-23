@@ -45,7 +45,11 @@ long inline vector, are shown as a placeholder like
 mtcars |>
   as_polars_lf() |>
   filter(cyl == 4) |>
-  mutate(mpg2 = mpg * 2, .by = am) |>
+  mutate(
+    mpg2 = mpg * 2,
+    mpg2_max = max(mpg2),
+   .by = am
+  ) |>
   show_query()
 \dontshow{\}) # examplesIf}
 }
