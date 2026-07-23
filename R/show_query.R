@@ -53,19 +53,6 @@ show_query.polars_data_frame <- function(x, ...) {
   invisible(x)
 }
 
-# Colorize the polars code produced.
-highlight_query <- function(text) {
-  if (num_ansi_colors() <= 1L) {
-    return(text)
-  }
-  lines <- strsplit(text, "\n", fixed = TRUE)[[1]]
-  out <- tryCatch(
-    cli::code_highlight(lines, code_theme = "Solarized Light"),
-    error = function(e) lines
-  )
-  paste(out, collapse = "\n")
-}
-
 #' @rdname show_query.polars_data_frame
 #' @export
 show_query.polars_lazy_frame <- show_query.polars_data_frame
@@ -545,6 +532,19 @@ format_polars_query <- function(text) {
     character(1)
   )
   paste(parts, collapse = "$\n  ")
+}
+
+# Colorize the polars code produced.
+highlight_query <- function(text) {
+  if (num_ansi_colors() <= 1L) {
+    return(text)
+  }
+  lines <- strsplit(text, "\n", fixed = TRUE)[[1]]
+  out <- tryCatch(
+    cli::code_highlight(lines, code_theme = "Solarized Light"),
+    error = function(e) lines
+  )
+  paste(out, collapse = "\n")
 }
 
 # Split a chain on top-level "$". Bare identifiers like the "pl" in
