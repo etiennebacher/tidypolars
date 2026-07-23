@@ -321,7 +321,6 @@ pl_rank <- function(x, na.last = TRUE, ties.method = "average", ...) {
   )
 
   # Core ranking logic
-  out <- NULL
   if (ties.method == "first") {
     out <- x$rank(method = "ordinal")
   } else if (ties.method == "last") {

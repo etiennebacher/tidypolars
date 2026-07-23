@@ -426,10 +426,6 @@ pl_substr <- function(x, start, stop) {
     length
   )$otherwise(2000)
 
-  foo2 <- pl$when(start_is_zero & stop$abs() <= len_string)$then(
-    len_string - stop - 1
-  )$otherwise(2000)
-
   foo3 <- pl$when(start > 0 & start <= len_string & stop > len_string)$then(
     len_string - start
   )$otherwise(2000)
