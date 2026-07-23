@@ -22,6 +22,22 @@
           maintain_order = TRUE
         )
 
+# head()/tail() start recording when they are the first verb
+
+    Code
+      show_query(query_head)
+    Output
+      as_polars_df(mtcars)$
+        head(n = 6L)
+
+---
+
+    Code
+      show_query(query_tail)
+    Output
+      as_polars_df(mtcars)$
+        tail(n = 3)
+
 # show_query() works with group_by() and summarize()
 
     Code

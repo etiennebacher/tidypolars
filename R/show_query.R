@@ -174,16 +174,26 @@ pl <- structure(new.env(parent = emptyenv()), class = "tidypolars_pl")
   wrap_polars_member(x, member, "pl", name)
 }
 
-# Needed for show_query()
+# Needed for show_query(). This has to shadow polars' exports, otherwise there
+# are cases where we cannot record the query at any time, e.g.:
+# mtcars |> as_polars_df() |> head() |> show_query()
 #' @export
-head.tp_recorded <- function(x, n = 6L, ...) {
+head.polars_data_frame <- function(x, n = 6L, ...) {
+  x <- tag_frame(x, substitute(x))
   x$head(n = n)
 }
 
 #' @export
-tail.tp_recorded <- function(x, n = 6L, ...) {
+head.polars_lazy_frame <- head.polars_data_frame
+
+#' @export
+tail.polars_data_frame <- function(x, n = 6L, ...) {
+  x <- tag_frame(x, substitute(x))
   x$tail(n = n)
 }
+
+#' @export
+tail.polars_lazy_frame <- tail.polars_data_frame
 
 # Wrap a member (`member`) accessed as `holder$name` so that using it keeps
 # recording the query. Depending on what the member is, the wrapper either

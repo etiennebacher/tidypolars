@@ -51,6 +51,21 @@ test_that("basic behavior works", {
   expect_equal_lazy(replay_query(query), query)
 })
 
+test_that("head()/tail() start recording when they are the first verb", {
+  query_head <- mtcars |>
+    as_polars_lf() |>
+    head()
+  query_tail <- mtcars |>
+    as_polars_lf() |>
+    tail(3)
+
+  expect_snapshot_lazy(show_query(query_head))
+  expect_snapshot_lazy(show_query(query_tail))
+
+  expect_equal_lazy(replay_query(query_head), query_head)
+  expect_equal_lazy(replay_query(query_tail), query_tail)
+})
+
 test_that("show_query() works with group_by() and summarize()", {
   query <- mtcars |>
     as_polars_lf() |>

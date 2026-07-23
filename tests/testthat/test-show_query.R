@@ -47,6 +47,21 @@ test_that("basic behavior works", {
   expect_equal(replay_query(query), query)
 })
 
+test_that("head()/tail() start recording when they are the first verb", {
+  query_head <- mtcars |>
+    as_polars_df() |>
+    head()
+  query_tail <- mtcars |>
+    as_polars_df() |>
+    tail(3)
+
+  expect_snapshot(show_query(query_head))
+  expect_snapshot(show_query(query_tail))
+
+  expect_equal(replay_query(query_head), query_head)
+  expect_equal(replay_query(query_tail), query_tail)
+})
+
 test_that("show_query() works with group_by() and summarize()", {
   query <- mtcars |>
     as_polars_df() |>
