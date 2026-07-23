@@ -794,7 +794,6 @@ translate <- function(
         },
         error = function(e) {
           if (!inherits(e, "tidypolars_error")) {
-            orig_name <- gsub("^pl_", "", name)
             cli_abort(
               c(
                 "Error while running function {.fn {fn_names$orig_name}} in Polars.",

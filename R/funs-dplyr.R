@@ -7,9 +7,6 @@ pl_between_dplyr <- function(x, left, right, ...) {
 
 pl_case_match_dplyr <- function(x, ...) {
   env <- env_from_dots(...)
-  expr_uses_col <- expr_uses_col_from_dots(...)
-  new_vars <- new_vars_from_dots(...)
-  caller <- caller_from_dots(...)
   dots <- clean_dots(...)
 
   from_to <- extract_formula_case(dots, env)
@@ -37,9 +34,6 @@ pl_case_match_dplyr <- function(x, ...) {
 
 pl_case_when_dplyr <- function(...) {
   env <- env_from_dots(...)
-  expr_uses_col <- expr_uses_col_from_dots(...)
-  new_vars <- new_vars_from_dots(...)
-  caller <- caller_from_dots(...)
   dots <- clean_dots(...)
 
   from_to <- extract_formula_case(dots, env)
@@ -284,9 +278,6 @@ pl_replace_values_dplyr <- function(x, ..., from = NULL, to = NULL) {
 ### The main difference is that we put $otherwise(x) instead of $otherwise(NA).
 pl_replace_when_dplyr <- function(x, ..., .data) {
   env <- env_from_dots(...)
-  expr_uses_col <- expr_uses_col_from_dots(...)
-  new_vars <- new_vars_from_dots(...)
-  caller <- caller_from_dots(...)
   dots <- clean_dots(...)
 
   from_to <- extract_formula_case(dots, env)
@@ -304,8 +295,6 @@ pl_replace_when_dplyr <- function(x, ..., .data) {
       out <- out$when(lhs)$then(rhs)
     }
   }
-  otw <- from_to$default |>
-    as_polars_expr(as_lit = TRUE)
 
   out <- out$otherwise(x)
   out
