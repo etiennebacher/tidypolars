@@ -72,7 +72,7 @@ show_query.polars_lazy_frame <- show_query.polars_data_frame
 # ------------------------------------------------------------------------
 
 query_recording_enabled <- function() {
-  isTRUE(getOption("tidypolars_record_query", TRUE))
+  isTRUE(getOption("tidypolars_record_query", FALSE))
 }
 
 tp_query_text <- function(x) {

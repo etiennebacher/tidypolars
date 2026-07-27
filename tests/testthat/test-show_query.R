@@ -1,3 +1,7 @@
+### This is disabled by default but I don't want to enable it in each test of
+### show_query().
+withr::local_options(tidypolars_record_query = TRUE)
+
 get_query <- function(x) {
   attr(x, "tp_query", exact = TRUE)
 }
