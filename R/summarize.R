@@ -35,6 +35,7 @@ summarize.polars_data_frame <- function(
   .by = NULL,
   .groups = "drop_last"
 ) {
+  .data <- tag_frame(.data, substitute(.data))
   grps <- get_grps(.data, rlang::enquo(.by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)

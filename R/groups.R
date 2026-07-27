@@ -36,6 +36,7 @@ group_by.polars_data_frame <- function(
   .add = FALSE,
   .drop = TRUE
 ) {
+  .data <- tag_frame(.data, substitute(.data))
   if (isFALSE(.drop)) {
     cli_abort(
       "{.pkg tidypolars} doesn't support {.code .drop = FALSE} in {.fn group_by}.",
@@ -74,6 +75,7 @@ group_by.polars_data_frame <- function(
 #' @export
 
 ungroup.polars_data_frame <- function(x, ...) {
+  x <- tag_frame(x, substitute(x))
   # need to clone, otherwise the original data loses its attributes, even if unassigned
   x2 <- x$clone()
   attributes(x2)$pl_grps <- NULL

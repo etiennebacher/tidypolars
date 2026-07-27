@@ -83,6 +83,7 @@ compute.polars_lazy_frame <- function(
   engine = c("auto", "in-memory", "streaming"),
   streaming = FALSE
 ) {
+  x <- tag_frame(x, substitute(x))
   check_dots_empty()
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order %||% FALSE
@@ -104,9 +105,9 @@ compute.polars_lazy_frame <- function(
   }
 
   if (isTRUE(no_optimization)) {
-    optimizations <- polars::pl$QueryOptFlags()$no_optimizations()
+    optimizations <- pl$QueryOptFlags()$no_optimizations()
   } else {
-    optimizations <- polars::pl$QueryOptFlags(
+    optimizations <- pl$QueryOptFlags(
       predicate_pushdown = predicate_pushdown,
       projection_pushdown = projection_pushdown,
       simplify_expression = simplify_expression,
@@ -155,6 +156,7 @@ collect.polars_lazy_frame <- function(
   ambiguous = "raise",
   non_existent = "raise"
 ) {
+  x <- tag_frame(x, substitute(x))
   check_dots_empty()
 
   if (!missing(streaming)) {
@@ -173,9 +175,9 @@ collect.polars_lazy_frame <- function(
   }
 
   if (isTRUE(no_optimization)) {
-    optimizations <- polars::pl$QueryOptFlags()$no_optimizations()
+    optimizations <- pl$QueryOptFlags()$no_optimizations()
   } else {
-    optimizations <- polars::pl$QueryOptFlags(
+    optimizations <- pl$QueryOptFlags(
       predicate_pushdown = predicate_pushdown,
       projection_pushdown = projection_pushdown,
       simplify_expression = simplify_expression,

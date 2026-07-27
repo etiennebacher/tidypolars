@@ -268,7 +268,11 @@ translate <- function(
         pl$col(expr_char)
       } else {
         val <- eval_tidy(expr, env = caller)
-        polars_constant(val)
+        # Refer to the object by its name in the recorded query when its value
+        # would otherwise be displayed as an unusable truncated placeholder
+        # (e.g. a long vector). The name is both clearer and copy-pasteable
+        # since the object lives in the caller environment.
+        record_named_literal(polars_constant(val), expr_char, val)
       }
     },
     language = {
@@ -634,11 +638,6 @@ translate <- function(
       )
 
       user_defined <- get_user_defined_functions(caller = caller)
-      # fmt: skip
-      known_ops <- c(
-        "+", "-", "*", "/", "^", "**", ">", ">=", "<", "<=", "==", "!=", "&",
-        "|", "!", "%%", "%/%"
-      )
       fn_names <- add_pkg_suffix(name, known_ops, user_defined)
       name <- fn_names$name_to_eval
       is_known <- is_function_known(name)
@@ -774,7 +773,14 @@ translate <- function(
                 return(polars_constant(r_result))
               }
             }
-            call2(name, !!!args) |> eval_bare(env = caller)
+            out <- call2(name, !!!args) |> eval_bare(env = caller)
+            if (name %in% user_defined && !name %in% known_ops) {
+              # In show_query(), we want user-defined functions to appear as-is
+              # instead of showing their pure Polars internals, so we record the
+              # call itself (e.g. `pl_standardize(pl$col("x"))`).
+              out <- record_udf_query(out, fn_names$orig_name, args)
+            }
+            out
           } else {
             accepted_args <- names(formals(name))
             if ("..." %in% accepted_args) {
@@ -1109,7 +1115,7 @@ polars_expr_to_r <- function(x) {
     # Keep other attributes, such as "case_insensitive"
     for (att in seq_along(attributes(x))) {
       nm <- names(attributes(x))[att]
-      if (nm %in% c("class", "original_value")) {
+      if (nm %in% c("class", "original_value", "tp_query")) {
         next
       }
       attr(out, nm) <- attr(x, nm)

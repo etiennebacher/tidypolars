@@ -12,6 +12,7 @@
 #'
 #' @export
 make_unique_id <- function(.data, ..., new_col = "hash") {
+  .data <- tag_frame(.data, substitute(.data))
   lifecycle::deprecate_warn(
     when = "0.16.0",
     what = "make_unique_id()",

@@ -23,6 +23,7 @@
 #'   arrange(-x2, .by_group = TRUE)
 
 arrange.polars_data_frame <- function(.data, ..., .by_group = FALSE) {
+  .data <- tag_frame(.data, substitute(.data))
   grps <- attributes(.data)$pl_grps
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)

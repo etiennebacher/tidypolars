@@ -32,6 +32,7 @@ count.polars_data_frame <- function(
   sort = FALSE,
   name = "n"
 ) {
+  x <- tag_frame(x, substitute(x))
   if (!missing(wt)) {
     check_unsupported_arg(wt = quo_text(enquo(wt)))
   }
@@ -142,6 +143,7 @@ count.polars_data_frame <- function(
 #' @rdname count.polars_data_frame
 #' @export
 tally.polars_data_frame <- function(x, wt = NULL, sort = FALSE, name = "n") {
+  x <- tag_frame(x, substitute(x))
   if (!missing(wt)) {
     check_unsupported_arg(wt = quo_text(enquo(wt)))
   }
@@ -176,6 +178,7 @@ add_count.polars_data_frame <- function(
   sort = FALSE,
   name = "n"
 ) {
+  x <- tag_frame(x, substitute(x))
   if (!missing(wt)) {
     check_unsupported_arg(wt = quo_text(enquo(wt)))
   }

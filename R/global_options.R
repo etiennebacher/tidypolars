@@ -19,6 +19,13 @@
 #'   - the session may crash or experience a severe slowdown when the data is
 #'     converted to R (especially if the input is a LazyFrame).
 #'
+#' * `tidypolars_record_query` controls whether the polars query performed in
+#'   the background is recorded so that it can be displayed with
+#'   [show_query()]. The default is `FALSE`, meaning that `show_query()` will
+#'   error. When set to `TRUE`, this option enables [show_query()] to show the
+#'   pure `polars` code that is equivalent to the `tidypolars` code, at the cost
+#'   of a small (fixed) overhead.
+#'
 #' The package `polars` also contains several global options that may be useful,
 #' such as changing the default behavior when converting Int64 values to R:
 #' <https://pola-rs.github.io/r-polars/man/polars_options.html>.

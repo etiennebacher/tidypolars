@@ -125,9 +125,9 @@ sink_parquet <- function(
   }
 
   if (isTRUE(no_optimization)) {
-    optimizations <- polars::pl$QueryOptFlags()$no_optimizations()
+    optimizations <- pl$QueryOptFlags()$no_optimizations()
   } else {
-    optimizations <- polars::pl$QueryOptFlags(
+    optimizations <- pl$QueryOptFlags(
       predicate_pushdown = predicate_pushdown,
       projection_pushdown = projection_pushdown,
       simplify_expression = simplify_expression,
@@ -282,9 +282,9 @@ sink_csv <- function(
   }
 
   if (isTRUE(no_optimization)) {
-    optimizations <- polars::pl$QueryOptFlags()$no_optimizations()
+    optimizations <- pl$QueryOptFlags()$no_optimizations()
   } else {
-    optimizations <- polars::pl$QueryOptFlags(
+    optimizations <- pl$QueryOptFlags(
       predicate_pushdown = predicate_pushdown,
       projection_pushdown = projection_pushdown,
       simplify_expression = simplify_expression,
@@ -386,9 +386,9 @@ sink_ipc <- function(
   rlang::arg_match0(compression, values = c("zstd", "lz4", "uncompressed"))
 
   if (isTRUE(no_optimization)) {
-    optimizations <- polars::pl$QueryOptFlags()$no_optimizations()
+    optimizations <- pl$QueryOptFlags()$no_optimizations()
   } else {
-    optimizations <- polars::pl$QueryOptFlags(
+    optimizations <- pl$QueryOptFlags(
       predicate_pushdown = predicate_pushdown,
       projection_pushdown = projection_pushdown,
       simplify_expression = simplify_expression,
@@ -469,9 +469,9 @@ sink_ndjson <- function(
   }
 
   if (isTRUE(no_optimization)) {
-    optimizations <- polars::pl$QueryOptFlags()$no_optimizations()
+    optimizations <- pl$QueryOptFlags()$no_optimizations()
   } else {
-    optimizations <- polars::pl$QueryOptFlags(
+    optimizations <- pl$QueryOptFlags(
       predicate_pushdown = predicate_pushdown,
       projection_pushdown = projection_pushdown,
       simplify_expression = simplify_expression,

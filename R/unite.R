@@ -39,6 +39,7 @@ unite.polars_data_frame <- function(
   remove = TRUE,
   na.rm = FALSE
 ) {
+  data <- tag_frame(data, substitute(data))
   if (missing(col)) {
     cli_abort("{.code col} is absent but must be supplied.")
   }

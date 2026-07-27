@@ -18,6 +18,7 @@
 #' # Renaming while selecting is also possible
 #' select(pl_iris, foo1 = Sepal.Length, Sepal.Width)
 select.polars_data_frame <- function(.data, ...) {
+  .data <- tag_frame(.data, substitute(.data))
   dots <- get_dots(...)
   with_renaming <- !is.null(names(dots))
   vars <- tidyselect_dots(.data, ..., with_renaming = with_renaming)

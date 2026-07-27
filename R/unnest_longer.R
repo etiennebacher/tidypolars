@@ -92,6 +92,7 @@ unnest_longer_polars <- function(
   indices_to = NULL,
   keep_empty = FALSE
 ) {
+  data <- tag_frame(data, substitute(data))
   check_polars_data(data)
   rlang::check_dots_empty()
   rlang::check_required(col)

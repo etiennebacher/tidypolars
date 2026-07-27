@@ -36,6 +36,7 @@ Imports:
     rlang (>= 1.1.0),
     tidyr,
     tidyselect,
+    utils,
     vctrs
 Suggests:
     arrow,

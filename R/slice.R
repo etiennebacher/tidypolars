@@ -18,6 +18,7 @@
 #' slice_sample(pl_test, n = 5)
 #' slice_sample(pl_test, prop = 0.1)
 slice_tail.polars_data_frame <- function(.data, ..., n, by = NULL) {
+  .data <- tag_frame(.data, substitute(.data))
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
@@ -49,6 +50,7 @@ slice_tail.polars_lazy_frame <- slice_tail.polars_data_frame
 #' @export
 
 slice_head.polars_data_frame <- function(.data, ..., n, by = NULL) {
+  .data <- tag_frame(.data, substitute(.data))
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())
   mo <- attributes(.data)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
@@ -91,6 +93,7 @@ slice_sample.polars_data_frame <- function(
   by = NULL,
   replace = FALSE
 ) {
+  .data <- tag_frame(.data, substitute(.data))
   check_dots_empty_ignore(..., .unsupported = "weight_by")
 
   grps <- get_grps(.data, rlang::enquo(by), env = rlang::current_env())

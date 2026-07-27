@@ -8,6 +8,7 @@
 #' @import tidyr
 #' @import rlang
 #' @import cli
+#' @importFrom utils head tail
 ## usethis namespace: end
 NULL
 

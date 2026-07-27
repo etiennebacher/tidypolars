@@ -82,6 +82,7 @@ separate_longer_delim_polars <- function(
   delim,
   ...
 ) {
+  data <- tag_frame(data, substitute(data))
   check_polars_data(data)
   rlang::check_dots_empty()
   rlang::check_required(cols)
@@ -138,6 +139,7 @@ separate_longer_position_polars <- function(
   ...,
   keep_empty = FALSE
 ) {
+  data <- tag_frame(data, substitute(data))
   check_polars_data(data)
   rlang::check_dots_empty()
   rlang::check_required(cols)
