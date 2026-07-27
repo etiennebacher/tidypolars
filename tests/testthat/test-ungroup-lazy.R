@@ -6,7 +6,6 @@ test_that("basic behavior works", {
   test_df <- as_tibble(mtcars)
   test_pl <- as_polars_lf(test_df)
 
-  # "tp_query" is always present because it stores the query for show_query()
   expect_equal_lazy(
     test_pl |> group_by(am, cyl) |> ungroup() |> attributes() |> length(),
     1
