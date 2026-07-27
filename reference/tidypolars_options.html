@@ -15,6 +15,12 @@ it loses some of polars built-in parallelism and other optimizations;
 the session may crash or experience a severe slowdown when the data is
 converted to R (especially if the input is a LazyFrame).
 
+tidypolars_record_query controls whether the polars query performed in
+the background is recorded so that it can be displayed with
+show_query(). The default is FALSE, meaning that show_query() will
+error. When set to TRUE, this option enables show_query() to show the
+pure polars code that is equivalent to the tidypolars code, at the cost
+of a small (fixed) overhead.
 
 
 The package polars also contains several global options that may be useful,
@@ -35,6 +41,12 @@ it loses some of polars built-in parallelism and other optimizations;
 the session may crash or experience a severe slowdown when the data is
 converted to R (especially if the input is a LazyFrame).
 
+tidypolars_record_query controls whether the polars query performed in
+the background is recorded so that it can be displayed with
+show_query(). The default is FALSE, meaning that show_query() will
+error. When set to TRUE, this option enables show_query() to show the
+pure polars code that is equivalent to the tidypolars code, at the cost
+of a small (fixed) overhead.
 
 
 The package polars also contains several global options that may be useful,
@@ -96,6 +108,12 @@ unknown function, and convert the output back to polars.
 <li><p>the session may crash or experience a severe slowdown when the data is
 converted to R (especially if the input is a LazyFrame).</p></li>
 </ul></li>
+<li><p><code>tidypolars_record_query</code> controls whether the polars query performed in
+the background is recorded so that it can be displayed with
+<code><a href="https://dplyr.tidyverse.org/reference/explain.html" class="external-link">show_query()</a></code>. The default is <code>FALSE</code>, meaning that <code><a href="https://dplyr.tidyverse.org/reference/explain.html" class="external-link">show_query()</a></code> will
+error. When set to <code>TRUE</code>, this option enables <code><a href="https://dplyr.tidyverse.org/reference/explain.html" class="external-link">show_query()</a></code> to show the
+pure <code>polars</code> code that is equivalent to the <code>tidypolars</code> code, at the cost
+of a small (fixed) overhead.</p></li>
 </ul><p>The package <code>polars</code> also contains several global options that may be useful,
 such as changing the default behavior when converting Int64 values to R:
 <a href="https://pola-rs.github.io/r-polars/man/polars_options.html" class="external-link">https://pola-rs.github.io/r-polars/man/polars_options.html</a>.</p>
@@ -120,11 +138,11 @@ such as changing the default behavior when converting Int64 values to R:
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64 ┆ f64 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2.0 ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 2.0 ┆ 5.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 2.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.0 ┆ 1.0 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 3.0 ┆ 3.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 1.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 5.0 ┆ 2.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 3.0 ┆ 5.0 │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 1.0 ┆ 3.0 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─────┴─────┘</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># But one can make this stricter and throw an error when this happens</span></span></span>

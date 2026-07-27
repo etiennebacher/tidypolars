@@ -338,10 +338,9 @@ LazyFrames (`sink_` functions).
 - [`select(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/select.polars_data_frame.md)
   [`select(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/select.polars_data_frame.md)
   : Select columns from a Data/LazyFrame
-- [`separate(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/separate.polars_data_frame.md)
-  [`separate(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/separate.polars_data_frame.md)
-  : Separate a character column into multiple columns based on a
-  substring
+- [`show_query(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/show_query.polars_data_frame.md)
+  [`show_query(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/show_query.polars_data_frame.md)
+  : Show the polars code equivalent to the tidypolars pipeline
 - [`slice_tail(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/slice_tail.polars_data_frame.md)
   [`slice_tail(`*`<polars_lazy_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/slice_tail.polars_data_frame.md)
   [`slice_head(`*`<polars_data_frame>`*`)`](https://tidypolars.etiennebacher.com/reference/slice_tail.polars_data_frame.md)

@@ -83,6 +83,12 @@ Polars `DataFrame` so that we can easily compare `dplyr` and
 
 library(polars)
 library(tidypolars)
+#> Registered S3 methods overwritten by 'tidypolars':
+#>   method                 from  
+#>   head.polars_data_frame polars
+#>   head.polars_lazy_frame polars
+#>   tail.polars_data_frame polars
+#>   tail.polars_lazy_frame polars
 library(dplyr, warn.conflicts = FALSE)
 library(tidyr, warn.conflicts = FALSE)
 

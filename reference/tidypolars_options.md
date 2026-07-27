@@ -22,6 +22,16 @@
   - the session may crash or experience a severe slowdown when the data
     is converted to R (especially if the input is a LazyFrame).
 
+- `tidypolars_record_query` controls whether the polars query performed
+  in the background is recorded so that it can be displayed with
+  [`show_query()`](https://dplyr.tidyverse.org/reference/explain.html).
+  The default is `FALSE`, meaning that
+  [`show_query()`](https://dplyr.tidyverse.org/reference/explain.html)
+  will error. When set to `TRUE`, this option enables
+  [`show_query()`](https://dplyr.tidyverse.org/reference/explain.html)
+  to show the pure `polars` code that is equivalent to the `tidypolars`
+  code, at the cost of a small (fixed) overhead.
+
 The package `polars` also contains several global options that may be
 useful, such as changing the default behavior when converting Int64
 values to R:
@@ -45,11 +55,11 @@ mutate(test, x2 = sample(x, prob = 0.5))
 #> │ --- ┆ --- │
 #> │ f64 ┆ f64 │
 #> ╞═════╪═════╡
-#> │ 2.0 ┆ 1.0 │
+#> │ 2.0 ┆ 5.0 │
+#> │ 1.0 ┆ 2.0 │
+#> │ 5.0 ┆ 1.0 │
+#> │ 3.0 ┆ 3.0 │
 #> │ 1.0 ┆ 1.0 │
-#> │ 5.0 ┆ 2.0 │
-#> │ 3.0 ┆ 5.0 │
-#> │ 1.0 ┆ 3.0 │
 #> └─────┴─────┘
 
 # But one can make this stricter and throw an error when this happens
