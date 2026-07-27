@@ -118,9 +118,9 @@
       show_query(test_pl)
     Condition
       Error in `show_query()`:
-      ! No polars query was recorded for this object.
-      i The query is only recorded when the option `tidypolars_record_query` is `TRUE` (the default) while the tidypolars functions are applied.
-      i See `?tidypolars_options`.
+      ! No polars query was recorded for this object because the option `tidypolars_record_query` is `FALSE`.
+      i Run `options(tidypolars_record_query = TRUE)` and re-run your query to show the equivalent polars code.
+      i More info with `?tidypolars_options`.
 
 # errors in the pipeline are not affected by the recording
 
@@ -136,9 +136,9 @@
       show_query(query)
     Condition
       Error in `show_query()`:
-      ! No polars query was recorded for this object.
-      i The query is only recorded when the option `tidypolars_record_query` is `TRUE` (the default) while the tidypolars functions are applied.
-      i See `?tidypolars_options`.
+      ! No polars query was recorded for this object because the option `tidypolars_record_query` is `FALSE`.
+      i Run `options(tidypolars_record_query = TRUE)` and re-run your query to show the equivalent polars code.
+      i More info with `?tidypolars_options`.
 
 # vignette 'Getting started': who pipeline
 
