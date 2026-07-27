@@ -1,17 +1,16 @@
 #' Show the polars code equivalent to the tidypolars pipeline
 #'
 #' @description
-#' `show_query()` prints the pure polars code that `tidypolars` runs in the
+#' `show_query()` prints the pure `polars` code that `tidypolars` runs in the
 #' background. This code can be copy-pasted and run with `polars` only (the
 #' input data must be assigned to the name displayed in the first line of the
 #' query).
 #'
-#' Recording the query is enabled by default. It can be disabled with
-#' `options(tidypolars_record_query = FALSE)`, in which case `show_query()`
-#' errors (see [tidypolars_options]). Objects created while recording was
-#' disabled cannot show their query.
+#' Recording the query is **disabled** by default, meaning that `show_query()` will
+#' error with an informative message. It can be enabled with
+#' `options(tidypolars_record_query = TRUE)` (see [tidypolars_options]).
 #'
-#' To keep the output readable and close to hand-written polars code, R
+#' To keep the output readable and close to hand-written `polars` code, R
 #' operators are used instead of their method equivalent (e.g. `a$add(b)` is
 #' shown as `a + b`), and user-defined functions are displayed as a call
 #' rather than expanded into the operations they perform internally.
@@ -28,24 +27,27 @@
 #' @return The input, invisibly. This function is called for its side effect
 #' of printing the polars query.
 #' @export
-#' @examplesIf require("dplyr", quietly = TRUE)
-#' mtcars |>
-#'   as_polars_lf() |>
-#'   filter(cyl == 4) |>
-#'   mutate(
-#'     mpg2 = mpg * 2,
-#'     mpg2_max = max(mpg2),
-#'    .by = am
-#'   ) |>
-#'   show_query()
+#' @examplesIf requireNamespace("dplyr", quietly = TRUE) & requireNamespace("withr", quietly = TRUE)
+#' withr::with_options(
+#'   list(tidypolars_record_query = TRUE),
+#'   mtcars |>
+#'     as_polars_lf() |>
+#'     filter(cyl == 4) |>
+#'     mutate(
+#'       mpg2 = mpg * 2,
+#'       mpg2_max = max(mpg2),
+#'      .by = am
+#'     ) |>
+#'     show_query()
+#' )
 show_query.polars_data_frame <- function(x, ...) {
   text <- tp_query_text(x)
   if (is.null(text)) {
     cli_abort(
       c(
-        "No polars query was recorded for this object.",
-        "i" = "The query is only recorded when the option {.code tidypolars_record_query} is {.code TRUE} (the default) while the {.pkg tidypolars} functions are applied.",
-        "i" = "See {.code ?tidypolars_options}."
+        "No {.pkg polars} query was recorded for this object because the option {.code tidypolars_record_query} is {.code FALSE}.",
+        "i" = "Run {.code options(tidypolars_record_query = TRUE)} and re-run your query to show the equivalent {.pkg polars} code.",
+        "i" = "More info with {.code ?tidypolars_options}."
       )
     )
   }

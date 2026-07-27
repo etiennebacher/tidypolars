@@ -21,9 +21,10 @@
 #'
 #' * `tidypolars_record_query` controls whether the polars query performed in
 #'   the background is recorded so that it can be displayed with
-#'   [show_query()]. The default is `TRUE`. Setting this option to `FALSE`
-#'   removes the (small) overhead of recording the query, but [show_query()]
-#'   will then error on objects created while the option was `FALSE`.
+#'   [show_query()]. The default is `FALSE`, meaning that `show_query()` will
+#'   error. When set to `TRUE`, this option enables [show_query()] to show the
+#'   pure `polars` code that is equivalent to the `tidypolars` code, at the cost
+#'   of a small (fixed) overhead.
 #'
 #' The package `polars` also contains several global options that may be useful,
 #' such as changing the default behavior when converting Int64 values to R:

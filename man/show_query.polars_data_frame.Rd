@@ -19,17 +19,16 @@ The input, invisibly. This function is called for its side effect
 of printing the polars query.
 }
 \description{
-\code{show_query()} prints the pure polars code that \code{tidypolars} runs in the
+\code{show_query()} prints the pure \code{polars} code that \code{tidypolars} runs in the
 background. This code can be copy-pasted and run with \code{polars} only (the
 input data must be assigned to the name displayed in the first line of the
 query).
 
-Recording the query is enabled by default. It can be disabled with
-\code{options(tidypolars_record_query = FALSE)}, in which case \code{show_query()}
-errors (see \link{tidypolars_options}). Objects created while recording was
-disabled cannot show their query.
+Recording the query is \strong{disabled} by default, meaning that \code{show_query()} will
+error with an informative message. It can be enabled with
+\code{options(tidypolars_record_query = TRUE)} (see \link{tidypolars_options}).
 
-To keep the output readable and close to hand-written polars code, R
+To keep the output readable and close to hand-written \code{polars} code, R
 operators are used instead of their method equivalent (e.g. \code{a$add(b)} is
 shown as \code{a + b}), and user-defined functions are displayed as a call
 rather than expanded into the operations they perform internally.
@@ -41,15 +40,18 @@ long inline vector, are shown as a placeholder like
 \code{`<numeric of length 200>`}.
 }
 \examples{
-\dontshow{if (require("dplyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
-mtcars |>
-  as_polars_lf() |>
-  filter(cyl == 4) |>
-  mutate(
-    mpg2 = mpg * 2,
-    mpg2_max = max(mpg2),
-   .by = am
-  ) |>
-  show_query()
+\dontshow{if (requireNamespace("dplyr", quietly = TRUE) & requireNamespace("withr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
+withr::with_options(
+  list(tidypolars_record_query = TRUE),
+  mtcars |>
+    as_polars_lf() |>
+    filter(cyl == 4) |>
+    mutate(
+      mpg2 = mpg * 2,
+      mpg2_max = max(mpg2),
+     .by = am
+    ) |>
+    show_query()
+)
 \dontshow{\}) # examplesIf}
 }
