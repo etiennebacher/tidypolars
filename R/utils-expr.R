@@ -775,10 +775,9 @@ translate <- function(
             }
             out <- call2(name, !!!args) |> eval_bare(env = caller)
             if (name %in% user_defined && !name %in% known_ops) {
-              # User-defined functions are opaque: record the call itself
-              # (e.g. `pl_standardize(pl$col("x"))`) rather than the individual
-              # polars operations it performs internally, which we should not
-              # inspect.
+              # In show_query(), we want user-defined functions to appear as-is
+              # instead of showing their pure Polars internals, so we record the
+              # call itself (e.g. `pl_standardize(pl$col("x"))`).
               out <- record_udf_query(out, fn_names$orig_name, args)
             }
             out
