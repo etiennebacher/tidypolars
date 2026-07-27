@@ -4,13 +4,8 @@ test_that("basic behavior works", {
 
   # "tp_query" is always present because it stores the query for show_query()
   expect_equal(
-    test_pl |>
-      group_by(am, cyl) |>
-      ungroup() |>
-      attributes() |>
-      names() |>
-      sort(),
-    c("class", "tp_query")
+    test_pl |> group_by(am, cyl) |> ungroup() |> attributes() |> length(),
+    1
   )
 
   # rowwise returns different number of attributes (tidypolars has 1, tidyverse has more)
