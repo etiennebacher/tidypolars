@@ -541,6 +541,10 @@ highlight_query <- function(text) {
     return(text)
   }
   lines <- strsplit(text, "\n", fixed = TRUE)[[1]]
+  # cli tries to link some function calls to their help page, e.g. `$filter()`,
+  # but not others, e.g. `$with_columns()`. Disable all links to keep syntax
+  # highlighting consistent.
+  local_options(cli.hyperlink_help = FALSE)
   out <- tryCatch(
     cli::code_highlight(lines, code_theme = "Solarized Light"),
     error = function(e) lines
