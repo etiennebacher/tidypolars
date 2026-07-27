@@ -40,7 +40,7 @@ long inline vector, are shown as a placeholder like
 \code{`<numeric of length 200>`}.
 }
 \examples{
-\dontshow{if (requireNamespace("dplyr", quietly = TRUE) & requireNamespace("withr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
+\dontshow{if (require("dplyr", quietly = TRUE) & require("withr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
 withr::with_options(
   list(tidypolars_record_query = TRUE),
   mtcars |>
