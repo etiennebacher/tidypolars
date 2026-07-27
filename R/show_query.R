@@ -27,7 +27,7 @@
 #' @return The input, invisibly. This function is called for its side effect
 #' of printing the polars query.
 #' @export
-#' @examplesIf requireNamespace("dplyr", quietly = TRUE) & requireNamespace("withr", quietly = TRUE)
+#' @examplesIf require("dplyr", quietly = TRUE) & require("withr", quietly = TRUE)
 #' withr::with_options(
 #'   list(tidypolars_record_query = TRUE),
 #'   mtcars |>
