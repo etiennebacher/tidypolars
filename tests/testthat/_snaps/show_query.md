@@ -169,6 +169,35 @@
         rename(len = "n")$
         sort("am")
 
+# non-syntactic argument names are backquoted in the query
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        filter(pl$col("cyl") > pl$lit(4))$
+        group_by(`__tidypolars_grp__` = pl$lit(1))$
+        len()$
+        drop("__tidypolars_grp__")$
+        rename(len = "n")
+
+---
+
+    Code
+      show_query(query)
+    Output
+      test_pl$pivot(
+        values = "v",
+        on = "k",
+        on_columns = data.frame(k = c(4, 5)),
+        index = "id",
+        separator = "_"
+      )$
+        rename(
+          `4.0` = "4",
+          `5.0` = "5"
+        )
+
 # the input data is not modified by the recording
 
     Code

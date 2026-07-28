@@ -269,6 +269,7 @@ record_udf_query <- function(out, fn_name, args) {
       n <- length(args)
       nms <- names(args) %||% character(n)
       nms[is.na(nms)] <- ""
+      nms <- quote_arg_names(nms)
       dep <- vapply(args, deparse_query_arg, character(1))
       pieces <- ifelse(nms == "", dep, paste0(nms, " = ", dep))
       paste0(fn_name, "(", paste(pieces, collapse = ", "), ")")
@@ -303,6 +304,20 @@ record_named_literal <- function(out, name, value) {
   out
 }
 
+# Argument names that aren't syntactic must be backquoted, otherwise the
+# printed code doesn't parse: tidypolars builds columns whose name is a number
+# (`$rename(4.0 = "4")` in pivot_wider()) or starts with an underscore
+# (`$group_by(__tidypolars_grp__ = ...)` in count()).
+quote_arg_names <- function(nms) {
+  to_quote <- nzchar(nms) & nms != make.names(nms)
+  nms[to_quote] <- paste0(
+    "`",
+    gsub("`", "\\`", nms[to_quote], fixed = TRUE),
+    "`"
+  )
+  nms
+}
+
 # Capture the arguments of a call and return them as a single string, e.g.
 # `"a", n = 2, pl$col("b")`.
 deparse_query_dots <- function(...) {
@@ -323,6 +338,7 @@ deparse_query_dots <- function(...) {
     }
     nms <- names(args) %||% character(n)
     nms[is.na(nms)] <- ""
+    nms <- quote_arg_names(nms)
     dep <- vapply(
       seq_len(n),
       \(i) {
@@ -342,6 +358,7 @@ deparse_query_dots <- function(...) {
   }
   nms <- ...names() %||% character(n)
   nms[is.na(nms)] <- ""
+  nms <- quote_arg_names(nms)
   out <- character(n)
   for (i in seq_len(n)) {
     dep <- tryCatch(
@@ -369,8 +386,11 @@ deparse_query_arg <- function(x) {
     inner <- vapply(x, deparse_query_arg, character(1))
     nms <- names(x) %||% character(length(x))
     nms[is.na(nms)] <- ""
+    nms <- quote_arg_names(nms)
     inner <- ifelse(nms == "", inner, paste0(nms, " = ", inner))
     paste0("list(", paste(inner, collapse = ", "), ")")
+  } else if (is_plain_data_frame(x)) {
+    deparse_data_frame(x)
   } else if (is.atomic(x) && length(x) > 100) {
     paste0("`<", class(x)[1], " of length ", length(x), ">`")
   } else {
@@ -385,6 +405,30 @@ deparse_query_arg <- function(x) {
     }
     dep
   }
+}
+
+# A data.frame that a `data.frame()` call rebuilds exactly: no subclass (a
+# tibble prints differently), no extra attribute and automatic row names.
+# Anything else keeps the faithful `structure()` deparse.
+is_plain_data_frame <- function(x) {
+  identical(class(x), "data.frame") &&
+    setequal(names(attributes(x)), c("names", "row.names", "class")) &&
+    .row_names_info(x) < 0
+}
+
+# deparse() renders a data.frame as `structure(list(...), row.names = ...,
+# class = "data.frame")`, which is correct but unreadable in a query. Rebuild
+# the `data.frame()` call instead. `pivot_wider()` passes one as the
+# `on_columns` argument of `$pivot()`, which polars requires on a LazyFrame.
+deparse_data_frame <- function(x) {
+  nms <- names(x) %||% character(length(x))
+  cols <- vapply(x, deparse_query_arg, character(1))
+  args <- paste0(quote_arg_names(nms), " = ", cols)
+  if (!identical(nms, make.names(nms, unique = TRUE))) {
+    # data.frame() would mangle the names that aren't syntactic.
+    args <- c(args, "check.names = FALSE")
+  }
+  paste0("data.frame(", paste(args, collapse = ", "), ")")
 }
 
 # Whether `text` parses as valid R code.
