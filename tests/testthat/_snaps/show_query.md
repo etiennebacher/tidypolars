@@ -112,6 +112,63 @@
           foo = pl$col("mpg")$is_in(pl$lit(large)$implode(), nulls_equal = TRUE)
         )
 
+# `NULL` arguments are kept in the query
+
+    Code
+      show_query(query)
+    Output
+      pl$scan_csv(
+        source = [TRUNCATED],
+        has_header = TRUE,
+        separator = ",",
+        comment_prefix = NULL,
+        quote_char = "\"",
+        skip_rows = 0,
+        schema = NULL,
+        schema_overrides = NULL,
+        null_values = NULL,
+        ignore_errors = FALSE,
+        cache = FALSE,
+        infer_schema_length = 100,
+        n_rows = NULL,
+        encoding = "utf8",
+        low_memory = FALSE,
+        rechunk = TRUE,
+        skip_rows_after_header = 0,
+        row_index_name = NULL,
+        row_index_offset = 0,
+        try_parse_dates = FALSE,
+        eol_char = "\n",
+        raise_if_empty = TRUE,
+        truncate_ragged_lines = FALSE,
+        include_file_paths = NULL
+      )$
+        collect(
+          optimizations = pl$QueryOptFlags(
+            predicate_pushdown = TRUE,
+            projection_pushdown = TRUE,
+            simplify_expression = TRUE,
+            slice_pushdown = TRUE,
+            comm_subplan_elim = TRUE,
+            comm_subexpr_elim = TRUE,
+            cluster_with_columns = TRUE,
+            
+          ),
+          engine = c("auto", "in-memory", "streaming")
+        )$
+        filter(pl$col("cyl") > pl$lit(4))
+
+# count() doesn't record a `NULL` in sort() when input isn't grouped
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        group_by(am = pl$col("am"))$
+        len()$
+        rename(len = "n")$
+        sort("am")
+
 # the input data is not modified by the recording
 
     Code

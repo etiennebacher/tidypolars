@@ -470,10 +470,11 @@ rewrite_op_node <- function(node) {
     rhs <- rewrite_op_node(node[[2]])
     return(call(op, lhs, rhs))
   }
-  for (i in seq_along(node)) {
-    node[[i]] <- rewrite_op_node(node[[i]])
+  parts <- as.list(node)
+  for (i in seq_along(parts)) {
+    parts[i] <- list(rewrite_op_node(parts[[i]]))
   }
-  node
+  as.call(parts)
 }
 
 # Return the R operator for a `lhs$method(rhs)` node whose method is a known

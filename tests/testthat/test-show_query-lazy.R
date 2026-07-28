@@ -133,6 +133,30 @@ test_that("long vectors are truncated in the query", {
   expect_snapshot_lazy(show_query(query))
 })
 
+test_that("`NULL` arguments are kept in the query", {
+  skip_if(Sys.getenv('TIDYPOLARS_TEST') == "TRUE")
+  dest <- tempfile(fileext = ".csv")
+  on.exit(unlink(dest))
+  write.csv(mtcars, dest, row.names = FALSE)
+
+  query <- read_csv_polars(dest) |>
+    filter(cyl > 4)
+
+  expect_snapshot_lazy(show_query(query), transform = function(x) {
+    gsub("source = .*csv\",", "source = [TRUNCATED],", x)
+  })
+  expect_equal_lazy(replay_query(query), query)
+})
+
+test_that("count() doesn't record a `NULL` in sort() when input isn't grouped", {
+  query <- mtcars |>
+    as_polars_lf() |>
+    count(am)
+
+  expect_snapshot_lazy(show_query(query))
+  expect_equal_lazy(replay_query(query), query)
+})
+
 test_that("the input data is not modified by the recording", {
   test_pl <- as_polars_lf(mtcars)
   invisible(mutate(test_pl, foo = 1))
