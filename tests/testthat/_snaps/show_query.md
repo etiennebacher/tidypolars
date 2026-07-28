@@ -112,6 +112,17 @@
           foo = pl$col("mpg")$is_in(pl$lit(large)$implode(), nulls_equal = TRUE)
         )
 
+# count() doesn't record a `NULL` in sort() when input isn't grouped
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        group_by(am = pl$col("am"))$
+        len()$
+        rename(len = "n")$
+        sort("am")
+
 # the input data is not modified by the recording
 
     Code

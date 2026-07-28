@@ -129,6 +129,15 @@ test_that("long vectors are truncated in the query", {
   expect_snapshot(show_query(query))
 })
 
+test_that("count() doesn't record a `NULL` in sort() when input isn't grouped", {
+  query <- mtcars |>
+    as_polars_df() |>
+    count(am)
+
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
 test_that("the input data is not modified by the recording", {
   test_pl <- as_polars_df(mtcars)
   invisible(mutate(test_pl, foo = 1))
