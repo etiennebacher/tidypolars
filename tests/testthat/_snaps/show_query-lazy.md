@@ -230,6 +230,26 @@
       │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ false │
       └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────┘
 
+# count() doesn't record a `NULL` in sort() when input isn't grouped
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(mtcars)$
+        group_by(am = pl$col("am"))$
+        len()$
+        rename(len = "n")$
+        sort("am")
+      shape: (2, 2)
+      ┌─────┬─────┐
+      │ am  ┆ n   │
+      │ --- ┆ --- │
+      │ f64 ┆ u32 │
+      ╞═════╪═════╡
+      │ 0.0 ┆ 19  │
+      │ 1.0 ┆ 13  │
+      └─────┴─────┘
+
 # the input data is not modified by the recording
 
     Code
