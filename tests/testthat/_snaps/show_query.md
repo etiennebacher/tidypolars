@@ -198,6 +198,63 @@
           `5.0` = "5"
         )
 
+# verbs building their expressions with polars record them
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(pl$col("x")$fill_null(strategy = "forward"))
+
+---
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(
+        pl$col("x")$fill_null(0),
+        pl$col("y")$replace(NA, "z")
+      )
+
+---
+
+    Code
+      show_query(query)
+    Output
+      test_pl$drop_nulls()
+
+# bind_rows_polars()/bind_cols_polars() record the query of each input
+
+    Code
+      show_query(query)
+    Output
+      pl$concat(
+        test_pl,
+        test_pl,
+        how = "diagonal_relaxed"
+      )
+
+---
+
+    Code
+      show_query(query)
+    Output
+      pl$concat(
+        test_pl,
+        other_pl,
+        how = "horizontal_extend"
+      )
+
+---
+
+    Code
+      show_query(query)
+    Output
+      pl$concat(
+        test_pl,
+        test_pl,
+        how = "diagonal_relaxed"
+      )
+
 # the input data is not modified by the recording
 
     Code

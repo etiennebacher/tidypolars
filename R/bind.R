@@ -73,8 +73,27 @@ bind_cols_polars <- function(
 
 concat_ <- function(..., how, .id = NULL, .name_repair = NULL) {
   dots <- rlang::list2(...)
+  exprs <- rlang::enexprs(...)
   if (length(dots) == 1 && rlang::is_bare_list(dots[[1]])) {
+    # `bind_*_polars(list(p1, p2))`: the arguments of that `list()` call name
+    # the frames individually. Anything else (e.g. a variable holding a list)
+    # has no expression to display, hence the NULLs.
+    call_args <- as.list(exprs[[1]])[-1]
     dots <- dots[[1]]
+    exprs <- if (
+      is_call(exprs[[1]], "list") && length(call_args) == length(dots)
+    ) {
+      call_args
+    } else {
+      vector("list", length(dots))
+    }
+  }
+
+  # Start the recording on each input so that show_query() displays their own
+  # query instead of a placeholder. Assigning in place keeps the names, which
+  # the `.id` branch below relies on.
+  for (i in seq_along(dots)) {
+    dots[[i]] <- tag_frame(dots[[i]], exprs[[i]])
   }
 
   all_df <- all(

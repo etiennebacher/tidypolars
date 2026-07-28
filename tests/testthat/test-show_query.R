@@ -657,3 +657,36 @@ test_that("translated lubridate functions: datetime handling", {
   expect_snapshot(show_query(query))
   expect_equal(replay_query(query), query)
 })
+
+test_that("check query for fill, replace_na, drop_na", {
+  test_pl <- as_polars_df(data.frame(x = c(1, NA, 3), y = c("a", NA, "c")))
+
+  query <- fill(test_pl, x)
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+
+  query <- replace_na(test_pl, list(x = 0, y = "z"))
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+
+  query <- drop_na(test_pl)
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("check query for bind_rows_polars, bind_cols_polars", {
+  test_pl <- as_polars_df(data.frame(x = c(1, 2)))
+  other_pl <- as_polars_df(data.frame(y = c("a", "b")))
+
+  query <- bind_rows_polars(test_pl, test_pl)
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+
+  query <- bind_cols_polars(test_pl, other_pl)
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+
+  query <- bind_rows_polars(list(test_pl, test_pl))
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})

@@ -295,6 +295,123 @@
       │ 1.0 ┆ 10.0 ┆ 20.0 │
       └─────┴──────┴──────┘
 
+# verbs building their expressions with polars record them
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(pl$col("x")$fill_null(strategy = "forward"))
+      shape: (3, 2)
+      ┌─────┬──────┐
+      │ x   ┆ y    │
+      │ --- ┆ ---  │
+      │ f64 ┆ str  │
+      ╞═════╪══════╡
+      │ 1.0 ┆ a    │
+      │ 1.0 ┆ null │
+      │ 3.0 ┆ c    │
+      └─────┴──────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(
+        pl$col("x")$fill_null(0),
+        pl$col("y")$replace(NA, "z")
+      )
+      shape: (3, 2)
+      ┌─────┬─────┐
+      │ x   ┆ y   │
+      │ --- ┆ --- │
+      │ f64 ┆ str │
+      ╞═════╪═════╡
+      │ 1.0 ┆ a   │
+      │ 0.0 ┆ z   │
+      │ 3.0 ┆ c   │
+      └─────┴─────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      test_pl$drop_nulls()
+      shape: (2, 2)
+      ┌─────┬─────┐
+      │ x   ┆ y   │
+      │ --- ┆ --- │
+      │ f64 ┆ str │
+      ╞═════╪═════╡
+      │ 1.0 ┆ a   │
+      │ 3.0 ┆ c   │
+      └─────┴─────┘
+
+# bind_rows_polars()/bind_cols_polars() record the query of each input
+
+    Code
+      current$collect()
+    Output
+      pl$concat(
+        test_pl,
+        test_pl,
+        how = "diagonal_relaxed"
+      )
+      shape: (4, 1)
+      ┌─────┐
+      │ x   │
+      │ --- │
+      │ f64 │
+      ╞═════╡
+      │ 1.0 │
+      │ 2.0 │
+      │ 1.0 │
+      │ 2.0 │
+      └─────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      pl$concat(
+        test_pl,
+        other_pl,
+        how = "horizontal_extend"
+      )
+      shape: (2, 2)
+      ┌─────┬─────┐
+      │ x   ┆ y   │
+      │ --- ┆ --- │
+      │ f64 ┆ str │
+      ╞═════╪═════╡
+      │ 1.0 ┆ a   │
+      │ 2.0 ┆ b   │
+      └─────┴─────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      pl$concat(
+        test_pl,
+        test_pl,
+        how = "diagonal_relaxed"
+      )
+      shape: (4, 1)
+      ┌─────┐
+      │ x   │
+      │ --- │
+      │ f64 │
+      ╞═════╡
+      │ 1.0 │
+      │ 2.0 │
+      │ 1.0 │
+      │ 2.0 │
+      └─────┘
+
 # the input data is not modified by the recording
 
     Code

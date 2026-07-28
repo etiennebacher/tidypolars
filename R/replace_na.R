@@ -32,12 +32,12 @@ replace_na.polars_data_frame <- function(data, replace, ...) {
   exprs <- list()
   for (i in seq_along(replace)) {
     if (is.character(replace[[i]])) {
-      exprs[[i]] <- polars::pl$col(names(replace)[i])$replace(
+      exprs[[i]] <- pl$col(names(replace)[i])$replace(
         NA,
         replace[[i]]
       )
     } else {
-      exprs[[i]] <- polars::pl$col(names(replace)[i])$fill_null(replace[[
+      exprs[[i]] <- pl$col(names(replace)[i])$fill_null(replace[[
         i
       ]])
     }

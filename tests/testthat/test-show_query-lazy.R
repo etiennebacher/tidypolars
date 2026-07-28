@@ -177,6 +177,43 @@ test_that("non-syntactic argument names are backquoted in the query", {
   expect_equal_lazy(replay_query(query), query)
 })
 
+test_that("verbs building their expressions with polars record them", {
+  # These used to reach polars through `polars::pl$`, which bypasses the
+  # recording and showed up as a `<polars object>` placeholder.
+  test_pl <- as_polars_lf(data.frame(x = c(1, NA, 3), y = c("a", NA, "c")))
+
+  query <- fill(test_pl, x)
+  expect_snapshot_lazy(show_query(query))
+  expect_equal_lazy(replay_query(query), query)
+
+  query <- replace_na(test_pl, list(x = 0, y = "z"))
+  expect_snapshot_lazy(show_query(query))
+  expect_equal_lazy(replay_query(query), query)
+
+  # Without any variable, drop_na() used to select them with `cs$all()`
+  query <- drop_na(test_pl)
+  expect_snapshot_lazy(show_query(query))
+  expect_equal_lazy(replay_query(query), query)
+})
+
+test_that("bind_rows_polars()/bind_cols_polars() record the query of each input", {
+  test_pl <- as_polars_lf(data.frame(x = c(1, 2)))
+  other_pl <- as_polars_lf(data.frame(y = c("a", "b")))
+
+  query <- bind_rows_polars(test_pl, test_pl)
+  expect_snapshot_lazy(show_query(query))
+  expect_equal_lazy(replay_query(query), query)
+
+  query <- bind_cols_polars(test_pl, other_pl)
+  expect_snapshot_lazy(show_query(query))
+  expect_equal_lazy(replay_query(query), query)
+
+  # The frames can also be passed as a single list
+  query <- bind_rows_polars(list(test_pl, test_pl))
+  expect_snapshot_lazy(show_query(query))
+  expect_equal_lazy(replay_query(query), query)
+})
+
 test_that("the input data is not modified by the recording", {
   test_pl <- as_polars_lf(mtcars)
   invisible(mutate(test_pl, foo = 1))
