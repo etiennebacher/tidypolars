@@ -182,6 +182,19 @@ test_that("the input data is not modified by the recording", {
   expect_snapshot(show_query(test_pl), error = TRUE)
 })
 
+test_that("the error mentions recording only when the option is FALSE", {
+  test_pl <- as_polars_df(mtcars)
+
+  # Recording is on (see the top of this file) but the frame never went
+  # through tidypolars, so the message must not blame the option.
+  expect_snapshot(show_query(test_pl), error = TRUE)
+
+  withr::with_options(
+    list(tidypolars_record_query = FALSE),
+    expect_snapshot(show_query(test_pl), error = TRUE)
+  )
+})
+
 test_that("errors in the pipeline are not affected by the recording", {
   test_pl <- as_polars_df(data.frame(char1 = c("a", "b")))
   expect_snapshot(

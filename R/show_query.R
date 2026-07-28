@@ -43,6 +43,14 @@
 show_query.polars_data_frame <- function(x, ...) {
   text <- tp_query_text(x)
   if (is.null(text)) {
+    if (query_recording_enabled()) {
+      cli_abort(
+        c(
+          "No {.pkg polars} query was recorded for this object because it didn't go through {.pkg tidypolars} functions.",
+          "i" = "Recording only starts when a {.pkg tidypolars} function is applied to the data."
+        )
+      )
+    }
     cli_abort(
       c(
         "No {.pkg polars} query was recorded for this object because the option {.code tidypolars_record_query} is {.code FALSE}.",

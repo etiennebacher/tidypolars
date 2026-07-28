@@ -198,64 +198,25 @@
           `5.0` = "5"
         )
 
-# verbs building their expressions with polars record them
-
-    Code
-      show_query(query)
-    Output
-      test_pl$with_columns(pl$col("x")$fill_null(strategy = "forward"))
-
----
-
-    Code
-      show_query(query)
-    Output
-      test_pl$with_columns(
-        pl$col("x")$fill_null(0),
-        pl$col("y")$replace(NA, "z")
-      )
-
----
-
-    Code
-      show_query(query)
-    Output
-      test_pl$drop_nulls()
-
-# bind_rows_polars()/bind_cols_polars() record the query of each input
-
-    Code
-      show_query(query)
-    Output
-      pl$concat(
-        test_pl,
-        test_pl,
-        how = "diagonal_relaxed"
-      )
-
----
-
-    Code
-      show_query(query)
-    Output
-      pl$concat(
-        test_pl,
-        other_pl,
-        how = "horizontal_extend"
-      )
-
----
-
-    Code
-      show_query(query)
-    Output
-      pl$concat(
-        test_pl,
-        test_pl,
-        how = "diagonal_relaxed"
-      )
-
 # the input data is not modified by the recording
+
+    Code
+      show_query(test_pl)
+    Condition
+      Error in `show_query()`:
+      ! No polars query was recorded for this object because it didn't go through tidypolars functions.
+      i Recording only starts when a tidypolars function is applied to the data.
+
+# the error mentions recording only when the option is FALSE
+
+    Code
+      show_query(test_pl)
+    Condition
+      Error in `show_query()`:
+      ! No polars query was recorded for this object because it didn't go through tidypolars functions.
+      i Recording only starts when a tidypolars function is applied to the data.
+
+---
 
     Code
       show_query(test_pl)
@@ -804,5 +765,62 @@
         pm_ = pl$col("time")$dt$hour() >= 12,
         w = pl$col("time")$dt$convert_time_zone("Europe/Paris"),
         f = pl$col("time")$dt$replace_time_zone("Europe/Paris")
+      )
+
+# check query for fill, replace_na, drop_na
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(pl$col("x")$fill_null(strategy = "forward"))
+
+---
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(
+        pl$col("x")$fill_null(0),
+        pl$col("y")$replace(NA, "z")
+      )
+
+---
+
+    Code
+      show_query(query)
+    Output
+      test_pl$drop_nulls()
+
+# check query for bind_rows_polars, bind_cols_polars
+
+    Code
+      show_query(query)
+    Output
+      pl$concat(
+        test_pl,
+        test_pl,
+        how = "diagonal_relaxed"
+      )
+
+---
+
+    Code
+      show_query(query)
+    Output
+      pl$concat(
+        test_pl,
+        other_pl,
+        how = "horizontal_extend"
+      )
+
+---
+
+    Code
+      show_query(query)
+    Output
+      pl$concat(
+        test_pl,
+        test_pl,
+        how = "diagonal_relaxed"
       )
 

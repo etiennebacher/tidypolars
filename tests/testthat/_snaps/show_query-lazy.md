@@ -295,124 +295,25 @@
       │ 1.0 ┆ 10.0 ┆ 20.0 │
       └─────┴──────┴──────┘
 
-# verbs building their expressions with polars record them
-
-    Code
-      current$collect()
-    Output
-      test_pl$with_columns(pl$col("x")$fill_null(strategy = "forward"))
-      shape: (3, 2)
-      ┌─────┬──────┐
-      │ x   ┆ y    │
-      │ --- ┆ ---  │
-      │ f64 ┆ str  │
-      ╞═════╪══════╡
-      │ 1.0 ┆ a    │
-      │ 1.0 ┆ null │
-      │ 3.0 ┆ c    │
-      └─────┴──────┘
-
----
-
-    Code
-      current$collect()
-    Output
-      test_pl$with_columns(
-        pl$col("x")$fill_null(0),
-        pl$col("y")$replace(NA, "z")
-      )
-      shape: (3, 2)
-      ┌─────┬─────┐
-      │ x   ┆ y   │
-      │ --- ┆ --- │
-      │ f64 ┆ str │
-      ╞═════╪═════╡
-      │ 1.0 ┆ a   │
-      │ 0.0 ┆ z   │
-      │ 3.0 ┆ c   │
-      └─────┴─────┘
-
----
-
-    Code
-      current$collect()
-    Output
-      test_pl$drop_nulls()
-      shape: (2, 2)
-      ┌─────┬─────┐
-      │ x   ┆ y   │
-      │ --- ┆ --- │
-      │ f64 ┆ str │
-      ╞═════╪═════╡
-      │ 1.0 ┆ a   │
-      │ 3.0 ┆ c   │
-      └─────┴─────┘
-
-# bind_rows_polars()/bind_cols_polars() record the query of each input
-
-    Code
-      current$collect()
-    Output
-      pl$concat(
-        test_pl,
-        test_pl,
-        how = "diagonal_relaxed"
-      )
-      shape: (4, 1)
-      ┌─────┐
-      │ x   │
-      │ --- │
-      │ f64 │
-      ╞═════╡
-      │ 1.0 │
-      │ 2.0 │
-      │ 1.0 │
-      │ 2.0 │
-      └─────┘
-
----
-
-    Code
-      current$collect()
-    Output
-      pl$concat(
-        test_pl,
-        other_pl,
-        how = "horizontal_extend"
-      )
-      shape: (2, 2)
-      ┌─────┬─────┐
-      │ x   ┆ y   │
-      │ --- ┆ --- │
-      │ f64 ┆ str │
-      ╞═════╪═════╡
-      │ 1.0 ┆ a   │
-      │ 2.0 ┆ b   │
-      └─────┴─────┘
-
----
-
-    Code
-      current$collect()
-    Output
-      pl$concat(
-        test_pl,
-        test_pl,
-        how = "diagonal_relaxed"
-      )
-      shape: (4, 1)
-      ┌─────┐
-      │ x   │
-      │ --- │
-      │ f64 │
-      ╞═════╡
-      │ 1.0 │
-      │ 2.0 │
-      │ 1.0 │
-      │ 2.0 │
-      └─────┘
-
 # the input data is not modified by the recording
+
+    Code
+      current$collect()
+    Condition
+      Error in `show_query()`:
+      ! No polars query was recorded for this object because it didn't go through tidypolars functions.
+      i Recording only starts when a tidypolars function is applied to the data.
+
+# the error mentions recording only when the option is FALSE
+
+    Code
+      current$collect()
+    Condition
+      Error in `show_query()`:
+      ! No polars query was recorded for this object because it didn't go through tidypolars functions.
+      i Recording only starts when a tidypolars function is applied to the data.
+
+---
 
     Code
       current$collect()
@@ -1450,4 +1351,121 @@
       │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ false ┆ true  ┆ 2020-07-04 14:15:00  ┆ 2020-07-04 12:15:00  │
       │      ┆     ┆     ┆             ┆   ┆       ┆       ┆ CEST                 ┆ CEST                 │
       └──────┴─────┴─────┴─────────────┴───┴───────┴───────┴──────────────────────┴──────────────────────┘
+
+# check query for fill, replace_na, drop_na
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(pl$col("x")$fill_null(strategy = "forward"))
+      shape: (3, 2)
+      ┌─────┬──────┐
+      │ x   ┆ y    │
+      │ --- ┆ ---  │
+      │ f64 ┆ str  │
+      ╞═════╪══════╡
+      │ 1.0 ┆ a    │
+      │ 1.0 ┆ null │
+      │ 3.0 ┆ c    │
+      └─────┴──────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(
+        pl$col("x")$fill_null(0),
+        pl$col("y")$replace(NA, "z")
+      )
+      shape: (3, 2)
+      ┌─────┬─────┐
+      │ x   ┆ y   │
+      │ --- ┆ --- │
+      │ f64 ┆ str │
+      ╞═════╪═════╡
+      │ 1.0 ┆ a   │
+      │ 0.0 ┆ z   │
+      │ 3.0 ┆ c   │
+      └─────┴─────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      test_pl$drop_nulls()
+      shape: (2, 2)
+      ┌─────┬─────┐
+      │ x   ┆ y   │
+      │ --- ┆ --- │
+      │ f64 ┆ str │
+      ╞═════╪═════╡
+      │ 1.0 ┆ a   │
+      │ 3.0 ┆ c   │
+      └─────┴─────┘
+
+# check query for bind_rows_polars, bind_cols_polars
+
+    Code
+      current$collect()
+    Output
+      pl$concat(
+        test_pl,
+        test_pl,
+        how = "diagonal_relaxed"
+      )
+      shape: (4, 1)
+      ┌─────┐
+      │ x   │
+      │ --- │
+      │ f64 │
+      ╞═════╡
+      │ 1.0 │
+      │ 2.0 │
+      │ 1.0 │
+      │ 2.0 │
+      └─────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      pl$concat(
+        test_pl,
+        other_pl,
+        how = "horizontal_extend"
+      )
+      shape: (2, 2)
+      ┌─────┬─────┐
+      │ x   ┆ y   │
+      │ --- ┆ --- │
+      │ f64 ┆ str │
+      ╞═════╪═════╡
+      │ 1.0 ┆ a   │
+      │ 2.0 ┆ b   │
+      └─────┴─────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      pl$concat(
+        test_pl,
+        test_pl,
+        how = "diagonal_relaxed"
+      )
+      shape: (4, 1)
+      ┌─────┐
+      │ x   │
+      │ --- │
+      │ f64 │
+      ╞═════╡
+      │ 1.0 │
+      │ 2.0 │
+      │ 1.0 │
+      │ 2.0 │
+      └─────┘
 
