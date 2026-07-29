@@ -131,7 +131,7 @@ sink_parquet <- function(
       predicate_pushdown = predicate_pushdown,
       projection_pushdown = projection_pushdown,
       simplify_expression = simplify_expression,
-      slice_pushdown = slice_pushdown,
+      slice_pushdown = slice_pushdown
     )
   }
 
@@ -288,7 +288,7 @@ sink_csv <- function(
       predicate_pushdown = predicate_pushdown,
       projection_pushdown = projection_pushdown,
       simplify_expression = simplify_expression,
-      slice_pushdown = slice_pushdown,
+      slice_pushdown = slice_pushdown
     )
   }
 
@@ -392,7 +392,7 @@ sink_ipc <- function(
       predicate_pushdown = predicate_pushdown,
       projection_pushdown = projection_pushdown,
       simplify_expression = simplify_expression,
-      slice_pushdown = slice_pushdown,
+      slice_pushdown = slice_pushdown
     )
   }
 
@@ -475,7 +475,7 @@ sink_ndjson <- function(
       predicate_pushdown = predicate_pushdown,
       projection_pushdown = projection_pushdown,
       simplify_expression = simplify_expression,
-      slice_pushdown = slice_pushdown,
+      slice_pushdown = slice_pushdown
     )
   }
 

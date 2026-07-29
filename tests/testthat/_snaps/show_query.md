@@ -151,8 +151,7 @@
             slice_pushdown = TRUE,
             comm_subplan_elim = TRUE,
             comm_subexpr_elim = TRUE,
-            cluster_with_columns = TRUE,
-            
+            cluster_with_columns = TRUE
           ),
           engine = c("auto", "in-memory", "streaming")
         )$
@@ -823,4 +822,209 @@
         test_pl,
         how = "diagonal_relaxed"
       )
+
+# check query for complete()
+
+    Code
+      show_query(query)
+    Output
+      test_pl$select(pl$col("country", "year")$unique()$sort()$implode())$
+        explode(
+          "country",
+          empty_as_null = TRUE
+        )$
+        explode(
+          "year",
+          empty_as_null = TRUE
+        )$
+        join(
+          test_pl,
+          on = c("country", "year"),
+          how = "full",
+          nulls_equal = TRUE,
+          coalesce = TRUE
+        )$
+        with_columns(pl$col("value")$fill_null(99))$
+        select("country", "year", "value")
+
+# check query for uncount()
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(pl$col("x")$repeat_by(pl$col("n")))$
+        explode(
+          pl$col("x"),
+          empty_as_null = TRUE
+        )$
+        drop("n")
+
+---
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(pl$col("x")$repeat_by(pl$col("n")))$
+        explode(
+          pl$col("x"),
+          empty_as_null = TRUE
+        )$
+        drop("n")$
+        with_columns(pl$col("x")$cum_count()$over("x", "y")$alias("id"))
+
+# check query for rowwise()
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(
+        total = pl$concat_list(pl$col("x"), pl$col("y"), pl$col("z"))$
+          list$eval(
+            pl$when(pl$element()$has_nulls())$then(NA)$otherwise(pl$element()$sum())
+          )$
+          explode(empty_as_null = TRUE),
+        avg = pl$concat_list(pl$col("x"), pl$col("y"), pl$col("z"))$
+          list$eval(pl$element()$mean())$
+          explode(empty_as_null = TRUE)
+      )
+
+# check query for unnest_longer_polars()
+
+    Code
+      show_query(query)
+    Output
+      test_pl$explode(
+        "values",
+        empty_as_null = TRUE
+      )$
+        drop_nulls("values")
+
+---
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_row_index(name = "__tidypolars_row_id__")$
+        explode(
+          "values",
+          empty_as_null = TRUE
+        )$
+        with_columns(pl$struct("values"))$
+        with_columns(
+          pl$col("values")$
+            struct$with_fields(pl$field("values")$cum_count()$alias("idx"))$
+            over(pl$col("__tidypolars_row_id__"))
+        )$
+        with_columns(
+          pl$struct(
+            pl$col("values")$struct$field("idx"),
+            pl$col("values")$struct$field("values")
+          )$
+            alias("values")
+        )$
+        unnest("values")$
+        drop("__tidypolars_row_id__")$
+        drop_nulls("values")$
+        rename(values = "val")
+
+# check query for separate_longer_delim_polars() and separate_longer_position_polars()
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(pl$col("x")$cast(pl$String)$str$split(","))$
+        explode(
+          "x",
+          empty_as_null = TRUE
+        )
+
+---
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(pl$col("x")$cast(pl$String)$str$extract_all(".{1,2}"))$
+        filter(pl$all_horizontal(pl$col("x")$is_null() | pl$col("x")$list$len() > 0))$
+        explode(
+          "x",
+          empty_as_null = TRUE
+        )
+
+# check query for make_unique_id()
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(pl$struct(c("x", "y"))$hash()$alias("id"))
+
+# check query for scan_*_polars() and read_*_polars()
+
+    Code
+      show_query(query)
+    Output
+      pl$scan_parquet(
+        source = [TRUNCATED],
+        n_rows = NULL,
+        row_index_name = NULL,
+        row_index_offset = 0L,
+        parallel = "auto",
+        hive_partitioning = NULL,
+        hive_schema = NULL,
+        try_parse_hive_dates = TRUE,
+        glob = TRUE,
+        rechunk = FALSE,
+        low_memory = FALSE,
+        storage_options = NULL,
+        use_statistics = TRUE,
+        cache = TRUE,
+        include_file_paths = NULL
+      )$
+        filter(pl$col("cyl") > pl$lit(4))$
+        select("mpg")
+
+---
+
+    Code
+      show_query(query)
+    Output
+      pl$scan_ndjson(
+        source = [TRUNCATED],
+        infer_schema_length = 100,
+        batch_size = NULL,
+        n_rows = NULL,
+        low_memory = FALSE,
+        rechunk = FALSE,
+        row_index_name = NULL,
+        row_index_offset = 0,
+        ignore_errors = FALSE
+      )$
+        collect(
+          optimizations = pl$QueryOptFlags(
+            predicate_pushdown = TRUE,
+            projection_pushdown = TRUE,
+            simplify_expression = TRUE,
+            slice_pushdown = TRUE,
+            comm_subplan_elim = TRUE,
+            comm_subexpr_elim = TRUE,
+            cluster_with_columns = TRUE
+          ),
+          engine = c("auto", "in-memory", "streaming")
+        )$
+        select("mpg")
+
+---
+
+    Code
+      show_query(query)
+    Output
+      pl$scan_ipc(
+        source = [TRUNCATED],
+        n_rows = NULL,
+        row_index_name = NULL,
+        row_index_offset = 0L,
+        rechunk = FALSE,
+        cache = TRUE,
+        include_file_paths = NULL
+      )$
+        select("mpg")
 

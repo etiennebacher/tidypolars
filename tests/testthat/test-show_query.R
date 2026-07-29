@@ -703,3 +703,135 @@ test_that("check query for bind_rows_polars, bind_cols_polars", {
   expect_snapshot(show_query(query))
   expect_equal(replay_query(query), query)
 })
+
+test_that("check query for complete()", {
+  test_pl <- as_polars_df(data.frame(
+    country = c("France", "France", "UK"),
+    year = c(2020, 2021, 2019),
+    value = c(1, 2, 3)
+  ))
+
+  query <- complete(test_pl, country, year, fill = list(value = 99))
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("check query for uncount()", {
+  # The frame must contain a column named "x" because `uncount()` hardcodes
+  # `pl$col("x")`. The snapshot below will change when this is fixed.
+  test_pl <- as_polars_df(data.frame(
+    x = c("a", "b"),
+    y = 100:101,
+    n = c(1, 2)
+  ))
+
+  query <- uncount(test_pl, n)
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+
+  query <- uncount(test_pl, n, .id = "id")
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("check query for rowwise()", {
+  test_pl <- as_polars_df(data.frame(
+    x = c(2, 2),
+    y = c(2, 3),
+    z = c(5, NA)
+  ))
+
+  query <- test_pl |>
+    rowwise() |>
+    mutate(
+      total = sum(c(x, y, z)),
+      avg = mean(c(x, y, z), na.rm = TRUE)
+    )
+
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("check query for unnest_longer_polars()", {
+  test_pl <- as_polars_df(tibble(
+    id = 1:3,
+    values = list(c(1, 2), c(3, 4, 5), 6)
+  ))
+
+  query <- unnest_longer_polars(test_pl, values)
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+
+  # `indices_to` creates a temporary column whose name contains a random
+  # number, hence the transformation below.
+  query <- unnest_longer_polars(
+    test_pl,
+    values,
+    values_to = "val",
+    indices_to = "idx"
+  )
+  expect_snapshot(
+    show_query(query),
+    transform = function(x) {
+      gsub("__tidypolars_row_id_\\d+__", "__tidypolars_row_id__", x)
+    }
+  )
+  expect_equal(replay_query(query), query)
+})
+
+test_that("check query for separate_longer_delim_polars() and separate_longer_position_polars()", {
+  test_pl <- as_polars_df(data.frame(
+    id = 1:3,
+    x = c("a,b,c", "d,e", "f")
+  ))
+
+  query <- separate_longer_delim_polars(test_pl, x, delim = ",")
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+
+  query <- separate_longer_position_polars(test_pl, x, width = 2)
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("check query for make_unique_id()", {
+  withr::local_options(lifecycle_verbosity = "quiet")
+  test_pl <- as_polars_df(data.frame(x = c("a", "b"), y = c(1, 2)))
+
+  query <- make_unique_id(test_pl, x, y, new_col = "id")
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("check query for scan_*_polars() and read_*_polars()", {
+  skip_if(Sys.getenv('TIDYPOLARS_TEST') == "TRUE")
+  dest_dir <- withr::local_tempdir()
+  test_pl <- as_polars_df(mtcars)
+
+  # The source is a temporary path, hence the transformation below.
+  redact_source <- function(x) {
+    gsub('source = ".*"', "source = [TRUNCATED]", x)
+  }
+
+  dest <- file.path(dest_dir, "data.parquet")
+  write_parquet_polars(test_pl, dest)
+  query <- scan_parquet_polars(dest) |>
+    filter(cyl > 4) |>
+    select(mpg)
+  expect_snapshot(show_query(query), transform = redact_source)
+  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+
+  dest <- file.path(dest_dir, "data.ndjson")
+  write_ndjson_polars(test_pl, dest)
+  query <- read_ndjson_polars(dest) |>
+    select(mpg)
+  expect_snapshot(show_query(query), transform = redact_source)
+  expect_equal(replay_query(query), query)
+
+  dest <- file.path(dest_dir, "data.arrow")
+  write_ipc_polars(test_pl, dest)
+  query <- scan_ipc_polars(dest) |>
+    select(mpg)
+  expect_snapshot(show_query(query), transform = redact_source)
+  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+})

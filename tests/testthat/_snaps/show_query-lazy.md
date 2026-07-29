@@ -1469,3 +1469,240 @@
       │ 2.0 │
       └─────┘
 
+# check query for complete()
+
+    Code
+      current$collect()
+    Output
+      test_pl$select(pl$col("country", "year")$unique()$sort()$implode())$
+        explode(
+          "country",
+          empty_as_null = TRUE
+        )$
+        explode(
+          "year",
+          empty_as_null = TRUE
+        )$
+        join(
+          test_pl,
+          on = c("country", "year"),
+          how = "full",
+          nulls_equal = TRUE,
+          coalesce = TRUE
+        )$
+        with_columns(pl$col("value")$fill_null(99))$
+        select("country", "year", "value")
+      shape: (6, 3)
+      ┌─────────┬────────┬───────┐
+      │ country ┆ year   ┆ value │
+      │ ---     ┆ ---    ┆ ---   │
+      │ str     ┆ f64    ┆ f64   │
+      ╞═════════╪════════╪═══════╡
+      │ France  ┆ 2019.0 ┆ 99.0  │
+      │ France  ┆ 2020.0 ┆ 1.0   │
+      │ France  ┆ 2021.0 ┆ 2.0   │
+      │ UK      ┆ 2019.0 ┆ 3.0   │
+      │ UK      ┆ 2020.0 ┆ 99.0  │
+      │ UK      ┆ 2021.0 ┆ 99.0  │
+      └─────────┴────────┴───────┘
+
+# check query for uncount()
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(pl$col("x")$repeat_by(pl$col("n")))$
+        explode(
+          pl$col("x"),
+          empty_as_null = TRUE
+        )$
+        drop("n")
+      shape: (3, 2)
+      ┌─────┬─────┐
+      │ x   ┆ y   │
+      │ --- ┆ --- │
+      │ str ┆ i32 │
+      ╞═════╪═════╡
+      │ a   ┆ 100 │
+      │ b   ┆ 101 │
+      │ b   ┆ 101 │
+      └─────┴─────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(pl$col("x")$repeat_by(pl$col("n")))$
+        explode(
+          pl$col("x"),
+          empty_as_null = TRUE
+        )$
+        drop("n")$
+        with_columns(pl$col("x")$cum_count()$over("x", "y")$alias("id"))
+      shape: (3, 3)
+      ┌─────┬─────┬─────┐
+      │ x   ┆ y   ┆ id  │
+      │ --- ┆ --- ┆ --- │
+      │ str ┆ i32 ┆ u32 │
+      ╞═════╪═════╪═════╡
+      │ a   ┆ 100 ┆ 1   │
+      │ b   ┆ 101 ┆ 1   │
+      │ b   ┆ 101 ┆ 2   │
+      └─────┴─────┴─────┘
+
+# check query for rowwise()
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(
+        total = pl$concat_list(pl$col("x"), pl$col("y"), pl$col("z"))$
+          list$eval(
+            pl$when(pl$element()$has_nulls())$then(NA)$otherwise(pl$element()$sum())
+          )$
+          explode(empty_as_null = TRUE),
+        avg = pl$concat_list(pl$col("x"), pl$col("y"), pl$col("z"))$
+          list$eval(pl$element()$mean())$
+          explode(empty_as_null = TRUE)
+      )
+      shape: (2, 5)
+      ┌─────┬─────┬──────┬───────┬─────┐
+      │ x   ┆ y   ┆ z    ┆ total ┆ avg │
+      │ --- ┆ --- ┆ ---  ┆ ---   ┆ --- │
+      │ f64 ┆ f64 ┆ f64  ┆ f64   ┆ f64 │
+      ╞═════╪═════╪══════╪═══════╪═════╡
+      │ 2.0 ┆ 2.0 ┆ 5.0  ┆ 9.0   ┆ 3.0 │
+      │ 2.0 ┆ 3.0 ┆ null ┆ null  ┆ 2.5 │
+      └─────┴─────┴──────┴───────┴─────┘
+
+# check query for unnest_longer_polars()
+
+    Code
+      current$collect()
+    Output
+      test_pl$explode(
+        "values",
+        empty_as_null = TRUE
+      )$
+        drop_nulls("values")
+      shape: (6, 2)
+      ┌─────┬────────┐
+      │ id  ┆ values │
+      │ --- ┆ ---    │
+      │ i32 ┆ f64    │
+      ╞═════╪════════╡
+      │ 1   ┆ 1.0    │
+      │ 1   ┆ 2.0    │
+      │ 2   ┆ 3.0    │
+      │ 2   ┆ 4.0    │
+      │ 2   ┆ 5.0    │
+      │ 3   ┆ 6.0    │
+      └─────┴────────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_row_index(name = "__tidypolars_row_id__")$
+        explode(
+          "values",
+          empty_as_null = TRUE
+        )$
+        with_columns(pl$struct("values"))$
+        with_columns(
+          pl$col("values")$
+            struct$with_fields(pl$field("values")$cum_count()$alias("idx"))$
+            over(pl$col("__tidypolars_row_id__"))
+        )$
+        with_columns(
+          pl$struct(
+            pl$col("values")$struct$field("idx"),
+            pl$col("values")$struct$field("values")
+          )$
+            alias("values")
+        )$
+        unnest("values")$
+        drop("__tidypolars_row_id__")$
+        drop_nulls("values")$
+        rename(values = "val")
+      shape: (6, 3)
+      ┌─────┬─────┬─────┐
+      │ id  ┆ idx ┆ val │
+      │ --- ┆ --- ┆ --- │
+      │ i32 ┆ u32 ┆ f64 │
+      ╞═════╪═════╪═════╡
+      │ 1   ┆ 1   ┆ 1.0 │
+      │ 1   ┆ 2   ┆ 2.0 │
+      │ 2   ┆ 1   ┆ 3.0 │
+      │ 2   ┆ 2   ┆ 4.0 │
+      │ 2   ┆ 3   ┆ 5.0 │
+      │ 3   ┆ 1   ┆ 6.0 │
+      └─────┴─────┴─────┘
+
+# check query for separate_longer_delim_polars() and separate_longer_position_polars()
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(pl$col("x")$cast(pl$String)$str$split(","))$
+        explode(
+          "x",
+          empty_as_null = TRUE
+        )
+      shape: (6, 2)
+      ┌─────┬─────┐
+      │ id  ┆ x   │
+      │ --- ┆ --- │
+      │ i32 ┆ str │
+      ╞═════╪═════╡
+      │ 1   ┆ a   │
+      │ 1   ┆ b   │
+      │ 1   ┆ c   │
+      │ 2   ┆ d   │
+      │ 2   ┆ e   │
+      │ 3   ┆ f   │
+      └─────┴─────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(pl$col("x")$cast(pl$String)$str$extract_all(".{1,2}"))$
+        filter(pl$all_horizontal(pl$col("x")$is_null() | pl$col("x")$list$len() > 0))$
+        explode(
+          "x",
+          empty_as_null = TRUE
+        )
+      shape: (6, 2)
+      ┌─────┬─────┐
+      │ id  ┆ x   │
+      │ --- ┆ --- │
+      │ i32 ┆ str │
+      ╞═════╪═════╡
+      │ 1   ┆ a,  │
+      │ 1   ┆ b,  │
+      │ 1   ┆ c   │
+      │ 2   ┆ d,  │
+      │ 2   ┆ e   │
+      │ 3   ┆ f   │
+      └─────┴─────┘
+
+# check query for make_unique_id()
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(pl$struct(c("x", "y"))$hash()$alias("id"))
+      shape: (2, 3)
+      ┌─────┬─────┬─────────────────────┐
+      │ x   ┆ y   ┆ id                  │
+      │ --- ┆ --- ┆ ---                 │
+      │ str ┆ f64 ┆ u64                 │
+      ╞═════╪═════╪═════════════════════╡
+      │ a   ┆ 1.0 ┆ 9401135652799850258 │
+      │ b   ┆ 2.0 ┆ 6701719201758175205 │
+      └─────┴─────┴─────────────────────┘
+
