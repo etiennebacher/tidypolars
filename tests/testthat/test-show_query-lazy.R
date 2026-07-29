@@ -708,8 +708,6 @@ test_that("check query for bind_rows_polars, bind_cols_polars", {
   expect_equal_lazy(replay_query(query), query)
 })
 
-# Verbs that are not covered by the tests above ---------------------------
-
 test_that("check query for complete()", {
   test_pl <- as_polars_lf(data.frame(
     country = c("France", "France", "UK"),

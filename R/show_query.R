@@ -167,13 +167,18 @@ tp_recorder$skip_next <- FALSE
 
 # `pl` defined here shadows the one imported from polars everywhere in the
 # package, so that expressions built internally (e.g. in funs-*.R) record
-# their own code. When recording is disabled this only costs one extra
-# environment lookup.
+# their own code.
 pl <- structure(new.env(parent = emptyenv()), class = "tidypolars_pl")
 
 #' @export
 `$.tidypolars_pl` <- function(x, name) {
-  member <- eval_bare(call2("$", expr(polars::pl), sym(name)))
+  # `[[` is used instead of `$` because it skips the `$.polars_object` dispatch.
+  # We fall back to the eval_bare() to get the proper polars error message if `name`
+  # isn't present in pl.
+  member <- polars::pl[[name]]
+  if (is.null(member)) {
+    return(eval_bare(call2("$", expr(polars::pl), sym(name))))
+  }
   if (tp_recorder$skip_next) {
     tp_recorder$skip_next <- FALSE
     return(member)
