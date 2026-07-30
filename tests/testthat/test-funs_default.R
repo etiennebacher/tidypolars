@@ -401,3 +401,84 @@ test_that("is.na", {
     mutate(test_df, y = is.na(x))
   )
 })
+
+test_that("duplicated() works", {
+  test_df <- tibble(
+    x = c(1, 1, 2, 3, 3, 3),
+    y = c("a", "b", "a", "a", "c", "b"),
+    z = c(NA, NA, 1, 1, NA, 2)
+  )
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    mutate(test_pl, dup = duplicated(x)),
+    mutate(test_df, dup = duplicated(x))
+  )
+  expect_equal(
+    mutate(test_pl, dup = duplicated(y)),
+    mutate(test_df, dup = duplicated(y))
+  )
+  expect_equal(
+    mutate(test_pl, dup = duplicated(z)),
+    mutate(test_df, dup = duplicated(z))
+  )
+  expect_equal(
+    summarize(test_pl, dup = any(duplicated(x))),
+    summarize(test_df, dup = any(duplicated(x)))
+  )
+})
+
+test_that("duplicated() works with fromLast = TRUE", {
+  test_df <- tibble(
+    x = c(1, 1, 2, 3, 3, 3),
+    y = c("a", "b", "a", "a", "c", "b"),
+    z = c(NA, NA, 1, 1, NA, 2)
+  )
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    mutate(test_pl, dup = duplicated(x, fromLast = TRUE)),
+    mutate(test_df, dup = duplicated(x, fromLast = TRUE))
+  )
+  expect_equal(
+    mutate(test_pl, dup = duplicated(y, fromLast = TRUE)),
+    mutate(test_df, dup = duplicated(y, fromLast = TRUE))
+  )
+  expect_equal(
+    mutate(test_pl, dup = duplicated(z, fromLast = TRUE)),
+    mutate(test_df, dup = duplicated(z, fromLast = TRUE))
+  )
+})
+
+test_that("duplicated() validates fromLast", {
+  test_df <- tibble(x = c(1, 1, 2))
+  test_pl <- as_polars_df(test_df)
+
+  expect_both_error(
+    mutate(test_pl, dup = duplicated(x, fromLast = NA)),
+    mutate(test_df, dup = duplicated(x, fromLast = NA))
+  )
+  expect_both_error(
+    mutate(test_pl, dup = duplicated(x, fromLast = NULL)),
+    mutate(test_df, dup = duplicated(x, fromLast = NULL))
+  )
+  expect_both_error(
+    mutate(test_pl, dup = duplicated(x, fromLast = "foo")),
+    mutate(test_df, dup = duplicated(x, fromLast = "foo"))
+  )
+
+  # base R coerces these to logical, tidypolars requires a strict TRUE/FALSE
+  expect_snapshot(
+    mutate(test_pl, dup = duplicated(x, fromLast = 1)),
+    error = TRUE
+  )
+  expect_snapshot(
+    mutate(test_pl, dup = duplicated(x, fromLast = "TRUE")),
+    error = TRUE
+  )
+  # base R silently uses the first element, tidypolars errors
+  expect_snapshot(
+    mutate(test_pl, dup = duplicated(x, fromLast = c(TRUE, FALSE))),
+    error = TRUE
+  )
+})

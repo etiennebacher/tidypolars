@@ -138,9 +138,17 @@ pl_diff <- function(x, lag = 1, differences = 1, ...) {
   x$diff(n = lag, null_behavior = "drop")
 }
 
-pl_duplicated <- function(x, ...) {
+pl_duplicated <- function(x, fromLast = FALSE, ...) {
   check_empty_dots(...)
-  x$duplicated()
+
+  fromLast <- polars_expr_to_r(fromLast)
+  check_bool(fromLast)
+
+  if (fromLast) {
+    x$is_last_distinct()$not()
+  } else {
+    x$is_first_distinct()$not()
+  }
 }
 
 pl_exp <- function(x) {
