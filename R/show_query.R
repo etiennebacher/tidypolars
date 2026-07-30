@@ -451,7 +451,7 @@ deparse_query_arg <- function(x) {
 # tibble prints differently), no extra attribute and automatic row names.
 # Anything else keeps the faithful `structure()` deparse.
 is_plain_data_frame <- function(x) {
-  identical(class(x), "data.frame") &&
+  inherits(x, "data.frame") &&
     setequal(names(attributes(x)), c("names", "row.names", "class")) &&
     .row_names_info(x) < 0
 }
