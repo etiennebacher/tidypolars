@@ -8,7 +8,7 @@
   query (#369).
 
 * Added support for `anyDuplicated()`, and for the `incomparables` and `fromLast`
-  arguments of `duplicated()`.
+  arguments of `duplicated()` (#375, @Yousa-Mirage).
 
 
 # tidypolars 0.19.0
