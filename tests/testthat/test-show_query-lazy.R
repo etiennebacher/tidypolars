@@ -185,6 +185,15 @@ test_that("non-syntactic argument names are backquoted in the query", {
   expect_equal_lazy(replay_query(query), query)
 })
 
+test_that("count() doesn't record a `NULL` in sort() when input isn't grouped", {
+  query <- mtcars |>
+    as_polars_lf() |>
+    count(am)
+
+  expect_snapshot_lazy(show_query(query))
+  expect_equal_lazy(replay_query(query), query)
+})
+
 test_that("the input data is not modified by the recording", {
   test_pl <- as_polars_lf(mtcars)
   invisible(mutate(test_pl, foo = 1))
