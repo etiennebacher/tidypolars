@@ -7,6 +7,14 @@
 * Added support for `show_query()` to print the pure `polars` code that is equivalent to the
   query (#369).
 
+## Bug fixes
+
+- `arrange()` no longer modifies its input, which could cause unary `-` expressions in later operations
+  to produce incorrect results (#374, @Yousa-Mirage).
+
+- `arrange()` now errors consistently with `dplyr` when unary `-` is applied to unsupported types such as
+  character columns (#374, @Yousa-Mirage).
+
 
 # tidypolars 0.19.0
 

@@ -29,6 +29,9 @@ arrange.polars_data_frame <- function(.data, ..., .by_group = FALSE) {
   is_grouped <- !is.null(grps)
 
   attr(.data, "called_from_arrange") <- TRUE
+  on.exit({
+    attr(.data, "called_from_arrange") <- NULL
+  })
 
   polars_exprs <- translate_dots(
     .data,
