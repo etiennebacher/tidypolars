@@ -7,6 +7,11 @@
 * Added support for `show_query()` to print the pure `polars` code that is equivalent to the
   query (#369).
 
+## Bug fixes
+
+* Fix `seq()` to correctly handle descending sequences, negative steps,
+  single-value results, and `by = 0` consistently with base R.
+
 
 # tidypolars 0.19.0
 
