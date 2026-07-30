@@ -412,9 +412,27 @@ pl_seq <- function(from = 1, to = 1, by = NULL, ...) {
   by <- polars_expr_to_r(by)
   to <- polars_expr_to_r(to)
   from <- polars_expr_to_r(from)
-  by <- by %||% 1
-  out <- pl$int_range(start = from, end = to + 1, step = by)
-  if ((to - from) == 1) {
+
+  if (is.null(by)) {
+    by <- if (to >= from) {
+      1
+    } else {
+      -1
+    }
+  }
+
+  if (by == 0) {
+    if (to == from) {
+      return(pl$lit(from))
+    }
+    cli_abort("{.arg by} must not be zero.")
+  }
+  if ((to - from) * by < 0) {
+    cli_abort("Wrong sign in {.arg by} argument.")
+  }
+
+  out <- pl$int_range(start = from, end = to + sign(by), step = by)
+  if (abs(to - from) < abs(by)) {
     out <- out$first()
   }
   out
