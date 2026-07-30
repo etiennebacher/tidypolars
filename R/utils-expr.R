@@ -19,8 +19,6 @@
 #' @param env Environment of the function from which this expression is called
 #' (`filter()`, `mutate()` or `summarize()`).
 #' @param caller User environment in which the function is called.
-#' @param called_from_arrange Whether unary `-` expressions should be rewritten
-#'   for use as sort expressions.
 #'
 #' @noRd
 #'
@@ -28,25 +26,20 @@
 #' created variables, then the list will contains sublists, one per `$with_columns()`
 #' call to make.
 
-translate_dots <- function(
-  .data,
-  ...,
-  env,
-  caller,
-  called_from_arrange = FALSE
-) {
+translate_dots <- function(.data, ..., env, caller) {
   dots <- enquos(...)
   if (length(dots) == 0) {
     return()
   }
   dots <- lapply(dots, quo_squash)
   new_vars <- c()
+  called_from_arrange <- attr(.data, "called_from_arrange") %||% FALSE
 
   out <- lapply(seq_along(dots), \(x) {
     expr <- dots[[x]]
 
-    # Using a multiplication here ensures that we support `-x` when `x` is a bool 
-    # column and that we error on `-x` when `x` is a character column, like `dplyr`. 
+    # Using a multiplication here ensures that we support `-x` when `x` is a bool
+    # column and that we error on `-x` when `x` is a character column, like `dplyr`.
     if (isTRUE(called_from_arrange) && length(expr) == 2 && expr[[1]] == "-") {
       expr <- call2("*", expr[[2]], -1)
     }

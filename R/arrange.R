@@ -28,12 +28,19 @@ arrange.polars_data_frame <- function(.data, ..., .by_group = FALSE) {
   mo <- attributes(.data)$maintain_grp_order
   is_grouped <- !is.null(grps)
 
+  attr(.data, "called_from_arrange") <- TRUE
+  on.exit(
+    {
+      attr(.data, "called_from_arrange") <- NULL
+    },
+    add = TRUE
+  )
+
   polars_exprs <- translate_dots(
     .data,
     ...,
     env = rlang::current_env(),
-    caller = rlang::caller_env(),
-    called_from_arrange = TRUE
+    caller = rlang::caller_env()
   )
 
   descending <- vapply(
