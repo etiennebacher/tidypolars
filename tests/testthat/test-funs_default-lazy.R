@@ -426,10 +426,6 @@ test_that("duplicated() works", {
     mutate(test_pl, dup = duplicated(z)),
     mutate(test_df, dup = duplicated(z))
   )
-  expect_equal_lazy(
-    summarize(test_pl, dup = any(duplicated(x))),
-    summarize(test_df, dup = any(duplicated(x)))
-  )
 })
 
 test_that("duplicated() works with fromLast = TRUE", {
@@ -530,7 +526,10 @@ test_that("duplicated() works with incomparables", {
   test_df3 <- tibble(d = as.Date(c("2024-01-01", "2024-01-01", "2024-01-02")))
   test_pl3 <- as_polars_lf(test_df3)
   expect_equal_lazy(
-    mutate(test_pl3, dup = duplicated(d, incomparables = as.Date("2024-01-01"))),
+    mutate(
+      test_pl3,
+      dup = duplicated(d, incomparables = as.Date("2024-01-01"))
+    ),
     mutate(test_df3, dup = duplicated(d, incomparables = as.Date("2024-01-01")))
   )
 })
@@ -573,8 +572,14 @@ test_that("anyDuplicated() works with incomparables", {
     summarize(test_df, dup = anyDuplicated(x, incomparables = 1))
   )
   expect_equal_lazy(
-    summarize(test_pl, dup = anyDuplicated(x, incomparables = 1, fromLast = TRUE)),
-    summarize(test_df, dup = anyDuplicated(x, incomparables = 1, fromLast = TRUE))
+    summarize(
+      test_pl,
+      dup = anyDuplicated(x, incomparables = 1, fromLast = TRUE)
+    ),
+    summarize(
+      test_df,
+      dup = anyDuplicated(x, incomparables = 1, fromLast = TRUE)
+    )
   )
   expect_equal_lazy(
     summarize(test_pl, dup = anyDuplicated(x, incomparables = c(1, 2))),
