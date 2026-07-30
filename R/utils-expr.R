@@ -45,9 +45,8 @@ translate_dots <- function(
   out <- lapply(seq_along(dots), \(x) {
     expr <- dots[[x]]
 
-    # Polars doesn't support unary `-` on logical columns, while R coerces them
-    # to integers. Multiplication preserves R's accepted types and still errors
-    # for unsupported types such as character and date columns.
+    # Using a multiplication here ensures that we support `-x` when `x` is a bool 
+    # column and that we error on `-x` when `x` is a character column, like `dplyr`. 
     if (isTRUE(called_from_arrange) && length(expr) == 2 && expr[[1]] == "-") {
       expr <- call2("*", expr[[2]], -1)
     }
