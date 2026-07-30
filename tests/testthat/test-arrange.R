@@ -144,7 +144,7 @@ test_that("works with expressions", {
   )
 })
 
-test_that("does not modify its input", {
+test_that("does not modify its input, #374", {
   test <- tibble(mpg = c(1, 2, 3))
   test_pl <- as_polars_df(test)
 
