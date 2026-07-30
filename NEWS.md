@@ -7,6 +7,9 @@
 * Added support for `show_query()` to print the pure `polars` code that is equivalent to the
   query (#369).
 
+* Added support for `anyDuplicated()`, and for the `incomparables` and `fromLast`
+  arguments of `duplicated()`.
+
 
 # tidypolars 0.19.0
 

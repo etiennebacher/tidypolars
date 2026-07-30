@@ -487,4 +487,141 @@ test_that("duplicated() validates fromLast", {
   )
 })
 
+test_that("duplicated() works with incomparables", {
+  test_df <- tibble(
+    x = c(1, 1, 2, 2, 3),
+    y = c("a", "a", "b", "b", "c"),
+    z = c(1, NA, NA, 2, 2)
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    mutate(test_pl, dup = duplicated(x, incomparables = 1)),
+    mutate(test_df, dup = duplicated(x, incomparables = 1))
+  )
+  expect_equal_lazy(
+    mutate(test_pl, dup = duplicated(y, incomparables = c("a", "b"))),
+    mutate(test_df, dup = duplicated(y, incomparables = c("a", "b")))
+  )
+  expect_equal_lazy(
+    mutate(test_pl, dup = duplicated(x, incomparables = 1, fromLast = TRUE)),
+    mutate(test_df, dup = duplicated(x, incomparables = 1, fromLast = TRUE))
+  )
+
+  # NA is a valid incomparable value
+  expect_equal_lazy(
+    mutate(test_pl, dup = duplicated(z, incomparables = NA)),
+    mutate(test_df, dup = duplicated(z, incomparables = NA))
+  )
+  expect_equal_lazy(
+    mutate(test_pl, dup = duplicated(z, incomparables = c(1, NA))),
+    mutate(test_df, dup = duplicated(z, incomparables = c(1, NA)))
+  )
+
+  # incomparables = FALSE doesn't exclude anything (not even FALSE itself)
+  test_df2 <- tibble(l = c(TRUE, TRUE, FALSE, FALSE))
+  test_pl2 <- as_polars_lf(test_df2)
+  expect_equal_lazy(
+    mutate(test_pl2, dup = duplicated(l, incomparables = FALSE)),
+    mutate(test_df2, dup = duplicated(l, incomparables = FALSE))
+  )
+
+  # works with Date columns
+  test_df3 <- tibble(d = as.Date(c("2024-01-01", "2024-01-01", "2024-01-02")))
+  test_pl3 <- as_polars_lf(test_df3)
+  expect_equal_lazy(
+    mutate(test_pl3, dup = duplicated(d, incomparables = as.Date("2024-01-01"))),
+    mutate(test_df3, dup = duplicated(d, incomparables = as.Date("2024-01-01")))
+  )
+})
+
+test_that("anyDuplicated() works", {
+  test_df <- tibble(
+    x = c(1, 2, 1, 2, 3),
+    y = c("a", "b", "c", "d", "e"),
+    z = c(1, NA, NA, 2, 2)
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    summarize(test_pl, dup = anyDuplicated(x)),
+    summarize(test_df, dup = anyDuplicated(x))
+  )
+  expect_equal_lazy(
+    summarize(test_pl, dup = anyDuplicated(y)),
+    summarize(test_df, dup = anyDuplicated(y))
+  )
+  expect_equal_lazy(
+    summarize(test_pl, dup = anyDuplicated(x, fromLast = TRUE)),
+    summarize(test_df, dup = anyDuplicated(x, fromLast = TRUE))
+  )
+  expect_equal_lazy(
+    mutate(test_pl, dup = anyDuplicated(x)),
+    mutate(test_df, dup = anyDuplicated(x))
+  )
+})
+
+test_that("anyDuplicated() works with incomparables", {
+  test_df <- tibble(
+    x = c(1, 2, 1, 2, 3),
+    z = c(1, NA, NA, 2, 2)
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    summarize(test_pl, dup = anyDuplicated(x, incomparables = 1)),
+    summarize(test_df, dup = anyDuplicated(x, incomparables = 1))
+  )
+  expect_equal_lazy(
+    summarize(test_pl, dup = anyDuplicated(x, incomparables = 1, fromLast = TRUE)),
+    summarize(test_df, dup = anyDuplicated(x, incomparables = 1, fromLast = TRUE))
+  )
+  expect_equal_lazy(
+    summarize(test_pl, dup = anyDuplicated(x, incomparables = c(1, 2))),
+    summarize(test_df, dup = anyDuplicated(x, incomparables = c(1, 2)))
+  )
+  expect_equal_lazy(
+    summarize(test_pl, dup = anyDuplicated(z, incomparables = NA)),
+    summarize(test_df, dup = anyDuplicated(z, incomparables = NA))
+  )
+})
+
+test_that("duplicated() treats NULL and zero-length incomparables as 'exclude nothing'", {
+  test_df <- tibble(x = c(NA, NA, 1, 1))
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    mutate(test_pl, dup = duplicated(x, incomparables = NULL)),
+    mutate(test_df, dup = duplicated(x, incomparables = NULL))
+  )
+  expect_equal_lazy(
+    mutate(test_pl, dup = duplicated(x, incomparables = logical(0))),
+    mutate(test_df, dup = duplicated(x, incomparables = logical(0)))
+  )
+  expect_equal_lazy(
+    mutate(test_pl, dup = duplicated(x, incomparables = character(0))),
+    mutate(test_df, dup = duplicated(x, incomparables = character(0)))
+  )
+  expect_equal_lazy(
+    mutate(test_pl, dup = duplicated(x, incomparables = numeric(0))),
+    mutate(test_df, dup = duplicated(x, incomparables = numeric(0)))
+  )
+
+  # NULL passed via a variable
+  incomp <- NULL
+  expect_equal_lazy(
+    mutate(test_pl, dup = duplicated(x, incomparables = incomp)),
+    mutate(test_df, dup = duplicated(x, incomparables = incomp))
+  )
+
+  expect_equal_lazy(
+    summarize(test_pl, dup = anyDuplicated(x, incomparables = NULL)),
+    summarize(test_df, dup = anyDuplicated(x, incomparables = NULL))
+  )
+  expect_equal_lazy(
+    summarize(test_pl, dup = anyDuplicated(x, incomparables = character(0))),
+    summarize(test_df, dup = anyDuplicated(x, incomparables = character(0)))
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

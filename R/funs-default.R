@@ -61,6 +61,23 @@ pl_anyNA <- function(x, recursive = FALSE) {
   x$has_nulls()
 }
 
+pl_anyDuplicated <- function(x, incomparables = FALSE, fromLast = FALSE, ...) {
+  check_empty_dots(...)
+
+  fromLast <- polars_expr_to_r(fromLast)
+  check_bool(fromLast)
+
+  flag <- duplicated_flag(x, incomparables, fromLast)
+  indices <- flag$arg_true()
+  index <- if (fromLast) {
+    indices$last()
+  } else {
+    indices$first()
+  }
+
+  (index + 1)$fill_null(0)
+}
+
 pl_acos <- function(x) {
   x$arccos()
 }
@@ -138,17 +155,13 @@ pl_diff <- function(x, lag = 1, differences = 1, ...) {
   x$diff(n = lag, null_behavior = "drop")
 }
 
-pl_duplicated <- function(x, fromLast = FALSE, ...) {
+pl_duplicated <- function(x, incomparables = FALSE, fromLast = FALSE, ...) {
   check_empty_dots(...)
 
   fromLast <- polars_expr_to_r(fromLast)
   check_bool(fromLast)
 
-  if (fromLast) {
-    x$is_last_distinct()$not()
-  } else {
-    x$is_first_distinct()$not()
-  }
+  duplicated_flag(x, incomparables, fromLast)
 }
 
 pl_exp <- function(x) {
@@ -572,4 +585,48 @@ extract_from_to <- function(dots, env) {
   to <- unlist(to, use.names = FALSE)
 
   list(from = from, to = to)
+}
+
+# Flag duplicated values in a column. Shared by pl_duplicated() and
+# pl_anyDuplicated().
+duplicated_flag <- function(x, incomparables, fromLast) {
+  flag <- if (fromLast) {
+    x$is_last_distinct()$not()
+  } else {
+    x$is_first_distinct()$not()
+  }
+
+  # Handle incomparables. If incomparables is NULL, list(NULL), or a polars
+  # expression that evaluates to NULL, then we don't need to do anything.
+  if (
+    is.null(incomparables) ||
+      identical(incomparables, list(NULL)) ||
+      (is_polars_expr(incomparables) &&
+        isTRUE(incomparables$meta$eq(pl$lit(NULL))))
+  ) {
+    incomparables <- FALSE
+  } else {
+    incomparables <- polars_expr_to_r(incomparables)
+    if (!is_polars_expr(incomparables) && length(incomparables) == 0L) {
+      incomparables <- FALSE
+    }
+  }
+
+  if (isFALSE(incomparables)) {
+    return(flag)
+  }
+
+  if (is_polars_expr(incomparables)) {
+    # `incomparables` couldn't be converted back to an R vector (e.g. it is
+    # a translated call like `as.Date("2024-01-01")`).
+    incomparable <- x$is_in(incomparables$implode(), nulls_equal = TRUE)
+  } else if (is.logical(incomparables) && all(is.na(incomparables))) {
+    # `pl$lit(list(NA))` is List(Boolean) and can't be used in is_in()
+    # with a non-boolean column.
+    incomparable <- x$is_null()
+  } else {
+    incomparable <- x$is_in(pl$lit(list(incomparables)), nulls_equal = TRUE)
+  }
+
+  flag & incomparable$not()
 }
