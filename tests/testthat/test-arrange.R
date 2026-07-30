@@ -27,23 +27,29 @@ test_that("basic behavior works", {
   )
 })
 
-test_that("using desc() works", {
-  test_df <- tibble(
-    x1 = c("a", "a", "b", "a", "c"),
-    x2 = c(2, 1, 5, 3, 1),
-    value = sample.int(5, )
-  )
-  test_pl <- as_polars_df(test_df)
-  expect_equal(
-    arrange(test_pl, desc(x2)),
-    arrange(test_df, -x2)
-  )
+patrick::with_parameters_test_that(
+  "using desc() works with different column types",
+  {
+    test_df <- tibble(x = x)
+    test_pl <- as_polars_df(test_df)
 
-  expect_equal(
-    arrange(test_pl, desc(x2), desc(value)),
-    arrange(test_df, -x2, -value)
+    expect_equal(
+      arrange(test_pl, desc(x)),
+      arrange(test_df, desc(x))
+    )
+  },
+  x = list(
+    c(2, 1, 3),
+    c(2L, 1L, 3L),
+    c(TRUE, FALSE, TRUE),
+    c("b", "a", "c"),
+    as.Date(c("2020-01-02", "2020-01-01", "2020-01-03")),
+    as.POSIXct(
+      c("2020-01-02", "2020-01-01", "2020-01-03"),
+      tz = "UTC"
+    )
   )
-})
+)
 
 test_that("sorting by multiple variables works", {
   test_df <- tibble(
@@ -55,6 +61,11 @@ test_that("sorting by multiple variables works", {
   expect_equal(
     arrange(test_pl, x1, -x2),
     arrange(test_df, x1, -x2)
+  )
+
+  expect_equal(
+    arrange(test_pl, desc(x1), desc(x2)),
+    arrange(test_df, desc(x1), desc(x2))
   )
 })
 
@@ -132,6 +143,44 @@ test_that("works with expressions", {
     test_df |> arrange(1 / mpg)
   )
 })
+
+test_that("does not modify its input, #374", {
+  test_df <- tibble(mpg = c(1, 2, 3))
+  test_pl <- as_polars_df(test_df)
+
+  invisible(arrange(test_df, mpg))
+  invisible(arrange(test_pl, mpg))
+
+  expect_equal(
+    test_pl |> mutate(z = -mpg),
+    test_df |> mutate(z = -mpg)
+  )
+})
+
+patrick::with_parameters_test_that(
+  "unary minus matches dplyr with different column types",
+  {
+    test_df <- tibble(x = x)
+    test_pl <- as_polars_df(test_df)
+
+    expect_equal_or_both_error(
+      arrange(test_pl, -x),
+      arrange(test_df, -x)
+    )
+  },
+  x = list(
+    c(2, 1, 3),
+    c(2L, 1L, 3L),
+    c(TRUE, FALSE, TRUE),
+    as.difftime(c(7200, 3600, 10800), units = "secs"),
+    c("b", "a", "c"),
+    as.Date(c("2020-01-02", "2020-01-01", "2020-01-03")),
+    as.POSIXct(
+      c("2020-01-02", "2020-01-01", "2020-01-03"),
+      tz = "UTC"
+    )
+  )
+)
 
 test_that("NA are placed last", {
   test_df <- tibble(
