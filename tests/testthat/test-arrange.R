@@ -133,6 +133,50 @@ test_that("works with expressions", {
   )
 })
 
+test_that("does not modify its input", {
+  test <- tibble(mpg = c(1, 2, 3))
+  test_pl <- as_polars_df(test)
+
+  invisible(arrange(test, mpg))
+  invisible(arrange(test_pl, mpg))
+
+  expect_equal(
+    test_pl |> mutate(z = -mpg),
+    test |> mutate(z = -mpg)
+  )
+})
+
+test_that("unary minus works with logical columns", {
+  test <- tibble(x = c(TRUE, FALSE, TRUE))
+  test_pl <- as_polars_df(test)
+
+  expect_equal(
+    arrange(test_pl, -x),
+    arrange(test, -x)
+  )
+})
+
+patrick::with_parameters_test_that(
+  "unary minus errors for unsupported column types",
+  {
+    test <- tibble(x = x)
+    test_pl <- as_polars_df(test)
+
+    expect_both_error(
+      arrange(test_pl, -x),
+      arrange(test, -x)
+    )
+  },
+  x = list(
+    c("b", "a", "c"),
+    as.Date(c("2020-01-02", "2020-01-01", "2020-01-03")),
+    as.POSIXct(
+      c("2020-01-02", "2020-01-01", "2020-01-03"),
+      tz = "UTC"
+    )
+  )
+)
+
 test_that("NA are placed last", {
   test_df <- tibble(
     x = c(2, 1, 3, NA),

@@ -19,6 +19,8 @@
 #' @param env Environment of the function from which this expression is called
 #' (`filter()`, `mutate()` or `summarize()`).
 #' @param caller User environment in which the function is called.
+#' @param called_from_arrange Whether unary `-` expressions should be rewritten
+#'   for use as sort expressions.
 #'
 #' @noRd
 #'
@@ -26,23 +28,28 @@
 #' created variables, then the list will contains sublists, one per `$with_columns()`
 #' call to make.
 
-translate_dots <- function(.data, ..., env, caller) {
+translate_dots <- function(
+  .data,
+  ...,
+  env,
+  caller,
+  called_from_arrange = FALSE
+) {
   dots <- enquos(...)
   if (length(dots) == 0) {
     return()
   }
   dots <- lapply(dots, quo_squash)
   new_vars <- c()
-  called_from_arrange <- attr(.data, "called_from_arrange") %||% FALSE
 
   out <- lapply(seq_along(dots), \(x) {
     expr <- dots[[x]]
 
-    # arrange() is a special case since using "-" on a character column is
-    # accepted but invalid for Polars so we need to replace "-" by "desc()"
-    # before translating.
+    # Polars doesn't support unary `-` on logical columns, while R coerces them
+    # to integers. Multiplication preserves R's accepted types and still errors
+    # for unsupported types such as character and date columns.
     if (isTRUE(called_from_arrange) && length(expr) == 2 && expr[[1]] == "-") {
-      expr <- call2("desc", expr[[2]])
+      expr <- call2("*", expr[[2]], -1)
     }
 
     tmp <- translate_expr(
