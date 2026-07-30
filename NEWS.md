@@ -10,7 +10,7 @@
 ## Bug fixes
 
 * Fix `distinct()` on grouped data to include grouping variables in the distinct keys,
-  retain grouping columns, and preserve grouping metadata.
+  retain grouping columns, and preserve grouping metadata (#376, @Yousa-Mirage).
 
 
 # tidypolars 0.19.0
