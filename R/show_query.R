@@ -15,10 +15,11 @@
 #' shown as `a + b`), and user-defined functions are displayed as a call
 #' rather than expanded into the operations they perform internally.
 #'
-#' Long values coming from the calling environment are referred to by the name
-#' of the object they come from, so that the printed code stays copy-pasteable.
-#' Values that are too long to display and are not bound to a name, such as a
-#' long inline vector, are shown as a placeholder like
+#' Long values coming from the calling environment are referred to by the code
+#' they come from -- the name of the object holding them, or the call that
+#' produced them, e.g. `pl$lit(runif(200))` -- so that the printed code stays
+#' copy-pasteable. Values that are too long to display and whose source code
+#' cannot be recovered are shown as a placeholder like
 #' `` `<numeric of length 200>` ``.
 #'
 #' @param x A Polars Data/LazyFrame that went through `tidypolars` functions.
@@ -300,11 +301,14 @@ record_udf_query <- function(out, fn_name, args) {
   tag_polars(out, text)
 }
 
-# Refer to a constant by the name of the caller-environment object it came
-# from, but only when its value is too long to display faithfully: short
-# values are clearer shown literally, and long ones would otherwise become an
-# unusable placeholder like `` `<numeric of length 200>` ``.
-record_named_literal <- function(out, name, value) {
+# Refer to a constant by the code it was written as (the name of a caller
+# environment object, or the call that produced it, e.g. `runif(200)`), but
+# only when its value is too long to display faithfully: short values are
+# clearer shown literally, and long ones would otherwise become an unusable
+# placeholder like `` `<numeric of length 200>` ``. The source code is both
+# shorter and copy-pasteable, since what it refers to lives in the caller
+# environment.
+record_source_literal <- function(out, expr, value) {
   if (!query_recording_enabled() || !inherits(out, "tp_recorded")) {
     return(out)
   }
@@ -313,7 +317,11 @@ record_named_literal <- function(out, name, value) {
   if (!startsWith(deparse_query_arg(value), "`<")) {
     return(out)
   }
-  attr(out, "tp_query") <- paste0("pl$lit(", name, ")")
+  src <- safe_deparse(expr)
+  if (is.null(src) || length(src) != 1 || nchar(src) > 80) {
+    return(out)
+  }
+  attr(out, "tp_query") <- paste0("pl$lit(", src, ")")
   out
 }
 
@@ -405,7 +413,17 @@ deparse_query_arg <- function(x) {
   } else if (is_plain_data_frame(x)) {
     deparse_data_frame(x)
   } else if (is.atomic(x) && length(x) > 100) {
-    paste0("`<", class(x)[1], " of length ", length(x), ">`")
+    # A long vector is usually unreadable when deparsed, but some deparse
+    # compactly (a sequence gives `1:200`), and then the literal is exact,
+    # copy-pasteable and shorter than the placeholder. `nlines` bounds the
+    # work: needing a second line already means too long to display, so a
+    # vector of any size costs a couple of lines of deparsing at most.
+    dep <- deparse(x, width.cutoff = 500L, nlines = 2L)
+    if (length(dep) == 1L && nchar(dep) <= 300L) {
+      dep
+    } else {
+      paste0("`<", class(x)[1], " of length ", length(x), ">`")
+    }
   } else {
     attr(x, "tp_query") <- NULL
     dep <- deparse1(x)

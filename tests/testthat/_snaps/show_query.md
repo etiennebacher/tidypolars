@@ -112,6 +112,16 @@
           foo = pl$col("mpg")$is_in(pl$lit(large)$implode(), nulls_equal = TRUE)
         )
 
+---
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          foo = pl$col("mpg")$is_in(pl$lit(runif(200))$implode(), nulls_equal = TRUE)
+        )
+
 # `NULL` arguments are kept in the query
 
     Code

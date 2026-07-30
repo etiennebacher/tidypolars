@@ -33,10 +33,11 @@ operators are used instead of their method equivalent (e.g. \code{a$add(b)} is
 shown as \code{a + b}), and user-defined functions are displayed as a call
 rather than expanded into the operations they perform internally.
 
-Long values coming from the calling environment are referred to by the name
-of the object they come from, so that the printed code stays copy-pasteable.
-Values that are too long to display and are not bound to a name, such as a
-long inline vector, are shown as a placeholder like
+Long values coming from the calling environment are referred to by the code
+they come from -- the name of the object holding them, or the call that
+produced them, e.g. \code{pl$lit(runif(200))} -- so that the printed code stays
+copy-pasteable. Values that are too long to display and whose source code
+cannot be recovered are shown as a placeholder like
 \code{`<numeric of length 200>`}.
 }
 \examples{

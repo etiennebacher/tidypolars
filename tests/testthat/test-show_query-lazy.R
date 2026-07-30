@@ -131,6 +131,14 @@ test_that("long vectors are truncated in the query", {
     mutate(foo = mpg %in% large)
 
   expect_snapshot_lazy(show_query(query))
+
+  # Same, but written inline
+  query <- mtcars |>
+    as_polars_lf() |>
+    mutate(foo = mpg %in% runif(200))
+
+  expect_snapshot_lazy(show_query(query))
+  expect_equal_lazy(replay_query(query), query)
 })
 
 test_that("`NULL` arguments are kept in the query", {
