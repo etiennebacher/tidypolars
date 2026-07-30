@@ -54,11 +54,7 @@ distinct.polars_data_frame <- function(
     maintain_order = maintain_order
   )
   if (length(grps) > 0) {
-    out <- group_by(
-      out,
-      all_of(grps),
-      maintain_order = mo
-    )
+    out <- group_by(out, all_of(grps), maintain_order = mo)
   }
   add_tidypolars_class(out)
 }
