@@ -31,23 +31,29 @@ test_that("basic behavior works", {
   )
 })
 
-test_that("using desc() works", {
-  test_df <- tibble(
-    x1 = c("a", "a", "b", "a", "c"),
-    x2 = c(2, 1, 5, 3, 1),
-    value = sample.int(5, )
-  )
-  test_pl <- as_polars_lf(test_df)
-  expect_equal_lazy(
-    arrange(test_pl, desc(x2)),
-    arrange(test_df, -x2)
-  )
+patrick::with_parameters_test_that(
+  "using desc() works with different column types",
+  {
+    test <- tibble(x = x)
+    test_pl <- as_polars_lf(test)
 
-  expect_equal_lazy(
-    arrange(test_pl, desc(x2), desc(value)),
-    arrange(test_df, -x2, -value)
+    expect_equal_lazy(
+      arrange(test_pl, desc(x)),
+      arrange(test, desc(x))
+    )
+  },
+  x = list(
+    c(2, 1, 3),
+    c(2L, 1L, 3L),
+    c(TRUE, FALSE, TRUE),
+    c("b", "a", "c"),
+    as.Date(c("2020-01-02", "2020-01-01", "2020-01-03")),
+    as.POSIXct(
+      c("2020-01-02", "2020-01-01", "2020-01-03"),
+      tz = "UTC"
+    )
   )
-})
+)
 
 test_that("sorting by multiple variables works", {
   test_df <- tibble(
@@ -59,6 +65,11 @@ test_that("sorting by multiple variables works", {
   expect_equal_lazy(
     arrange(test_pl, x1, -x2),
     arrange(test_df, x1, -x2)
+  )
+
+  expect_equal_lazy(
+    arrange(test_pl, desc(x1), desc(x2)),
+    arrange(test_df, desc(x1), desc(x2))
   )
 })
 
@@ -150,15 +161,24 @@ test_that("does not modify its input", {
   )
 })
 
-test_that("unary minus works with logical columns", {
-  test <- tibble(x = c(TRUE, FALSE, TRUE))
-  test_pl <- as_polars_lf(test)
+patrick::with_parameters_test_that(
+  "unary minus works with supported column types",
+  {
+    test <- tibble(x = x)
+    test_pl <- as_polars_lf(test)
 
-  expect_equal_lazy(
-    arrange(test_pl, -x),
-    arrange(test, -x)
+    expect_equal_lazy(
+      arrange(test_pl, -x),
+      arrange(test, -x)
+    )
+  },
+  x = list(
+    c(2, 1, 3),
+    c(2L, 1L, 3L),
+    c(TRUE, FALSE, TRUE),
+    as.difftime(c(7200, 3600, 10800), units = "secs")
   )
-})
+)
 
 patrick::with_parameters_test_that(
   "unary minus errors for unsupported column types",
