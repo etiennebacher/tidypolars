@@ -413,7 +413,13 @@ pl_seq <- function(from = 1, to = 1, by = NULL, ...) {
   to <- polars_expr_to_r(to)
   from <- polars_expr_to_r(from)
 
-  by <- by %||% (if (to >= from) 1 else -1)
+  if (is.null(by)) {
+    by <- if (to >= from) {
+      1
+    } else {
+      -1
+    }
+  }
 
   if (by == 0) {
     if (to == from) {
