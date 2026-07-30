@@ -212,6 +212,20 @@ test_that("show_query() rejects extra arguments", {
   expect_snapshot(show_query(query, 2), error = TRUE)
 })
 
+test_that("the query is wrapped at the console width", {
+  query <- mtcars |>
+    as_polars_df() |>
+    mutate(across(contains("m"), mean)) |>
+    filter(cyl == 4 & am == 1)
+
+  # A wide console keeps the method chains of each argument inline, a narrow
+  # one explodes them.
+  expect_snapshot(withr::with_options(list(width = 120), show_query(query)))
+  expect_snapshot(withr::with_options(list(width = 40), show_query(query)))
+
+  expect_equal(replay_query(query), query)
+})
+
 test_that("errors in the pipeline are not affected by the recording", {
   test_pl <- as_polars_df(data.frame(char1 = c("a", "b")))
   expect_snapshot(

@@ -10,6 +10,11 @@
 #' error with an informative message. It can be enabled with
 #' `options(tidypolars_record_query = TRUE)` (see [tidypolars_options]).
 #'
+#' @param x A Polars Data/LazyFrame that went through `tidypolars` functions.
+#' @inheritParams rlang::check_dots_empty0
+#'
+#' @details
+#'
 #' To keep the output readable and close to hand-written `polars` code, R
 #' operators are used instead of their method equivalent (e.g. `a$add(b)` is
 #' shown as `a + b`), and user-defined functions are displayed as a call
@@ -22,8 +27,11 @@
 #' cannot be recovered are shown as a placeholder like
 #' `` `<numeric of length 200>` ``.
 #'
-#' @param x A Polars Data/LazyFrame that went through `tidypolars` functions.
-#' @inheritParams rlang::check_dots_empty0
+#' The code is wrapped at the console width (`getOption("width")`).
+#'
+#' If the package `cli` is installed, it provides syntax highlighting for the output.
+#' This can be controlled with `options(cli.code_theme = )` (see [cli::code_theme_list()]
+#' for the available themes).
 #'
 #' @return The input, invisibly. This function is called for its side effect
 #' of printing the polars query.
@@ -592,7 +600,11 @@ match_binary_op <- function(node) {
 #   inline.
 # ------------------------------------------------------------------------
 
-tp_query_width <- 80L
+# Width the printed query is wrapped at. Follows the console, like every other
+# printing function; `options()` already keeps `width` in [10, 10000].
+tp_query_width <- function() {
+  getOption("width", 80L)
+}
 
 format_polars_query <- function(text) {
   text <- rewrite_query_operators(text)
@@ -622,8 +634,10 @@ highlight_query <- function(text) {
   # but not others, e.g. `$with_columns()`. Disable all links to keep syntax
   # highlighting consistent.
   local_options(cli.hyperlink_help = FALSE)
+  # No `code_theme`, so cli resolves it itself: `cli.code_theme` if the user set
+  # one, the RStudio editor theme in RStudio, "Solarized Dark" in a terminal.
   out <- tryCatch(
-    cli::code_highlight(lines, code_theme = "Solarized Light"),
+    cli::code_highlight(lines),
     error = function(e) lines
   )
   paste(out, collapse = "\n")
@@ -651,7 +665,7 @@ split_chain_merged <- function(text) {
 # chain of method calls. The first line is placed by the caller, so only
 # continuation lines get the indent.
 format_query_value <- function(text, indent) {
-  if (indent + nchar(text) <= tp_query_width) {
+  if (indent + nchar(text) <= tp_query_width()) {
     return(text)
   }
   parts <- split_chain_merged(text)
@@ -769,7 +783,7 @@ format_call_segment <- function(part, indent, force_explode) {
   # arguments (named ones, or nested expressions like `pl$col("a")`) benefit
   # from that. A call made solely of plain unnamed values, e.g.
   # `select("a", "b")`, stays inline as long as it fits on the line.
-  too_long <- indent + nchar(part) > tp_query_width
+  too_long <- indent + nchar(part) > tp_query_width()
   explode <- too_long ||
     (force_explode &&
       length(commas) > 0 &&
@@ -805,7 +819,7 @@ format_call_segment <- function(part, indent, force_explode) {
 }
 
 # Pack plain arguments so that each line holds as many comma-separated values
-# as fit within `tp_query_width`, instead of one value per line. Returns the
+# as fit within `tp_query_width()`, instead of one value per line. Returns the
 # lines without their leading indentation (`indent` is only used to measure the
 # available width) and without trailing commas: those are added by the caller
 # when the lines are joined.
@@ -822,7 +836,7 @@ fill_query_args <- function(args, indent) {
     }
     if (
       current != "" &&
-        indent + nchar(candidate) + trailing_comma > tp_query_width
+        indent + nchar(candidate) + trailing_comma > tp_query_width()
     ) {
       lines <- c(lines, current)
       current <- piece

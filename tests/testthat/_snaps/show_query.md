@@ -256,6 +256,43 @@
       * ..1 = 2
       i Did you forget to name an argument?
 
+# the query is wrapped at the console width
+
+    Code
+      withr::with_options(list(width = 120), show_query(query))
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          mpg = pl$when(pl$col("mpg")$has_nulls())$then(NA)$otherwise(pl$col("mpg")$mean()),
+          am = pl$when(pl$col("am")$has_nulls())$then(NA)$otherwise(pl$col("am")$mean())
+        )$
+        filter(pl$col("cyl") == pl$lit(4) & pl$col("am") == pl$lit(1))
+
+---
+
+    Code
+      withr::with_options(list(width = 40), show_query(query))
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          mpg = pl$when(
+            pl$col("mpg")$has_nulls()
+          )$
+            then(NA)$
+            otherwise(pl$col("mpg")$mean()),
+          am = pl$when(
+            pl$col("am")$has_nulls()
+          )$
+            then(NA)$
+            otherwise(pl$col("am")$mean())
+        )$
+        filter(
+          pl$col("cyl") == pl$
+            lit(4) & pl$
+            col("am") == pl$
+            lit(1)
+        )
+
 # errors in the pipeline are not affected by the recording
 
     Code

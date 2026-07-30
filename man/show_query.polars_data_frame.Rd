@@ -27,7 +27,8 @@ query).
 Recording the query is \strong{disabled} by default, meaning that \code{show_query()} will
 error with an informative message. It can be enabled with
 \code{options(tidypolars_record_query = TRUE)} (see \link{tidypolars_options}).
-
+}
+\details{
 To keep the output readable and close to hand-written \code{polars} code, R
 operators are used instead of their method equivalent (e.g. \code{a$add(b)} is
 shown as \code{a + b}), and user-defined functions are displayed as a call
@@ -39,6 +40,12 @@ produced them, e.g. \code{pl$lit(runif(200))} -- so that the printed code stays
 copy-pasteable. Values that are too long to display and whose source code
 cannot be recovered are shown as a placeholder like
 \code{`<numeric of length 200>`}.
+
+The code is wrapped at the console width (\code{getOption("width")}).
+
+If the package \code{cli} is installed, it provides syntax highlighting for the output.
+This can be controlled with \code{options(cli.code_theme = )} (see \code{\link[cli:code_theme_list]{cli::code_theme_list()}}
+for the available themes).
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) & require("withr", quietly = TRUE)) withAutoprint(\{ # examplesIf}

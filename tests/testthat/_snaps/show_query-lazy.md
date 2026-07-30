@@ -372,6 +372,57 @@
       * ..1 = 2
       i Did you forget to name an argument?
 
+# the query is wrapped at the console width
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(mtcars)$
+        with_columns(
+          mpg = pl$when(pl$col("mpg")$has_nulls())$then(NA)$otherwise(pl$col("mpg")$mean()),
+          am = pl$when(pl$col("am")$has_nulls())$then(NA)$otherwise(pl$col("am")$mean())
+        )$
+        filter(pl$col("cyl") == pl$lit(4) & pl$col("am") == pl$lit(1))
+      shape: (0, 11)
+      ┌─────┬─────┬──────┬─────┬───┬─────┬─────┬──────┬──────┐
+      │ mpg ┆ cyl ┆ disp ┆ hp  ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │
+      │ --- ┆ --- ┆ ---  ┆ --- ┆   ┆ --- ┆ --- ┆ ---  ┆ ---  │
+      │ f64 ┆ f64 ┆ f64  ┆ f64 ┆   ┆ f64 ┆ f64 ┆ f64  ┆ f64  │
+      ╞═════╪═════╪══════╪═════╪═══╪═════╪═════╪══════╪══════╡
+      └─────┴─────┴──────┴─────┴───┴─────┴─────┴──────┴──────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(mtcars)$
+        with_columns(
+          mpg = pl$when(
+            pl$col("mpg")$has_nulls()
+          )$
+            then(NA)$
+            otherwise(pl$col("mpg")$mean()),
+          am = pl$when(
+            pl$col("am")$has_nulls()
+          )$
+            then(NA)$
+            otherwise(pl$col("am")$mean())
+        )$
+        filter(
+          pl$col("cyl") == pl$
+            lit(4) & pl$
+            col("am") == pl$
+            lit(1)
+        )
+      shape: (0, 11)
+      ┌─────┬─────┬──────┬─────┬───┬─────┬─────┬──────┬──────┐
+      │ mpg ┆ cyl ┆ disp ┆ hp  ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │
+      │ --- ┆ --- ┆ ---  ┆ --- ┆   ┆ --- ┆ --- ┆ ---  ┆ ---  │
+      │ f64 ┆ f64 ┆ f64  ┆ f64 ┆   ┆ f64 ┆ f64 ┆ f64  ┆ f64  │
+      ╞═════╪═════╪══════╪═════╪═══╪═════╪═════╪══════╪══════╡
+      └─────┴─────┴──────┴─────┴───┴─────┴─────┴──────┴──────┘
+
 # errors in the pipeline are not affected by the recording
 
     Code
