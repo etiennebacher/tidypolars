@@ -30,12 +30,12 @@ test_that("basic behavior works", {
 patrick::with_parameters_test_that(
   "using desc() works with different column types",
   {
-    test <- tibble(x = x)
-    test_pl <- as_polars_df(test)
+    test_df <- tibble(x = x)
+    test_pl <- as_polars_df(test_df)
 
     expect_equal(
       arrange(test_pl, desc(x)),
-      arrange(test, desc(x))
+      arrange(test_df, desc(x))
     )
   },
   x = list(
