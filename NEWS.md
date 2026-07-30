@@ -7,6 +7,11 @@
 * Added support for `show_query()` to print the pure `polars` code that is equivalent to the
   query (#369).
 
+## Bug fixes
+
+* Fix `distinct()` on grouped data to include grouping variables in the distinct keys,
+  retain grouping columns, and preserve grouping metadata.
+
 
 # tidypolars 0.19.0
 
