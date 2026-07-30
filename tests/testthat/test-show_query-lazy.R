@@ -233,8 +233,12 @@ test_that("the query is wrapped at the console width", {
 
   # A wide console keeps the method chains of each argument inline, a narrow
   # one explodes them.
-  expect_snapshot_lazy(withr::with_options(list(width = 120), show_query(query)))
-  expect_snapshot_lazy(withr::with_options(list(width = 40), show_query(query)))
+  expect_snapshot_lazy(
+    withr::with_options(list(width = 120), show_query(query))
+  )
+  expect_snapshot_lazy(
+    withr::with_options(list(width = 40), show_query(query))
+  )
 
   expect_equal_lazy(replay_query(query), query)
 })
