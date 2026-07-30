@@ -34,12 +34,12 @@ test_that("basic behavior works", {
 patrick::with_parameters_test_that(
   "using desc() works with different column types",
   {
-    test <- tibble(x = x)
-    test_pl <- as_polars_lf(test)
+    test_df <- tibble(x = x)
+    test_pl <- as_polars_lf(test_df)
 
     expect_equal_lazy(
       arrange(test_pl, desc(x)),
-      arrange(test, desc(x))
+      arrange(test_df, desc(x))
     )
   },
   x = list(
@@ -148,7 +148,7 @@ test_that("works with expressions", {
   )
 })
 
-test_that("does not modify its input", {
+test_that("does not modify its input, #374", {
   test <- tibble(mpg = c(1, 2, 3))
   test_pl <- as_polars_lf(test)
 
@@ -162,12 +162,12 @@ test_that("does not modify its input", {
 })
 
 patrick::with_parameters_test_that(
-  "unary minus works with supported column types",
+  "unary minus matches dplyr with different column types",
   {
     test <- tibble(x = x)
     test_pl <- as_polars_lf(test)
 
-    expect_equal_lazy(
+    expect_equal_or_both_error(
       arrange(test_pl, -x),
       arrange(test, -x)
     )
@@ -176,22 +176,7 @@ patrick::with_parameters_test_that(
     c(2, 1, 3),
     c(2L, 1L, 3L),
     c(TRUE, FALSE, TRUE),
-    as.difftime(c(7200, 3600, 10800), units = "secs")
-  )
-)
-
-patrick::with_parameters_test_that(
-  "unary minus errors for unsupported column types",
-  {
-    test <- tibble(x = x)
-    test_pl <- as_polars_lf(test)
-
-    expect_both_error(
-      arrange(test_pl, -x),
-      arrange(test, -x)
-    )
-  },
-  x = list(
+    as.difftime(c(7200, 3600, 10800), units = "secs"),
     c("b", "a", "c"),
     as.Date(c("2020-01-02", "2020-01-01", "2020-01-03")),
     as.POSIXct(

@@ -9,10 +9,11 @@
 
 ## Bug fixes
 
-* `arrange()` no longer modifies its input, which could cause unary `-`
-  expressions in later operations to produce incorrect results. And `arrange()`
-  now errors consistently with `dplyr` when unary `-` is applied to unsupported
-  types such as character columns (#374, @Yousa-Mirage).
+- `arrange()` no longer modifies its input, which could cause unary `-` expressions in later operations
+  to produce incorrect results (#374, @Yousa-Mirage).
+
+- `arrange()` now errors consistently with `dplyr` when unary `-` is applied to unsupported types such as
+  character columns (#374, @Yousa-Mirage).
 
 
 # tidypolars 0.19.0

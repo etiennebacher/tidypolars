@@ -158,12 +158,12 @@ test_that("does not modify its input, #374", {
 })
 
 patrick::with_parameters_test_that(
-  "unary minus works with supported column types",
+  "unary minus matches dplyr with different column types",
   {
     test <- tibble(x = x)
     test_pl <- as_polars_df(test)
 
-    expect_equal(
+    expect_equal_or_both_error(
       arrange(test_pl, -x),
       arrange(test, -x)
     )
@@ -172,22 +172,7 @@ patrick::with_parameters_test_that(
     c(2, 1, 3),
     c(2L, 1L, 3L),
     c(TRUE, FALSE, TRUE),
-    as.difftime(c(7200, 3600, 10800), units = "secs")
-  )
-)
-
-patrick::with_parameters_test_that(
-  "unary minus errors for unsupported column types",
-  {
-    test <- tibble(x = x)
-    test_pl <- as_polars_df(test)
-
-    expect_both_error(
-      arrange(test_pl, -x),
-      arrange(test, -x)
-    )
-  },
-  x = list(
+    as.difftime(c(7200, 3600, 10800), units = "secs"),
     c("b", "a", "c"),
     as.Date(c("2020-01-02", "2020-01-01", "2020-01-03")),
     as.POSIXct(
