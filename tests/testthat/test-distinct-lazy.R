@@ -97,4 +97,27 @@ test_that("argument .keep_all works", {
   )
 })
 
+test_that("distinct() respects groups", {
+  test_df <- tibble(
+    g = c("a", "a", "b", "b"),
+    x = c(1, 1, 1, 2)
+  ) |>
+    group_by(g)
+  test_pl <- as_polars_lf(test_df) |>
+    group_by(g)
+
+  expect_equal_lazy(
+    distinct(test_pl, x),
+    distinct(test_df, x)
+  )
+  expect_equal_lazy(
+    distinct(test_pl, x, .keep_all = TRUE),
+    distinct(test_df, x, .keep_all = TRUE)
+  )
+  expect_equal_lazy(
+    distinct(test_pl),
+    distinct(test_df)
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
