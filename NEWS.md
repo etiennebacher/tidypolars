@@ -10,7 +10,7 @@
 ## Bug fixes
 
 * Fix `seq()` to correctly handle descending sequences, negative steps,
-  single-value results, and `by = 0` consistently with base R.
+  single-value results, and `by = 0` consistently with base R (#377, @Yousa-Mirage).
 
 
 # tidypolars 0.19.0
