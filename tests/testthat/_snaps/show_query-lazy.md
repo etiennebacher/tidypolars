@@ -278,6 +278,26 @@
       │ 1.0 ┆ 13  │
       └─────┴─────┘
 
+---
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(mtcars)$
+        group_by(am = pl$col("am"))$
+        len()$
+        rename(len = "n")$
+        sort("am")
+      shape: (2, 2)
+      ┌─────┬─────┐
+      │ am  ┆ n   │
+      │ --- ┆ --- │
+      │ f64 ┆ u32 │
+      ╞═════╪═════╡
+      │ 0.0 ┆ 19  │
+      │ 1.0 ┆ 13  │
+      └─────┴─────┘
+
 # non-syntactic argument names are backquoted in the query
 
     Code

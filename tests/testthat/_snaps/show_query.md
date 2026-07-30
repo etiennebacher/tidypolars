@@ -178,6 +178,17 @@
         rename(len = "n")$
         sort("am")
 
+---
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        group_by(am = pl$col("am"))$
+        len()$
+        rename(len = "n")$
+        sort("am")
+
 # non-syntactic argument names are backquoted in the query
 
     Code
