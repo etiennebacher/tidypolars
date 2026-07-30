@@ -235,6 +235,27 @@
       i Run `options(tidypolars_record_query = TRUE)` and re-run your query to show the equivalent polars code.
       i More info with `?tidypolars_options`.
 
+# show_query() rejects extra arguments
+
+    Code
+      show_query(query, foo = 1)
+    Condition
+      Error in `show_query()`:
+      ! `...` must be empty.
+      x Problematic argument:
+      * foo = 1
+
+---
+
+    Code
+      show_query(query, 2)
+    Condition
+      Error in `show_query()`:
+      ! `...` must be empty.
+      x Problematic argument:
+      * ..1 = 2
+      i Did you forget to name an argument?
+
 # errors in the pipeline are not affected by the recording
 
     Code

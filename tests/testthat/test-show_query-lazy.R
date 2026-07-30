@@ -207,6 +207,15 @@ test_that("the error mentions recording only when the option is FALSE", {
   )
 })
 
+test_that("show_query() rejects extra arguments", {
+  query <- mtcars |>
+    as_polars_lf() |>
+    filter(cyl == 4)
+
+  expect_snapshot_lazy(show_query(query, foo = 1), error = TRUE)
+  expect_snapshot_lazy(show_query(query, 2), error = TRUE)
+})
+
 test_that("errors in the pipeline are not affected by the recording", {
   test_pl <- as_polars_lf(data.frame(char1 = c("a", "b")))
   expect_snapshot_lazy(

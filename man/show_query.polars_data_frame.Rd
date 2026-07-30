@@ -12,7 +12,7 @@
 \arguments{
 \item{x}{A Polars Data/LazyFrame that went through \code{tidypolars} functions.}
 
-\item{...}{Not used.}
+\item{...}{Dots which should be empty.}
 }
 \value{
 The input, invisibly. This function is called for its side effect

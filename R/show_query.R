@@ -23,7 +23,7 @@
 #' `` `<numeric of length 200>` ``.
 #'
 #' @param x A Polars Data/LazyFrame that went through `tidypolars` functions.
-#' @param ... Not used.
+#' @inheritParams rlang::check_dots_empty0
 #'
 #' @return The input, invisibly. This function is called for its side effect
 #' of printing the polars query.
@@ -42,6 +42,7 @@
 #'     show_query()
 #' )
 show_query.polars_data_frame <- function(x, ...) {
+  check_dots_empty()
   text <- tp_query_text(x)
   if (is.null(text)) {
     if (query_recording_enabled()) {
