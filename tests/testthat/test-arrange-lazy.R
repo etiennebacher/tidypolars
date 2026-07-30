@@ -149,27 +149,27 @@ test_that("works with expressions", {
 })
 
 test_that("does not modify its input, #374", {
-  test <- tibble(mpg = c(1, 2, 3))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(mpg = c(1, 2, 3))
+  test_pl <- as_polars_lf(test_df)
 
-  invisible(arrange(test, mpg))
+  invisible(arrange(test_df, mpg))
   invisible(arrange(test_pl, mpg))
 
   expect_equal_lazy(
     test_pl |> mutate(z = -mpg),
-    test |> mutate(z = -mpg)
+    test_df |> mutate(z = -mpg)
   )
 })
 
 patrick::with_parameters_test_that(
   "unary minus matches dplyr with different column types",
   {
-    test <- tibble(x = x)
-    test_pl <- as_polars_lf(test)
+    test_df <- tibble(x = x)
+    test_pl <- as_polars_lf(test_df)
 
     expect_equal_or_both_error(
       arrange(test_pl, -x),
-      arrange(test, -x)
+      arrange(test_df, -x)
     )
   },
   x = list(
