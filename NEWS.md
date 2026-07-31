@@ -9,6 +9,9 @@
 
 ## Bug fixes
 
+* Nested `where()` expressions now select columns using their actual
+  types (#379, @Yousa-Mirage).
+
 * `arrange()` no longer modifies its input, which could cause unary `-` expressions in later operations
   to produce incorrect results (#374, @Yousa-Mirage).
 
