@@ -473,6 +473,22 @@ test_that("need to specify .cols (either named or unnamed)", {
   )
 })
 
+test_that("nested `where()` selects columns by type", {
+  test_df <- tibble(
+    x = 1:3,
+    y = letters[1:3],
+    z = c(-5L, 0L, 10L)
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |>
+      mutate(across(c(where(is.numeric)), \(x) x * 2)),
+    test_df |>
+      mutate(across(c(where(is.numeric)), \(x) x * 2))
+  )
+})
+
 test_that(".by works with across() and everything()", {
   test_df <- head(mtcars, n = 5)
   test_pl <- as_polars_lf(test_df)

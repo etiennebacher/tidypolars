@@ -9,12 +9,15 @@
 
 ## Bug fixes
 
+* Fix `where()` when nested in `c()` or interacting with various boolean operators
+  (#379, @Yousa-Mirage).
+
 * `arrange()` no longer modifies its input, which could cause unary `-` expressions in later operations
   to produce incorrect results (#374, @Yousa-Mirage).
 
 * `arrange()` now errors consistently with `dplyr` when unary `-` is applied to unsupported types such as
   character columns (#374, @Yousa-Mirage).
-  
+
 * Fix `distinct()` on grouped data to include grouping variables in the distinct keys,
   retain grouping columns, and preserve grouping metadata (#376, @Yousa-Mirage).
 
