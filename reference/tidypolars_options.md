@@ -57,9 +57,9 @@ mutate(test, x2 = sample(x, prob = 0.5))
 #> ╞═════╪═════╡
 #> │ 2.0 ┆ 2.0 │
 #> │ 1.0 ┆ 1.0 │
-#> │ 5.0 ┆ 5.0 │
-#> │ 3.0 ┆ 3.0 │
-#> │ 1.0 ┆ 1.0 │
+#> │ 5.0 ┆ 3.0 │
+#> │ 3.0 ┆ 1.0 │
+#> │ 1.0 ┆ 5.0 │
 #> └─────┴─────┘
 
 # But one can make this stricter and throw an error when this happens
