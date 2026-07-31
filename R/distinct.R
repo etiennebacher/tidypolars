@@ -36,9 +36,14 @@ distinct.polars_data_frame <- function(
   maintain_order = TRUE
 ) {
   .data <- tag_frame(.data, substitute(.data))
+  grps <- attributes(.data)$pl_grps
+  mo <- attributes(.data)$maintain_grp_order %||% FALSE
+
   vars <- tidyselect_dots(.data, ...)
   if (length(vars) == 0) {
     vars <- names(.data)
+  } else {
+    vars <- unique(c(grps, vars))
   }
   if (!.keep_all) {
     .data <- .data$select(!!!vars)
@@ -48,6 +53,9 @@ distinct.polars_data_frame <- function(
     keep = keep,
     maintain_order = maintain_order
   )
+  if (length(grps) > 0) {
+    out <- group_by(out, all_of(grps), maintain_order = mo)
+  }
   add_tidypolars_class(out)
 }
 

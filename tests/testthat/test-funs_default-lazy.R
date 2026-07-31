@@ -327,6 +327,42 @@ test_that("seq() works", {
     mutate(test_pl, y = seq(1, 4, by = 2)),
     mutate(test_df, y = seq(1, 4, by = 2))
   )
+  expect_equal_lazy(
+    mutate(test_pl, y = seq(1, 2)),
+    mutate(test_df, y = seq(1, 2))
+  )
+
+  test_df <- tibble(x = 1:4)
+  test_pl <- as_polars_lf(test_df)
+  expect_equal_lazy(
+    mutate(test_pl, y = seq(10, 1, by = -3)),
+    mutate(test_df, y = seq(10, 1, by = -3))
+  )
+
+  test_df <- tibble(x = 1:5)
+  test_pl <- as_polars_lf(test_df)
+  expect_equal_lazy(
+    mutate(test_pl, y = seq(5, 1)),
+    mutate(test_df, y = seq(5, 1))
+  )
+  expect_equal_lazy(
+    mutate(test_pl, y = seq(1, 1)),
+    mutate(test_df, y = seq(1, 1))
+  )
+
+  expect_equal_lazy(
+    mutate(test_pl, y = seq(1, 1, by = 0)),
+    mutate(test_df, y = seq(1, 1, by = 0))
+  )
+  expect_both_error(
+    mutate(test_pl, y = seq(1, 5, by = 0)),
+    mutate(test_df, y = seq(1, 5, by = 0))
+  )
+
+  expect_both_error(
+    mutate(test_pl, y = seq(1, 3, by = -1)),
+    mutate(test_df, y = seq(1, 3, by = -1))
+  )
 
   expect_error_lazy(
     expect_warning(

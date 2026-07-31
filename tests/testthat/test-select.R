@@ -120,6 +120,60 @@ test_that("select helpers work", {
   )
 })
 
+test_that("nested `where()` helpers work", {
+  test_df <- tibble(
+    x = 1:3,
+    y = c("a", "b", "c"),
+    z = c(TRUE, FALSE, TRUE),
+    w = c(1.5, 2.5, 3.5)
+  )
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    select(test_pl, c(where(is.numeric), y)),
+    select(test_df, c(where(is.numeric), y))
+  )
+
+  expect_equal(
+    select(test_pl, !where(is.character)),
+    select(test_df, !where(is.character))
+  )
+
+  expect_equal(
+    select(test_pl, where(is.numeric) & starts_with("x")),
+    select(test_df, where(is.numeric) & starts_with("x"))
+  )
+
+  expect_equal(
+    select(test_pl, c(tidyselect::where(is.logical))),
+    select(test_df, c(tidyselect::where(is.logical)))
+  )
+})
+
+test_that("nested `where()` uses column types for empty data", {
+  test_df <- tibble(
+    x = numeric(),
+    y = character(),
+    z = logical()
+  )
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    select(test_pl, c(where(is.logical))),
+    select(test_df, c(where(is.logical)))
+  )
+})
+
+test_that("nested `where()` predicates are checked", {
+  test_df <- tibble(x = 1:3)
+  test_pl <- as_polars_df(test_df)
+
+  expect_snapshot(
+    select(test_pl, c(where(~ mean(.x) > 3.5))),
+    error = TRUE
+  )
+})
+
 test_that("renaming in select works", {
   test_df <- as_tibble(iris)
   test_pl <- as_polars_df(test_df)

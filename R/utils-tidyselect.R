@@ -57,9 +57,24 @@ tidyselect_new_vars <- function(.cols, new_vars) {
   NULL
 }
 
+find_where_calls <- function(expr) {
+  if (!is_call(expr)) {
+    return(list())
+  }
+
+  nested_calls <- unlist(
+    lapply(call_args(expr), find_where_calls),
+    recursive = FALSE
+  )
+  if (identical(call_name(expr), "where")) {
+    nested_calls <- c(list(expr), nested_calls)
+  }
+
+  nested_calls
+}
+
 # When where() is in the dots, then we need to know the type of each variable.
-# This is done by creating a one-row DataFrame with the existing schema and
-# convert it to a tibble.
+# This is done by creating a zero-row tibble that preserves the existing schema.
 #
 # This is very expensive when there are hundreds or thousands of columns, so
 # we only do it when there's a where() call.
@@ -70,13 +85,7 @@ build_data_context <- function(.data, ..., cols = NULL) {
   if (!is.null(cols) && !is.null(quo_get_expr(cols))) {
     dots <- append(dots, quo_get_expr(cols))
   }
-  any_is_where <- any(
-    vapply(
-      dots,
-      function(x) is_call(x, "where"),
-      FUN.VALUE = logical(1)
-    )
-  )
+  any_is_where <- any(lengths(lapply(dots, find_where_calls)) > 0)
 
   if (!any_is_where) {
     out <- rlang::set_names(
@@ -96,14 +105,12 @@ build_data_context <- function(.data, ..., cols = NULL) {
 #' @noRd
 check_where_arg <- function(...) {
   exprs <- get_dots(...)
-  for (i in seq_along(exprs)) {
-    tmp <- safe_deparse(exprs[[i]])
-    if (!startsWith(tmp, "where(")) {
-      next
-    }
-    tmp <- gsub("^where\\(", "", tmp)
-    tmp <- gsub("\\)$", "", tmp)
-    if (!startsWith(tmp, "is.")) {
+  where_calls <- unlist(lapply(exprs, find_where_calls), recursive = FALSE)
+  for (where_call in where_calls) {
+    args <- call_args(where_call)
+    valid_predicate <- length(args) > 0 &&
+      startsWith(safe_deparse(args[[1]]), "is.")
+    if (!valid_predicate) {
       cli_abort(
         "{.fn where} can only take {.fn is.*} functions (like {.fn is.numeric}).",
         call = caller_env(2)
