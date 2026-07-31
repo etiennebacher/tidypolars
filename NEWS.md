@@ -9,6 +9,8 @@
 
 ## Bug fixes
 
+* R expressions using `:` now resolve local variables from the calling environment.
+
 * `arrange()` no longer modifies its input, which could cause unary `-` expressions in later operations
   to produce incorrect results (#374, @Yousa-Mirage).
 

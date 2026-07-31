@@ -462,8 +462,7 @@ translate <- function(
           return(polars_constant(unlist(expr)))
         },
         ":" = {
-          out <- tryCatch(eval_tidy(expr, env = caller_env()), error = identity)
-          return(out)
+          return(eval_tidy(expr, env = caller))
         },
         "%in%" = {
           out <- tryCatch(
