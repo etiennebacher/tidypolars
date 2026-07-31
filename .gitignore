@@ -7,3 +7,5 @@ docs
 inst/doc
 /doc/
 /Meta/
+
+^test.R$

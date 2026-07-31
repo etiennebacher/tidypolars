@@ -16,3 +16,5 @@
 ^flir$
 
 ^jarl\.toml$
+
+^test.R$
