@@ -66,7 +66,7 @@ find_where_calls <- function(expr) {
     lapply(call_args(expr), find_where_calls),
     recursive = FALSE
   )
-  if (identical(call_name(expr), "where")) {
+  if (identical(call_fn(expr), tidyselect::where)) {
     nested_calls <- c(list(expr), nested_calls)
   }
 
@@ -105,10 +105,7 @@ build_data_context <- function(.data, ..., cols = NULL) {
 #' @noRd
 check_where_arg <- function(...) {
   exprs <- get_dots(...)
-  where_calls <- unlist(
-    lapply(exprs, find_where_calls),
-    recursive = FALSE
-  )
+  where_calls <- unlist(lapply(exprs, find_where_calls), recursive = FALSE)
   for (where_call in where_calls) {
     args <- call_args(where_call)
     valid_predicate <- length(args) > 0 &&
