@@ -690,8 +690,8 @@ test_that("ranges use local variables from the calling environment", {
   test_pl <- as_polars_df(test_df)
 
   expect_equal(
-    mutate_in_range(test_pl, 2, 4),
-    mutate_in_range(test_df, 2, 4)
+    mutate_in_range(test_df, 2, 4),
+    mutate_in_range(test_pl, 2, 4)
   )
 })
 

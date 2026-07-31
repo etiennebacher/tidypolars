@@ -16,3 +16,19 @@
       ! Error while running function `dplyr::min_rank()` in Polars.
       x argument "x" is missing, with no default
 
+# missing variables in ranges produce errors
+
+    Code
+      translate_in_caller(rlang::expr(x %in% missing_lower:4))
+    Condition
+      Error:
+      ! object 'missing_lower' not found
+
+---
+
+    Code
+      translate_in_caller(rlang::expr(x %notin% missing_lower:4))
+    Condition
+      Error:
+      ! object 'missing_lower' not found
+

@@ -465,65 +465,53 @@ translate <- function(
           return(eval_tidy(expr, env = caller))
         },
         "%in%" = {
-          out <- tryCatch(
-            {
-              lhs <- translate(
-                expr[[2]],
-                .data = .data,
-                new_vars = new_vars,
-                env = env,
-                caller = caller,
-                expr_uses_col = expr_uses_col
-              ) |>
-                as_polars_expr(as_lit = TRUE)
-              rhs <- translate(
-                expr[[3]],
-                .data = .data,
-                new_vars = new_vars,
-                env = env,
-                caller = caller,
-                expr_uses_col = expr_uses_col
-              ) |>
-                as_polars_expr(as_lit = TRUE)
-              if (is.list(rhs)) {
-                rhs <- unlist(rhs)
-              }
-              lhs$is_in(rhs$implode(), nulls_equal = TRUE)
-            },
-            error = identity
-          )
-          return(out)
+          lhs <- translate(
+            expr[[2]],
+            .data = .data,
+            new_vars = new_vars,
+            env = env,
+            caller = caller,
+            expr_uses_col = expr_uses_col
+          ) |>
+            as_polars_expr(as_lit = TRUE)
+          rhs <- translate(
+            expr[[3]],
+            .data = .data,
+            new_vars = new_vars,
+            env = env,
+            caller = caller,
+            expr_uses_col = expr_uses_col
+          ) |>
+            as_polars_expr(as_lit = TRUE)
+          if (is.list(rhs)) {
+            rhs <- unlist(rhs)
+          }
+          return(lhs$is_in(rhs$implode(), nulls_equal = TRUE))
         },
         # Same thing as "%in%" but with the "$not()" at the end.
         "%notin%" = {
-          out <- tryCatch(
-            {
-              lhs <- translate(
-                expr[[2]],
-                .data = .data,
-                new_vars = new_vars,
-                env = env,
-                caller = caller,
-                expr_uses_col = expr_uses_col
-              ) |>
-                as_polars_expr(as_lit = TRUE)
-              rhs <- translate(
-                expr[[3]],
-                .data = .data,
-                new_vars = new_vars,
-                env = env,
-                caller = caller,
-                expr_uses_col = expr_uses_col
-              ) |>
-                as_polars_expr(as_lit = TRUE)
-              if (is.list(rhs)) {
-                rhs <- unlist(rhs)
-              }
-              lhs$is_in(rhs$implode(), nulls_equal = TRUE)$not()
-            },
-            error = identity
-          )
-          return(out)
+          lhs <- translate(
+            expr[[2]],
+            .data = .data,
+            new_vars = new_vars,
+            env = env,
+            caller = caller,
+            expr_uses_col = expr_uses_col
+          ) |>
+            as_polars_expr(as_lit = TRUE)
+          rhs <- translate(
+            expr[[3]],
+            .data = .data,
+            new_vars = new_vars,
+            env = env,
+            caller = caller,
+            expr_uses_col = expr_uses_col
+          ) |>
+            as_polars_expr(as_lit = TRUE)
+          if (is.list(rhs)) {
+            rhs <- unlist(rhs)
+          }
+          return(lhs$is_in(rhs$implode(), nulls_equal = TRUE)$not())
         },
         "base::ifelse" = ,
         "ifelse" = ,
