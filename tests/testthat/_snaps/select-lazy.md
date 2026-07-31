@@ -17,3 +17,11 @@
       Error in `select()`:
       ! `where()` can only take `is.*()` functions (like `is.numeric()`).
 
+# nested `where()` predicates are checked
+
+    Code
+      current$collect()
+    Condition
+      Error in `select()`:
+      ! `where()` can only take `is.*()` functions (like `is.numeric()`).
+

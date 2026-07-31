@@ -92,3 +92,26 @@ test_that("argument .keep_all works", {
     distinct(test_df, iso_o, iso_d, .keep_all = TRUE)
   )
 })
+
+test_that("distinct() respects groups", {
+  test_df <- tibble(
+    g = c("a", "a", "b", "b"),
+    x = c(1, 1, 1, 2)
+  ) |>
+    group_by(g)
+  test_pl <- as_polars_df(test_df) |>
+    group_by(g)
+
+  expect_equal(
+    distinct(test_pl, x),
+    distinct(test_df, x)
+  )
+  expect_equal(
+    distinct(test_pl, x, .keep_all = TRUE),
+    distinct(test_df, x, .keep_all = TRUE)
+  )
+  expect_equal(
+    distinct(test_pl),
+    distinct(test_df)
+  )
+})

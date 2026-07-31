@@ -38,11 +38,10 @@ translate_dots <- function(.data, ..., env, caller) {
   out <- lapply(seq_along(dots), \(x) {
     expr <- dots[[x]]
 
-    # arrange() is a special case since using "-" on a character column is
-    # accepted but invalid for Polars so we need to replace "-" by "desc()"
-    # before translating.
+    # Using a multiplication here ensures that we support `-x` when `x` is a bool
+    # column and that we error on `-x` when `x` is a character column, like `dplyr`.
     if (isTRUE(called_from_arrange) && length(expr) == 2 && expr[[1]] == "-") {
-      expr <- call2("desc", expr[[2]])
+      expr <- call2("*", expr[[2]], -1)
     }
 
     tmp <- translate_expr(
