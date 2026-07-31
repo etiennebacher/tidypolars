@@ -17,3 +17,11 @@
       Error in `select()`:
       ! `where()` can only take `is.*()` functions (like `is.numeric()`).
 
+# nested `where()` predicates are checked
+
+    Code
+      select(test_pl, c(where(~ mean(.x) > 3.5)))
+    Condition
+      Error in `select()`:
+      ! `where()` can only take `is.*()` functions (like `is.numeric()`).
+
