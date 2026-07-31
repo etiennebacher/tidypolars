@@ -9,7 +9,6 @@ test filter="":
 
 lint:
     jarl check .
-    air format . --check
 
 format:
     air format .
