@@ -17,4 +17,5 @@
 
 ^jarl\.toml$
 
-^test.R$
+^test\.R$
+^test\.r$

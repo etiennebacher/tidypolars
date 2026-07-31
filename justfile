@@ -2,20 +2,18 @@ _default:
     just --list
 
 document:
-  Rscript -e 'devtools::document()'
+    Rscript -e 'devtools::document()'
 
-test:
-  Rscript -e 'devtools::test()'
+test filter="":
+    Rscript -e 'devtools::test(filter = commandArgs(TRUE)[[1]])' {{ quote(filter) }}
 
 lint:
-  jarl check .
+    jarl check .
+    air format . --check
 
 format:
-  air format .
+    air format .
 
 lint-format:
-  jarl check .
-  air format .
-
-
-
+    jarl check .
+    air format .
