@@ -8,4 +8,5 @@ inst/doc
 /doc/
 /Meta/
 
-^test.R$
+/test.R
+/test.r

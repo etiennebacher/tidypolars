@@ -16,5 +16,7 @@
 ^flir$
 
 ^jarl\.toml$
+^justfile$
 
-^test.R$
+^test\.R$
+^test\.r$
