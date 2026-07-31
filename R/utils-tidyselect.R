@@ -66,7 +66,7 @@ find_where_calls <- function(expr) {
     lapply(call_args(expr), find_where_calls),
     recursive = FALSE
   )
-  if (identical(call_fn(expr), tidyselect::where)) {
+  if (identical(call_name(expr), "where")) {
     nested_calls <- c(list(expr), nested_calls)
   }
 
