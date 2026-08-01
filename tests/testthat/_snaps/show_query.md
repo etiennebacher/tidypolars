@@ -389,6 +389,33 @@
         df = pl$col("int") - pl$col("int")$shift(1)
       )
 
+# translated base functions: anyDuplicated and duplicated
+
+    Code
+      show_query(query)
+    Output
+      dat$with_columns(
+        dup = pl$col("grp")$
+          is_first_distinct()$
+          not() & pl$
+          col("grp")$
+          is_in(pl$lit(list("a")), nulls_equal = TRUE)$
+          not(),
+        any_dup = (
+          (
+            pl$col("grp")$
+              is_first_distinct()$
+              not() & pl$
+              col("grp")$
+              is_in(pl$lit(list("a")), nulls_equal = TRUE)$
+              not()
+          )$
+            arg_true()$
+            first() + 1
+        )$
+          fill_null(0)
+      )
+
 # translated base functions: aggregations in summarize()
 
     Code
