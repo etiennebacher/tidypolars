@@ -186,9 +186,6 @@ pl <- structure(new.env(parent = emptyenv()), class = "tidypolars_pl")
   # We fall back to the eval_bare() to get the proper polars error message if `name`
   # isn't present in pl.
   member <- polars::pl[[name]]
-  if (is.null(member)) {
-    return(eval_bare(call2("$", expr(polars::pl), sym(name))))
-  }
   if (tp_recorder$skip_next) {
     tp_recorder$skip_next <- FALSE
     return(member)
@@ -311,12 +308,7 @@ record_udf_query <- function(out, fn_name, args) {
 }
 
 # Refer to a constant by the code it was written as (the name of a caller
-# environment object, or the call that produced it, e.g. `runif(200)`), but
-# only when its value is too long to display faithfully: short values are
-# clearer shown literally, and long ones would otherwise become an unusable
-# placeholder like `` `<numeric of length 200>` ``. The source code is both
-# shorter and copy-pasteable, since what it refers to lives in the caller
-# environment.
+# environment object, or the call that produced it, e.g. `runif(200)`).
 record_source_literal <- function(out, expr, value) {
   if (!query_recording_enabled() || !inherits(out, "tp_recorded")) {
     return(out)
@@ -381,23 +373,16 @@ deparse_query_dots <- function(...) {
   }
 
   # dots_list() errored, e.g. because forcing a forwarded argument failed:
-  # fall back to forcing each element individually.
+  # fall back to forcing each element individually. `...elt()` errors on the
+  # arguments that cannot be forced, including the missing ones, and those are
+  # displayed as empty.
   n <- ...length()
-  if (n == 0) {
-    return("")
-  }
   nms <- ...names() %||% character(n)
   nms[is.na(nms)] <- ""
   nms <- quote_arg_names(nms)
   out <- character(n)
   for (i in seq_len(n)) {
-    dep <- tryCatch(
-      {
-        val <- ...elt(i)
-        if (missing(val)) "" else deparse_query_arg(val)
-      },
-      error = function(e) ""
-    )
+    dep <- tryCatch(deparse_query_arg(...elt(i)), error = function(e) "")
     out[i] <- if (nms[i] == "") dep else paste0(nms[i], " = ", dep)
   }
   paste(out, collapse = ", ")
