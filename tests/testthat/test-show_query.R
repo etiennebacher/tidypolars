@@ -127,6 +127,58 @@ test_that("long vectors are truncated in the query", {
     mutate(foo = mpg %in% large)
 
   expect_snapshot(show_query(query))
+
+  # Same, but written inline
+  query <- mtcars |>
+    as_polars_df() |>
+    mutate(foo = mpg %in% runif(200))
+
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("`NULL` arguments are kept in the query", {
+  skip_if(Sys.getenv('TIDYPOLARS_TEST') == "TRUE")
+  dest <- tempfile(fileext = ".csv")
+  on.exit(unlink(dest))
+  write.csv(mtcars, dest, row.names = FALSE)
+
+  query <- read_csv_polars(dest) |>
+    filter(cyl > 4)
+
+  expect_snapshot(show_query(query), transform = function(x) {
+    gsub("source = .*csv\",", "source = [TRUNCATED],", x)
+  })
+  expect_equal(replay_query(query), query)
+})
+
+test_that("count() doesn't record a `NULL` in sort() when input isn't grouped", {
+  query <- mtcars |>
+    as_polars_df() |>
+    count(am)
+
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("non-syntactic argument names are backquoted in the query", {
+  query <- mtcars |>
+    as_polars_df() |>
+    filter(cyl > 4) |>
+    tally()
+
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+
+  test_pl <- as_polars_df(data.frame(
+    id = c(1, 1),
+    k = c(4, 5),
+    v = c(10, 20)
+  ))
+  query <- pivot_wider(test_pl, names_from = k, values_from = v)
+
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
 })
 
 test_that("count() doesn't record a `NULL` in sort() when input isn't grouped", {
@@ -147,6 +199,46 @@ test_that("the input data is not modified by the recording", {
   expect_snapshot(show_query(test_pl), error = TRUE)
 })
 
+test_that("the error mentions recording only when the option is FALSE", {
+  test_pl <- as_polars_df(mtcars)
+
+  # Recording is on (see the top of this file) but the frame never went
+  # through tidypolars, so the message must not blame the option.
+  expect_snapshot(show_query(test_pl), error = TRUE)
+
+  withr::with_options(
+    list(tidypolars_record_query = FALSE),
+    expect_snapshot(show_query(test_pl), error = TRUE)
+  )
+})
+
+test_that("show_query() rejects extra arguments", {
+  query <- mtcars |>
+    as_polars_df() |>
+    filter(cyl == 4)
+
+  expect_snapshot(show_query(query, foo = 1), error = TRUE)
+  expect_snapshot(show_query(query, 2), error = TRUE)
+})
+
+test_that("the query is wrapped at the console width", {
+  query <- mtcars |>
+    as_polars_df() |>
+    mutate(across(contains("m"), mean)) |>
+    filter(cyl == 4 & am == 1)
+
+  # A wide console keeps the method chains of each argument inline, a narrow
+  # one explodes them.
+  expect_snapshot(
+    withr::with_options(list(width = 120), show_query(query))
+  )
+  expect_snapshot(
+    withr::with_options(list(width = 40), show_query(query))
+  )
+
+  expect_equal(replay_query(query), query)
+})
+
 test_that("errors in the pipeline are not affected by the recording", {
   test_pl <- as_polars_df(data.frame(char1 = c("a", "b")))
   expect_snapshot(
@@ -164,6 +256,113 @@ test_that("option tidypolars_record_query = FALSE disables the recording", {
 
   expect_null(get_query(query))
   expect_snapshot(show_query(query), error = TRUE)
+})
+
+test_that("the input name falls back to a placeholder when it is too long", {
+  query <- data.frame(
+    x = 1,
+    y = 2,
+    zzzz = 3,
+    aaaa = 4,
+    bbbb = 5,
+    cccc = 6,
+    dddd = 7
+  ) |>
+    as_polars_df() |>
+    filter(x == 1)
+
+  expect_snapshot(show_query(query))
+})
+
+test_that("polars objects built outside tidypolars are shown as a placeholder", {
+  skip_if(Sys.getenv('TIDYPOLARS_TEST') == "TRUE")
+  query <- mtcars |>
+    as_polars_lf() |>
+    filter(cyl == 4)
+
+  out <- query$collect(
+    optimizations = polars::pl$QueryOptFlags(predicate_pushdown = FALSE)
+  )
+
+  expect_snapshot(show_query(out))
+})
+
+test_that("data.frame arguments with non-syntactic names are rebuilt faithfully", {
+  dat <- data.frame(id = c(1, 1), k = c("a", "b"), v = c(10, 20))
+  names(dat)[2] <- "my col"
+
+  query <- as_polars_df(dat) |>
+    pivot_wider(names_from = `my col`, values_from = v)
+
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("long vectors that deparse compactly are kept in the query", {
+  query <- mtcars |>
+    as_polars_df() |>
+    mutate(foo = mpg %in% 1:200)
+
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("values too long to display fall back to the code producing them", {
+  query <- as_polars_df(data.frame(txt = "a")) |>
+    filter(txt == strrep("a", 400))
+
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("the source of a value is only used when it is short enough", {
+  this_is_an_extremely_long_object_name_used_to_exceed_the_eighty_character_limit_ok <- runif(
+    200
+  )
+
+  query <- mtcars |>
+    as_polars_df() |>
+    mutate(
+      foo = mpg %in%
+        this_is_an_extremely_long_object_name_used_to_exceed_the_eighty_character_limit_ok
+    )
+
+  expect_snapshot(show_query(query))
+})
+
+test_that("the query is syntax highlighted when the console supports colors", {
+  withr::local_options(cli.num_colors = 256)
+
+  query <- mtcars |>
+    as_polars_df() |>
+    filter(cyl == 4)
+
+  expect_true(
+    any(grepl("\033[", capture.output(show_query(query)), fixed = TRUE))
+  )
+})
+
+test_that("arguments that don't fit on a line are wrapped too", {
+  query <- mtcars |>
+    as_polars_df() |>
+    mutate(z = (mpg - mean(mpg)) / sd(mpg))
+
+  expect_snapshot(
+    withr::with_options(list(width = 30), show_query(query))
+  )
+  expect_equal(replay_query(query), query)
+})
+
+test_that("a long value that is not a method call is left on its own line", {
+  long_txt <- paste(rep("ab", 60), collapse = "")
+
+  query <- as_polars_df(data.frame(txt = "x")) |>
+    filter(txt == long_txt)
+
+  expect_snapshot(
+    withr::with_options(list(width = 40), show_query(query))
+  )
+  expect_equal(replay_query(query), query)
 })
 
 # Test code from vignettes and examples
@@ -633,4 +832,169 @@ test_that("translated lubridate functions: datetime handling", {
 
   expect_snapshot(show_query(query))
   expect_equal(replay_query(query), query)
+})
+
+test_that("check query for fill, replace_na, drop_na", {
+  test_pl <- as_polars_df(data.frame(x = c(1, NA, 3), y = c("a", NA, "c")))
+
+  query <- fill(test_pl, x)
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+
+  query <- replace_na(test_pl, list(x = 0, y = "z"))
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+
+  query <- drop_na(test_pl)
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("check query for bind_rows_polars, bind_cols_polars", {
+  test_pl <- as_polars_df(data.frame(x = c(1, 2)))
+  other_pl <- as_polars_df(data.frame(y = c("a", "b")))
+
+  query <- bind_rows_polars(test_pl, test_pl)
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+
+  query <- bind_cols_polars(test_pl, other_pl)
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+
+  query <- bind_rows_polars(list(test_pl, test_pl))
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("check query for complete()", {
+  test_pl <- as_polars_df(data.frame(
+    country = c("France", "France", "UK"),
+    year = c(2020, 2021, 2019),
+    value = c(1, 2, 3)
+  ))
+
+  query <- complete(test_pl, country, year, fill = list(value = 99))
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("check query for uncount()", {
+  # The frame must contain a column named "x" because `uncount()` hardcodes
+  # `pl$col("x")`. The snapshot below will change when this is fixed.
+  test_pl <- as_polars_df(data.frame(
+    x = c("a", "b"),
+    y = 100:101,
+    n = c(1, 2)
+  ))
+
+  query <- uncount(test_pl, n)
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+
+  query <- uncount(test_pl, n, .id = "id")
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("check query for rowwise()", {
+  test_pl <- as_polars_df(data.frame(
+    x = c(2, 2),
+    y = c(2, 3),
+    z = c(5, NA)
+  ))
+
+  query <- test_pl |>
+    rowwise() |>
+    mutate(
+      total = sum(c(x, y, z)),
+      avg = mean(c(x, y, z), na.rm = TRUE)
+    )
+
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("check query for unnest_longer_polars()", {
+  test_pl <- as_polars_df(tibble(
+    id = 1:3,
+    values = list(c(1, 2), c(3, 4, 5), 6)
+  ))
+
+  query <- unnest_longer_polars(test_pl, values)
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+
+  # `indices_to` creates a temporary column whose name contains a random
+  # number, hence the transformation below.
+  query <- unnest_longer_polars(
+    test_pl,
+    values,
+    values_to = "val",
+    indices_to = "idx"
+  )
+  expect_snapshot(
+    show_query(query),
+    transform = function(x) {
+      gsub("__tidypolars_row_id_\\d+__", "__tidypolars_row_id__", x)
+    }
+  )
+  expect_equal(replay_query(query), query)
+})
+
+test_that("check query for separate_longer_delim_polars() and separate_longer_position_polars()", {
+  test_pl <- as_polars_df(data.frame(
+    id = 1:3,
+    x = c("a,b,c", "d,e", "f")
+  ))
+
+  query <- separate_longer_delim_polars(test_pl, x, delim = ",")
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+
+  query <- separate_longer_position_polars(test_pl, x, width = 2)
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("check query for make_unique_id()", {
+  withr::local_options(lifecycle_verbosity = "quiet")
+  test_pl <- as_polars_df(data.frame(x = c("a", "b"), y = c(1, 2)))
+
+  query <- make_unique_id(test_pl, x, y, new_col = "id")
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("check query for scan_*_polars() and read_*_polars()", {
+  skip_if(Sys.getenv('TIDYPOLARS_TEST') == "TRUE")
+  dest_dir <- withr::local_tempdir()
+  test_pl <- as_polars_df(mtcars)
+
+  # The source is a temporary path, hence the transformation below.
+  redact_source <- function(x) {
+    gsub('source = ".*"', "source = [TRUNCATED]", x)
+  }
+
+  dest <- file.path(dest_dir, "data.parquet")
+  write_parquet_polars(test_pl, dest)
+  query <- scan_parquet_polars(dest) |>
+    filter(cyl > 4) |>
+    select(mpg)
+  expect_snapshot(show_query(query), transform = redact_source)
+  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
+
+  dest <- file.path(dest_dir, "data.ndjson")
+  write_ndjson_polars(test_pl, dest)
+  query <- read_ndjson_polars(dest) |>
+    select(mpg)
+  expect_snapshot(show_query(query), transform = redact_source)
+  expect_equal(replay_query(query), query)
+
+  dest <- file.path(dest_dir, "data.arrow")
+  write_ipc_polars(test_pl, dest)
+  query <- scan_ipc_polars(dest) |>
+    select(mpg)
+  expect_snapshot(show_query(query), transform = redact_source)
+  expect_equal(as_tibble(replay_query(query)), as_tibble(query))
 })

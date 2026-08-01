@@ -681,6 +681,20 @@ test_that("works with a local variable defined in a function", {
   )
 })
 
+test_that("ranges use local variables from the calling environment", {
+  mutate_in_range <- function(data, lower, upper) {
+    data |> mutate(in_range = x %in% lower:upper)
+  }
+
+  test_df <- tibble(x = 1:5)
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    mutate_in_range(test_df, 2, 4),
+    mutate_in_range(test_pl, 2, 4)
+  )
+})
+
 test_that("works with external data.frame/list elements", {
   test_df <- tibble(x = 1:3)
   test_pl <- as_polars_df(test_df)

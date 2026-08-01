@@ -415,6 +415,20 @@ test_that("works with a local variable defined in a function", {
   )
 })
 
+test_that("ranges use local variables from the calling environment", {
+  filter_in_range <- function(data, lower, upper) {
+    data |> filter(x %in% lower:upper)
+  }
+
+  test_df <- tibble(x = 1:5)
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    filter_in_range(test_df, 2, 4),
+    filter_in_range(test_pl, 2, 4)
+  )
+})
+
 test_that("error message when using =", {
   test_df <- tibble(x = 1, y = 2)
   test_pl <- as_polars_df(test_df)

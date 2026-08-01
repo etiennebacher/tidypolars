@@ -114,7 +114,7 @@ compute.polars_lazy_frame <- function(
       slice_pushdown = slice_pushdown,
       comm_subplan_elim = comm_subplan_elim,
       comm_subexpr_elim = comm_subexpr_elim,
-      cluster_with_columns = cluster_with_columns,
+      cluster_with_columns = cluster_with_columns
     )
   }
 
@@ -184,7 +184,7 @@ collect.polars_lazy_frame <- function(
       slice_pushdown = slice_pushdown,
       comm_subplan_elim = comm_subplan_elim,
       comm_subexpr_elim = comm_subexpr_elim,
-      cluster_with_columns = cluster_with_columns,
+      cluster_with_columns = cluster_with_columns
     )
   }
 

@@ -112,6 +112,61 @@
           foo = pl$col("mpg")$is_in(pl$lit(large)$implode(), nulls_equal = TRUE)
         )
 
+---
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          foo = pl$col("mpg")$is_in(pl$lit(runif(200))$implode(), nulls_equal = TRUE)
+        )
+
+# `NULL` arguments are kept in the query
+
+    Code
+      show_query(query)
+    Output
+      pl$scan_csv(
+        source = [TRUNCATED],
+        has_header = TRUE,
+        separator = ",",
+        comment_prefix = NULL,
+        quote_char = "\"",
+        skip_rows = 0,
+        schema = NULL,
+        schema_overrides = NULL,
+        null_values = NULL,
+        ignore_errors = FALSE,
+        cache = FALSE,
+        infer_schema_length = 100,
+        n_rows = NULL,
+        encoding = "utf8",
+        low_memory = FALSE,
+        rechunk = TRUE,
+        skip_rows_after_header = 0,
+        row_index_name = NULL,
+        row_index_offset = 0,
+        try_parse_dates = FALSE,
+        eol_char = "\n",
+        raise_if_empty = TRUE,
+        truncate_ragged_lines = FALSE,
+        include_file_paths = NULL
+      )$
+        collect(
+          optimizations = pl$QueryOptFlags(
+            predicate_pushdown = TRUE,
+            projection_pushdown = TRUE,
+            simplify_expression = TRUE,
+            slice_pushdown = TRUE,
+            comm_subplan_elim = TRUE,
+            comm_subexpr_elim = TRUE,
+            cluster_with_columns = TRUE
+          ),
+          engine = c("auto", "in-memory", "streaming")
+        )$
+        filter(pl$col("cyl") > pl$lit(4))
+
 # count() doesn't record a `NULL` in sort() when input isn't grouped
 
     Code
@@ -123,7 +178,65 @@
         rename(len = "n")$
         sort("am")
 
+---
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        group_by(am = pl$col("am"))$
+        len()$
+        rename(len = "n")$
+        sort("am")
+
+# non-syntactic argument names are backquoted in the query
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        filter(pl$col("cyl") > pl$lit(4))$
+        group_by(`__tidypolars_grp__` = pl$lit(1))$
+        len()$
+        drop("__tidypolars_grp__")$
+        rename(len = "n")
+
+---
+
+    Code
+      show_query(query)
+    Output
+      test_pl$pivot(
+        values = "v",
+        on = "k",
+        on_columns = data.frame(k = c(4, 5)),
+        index = "id",
+        separator = "_"
+      )$
+        rename(
+          `4.0` = "4",
+          `5.0` = "5"
+        )
+
 # the input data is not modified by the recording
+
+    Code
+      show_query(test_pl)
+    Condition
+      Error in `show_query()`:
+      ! No polars query was recorded for this object because it didn't go through tidypolars functions.
+      i Recording only starts when a tidypolars function is applied to the data.
+
+# the error mentions recording only when the option is FALSE
+
+    Code
+      show_query(test_pl)
+    Condition
+      Error in `show_query()`:
+      ! No polars query was recorded for this object because it didn't go through tidypolars functions.
+      i Recording only starts when a tidypolars function is applied to the data.
+
+---
 
     Code
       show_query(test_pl)
@@ -132,6 +245,64 @@
       ! No polars query was recorded for this object because the option `tidypolars_record_query` is `FALSE`.
       i Run `options(tidypolars_record_query = TRUE)` and re-run your query to show the equivalent polars code.
       i More info with `?tidypolars_options`.
+
+# show_query() rejects extra arguments
+
+    Code
+      show_query(query, foo = 1)
+    Condition
+      Error in `show_query()`:
+      ! `...` must be empty.
+      x Problematic argument:
+      * foo = 1
+
+---
+
+    Code
+      show_query(query, 2)
+    Condition
+      Error in `show_query()`:
+      ! `...` must be empty.
+      x Problematic argument:
+      * ..1 = 2
+      i Did you forget to name an argument?
+
+# the query is wrapped at the console width
+
+    Code
+      withr::with_options(list(width = 120), show_query(query))
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          mpg = pl$when(pl$col("mpg")$has_nulls())$then(NA)$otherwise(pl$col("mpg")$mean()),
+          am = pl$when(pl$col("am")$has_nulls())$then(NA)$otherwise(pl$col("am")$mean())
+        )$
+        filter(pl$col("cyl") == pl$lit(4) & pl$col("am") == pl$lit(1))
+
+---
+
+    Code
+      withr::with_options(list(width = 40), show_query(query))
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          mpg = pl$when(
+            pl$col("mpg")$has_nulls()
+          )$
+            then(NA)$
+            otherwise(pl$col("mpg")$mean()),
+          am = pl$when(
+            pl$col("am")$has_nulls()
+          )$
+            then(NA)$
+            otherwise(pl$col("am")$mean())
+        )$
+        filter(
+          pl$col("cyl") == pl$
+            lit(4) & pl$
+            col("am") == pl$
+            lit(1)
+        )
 
 # errors in the pipeline are not affected by the recording
 
@@ -150,6 +321,111 @@
       ! No polars query was recorded for this object because the option `tidypolars_record_query` is `FALSE`.
       i Run `options(tidypolars_record_query = TRUE)` and re-run your query to show the equivalent polars code.
       i More info with `?tidypolars_options`.
+
+# the input name falls back to a placeholder when it is too long
+
+    Code
+      show_query(query)
+    Output
+      `<data>`$filter(pl$col("x") == pl$lit(1))
+
+# polars objects built outside tidypolars are shown as a placeholder
+
+    Code
+      show_query(out)
+    Output
+      as_polars_lf(mtcars)$
+        filter(pl$col("cyl") == pl$lit(4))$
+        collect(optimizations = `<polars::QueryOptFlags>`)
+
+# data.frame arguments with non-syntactic names are rebuilt faithfully
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(dat)$
+        pivot(
+          values = "v",
+          on = "my col",
+          on_columns = data.frame(`my col` = c("a", "b"), check.names = FALSE),
+          index = "id",
+          separator = "_"
+        )$
+        rename(
+          a = "a",
+          b = "b"
+        )
+
+# long vectors that deparse compactly are kept in the query
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          foo = pl$col("mpg")$is_in(pl$lit(1:200)$implode(), nulls_equal = TRUE)
+        )
+
+# values too long to display fall back to the code producing them
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(data.frame(txt = "a"))$
+        filter(pl$col("txt") == pl$lit(strrep("a", 400)))
+
+# the source of a value is only used when it is short enough
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          foo = pl$col("mpg")$
+            is_in(pl$lit(`<numeric of length 200>`)$implode(), nulls_equal = TRUE)
+        )
+
+# arguments that don't fit on a line are wrapped too
+
+    Code
+      withr::with_options(list(width = 30), show_query(query))
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          z = (
+            pl$col("mpg") - pl$
+              when(
+                pl$col("mpg")$
+                  has_nulls()
+              )$
+              then(NA)$
+              otherwise(
+                pl$col("mpg")$mean()
+              )
+          )/pl$
+            when(
+              pl$col("mpg")$
+                has_nulls()
+            )$
+            then(NA)$
+            otherwise(
+              pl$col("mpg")$
+                std(ddof = 1)
+            )
+        )
+
+# a long value that is not a method call is left on its own line
+
+    Code
+      withr::with_options(list(width = 40), show_query(query))
+    Output
+      as_polars_df(data.frame(txt = "x"))$
+        filter(
+          pl$col("txt") == pl$
+            lit(
+              "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
+            )
+        )
 
 # vignette 'Getting started': who pipeline
 
@@ -700,4 +976,266 @@
         w = pl$col("time")$dt$convert_time_zone("Europe/Paris"),
         f = pl$col("time")$dt$replace_time_zone("Europe/Paris")
       )
+
+# check query for fill, replace_na, drop_na
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(pl$col("x")$fill_null(strategy = "forward"))
+
+---
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(
+        pl$col("x")$fill_null(0),
+        pl$col("y")$replace(NA, "z")
+      )
+
+---
+
+    Code
+      show_query(query)
+    Output
+      test_pl$drop_nulls()
+
+# check query for bind_rows_polars, bind_cols_polars
+
+    Code
+      show_query(query)
+    Output
+      pl$concat(
+        test_pl,
+        test_pl,
+        how = "diagonal_relaxed"
+      )
+
+---
+
+    Code
+      show_query(query)
+    Output
+      pl$concat(
+        test_pl,
+        other_pl,
+        how = "horizontal_extend"
+      )
+
+---
+
+    Code
+      show_query(query)
+    Output
+      pl$concat(
+        test_pl,
+        test_pl,
+        how = "diagonal_relaxed"
+      )
+
+# check query for complete()
+
+    Code
+      show_query(query)
+    Output
+      test_pl$select(pl$col("country", "year")$unique()$sort()$implode())$
+        explode(
+          "country",
+          empty_as_null = TRUE
+        )$
+        explode(
+          "year",
+          empty_as_null = TRUE
+        )$
+        join(
+          test_pl,
+          on = c("country", "year"),
+          how = "full",
+          nulls_equal = TRUE,
+          coalesce = TRUE
+        )$
+        with_columns(pl$col("value")$fill_null(99))$
+        select("country", "year", "value")
+
+# check query for uncount()
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(pl$col("x")$repeat_by(pl$col("n")))$
+        explode(
+          pl$col("x"),
+          empty_as_null = TRUE
+        )$
+        drop("n")
+
+---
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(pl$col("x")$repeat_by(pl$col("n")))$
+        explode(
+          pl$col("x"),
+          empty_as_null = TRUE
+        )$
+        drop("n")$
+        with_columns(pl$col("x")$cum_count()$over("x", "y")$alias("id"))
+
+# check query for rowwise()
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(
+        total = pl$concat_list(pl$col("x"), pl$col("y"), pl$col("z"))$
+          list$eval(
+            pl$when(pl$element()$has_nulls())$then(NA)$otherwise(pl$element()$sum())
+          )$
+          explode(empty_as_null = TRUE),
+        avg = pl$concat_list(pl$col("x"), pl$col("y"), pl$col("z"))$
+          list$eval(pl$element()$mean())$
+          explode(empty_as_null = TRUE)
+      )
+
+# check query for unnest_longer_polars()
+
+    Code
+      show_query(query)
+    Output
+      test_pl$explode(
+        "values",
+        empty_as_null = TRUE
+      )$
+        drop_nulls("values")
+
+---
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_row_index(name = "__tidypolars_row_id__")$
+        explode(
+          "values",
+          empty_as_null = TRUE
+        )$
+        with_columns(pl$struct("values"))$
+        with_columns(
+          pl$col("values")$
+            struct$with_fields(pl$field("values")$cum_count()$alias("idx"))$
+            over(pl$col("__tidypolars_row_id__"))
+        )$
+        with_columns(
+          pl$struct(
+            pl$col("values")$struct$field("idx"),
+            pl$col("values")$struct$field("values")
+          )$
+            alias("values")
+        )$
+        unnest("values")$
+        drop("__tidypolars_row_id__")$
+        drop_nulls("values")$
+        rename(values = "val")
+
+# check query for separate_longer_delim_polars() and separate_longer_position_polars()
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(pl$col("x")$cast(pl$String)$str$split(","))$
+        explode(
+          "x",
+          empty_as_null = TRUE
+        )
+
+---
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(pl$col("x")$cast(pl$String)$str$extract_all(".{1,2}"))$
+        filter(pl$all_horizontal(pl$col("x")$is_null() | pl$col("x")$list$len() > 0))$
+        explode(
+          "x",
+          empty_as_null = TRUE
+        )
+
+# check query for make_unique_id()
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(pl$struct(c("x", "y"))$hash()$alias("id"))
+
+# check query for scan_*_polars() and read_*_polars()
+
+    Code
+      show_query(query)
+    Output
+      pl$scan_parquet(
+        source = [TRUNCATED],
+        n_rows = NULL,
+        row_index_name = NULL,
+        row_index_offset = 0L,
+        parallel = "auto",
+        hive_partitioning = NULL,
+        hive_schema = NULL,
+        try_parse_hive_dates = TRUE,
+        glob = TRUE,
+        rechunk = FALSE,
+        low_memory = FALSE,
+        storage_options = NULL,
+        use_statistics = TRUE,
+        cache = TRUE,
+        include_file_paths = NULL
+      )$
+        filter(pl$col("cyl") > pl$lit(4))$
+        select("mpg")
+
+---
+
+    Code
+      show_query(query)
+    Output
+      pl$scan_ndjson(
+        source = [TRUNCATED],
+        infer_schema_length = 100,
+        batch_size = NULL,
+        n_rows = NULL,
+        low_memory = FALSE,
+        rechunk = FALSE,
+        row_index_name = NULL,
+        row_index_offset = 0,
+        ignore_errors = FALSE
+      )$
+        collect(
+          optimizations = pl$QueryOptFlags(
+            predicate_pushdown = TRUE,
+            projection_pushdown = TRUE,
+            simplify_expression = TRUE,
+            slice_pushdown = TRUE,
+            comm_subplan_elim = TRUE,
+            comm_subexpr_elim = TRUE,
+            cluster_with_columns = TRUE
+          ),
+          engine = c("auto", "in-memory", "streaming")
+        )$
+        select("mpg")
+
+---
+
+    Code
+      show_query(query)
+    Output
+      pl$scan_ipc(
+        source = [TRUNCATED],
+        n_rows = NULL,
+        row_index_name = NULL,
+        row_index_offset = 0L,
+        rechunk = FALSE,
+        cache = TRUE,
+        include_file_paths = NULL
+      )$
+        select("mpg")
 
