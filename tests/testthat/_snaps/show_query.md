@@ -298,10 +298,8 @@
             otherwise(pl$col("am")$mean())
         )$
         filter(
-          pl$col("cyl") == pl$
-            lit(4) & pl$
-            col("am") == pl$
-            lit(1)
+          pl$col("cyl") == pl$lit(4) &
+            pl$col("am") == pl$lit(1)
         )
 
 # errors in the pipeline are not affected by the recording
@@ -393,25 +391,26 @@
       as_polars_df(mtcars)$
         with_columns(
           z = (
-            pl$col("mpg") - pl$
-              when(
+            pl$col("mpg") -
+              pl$when(
                 pl$col("mpg")$
                   has_nulls()
               )$
-              then(NA)$
-              otherwise(
-                pl$col("mpg")$mean()
-              )
-          )/pl$
-            when(
+                then(NA)$
+                otherwise(
+                  pl$col("mpg")$
+                    mean()
+                )
+          )/
+            pl$when(
               pl$col("mpg")$
                 has_nulls()
             )$
-            then(NA)$
-            otherwise(
-              pl$col("mpg")$
-                std(ddof = 1)
-            )
+              then(NA)$
+              otherwise(
+                pl$col("mpg")$
+                  std(ddof = 1)
+              )
         )
 
 # a long value that is not a method call is left on its own line
@@ -421,8 +420,8 @@
     Output
       as_polars_df(data.frame(txt = "x"))$
         filter(
-          pl$col("txt") == pl$
-            lit(
+          pl$col("txt") ==
+            pl$lit(
               "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
             )
         )
@@ -671,23 +670,16 @@
       show_query(query)
     Output
       dat$with_columns(
-        dup = pl$col("grp")$
-          is_first_distinct()$
-          not() & pl$
-          col("grp")$
-          is_in(pl$lit(list("a")), nulls_equal = TRUE)$
-          not(),
+        dup = pl$col("grp")$is_first_distinct()$not() &
+          pl$col("grp")$is_in(pl$lit(list("a")), nulls_equal = TRUE)$not(),
         any_dup = (
           (
-            pl$col("grp")$
-              is_first_distinct()$
-              not() & pl$
-              col("grp")$
-              is_in(pl$lit(list("a")), nulls_equal = TRUE)$
-              not()
+            pl$col("grp")$is_first_distinct()$not() &
+              pl$col("grp")$is_in(pl$lit(list("a")), nulls_equal = TRUE)$not()
           )$
             arg_true()$
-            first() + 1
+            first() +
+            1
         )$
           fill_null(0)
       )

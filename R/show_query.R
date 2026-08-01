@@ -649,12 +649,69 @@ split_chain_merged <- function(text) {
   parts
 }
 
+# Break `lhs <op> rhs` at its outermost operator, e.g. "a == 1 & b == 2" gives
+# the operands "a == 1" and "b == 2" around "&". Returns NULL when the text
+# isn't an operation.
+split_top_operator <- function(text) {
+  # The `name = ` of a named argument belongs to the left-hand side: it is not
+  # an operator, and parse() would read it as an assignment.
+  m <- regexpr("^(`[^`]*`|[.[:alpha:]][._[:alnum:]]*) = ", text)
+  prefix <- if (m == -1L) "" else substring(text, 1L, attr(m, "match.length"))
+  node <- tryCatch(
+    parse(text = substring(text, nchar(prefix) + 1L), keep.source = FALSE)[[1]],
+    error = function(e) NULL
+  )
+  if (
+    !is.call(node) ||
+      length(node) != 3L ||
+      !is.symbol(node[[1]]) ||
+      !as.character(node[[1]]) %in% known_ops
+  ) {
+    return(NULL)
+  }
+  sides <- tryCatch(
+    lapply(as.list(node)[-1], \(x) {
+      collapse_deparse(deparse(x, width.cutoff = 500L))
+    }),
+    error = function(e) NULL
+  )
+  if (is.null(sides)) {
+    return(NULL)
+  }
+  op <- as.character(node[[1]])
+  list(
+    lhs = paste0(prefix, sides[[1]]),
+    rhs = sides[[2]],
+    op = op,
+    # The operator ends the line it breaks, spaced as deparse() spaces it
+    # inline: "a + b" but "a/b".
+    sep = if (op %in% c("/", "^", "%%", "%/%")) "" else " "
+  )
+}
+
 # Format a value (e.g. an argument of a method call), which can itself be a
 # chain of method calls. The first line is placed by the caller, so only
 # continuation lines get the indent.
 format_query_value <- function(text, indent) {
   if (indent + nchar(text) <= tp_query_width()) {
     return(text)
+  }
+  # An expression built with operators, e.g. `pl$col("a") == 1 & ...`, breaks
+  # at its outermost operator: "$" binds tighter than any operator, so
+  # splitting the "$" chain here would cut through the operands instead (right
+  # after the "pl" of `pl$lit(1)`, typically). Both sides are formatted with
+  # the same continuation indent, so a chain of operators of the same
+  # precedence ends up with one operand per line.
+  op <- split_top_operator(text)
+  if (!is.null(op)) {
+    return(paste0(
+      format_query_value(op$lhs, indent),
+      op$sep,
+      op$op,
+      "\n",
+      strrep(" ", indent + 2L),
+      format_query_value(op$rhs, indent + 2L)
+    ))
   }
   parts <- split_chain_merged(text)
   if (length(parts) == 1) {
@@ -729,15 +786,27 @@ split_at_positions <- function(chars, breaks) {
 }
 
 # Split on "$" located at depth 0, i.e. not inside parentheses/brackets and
-# not inside a string.
+# not inside a string. A "$" whose left-hand side is `pl` is not a split point:
+# `pl$col("x")` is read as a single value, contrary to the method calls that
+# follow it in a chain.
 split_query_chain <- function(text) {
   chars <- strsplit(text, "", fixed = TRUE)[[1]]
   info <- scan_code(chars)
   breaks <- which(chars == "$" & info$depth == 0L & !info$in_string)
+  breaks <- breaks[!vapply(breaks, follows_pl, logical(1), chars = chars)]
   if (length(breaks) == 0) {
     return(text)
   }
   split_at_positions(chars, breaks)
+}
+
+# Whether the "$" at position `i` is preceded by the symbol `pl` (and not by
+# the end of a longer name such as `who_pl` or `` `my pl` ``).
+follows_pl <- function(i, chars) {
+  i > 2L &&
+    chars[i - 1L] == "l" &&
+    chars[i - 2L] == "p" &&
+    (i == 3L || !grepl("[[:alnum:]._`]", chars[i - 3L]))
 }
 
 # Reformat "fn(arg1, arg2)" so that each argument is on its own line, if
