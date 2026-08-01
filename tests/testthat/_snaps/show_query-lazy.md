@@ -478,14 +478,6 @@
       │ 1.0 ┆ 2.0 ┆ 3.0  ┆ 4.0  ┆ 5.0  ┆ 6.0  ┆ 7.0  │
       └─────┴─────┴──────┴──────┴──────┴──────┴──────┘
 
-# `pl$` gives the polars error message for unknown members
-
-    Code
-      current$collect()
-    Condition
-      Error in `polars::pl$this_does_not_exist`:
-      ! $ - syntax error: `this_does_not_exist` is not a member of this polars object
-
 # data.frame arguments with non-syntactic names are rebuilt faithfully
 
     Code

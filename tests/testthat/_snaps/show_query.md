@@ -329,14 +329,6 @@
     Output
       `<data>`$filter(pl$col("x") == pl$lit(1))
 
-# `pl$` gives the polars error message for unknown members
-
-    Code
-      pl$this_does_not_exist
-    Condition
-      Error in `polars::pl$this_does_not_exist`:
-      ! $ - syntax error: `this_does_not_exist` is not a member of this polars object
-
 # polars objects built outside tidypolars are shown as a placeholder
 
     Code

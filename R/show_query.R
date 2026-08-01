@@ -397,6 +397,9 @@ deparse_query_arg <- function(x) {
     "`<polars object>`"
   } else if (is.environment(x)) {
     "`<environment>`"
+  } else if (inherits(x, "S7_object")) {
+    # Ensure that the S7 object is printed identically in R < 4.4 and R >= 4.4
+    paste0("`<", class(x)[1], ">`")
   } else if (is.list(x) && !is.object(x)) {
     inner <- vapply(x, deparse_query_arg, character(1))
     nms <- names(x) %||% character(length(x))
