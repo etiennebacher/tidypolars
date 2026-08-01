@@ -558,6 +558,18 @@ test_that("translated base functions: cumulative and diff", {
   expect_equal(replay_query(query), query)
 })
 
+test_that("translated base functions: anyDuplicated and duplicated", {
+  dat <- tp_test_frame()
+  query <- dat |>
+    mutate(
+      dup = duplicated(grp, incomparables = "a"),
+      any_dup = anyDuplicated(grp, incomparables = "a")
+    )
+
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
 test_that("translated base functions: aggregations in summarize()", {
   dat <- tp_test_frame()
   query <- dat |>

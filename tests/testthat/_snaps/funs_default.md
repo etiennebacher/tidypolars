@@ -63,3 +63,30 @@
       ! Error while running function `anyNA()` in Polars.
       x Argument `recursive` is not supported by tidypolars.
 
+# duplicated() validates fromLast
+
+    Code
+      mutate(test_pl, dup = duplicated(x, fromLast = 1))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `duplicated()` in Polars.
+      x `fromLast` must be `TRUE` or `FALSE`, not the number 1.
+
+---
+
+    Code
+      mutate(test_pl, dup = duplicated(x, fromLast = "TRUE"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `duplicated()` in Polars.
+      x `fromLast` must be `TRUE` or `FALSE`, not the string "TRUE".
+
+---
+
+    Code
+      mutate(test_pl, dup = duplicated(x, fromLast = c(TRUE, FALSE)))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `duplicated()` in Polars.
+      x `fromLast` must be `TRUE` or `FALSE`, not a logical vector.
+

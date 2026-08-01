@@ -1108,6 +1108,45 @@
       │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 1    ┆ 5    ┆ 2   ┆ -1   │
       └──────┴─────┴─────┴─────────────┴───┴──────┴──────┴─────┴──────┘
 
+# translated base functions: anyDuplicated and duplicated
+
+    Code
+      current$collect()
+    Output
+      dat$with_columns(
+        dup = pl$col("grp")$
+          is_first_distinct()$
+          not() & pl$
+          col("grp")$
+          is_in(pl$lit(list("a")), nulls_equal = TRUE)$
+          not(),
+        any_dup = (
+          (
+            pl$col("grp")$
+              is_first_distinct()$
+              not() & pl$
+              col("grp")$
+              is_in(pl$lit(list("a")), nulls_equal = TRUE)$
+              not()
+          )$
+            arg_true()$
+            first() + 1
+        )$
+          fill_null(0)
+      )
+      shape: (5, 10)
+      ┌──────┬─────┬─────┬─────────────┬───┬────────────┬─────────────────────────┬───────┬─────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ date       ┆ time                    ┆ dup   ┆ any_dup │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---        ┆ ---                     ┆ ---   ┆ ---     │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ date       ┆ datetime[ms, UTC]       ┆ bool  ┆ f64     │
+      ╞══════╪═════╪═════╪═════════════╪═══╪════════════╪═════════════════════════╪═══════╪═════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 ┆ 2020-01-15 08:30:00 UTC ┆ false ┆ 4.0     │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 ┆ 2021-06-30 14:00:00 UTC ┆ false ┆ 4.0     │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 ┆ 2019-12-01 23:59:00 UTC ┆ false ┆ 4.0     │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 ┆ 2022-03-10 00:00:00 UTC ┆ true  ┆ 4.0     │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 ┆ 2020-07-04 12:15:00 UTC ┆ false ┆ 4.0     │
+      └──────┴─────┴─────┴─────────────┴───┴────────────┴─────────────────────────┴───────┴─────────┘
+
 # translated base functions: aggregations in summarize()
 
     Code

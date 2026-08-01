@@ -7,6 +7,9 @@
 * Added support for `show_query()` to print the pure `polars` code that is equivalent to the
   query (#369).
 
+* Added support for `anyDuplicated()`, and for the `incomparables` and `fromLast`
+  arguments of `duplicated()` (#375, @Yousa-Mirage).
+
 ## Bug fixes
 
 * R expressions using `:` now resolve local variables from the calling environment (#381, @Yousa-Mirage).
