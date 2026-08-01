@@ -14,9 +14,9 @@ pl_case_match_dplyr <- function(x, ...) {
   out <- NULL
   for (i in seq_along(from_to$from)) {
     lhs <- from_to$from[[i]] |>
-      as_polars_expr(as_lit = TRUE)
+      as_lit_expr()
     rhs <- from_to$to[[i]] |>
-      as_polars_expr(as_lit = TRUE)
+      as_lit_expr()
 
     if (is.null(out)) {
       out <- pl$when(x$is_in(lhs$implode()))$then(rhs)
@@ -25,7 +25,7 @@ pl_case_match_dplyr <- function(x, ...) {
     }
   }
   otw <- from_to$default |>
-    as_polars_expr(as_lit = TRUE)
+    as_lit_expr()
 
   out <- out$otherwise(otw)
 
@@ -41,9 +41,9 @@ pl_case_when_dplyr <- function(...) {
   out <- NULL
   for (i in seq_along(from_to$from)) {
     lhs <- from_to$from[[i]] |>
-      as_polars_expr(as_lit = TRUE)
+      as_lit_expr()
     rhs <- from_to$to[[i]] |>
-      as_polars_expr(as_lit = TRUE)
+      as_lit_expr()
 
     if (is.null(out)) {
       out <- pl$when(lhs)$then(rhs)
@@ -52,7 +52,7 @@ pl_case_when_dplyr <- function(...) {
     }
   }
   otw <- from_to$default |>
-    as_polars_expr(as_lit = TRUE)
+    as_lit_expr()
 
   out <- out$otherwise(otw)
   out
@@ -285,9 +285,9 @@ pl_replace_when_dplyr <- function(x, ..., .data) {
   out <- NULL
   for (i in seq_along(from_to$from)) {
     lhs <- from_to$from[[i]] |>
-      as_polars_expr(as_lit = TRUE)
+      as_lit_expr()
     rhs <- from_to$to[[i]] |>
-      as_polars_expr(as_lit = TRUE)
+      as_lit_expr()
 
     if (is.null(out)) {
       out <- pl$when(lhs)$then(rhs)

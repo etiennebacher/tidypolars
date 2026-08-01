@@ -230,6 +230,34 @@
       │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ false │
       └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────┘
 
+---
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(mtcars)$
+        with_columns(
+          foo = pl$col("mpg")$is_in(pl$lit(runif(200))$implode(), nulls_equal = TRUE)
+        )
+      shape: (32, 12)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ foo   │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---   │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ bool  │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═══════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ false │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ false │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ false │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ false │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ false │
+      │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …     │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ false │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ false │
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ false │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ false │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ false │
+      └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────┘
+
 # count() doesn't record a `NULL` in sort() when input isn't grouped
 
     Code
@@ -250,7 +278,90 @@
       │ 1.0 ┆ 13  │
       └─────┴─────┘
 
+---
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(mtcars)$
+        group_by(am = pl$col("am"))$
+        len()$
+        rename(len = "n")$
+        sort("am")
+      shape: (2, 2)
+      ┌─────┬─────┐
+      │ am  ┆ n   │
+      │ --- ┆ --- │
+      │ f64 ┆ u32 │
+      ╞═════╪═════╡
+      │ 0.0 ┆ 19  │
+      │ 1.0 ┆ 13  │
+      └─────┴─────┘
+
+# non-syntactic argument names are backquoted in the query
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(mtcars)$
+        filter(pl$col("cyl") > pl$lit(4))$
+        group_by(`__tidypolars_grp__` = pl$lit(1))$
+        len()$
+        drop("__tidypolars_grp__")$
+        rename(len = "n")
+      shape: (1, 1)
+      ┌─────┐
+      │ n   │
+      │ --- │
+      │ u32 │
+      ╞═════╡
+      │ 21  │
+      └─────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      test_pl$pivot(
+        values = "v",
+        on = "k",
+        on_columns = data.frame(k = c(4, 5)),
+        index = "id",
+        separator = "_"
+      )$
+        rename(
+          `4.0` = "4",
+          `5.0` = "5"
+        )
+      shape: (1, 3)
+      ┌─────┬──────┬──────┐
+      │ id  ┆ 4    ┆ 5    │
+      │ --- ┆ ---  ┆ ---  │
+      │ f64 ┆ f64  ┆ f64  │
+      ╞═════╪══════╪══════╡
+      │ 1.0 ┆ 10.0 ┆ 20.0 │
+      └─────┴──────┴──────┘
+
 # the input data is not modified by the recording
+
+    Code
+      current$collect()
+    Condition
+      Error in `show_query()`:
+      ! No polars query was recorded for this object because it didn't go through tidypolars functions.
+      i Recording only starts when a tidypolars function is applied to the data.
+
+# the error mentions recording only when the option is FALSE
+
+    Code
+      current$collect()
+    Condition
+      Error in `show_query()`:
+      ! No polars query was recorded for this object because it didn't go through tidypolars functions.
+      i Recording only starts when a tidypolars function is applied to the data.
+
+---
 
     Code
       current$collect()
@@ -259,6 +370,78 @@
       ! No polars query was recorded for this object because the option `tidypolars_record_query` is `FALSE`.
       i Run `options(tidypolars_record_query = TRUE)` and re-run your query to show the equivalent polars code.
       i More info with `?tidypolars_options`.
+
+# show_query() rejects extra arguments
+
+    Code
+      current$collect()
+    Condition
+      Error in `show_query()`:
+      ! `...` must be empty.
+      x Problematic argument:
+      * foo = 1
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `show_query()`:
+      ! `...` must be empty.
+      x Problematic argument:
+      * ..1 = 2
+      i Did you forget to name an argument?
+
+# the query is wrapped at the console width
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(mtcars)$
+        with_columns(
+          mpg = pl$when(pl$col("mpg")$has_nulls())$then(NA)$otherwise(pl$col("mpg")$mean()),
+          am = pl$when(pl$col("am")$has_nulls())$then(NA)$otherwise(pl$col("am")$mean())
+        )$
+        filter(pl$col("cyl") == pl$lit(4) & pl$col("am") == pl$lit(1))
+      shape: (0, 11)
+      ┌─────┬─────┬──────┬─────┬───┬─────┬─────┬──────┬──────┐
+      │ mpg ┆ cyl ┆ disp ┆ hp  ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │
+      │ --- ┆ --- ┆ ---  ┆ --- ┆   ┆ --- ┆ --- ┆ ---  ┆ ---  │
+      │ f64 ┆ f64 ┆ f64  ┆ f64 ┆   ┆ f64 ┆ f64 ┆ f64  ┆ f64  │
+      ╞═════╪═════╪══════╪═════╪═══╪═════╪═════╪══════╪══════╡
+      └─────┴─────┴──────┴─────┴───┴─────┴─────┴──────┴──────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(mtcars)$
+        with_columns(
+          mpg = pl$when(
+            pl$col("mpg")$has_nulls()
+          )$
+            then(NA)$
+            otherwise(pl$col("mpg")$mean()),
+          am = pl$when(
+            pl$col("am")$has_nulls()
+          )$
+            then(NA)$
+            otherwise(pl$col("am")$mean())
+        )$
+        filter(
+          pl$col("cyl") == pl$
+            lit(4) & pl$
+            col("am") == pl$
+            lit(1)
+        )
+      shape: (0, 11)
+      ┌─────┬─────┬──────┬─────┬───┬─────┬─────┬──────┬──────┐
+      │ mpg ┆ cyl ┆ disp ┆ hp  ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │
+      │ --- ┆ --- ┆ ---  ┆ --- ┆   ┆ --- ┆ --- ┆ ---  ┆ ---  │
+      │ f64 ┆ f64 ┆ f64  ┆ f64 ┆   ┆ f64 ┆ f64 ┆ f64  ┆ f64  │
+      ╞═════╪═════╪══════╪═════╪═══╪═════╪═════╪══════╪══════╡
+      └─────┴─────┴──────┴─────┴───┴─────┴─────┴──────┴──────┘
 
 # errors in the pipeline are not affected by the recording
 
@@ -279,6 +462,186 @@
       ! No polars query was recorded for this object because the option `tidypolars_record_query` is `FALSE`.
       i Run `options(tidypolars_record_query = TRUE)` and re-run your query to show the equivalent polars code.
       i More info with `?tidypolars_options`.
+
+# the input name falls back to a placeholder when it is too long
+
+    Code
+      current$collect()
+    Output
+      `<data>`$filter(pl$col("x") == pl$lit(1))
+      shape: (1, 7)
+      ┌─────┬─────┬──────┬──────┬──────┬──────┬──────┐
+      │ x   ┆ y   ┆ zzzz ┆ aaaa ┆ bbbb ┆ cccc ┆ dddd │
+      │ --- ┆ --- ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  │
+      │ f64 ┆ f64 ┆ f64  ┆ f64  ┆ f64  ┆ f64  ┆ f64  │
+      ╞═════╪═════╪══════╪══════╪══════╪══════╪══════╡
+      │ 1.0 ┆ 2.0 ┆ 3.0  ┆ 4.0  ┆ 5.0  ┆ 6.0  ┆ 7.0  │
+      └─────┴─────┴──────┴──────┴──────┴──────┴──────┘
+
+# data.frame arguments with non-syntactic names are rebuilt faithfully
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(dat)$
+        pivot(
+          values = "v",
+          on = "my col",
+          on_columns = data.frame(`my col` = c("a", "b"), check.names = FALSE),
+          index = "id",
+          separator = "_"
+        )$
+        rename(
+          a = "a",
+          b = "b"
+        )
+      shape: (1, 3)
+      ┌─────┬──────┬──────┐
+      │ id  ┆ a    ┆ b    │
+      │ --- ┆ ---  ┆ ---  │
+      │ f64 ┆ f64  ┆ f64  │
+      ╞═════╪══════╪══════╡
+      │ 1.0 ┆ 10.0 ┆ 20.0 │
+      └─────┴──────┴──────┘
+
+# long vectors that deparse compactly are kept in the query
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(mtcars)$
+        with_columns(
+          foo = pl$col("mpg")$is_in(pl$lit(1:200)$implode(), nulls_equal = TRUE)
+        )
+      shape: (32, 12)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ foo   │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---   │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ bool  │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═══════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ true  │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ true  │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ false │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ false │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ false │
+      │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …     │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ false │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ false │
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ false │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ true  │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ false │
+      └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────┘
+
+# values too long to display fall back to the code producing them
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(data.frame(txt = "a"))$
+        filter(pl$col("txt") == pl$lit(strrep("a", 400)))
+      shape: (0, 1)
+      ┌─────┐
+      │ txt │
+      │ --- │
+      │ str │
+      ╞═════╡
+      └─────┘
+
+# the source of a value is only used when it is short enough
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(mtcars)$
+        with_columns(
+          foo = pl$col("mpg")$
+            is_in(pl$lit(`<numeric of length 200>`)$implode(), nulls_equal = TRUE)
+        )
+      shape: (32, 12)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ foo   │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---   │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ bool  │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═══════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ false │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ false │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ false │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ false │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ false │
+      │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …     │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ false │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ false │
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ false │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ false │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ false │
+      └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────┘
+
+# arguments that don't fit on a line are wrapped too
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(mtcars)$
+        with_columns(
+          z = (
+            pl$col("mpg") - pl$
+              when(
+                pl$col("mpg")$
+                  has_nulls()
+              )$
+              then(NA)$
+              otherwise(
+                pl$col("mpg")$mean()
+              )
+          )/pl$
+            when(
+              pl$col("mpg")$
+                has_nulls()
+            )$
+            then(NA)$
+            otherwise(
+              pl$col("mpg")$
+                std(ddof = 1)
+            )
+        )
+      shape: (32, 12)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ z         │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---       │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ f64       │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═══════════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 0.150885  │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 0.150885  │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 0.449543  │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ 0.217253  │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ -0.230735 │
+      │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …         │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ 1.710547  │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ -0.711907 │
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ -0.064813 │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ -0.844644 │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ 0.217253  │
+      └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────────┘
+
+# a long value that is not a method call is left on its own line
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(data.frame(txt = "x"))$
+        filter(
+          pl$col("txt") == pl$
+            lit(
+              "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
+            )
+        )
+      shape: (0, 1)
+      ┌─────┐
+      │ txt │
+      │ --- │
+      │ str │
+      ╞═════╡
+      └─────┘
 
 # vignette 'Getting started': who pipeline
 
@@ -1288,4 +1651,358 @@
       │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ false ┆ true  ┆ 2020-07-04 14:15:00  ┆ 2020-07-04 12:15:00  │
       │      ┆     ┆     ┆             ┆   ┆       ┆       ┆ CEST                 ┆ CEST                 │
       └──────┴─────┴─────┴─────────────┴───┴───────┴───────┴──────────────────────┴──────────────────────┘
+
+# check query for fill, replace_na, drop_na
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(pl$col("x")$fill_null(strategy = "forward"))
+      shape: (3, 2)
+      ┌─────┬──────┐
+      │ x   ┆ y    │
+      │ --- ┆ ---  │
+      │ f64 ┆ str  │
+      ╞═════╪══════╡
+      │ 1.0 ┆ a    │
+      │ 1.0 ┆ null │
+      │ 3.0 ┆ c    │
+      └─────┴──────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(
+        pl$col("x")$fill_null(0),
+        pl$col("y")$replace(NA, "z")
+      )
+      shape: (3, 2)
+      ┌─────┬─────┐
+      │ x   ┆ y   │
+      │ --- ┆ --- │
+      │ f64 ┆ str │
+      ╞═════╪═════╡
+      │ 1.0 ┆ a   │
+      │ 0.0 ┆ z   │
+      │ 3.0 ┆ c   │
+      └─────┴─────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      test_pl$drop_nulls()
+      shape: (2, 2)
+      ┌─────┬─────┐
+      │ x   ┆ y   │
+      │ --- ┆ --- │
+      │ f64 ┆ str │
+      ╞═════╪═════╡
+      │ 1.0 ┆ a   │
+      │ 3.0 ┆ c   │
+      └─────┴─────┘
+
+# check query for bind_rows_polars, bind_cols_polars
+
+    Code
+      current$collect()
+    Output
+      pl$concat(
+        test_pl,
+        test_pl,
+        how = "diagonal_relaxed"
+      )
+      shape: (4, 1)
+      ┌─────┐
+      │ x   │
+      │ --- │
+      │ f64 │
+      ╞═════╡
+      │ 1.0 │
+      │ 2.0 │
+      │ 1.0 │
+      │ 2.0 │
+      └─────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      pl$concat(
+        test_pl,
+        other_pl,
+        how = "horizontal_extend"
+      )
+      shape: (2, 2)
+      ┌─────┬─────┐
+      │ x   ┆ y   │
+      │ --- ┆ --- │
+      │ f64 ┆ str │
+      ╞═════╪═════╡
+      │ 1.0 ┆ a   │
+      │ 2.0 ┆ b   │
+      └─────┴─────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      pl$concat(
+        test_pl,
+        test_pl,
+        how = "diagonal_relaxed"
+      )
+      shape: (4, 1)
+      ┌─────┐
+      │ x   │
+      │ --- │
+      │ f64 │
+      ╞═════╡
+      │ 1.0 │
+      │ 2.0 │
+      │ 1.0 │
+      │ 2.0 │
+      └─────┘
+
+# check query for complete()
+
+    Code
+      current$collect()
+    Output
+      test_pl$select(pl$col("country", "year")$unique()$sort()$implode())$
+        explode(
+          "country",
+          empty_as_null = TRUE
+        )$
+        explode(
+          "year",
+          empty_as_null = TRUE
+        )$
+        join(
+          test_pl,
+          on = c("country", "year"),
+          how = "full",
+          nulls_equal = TRUE,
+          coalesce = TRUE
+        )$
+        with_columns(pl$col("value")$fill_null(99))$
+        select("country", "year", "value")
+      shape: (6, 3)
+      ┌─────────┬────────┬───────┐
+      │ country ┆ year   ┆ value │
+      │ ---     ┆ ---    ┆ ---   │
+      │ str     ┆ f64    ┆ f64   │
+      ╞═════════╪════════╪═══════╡
+      │ France  ┆ 2019.0 ┆ 99.0  │
+      │ France  ┆ 2020.0 ┆ 1.0   │
+      │ France  ┆ 2021.0 ┆ 2.0   │
+      │ UK      ┆ 2019.0 ┆ 3.0   │
+      │ UK      ┆ 2020.0 ┆ 99.0  │
+      │ UK      ┆ 2021.0 ┆ 99.0  │
+      └─────────┴────────┴───────┘
+
+# check query for uncount()
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(pl$col("x")$repeat_by(pl$col("n")))$
+        explode(
+          pl$col("x"),
+          empty_as_null = TRUE
+        )$
+        drop("n")
+      shape: (3, 2)
+      ┌─────┬─────┐
+      │ x   ┆ y   │
+      │ --- ┆ --- │
+      │ str ┆ i32 │
+      ╞═════╪═════╡
+      │ a   ┆ 100 │
+      │ b   ┆ 101 │
+      │ b   ┆ 101 │
+      └─────┴─────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(pl$col("x")$repeat_by(pl$col("n")))$
+        explode(
+          pl$col("x"),
+          empty_as_null = TRUE
+        )$
+        drop("n")$
+        with_columns(pl$col("x")$cum_count()$over("x", "y")$alias("id"))
+      shape: (3, 3)
+      ┌─────┬─────┬─────┐
+      │ x   ┆ y   ┆ id  │
+      │ --- ┆ --- ┆ --- │
+      │ str ┆ i32 ┆ u32 │
+      ╞═════╪═════╪═════╡
+      │ a   ┆ 100 ┆ 1   │
+      │ b   ┆ 101 ┆ 1   │
+      │ b   ┆ 101 ┆ 2   │
+      └─────┴─────┴─────┘
+
+# check query for rowwise()
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(
+        total = pl$concat_list(pl$col("x"), pl$col("y"), pl$col("z"))$
+          list$eval(
+            pl$when(pl$element()$has_nulls())$then(NA)$otherwise(pl$element()$sum())
+          )$
+          explode(empty_as_null = TRUE),
+        avg = pl$concat_list(pl$col("x"), pl$col("y"), pl$col("z"))$
+          list$eval(pl$element()$mean())$
+          explode(empty_as_null = TRUE)
+      )
+      shape: (2, 5)
+      ┌─────┬─────┬──────┬───────┬─────┐
+      │ x   ┆ y   ┆ z    ┆ total ┆ avg │
+      │ --- ┆ --- ┆ ---  ┆ ---   ┆ --- │
+      │ f64 ┆ f64 ┆ f64  ┆ f64   ┆ f64 │
+      ╞═════╪═════╪══════╪═══════╪═════╡
+      │ 2.0 ┆ 2.0 ┆ 5.0  ┆ 9.0   ┆ 3.0 │
+      │ 2.0 ┆ 3.0 ┆ null ┆ null  ┆ 2.5 │
+      └─────┴─────┴──────┴───────┴─────┘
+
+# check query for unnest_longer_polars()
+
+    Code
+      current$collect()
+    Output
+      test_pl$explode(
+        "values",
+        empty_as_null = TRUE
+      )$
+        drop_nulls("values")
+      shape: (6, 2)
+      ┌─────┬────────┐
+      │ id  ┆ values │
+      │ --- ┆ ---    │
+      │ i32 ┆ f64    │
+      ╞═════╪════════╡
+      │ 1   ┆ 1.0    │
+      │ 1   ┆ 2.0    │
+      │ 2   ┆ 3.0    │
+      │ 2   ┆ 4.0    │
+      │ 2   ┆ 5.0    │
+      │ 3   ┆ 6.0    │
+      └─────┴────────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_row_index(name = "__tidypolars_row_id__")$
+        explode(
+          "values",
+          empty_as_null = TRUE
+        )$
+        with_columns(pl$struct("values"))$
+        with_columns(
+          pl$col("values")$
+            struct$with_fields(pl$field("values")$cum_count()$alias("idx"))$
+            over(pl$col("__tidypolars_row_id__"))
+        )$
+        with_columns(
+          pl$struct(
+            pl$col("values")$struct$field("idx"),
+            pl$col("values")$struct$field("values")
+          )$
+            alias("values")
+        )$
+        unnest("values")$
+        drop("__tidypolars_row_id__")$
+        drop_nulls("values")$
+        rename(values = "val")
+      shape: (6, 3)
+      ┌─────┬─────┬─────┐
+      │ id  ┆ idx ┆ val │
+      │ --- ┆ --- ┆ --- │
+      │ i32 ┆ u32 ┆ f64 │
+      ╞═════╪═════╪═════╡
+      │ 1   ┆ 1   ┆ 1.0 │
+      │ 1   ┆ 2   ┆ 2.0 │
+      │ 2   ┆ 1   ┆ 3.0 │
+      │ 2   ┆ 2   ┆ 4.0 │
+      │ 2   ┆ 3   ┆ 5.0 │
+      │ 3   ┆ 1   ┆ 6.0 │
+      └─────┴─────┴─────┘
+
+# check query for separate_longer_delim_polars() and separate_longer_position_polars()
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(pl$col("x")$cast(pl$String)$str$split(","))$
+        explode(
+          "x",
+          empty_as_null = TRUE
+        )
+      shape: (6, 2)
+      ┌─────┬─────┐
+      │ id  ┆ x   │
+      │ --- ┆ --- │
+      │ i32 ┆ str │
+      ╞═════╪═════╡
+      │ 1   ┆ a   │
+      │ 1   ┆ b   │
+      │ 1   ┆ c   │
+      │ 2   ┆ d   │
+      │ 2   ┆ e   │
+      │ 3   ┆ f   │
+      └─────┴─────┘
+
+---
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(pl$col("x")$cast(pl$String)$str$extract_all(".{1,2}"))$
+        filter(pl$all_horizontal(pl$col("x")$is_null() | pl$col("x")$list$len() > 0))$
+        explode(
+          "x",
+          empty_as_null = TRUE
+        )
+      shape: (6, 2)
+      ┌─────┬─────┐
+      │ id  ┆ x   │
+      │ --- ┆ --- │
+      │ i32 ┆ str │
+      ╞═════╪═════╡
+      │ 1   ┆ a,  │
+      │ 1   ┆ b,  │
+      │ 1   ┆ c   │
+      │ 2   ┆ d,  │
+      │ 2   ┆ e   │
+      │ 3   ┆ f   │
+      └─────┴─────┘
+
+# check query for make_unique_id()
+
+    Code
+      current$collect()
+    Output
+      test_pl$with_columns(pl$struct(c("x", "y"))$hash()$alias("id"))
+      shape: (2, 3)
+      ┌─────┬─────┬─────────────────────┐
+      │ x   ┆ y   ┆ id                  │
+      │ --- ┆ --- ┆ ---                 │
+      │ str ┆ f64 ┆ u64                 │
+      ╞═════╪═════╪═════════════════════╡
+      │ a   ┆ 1.0 ┆ 9401135652799850258 │
+      │ b   ┆ 2.0 ┆ 6701719201758175205 │
+      └─────┴─────┴─────────────────────┘
 

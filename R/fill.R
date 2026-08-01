@@ -49,7 +49,7 @@ fill.polars_data_frame <- function(
   is_grouped <- !is.null(grps)
   mo <- attributes(data)$maintain_grp_order
 
-  expr <- polars::pl$col(!!!vars)
+  expr <- pl$col(!!!vars)
   expr <- switch(
     .direction,
     "down" = expr$fill_null(strategy = 'forward'),
