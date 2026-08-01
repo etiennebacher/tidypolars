@@ -67,8 +67,8 @@ pl_anyDuplicated <- function(x, incomparables = FALSE, fromLast = FALSE, ...) {
   fromLast <- polars_expr_to_r(fromLast)
   check_bool(fromLast)
 
-  flag <- duplicated_flag(x, incomparables, fromLast)
-  indices <- flag$arg_true()
+  is_dup <- is_duplicated(x, incomparables, fromLast)
+  indices <- is_dup$arg_true()
   index <- if (fromLast) {
     indices$last()
   } else {
@@ -160,8 +160,7 @@ pl_duplicated <- function(x, incomparables = FALSE, fromLast = FALSE, ...) {
 
   fromLast <- polars_expr_to_r(fromLast)
   check_bool(fromLast)
-
-  duplicated_flag(x, incomparables, fromLast)
+  is_duplicated(x, incomparables, fromLast)
 }
 
 pl_exp <- function(x) {
@@ -607,8 +606,8 @@ extract_from_to <- function(dots, env) {
 
 # Flag duplicated values in a column. Shared by pl_duplicated() and
 # pl_anyDuplicated().
-duplicated_flag <- function(x, incomparables, fromLast) {
-  flag <- if (fromLast) {
+is_duplicated <- function(x, incomparables, fromLast) {
+  dupes <- if (fromLast) {
     x$is_last_distinct()$not()
   } else {
     x$is_first_distinct()$not()
@@ -631,7 +630,7 @@ duplicated_flag <- function(x, incomparables, fromLast) {
   }
 
   if (isFALSE(incomparables)) {
-    return(flag)
+    return(dupes)
   }
 
   if (is_polars_expr(incomparables)) {
@@ -646,5 +645,5 @@ duplicated_flag <- function(x, incomparables, fromLast) {
     incomparable <- x$is_in(pl$lit(list(incomparables)), nulls_equal = TRUE)
   }
 
-  flag & incomparable$not()
+  dupes & incomparable$not()
 }
