@@ -462,10 +462,12 @@ translate <- function(
           return(polars_constant(unlist(expr)))
         },
         ":" = {
-          out <- tryCatch(eval_tidy(expr, env = caller_env()), error = identity)
-          return(out)
+          return(eval_tidy(expr, env = caller))
         },
-        "%in%" = {
+        # Both sides can contain arbitrary R code that we evaluate in the caller
+        # environment (e.g. `x %in% lower:upper`).
+        "%in%" = ,
+        "%notin%" = {
           out <- tryCatch(
             {
               lhs <- translate(
@@ -491,39 +493,20 @@ translate <- function(
               }
               lhs$is_in(rhs$implode(), nulls_equal = TRUE)
             },
-            error = identity
-          )
-          return(out)
-        },
-        # Same thing as "%in%" but with the "$not()" at the end.
-        "%notin%" = {
-          out <- tryCatch(
-            {
-              lhs <- translate(
-                expr[[2]],
-                .data = .data,
-                new_vars = new_vars,
-                env = env,
-                caller = caller,
-                expr_uses_col = expr_uses_col
-              ) |>
-                as_lit_expr()
-              rhs <- translate(
-                expr[[3]],
-                .data = .data,
-                new_vars = new_vars,
-                env = env,
-                caller = caller,
-                expr_uses_col = expr_uses_col
-              ) |>
-                as_lit_expr()
-              if (is.list(rhs)) {
-                rhs <- unlist(rhs)
+            error = function(e) {
+              if (inherits(e, "rlang_error")) {
+                cnd_signal(e)
               }
-              lhs$is_in(rhs$implode(), nulls_equal = TRUE)$not()
-            },
-            error = identity
+              cli_abort(
+                "Error while translating {.code {safe_deparse(expr)}}.",
+                parent = e,
+                call = env
+              )
+            }
           )
+          if (name == "%notin%") {
+            out <- out$not()
+          }
           return(out)
         },
         "base::ifelse" = ,

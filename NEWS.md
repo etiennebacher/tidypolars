@@ -9,6 +9,8 @@
 
 ## Bug fixes
 
+* R expressions using `:` now resolve local variables from the calling environment (#381, @Yousa-Mirage).
+
 * Fix `where()` when nested in `c()` or interacting with various boolean operators
   (#379, @Yousa-Mirage).
 

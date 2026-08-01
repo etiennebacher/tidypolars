@@ -65,6 +65,23 @@ test_that("error messages when error in known function is good", {
   )
 })
 
+test_that("missing variables in ranges produce errors", {
+  test_pl <- as_polars_lf(tibble(x = 1:5))
+
+  expect_snapshot_lazy(
+    test_pl |> mutate(in_range = x %in% missing_lower:4),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    test_pl |> mutate(in_range = x %notin% missing_lower:4),
+    error = TRUE
+  )
+  expect_snapshot_lazy(
+    test_pl |> filter(x %in% missing_lower:4),
+    error = TRUE
+  )
+})
+
 test_that("doesn't error with missing variable in function call, #219", {
   pl_iris <- pl$LazyFrame(x = 1)
   # only errors with filter()
