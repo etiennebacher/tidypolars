@@ -5,31 +5,13 @@ input data must be assigned to the name displayed in the first line of the
 query).
 Recording the query is disabled by default, meaning that show_query() will
 error with an informative message. It can be enabled with
-options(tidypolars_record_query = TRUE) (see tidypolars_options).
-To keep the output readable and close to hand-written polars code, R
-operators are used instead of their method equivalent (e.g. a$add(b) is
-shown as a + b), and user-defined functions are displayed as a call
-rather than expanded into the operations they perform internally.
-Long values coming from the calling environment are referred to by the name
-of the object they come from, so that the printed code stays copy-pasteable.
-Values that are too long to display and are not bound to a name, such as a
-long inline vector, are shown as a placeholder like
-`&amp;lt;numeric of length 200&amp;gt;`."><meta property="og:description" content="show_query() prints the pure polars code that tidypolars runs in the
+options(tidypolars_record_query = TRUE) (see tidypolars_options)."><meta property="og:description" content="show_query() prints the pure polars code that tidypolars runs in the
 background. This code can be copy-pasted and run with polars only (the
 input data must be assigned to the name displayed in the first line of the
 query).
 Recording the query is disabled by default, meaning that show_query() will
 error with an informative message. It can be enabled with
-options(tidypolars_record_query = TRUE) (see tidypolars_options).
-To keep the output readable and close to hand-written polars code, R
-operators are used instead of their method equivalent (e.g. a$add(b) is
-shown as a + b), and user-defined functions are displayed as a call
-rather than expanded into the operations they perform internally.
-Long values coming from the calling environment are referred to by the name
-of the object they come from, so that the printed code stays copy-pasteable.
-Values that are too long to display and are not bound to a name, such as a
-long inline vector, are shown as a placeholder like
-`&amp;lt;numeric of length 200&amp;gt;`."><meta property="og:image" content="https://tidypolars.etiennebacher.com/logo.png"></head><body>
+options(tidypolars_record_query = TRUE) (see tidypolars_options)."><meta property="og:image" content="https://tidypolars.etiennebacher.com/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -79,15 +61,6 @@ query).</p>
 <p>Recording the query is <strong>disabled</strong> by default, meaning that <code><a href="https://dplyr.tidyverse.org/reference/explain.html" class="external-link">show_query()</a></code> will
 error with an informative message. It can be enabled with
 <code>options(tidypolars_record_query = TRUE)</code> (see <a href="tidypolars_options.html">tidypolars_options</a>).</p>
-<p>To keep the output readable and close to hand-written <code>polars</code> code, R
-operators are used instead of their method equivalent (e.g. <code>a$add(b)</code> is
-shown as <code>a + b</code>), and user-defined functions are displayed as a call
-rather than expanded into the operations they perform internally.</p>
-<p>Long values coming from the calling environment are referred to by the name
-of the object they come from, so that the printed code stays copy-pasteable.
-Values that are too long to display and are not bound to a name, such as a
-long inline vector, are shown as a placeholder like
-<code>`&lt;numeric of length 200&gt;`</code>.</p>
     </div>
 
     <div class="section level2">
@@ -108,13 +81,30 @@ long inline vector, are shown as a placeholder like
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Not used.</p></dd>
+<dd><p>Dots which should be empty.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The input, invisibly. This function is called for its side effect
 of printing the polars query.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>To keep the output readable and close to hand-written <code>polars</code> code, R
+operators are used instead of their method equivalent (e.g. <code>a$add(b)</code> is
+shown as <code>a + b</code>), and user-defined functions are displayed as a call
+rather than expanded into the operations they perform internally.</p>
+<p>Long values coming from the calling environment are referred to by the code
+they come from – the name of the object holding them, or the call that
+produced them, e.g. <code>pl$lit(runif(200))</code> – so that the printed code stays
+copy-pasteable. Values that are too long to display and whose source code
+cannot be recovered are shown as a placeholder like
+<code>`&lt;numeric of length 200&gt;`</code>.</p>
+<p>The code is wrapped at the console width (<code>getOption("width")</code>).</p>
+<p>If the package <code>cli</code> is installed, it provides syntax highlighting for the output.
+This can be controlled with <code>options(cli.code_theme = )</code> (see <code><a href="https://cli.r-lib.org/reference/code_theme_list.html" class="external-link">cli::code_theme_list()</a></code>
+for the available themes).</p>
     </div>
 
     <div class="section level2">
@@ -131,15 +121,15 @@ of printing the polars query.</p>
 <span class="r-in"><span>    <span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/explain.html" class="external-link">show_query</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">as_polars_lf</span><span style="color: #949494;">(</span>mtcars<span style="color: #949494;">)$</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">filter</span><span style="color: #949494;">(</span>pl<span style="color: #949494;">$</span><span style="font-weight: bold;">col</span><span style="color: #BBBB00;">(</span><span style="color: #00AFAF;">"cyl"</span><span style="color: #BBBB00;">)</span> <span style="color: #949494;">==</span> pl<span style="color: #949494;">$</span><span style="font-weight: bold;">lit</span><span style="color: #BBBB00;">(</span><span style="color: #D75FAF;">4</span><span style="color: #BBBB00;">)</span><span style="color: #949494;">)$</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">with_columns</span><span style="color: #949494;">(</span>mpg2 = <span style="color: #BBBB00;">(</span>pl<span style="color: #949494;">$</span><span style="font-weight: bold;">col</span><span style="color: #0000BB;">(</span><span style="color: #00AFAF;">"mpg"</span><span style="color: #0000BB;">)</span> <span style="color: #949494;">*</span> pl<span style="color: #949494;">$</span><span style="font-weight: bold;">lit</span><span style="color: #0000BB;">(</span><span style="color: #D75FAF;">2</span><span style="color: #0000BB;">)</span><span style="color: #BBBB00;">)</span><span style="color: #949494;">$</span><span style="font-weight: bold;">over</span><span style="color: #BBBB00;">(</span><span style="color: #00AFAF;">"am"</span><span style="color: #BBBB00;">)</span><span style="color: #949494;">)$</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">with_columns</span><span style="color: #949494;">(</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     mpg2_max = pl<span style="color: #949494;">$</span><span style="font-weight: bold;">when</span><span style="color: #BBBB00;">(</span>pl<span style="color: #949494;">$</span><span style="font-weight: bold;">col</span><span style="color: #0000BB;">(</span><span style="color: #00AFAF;">"mpg2"</span><span style="color: #0000BB;">)</span><span style="color: #949494;">$</span><span style="font-weight: bold;">has_nulls</span><span style="color: #0000BB;">()</span><span style="color: #BBBB00;">)</span><span style="color: #949494;">$</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       <span style="font-weight: bold;">then</span><span style="color: #BBBB00;">(</span><span style="color: #D75FAF;">NA</span><span style="color: #BBBB00;">)</span><span style="color: #949494;">$</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       <span style="font-weight: bold;">otherwise</span><span style="color: #BBBB00;">(</span>pl<span style="color: #949494;">$</span><span style="font-weight: bold;">col</span><span style="color: #0000BB;">(</span><span style="color: #00AFAF;">"mpg2"</span><span style="color: #0000BB;">)</span><span style="color: #949494;">$</span><span style="font-weight: bold;">max</span><span style="color: #0000BB;">()</span><span style="color: #BBBB00;">)</span><span style="color: #949494;">$</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">as_polars_lf</span><span style="color: #D7AF00;">(</span>mtcars<span style="color: #D7AF00;">)$</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">filter</span><span style="color: #D7AF00;">(</span>pl<span style="color: #D7AF00;">$</span><span style="font-weight: bold;">col</span><span style="color: #BBBB00;">(</span><span style="color: #00AFAF;">"cyl"</span><span style="color: #BBBB00;">)</span> <span style="color: #D7AF00;">==</span> pl<span style="color: #D7AF00;">$</span><span style="font-weight: bold;">lit</span><span style="color: #BBBB00;">(</span><span style="color: #D75FAF;">4</span><span style="color: #BBBB00;">)</span><span style="color: #D7AF00;">)$</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">with_columns</span><span style="color: #D7AF00;">(</span>mpg2 = <span style="color: #BBBB00;">(</span>pl<span style="color: #D7AF00;">$</span><span style="font-weight: bold;">col</span><span style="color: #0000BB;">(</span><span style="color: #00AFAF;">"mpg"</span><span style="color: #0000BB;">)</span> <span style="color: #D7AF00;">*</span> pl<span style="color: #D7AF00;">$</span><span style="font-weight: bold;">lit</span><span style="color: #0000BB;">(</span><span style="color: #D75FAF;">2</span><span style="color: #0000BB;">)</span><span style="color: #BBBB00;">)</span><span style="color: #D7AF00;">$</span><span style="font-weight: bold;">over</span><span style="color: #BBBB00;">(</span><span style="color: #00AFAF;">"am"</span><span style="color: #BBBB00;">)</span><span style="color: #D7AF00;">)$</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-weight: bold;">with_columns</span><span style="color: #D7AF00;">(</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     mpg2_max = pl<span style="color: #D7AF00;">$</span><span style="font-weight: bold;">when</span><span style="color: #BBBB00;">(</span>pl<span style="color: #D7AF00;">$</span><span style="font-weight: bold;">col</span><span style="color: #0000BB;">(</span><span style="color: #00AFAF;">"mpg2"</span><span style="color: #0000BB;">)</span><span style="color: #D7AF00;">$</span><span style="font-weight: bold;">has_nulls</span><span style="color: #0000BB;">()</span><span style="color: #BBBB00;">)</span><span style="color: #D7AF00;">$</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       <span style="font-weight: bold;">then</span><span style="color: #BBBB00;">(</span><span style="color: #D75FAF;">NA</span><span style="color: #BBBB00;">)</span><span style="color: #D7AF00;">$</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       <span style="font-weight: bold;">otherwise</span><span style="color: #BBBB00;">(</span>pl<span style="color: #D7AF00;">$</span><span style="font-weight: bold;">col</span><span style="color: #0000BB;">(</span><span style="color: #00AFAF;">"mpg2"</span><span style="color: #0000BB;">)</span><span style="color: #D7AF00;">$</span><span style="font-weight: bold;">max</span><span style="color: #0000BB;">()</span><span style="color: #BBBB00;">)</span><span style="color: #D7AF00;">$</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       <span style="font-weight: bold;">over</span><span style="color: #BBBB00;">(</span><span style="color: #00AFAF;">"am"</span><span style="color: #BBBB00;">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494;">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #D7AF00;">)</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

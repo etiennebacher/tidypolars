@@ -11,17 +11,6 @@ will error with an informative message. It can be enabled with
 `options(tidypolars_record_query = TRUE)` (see
 [tidypolars_options](https://tidypolars.etiennebacher.com/reference/tidypolars_options.md)).
 
-To keep the output readable and close to hand-written `polars` code, R
-operators are used instead of their method equivalent (e.g. `a$add(b)`
-is shown as `a + b`), and user-defined functions are displayed as a call
-rather than expanded into the operations they perform internally.
-
-Long values coming from the calling environment are referred to by the
-name of the object they come from, so that the printed code stays
-copy-pasteable. Values that are too long to display and are not bound to
-a name, such as a long inline vector, are shown as a placeholder like
-`` `<numeric of length 200>` ``.
-
 ## Usage
 
 ``` r
@@ -40,12 +29,34 @@ show_query(x, ...)
 
 - ...:
 
-  Not used.
+  Dots which should be empty.
 
 ## Value
 
 The input, invisibly. This function is called for its side effect of
 printing the polars query.
+
+## Details
+
+To keep the output readable and close to hand-written `polars` code, R
+operators are used instead of their method equivalent (e.g. `a$add(b)`
+is shown as `a + b`), and user-defined functions are displayed as a call
+rather than expanded into the operations they perform internally.
+
+Long values coming from the calling environment are referred to by the
+code they come from – the name of the object holding them, or the call
+that produced them, e.g. `pl$lit(runif(200))` – so that the printed code
+stays copy-pasteable. Values that are too long to display and whose
+source code cannot be recovered are shown as a placeholder like
+`` `<numeric of length 200>` ``.
+
+The code is wrapped at the console width (`getOption("width")`).
+
+If the package `cli` is installed, it provides syntax highlighting for
+the output. This can be controlled with `options(cli.code_theme = )`
+(see
+[`cli::code_theme_list()`](https://cli.r-lib.org/reference/code_theme_list.html)
+for the available themes).
 
 ## Examples
 
