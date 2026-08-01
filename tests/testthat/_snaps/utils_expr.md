@@ -19,16 +19,30 @@
 # missing variables in ranges produce errors
 
     Code
-      translate_in_caller(rlang::expr(x %in% missing_lower:4))
+      mutate(test_pl, in_range = x %in% missing_lower:4)
     Condition
-      Error:
+      Error in `mutate()`:
+      ! Error while translating `x %in% missing_lower:4`.
+      Caused by error:
       ! object 'missing_lower' not found
 
 ---
 
     Code
-      translate_in_caller(rlang::expr(x %notin% missing_lower:4))
+      mutate(test_pl, in_range = x %notin% missing_lower:4)
     Condition
-      Error:
+      Error in `mutate()`:
+      ! Error while translating `x %notin% missing_lower:4`.
+      Caused by error:
+      ! object 'missing_lower' not found
+
+---
+
+    Code
+      filter(test_pl, x %in% missing_lower:4)
+    Condition
+      Error in `filter()`:
+      ! Error while translating `x %in% missing_lower:4`.
+      Caused by error:
       ! object 'missing_lower' not found
 

@@ -63,21 +63,17 @@ test_that("error messages when error in known function is good", {
 
 test_that("missing variables in ranges produce errors", {
   test_pl <- as_polars_df(tibble(x = 1:5))
-  translate_in_caller <- function(expr) {
-    translate_expr(
-      test_pl,
-      expr,
-      env = rlang::current_env(),
-      caller = rlang::current_env()
-    )
-  }
 
   expect_snapshot(
-    translate_in_caller(rlang::expr(x %in% missing_lower:4)),
+    test_pl |> mutate(in_range = x %in% missing_lower:4),
     error = TRUE
   )
   expect_snapshot(
-    translate_in_caller(rlang::expr(x %notin% missing_lower:4)),
+    test_pl |> mutate(in_range = x %notin% missing_lower:4),
+    error = TRUE
+  )
+  expect_snapshot(
+    test_pl |> filter(x %in% missing_lower:4),
     error = TRUE
   )
 })
