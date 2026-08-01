@@ -10,19 +10,28 @@
 #' error with an informative message. It can be enabled with
 #' `options(tidypolars_record_query = TRUE)` (see [tidypolars_options]).
 #'
+#' @param x A Polars Data/LazyFrame that went through `tidypolars` functions.
+#' @inheritParams rlang::check_dots_empty0
+#'
+#' @details
+#'
 #' To keep the output readable and close to hand-written `polars` code, R
 #' operators are used instead of their method equivalent (e.g. `a$add(b)` is
 #' shown as `a + b`), and user-defined functions are displayed as a call
 #' rather than expanded into the operations they perform internally.
 #'
-#' Long values coming from the calling environment are referred to by the name
-#' of the object they come from, so that the printed code stays copy-pasteable.
-#' Values that are too long to display and are not bound to a name, such as a
-#' long inline vector, are shown as a placeholder like
+#' Long values coming from the calling environment are referred to by the code
+#' they come from -- the name of the object holding them, or the call that
+#' produced them, e.g. `pl$lit(runif(200))` -- so that the printed code stays
+#' copy-pasteable. Values that are too long to display and whose source code
+#' cannot be recovered are shown as a placeholder like
 #' `` `<numeric of length 200>` ``.
 #'
-#' @param x A Polars Data/LazyFrame that went through `tidypolars` functions.
-#' @param ... Not used.
+#' The code is wrapped at the console width (`getOption("width")`).
+#'
+#' If the package `cli` is installed, it provides syntax highlighting for the output.
+#' This can be controlled with `options(cli.code_theme = )` (see [cli::code_theme_list()]
+#' for the available themes).
 #'
 #' @return The input, invisibly. This function is called for its side effect
 #' of printing the polars query.
@@ -41,8 +50,17 @@
 #'     show_query()
 #' )
 show_query.polars_data_frame <- function(x, ...) {
+  check_dots_empty()
   text <- tp_query_text(x)
   if (is.null(text)) {
+    if (query_recording_enabled()) {
+      cli_abort(
+        c(
+          "No {.pkg polars} query was recorded for this object because it didn't go through {.pkg tidypolars} functions.",
+          "i" = "Recording only starts when a {.pkg tidypolars} function is applied to the data."
+        )
+      )
+    }
     cli_abort(
       c(
         "No {.pkg polars} query was recorded for this object because the option {.code tidypolars_record_query} is {.code FALSE}.",
@@ -159,13 +177,15 @@ tp_recorder$skip_next <- FALSE
 
 # `pl` defined here shadows the one imported from polars everywhere in the
 # package, so that expressions built internally (e.g. in funs-*.R) record
-# their own code. When recording is disabled this only costs one extra
-# environment lookup.
+# their own code.
 pl <- structure(new.env(parent = emptyenv()), class = "tidypolars_pl")
 
 #' @export
 `$.tidypolars_pl` <- function(x, name) {
-  member <- eval_bare(call2("$", expr(polars::pl), sym(name)))
+  # `[[` is used instead of `$` because it skips the `$.polars_object` dispatch.
+  # We fall back to the eval_bare() to get the proper polars error message if `name`
+  # isn't present in pl.
+  member <- polars::pl[[name]]
   if (tp_recorder$skip_next) {
     tp_recorder$skip_next <- FALSE
     return(member)
@@ -269,6 +289,7 @@ record_udf_query <- function(out, fn_name, args) {
       n <- length(args)
       nms <- names(args) %||% character(n)
       nms[is.na(nms)] <- ""
+      nms <- quote_arg_names(nms)
       dep <- vapply(args, deparse_query_arg, character(1))
       pieces <- ifelse(nms == "", dep, paste0(nms, " = ", dep))
       paste0(fn_name, "(", paste(pieces, collapse = ", "), ")")
@@ -286,11 +307,9 @@ record_udf_query <- function(out, fn_name, args) {
   tag_polars(out, text)
 }
 
-# Refer to a constant by the name of the caller-environment object it came
-# from, but only when its value is too long to display faithfully: short
-# values are clearer shown literally, and long ones would otherwise become an
-# unusable placeholder like `` `<numeric of length 200>` ``.
-record_named_literal <- function(out, name, value) {
+# Refer to a constant by the code it was written as (the name of a caller
+# environment object, or the call that produced it, e.g. `runif(200)`).
+record_source_literal <- function(out, expr, value) {
   if (!query_recording_enabled() || !inherits(out, "tp_recorded")) {
     return(out)
   }
@@ -299,8 +318,26 @@ record_named_literal <- function(out, name, value) {
   if (!startsWith(deparse_query_arg(value), "`<")) {
     return(out)
   }
-  attr(out, "tp_query") <- paste0("pl$lit(", name, ")")
+  src <- safe_deparse(expr)
+  if (is.null(src) || length(src) != 1 || nchar(src) > 80) {
+    return(out)
+  }
+  attr(out, "tp_query") <- paste0("pl$lit(", src, ")")
   out
+}
+
+# Argument names that aren't syntactic must be backquoted, otherwise the
+# printed code doesn't parse: tidypolars builds columns whose name is a number
+# (`$rename(4.0 = "4")` in pivot_wider()) or starts with an underscore
+# (`$group_by(__tidypolars_grp__ = ...)` in count()).
+quote_arg_names <- function(nms) {
+  to_quote <- nzchar(nms) & nms != make.names(nms)
+  nms[to_quote] <- paste0(
+    "`",
+    gsub("`", "\\`", nms[to_quote], fixed = TRUE),
+    "`"
+  )
+  nms
 }
 
 # Capture the arguments of a call and return them as a single string, e.g.
@@ -323,6 +360,7 @@ deparse_query_dots <- function(...) {
     }
     nms <- names(args) %||% character(n)
     nms[is.na(nms)] <- ""
+    nms <- quote_arg_names(nms)
     dep <- vapply(
       seq_len(n),
       \(i) {
@@ -335,22 +373,16 @@ deparse_query_dots <- function(...) {
   }
 
   # dots_list() errored, e.g. because forcing a forwarded argument failed:
-  # fall back to forcing each element individually.
+  # fall back to forcing each element individually. `...elt()` errors on the
+  # arguments that cannot be forced, including the missing ones, and those are
+  # displayed as empty.
   n <- ...length()
-  if (n == 0) {
-    return("")
-  }
   nms <- ...names() %||% character(n)
   nms[is.na(nms)] <- ""
+  nms <- quote_arg_names(nms)
   out <- character(n)
   for (i in seq_len(n)) {
-    dep <- tryCatch(
-      {
-        val <- ...elt(i)
-        if (missing(val)) "" else deparse_query_arg(val)
-      },
-      error = function(e) ""
-    )
+    dep <- tryCatch(deparse_query_arg(...elt(i)), error = function(e) "")
     out[i] <- if (nms[i] == "") dep else paste0(nms[i], " = ", dep)
   }
   paste(out, collapse = ", ")
@@ -365,14 +397,30 @@ deparse_query_arg <- function(x) {
     "`<polars object>`"
   } else if (is.environment(x)) {
     "`<environment>`"
+  } else if (inherits(x, "S7_object")) {
+    # Ensure that the S7 object is printed identically in R < 4.4 and R >= 4.4
+    paste0("`<", class(x)[1], ">`")
   } else if (is.list(x) && !is.object(x)) {
     inner <- vapply(x, deparse_query_arg, character(1))
     nms <- names(x) %||% character(length(x))
     nms[is.na(nms)] <- ""
+    nms <- quote_arg_names(nms)
     inner <- ifelse(nms == "", inner, paste0(nms, " = ", inner))
     paste0("list(", paste(inner, collapse = ", "), ")")
+  } else if (is_plain_data_frame(x)) {
+    deparse_data_frame(x)
   } else if (is.atomic(x) && length(x) > 100) {
-    paste0("`<", class(x)[1], " of length ", length(x), ">`")
+    # A long vector is usually unreadable when deparsed, but some deparse
+    # compactly (a sequence gives `1:200`), and then the literal is exact,
+    # copy-pasteable and shorter than the placeholder. `nlines` bounds the
+    # work: needing a second line already means too long to display, so a
+    # vector of any size costs a couple of lines of deparsing at most.
+    dep <- deparse(x, width.cutoff = 500L, nlines = 2L)
+    if (length(dep) == 1L && nchar(dep) <= 300L) {
+      dep
+    } else {
+      paste0("`<", class(x)[1], " of length ", length(x), ">`")
+    }
   } else {
     attr(x, "tp_query") <- NULL
     dep <- deparse1(x)
@@ -385,6 +433,30 @@ deparse_query_arg <- function(x) {
     }
     dep
   }
+}
+
+# A data.frame that a `data.frame()` call rebuilds exactly: no subclass (a
+# tibble prints differently), no extra attribute and automatic row names.
+# Anything else keeps the faithful `structure()` deparse.
+is_plain_data_frame <- function(x) {
+  inherits(x, "data.frame") &&
+    setequal(names(attributes(x)), c("names", "row.names", "class")) &&
+    .row_names_info(x) < 0
+}
+
+# deparse() renders a data.frame as `structure(list(...), row.names = ...,
+# class = "data.frame")`, which is correct but unreadable in a query. Rebuild
+# the `data.frame()` call instead. `pivot_wider()` passes one as the
+# `on_columns` argument of `$pivot()`, which polars requires on a LazyFrame.
+deparse_data_frame <- function(x) {
+  nms <- names(x) %||% character(length(x))
+  cols <- vapply(x, deparse_query_arg, character(1))
+  args <- paste0(quote_arg_names(nms), " = ", cols)
+  if (!identical(nms, make.names(nms, unique = TRUE))) {
+    # data.frame() would mangle the names that aren't syntactic.
+    args <- c(args, "check.names = FALSE")
+  }
+  paste0("data.frame(", paste(args, collapse = ", "), ")")
 }
 
 # Whether `text` parses as valid R code.
@@ -470,10 +542,11 @@ rewrite_op_node <- function(node) {
     rhs <- rewrite_op_node(node[[2]])
     return(call(op, lhs, rhs))
   }
-  for (i in seq_along(node)) {
-    node[[i]] <- rewrite_op_node(node[[i]])
+  parts <- as.list(node)
+  for (i in seq_along(parts)) {
+    parts[i] <- list(rewrite_op_node(parts[[i]]))
   }
-  node
+  as.call(parts)
 }
 
 # Return the R operator for a `lhs$method(rhs)` node whose method is a known
@@ -515,7 +588,11 @@ match_binary_op <- function(node) {
 #   inline.
 # ------------------------------------------------------------------------
 
-tp_query_width <- 80L
+# Width the printed query is wrapped at. Follows the console, like every other
+# printing function; `options()` already keeps `width` in [10, 10000].
+tp_query_width <- function() {
+  getOption("width", 80L)
+}
 
 format_polars_query <- function(text) {
   text <- rewrite_query_operators(text)
@@ -545,8 +622,10 @@ highlight_query <- function(text) {
   # but not others, e.g. `$with_columns()`. Disable all links to keep syntax
   # highlighting consistent.
   local_options(cli.hyperlink_help = FALSE)
+  # No `code_theme`, so cli resolves it itself: `cli.code_theme` if the user set
+  # one, the RStudio editor theme in RStudio, "Solarized Dark" in a terminal.
   out <- tryCatch(
-    cli::code_highlight(lines, code_theme = "Solarized Light"),
+    cli::code_highlight(lines),
     error = function(e) lines
   )
   paste(out, collapse = "\n")
@@ -574,7 +653,7 @@ split_chain_merged <- function(text) {
 # chain of method calls. The first line is placed by the caller, so only
 # continuation lines get the indent.
 format_query_value <- function(text, indent) {
-  if (indent + nchar(text) <= tp_query_width) {
+  if (indent + nchar(text) <= tp_query_width()) {
     return(text)
   }
   parts <- split_chain_merged(text)
@@ -692,7 +771,7 @@ format_call_segment <- function(part, indent, force_explode) {
   # arguments (named ones, or nested expressions like `pl$col("a")`) benefit
   # from that. A call made solely of plain unnamed values, e.g.
   # `select("a", "b")`, stays inline as long as it fits on the line.
-  too_long <- indent + nchar(part) > tp_query_width
+  too_long <- indent + nchar(part) > tp_query_width()
   explode <- too_long ||
     (force_explode &&
       length(commas) > 0 &&
@@ -728,7 +807,7 @@ format_call_segment <- function(part, indent, force_explode) {
 }
 
 # Pack plain arguments so that each line holds as many comma-separated values
-# as fit within `tp_query_width`, instead of one value per line. Returns the
+# as fit within `tp_query_width()`, instead of one value per line. Returns the
 # lines without their leading indentation (`indent` is only used to measure the
 # available width) and without trailing commas: those are added by the caller
 # when the lines are joined.
@@ -745,7 +824,7 @@ fill_query_args <- function(args, indent) {
     }
     if (
       current != "" &&
-        indent + nchar(candidate) + trailing_comma > tp_query_width
+        indent + nchar(candidate) + trailing_comma > tp_query_width()
     ) {
       lines <- c(lines, current)
       current <- piece

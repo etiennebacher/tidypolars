@@ -19,8 +19,12 @@
 
 drop_na.polars_data_frame <- function(data, ...) {
   data <- tag_frame(data, substitute(data))
-  vars <- tidyselect_dots(data, ...) %||% cs$all()
-  out <- data$drop_nulls(!!!c(vars))
+  vars <- tidyselect_dots(data, ...)
+  out <- if (is.null(vars)) {
+    data$drop_nulls()
+  } else {
+    data$drop_nulls(!!!vars)
+  }
   add_tidypolars_class(out)
 }
 

@@ -271,7 +271,7 @@ translate <- function(
         # would otherwise be displayed as an unusable truncated placeholder
         # (e.g. a long vector). The name is both clearer and copy-pasteable
         # since the object lives in the caller environment.
-        record_named_literal(polars_constant(val), expr_char, val)
+        record_source_literal(polars_constant(val), expr, val)
       }
     },
     language = {
@@ -476,7 +476,7 @@ translate <- function(
                 caller = caller,
                 expr_uses_col = expr_uses_col
               ) |>
-                as_polars_expr(as_lit = TRUE)
+                as_lit_expr()
               rhs <- translate(
                 expr[[3]],
                 .data = .data,
@@ -485,7 +485,7 @@ translate <- function(
                 caller = caller,
                 expr_uses_col = expr_uses_col
               ) |>
-                as_polars_expr(as_lit = TRUE)
+                as_lit_expr()
               if (is.list(rhs)) {
                 rhs <- unlist(rhs)
               }
@@ -507,7 +507,7 @@ translate <- function(
                 caller = caller,
                 expr_uses_col = expr_uses_col
               ) |>
-                as_polars_expr(as_lit = TRUE)
+                as_lit_expr()
               rhs <- translate(
                 expr[[3]],
                 .data = .data,
@@ -516,7 +516,7 @@ translate <- function(
                 caller = caller,
                 expr_uses_col = expr_uses_col
               ) |>
-                as_polars_expr(as_lit = TRUE)
+                as_lit_expr()
               if (is.list(rhs)) {
                 rhs <- unlist(rhs)
               }
@@ -673,7 +673,7 @@ translate <- function(
           # must be called only in summarize(), etc.
           out <- try(eval_bare(expr, env = caller), silent = TRUE)
           if (!inherits(out, "try-error")) {
-            return(polars_constant(out))
+            return(record_source_literal(polars_constant(out), expr, out))
           }
         }
       }
@@ -769,7 +769,13 @@ translate <- function(
               })
               if (all_literal) {
                 r_result <- call2(name, !!!r_args) |> eval_bare()
-                return(polars_constant(r_result))
+                return(
+                  record_source_literal(
+                    polars_constant(r_result),
+                    expr,
+                    r_result
+                  )
+                )
               }
             }
             out <- call2(name, !!!args) |> eval_bare(env = caller)
@@ -1099,6 +1105,16 @@ polars_constant <- function(x) {
   out <- pl$lit(x)
   attr(out, "original_value") <- x
   out
+}
+
+# Needed for show_query(): virtually the same as `as_polars_expr(x, as_lit = TRUE)`
+# for non-polars objects but uses `$.tidypolars` so that we can record the call.
+as_lit_expr <- function(x) {
+  if (inherits(x, "polars_object")) {
+    as_polars_expr(x, as_lit = TRUE)
+  } else {
+    pl$lit(x)
+  }
 }
 
 # When we translate components of a call, we cannot tell in advance what should
