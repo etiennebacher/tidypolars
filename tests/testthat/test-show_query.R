@@ -258,6 +258,113 @@ test_that("option tidypolars_record_query = FALSE disables the recording", {
   expect_snapshot(show_query(query), error = TRUE)
 })
 
+test_that("the input name falls back to a placeholder when it is too long", {
+  query <- data.frame(
+    x = 1,
+    y = 2,
+    zzzz = 3,
+    aaaa = 4,
+    bbbb = 5,
+    cccc = 6,
+    dddd = 7
+  ) |>
+    as_polars_df() |>
+    filter(x == 1)
+
+  expect_snapshot(show_query(query))
+})
+
+test_that("polars objects built outside tidypolars are shown as a placeholder", {
+  skip_if(Sys.getenv('TIDYPOLARS_TEST') == "TRUE")
+  query <- mtcars |>
+    as_polars_lf() |>
+    filter(cyl == 4)
+
+  out <- query$collect(
+    optimizations = polars::pl$QueryOptFlags(predicate_pushdown = FALSE)
+  )
+
+  expect_snapshot(show_query(out))
+})
+
+test_that("data.frame arguments with non-syntactic names are rebuilt faithfully", {
+  dat <- data.frame(id = c(1, 1), k = c("a", "b"), v = c(10, 20))
+  names(dat)[2] <- "my col"
+
+  query <- as_polars_df(dat) |>
+    pivot_wider(names_from = `my col`, values_from = v)
+
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("long vectors that deparse compactly are kept in the query", {
+  query <- mtcars |>
+    as_polars_df() |>
+    mutate(foo = mpg %in% 1:200)
+
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("values too long to display fall back to the code producing them", {
+  query <- as_polars_df(data.frame(txt = "a")) |>
+    filter(txt == strrep("a", 400))
+
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("the source of a value is only used when it is short enough", {
+  this_is_an_extremely_long_object_name_used_to_exceed_the_eighty_character_limit_ok <- runif(
+    200
+  )
+
+  query <- mtcars |>
+    as_polars_df() |>
+    mutate(
+      foo = mpg %in%
+        this_is_an_extremely_long_object_name_used_to_exceed_the_eighty_character_limit_ok
+    )
+
+  expect_snapshot(show_query(query))
+})
+
+test_that("the query is syntax highlighted when the console supports colors", {
+  withr::local_options(cli.num_colors = 256)
+
+  query <- mtcars |>
+    as_polars_df() |>
+    filter(cyl == 4)
+
+  expect_true(
+    any(grepl("\033[", capture.output(show_query(query)), fixed = TRUE))
+  )
+})
+
+test_that("arguments that don't fit on a line are wrapped too", {
+  query <- mtcars |>
+    as_polars_df() |>
+    mutate(z = (mpg - mean(mpg)) / sd(mpg))
+
+  expect_snapshot(
+    withr::with_options(list(width = 30), show_query(query))
+  )
+  expect_equal(replay_query(query), query)
+})
+
+test_that("a long value that is not a method call is left on its own line", {
+  long_txt <- paste(rep("ab", 60), collapse = "")
+
+  query <- as_polars_df(data.frame(txt = "x")) |>
+    filter(txt == long_txt)
+
+  expect_snapshot(
+    withr::with_options(list(width = 40), show_query(query))
+  )
+  expect_equal(replay_query(query), query)
+})
+
 # Test code from vignettes and examples
 
 test_that("vignette 'Getting started': who pipeline", {

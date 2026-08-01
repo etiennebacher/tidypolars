@@ -322,6 +322,119 @@
       i Run `options(tidypolars_record_query = TRUE)` and re-run your query to show the equivalent polars code.
       i More info with `?tidypolars_options`.
 
+# the input name falls back to a placeholder when it is too long
+
+    Code
+      show_query(query)
+    Output
+      `<data>`$filter(pl$col("x") == pl$lit(1))
+
+# `pl$` gives the polars error message for unknown members
+
+    Code
+      pl$this_does_not_exist
+    Condition
+      Error in `polars::pl$this_does_not_exist`:
+      ! $ - syntax error: `this_does_not_exist` is not a member of this polars object
+
+# polars objects built outside tidypolars are shown as a placeholder
+
+    Code
+      show_query(out)
+    Output
+      as_polars_lf(mtcars)$
+        filter(pl$col("cyl") == pl$lit(4))$
+        collect(optimizations = `<polars::QueryOptFlags>`)
+
+# data.frame arguments with non-syntactic names are rebuilt faithfully
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(dat)$
+        pivot(
+          values = "v",
+          on = "my col",
+          on_columns = data.frame(`my col` = c("a", "b"), check.names = FALSE),
+          index = "id",
+          separator = "_"
+        )$
+        rename(
+          a = "a",
+          b = "b"
+        )
+
+# long vectors that deparse compactly are kept in the query
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          foo = pl$col("mpg")$is_in(pl$lit(1:200)$implode(), nulls_equal = TRUE)
+        )
+
+# values too long to display fall back to the code producing them
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(data.frame(txt = "a"))$
+        filter(pl$col("txt") == pl$lit(strrep("a", 400)))
+
+# the source of a value is only used when it is short enough
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          foo = pl$col("mpg")$
+            is_in(pl$lit(`<numeric of length 200>`)$implode(), nulls_equal = TRUE)
+        )
+
+# arguments that don't fit on a line are wrapped too
+
+    Code
+      withr::with_options(list(width = 30), show_query(query))
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          z = (
+            pl$col("mpg") - pl$
+              when(
+                pl$col("mpg")$
+                  has_nulls()
+              )$
+              then(NA)$
+              otherwise(
+                pl$col("mpg")$mean()
+              )
+          )/pl$
+            when(
+              pl$col("mpg")$
+                has_nulls()
+            )$
+            then(NA)$
+            otherwise(
+              pl$col("mpg")$
+                std(ddof = 1)
+            )
+        )
+
+# a long value that is not a method call is left on its own line
+
+    Code
+      withr::with_options(list(width = 40), show_query(query))
+    Output
+      as_polars_df(data.frame(txt = "x"))$
+        filter(
+          pl$col("txt") == pl$
+            lit(
+              "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
+            )
+        )
+
 # vignette 'Getting started': who pipeline
 
     Code

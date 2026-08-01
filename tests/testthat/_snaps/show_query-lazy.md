@@ -463,6 +463,194 @@
       i Run `options(tidypolars_record_query = TRUE)` and re-run your query to show the equivalent polars code.
       i More info with `?tidypolars_options`.
 
+# the input name falls back to a placeholder when it is too long
+
+    Code
+      current$collect()
+    Output
+      `<data>`$filter(pl$col("x") == pl$lit(1))
+      shape: (1, 7)
+      ┌─────┬─────┬──────┬──────┬──────┬──────┬──────┐
+      │ x   ┆ y   ┆ zzzz ┆ aaaa ┆ bbbb ┆ cccc ┆ dddd │
+      │ --- ┆ --- ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  │
+      │ f64 ┆ f64 ┆ f64  ┆ f64  ┆ f64  ┆ f64  ┆ f64  │
+      ╞═════╪═════╪══════╪══════╪══════╪══════╪══════╡
+      │ 1.0 ┆ 2.0 ┆ 3.0  ┆ 4.0  ┆ 5.0  ┆ 6.0  ┆ 7.0  │
+      └─────┴─────┴──────┴──────┴──────┴──────┴──────┘
+
+# `pl$` gives the polars error message for unknown members
+
+    Code
+      current$collect()
+    Condition
+      Error in `polars::pl$this_does_not_exist`:
+      ! $ - syntax error: `this_does_not_exist` is not a member of this polars object
+
+# data.frame arguments with non-syntactic names are rebuilt faithfully
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(dat)$
+        pivot(
+          values = "v",
+          on = "my col",
+          on_columns = data.frame(`my col` = c("a", "b"), check.names = FALSE),
+          index = "id",
+          separator = "_"
+        )$
+        rename(
+          a = "a",
+          b = "b"
+        )
+      shape: (1, 3)
+      ┌─────┬──────┬──────┐
+      │ id  ┆ a    ┆ b    │
+      │ --- ┆ ---  ┆ ---  │
+      │ f64 ┆ f64  ┆ f64  │
+      ╞═════╪══════╪══════╡
+      │ 1.0 ┆ 10.0 ┆ 20.0 │
+      └─────┴──────┴──────┘
+
+# long vectors that deparse compactly are kept in the query
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(mtcars)$
+        with_columns(
+          foo = pl$col("mpg")$is_in(pl$lit(1:200)$implode(), nulls_equal = TRUE)
+        )
+      shape: (32, 12)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ foo   │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---   │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ bool  │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═══════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ true  │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ true  │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ false │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ false │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ false │
+      │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …     │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ false │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ false │
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ false │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ true  │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ false │
+      └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────┘
+
+# values too long to display fall back to the code producing them
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(data.frame(txt = "a"))$
+        filter(pl$col("txt") == pl$lit(strrep("a", 400)))
+      shape: (0, 1)
+      ┌─────┐
+      │ txt │
+      │ --- │
+      │ str │
+      ╞═════╡
+      └─────┘
+
+# the source of a value is only used when it is short enough
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(mtcars)$
+        with_columns(
+          foo = pl$col("mpg")$
+            is_in(pl$lit(`<numeric of length 200>`)$implode(), nulls_equal = TRUE)
+        )
+      shape: (32, 12)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ foo   │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---   │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ bool  │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═══════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ false │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ false │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ false │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ false │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ false │
+      │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …     │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ false │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ false │
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ false │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ false │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ false │
+      └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────┘
+
+# arguments that don't fit on a line are wrapped too
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(mtcars)$
+        with_columns(
+          z = (
+            pl$col("mpg") - pl$
+              when(
+                pl$col("mpg")$
+                  has_nulls()
+              )$
+              then(NA)$
+              otherwise(
+                pl$col("mpg")$mean()
+              )
+          )/pl$
+            when(
+              pl$col("mpg")$
+                has_nulls()
+            )$
+            then(NA)$
+            otherwise(
+              pl$col("mpg")$
+                std(ddof = 1)
+            )
+        )
+      shape: (32, 12)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ z         │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---       │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ f64       │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═══════════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 0.150885  │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 0.150885  │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 0.449543  │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ 0.217253  │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ -0.230735 │
+      │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …         │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ 1.710547  │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ -0.711907 │
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ -0.064813 │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ -0.844644 │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ 0.217253  │
+      └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────────┘
+
+# a long value that is not a method call is left on its own line
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(data.frame(txt = "x"))$
+        filter(
+          pl$col("txt") == pl$
+            lit(
+              "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
+            )
+        )
+      shape: (0, 1)
+      ┌─────┐
+      │ txt │
+      │ --- │
+      │ str │
+      ╞═════╡
+      └─────┘
+
 # vignette 'Getting started': who pipeline
 
     Code
