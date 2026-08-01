@@ -18,6 +18,7 @@ original functions and of their translation by `tidypolars`.
 | `base` | `acosh` |  |
 | `base` | `all` |  |
 | `base` | `any` |  |
+| `base` | `anyDuplicated` |  |
 | `base` | `anyNA` |  |
 | `base` | `asin` |  |
 | `base` | `asinh` |  |
@@ -35,6 +36,7 @@ original functions and of their translation by `tidypolars`.
 | `base` | `cummax` |  |
 | `base` | `cumsum` |  |
 | `base` | `diff` |  |
+| `base` | `duplicated` |  |
 | `base` | `exp` |  |
 | `base` | `floor` |  |
 | `base` | `grepl` |  |
