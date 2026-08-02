@@ -30,7 +30,7 @@
       mutate(test_pl, foo = str_pad(x6, width = 10, use_width = FALSE))
     Condition
       Error in `mutate()`:
-      ! `str_pad()` doesn't work with a Polars object when `use_width = FALSE`
+      ! `str_pad()` doesn't work with a Polars object when `use_width = FALSE`.
 
 ---
 
