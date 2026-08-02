@@ -537,13 +537,27 @@ translate <- function(
         ### stringr functions
         "stringr::fixed" = ,
         "fixed" = {
-          out <- expr[[2]]
+          out <- translate(
+            expr[[2]],
+            .data = .data,
+            new_vars = new_vars,
+            env = env,
+            caller = caller,
+            expr_uses_col = expr_uses_col
+          )
           attr(out, "stringr_attr") <- "fixed"
           return(out)
         },
         "stringr::regex" = ,
         "regex" = {
-          out <- select_by_name_or_position(expr, "pattern", 1, env = env)
+          out <- translate(
+            select_by_name_or_position(expr, "pattern", 1, env = env),
+            .data = .data,
+            new_vars = new_vars,
+            env = env,
+            caller = caller,
+            expr_uses_col = expr_uses_col
+          )
           case_insensitive <- select_by_name_or_position(
             expr,
             "ignore_case",
@@ -551,6 +565,14 @@ translate <- function(
             default = FALSE,
             env = env
           )
+          if (is.language(case_insensitive)) {
+            case_insensitive <- tryCatch(
+              eval_tidy(case_insensitive, env = caller),
+              error = function(e) {
+                cli_abort(e$message, call = env)
+              }
+            )
+          }
           names_expr <- names(expr)
           unexpected_names <- setdiff(
             names_expr[names_expr != ""],

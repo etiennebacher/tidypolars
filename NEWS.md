@@ -12,6 +12,13 @@
 
 ## Bug fixes
 
+* Multiple fixes to improve compatibility with `stringr` for the following functions:
+  `fixed()`, `regex()`, `str_extract_all()`, `str_pad()`, `str_split()`, `str_split_i()`,
+  `str_trunc()`, `word()`. (#384)
+
+* `grepl()` now returns `FALSE` for `NA` inputs, like base R (it used to return `NA`)
+  (#384).
+
 * R expressions using `:` now resolve local variables from the calling environment (#381, @Yousa-Mirage).
 
 * Fix `where()` when nested in `c()` or interacting with various boolean operators

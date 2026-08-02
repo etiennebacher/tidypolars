@@ -149,6 +149,12 @@ test_that("pad functions work", {
     mutate(test_pl, foo = str_pad(x6, width = 10, use_width = FALSE)),
     "doesn't work with a Polars object"
   )
+
+  # Polars only accepts a single fill character
+  expect_error_lazy(
+    mutate(test_pl, foo = str_pad(x6, width = 10, pad = c("*", "-"))),
+    "`pad` has a length greater than 1"
+  )
 })
 
 test_that("word functions work", {
@@ -156,8 +162,8 @@ test_that("word functions work", {
   test_pl <- as_polars_lf(test_df)
 
   expect_error_lazy(
-    mutate(test_pl, foo = word(x7, 2, 4)),
-    "out of bounds"
+    mutate(test_pl, foo = word(x7, c(1L, 2L))),
+    "`start` or `end` has a length greater than 1"
   )
 })
 
