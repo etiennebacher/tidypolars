@@ -22,7 +22,7 @@
       mutate(test_pl, foo = str_pad(x6, width = 10, side = "both"))
     Condition
       Error in `mutate()`:
-      ! `str_pad()` doesn't work with a Polars object when `side = "both"`
+      ! `str_pad()` doesn't work with a Polars object when `side = "both"`.
 
 ---
 

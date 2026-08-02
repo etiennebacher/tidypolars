@@ -213,7 +213,7 @@ pl_str_pad_stringr <- function(
   switch(
     side,
     "both" = cli_abort(
-      '{.fn str_pad} doesn\'t work with a Polars object when {.code side = "both"}',
+      '{.fn str_pad} doesn\'t work with a Polars object when {.code side = "both"}.',
       class = "tidypolars_error"
     ),
     # polars and dplyr have the opposite understanding for "side"

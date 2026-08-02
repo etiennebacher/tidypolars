@@ -22,7 +22,7 @@
       current$collect()
     Condition
       Error in `mutate()`:
-      ! `str_pad()` doesn't work with a Polars object when `side = "both"`
+      ! `str_pad()` doesn't work with a Polars object when `side = "both"`.
 
 ---
 
