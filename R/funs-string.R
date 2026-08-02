@@ -179,7 +179,7 @@ pl_str_pad_stringr <- function(
   use_width <- polars_expr_to_r(use_width)
   if (isFALSE(use_width)) {
     cli_abort(
-      "{.fn str_pad} doesn't work with a Polars object when {.code use_width = FALSE}",
+      "{.fn str_pad} doesn't work with a Polars object when {.code use_width = FALSE}.",
       class = "tidypolars_error"
     )
   }
@@ -213,7 +213,7 @@ pl_str_pad_stringr <- function(
   switch(
     side,
     "both" = cli_abort(
-      '{.fn str_pad} doesn\'t work with a Polars object when {.code side = "both"}',
+      '{.fn str_pad} doesn\'t work with a Polars object when {.code side = "both"}.',
       class = "tidypolars_error"
     ),
     # polars and dplyr have the opposite understanding for "side"
