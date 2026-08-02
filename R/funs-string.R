@@ -7,7 +7,9 @@ pl_grepl <- function(pattern, x, ignore.case = FALSE, fixed = FALSE, ...) {
   if (isTRUE(ignore.case)) {
     attr(pattern, "case_insensitive") <- TRUE
   }
-  pl_str_detect_stringr(string = x, pattern = pattern, ...)
+  # Unlike stringr::str_detect(), base R's grepl() returns FALSE (not NA) for
+  # missing inputs
+  pl_str_detect_stringr(string = x, pattern = pattern, ...)$fill_null(FALSE)
 }
 
 pl_gsub <- function(
@@ -138,7 +140,10 @@ pl_str_extract_stringr <- function(string, pattern, group = 0, ...) {
 pl_str_extract_all_stringr <- function(string, pattern, ...) {
   check_empty_dots(...)
   pattern <- check_pattern(pattern)
-  string$str$extract_all(pattern$pattern)
+  out <- string$str$extract_all(pattern$pattern)
+  pl$when(out$is_null())$then(pl$concat_list(pl$lit(NA_character_)))$otherwise(
+    out
+  )
 }
 
 pl_str_length_stringr <- function(string, ...) {
@@ -179,19 +184,30 @@ pl_str_pad_stringr <- function(
     )
   }
 
-  if (length(width) > 1) {
+  if (length(pad) > 1) {
     cli_abort(
-      "{.fn str_pad} doesn't work with a Polars object when `width` has a length greater than 1.",
+      "{.fn str_pad} doesn't work with a Polars object when `pad` has a length greater than 1.",
       class = "tidypolars_error"
     )
   }
 
   # follow stringr::str_pad()
-  if (is.na(width) || is.na(pad)) {
+  if (is.na(pad)) {
     return(pl$lit(NA_character_))
   }
-  if (width <= 0) {
-    return(string)
+
+  if (!is_polars_expr(width) && length(width) == 1) {
+    if (is.na(width)) {
+      return(pl$lit(NA_character_))
+    }
+    if (width <= 0) {
+      return(string)
+    }
+  } else {
+    if (!is_polars_expr(width)) {
+      width <- pl$lit(as.integer(width))
+    }
+    width <- pl$when(width < 0)$then(pl$lit(0L))$otherwise(width)
   }
 
   switch(
@@ -497,20 +513,31 @@ pl_substr <- function(x, start, stop) {
 # https://github.com/pola-rs/polars/issues/13649
 pl_str_split_stringr <- function(string, pattern, ...) {
   check_empty_dots(...)
-  pattern <- polars_expr_to_r(pattern)
-  string$str$split(by = pattern, inclusive = FALSE)
+  pattern <- check_pattern(pattern)
+  out <- string$str$split(
+    by = pattern$pattern,
+    inclusive = FALSE,
+    literal = pattern$is_fixed
+  )
+  pl$when(out$is_null())$then(pl$concat_list(pl$lit(NA_character_)))$otherwise(
+    out
+  )
 }
 
 pl_str_split_i_stringr <- function(string, pattern, i, ...) {
   check_empty_dots(...)
-  pattern <- polars_expr_to_r(pattern)
+  pattern <- check_pattern(pattern)
   i <- polars_expr_to_r(i)
   if (i == 0) {
     cli_abort("{.code i} must not be 0.", call = env_from_dots(...))
   } else if (i >= 1) {
     i <- i - 1
   }
-  string$str$split(by = pattern, inclusive = FALSE)$list$get(
+  string$str$split(
+    by = pattern$pattern,
+    inclusive = FALSE,
+    literal = pattern$is_fixed
+  )$list$get(
     i,
     null_on_oob = TRUE
   )
@@ -579,7 +606,7 @@ pl_str_trunc_stringr <- function(
       )
     )
   }
-  switch(
+  truncated <- switch(
     side,
     "left" = pl$concat_str(
       pl$lit(ellipsis),
@@ -592,6 +619,9 @@ pl_str_trunc_stringr <- function(
     "center" = cli_abort("{.code side = \"center\"} is not supported."),
     cli_abort("{.code side} must be either \"left\" or \"right\".")
   )
+  pl$when(string$str$len_chars() > pl$lit(width))$then(truncated)$otherwise(
+    string
+  )
 }
 
 pl_word_stringr <- function(string, start = 1L, end = start, sep = " ", ...) {
@@ -599,5 +629,63 @@ pl_word_stringr <- function(string, start = 1L, end = start, sep = " ", ...) {
   start <- polars_expr_to_r(start)
   end <- polars_expr_to_r(end)
   sep <- polars_expr_to_r(sep)
-  string$str$split(sep)$list$gather(list((start:end) - 1L))$list$join(sep)
+
+  if (length(start) > 1 || length(end) > 1) {
+    cli_abort(
+      "{.fn word} doesn't work with a Polars object when {.code start} or {.code end} has a length greater than 1.",
+      class = "tidypolars_error"
+    )
+  }
+  if (is.na(start) || is.na(end)) {
+    return(pl$lit(NA_character_))
+  }
+  # `end = 0` is before the first word whatever the input is
+  if (end == 0) {
+    return(pl$lit(NA_character_))
+  }
+
+  words <- string$str$split(sep)
+  n_words <- words$list$len()$cast(pl$Int64)
+
+  # Negative indices count from the last word, like in stringr
+  start_idx <- if (start < 0) {
+    n_words + (as.integer(start) + 1L)
+  } else {
+    pl$lit(as.integer(start))
+  }
+  end_idx <- if (end < 0) {
+    n_words + (as.integer(end) + 1L)
+  } else {
+    pl$lit(as.integer(end))
+  }
+
+  # stringr returns NA when `end` is out of bounds or when `start` is past the
+  # last word. Otherwise `start` is clamped to the first word. Checks that
+  # cannot fire are skipped so that the query stays readable.
+  checks <- list(end_idx > n_words)
+  if (end < 0) {
+    checks <- c(list(end_idx < 1), checks)
+  }
+  # `start > n_words` implies `end > n_words` unless `start` is after `end`
+  if (start != end && (start < 0 || end < 0 || start > end)) {
+    checks <- c(checks, list(start_idx > n_words))
+  }
+  out_of_bounds <- Reduce(`|`, checks)
+
+  # `start` is clamped to the first word
+  offset <- if (start < 0) {
+    pl$max_horizontal(start_idx, pl$lit(1L)) - 1L
+  } else {
+    max(as.integer(start), 1L) - 1L
+  }
+  # When `start` is after `end` the slice is empty, hence "", which is what
+  # stringr returns too.
+  n_taken <- if (start < 0 || end < 0) {
+    pl$max_horizontal(end_idx - offset, pl$lit(0L))
+  } else {
+    max(as.integer(end) - offset, 0L)
+  }
+  out <- words$list$slice(offset, n_taken)$list$join(sep)
+
+  pl$when(out_of_bounds)$then(pl$lit(NA_character_))$otherwise(out)
 }

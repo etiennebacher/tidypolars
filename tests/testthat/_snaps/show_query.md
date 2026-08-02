@@ -924,9 +924,13 @@
       dat$with_columns(
         ex = pl$col("txt")$str$extract(pl$lit("[a-z]+"), group_index = 0),
         spi = pl$col("txt")$
-          str$split(by = " ", inclusive = FALSE)$
+          str$split(by = " ", inclusive = FALSE, literal = FALSE)$
           list$get(0, null_on_oob = TRUE),
-        wd = pl$col("txt")$str$split(" ")$list$gather(list(0L))$list$join(" ")
+        wd = pl$when(
+          pl$lit(1L) > pl$col("txt")$str$split(" ")$list$len()$cast(pl$Int64)
+        )$
+          then(pl$lit(NA_character_))$
+          otherwise(pl$col("txt")$str$split(" ")$list$slice(0L, 1L)$list$join(" "))
       )
 
 # translated lubridate functions: date components

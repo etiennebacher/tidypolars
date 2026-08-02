@@ -194,21 +194,43 @@ test_that("str_trim() and trimws() work", {
   )
 })
 
-# TODO: `width` and `pad` are restricted to length 1 here. tidypolars errors
-# when `width` has a length greater than 1, and there is no way to generate a
-# `pad` whose length matches the one of `string` while still allowing NA.
 test_that("str_pad() works", {
+  length <- sample.int(10, 1)
+
   for_all(
     tests = 40,
-    string = character_(any_na = TRUE),
+    string = character_(any_na = TRUE, len = length),
     pad = quickcheck::one_of(constant(" "), constant("*"), constant("-")),
-    width = integer_bounded(-5, 20, len = 1, any_na = TRUE),
+    width = integer_bounded(-5, 20, len = length, any_na = TRUE),
+    scalar_width = integer_bounded(-5, 20, len = 1, any_na = TRUE),
     # can't use "both" in polars
     side = quickcheck::one_of(constant("left"), constant("right")),
-    property = function(string, side, pad, width) {
-      test_df <- tibble(x1 = string)
-      test_pl <- pl$DataFrame(x1 = string)
+    property = function(string, side, pad, width, scalar_width) {
+      test_df <- tibble(x1 = string, w = width)
+      test_pl <- pl$DataFrame(x1 = string, w = width)
 
+      expect_equal_or_both_error(
+        mutate(
+          test_pl,
+          foo = str_pad(x1, side = side, pad = pad, width = scalar_width)
+        ) |>
+          pull(foo),
+        mutate(
+          test_df,
+          foo = str_pad(x1, side = side, pad = pad, width = scalar_width)
+        ) |>
+          pull(foo)
+      )
+
+      # `width` as a column
+      expect_equal_or_both_error(
+        mutate(test_pl, foo = str_pad(x1, side = side, pad = pad, width = w)) |>
+          pull(foo),
+        mutate(test_df, foo = str_pad(x1, side = side, pad = pad, width = w)) |>
+          pull(foo)
+      )
+
+      # `width` as an external vector
       expect_equal_or_both_error(
         mutate(
           test_pl,
@@ -373,9 +395,7 @@ test_that("str_detect(), grepl() and str_count() work", {
 test_that("grepl() works", {
   for_all(
     tests = 40,
-    # TODO: `any_na = TRUE` doesn't work here: base R returns FALSE for NA
-    # inputs while tidypolars returns NA.
-    string = character_(any_na = FALSE),
+    string = character_(any_na = TRUE),
     pattern = pattern_(),
     literal = literal_pattern_(),
     ignore_case = logical_(len = 1),
@@ -404,13 +424,23 @@ test_that("regex() and fixed() modifiers work", {
   for_all(
     tests = 40,
     string = character_(any_na = TRUE),
-    # TODO: the pattern has to be inlined in the code because `regex()` and
-    # `fixed()` error when they receive a variable instead of a literal.
-    pattern = character_letters(len = 1),
+    pattern = pattern_(),
+    literal = literal_pattern_(),
     ignore_case = logical_(len = 1),
-    property = function(string, pattern, ignore_case) {
+    property = function(string, pattern, literal, ignore_case) {
       test_df <- tibble(x1 = string)
       test_pl <- pl$DataFrame(x1 = string)
+
+      # The function name and the namespace prefix cannot be variables, so the
+      # calls are built as code. `pattern` and `ignore_case` are passed as
+      # variables on purpose: `regex()` and `fixed()` must accept those and not
+      # only string literals.
+      check <- function(code) {
+        expect_equal_or_both_error(
+          eval(parse(text = sprintf(code, "test_pl"))),
+          eval(parse(text = sprintf(code, "test_df")))
+        )
+      }
 
       funs <- c(
         "str_detect",
@@ -422,60 +452,34 @@ test_that("regex() and fixed() modifiers work", {
         "str_remove_all"
       )
 
-      # `regex()`, with and without the explicit namespace
       for (fun in funs) {
+        # with and without the explicit namespace
         for (ns in c("", "stringr::")) {
-          code <- paste0(
+          check(paste0(
             "mutate(%s, foo = ",
             fun,
             "(x1, ",
             ns,
-            "regex(\"",
-            pattern,
-            "\", ignore_case = ",
-            ignore_case,
-            "))) |> pull(foo)"
-          )
-
-          expect_equal_or_both_error(
-            eval(parse(text = sprintf(code, "test_pl"))),
-            eval(parse(text = sprintf(code, "test_df")))
-          )
+            "regex(pattern, ignore_case = ignore_case))) |> pull(foo)"
+          ))
         }
       }
 
-      # `fixed()`, with and without the explicit namespace
       for (ns in c("", "stringr::")) {
-        code <- paste0(
+        check(paste0(
           "mutate(%s, foo = str_detect(x1, ",
           ns,
-          "fixed(\"",
-          pattern,
-          "\"))) |> pull(foo)"
-        )
-
-        expect_equal_or_both_error(
-          eval(parse(text = sprintf(code, "test_pl"))),
-          eval(parse(text = sprintf(code, "test_df")))
-        )
+          "fixed(literal))) |> pull(foo)"
+        ))
       }
 
       # functions taking a `replacement` argument
       for (fun in c("str_replace", "str_replace_all")) {
-        code <- paste0(
+        check(paste0(
           "mutate(%s, foo = ",
           fun,
-          "(x1, regex(\"",
-          pattern,
-          "\", ignore_case = ",
-          ignore_case,
-          "), \"-\")) |> pull(foo)"
-        )
-
-        expect_equal_or_both_error(
-          eval(parse(text = sprintf(code, "test_pl"))),
-          eval(parse(text = sprintf(code, "test_df")))
-        )
+          "(x1, regex(pattern, ignore_case = ignore_case), \"-\")) |> pull(foo)"
+        ))
       }
     }
   )
@@ -511,9 +515,7 @@ test_that("str_extract() works", {
 test_that("str_extract_all() works", {
   for_all(
     tests = 40,
-    # TODO: `any_na = TRUE` doesn't work here: stringr returns NA_character_
-    # for NA inputs while tidypolars returns an empty list element.
-    string = character_(any_na = FALSE),
+    string = character_(any_na = TRUE),
     pattern = pattern_(),
     property = function(string, pattern) {
       test_df <- tibble(x1 = string)
@@ -690,14 +692,16 @@ test_that("word() works", {
     w1 = character_letters(len = 3),
     w2 = character_letters(len = 3),
     w3 = character_letters(len = 3),
-    # TODO: `start` and `end` must be positive and within bounds. tidypolars
-    # returns the last word for 0 (stringr returns NA), counts from the wrong
-    # end for negative values, and errors when `end` is out of bounds.
-    start = integer_bounded(1, 3, len = 1),
-    n_words = integer_bounded(0, 2, len = 1),
+    # The strings below always have 3 words. `end` is not allowed to go below
+    # -3 because stringr indexes a matrix with the resolved index, so an index
+    # below 0 silently becomes a negative (i.e. "drop this row") subscript
+    # instead of being out of bounds. tidypolars returns NA in that case.
+    start = integer_bounded(-4, 4, len = 1),
+    end = integer_bounded(-3, 4, len = 1),
+    # `end` defaults to `start`, so this one is bounded like `end`
+    single = integer_bounded(-3, 4, len = 1),
     sep = quickcheck::one_of(constant(" "), constant("-")),
-    property = function(w1, w2, w3, start, n_words, sep) {
-      end <- min(start + n_words, 3L)
+    property = function(w1, w2, w3, start, end, single, sep) {
       string <- paste(w1, w2, w3, sep = sep)
       test_df <- tibble(x1 = string)
       test_pl <- pl$DataFrame(x1 = string)
@@ -706,6 +710,11 @@ test_that("word() works", {
         mutate(test_pl, foo = word(x1, start, end, sep = sep)) |> pull(foo),
         mutate(test_df, foo = word(x1, start, end, sep = sep)) |> pull(foo)
       )
+
+      expect_equal_or_both_error(
+        mutate(test_pl, foo = word(x1, single, sep = sep)) |> pull(foo),
+        mutate(test_df, foo = word(x1, single, sep = sep)) |> pull(foo)
+      )
     }
   )
 })
@@ -713,15 +722,11 @@ test_that("word() works", {
 test_that("str_split() and str_split_i() work", {
   for_all(
     tests = 40,
-    # TODO: `any_na = TRUE` doesn't work for str_split(): stringr returns
-    # NA_character_ for NA inputs while tidypolars returns an empty list
-    # element.
-    string = character_(any_na = FALSE),
-    # TODO: the pattern must be a literal string, Polars' `$str$split()` does
-    # not treat it as a regex while stringr does.
-    pattern = literal_pattern_(),
+    string = character_(any_na = TRUE),
+    pattern = pattern_(),
+    literal = literal_pattern_(),
     i = integer_bounded(-5, 5, len = 1),
-    property = function(string, pattern, i) {
+    property = function(string, pattern, literal, i) {
       test_df <- tibble(x1 = string)
       test_pl <- pl$DataFrame(x1 = string)
 
@@ -732,8 +737,21 @@ test_that("str_split() and str_split_i() work", {
       )
 
       expect_equal_or_both_error(
+        mutate(test_pl, foo = str_split(x1, fixed(literal))) |> pull(foo),
+        mutate(test_df, foo = str_split(x1, fixed(literal))) |> pull(foo),
+        ignore_attr = TRUE
+      )
+
+      expect_equal_or_both_error(
         mutate(test_pl, foo = str_split_i(x1, pattern, i = i)) |> pull(foo),
         mutate(test_df, foo = str_split_i(x1, pattern, i = i)) |> pull(foo)
+      )
+
+      expect_equal_or_both_error(
+        mutate(test_pl, foo = str_split_i(x1, fixed(literal), i = i)) |>
+          pull(foo),
+        mutate(test_df, foo = str_split_i(x1, fixed(literal), i = i)) |>
+          pull(foo)
       )
     }
   )
@@ -752,9 +770,6 @@ test_that("str_trunc() works", {
       constant("")
     ),
     property = function(string, width, side, ellipsis) {
-      # TODO: strings shorter than `width` are excluded because tidypolars
-      # appends `ellipsis` to them anyway while stringr returns them unchanged.
-      string <- string[is.na(string) | nchar(string) > width]
       test_df <- tibble(x1 = string)
       test_pl <- pl$DataFrame(x1 = string)
 
@@ -782,7 +797,7 @@ test_that("str_replace_na() works", {
     lgl = logical_(any_na = TRUE),
     replacement = character_letters(len = 1),
     property = function(chr, int, lgl, replacement) {
-      # TODO: doubles are excluded because Polars formats whole doubles with a
+      # Doubles are excluded because Polars formats whole doubles with a
       # decimal part ("0.0") while R doesn't ("0").
       for (column in list(chr, int)) {
         test_df <- tibble(x1 = column)
