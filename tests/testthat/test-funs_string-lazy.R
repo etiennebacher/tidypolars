@@ -140,20 +140,20 @@ test_that("pad functions work", {
   test_df <- tibble(x6 = c("  foo  ", "hi there  "))
   test_pl <- as_polars_lf(test_df)
 
-  expect_error_lazy(
+  expect_snapshot_lazy(
     mutate(test_pl, foo = str_pad(x6, width = 10, side = "both")),
-    "doesn't work with a Polars object"
+    error = TRUE
   )
 
-  expect_error_lazy(
+  expect_snapshot_lazy(
     mutate(test_pl, foo = str_pad(x6, width = 10, use_width = FALSE)),
-    "doesn't work with a Polars object"
+    error = TRUE
   )
 
   # Polars only accepts a single fill character
-  expect_error_lazy(
+  expect_snapshot_lazy(
     mutate(test_pl, foo = str_pad(x6, width = 10, pad = c("*", "-"))),
-    "`pad` has a length greater than 1"
+    error = TRUE
   )
 })
 
@@ -161,10 +161,7 @@ test_that("word functions work", {
   test_df <- tibble(x7 = c("Jane saw a cat", "Jane sat down"))
   test_pl <- as_polars_lf(test_df)
 
-  expect_error_lazy(
-    mutate(test_pl, foo = word(x7, c(1L, 2L))),
-    "`start` or `end` has a length greater than 1"
-  )
+  expect_snapshot_lazy(mutate(test_pl, foo = word(x7, c(1L, 2L))), error = TRUE)
 })
 
 test_that("regex functions work", {
@@ -201,9 +198,9 @@ test_that("split functions work", {
     "doesn't know how to use some arguments"
   )
 
-  expect_error_lazy(
+  expect_snapshot_lazy(
     mutate(test_pl, foo = str_split_i(x8, "-", i = 0)),
-    "must not be 0"
+    error = TRUE
   )
 })
 
@@ -211,19 +208,16 @@ test_that("trunc functions work", {
   test_df <- tibble(x1 = c("heLLo there", "it's mE"))
   test_pl <- as_polars_lf(test_df)
 
-  expect_error_lazy(
-    mutate(test_pl, foo = str_trunc(x1, 1)),
-    "is shorter than `ellipsis`"
-  )
+  expect_snapshot_lazy(mutate(test_pl, foo = str_trunc(x1, 1)), error = TRUE)
 
-  expect_error_lazy(
+  expect_snapshot_lazy(
     mutate(test_pl, foo = str_trunc(x1, 5, side = "center")),
-    "is not supported"
+    error = TRUE
   )
 
-  expect_error_lazy(
+  expect_snapshot_lazy(
     mutate(test_pl, foo = str_trunc(x1, 5, side = "foobar")),
-    "must be either"
+    error = TRUE
   )
 })
 
