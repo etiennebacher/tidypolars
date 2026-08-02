@@ -654,13 +654,20 @@ split_chain_merged <- function(text) {
 # isn't an operation.
 split_top_operator <- function(text) {
   # The `name = ` of a named argument belongs to the left-hand side: it is not
-  # an operator, and parse() would read it as an assignment.
-  m <- regexpr("^(`[^`]*`|[.[:alpha:]][._[:alnum:]]*) = ", text)
-  prefix <- if (m == -1L) "" else substring(text, 1L, attr(m, "match.length"))
-  node <- tryCatch(
-    parse(text = substring(text, nchar(prefix) + 1L), keep.source = FALSE)[[1]],
+  # an operator, and parsing the text on its own would read it as an
+  # assignment. Parsing it as the argument of a call instead lets R separate
+  # the name from the value, whatever the name looks like.
+  call_node <- tryCatch(
+    parse(text = paste0("f(\n", text, "\n)"), keep.source = FALSE)[[1]],
     error = function(e) NULL
   )
+  # Anything that isn't exactly one argument (empty text, a top-level comma)
+  # isn't a value this can break up.
+  if (is.null(call_node) || length(call_node) != 2L) {
+    return(NULL)
+  }
+  arg_name <- names(call_node)[2] %||% ""
+  node <- call_node[[2]]
   if (
     !is.call(node) ||
       length(node) != 3L ||
@@ -677,6 +684,13 @@ split_top_operator <- function(text) {
   )
   if (is.null(sides)) {
     return(NULL)
+  }
+  # `parse()` returns the name unquoted, so a non-syntactic one is backquoted
+  # again here.
+  prefix <- if (nzchar(arg_name)) {
+    paste0(quote_arg_names(arg_name), " = ")
+  } else {
+    ""
   }
   op <- as.character(node[[1]])
   list(
