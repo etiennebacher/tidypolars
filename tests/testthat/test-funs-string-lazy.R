@@ -801,12 +801,8 @@ test_that("str_replace_na() works", {
     lgl = logical_(any_na = TRUE),
     replacement = character_letters(len = 1),
     property = function(chr, int, lgl, replacement) {
-      # Doubles are excluded on purpose: casting a float to a string doesn't
-      # give the same result in R and in Polars, and this is not specific to
-      # `str_replace_na()`. R uses 15 significant digits and its own rules for
-      # the scientific notation, Polars uses the shortest representation that
-      # round-trips (0 -> "0.0", 1e5 -> "100000.0", 0.1 + 0.2 ->
-      # "0.30000000000000004", ...). Matching R here would require a UDF.
+      # Doubles are excluded because Polars formats whole doubles with a
+      # decimal part ("0.0") while R doesn't ("0").
       for (column in list(chr, int)) {
         test_df <- tibble(x1 = column)
         test_pl <- pl$LazyFrame(x1 = column)

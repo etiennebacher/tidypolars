@@ -930,7 +930,7 @@
           pl$lit(1L) > pl$col("txt")$str$split(" ")$list$len()$cast(pl$Int64)
         )$
           then(pl$lit(NA_character_))$
-          otherwise(pl$col("txt")$str$split(" ")$list$slice(0L, 1L)$list$join(" "))
+          otherwise(pl$col("txt")$str$split(" ")$list$slice(0, 1)$list$join(" "))
       )
 
 # translated lubridate functions: date components

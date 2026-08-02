@@ -207,7 +207,7 @@ pl_str_pad_stringr <- function(
     if (!is_polars_expr(width)) {
       width <- pl$lit(as.integer(width))
     }
-    width <- pl$when(width < 0)$then(pl$lit(0L))$otherwise(width)
+    width <- pl$when(width < 0)$then(pl$lit(0))$otherwise(width)
   }
 
   switch(
@@ -649,12 +649,12 @@ pl_word_stringr <- function(string, start = 1L, end = start, sep = " ", ...) {
 
   # Negative indices count from the last word, like in stringr
   start_idx <- if (start < 0) {
-    n_words + (as.integer(start) + 1L)
+    n_words + (as.integer(start) + 1)
   } else {
     pl$lit(as.integer(start))
   }
   end_idx <- if (end < 0) {
-    n_words + (as.integer(end) + 1L)
+    n_words + (as.integer(end) + 1)
   } else {
     pl$lit(as.integer(end))
   }
@@ -674,16 +674,16 @@ pl_word_stringr <- function(string, start = 1L, end = start, sep = " ", ...) {
 
   # `start` is clamped to the first word
   offset <- if (start < 0) {
-    pl$max_horizontal(start_idx, pl$lit(1L)) - 1L
+    pl$max_horizontal(start_idx, pl$lit(1)) - 1
   } else {
-    max(as.integer(start), 1L) - 1L
+    max(as.integer(start), 1) - 1
   }
   # When `start` is after `end` the slice is empty, hence "", which is what
   # stringr returns too.
   n_taken <- if (start < 0 || end < 0) {
-    pl$max_horizontal(end_idx - offset, pl$lit(0L))
+    pl$max_horizontal(end_idx - offset, pl$lit(0))
   } else {
-    max(as.integer(end) - offset, 0L)
+    max(as.integer(end) - offset, 0)
   }
   out <- words$list$slice(offset, n_taken)$list$join(sep)
 
