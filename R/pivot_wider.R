@@ -92,10 +92,33 @@ pivot_wider.polars_data_frame <- function(
   data_names <- names(data)
   value_vars <- tidyselect_named_arg(data, rlang::enquo(values_from))
   names_vars <- tidyselect_named_arg(data, rlang::enquo(names_from))
-  id_cols <- setdiff(
-    tidyselect_named_arg(data, rlang::enquo(id_cols)),
-    c(value_vars, names_vars)
+
+  id_cols_is_everything <- identical(
+    quo_get_expr(enquo(id_cols)),
+    expr(everything())
   )
+  id_cols <- tidyselect_named_arg(data, rlang::enquo(id_cols))
+
+  in_name_and_id_cols <- dplyr::intersect(id_cols, names_vars)
+  if (!id_cols_is_everything && length(in_name_and_id_cols) > 0) {
+    cli_abort(
+      c(
+        "{.arg id_cols} can't select a column already selected by {.arg names_from}.",
+        "i" = "Column{?s} {.arg {in_name_and_id_cols}} ha{?s/ve} already been selected."
+      )
+    )
+  }
+  in_value_and_id_cols <- dplyr::intersect(id_cols, value_vars)
+  if (!id_cols_is_everything && length(in_value_and_id_cols) > 0) {
+    cli_abort(
+      c(
+        "{.arg id_cols} can't select a column already selected by {.arg values_from}.",
+        "i" = "Column{?s} {.arg {in_value_and_id_cols}} ha{?s/ve} already been selected."
+      )
+    )
+  }
+
+  id_cols <- setdiff(id_cols, c(value_vars, names_vars))
   id_vars <- id_cols %||% data_names[!data_names %in% c(value_vars, names_vars)]
 
   if (length(value_vars) == 0) {
