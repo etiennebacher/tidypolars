@@ -67,7 +67,8 @@
       pivot_wider(test_pl, id_cols = name, names_from = name, values_from = value)
     Condition
       Error in `pivot_wider()`:
-      ! at least one key is required in a group_by operation
+      ! `id_cols` can't select a column already selected by `names_from`.
+      i Column `name` has already been selected.
 
 ---
 
@@ -75,7 +76,27 @@
       pivot_wider(test_pl, id_cols = value, names_from = name, values_from = value)
     Condition
       Error in `pivot_wider()`:
-      ! at least one key is required in a group_by operation
+      ! `id_cols` can't select a column already selected by `values_from`.
+      i Column `value` has already been selected.
+
+---
+
+    Code
+      pivot_wider(test_pl, id_cols = c(name, value), names_from = c(name, value))
+    Condition
+      Error in `pivot_wider()`:
+      ! `id_cols` can't select a column already selected by `names_from`.
+      i Columns `name` and `value` have already been selected.
+
+---
+
+    Code
+      pivot_wider(test_pl, id_cols = c(name, value), names_from = NULL, values_from = c(
+        name, value))
+    Condition
+      Error in `pivot_wider()`:
+      ! `id_cols` can't select a column already selected by `values_from`.
+      i Columns `name` and `value` have already been selected.
 
 # dots must be empty
 

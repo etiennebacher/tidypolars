@@ -306,6 +306,23 @@ test_that("`id_cols` can't select columns from `names_from` or `values_from`", {
     ),
     error = TRUE
   )
+  expect_snapshot(
+    pivot_wider(
+      test_pl,
+      id_cols = c(name, value),
+      names_from = c(name, value)
+    ),
+    error = TRUE
+  )
+  expect_snapshot(
+    pivot_wider(
+      test_pl,
+      id_cols = c(name, value),
+      names_from = NULL,
+      values_from = c(name, value)
+    ),
+    error = TRUE
+  )
 })
 
 test_that("unsupported args throw warning", {

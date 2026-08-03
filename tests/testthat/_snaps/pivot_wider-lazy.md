@@ -28,7 +28,7 @@
       
       	---> FAILED HERE RESOLVING THIS_NODE <---
       AGGREGATE[maintain_order: false]
-        [col("val").filter([(col("key")) ==v ("a")].all_horizontal([[(col("key_2")) ==v ("c")]])).item(allow_empty=true).alias("{"a","c"}"), col("val").filter([(col("key")) ==v ("b")].all_horizontal([[(col("key_2")) ==v ("d")]])).item(allow_empty=true).alias("{"b","d"}")] BY [col("a_c")]
+        [col("val").filter((col("key") ==v "a") & (col("key_2") ==v "c")).item(allow_empty=true).alias("{"a","c"}"), col("val").filter((col("key") ==v "b") & (col("key_2") ==v "d")).item(allow_empty=true).alias("{"b","d"}")] BY [col("a_c")]
         FROM
         DF ["a_c", "key", "key_2", "val"]; PROJECT */4 COLUMNS
 
@@ -71,20 +71,36 @@
     Code
       current$collect()
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
-      ! at least one key is required in a group_by operation
+      Error in `pivot_wider()`:
+      ! `id_cols` can't select a column already selected by `names_from`.
+      i Column `name` has already been selected.
 
 ---
 
     Code
       current$collect()
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
-      ! at least one key is required in a group_by operation
+      Error in `pivot_wider()`:
+      ! `id_cols` can't select a column already selected by `values_from`.
+      i Column `value` has already been selected.
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `pivot_wider()`:
+      ! `id_cols` can't select a column already selected by `names_from`.
+      i Columns `name` and `value` have already been selected.
+
+---
+
+    Code
+      current$collect()
+    Condition
+      Error in `pivot_wider()`:
+      ! `id_cols` can't select a column already selected by `values_from`.
+      i Columns `name` and `value` have already been selected.
 
 # dots must be empty
 
