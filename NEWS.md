@@ -1,5 +1,7 @@
 # tidypolars (development)
 
+`tidypolars` requires `polars` >= 1.14.0.
+
 ## New features
 
 * Clearer error messages in many cases (#370).
