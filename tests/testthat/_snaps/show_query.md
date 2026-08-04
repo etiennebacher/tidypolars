@@ -93,6 +93,26 @@
             otherwise(pl$col("am")$mean())
         )
 
+# show_query() records magrittr pipe translations
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(tibble(x = 1:3))$
+        with_columns(
+          rounded = pl$col("x")$round(decimals = 2),
+          in_range = pl$col("x")$
+            is_between(
+              lower_bound = pl$when(pl$col("x")$has_nulls())$
+                then(NA)$
+                otherwise(pl$col("x")$min()),
+              upper_bound = pl$when(pl$col("x")$has_nulls())$
+                then(NA)$
+                otherwise(pl$col("x")$max()),
+              closed = "both"
+            )
+        )
+
 # user-defined functions returning polars expressions are recorded
 
     Code
