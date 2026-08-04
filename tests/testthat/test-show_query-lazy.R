@@ -99,6 +99,18 @@ test_that("show_query() works with across()", {
   expect_equal_lazy(replay_query(query), query)
 })
 
+test_that("show_query() records magrittr pipe translations", {
+  query <- tibble(x = 1:3) |>
+    as_polars_lf() |>
+    mutate(
+      rounded = x %>% round(2),
+      in_range = x %>% between(left = min(.), right = max(.))
+    )
+
+  expect_snapshot_lazy(show_query(query))
+  expect_equal_lazy(replay_query(query), query)
+})
+
 test_that("user-defined functions returning polars expressions are recorded", {
   pl_standardize <- function(x) {
     (x - x$mean()) / x$std()

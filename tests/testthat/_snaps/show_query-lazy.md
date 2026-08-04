@@ -175,6 +175,36 @@
       │ 20.090625 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 0.40625 ┆ 4.0  ┆ 2.0  │
       └───────────┴─────┴───────┴───────┴───┴─────┴─────────┴──────┴──────┘
 
+# show_query() records magrittr pipe translations
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(tibble(x = 1:3))$
+        with_columns(
+          rounded = pl$col("x")$round(decimals = 2),
+          in_range = pl$col("x")$
+            is_between(
+              lower_bound = pl$when(pl$col("x")$has_nulls())$
+                then(NA)$
+                otherwise(pl$col("x")$min()),
+              upper_bound = pl$when(pl$col("x")$has_nulls())$
+                then(NA)$
+                otherwise(pl$col("x")$max()),
+              closed = "both"
+            )
+        )
+      shape: (3, 3)
+      ┌─────┬─────────┬──────────┐
+      │ x   ┆ rounded ┆ in_range │
+      │ --- ┆ ---     ┆ ---      │
+      │ i32 ┆ i32     ┆ bool     │
+      ╞═════╪═════════╪══════════╡
+      │ 1   ┆ 1       ┆ true     │
+      │ 2   ┆ 2       ┆ true     │
+      │ 3   ┆ 3       ┆ true     │
+      └─────┴─────────┴──────────┘
+
 # user-defined functions returning polars expressions are recorded
 
     Code

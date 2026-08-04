@@ -16,6 +16,9 @@
 
 * Fix grouped `slice_head()`, `slice_tail()`, and `slice_sample()` for zero-size
   samples. Allow `slice_sample()` with `n > nrow(data)` and `prop > 1` (#394, @Yousa-Mirage).
+  
+* Fix `relocate()` to use the leftmost and rightmost selected columns for
+  `.before` and `.after` for consistency with `dplyr` (#392, @Yousa-Mirage).
 
 * Multiple fixes to improve compatibility with `stringr` for the following functions:
   `fixed()`, `regex()`, `str_extract_all()`, `str_pad()`, `str_split()`, `str_split_i()`,
@@ -23,6 +26,8 @@
 
 * `grepl()` now returns `FALSE` for `NA` inputs, like base R (it used to return `NA`)
   (#384).
+
+* Fix `%>%` with unnamed arguments and nested `.` placeholders (#390, @Yousa-Mirage).
 
 * R expressions using `:` now resolve local variables from the calling environment (#381, @Yousa-Mirage).
 
