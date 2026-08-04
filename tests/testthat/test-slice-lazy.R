@@ -61,17 +61,6 @@ test_that("grouped head and tail with zero rows return zero rows", {
   )
 })
 
-test_that("grouped slice_sample with zero rows returns zero rows", {
-  test_df <- tibble(g = c("a", "a", "b"), x = 1:3)
-  test_pl <- as_polars_lf(test_df)
-  skip_if_not(is_polars_df(test_pl))
-
-  expect_equal_lazy(
-    test_pl |> group_by(g) |> slice_sample(n = 0),
-    test_df |> group_by(g) |> slice_sample(n = 0)
-  )
-})
-
 test_that("slice_tail works on grouped data", {
   test_df <- as_tibble(iris)
   test_pl <- as_polars_lf(test_df)
@@ -281,6 +270,17 @@ test_that("grouped slice_sample limits n to each group size", {
       slice_sample(n = 3, by = g) |>
       count(g) |>
       arrange(g)
+  )
+})
+
+test_that("grouped slice_sample with zero rows returns zero rows", {
+  test_df <- tibble(g = c("a", "a", "b"), x = 1:3)
+  test_pl <- as_polars_lf(test_df)
+  skip_if_not(is_polars_df(test_pl))
+
+  expect_equal_lazy(
+    test_pl |> group_by(g) |> slice_sample(n = 0),
+    test_df |> group_by(g) |> slice_sample(n = 0)
   )
 })
 
