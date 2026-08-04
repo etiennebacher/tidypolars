@@ -867,8 +867,9 @@
       current$collect()
     Output
       as_polars_lf(tidyr::relig_income)$
+        with_row_index(name = "__tidypolars_pivot_longer_row_id__")$
         unpivot(
-          index = "religion",
+          index = c("religion", "__tidypolars_pivot_longer_row_id__"),
           on = c(
             "<$10k", "$10-20k", "$20-30k", "$30-40k", "$40-50k", "$50-75k",
             "$75-100k", "$100-150k", ">150k", "Don't know/refused"
@@ -876,7 +877,8 @@
           variable_name = "income",
           value_name = "count"
         )$
-        sort("religion")
+        sort("__tidypolars_pivot_longer_row_id__")$
+        drop("__tidypolars_pivot_longer_row_id__")
       shape: (180, 3)
       ┌──────────────┬────────────────────┬───────┐
       │ religion     ┆ income             ┆ count │
