@@ -258,7 +258,7 @@ sink_csv <- function(
 
   rlang::arg_match0(
     quote_style,
-    values = c("necessary", "always", "non_numeric")
+    values = c("necessary", "always", "non_numeric", "never")
   )
 
   if (!missing(quote)) {

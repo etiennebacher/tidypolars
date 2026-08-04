@@ -14,6 +14,9 @@
 
 ## Bug fixes
 
+* Allow the Polars-supported "prefiltered" Parquet scan strategy and
+  "never" CSV quote style in the corresponding wrappers (#393, @Yousa-Mirage).
+
 * Multiple fixes to improve compatibility with `stringr` for the following functions:
   `fixed()`, `regex()`, `str_extract_all()`, `str_pad()`, `str_split()`, `str_split_i()`,
   `str_trunc()`, `word()`. (#384)

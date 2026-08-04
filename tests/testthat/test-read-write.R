@@ -27,6 +27,20 @@ patrick::with_parameters_test_that(
   file_format = c("ipc", "parquet")
 )
 
+test_that("parquet supports the prefiltered parallel strategy", {
+  dest <- tempfile(fileext = ".parquet")
+  write_parquet_polars(as_polars_df(mtcars), dest)
+
+  expect_s3_class(
+    scan_parquet_polars(dest, parallel = "prefiltered"),
+    "polars_lazy_frame"
+  )
+  expect_s3_class(
+    read_parquet_polars(dest, parallel = "prefiltered"),
+    "polars_data_frame"
+  )
+})
+
 # Can't distinguish integers from floats
 test_that("CSV can do a write-read roundtrip", {
   for_all(
