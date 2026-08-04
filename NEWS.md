@@ -38,6 +38,9 @@
 * Fix `seq()` to correctly handle descending sequences, negative steps,
   single-value results, and `by = 0` consistently with base R (#377, @Yousa-Mirage).
 
+* Fix `pull()` to support negative column indices and default to the last column,
+  consistently with `dplyr` (#391, @Yousa-Mirage).
+
 
 # tidypolars 0.19.0
 

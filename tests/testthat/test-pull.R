@@ -16,6 +16,21 @@ test_that("basic behavior works", {
     pull(test_pl, 1),
     pull(test_df, 1)
   )
+
+  expect_equal(
+    pull(test_pl, -1),
+    pull(test_df, -1)
+  )
+
+  expect_equal(
+    pull(test_pl, -2),
+    pull(test_df, -2)
+  )
+
+  expect_equal(
+    pull(test_pl),
+    pull(test_df)
+  )
 })
 
 test_that("error cases work", {

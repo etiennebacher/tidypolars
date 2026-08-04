@@ -12,13 +12,11 @@
 #' pull(pl_test, Sepal.Length)
 #' pull(pl_test, "Sepal.Length")
 
-pull.polars_data_frame <- function(.data, var, ...) {
-  var <- tidyselect_named_arg(.data, rlang::enquo(var))
-  if (length(var) > 1) {
-    cli_abort(
-      "{.fn pull} can only extract one column. You tried to extract {length(var)}."
-    )
-  }
+pull.polars_data_frame <- function(.data, var = -1, ...) {
+  var <- tidyselect::vars_pull(
+    names(.data),
+    !!rlang::enquo(var)
+  )
 
   out <- add_tidypolars_class(.data)
   if (is_polars_lf(.data)) {
