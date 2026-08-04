@@ -264,7 +264,7 @@ sink_csv <- function(
   if (!missing(quote)) {
     lifecycle::deprecate_warn(
       when = "0.14.0",
-      what = "sink_csv_polars(quote)",
+      what = "sink_csv(quote)",
       details = "Use `quote_char` instead."
     )
     quote_char <- quote
@@ -273,7 +273,7 @@ sink_csv <- function(
   if (!missing(null_values)) {
     lifecycle::deprecate_warn(
       when = "0.14.0",
-      what = "sink_csv_polars(null_values)",
+      what = "sink_csv(null_values)",
       details = "Use `null_value` instead."
     )
     if (missing(null_value)) {

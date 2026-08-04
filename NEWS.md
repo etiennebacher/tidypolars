@@ -14,6 +14,8 @@
 
 ## Bug fixes
 
+* Fix the function name in deprecation warnings from `sink_csv()`.
+
 * Allow the Polars-supported "prefiltered" Parquet scan strategy and
   "never" CSV quote style in the corresponding wrappers (#393, @Yousa-Mirage).
 

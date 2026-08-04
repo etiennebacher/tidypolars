@@ -36,7 +36,7 @@
       x <- sink_csv(dat, dest, null_values = "a")
     Condition
       Warning:
-      The `null_values` argument of `sink_csv_polars()` is deprecated as of tidypolars 0.14.0.
+      The `null_values` argument of `sink_csv()` is deprecated as of tidypolars 0.14.0.
       i Use `null_value` instead.
 
 ---
@@ -45,6 +45,6 @@
       x <- sink_csv(dat, dest, quote = "a")
     Condition
       Warning:
-      The `quote` argument of `sink_csv_polars()` is deprecated as of tidypolars 0.14.0.
+      The `quote` argument of `sink_csv()` is deprecated as of tidypolars 0.14.0.
       i Use `quote_char` instead.
 
