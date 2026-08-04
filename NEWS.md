@@ -21,6 +21,8 @@
 * `grepl()` now returns `FALSE` for `NA` inputs, like base R (it used to return `NA`)
   (#384).
 
+* Fix `%>%` with unnamed arguments and nested `.` placeholders (#390, @Yousa-Mirage).
+
 * R expressions using `:` now resolve local variables from the calling environment (#381, @Yousa-Mirage).
 
 * Fix `where()` when nested in `c()` or interacting with various boolean operators
