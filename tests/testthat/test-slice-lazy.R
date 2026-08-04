@@ -126,22 +126,9 @@ test_that("basic slice_sample works", {
     slice_sample(test_df, n = 200, replace = TRUE) |> nrow()
   )
 
-  # TODO? dplyr chooses to take n_rows(data) if n > n_rows(data)
-  # https://github.com/tidyverse/dplyr/issues/6185
-  expect_snapshot_lazy(
-    slice_sample(test_pl, n = 200),
-    error = TRUE
-  )
-
   expect_equal_lazy(
     slice_sample(test_pl, prop = 2, replace = TRUE) |> nrow(),
     slice_sample(test_df, prop = 2, replace = TRUE) |> nrow()
-  )
-
-  # TODO? dplyr chooses to take n_rows(data) if prop > 1
-  expect_snapshot_lazy(
-    slice_sample(test_pl, prop = 1.2),
-    error = TRUE
   )
 
   # slice_sample keeps rows consistent
@@ -239,6 +226,21 @@ test_that("slice_sample works with grouped data", {
       expect_equal_lazy(y_val[i], 10)
     }
   }
+})
+
+test_that("slice_sample() truncates n and prop if they are too large", {
+  test_df <- tibble(x = 1:5, y = 6:10)
+  test_pl <- as_polars_lf(test_df)
+  skip_if_not(is_polars_df(test_pl))
+
+  expect_equal_lazy(
+    test_pl |> slice_sample(n = 200) |> arrange(x, y),
+    test_df |> slice_sample(n = 200) |> arrange(x, y)
+  )
+  expect_equal_lazy(
+    test_pl |> slice_sample(prop = 1.5) |> arrange(x, y),
+    test_df |> slice_sample(prop = 1.5) |> arrange(x, y)
+  )
 })
 
 test_that("grouped slice_sample limits n to each group size", {

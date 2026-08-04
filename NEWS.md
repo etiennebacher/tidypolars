@@ -15,7 +15,7 @@
 ## Bug fixes
 
 * Fix grouped `slice_head()`, `slice_tail()`, and `slice_sample()` for zero-size
-  samples and samples larger than a group (#394, @Yousa-Mirage).
+  samples. Allow `slice_sample()` with `n > nrow(data)` and `prop > 1` (#394, @Yousa-Mirage).
 
 * Multiple fixes to improve compatibility with `stringr` for the following functions:
   `fixed()`, `regex()`, `str_extract_all()`, `str_pad()`, `str_split()`, `str_split_i()`,

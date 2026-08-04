@@ -107,14 +107,12 @@ slice_sample.polars_data_frame <- function(
   if (is.null(n) && is.null(prop)) {
     n <- 1
   }
-  if (
-    isFALSE(replace) &&
-      ((!is_grouped && !is.null(n) && n > nrow(.data)) ||
-        (!is.null(prop) && prop > 1))
-  ) {
-    cli_abort(
-      "Cannot take more rows than the total number of rows when {.code replace = FALSE}."
-    )
+  if (isFALSE(replace)) {
+    if (!is.null(n) && n > nrow(.data)) {
+      n <- nrow(.data)
+    } else if (!is.null(prop) && prop > 1) {
+      prop <- 1
+    }
   }
 
   if (is_grouped) {
@@ -123,11 +121,21 @@ slice_sample.polars_data_frame <- function(
       if (isFALSE(replace) && !is.null(n) && isTRUE(n >= nrow(x))) {
         n <- nrow(x)
       }
-      x$sample(n = n, fraction = prop, with_replacement = replace)
+      x$sample(
+        n = n,
+        fraction = prop,
+        with_replacement = replace,
+        shuffle = TRUE
+      )
     })
     out <- bind_rows_polars(sampled_partitions)
   } else {
-    out <- .data$sample(n = n, fraction = prop, with_replacement = replace)
+    out <- .data$sample(
+      n = n,
+      fraction = prop,
+      with_replacement = replace,
+      shuffle = TRUE
+    )
   }
 
   out <- if (is_grouped && missing(by)) {
