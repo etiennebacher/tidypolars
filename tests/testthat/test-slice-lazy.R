@@ -46,6 +46,32 @@ test_that("slice_head works with grouped data", {
   expect_true(attr(slice_head(test_pl_grp, n = 2), "maintain_grp_order"))
 })
 
+test_that("grouped head and tail with zero rows return zero rows", {
+  test_df <- tibble(g = c("a", "a", "b"), x = 1:3)
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |> group_by(g) |> slice_head(n = 0),
+    test_df |> group_by(g) |> slice_head(n = 0)
+  )
+
+  expect_equal_lazy(
+    test_pl |> group_by(g) |> slice_tail(n = 0),
+    test_df |> group_by(g) |> slice_tail(n = 0)
+  )
+})
+
+test_that("grouped slice_sample with zero rows returns zero rows", {
+  test_df <- tibble(g = c("a", "a", "b"), x = 1:3)
+  test_pl <- as_polars_lf(test_df)
+  skip_if_not(is_polars_df(test_pl))
+
+  expect_equal_lazy(
+    test_pl |> group_by(g) |> slice_sample(n = 0),
+    test_df |> group_by(g) |> slice_sample(n = 0)
+  )
+})
+
 test_that("slice_tail works on grouped data", {
   test_df <- as_tibble(iris)
   test_pl <- as_polars_lf(test_df)
@@ -188,6 +214,38 @@ test_that("slice_sample works with grouped data", {
     test_pl |>
       slice_sample(prop = 0.1, by = Species) |>
       attr("maintain_grp_order")
+  )
+})
+
+test_that("grouped slice_sample limits n to each group size", {
+  test_df <- tibble(g = c("a", "a", "b", "b", "b"), x = 1:5)
+  test_pl <- as_polars_lf(test_df)
+  skip_if_not(is_polars_df(test_pl))
+
+  expect_equal_lazy(
+    test_pl |>
+      group_by(g) |>
+      slice_sample(n = 3) |>
+      ungroup() |>
+      count(g) |>
+      arrange(g),
+    test_df |>
+      group_by(g) |>
+      slice_sample(n = 3) |>
+      ungroup() |>
+      count(g) |>
+      arrange(g)
+  )
+
+  expect_equal_lazy(
+    test_pl |>
+      slice_sample(n = 3, by = g) |>
+      count(g) |>
+      arrange(g),
+    test_df |>
+      slice_sample(n = 3, by = g) |>
+      count(g) |>
+      arrange(g)
   )
 })
 

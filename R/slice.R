@@ -28,7 +28,7 @@ slice_tail.polars_data_frame <- function(.data, ..., n, by = NULL) {
     non_grps <- setdiff(names(.data), grps)
     out <- .data$group_by(grps, .maintain_order = mo)$agg(
       pl$all()$tail(n)
-    )$explode(non_grps, empty_as_null = TRUE)$select(!!!col_order)
+    )$explode(non_grps, empty_as_null = FALSE)$select(!!!col_order)
   } else {
     out <- .data$tail(n)
   }
@@ -60,7 +60,7 @@ slice_head.polars_data_frame <- function(.data, ..., n, by = NULL) {
     non_grps <- setdiff(names(.data), grps)
     out <- .data$group_by(grps, .maintain_order = mo)$agg(
       pl$all()$head(n)
-    )$explode(non_grps, empty_as_null = TRUE)$select(!!!col_order)
+    )$explode(non_grps, empty_as_null = FALSE)$select(!!!col_order)
   } else {
     out <- .data$head(n)
   }
@@ -109,7 +109,7 @@ slice_sample.polars_data_frame <- function(
   }
   if (
     isFALSE(replace) &&
-      ((!is.null(n) && n > nrow(.data)) ||
+      ((!is_grouped && !is.null(n) && n > nrow(.data)) ||
         (!is.null(prop) && prop > 1))
   ) {
     cli_abort(
@@ -119,9 +119,18 @@ slice_sample.polars_data_frame <- function(
 
   if (is_grouped) {
     non_grps <- setdiff(names(.data), grps)
-    out <- .data$group_by(grps, .maintain_order = mo)$agg(
+    # Polars errors when sampling more rows than a group contains. Shuffling
+    # and taking the head matches dplyr's per-group truncation instead.
+    sample_expr <- if (isFALSE(replace) && !is.null(n) && isTRUE(n >= 0)) {
+      pl$all()$shuffle()$head(n)
+    } else {
       pl$all()$sample(n = n, fraction = prop, with_replacement = replace)
-    )$explode(non_grps, empty_as_null = TRUE)
+    }
+
+    out <- .data$group_by(grps, .maintain_order = mo)$agg(sample_expr)$explode(
+      non_grps,
+      empty_as_null = FALSE
+    )
   } else {
     out <- .data$sample(n = n, fraction = prop, with_replacement = replace)
   }
