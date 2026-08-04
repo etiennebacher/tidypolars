@@ -118,19 +118,14 @@ slice_sample.polars_data_frame <- function(
   }
 
   if (is_grouped) {
-    non_grps <- setdiff(names(.data), grps)
-    # Polars errors when sampling more rows than a group contains. Shuffling
-    # and taking the head matches dplyr's per-group truncation instead.
-    sample_expr <- if (isFALSE(replace) && !is.null(n) && isTRUE(n >= 0)) {
-      pl$all()$shuffle()$head(n)
-    } else {
-      pl$all()$sample(n = n, fraction = prop, with_replacement = replace)
-    }
-
-    out <- .data$group_by(grps, .maintain_order = mo)$agg(sample_expr)$explode(
-      non_grps,
-      empty_as_null = FALSE
-    )
+    partitions <- .data$partition_by(!!!grps)
+    sampled_partitions <- lapply(partitions, function(x) {
+      if (isFALSE(replace) && !is.null(n) && isTRUE(n >= nrow(x))) {
+        n <- nrow(x)
+      }
+      x$sample(n = n, fraction = prop, with_replacement = replace)
+    })
+    out <- bind_rows_polars(sampled_partitions)
   } else {
     out <- .data$sample(n = n, fraction = prop, with_replacement = replace)
   }

@@ -152,8 +152,7 @@ test_that("basic slice_sample works", {
   )
 
   # slice_sample keeps rows consistent
-  test_df <- tibble(x = 1:3, y = letters[1:3], z = 4:6)
-  test_pl <- as_polars_df(test_df)
+  test_pl <- pl$DataFrame(x = 1:3, y = letters[1:3], z = 4:6)
   foo <- slice_sample(test_pl, n = 1)
 
   if (pull(foo, x) == 1) {
@@ -211,6 +210,42 @@ test_that("slice_sample works with grouped data", {
       slice_sample(prop = 0.1, by = Species) |>
       attr("maintain_grp_order")
   )
+
+  # slice_sample by group keeps rows consistent
+  test_pl_g <- pl$DataFrame(
+    g = c("a", "a", "b", "b", "b"),
+    x = 1:5,
+    y = 6:10
+  ) |>
+    group_by(g)
+
+  foo <- slice_sample(test_pl_g, n = 1) |>
+    ungroup() |>
+    arrange(g)
+
+  g_val <- pull(foo, g)
+  x_val <- pull(foo, x)
+  y_val <- pull(foo, y)
+
+  for (i in 1:2) {
+    if (x_val[i] == 1) {
+      expect_equal(g_val[i], "a")
+      expect_equal(y_val[i], 6)
+    } else if (x_val[i] == 2) {
+      expect_equal(g_val[i], "a")
+      expect_equal(y_val[i], 7)
+    } else if (x_val[i] == 3) {
+      expect_equal(g_val[i], "b")
+      expect_equal(y_val[i], 8)
+    } else if (x_val[i] == 4) {
+      expect_equal(g_val[i], "b")
+      expect_equal(y_val[i], 9)
+    } else {
+      expect_equal(x_val[i], 5)
+      expect_equal(g_val[i], "b")
+      expect_equal(y_val[i], 10)
+    }
+  }
 })
 
 test_that("grouped slice_sample limits n to each group size", {
