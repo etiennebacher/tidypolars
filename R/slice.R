@@ -108,37 +108,32 @@ slice_sample.polars_data_frame <- function(
     n <- 1
   }
   if (isFALSE(replace)) {
-    if (!is.null(n) && n > nrow(.data)) {
+    if (!is_grouped && !is.null(n) && n > nrow(.data)) {
       n <- nrow(.data)
-    } else if (!is.null(prop) && prop > 1) {
+    }
+    if (!is.null(prop) && prop > 1) {
       prop <- 1
     }
   }
 
   if (is_grouped) {
-    partitions <- .data$partition_by(!!!grps, maintain_order = mo)
+    temp_row <- "__tidypolars_slice_sample_row__"
+    row_expr <- pl$struct(names(.data))
 
-    if (length(partitions) == 0) {
-      out <- .data
+    sample_expr <- if (isFALSE(replace) && !is.null(n) && isTRUE(n >= 0)) {
+      row_expr$shuffle()$head(n)
     } else {
-      sampled_partitions <- lapply(partitions, function(x) {
-        sample_n <- n
-        if (
-          isFALSE(replace) &&
-            !is.null(sample_n) &&
-            isTRUE(sample_n >= nrow(x))
-        ) {
-          sample_n <- nrow(x)
-        }
-        x$sample(
-          n = sample_n,
-          fraction = prop,
-          with_replacement = replace,
-          shuffle = TRUE
-        )
-      })
-      out <- bind_rows_polars(sampled_partitions)
+      row_expr$sample(
+        n = n,
+        fraction = prop,
+        with_replacement = replace,
+        shuffle = TRUE
+      )
     }
+
+    out <- .data$group_by(grps, .maintain_order = mo)$agg(
+      sample_expr$alias(temp_row)
+    )$explode(temp_row, empty_as_null = FALSE)$select(temp_row)$unnest(temp_row)
   } else {
     out <- .data$sample(
       n = n,

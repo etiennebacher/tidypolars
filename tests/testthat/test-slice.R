@@ -188,40 +188,26 @@ test_that("slice_sample works with grouped data", {
   )
 
   # slice_sample by group keeps rows consistent
-  test_pl_g <- pl$DataFrame(
-    g = c("a", "a", "b", "b", "b"),
-    x = 1:5,
-    y = 6:10
-  ) |>
-    group_by(g)
+  test_df <- tibble(
+    g = rep(c("a", "b"), each = 10),
+    id = 1:20,
+    x = 1:20 * 7,
+    y = paste0("row-", 1:20)
+  )
+  test_pl <- as_polars_df(test_df)
 
-  foo <- slice_sample(test_pl_g, n = 1) |>
-    ungroup() |>
-    arrange(g)
-
-  g_val <- pull(foo, g)
-  x_val <- pull(foo, x)
-  y_val <- pull(foo, y)
-
-  for (i in 1:2) {
-    if (x_val[i] == 1) {
-      expect_equal(g_val[i], "a")
-      expect_equal(y_val[i], 6)
-    } else if (x_val[i] == 2) {
-      expect_equal(g_val[i], "a")
-      expect_equal(y_val[i], 7)
-    } else if (x_val[i] == 3) {
-      expect_equal(g_val[i], "b")
-      expect_equal(y_val[i], 8)
-    } else if (x_val[i] == 4) {
-      expect_equal(g_val[i], "b")
-      expect_equal(y_val[i], 9)
-    } else {
-      expect_equal(x_val[i], 5)
-      expect_equal(g_val[i], "b")
-      expect_equal(y_val[i], 10)
-    }
-  }
+  expect_equal(
+    test_pl |>
+      group_by(g) |>
+      slice_sample(n = 20) |>
+      ungroup() |>
+      arrange(g, id),
+    test_df |>
+      group_by(g) |>
+      slice_sample(n = 20) |>
+      ungroup() |>
+      arrange(g, id)
+  )
 })
 
 test_that("slice_sample() truncates n and prop if they are too large", {
@@ -312,6 +298,60 @@ test_that("grouped slice_sample maintains group order when requested", {
     distinct(g)
 
   expect_equal(out, expected)
+})
+
+test_that("slice_sample works with different group structures", {
+  test_df <- tibble(
+    g1 = c("a", "a", "a", "b"),
+    g2 = c(1L, 1L, 2L, 1L)
+  )
+  test_pl <- as_polars_df(test_df)
+  skip_if_not(is_polars_df(test_pl))
+
+  group_only_df <- test_df |> select(g1)
+  group_only_pl <- as_polars_df(group_only_df)
+  expect_equal(
+    group_only_pl |>
+      group_by(g1) |>
+      slice_sample(n = 2) |>
+      ungroup() |>
+      arrange(g1),
+    group_only_df |>
+      group_by(g1) |>
+      slice_sample(n = 2) |>
+      ungroup() |>
+      arrange(g1)
+  )
+
+  expect_equal(
+    test_pl |>
+      group_by(g1, g2) |>
+      slice_sample(n = 1) |>
+      ungroup() |>
+      count(g1, g2) |>
+      arrange(g1, g2),
+    test_df |>
+      group_by(g1, g2) |>
+      slice_sample(n = 1) |>
+      ungroup() |>
+      count(g1, g2) |>
+      arrange(g1, g2)
+  )
+
+  expect_equal(
+    test_pl |>
+      group_by(g1, g2) |>
+      slice_sample(n = 3, replace = TRUE) |>
+      ungroup() |>
+      count(g1, g2) |>
+      arrange(g1, g2),
+    test_df |>
+      group_by(g1, g2) |>
+      slice_sample(n = 3, replace = TRUE) |>
+      ungroup() |>
+      count(g1, g2) |>
+      arrange(g1, g2)
+  )
 })
 
 test_that("unsupported args throw warning", {
