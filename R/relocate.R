@@ -68,7 +68,7 @@ relocate.polars_data_frame <- function(
     limit <- if (is.null(.before)) {
       0
     } else {
-      which(names_data == .before[1]) - 1
+      min(match(.before, names_data)) - 1
     }
     lhs <- names_data[seq_len(limit)]
     lhs <- lhs[which(lhs %in% not_moving)]
@@ -79,7 +79,7 @@ relocate.polars_data_frame <- function(
     limit <- if (is.null(.after)) {
       ncol(.data)
     } else {
-      which(names_data == .after[length(.after)])
+      max(match(.after, names_data))
     }
     lhs <- names_data[seq_len(limit)]
     lhs <- lhs[which(lhs %in% not_moving)]

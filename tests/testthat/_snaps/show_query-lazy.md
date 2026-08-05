@@ -175,6 +175,36 @@
       │ 20.090625 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 0.40625 ┆ 4.0  ┆ 2.0  │
       └───────────┴─────┴───────┴───────┴───┴─────┴─────────┴──────┴──────┘
 
+# show_query() records magrittr pipe translations
+
+    Code
+      current$collect()
+    Output
+      as_polars_lf(tibble(x = 1:3))$
+        with_columns(
+          rounded = pl$col("x")$round(decimals = 2),
+          in_range = pl$col("x")$
+            is_between(
+              lower_bound = pl$when(pl$col("x")$has_nulls())$
+                then(NA)$
+                otherwise(pl$col("x")$min()),
+              upper_bound = pl$when(pl$col("x")$has_nulls())$
+                then(NA)$
+                otherwise(pl$col("x")$max()),
+              closed = "both"
+            )
+        )
+      shape: (3, 3)
+      ┌─────┬─────────┬──────────┐
+      │ x   ┆ rounded ┆ in_range │
+      │ --- ┆ ---     ┆ ---      │
+      │ i32 ┆ i32     ┆ bool     │
+      ╞═════╪═════════╪══════════╡
+      │ 1   ┆ 1       ┆ true     │
+      │ 2   ┆ 2       ┆ true     │
+      │ 3   ┆ 3       ┆ true     │
+      └─────┴─────────┴──────────┘
+
 # user-defined functions returning polars expressions are recorded
 
     Code
@@ -875,26 +905,25 @@
           ),
           variable_name = "income",
           value_name = "count"
-        )$
-        sort("religion")
+        )
       shape: (180, 3)
-      ┌──────────────┬────────────────────┬───────┐
-      │ religion     ┆ income             ┆ count │
-      │ ---          ┆ ---                ┆ ---   │
-      │ str          ┆ str                ┆ f64   │
-      ╞══════════════╪════════════════════╪═══════╡
-      │ Agnostic     ┆ <$10k              ┆ 27.0  │
-      │ Agnostic     ┆ $10-20k            ┆ 34.0  │
-      │ Agnostic     ┆ $20-30k            ┆ 60.0  │
-      │ Agnostic     ┆ $30-40k            ┆ 81.0  │
-      │ Agnostic     ┆ $40-50k            ┆ 76.0  │
-      │ …            ┆ …                  ┆ …     │
-      │ Unaffiliated ┆ $50-75k            ┆ 528.0 │
-      │ Unaffiliated ┆ $75-100k           ┆ 407.0 │
-      │ Unaffiliated ┆ $100-150k          ┆ 321.0 │
-      │ Unaffiliated ┆ >150k              ┆ 258.0 │
-      │ Unaffiliated ┆ Don't know/refused ┆ 597.0 │
-      └──────────────┴────────────────────┴───────┘
+      ┌───────────────────────┬────────────────────┬───────┐
+      │ religion              ┆ income             ┆ count │
+      │ ---                   ┆ ---                ┆ ---   │
+      │ str                   ┆ str                ┆ f64   │
+      ╞═══════════════════════╪════════════════════╪═══════╡
+      │ Agnostic              ┆ <$10k              ┆ 27.0  │
+      │ Atheist               ┆ <$10k              ┆ 12.0  │
+      │ Buddhist              ┆ <$10k              ┆ 27.0  │
+      │ Catholic              ┆ <$10k              ┆ 418.0 │
+      │ Don’t know/refused    ┆ <$10k              ┆ 15.0  │
+      │ …                     ┆ …                  ┆ …     │
+      │ Orthodox              ┆ Don't know/refused ┆ 73.0  │
+      │ Other Christian       ┆ Don't know/refused ┆ 18.0  │
+      │ Other Faiths          ┆ Don't know/refused ┆ 71.0  │
+      │ Other World Religions ┆ Don't know/refused ┆ 8.0   │
+      │ Unaffiliated          ┆ Don't know/refused ┆ 597.0 │
+      └───────────────────────┴────────────────────┴───────┘
 
 # separate() example: split on a dot
 

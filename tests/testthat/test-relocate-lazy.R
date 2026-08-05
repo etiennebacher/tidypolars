@@ -40,6 +40,28 @@ test_that(".before and .after can be quoted or unquoted", {
   )
 })
 
+test_that("multiple destination columns use their positions", {
+  test_df <- tibble(
+    a = 1,
+    b = 2,
+    c = 3,
+    d = 4,
+    e = 5,
+    moved = 6
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |> relocate(moved, .before = c(d, b)),
+    test_df |> relocate(moved, .before = c(d, b))
+  )
+
+  expect_equal_lazy(
+    test_pl |> relocate(moved, .after = c(d, b)),
+    test_df |> relocate(moved, .after = c(d, b))
+  )
+})
+
 test_that("select helpers are also available", {
   test_df <- as_tibble(mtcars)
   test_pl <- as_polars_lf(test_df)
