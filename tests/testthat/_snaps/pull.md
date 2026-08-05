@@ -4,7 +4,7 @@
       pull(test_pl, all_of(c("mpg", "drat")))
     Condition
       Error in `pull()`:
-      ! `!!rlang::enquo(var)` must select exactly one column.
+      ! `pull()` can only extract one column. You tried to extract 2.
 
 ---
 

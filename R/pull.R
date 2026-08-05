@@ -15,9 +15,21 @@
 
 pull.polars_data_frame <- function(.data, var = -1, name = NULL, ...) {
   data_names <- names(.data)
-  var <- tidyselect::vars_pull(
-    data_names,
-    !!rlang::enquo(var)
+  var_quo <- rlang::enquo(var)
+  error_call <- rlang::current_env()
+  var <- tryCatch(
+    tidyselect::vars_pull(data_names, !!var_quo),
+    error = function(cnd) {
+      selected <- tidyselect_named_arg(.data, var_quo)
+      selected_length <- length(selected)
+      if (selected_length > 1) {
+        cli_abort(
+          "{.fn pull} can only extract one column. You tried to extract {selected_length}.",
+          call = error_call
+        )
+      }
+      rlang::cnd_signal(cnd)
+    }
   )
 
   name_quo <- rlang::enquo(name)
