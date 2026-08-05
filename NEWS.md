@@ -14,6 +14,8 @@
 
 * Improved the performance of `pivot_longer()` by no longer sorting its
   output (#395, @Yousa-Mirage).
+  
+* Added support for the `name` argument in `pull()` (#391, @Yousa-Mirage).
 
 ## Bug fixes
 
@@ -45,6 +47,9 @@
 
 * Fix `seq()` to correctly handle descending sequences, negative steps,
   single-value results, and `by = 0` consistently with base R (#377, @Yousa-Mirage).
+
+* Fix `pull()` to support negative column indices and default to the last column,
+  consistently with `dplyr` (#391, @Yousa-Mirage).
 
 
 # tidypolars 0.19.0
