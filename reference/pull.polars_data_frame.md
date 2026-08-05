@@ -6,10 +6,10 @@ This returns an R vector and not a Polars Series.
 
 ``` r
 # S3 method for class 'polars_data_frame'
-pull(.data, var, ...)
+pull(.data, var = -1, name = NULL, ...)
 
 # S3 method for class 'polars_lazy_frame'
-pull(.data, var, ...)
+pull(.data, var = -1, name = NULL, ...)
 ```
 
 ## Arguments
@@ -21,6 +21,10 @@ pull(.data, var, ...)
 - var:
 
   A quoted or unquoted variable name, or a variable index.
+
+- name:
+
+  An optional column to use to name the returned vector.
 
 - ...:
 
