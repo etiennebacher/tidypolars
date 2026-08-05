@@ -55,8 +55,6 @@ test_that("argument names_prefix works", {
 })
 
 test_that("row order is preserved", {
-  # index values in non-increasing order: sorting by the index columns would
-  # reorder the rows, the output must keep the original row order
   test_df <- data.frame(id = c(2L, 1L), a = c("a2", "a1"), b = c("b2", "b1"))
   test_pl <- as_polars_lf(test_df)
 
@@ -67,8 +65,6 @@ test_that("row order is preserved", {
 })
 
 test_that("no index column: output is in row-major order", {
-  # all columns are pivoted, the output must be a, b, a, b (row-major), not
-  # a, a, b, b (column-major)
   test_df <- data.frame(a = c("a1", "a2"), b = c("b1", "b2"))
   test_pl <- as_polars_lf(test_df)
 
