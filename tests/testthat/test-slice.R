@@ -282,6 +282,38 @@ test_that("grouped slice_sample with zero rows returns zero rows", {
   )
 })
 
+test_that("grouped slice_sample works with empty data", {
+  test_df <- tibble(g = character(), x = integer())
+  test_pl <- as_polars_df(test_df)
+  skip_if_not(is_polars_df(test_pl))
+
+  expect_equal(
+    test_pl |> group_by(g) |> slice_sample(n = 1),
+    test_df |> group_by(g) |> slice_sample(n = 1)
+  )
+
+  expect_equal(
+    test_pl |> slice_sample(n = 1, by = g),
+    test_df |> slice_sample(n = 1, by = g)
+  )
+})
+
+test_that("grouped slice_sample maintains group order when requested", {
+  test_df <- tibble(g = c("b", "a", "b", "c", "a"), x = 1:5)
+  test_pl <- as_polars_df(test_df)
+  skip_if_not(is_polars_df(test_pl))
+
+  out <- test_pl |>
+    group_by(g, maintain_order = TRUE) |>
+    slice_sample(n = 5) |>
+    distinct(g)
+  expected <- test_df |>
+    group_by(g) |>
+    distinct(g)
+
+  expect_equal(out, expected)
+})
+
 test_that("unsupported args throw warning", {
   test_df <- as_tibble(mtcars)
   test_pl <- as_polars_df(test_df)

@@ -116,19 +116,29 @@ slice_sample.polars_data_frame <- function(
   }
 
   if (is_grouped) {
-    partitions <- .data$partition_by(!!!grps)
-    sampled_partitions <- lapply(partitions, function(x) {
-      if (isFALSE(replace) && !is.null(n) && isTRUE(n >= nrow(x))) {
-        n <- nrow(x)
-      }
-      x$sample(
-        n = n,
-        fraction = prop,
-        with_replacement = replace,
-        shuffle = TRUE
-      )
-    })
-    out <- bind_rows_polars(sampled_partitions)
+    partitions <- .data$partition_by(!!!grps, maintain_order = mo)
+
+    if (length(partitions) == 0) {
+      out <- .data
+    } else {
+      sampled_partitions <- lapply(partitions, function(x) {
+        sample_n <- n
+        if (
+          isFALSE(replace) &&
+            !is.null(sample_n) &&
+            isTRUE(sample_n >= nrow(x))
+        ) {
+          sample_n <- nrow(x)
+        }
+        x$sample(
+          n = sample_n,
+          fraction = prop,
+          with_replacement = replace,
+          shuffle = TRUE
+        )
+      })
+      out <- bind_rows_polars(sampled_partitions)
+    }
   } else {
     out <- .data$sample(
       n = n,
