@@ -88,6 +88,21 @@ test_that("repeated index values keep the original row order", {
   )
 })
 
+test_that("selected columns keep their tidy-select order", {
+  test_df <- data.frame(
+    id = c(2L, 1L),
+    a = c("a2", "a1"),
+    b = c("b2", "b1"),
+    c = c("c2", "c1")
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |> pivot_longer(c(c, a, b)),
+    test_df |> pivot_longer(c(c, a, b))
+  )
+})
+
 test_that("unsupported args throw warning", {
   test_df <- as.data.frame(tidyr::billboard)
   test_pl <- as_polars_lf(test_df)

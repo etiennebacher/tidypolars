@@ -547,7 +547,10 @@
           variable_name = "income",
           value_name = "count"
         )$
-        sort("__tidypolars_pivot_longer_row_id__")$
+        sort(
+          "__tidypolars_pivot_longer_row_id__",
+          maintain_order = TRUE
+        )$
         drop("__tidypolars_pivot_longer_row_id__")
 
 # separate() example: split on a dot
