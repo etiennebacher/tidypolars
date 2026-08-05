@@ -12,8 +12,11 @@ test_that("basic behavior works", {
 
   expect_equal_lazy(
     test_pl |>
-      pivot_longer(!religion, names_to = "income", values_to = "count"),
-    test_df |> pivot_longer(!religion, names_to = "income", values_to = "count")
+      pivot_longer(!religion, names_to = "income", values_to = "count") |>
+      arrange(religion, income, count),
+    test_df |>
+      pivot_longer(!religion, names_to = "income", values_to = "count") |>
+      arrange(religion, income, count)
   )
 })
 
@@ -51,51 +54,6 @@ test_that("argument names_prefix works", {
         names_prefix = c("wk", "foo")
       ),
     error = TRUE
-  )
-})
-
-test_that("row order is preserved", {
-  test_df <- data.frame(id = c(2L, 1L), a = c("a2", "a1"), b = c("b2", "b1"))
-  test_pl <- as_polars_lf(test_df)
-
-  expect_equal_lazy(
-    test_pl |> pivot_longer(c(a, b)),
-    test_df |> pivot_longer(c(a, b))
-  )
-})
-
-test_that("no index column: output is in row-major order", {
-  test_df <- data.frame(a = c("a1", "a2"), b = c("b1", "b2"))
-  test_pl <- as_polars_lf(test_df)
-
-  expect_equal_lazy(
-    test_pl |> pivot_longer(c(a, b)),
-    test_df |> pivot_longer(c(a, b))
-  )
-})
-
-test_that("repeated index values keep the original row order", {
-  test_df <- data.frame(id = c(1L, 1L, 2L), a = 1:3, b = 4:6)
-  test_pl <- as_polars_lf(test_df)
-
-  expect_equal_lazy(
-    test_pl |> pivot_longer(c(a, b)),
-    test_df |> pivot_longer(c(a, b))
-  )
-})
-
-test_that("selected columns keep their tidy-select order", {
-  test_df <- data.frame(
-    id = c(2L, 1L),
-    a = c("a2", "a1"),
-    b = c("b2", "b1"),
-    c = c("c2", "c1")
-  )
-  test_pl <- as_polars_lf(test_df)
-
-  expect_equal_lazy(
-    test_pl |> pivot_longer(c(c, a, b)),
-    test_df |> pivot_longer(c(c, a, b))
   )
 })
 

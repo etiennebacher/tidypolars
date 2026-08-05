@@ -537,21 +537,15 @@
       show_query(query)
     Output
       as_polars_df(tidyr::relig_income)$
-        with_row_index(name = "__tidypolars_pivot_longer_row_id__")$
         unpivot(
-          index = c("religion", "__tidypolars_pivot_longer_row_id__"),
+          index = "religion",
           on = c(
             "<$10k", "$10-20k", "$20-30k", "$30-40k", "$40-50k", "$50-75k",
             "$75-100k", "$100-150k", ">150k", "Don't know/refused"
           ),
           variable_name = "income",
           value_name = "count"
-        )$
-        sort(
-          "__tidypolars_pivot_longer_row_id__",
-          maintain_order = TRUE
-        )$
-        drop("__tidypolars_pivot_longer_row_id__")
+        )
 
 # separate() example: split on a dot
 

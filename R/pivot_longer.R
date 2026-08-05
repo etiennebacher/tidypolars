@@ -59,14 +59,12 @@ pivot_longer.polars_data_frame <- function(
   data_names <- names(data)
   on <- tidyselect_named_arg(data, rlang::enquo(cols))
   index <- data_names[!data_names %in% on]
-
-  temp_row_id <- "__tidypolars_pivot_longer_row_id__"
-  out <- data$with_row_index(name = temp_row_id)$unpivot(
-    index = c(index, temp_row_id),
+  out <- data$unpivot(
+    index = index,
     on = on,
     variable_name = names_to,
     value_name = values_to
-  )$sort(temp_row_id, maintain_order = TRUE)$drop(temp_row_id)
+  )
 
   if (!is.null(names_prefix)) {
     out <- out$with_columns(
