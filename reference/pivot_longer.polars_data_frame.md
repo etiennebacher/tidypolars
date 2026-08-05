@@ -92,23 +92,23 @@ pl_relig_income
 pl_relig_income |>
   pivot_longer(!religion, names_to = "income", values_to = "count")
 #> shape: (180, 3)
-#> ┌──────────────┬────────────────────┬───────┐
-#> │ religion     ┆ income             ┆ count │
-#> │ ---          ┆ ---                ┆ ---   │
-#> │ str          ┆ str                ┆ f64   │
-#> ╞══════════════╪════════════════════╪═══════╡
-#> │ Agnostic     ┆ <$10k              ┆ 27.0  │
-#> │ Agnostic     ┆ $10-20k            ┆ 34.0  │
-#> │ Agnostic     ┆ $20-30k            ┆ 60.0  │
-#> │ Agnostic     ┆ $30-40k            ┆ 81.0  │
-#> │ Agnostic     ┆ $40-50k            ┆ 76.0  │
-#> │ …            ┆ …                  ┆ …     │
-#> │ Unaffiliated ┆ $50-75k            ┆ 528.0 │
-#> │ Unaffiliated ┆ $75-100k           ┆ 407.0 │
-#> │ Unaffiliated ┆ $100-150k          ┆ 321.0 │
-#> │ Unaffiliated ┆ >150k              ┆ 258.0 │
-#> │ Unaffiliated ┆ Don't know/refused ┆ 597.0 │
-#> └──────────────┴────────────────────┴───────┘
+#> ┌───────────────────────┬────────────────────┬───────┐
+#> │ religion              ┆ income             ┆ count │
+#> │ ---                   ┆ ---                ┆ ---   │
+#> │ str                   ┆ str                ┆ f64   │
+#> ╞═══════════════════════╪════════════════════╪═══════╡
+#> │ Agnostic              ┆ <$10k              ┆ 27.0  │
+#> │ Atheist               ┆ <$10k              ┆ 12.0  │
+#> │ Buddhist              ┆ <$10k              ┆ 27.0  │
+#> │ Catholic              ┆ <$10k              ┆ 418.0 │
+#> │ Don’t know/refused    ┆ <$10k              ┆ 15.0  │
+#> │ …                     ┆ …                  ┆ …     │
+#> │ Orthodox              ┆ Don't know/refused ┆ 73.0  │
+#> │ Other Christian       ┆ Don't know/refused ┆ 18.0  │
+#> │ Other Faiths          ┆ Don't know/refused ┆ 71.0  │
+#> │ Other World Religions ┆ Don't know/refused ┆ 8.0   │
+#> │ Unaffiliated          ┆ Don't know/refused ┆ 597.0 │
+#> └───────────────────────┴────────────────────┴───────┘
 
 pl_billboard <- as_polars_df(tidyr::billboard)
 pl_billboard
@@ -139,21 +139,21 @@ pl_billboard |>
     values_to = "rank",
   )
 #> shape: (24_092, 5)
-#> ┌─────────────────┬─────────────────────────┬──────────────┬──────┬──────┐
-#> │ artist          ┆ track                   ┆ date.entered ┆ week ┆ rank │
-#> │ ---             ┆ ---                     ┆ ---          ┆ ---  ┆ ---  │
-#> │ str             ┆ str                     ┆ date         ┆ str  ┆ f64  │
-#> ╞═════════════════╪═════════════════════════╪══════════════╪══════╪══════╡
-#> │ 2 Pac           ┆ Baby Don't Cry (Keep... ┆ 2000-02-26   ┆ 2    ┆ 82.0 │
-#> │ 2 Pac           ┆ Baby Don't Cry (Keep... ┆ 2000-02-26   ┆ 76   ┆ null │
-#> │ 2 Pac           ┆ Baby Don't Cry (Keep... ┆ 2000-02-26   ┆ 75   ┆ null │
-#> │ 2 Pac           ┆ Baby Don't Cry (Keep... ┆ 2000-02-26   ┆ 74   ┆ null │
-#> │ 2 Pac           ┆ Baby Don't Cry (Keep... ┆ 2000-02-26   ┆ 73   ┆ null │
-#> │ …               ┆ …                       ┆ …            ┆ …    ┆ …    │
-#> │ matchbox twenty ┆ Bent                    ┆ 2000-04-29   ┆ 32   ┆ 28.0 │
-#> │ matchbox twenty ┆ Bent                    ┆ 2000-04-29   ┆ 56   ┆ null │
-#> │ matchbox twenty ┆ Bent                    ┆ 2000-04-29   ┆ 17   ┆ 2.0  │
-#> │ matchbox twenty ┆ Bent                    ┆ 2000-04-29   ┆ 3    ┆ 29.0 │
-#> │ matchbox twenty ┆ Bent                    ┆ 2000-04-29   ┆ 76   ┆ null │
-#> └─────────────────┴─────────────────────────┴──────────────┴──────┴──────┘
+#> ┌──────────────────┬─────────────────────────┬──────────────┬──────┬──────┐
+#> │ artist           ┆ track                   ┆ date.entered ┆ week ┆ rank │
+#> │ ---              ┆ ---                     ┆ ---          ┆ ---  ┆ ---  │
+#> │ str              ┆ str                     ┆ date         ┆ str  ┆ f64  │
+#> ╞══════════════════╪═════════════════════════╪══════════════╪══════╪══════╡
+#> │ 2 Pac            ┆ Baby Don't Cry (Keep... ┆ 2000-02-26   ┆ 1    ┆ 87.0 │
+#> │ 2Ge+her          ┆ The Hardest Part Of ... ┆ 2000-09-02   ┆ 1    ┆ 91.0 │
+#> │ 3 Doors Down     ┆ Kryptonite              ┆ 2000-04-08   ┆ 1    ┆ 81.0 │
+#> │ 3 Doors Down     ┆ Loser                   ┆ 2000-10-21   ┆ 1    ┆ 76.0 │
+#> │ 504 Boyz         ┆ Wobble Wobble           ┆ 2000-04-15   ┆ 1    ┆ 57.0 │
+#> │ …                ┆ …                       ┆ …            ┆ …    ┆ …    │
+#> │ Yankee Grey      ┆ Another Nine Minutes    ┆ 2000-04-29   ┆ 76   ┆ null │
+#> │ Yearwood, Trisha ┆ Real Live Woman         ┆ 2000-04-01   ┆ 76   ┆ null │
+#> │ Ying Yang Twins  ┆ Whistle While You Tw... ┆ 2000-03-18   ┆ 76   ┆ null │
+#> │ Zombie Nation    ┆ Kernkraft 400           ┆ 2000-09-02   ┆ 76   ┆ null │
+#> │ matchbox twenty  ┆ Bent                    ┆ 2000-04-29   ┆ 76   ┆ null │
+#> └──────────────────┴─────────────────────────┴──────────────┴──────┴──────┘
 ```

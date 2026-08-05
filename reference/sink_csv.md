@@ -205,7 +205,7 @@ sink_csv(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
 #> Warning: `partition_by_key()` was deprecated in tidypolars 0.16.0.
 #> ℹ Please use `partition_by(key = )` instead.
 fs::dir_tree(out_path)
-#> /tmp/RtmpUfXZTo/file1a247f1537c7
+#> /tmp/Rtmp9LpoC6/file1a75667e0dca
 #> ├── am=0.0
 #> │   ├── cyl=4.0
 #> │   │   └── 00000000.csv
@@ -227,7 +227,7 @@ sink_csv(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
 #> Warning: `partition_by_max_size()` was deprecated in tidypolars 0.16.0.
 #> ℹ Please use `partition_by(max_rows_per_file = )` instead.
 fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-#> /tmp/RtmpUfXZTo/file1a24697a6b44
+#> /tmp/Rtmp9LpoC6/file1a75585c5f0b
 #> ├── 00000000.csv
 #> ├── 00000001.csv
 #> ├── 00000002.csv
