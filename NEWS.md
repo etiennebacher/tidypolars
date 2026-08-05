@@ -12,6 +12,8 @@
 * Added support for `anyDuplicated()`, and for the `incomparables` and `fromLast`
   arguments of `duplicated()` (#375, @Yousa-Mirage).
 
+* Add support for the `name` argument in `pull()` (#391, @Yousa-Mirage).
+
 ## Bug fixes
 
 * Multiple fixes to improve compatibility with `stringr` for the following functions:
@@ -40,8 +42,6 @@
 
 * Fix `pull()` to support negative column indices and default to the last column,
   consistently with `dplyr` (#391, @Yousa-Mirage).
-
-* Add support for the `name` argument in `pull()` (#391, @Yousa-Mirage).
 
 
 # tidypolars 0.19.0

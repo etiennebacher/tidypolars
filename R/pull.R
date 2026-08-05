@@ -42,11 +42,8 @@ pull.polars_data_frame <- function(.data, var = -1, name = NULL, ...) {
   out <- add_tidypolars_class(.data)
   cols <- unique(c(var, name))
   exprs <- lapply(cols, \(col) pl$col(col))
-  out <- out$select(!!!exprs)
-  if (is_polars_lf(out)) {
-    out <- out$collect()
-  }
-  out <- as.data.frame(out)
+  out <- out$select(!!!exprs) |>
+    as.data.frame()
 
   value <- out[[1]]
   if (!is.null(name)) {
