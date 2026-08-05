@@ -8,8 +8,11 @@ test_that("basic behavior works", {
 
   expect_equal(
     test_pl |>
-      pivot_longer(!religion, names_to = "income", values_to = "count"),
-    test_df |> pivot_longer(!religion, names_to = "income", values_to = "count")
+      pivot_longer(!religion, names_to = "income", values_to = "count") |>
+      arrange(religion, income, count),
+    test_df |>
+      pivot_longer(!religion, names_to = "income", values_to = "count") |>
+      arrange(religion, income, count)
   )
 })
 

@@ -12,6 +12,9 @@
 * Added support for `anyDuplicated()`, and for the `incomparables` and `fromLast`
   arguments of `duplicated()` (#375, @Yousa-Mirage).
 
+* Improved the performance of `pivot_longer()` by no longer sorting its
+  output (#395, @Yousa-Mirage).
+
 ## Bug fixes
 
 * Fix `relocate()` to use the leftmost and rightmost selected columns for
