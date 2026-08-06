@@ -21,6 +21,11 @@
 
 ## Bug fixes
 
+* Fix the function name in deprecation warnings from `sink_csv()` (#393, @Yousa-Mirage).
+
+* Allow the Polars-supported "prefiltered" Parquet scan strategy and
+  "never" CSV quote style in the corresponding wrappers (#393, @Yousa-Mirage).
+
 * Fix grouped `slice_head()`, `slice_tail()`, and `slice_sample()` for zero-size
   samples (#394, @Yousa-Mirage).
   

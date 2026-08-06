@@ -139,7 +139,7 @@ scan_parquet_polars <- function(
 ) {
   rlang::arg_match0(
     parallel,
-    values = c("auto", "columns", "row_groups", "none")
+    values = c("auto", "columns", "row_groups", "prefiltered", "none")
   )
   rlang::check_dots_empty()
 
