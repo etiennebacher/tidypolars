@@ -12,10 +12,12 @@
 * Added support for `anyDuplicated()`, and for the `incomparables` and `fromLast`
   arguments of `duplicated()` (#375, @Yousa-Mirage).
 
+* Allow `slice_sample()` with `n > nrow(data)` and `prop > 1` (#394, @Yousa-Mirage).
+
 ## Bug fixes
 
 * Fix grouped `slice_head()`, `slice_tail()`, and `slice_sample()` for zero-size
-  samples. Allow `slice_sample()` with `n > nrow(data)` and `prop > 1` (#394, @Yousa-Mirage).
+  samples (#394, @Yousa-Mirage).
   
 * Fix `relocate()` to use the leftmost and rightmost selected columns for
   `.before` and `.after` for consistency with `dplyr` (#392, @Yousa-Mirage).
