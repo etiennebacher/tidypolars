@@ -223,7 +223,7 @@ test_that("slice_sample() truncates n and prop if they are too large", {
   )
 })
 
-test_that("grouped slice_sample limits n to each group size", {
+test_that("slice_sample() by group truncates n and prop if they are too large", {
   test_df <- tibble(g = c("a", "a", "b", "b", "b"), x = 1:5, y = 6:10)
   test_pl <- as_polars_df(test_df)
   skip_if_not(is_polars_df(test_pl))
@@ -238,6 +238,21 @@ test_that("grouped slice_sample limits n to each group size", {
     test_df |>
       group_by(g) |>
       slice_sample(n = 3) |>
+      ungroup() |>
+      count(g) |>
+      arrange(g)
+  )
+
+  expect_equal(
+    test_pl |>
+      group_by(g) |>
+      slice_sample(prop = 1.5) |>
+      ungroup() |>
+      count(g) |>
+      arrange(g),
+    test_df |>
+      group_by(g) |>
+      slice_sample(prop = 1.5) |>
       ungroup() |>
       count(g) |>
       arrange(g)
