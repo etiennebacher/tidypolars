@@ -46,6 +46,21 @@ test_that("slice_head works with grouped data", {
   expect_true(attr(slice_head(test_pl_grp, n = 2), "maintain_grp_order"))
 })
 
+test_that("grouped head and tail with zero rows return zero rows", {
+  test_df <- tibble(g = c("a", "a", "b"), x = 1:3)
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |> group_by(g) |> slice_head(n = 0),
+    test_df |> group_by(g) |> slice_head(n = 0)
+  )
+
+  expect_equal_lazy(
+    test_pl |> group_by(g) |> slice_tail(n = 0),
+    test_df |> group_by(g) |> slice_tail(n = 0)
+  )
+})
+
 test_that("slice_tail works on grouped data", {
   test_df <- as_tibble(iris)
   test_pl <- as_polars_lf(test_df)
@@ -111,27 +126,13 @@ test_that("basic slice_sample works", {
     slice_sample(test_df, n = 200, replace = TRUE) |> nrow()
   )
 
-  # TODO? dplyr chooses to take n_rows(data) if n > n_rows(data)
-  # https://github.com/tidyverse/dplyr/issues/6185
-  expect_snapshot_lazy(
-    slice_sample(test_pl, n = 200),
-    error = TRUE
-  )
-
   expect_equal_lazy(
     slice_sample(test_pl, prop = 2, replace = TRUE) |> nrow(),
     slice_sample(test_df, prop = 2, replace = TRUE) |> nrow()
   )
 
-  # TODO? dplyr chooses to take n_rows(data) if prop > 1
-  expect_snapshot_lazy(
-    slice_sample(test_pl, prop = 1.2),
-    error = TRUE
-  )
-
   # slice_sample keeps rows consistent
-  test_df <- tibble(x = 1:3, y = letters[1:3], z = 4:6)
-  test_pl <- as_polars_lf(test_df)
+  test_pl <- pl$LazyFrame(x = 1:3, y = letters[1:3], z = 4:6)
   foo <- slice_sample(test_pl, n = 1)
 
   if (pull(foo, x) == 1) {
@@ -188,6 +189,185 @@ test_that("slice_sample works with grouped data", {
     test_pl |>
       slice_sample(prop = 0.1, by = Species) |>
       attr("maintain_grp_order")
+  )
+
+  # slice_sample by group keeps rows consistent
+  test_pl <- pl$LazyFrame(g = c("a", "a", "b", "b"), x = 1:4, y = 5:8) |>
+    group_by(g)
+  foo <- slice_sample(test_pl, n = 1)
+
+  g1 <- filter(foo, g == "a")
+  g2 <- filter(foo, g == "b")
+
+  if (pull(g1, x) == 1) {
+    expect_equal_lazy(pull(g1, y), 5)
+  } else if (pull(g1, x) == 2) {
+    expect_equal_lazy(pull(g1, y), 6)
+  }
+
+  if (pull(g2, x) == 3) {
+    expect_equal_lazy(pull(g2, y), 7)
+  } else if (pull(g2, x) == 4) {
+    expect_equal_lazy(pull(g2, y), 8)
+  }
+})
+
+test_that("slice_sample() truncates n and prop if they are too large", {
+  test_df <- tibble(x = 1:5, y = 6:10)
+  test_pl <- as_polars_lf(test_df)
+  skip_if_not(is_polars_df(test_pl))
+
+  expect_equal_lazy(
+    test_pl |> slice_sample(n = 200) |> arrange(x, y),
+    test_df |> slice_sample(n = 200) |> arrange(x, y)
+  )
+  expect_equal_lazy(
+    test_pl |> slice_sample(prop = 1.5) |> arrange(x, y),
+    test_df |> slice_sample(prop = 1.5) |> arrange(x, y)
+  )
+})
+
+test_that("slice_sample() by group truncates n and prop if they are too large", {
+  test_df <- tibble(g = c("a", "a", "b", "b", "b"), x = 1:5, y = 6:10)
+  test_pl <- as_polars_lf(test_df)
+  skip_if_not(is_polars_df(test_pl))
+
+  expect_equal_lazy(
+    test_pl |>
+      group_by(g) |>
+      slice_sample(n = 3) |>
+      ungroup() |>
+      count(g) |>
+      arrange(g),
+    test_df |>
+      group_by(g) |>
+      slice_sample(n = 3) |>
+      ungroup() |>
+      count(g) |>
+      arrange(g)
+  )
+
+  expect_equal_lazy(
+    test_pl |>
+      group_by(g) |>
+      slice_sample(prop = 1.5) |>
+      ungroup() |>
+      count(g) |>
+      arrange(g),
+    test_df |>
+      group_by(g) |>
+      slice_sample(prop = 1.5) |>
+      ungroup() |>
+      count(g) |>
+      arrange(g)
+  )
+
+  expect_equal_lazy(
+    test_pl |>
+      slice_sample(n = 3, by = g) |>
+      count(g) |>
+      arrange(g),
+    test_df |>
+      slice_sample(n = 3, by = g) |>
+      count(g) |>
+      arrange(g)
+  )
+})
+
+test_that("grouped slice_sample with zero rows returns zero rows", {
+  test_df <- tibble(g = c("a", "a", "b"), x = 1:3)
+  test_pl <- as_polars_lf(test_df)
+  skip_if_not(is_polars_df(test_pl))
+
+  expect_equal_lazy(
+    test_pl |> group_by(g) |> slice_sample(n = 0),
+    test_df |> group_by(g) |> slice_sample(n = 0)
+  )
+})
+
+test_that("grouped slice_sample works with empty data", {
+  test_df <- tibble(g = character(), x = integer())
+  test_pl <- as_polars_lf(test_df)
+  skip_if_not(is_polars_df(test_pl))
+
+  expect_equal_lazy(
+    test_pl |> group_by(g) |> slice_sample(n = 1),
+    test_df |> group_by(g) |> slice_sample(n = 1)
+  )
+
+  expect_equal_lazy(
+    test_pl |> slice_sample(n = 1, by = g),
+    test_df |> slice_sample(n = 1, by = g)
+  )
+})
+
+test_that("grouped slice_sample maintains group order when requested", {
+  test_df <- tibble(g = c("b", "a", "b", "c", "a"), x = 1:5)
+  test_pl <- as_polars_lf(test_df)
+  skip_if_not(is_polars_df(test_pl))
+
+  out <- test_pl |>
+    group_by(g, maintain_order = TRUE) |>
+    slice_sample(n = 5) |>
+    distinct(g)
+  expected <- test_df |>
+    group_by(g) |>
+    distinct(g)
+
+  expect_equal_lazy(out, expected)
+})
+
+test_that("slice_sample works with different group structures", {
+  test_df <- tibble(
+    g1 = c("a", "a", "a", "b"),
+    g2 = c(1L, 1L, 2L, 1L)
+  )
+  test_pl <- as_polars_lf(test_df)
+  skip_if_not(is_polars_df(test_pl))
+
+  group_only_df <- test_df |> select(g1)
+  group_only_pl <- as_polars_lf(group_only_df)
+  expect_equal_lazy(
+    group_only_pl |>
+      group_by(g1) |>
+      slice_sample(n = 2) |>
+      ungroup() |>
+      arrange(g1),
+    group_only_df |>
+      group_by(g1) |>
+      slice_sample(n = 2) |>
+      ungroup() |>
+      arrange(g1)
+  )
+
+  expect_equal_lazy(
+    test_pl |>
+      group_by(g1, g2) |>
+      slice_sample(n = 1) |>
+      ungroup() |>
+      count(g1, g2) |>
+      arrange(g1, g2),
+    test_df |>
+      group_by(g1, g2) |>
+      slice_sample(n = 1) |>
+      ungroup() |>
+      count(g1, g2) |>
+      arrange(g1, g2)
+  )
+
+  expect_equal_lazy(
+    test_pl |>
+      group_by(g1, g2) |>
+      slice_sample(n = 3, replace = TRUE) |>
+      ungroup() |>
+      count(g1, g2) |>
+      arrange(g1, g2),
+    test_df |>
+      group_by(g1, g2) |>
+      slice_sample(n = 3, replace = TRUE) |>
+      ungroup() |>
+      count(g1, g2) |>
+      arrange(g1, g2)
   )
 })
 

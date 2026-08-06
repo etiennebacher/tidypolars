@@ -14,6 +14,10 @@
 
 * Improved the performance of `pivot_longer()` by no longer sorting its
   output (#395, @Yousa-Mirage).
+  
+* Added support for the `name` argument in `pull()` (#391, @Yousa-Mirage).
+
+* Allow `slice_sample()` with `n > nrow(data)` and `prop > 1` (#394, @Yousa-Mirage).
 
 ## Bug fixes
 
@@ -22,6 +26,9 @@
 * Allow the Polars-supported "prefiltered" Parquet scan strategy and
   "never" CSV quote style in the corresponding wrappers (#393, @Yousa-Mirage).
 
+* Fix grouped `slice_head()`, `slice_tail()`, and `slice_sample()` for zero-size
+  samples (#394, @Yousa-Mirage).
+  
 * Fix `relocate()` to use the leftmost and rightmost selected columns for
   `.before` and `.after` for consistency with `dplyr` (#392, @Yousa-Mirage).
 
@@ -50,6 +57,9 @@
 
 * Fix `seq()` to correctly handle descending sequences, negative steps,
   single-value results, and `by = 0` consistently with base R (#377, @Yousa-Mirage).
+
+* Fix `pull()` to support negative column indices and default to the last column,
+  consistently with `dplyr` (#391, @Yousa-Mirage).
 
 
 # tidypolars 0.19.0

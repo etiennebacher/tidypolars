@@ -630,6 +630,126 @@
       as_polars_df(iris)$
         tail(3)
 
+# slice example: slice_sample()
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(iris[, c("Species", "Sepal.Width")])$
+        sample(
+          n = NULL,
+          fraction = 1,
+          with_replacement = FALSE,
+          shuffle = TRUE
+        )$
+        with_columns(
+          pl$col("Species")$alias("__TIDYPOLARS_TEMP_SORT__1"),
+          pl$col("Sepal.Width")$alias("__TIDYPOLARS_TEMP_SORT__2")
+        )$
+        sort(
+          "__TIDYPOLARS_TEMP_SORT__1",
+          "__TIDYPOLARS_TEMP_SORT__2",
+          descending = c(FALSE, FALSE),
+          nulls_last = TRUE
+        )$
+        drop("__TIDYPOLARS_TEMP_SORT__1", "__TIDYPOLARS_TEMP_SORT__2")
+
+# slice example: slice by group
+
+    Code
+      show_query(query_head)
+    Output
+      as_polars_df(iris)$
+        group_by(
+          "Species",
+          .maintain_order = FALSE
+        )$
+        agg(pl$all()$head(3))$
+        explode(
+          c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
+          empty_as_null = FALSE
+        )$
+        select(
+          "Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species"
+        )$
+        with_columns(
+          pl$col("Species")$alias("__TIDYPOLARS_TEMP_SORT__1"),
+          pl$col("Sepal.Width")$alias("__TIDYPOLARS_TEMP_SORT__2")
+        )$
+        sort(
+          "__TIDYPOLARS_TEMP_SORT__1",
+          "__TIDYPOLARS_TEMP_SORT__2",
+          descending = c(FALSE, FALSE),
+          nulls_last = TRUE
+        )$
+        drop("__TIDYPOLARS_TEMP_SORT__1", "__TIDYPOLARS_TEMP_SORT__2")
+
+---
+
+    Code
+      show_query(query_tail)
+    Output
+      as_polars_df(iris)$
+        group_by(
+          "Species",
+          .maintain_order = FALSE
+        )$
+        agg(pl$all()$tail(3))$
+        explode(
+          c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width"),
+          empty_as_null = FALSE
+        )$
+        select(
+          "Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species"
+        )$
+        with_columns(
+          pl$col("Species")$alias("__TIDYPOLARS_TEMP_SORT__1"),
+          pl$col("Sepal.Width")$alias("__TIDYPOLARS_TEMP_SORT__2")
+        )$
+        sort(
+          "__TIDYPOLARS_TEMP_SORT__1",
+          "__TIDYPOLARS_TEMP_SORT__2",
+          descending = c(FALSE, FALSE),
+          nulls_last = TRUE
+        )$
+        drop("__TIDYPOLARS_TEMP_SORT__1", "__TIDYPOLARS_TEMP_SORT__2")
+
+---
+
+    Code
+      show_query(query_sample)
+    Output
+      as_polars_df(iris)$
+        group_by(
+          "Species",
+          .maintain_order = FALSE
+        )$
+        agg(
+          pl$struct(
+            c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species")
+          )$
+            shuffle()$
+            head(3)$
+            alias("__tidypolars_slice_sample_row__")
+        )$
+        explode(
+          "__tidypolars_slice_sample_row__",
+          empty_as_null = FALSE
+        )$
+        select("__tidypolars_slice_sample_row__")$
+        unnest("__tidypolars_slice_sample_row__")$
+        with_columns(
+          pl$col("Species")$alias("__TIDYPOLARS_TEMP_SORT__1"),
+          pl$col("Sepal.Width")$alias("__TIDYPOLARS_TEMP_SORT__2")
+        )$
+        sort(
+          "__TIDYPOLARS_TEMP_SORT__1",
+          "__TIDYPOLARS_TEMP_SORT__2",
+          descending = c(FALSE, FALSE),
+          nulls_last = TRUE
+        )$
+        drop("__TIDYPOLARS_TEMP_SORT__1", "__TIDYPOLARS_TEMP_SORT__2")
+
 # translated base functions: maths and rounding
 
     Code
