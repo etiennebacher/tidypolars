@@ -64,7 +64,7 @@ pivot_longer.polars_data_frame <- function(
     on = on,
     variable_name = names_to,
     value_name = values_to
-  )$sort(index)
+  )
 
   if (!is.null(names_prefix)) {
     out <- out$with_columns(

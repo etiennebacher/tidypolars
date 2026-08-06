@@ -565,8 +565,7 @@
           ),
           variable_name = "income",
           value_name = "count"
-        )$
-        sort("religion")
+        )
 
 # separate() example: split on a dot
 

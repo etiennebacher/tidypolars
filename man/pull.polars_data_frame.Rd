@@ -5,14 +5,16 @@
 \alias{pull.polars_lazy_frame}
 \title{Extract a variable of a Data/LazyFrame}
 \usage{
-\method{pull}{polars_data_frame}(.data, var, ...)
+\method{pull}{polars_data_frame}(.data, var = -1, name = NULL, ...)
 
-\method{pull}{polars_lazy_frame}(.data, var, ...)
+\method{pull}{polars_lazy_frame}(.data, var = -1, name = NULL, ...)
 }
 \arguments{
 \item{.data}{A Polars Data/LazyFrame}
 
 \item{var}{A quoted or unquoted variable name, or a variable index.}
+
+\item{name}{An optional column to use to name the returned vector.}
 
 \item{...}{Dots which should be empty.}
 }
