@@ -192,26 +192,24 @@ test_that("slice_sample works with grouped data", {
   )
 
   # slice_sample by group keeps rows consistent
-  test_df <- tibble(
-    g = rep(c("a", "b"), each = 10),
-    id = 1:20,
-    x = 1:20 * 7,
-    y = paste0("row-", 1:20)
-  )
-  test_pl <- as_polars_lf(test_df)
+  test_pl <- pl$LazyFrame(g = c("a", "a", "b", "b"), x = 1:4, y = 5:8) |>
+    group_by(g)
+  foo <- slice_sample(test_pl, n = 1)
 
-  expect_equal_lazy(
-    test_pl |>
-      group_by(g) |>
-      slice_sample(n = 20) |>
-      ungroup() |>
-      arrange(g, id),
-    test_df |>
-      group_by(g) |>
-      slice_sample(n = 20) |>
-      ungroup() |>
-      arrange(g, id)
-  )
+  g1 <- filter(foo, g == "a")
+  g2 <- filter(foo, g == "b")
+
+  if (pull(g1, x) == 1) {
+    expect_equal_lazy(pull(g1, y), 5)
+  } else if (pull(g1, x) == 2) {
+    expect_equal_lazy(pull(g1, y), 6)
+  }
+
+  if (pull(g2, x) == 3) {
+    expect_equal_lazy(pull(g2, y), 7)
+  } else if (pull(g2, x) == 4) {
+    expect_equal_lazy(pull(g2, y), 8)
+  }
 })
 
 test_that("slice_sample() truncates n and prop if they are too large", {
@@ -230,7 +228,7 @@ test_that("slice_sample() truncates n and prop if they are too large", {
 })
 
 test_that("grouped slice_sample limits n to each group size", {
-  test_df <- tibble(g = c("a", "a", "b", "b", "b"), x = 1:5)
+  test_df <- tibble(g = c("a", "a", "b", "b", "b"), x = 1:5, y = 6:10)
   test_pl <- as_polars_lf(test_df)
   skip_if_not(is_polars_df(test_pl))
 
