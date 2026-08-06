@@ -118,12 +118,18 @@ slice_sample.polars_data_frame <- function(
 
   if (is_grouped) {
     temp_row <- "__tidypolars_slice_sample_row__"
-    sample_expr <- pl$struct(names(.data))$sample(
-      n = n,
-      fraction = prop,
-      with_replacement = replace,
-      shuffle = TRUE
-    )
+    row_expr <- pl$struct(names(.data))
+
+    sample_expr <- if (isFALSE(replace) && !is.null(n) && isTRUE(n >= 0)) {
+      row_expr$shuffle()$head(n)
+    } else {
+      row_expr$sample(
+        n = n,
+        fraction = prop,
+        with_replacement = replace,
+        shuffle = TRUE
+      )
+    }
 
     out <- .data$group_by(grps, .maintain_order = mo)$agg(
       sample_expr$alias(temp_row)

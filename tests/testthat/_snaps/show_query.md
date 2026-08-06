@@ -728,7 +728,8 @@
           pl$struct(
             c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species")
           )$
-            sample(n = 3, fraction = NULL, with_replacement = FALSE, shuffle = TRUE)$
+            shuffle()$
+            head(3)$
             alias("__tidypolars_slice_sample_row__")
         )$
         explode(
