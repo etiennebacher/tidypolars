@@ -4,17 +4,12 @@
       show_query(query)
     Output
       as_polars_df(mtcars)$
-        with_columns(
-          pl$col("cyl")$alias("__TIDYPOLARS_TEMP_SORT__1"),
-          pl$col("disp")$alias("__TIDYPOLARS_TEMP_SORT__2")
-        )$
         sort(
-          "__TIDYPOLARS_TEMP_SORT__1",
-          "__TIDYPOLARS_TEMP_SORT__2",
+          pl$col("cyl"),
+          pl$col("disp"),
           descending = c(FALSE, TRUE),
           nulls_last = TRUE
         )$
-        drop("__TIDYPOLARS_TEMP_SORT__1", "__TIDYPOLARS_TEMP_SORT__2")$
         unique(
           "cyl",
           "am",
@@ -457,17 +452,12 @@
           "iso3", "year", "newrel_f014", "newrel_f1524", "newrel_f2534",
           "newrel_f3544", "newrel_f4554", "newrel_f5564", "newrel_f65"
         )$
-        with_columns(
-          pl$col("iso3")$alias("__TIDYPOLARS_TEMP_SORT__1"),
-          pl$col("year")$alias("__TIDYPOLARS_TEMP_SORT__2")
-        )$
         sort(
-          "__TIDYPOLARS_TEMP_SORT__1",
-          "__TIDYPOLARS_TEMP_SORT__2",
+          pl$col("iso3"),
+          pl$col("year"),
           descending = c(FALSE, FALSE),
           nulls_last = TRUE
         )$
-        drop("__TIDYPOLARS_TEMP_SORT__1", "__TIDYPOLARS_TEMP_SORT__2")$
         rename(
           iso3 = "ISO3",
           year = "YEAR",
@@ -642,17 +632,12 @@
           with_replacement = FALSE,
           shuffle = TRUE
         )$
-        with_columns(
-          pl$col("Species")$alias("__TIDYPOLARS_TEMP_SORT__1"),
-          pl$col("Sepal.Width")$alias("__TIDYPOLARS_TEMP_SORT__2")
-        )$
         sort(
-          "__TIDYPOLARS_TEMP_SORT__1",
-          "__TIDYPOLARS_TEMP_SORT__2",
+          pl$col("Species"),
+          pl$col("Sepal.Width"),
           descending = c(FALSE, FALSE),
           nulls_last = TRUE
-        )$
-        drop("__TIDYPOLARS_TEMP_SORT__1", "__TIDYPOLARS_TEMP_SORT__2")
+        )
 
 # slice example: slice by group
 
@@ -672,17 +657,12 @@
         select(
           "Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species"
         )$
-        with_columns(
-          pl$col("Species")$alias("__TIDYPOLARS_TEMP_SORT__1"),
-          pl$col("Sepal.Width")$alias("__TIDYPOLARS_TEMP_SORT__2")
-        )$
         sort(
-          "__TIDYPOLARS_TEMP_SORT__1",
-          "__TIDYPOLARS_TEMP_SORT__2",
+          pl$col("Species"),
+          pl$col("Sepal.Width"),
           descending = c(FALSE, FALSE),
           nulls_last = TRUE
-        )$
-        drop("__TIDYPOLARS_TEMP_SORT__1", "__TIDYPOLARS_TEMP_SORT__2")
+        )
 
 ---
 
@@ -702,17 +682,12 @@
         select(
           "Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species"
         )$
-        with_columns(
-          pl$col("Species")$alias("__TIDYPOLARS_TEMP_SORT__1"),
-          pl$col("Sepal.Width")$alias("__TIDYPOLARS_TEMP_SORT__2")
-        )$
         sort(
-          "__TIDYPOLARS_TEMP_SORT__1",
-          "__TIDYPOLARS_TEMP_SORT__2",
+          pl$col("Species"),
+          pl$col("Sepal.Width"),
           descending = c(FALSE, FALSE),
           nulls_last = TRUE
-        )$
-        drop("__TIDYPOLARS_TEMP_SORT__1", "__TIDYPOLARS_TEMP_SORT__2")
+        )
 
 ---
 
@@ -738,17 +713,12 @@
         )$
         select("__tidypolars_slice_sample_row__")$
         unnest("__tidypolars_slice_sample_row__")$
-        with_columns(
-          pl$col("Species")$alias("__TIDYPOLARS_TEMP_SORT__1"),
-          pl$col("Sepal.Width")$alias("__TIDYPOLARS_TEMP_SORT__2")
-        )$
         sort(
-          "__TIDYPOLARS_TEMP_SORT__1",
-          "__TIDYPOLARS_TEMP_SORT__2",
+          pl$col("Species"),
+          pl$col("Sepal.Width"),
           descending = c(FALSE, FALSE),
           nulls_last = TRUE
-        )$
-        drop("__TIDYPOLARS_TEMP_SORT__1", "__TIDYPOLARS_TEMP_SORT__2")
+        )
 
 # translated base functions: maths and rounding
 
