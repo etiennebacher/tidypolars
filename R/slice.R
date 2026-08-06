@@ -28,7 +28,7 @@ slice_tail.polars_data_frame <- function(.data, ..., n, by = NULL) {
     non_grps <- setdiff(names(.data), grps)
     out <- .data$group_by(grps, .maintain_order = mo)$agg(
       pl$all()$tail(n)
-    )$explode(non_grps, empty_as_null = TRUE)$select(!!!col_order)
+    )$explode(non_grps, empty_as_null = FALSE)$select(!!!col_order)
   } else {
     out <- .data$tail(n)
   }
@@ -60,7 +60,7 @@ slice_head.polars_data_frame <- function(.data, ..., n, by = NULL) {
     non_grps <- setdiff(names(.data), grps)
     out <- .data$group_by(grps, .maintain_order = mo)$agg(
       pl$all()$head(n)
-    )$explode(non_grps, empty_as_null = TRUE)$select(!!!col_order)
+    )$explode(non_grps, empty_as_null = FALSE)$select(!!!col_order)
   } else {
     out <- .data$head(n)
   }
@@ -107,23 +107,40 @@ slice_sample.polars_data_frame <- function(
   if (is.null(n) && is.null(prop)) {
     n <- 1
   }
-  if (
-    isFALSE(replace) &&
-      ((!is.null(n) && n > nrow(.data)) ||
-        (!is.null(prop) && prop > 1))
-  ) {
-    cli_abort(
-      "Cannot take more rows than the total number of rows when {.code replace = FALSE}."
-    )
+  if (isFALSE(replace)) {
+    if (!is_grouped && !is.null(n) && n > nrow(.data)) {
+      n <- nrow(.data)
+    }
+    if (!is.null(prop) && prop > 1) {
+      prop <- 1
+    }
   }
 
   if (is_grouped) {
-    non_grps <- setdiff(names(.data), grps)
+    temp_row <- "__tidypolars_slice_sample_row__"
+    row_expr <- pl$struct(names(.data))
+
+    sample_expr <- if (isFALSE(replace) && !is.null(n) && isTRUE(n >= 0)) {
+      row_expr$shuffle()$head(n)
+    } else {
+      row_expr$sample(
+        n = n,
+        fraction = prop,
+        with_replacement = replace,
+        shuffle = TRUE
+      )
+    }
+
     out <- .data$group_by(grps, .maintain_order = mo)$agg(
-      pl$all()$sample(n = n, fraction = prop, with_replacement = replace)
-    )$explode(non_grps, empty_as_null = TRUE)
+      sample_expr$alias(temp_row)
+    )$explode(temp_row, empty_as_null = FALSE)$select(temp_row)$unnest(temp_row)
   } else {
-    out <- .data$sample(n = n, fraction = prop, with_replacement = replace)
+    out <- .data$sample(
+      n = n,
+      fraction = prop,
+      with_replacement = replace,
+      shuffle = TRUE
+    )
   }
 
   out <- if (is_grouped && missing(by)) {

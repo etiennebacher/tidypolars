@@ -517,6 +517,46 @@ test_that("slice example: slice_head() and slice_tail()", {
   expect_equal_lazy(replay_query(query_tail), query_tail)
 })
 
+test_that("slice example: slice_sample()", {
+  skip_if(Sys.getenv('TIDYPOLARS_TEST') == "TRUE")
+  query <- iris[, c("Species", "Sepal.Width")] |>
+    as_polars_lf() |>
+    slice_sample(prop = 1) |>
+    arrange(Species, Sepal.Width)
+
+  expect_snapshot_lazy(show_query(query))
+  expect_equal_lazy(replay_query(query), query)
+})
+
+test_that("slice example: slice by group", {
+  skip_if(Sys.getenv('TIDYPOLARS_TEST') == "TRUE")
+  query_head <- iris |>
+    as_polars_lf() |>
+    group_by(Species) |>
+    slice_head(n = 3) |>
+    ungroup() |>
+    arrange(Species, Sepal.Width)
+  query_tail <- iris |>
+    as_polars_lf() |>
+    group_by(Species) |>
+    slice_tail(n = 3) |>
+    ungroup() |>
+    arrange(Species, Sepal.Width)
+  query_sample <- iris |>
+    as_polars_lf() |>
+    group_by(Species) |>
+    slice_sample(n = 3) |>
+    ungroup() |>
+    arrange(Species, Sepal.Width)
+
+  expect_snapshot_lazy(show_query(query_head))
+  expect_snapshot_lazy(show_query(query_tail))
+  expect_snapshot_lazy(show_query(query_sample))
+
+  expect_equal_lazy(replay_query(query_head), query_head)
+  expect_equal_lazy(replay_query(query_tail), query_tail)
+})
+
 # Translated functions (see the "List of supported functions" vignette). Each
 # test records a query using a family of translated functions and checks that
 # the recorded polars code reproduces the original result.
