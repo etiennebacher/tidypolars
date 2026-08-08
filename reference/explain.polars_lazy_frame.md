@@ -43,28 +43,22 @@ query <- mtcars |>
 # unoptimized query plan:
 no_opt <- explain(query, optimized = FALSE)
 no_opt
-#> [1] "SELECT [col(\"mpg\")]\n  FILTER col(\"cyl\") == 3.0\n  FROM\n    SELECT [col(\"mpg\"), col(\"cyl\"), col(\"disp\"), col(\"hp\"), col(\"drat\"), col(\"wt\"), col(\"qsec\"), col(\"vs\"), col(\"am\"), col(\"gear\"), col(\"carb\")]\n      SORT BY [nulls_last: [true]] [col(\"__TIDYPOLARS_TEMP_SORT__1\")]\n         WITH_COLUMNS:\n         [col(\"drat\").alias(\"__TIDYPOLARS_TEMP_SORT__1\")] \n          DF [\"mpg\", \"cyl\", \"disp\", \"hp\", ...]; PROJECT */11 COLUMNS"
+#> [1] "SELECT [col(\"mpg\")]\n  FILTER col(\"cyl\") == 3.0\n  FROM\n    SORT BY [nulls_last: [true]] [col(\"drat\")]\n      DF [\"mpg\", \"cyl\", \"disp\", \"hp\", ...]; PROJECT */11 COLUMNS"
 
 # better printing with cat():
 cat(no_opt)
 #> SELECT [col("mpg")]
 #>   FILTER col("cyl") == 3.0
 #>   FROM
-#>     SELECT [col("mpg"), col("cyl"), col("disp"), col("hp"), col("drat"), col("wt"), col("qsec"), col("vs"), col("am"), col("gear"), col("carb")]
-#>       SORT BY [nulls_last: [true]] [col("__TIDYPOLARS_TEMP_SORT__1")]
-#>          WITH_COLUMNS:
-#>          [col("drat").alias("__TIDYPOLARS_TEMP_SORT__1")] 
-#>           DF ["mpg", "cyl", "disp", "hp", ...]; PROJECT */11 COLUMNS
+#>     SORT BY [nulls_last: [true]] [col("drat")]
+#>       DF ["mpg", "cyl", "disp", "hp", ...]; PROJECT */11 COLUMNS
 
 # optimized query run by polars
 cat(explain(query))
 #> simple π 1/1 ["mpg"]
-#>   SORT BY [nulls_last: [true]] [col("__TIDYPOLARS_TEMP_SORT__1")]
-#>     simple π 2/2 ["mpg", ... 1 other column]
-#>        WITH_COLUMNS:
-#>        [col("drat").alias("__TIDYPOLARS_TEMP_SORT__1")] 
-#>         simple π 2/2 ["mpg", "drat"]
-#>           FILTER col("cyl") == 3.0
-#>           FROM
-#>             DF ["mpg", "cyl", "disp", "hp", ...]; PROJECT["mpg", "drat", "cyl"] 3/11 COLUMNS
+#>   SORT BY [nulls_last: [true]] [col("drat")]
+#>     simple π 2/2 ["mpg", "drat"]
+#>       FILTER col("cyl") == 3.0
+#>       FROM
+#>         DF ["mpg", "cyl", "disp", "hp", ...]; PROJECT["mpg", "drat", "cyl"] 3/11 COLUMNS
 ```
