@@ -211,10 +211,7 @@
     Output
       as_polars_df(mtcars)$
         filter(pl$col("cyl") > pl$lit(4))$
-        group_by(`__tidypolars_grp__` = pl$lit(1))$
-        len()$
-        drop("__tidypolars_grp__")$
-        rename(len = "n")
+        select(pl$len()$alias("n"))
 
 ---
 
