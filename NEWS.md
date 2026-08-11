@@ -14,21 +14,23 @@
 
 * Improved the performance of `pivot_longer()` by no longer sorting its
   output (#395, @Yousa-Mirage).
-  
+
 * Added support for the `name` argument in `pull()` (#391, @Yousa-Mirage).
 
 * Allow `slice_sample()` with `n > nrow(data)` and `prop > 1` (#394, @Yousa-Mirage).
+
+* Allow `parallel = "prefiltered"` in `scan_parquet_polars()` and
+  `read_parquet_polars()` (#393, @Yousa-Mirage).
+
+* Allow `quote_style = "never"` in `sink_csv()` (#393, @Yousa-Mirage).
 
 ## Bug fixes
 
 * Fix the function name in deprecation warnings from `sink_csv()` (#393, @Yousa-Mirage).
 
-* Allow the Polars-supported "prefiltered" Parquet scan strategy and
-  "never" CSV quote style in the corresponding wrappers (#393, @Yousa-Mirage).
-
 * Fix grouped `slice_head()`, `slice_tail()`, and `slice_sample()` for zero-size
   samples (#394, @Yousa-Mirage).
-  
+
 * Fix `relocate()` to use the leftmost and rightmost selected columns for
   `.before` and `.after` for consistency with `dplyr` (#392, @Yousa-Mirage).
 
