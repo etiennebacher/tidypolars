@@ -108,6 +108,10 @@ sink_csv(
     valid float or integer, then quotes will be used even if they aren't
     strictly necessary.
 
+  - `"never"`: This never puts quotes around fields, even if that
+    results in invalid CSV data (e.g. by not quoting strings containing
+    the separator).
+
 - maintain_order:
 
   Whether maintain the order the data was processed (default is `TRUE`).
@@ -205,7 +209,7 @@ sink_csv(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
 #> Warning: `partition_by_key()` was deprecated in tidypolars 0.16.0.
 #> ℹ Please use `partition_by(key = )` instead.
 fs::dir_tree(out_path)
-#> /tmp/RtmpbdSpaI/file19f570084300
+#> /tmp/RtmpHuU6OW/file1980717d781e
 #> ├── am=0.0
 #> │   ├── cyl=4.0
 #> │   │   └── 00000000.csv
@@ -227,7 +231,7 @@ sink_csv(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
 #> Warning: `partition_by_max_size()` was deprecated in tidypolars 0.16.0.
 #> ℹ Please use `partition_by(max_rows_per_file = )` instead.
 fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-#> /tmp/RtmpbdSpaI/file19f545d176a7
+#> /tmp/RtmpHuU6OW/file19806f54c397
 #> ├── 00000000.csv
 #> ├── 00000001.csv
 #> ├── 00000002.csv
