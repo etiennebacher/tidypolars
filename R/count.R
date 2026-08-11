@@ -80,9 +80,7 @@ count.polars_data_frame <- function(
       }
       out <- group_by(out, all_of(grps), maintain_order = mo)
     } else {
-      out <- x$group_by(`__tidypolars_grp__` = pl$lit(1))$len()$drop(
-        "__tidypolars_grp__"
-      )$rename(len = name)
+      out <- x$select(pl$len()$alias(name))
     }
 
     return(add_tidypolars_class(out))

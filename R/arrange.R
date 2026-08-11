@@ -51,28 +51,30 @@ arrange.polars_data_frame <- function(.data, ..., .by_group = FALSE) {
   # We want to allow sort expressions of length 1 (e.g. `arrange("a")`). This
   # isn't doing anything on the sort but dplyr allows it.
   polars_exprs <- lapply(seq_along(polars_exprs), function(x) {
-    if (!is_polars_expr(polars_exprs[[x]])) {
-      polars_exprs[[x]] <- pl$lit(polars_exprs[[x]])
+    expr <- polars_exprs[[x]]
+    if (
+      !is_polars_expr(expr) ||
+        (expr$meta$is_literal() && length(polars_expr_to_r(expr)) == 1)
+    ) {
+      NULL
+    } else {
+      expr
     }
-    polars_exprs[[x]]$alias(paste0("__TIDYPOLARS_TEMP_SORT__", x))
-  })
-
-  names_exprs <- lapply(polars_exprs, function(x) {
-    x$meta$output_name()
-  })
+  }) |>
+    Filter(Negate(is.null), x = _)
 
   if (is_grouped && isTRUE(.by_group)) {
-    to_sort_with <- c(grps, names_exprs)
+    to_sort_with <- c(grps, polars_exprs)
     descending <- c(rep(FALSE, length(grps)), descending)
   } else {
-    to_sort_with <- names_exprs
+    to_sort_with <- polars_exprs
   }
 
-  out <- .data$with_columns(!!!polars_exprs)$sort(
+  out <- .data$sort(
     !!!to_sort_with,
     descending = descending,
     nulls_last = TRUE
-  )$drop(!!!names_exprs)
+  )
 
   if (is_grouped) {
     out <- out |>
