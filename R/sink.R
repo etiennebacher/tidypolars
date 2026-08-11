@@ -180,6 +180,8 @@ sink_parquet <- function(
 #' * `"non_numeric"`: This puts quotes around all fields that are non-numeric.
 #'   Namely, when writing a field that does not parse as a valid float or integer,
 #'   then quotes will be used even if they aren't strictly necessary.
+#' * `"never"`: This never puts quotes around fields, even if that results in
+#'   invalid CSV data (e.g. by not quoting strings containing the separator).
 #' @param quote `r lifecycle::badge("deprecated")` Deprecated, use `quote_char`
 #' instead.
 #' @param null_values `r lifecycle::badge("deprecated")` Deprecated, use
@@ -258,13 +260,13 @@ sink_csv <- function(
 
   rlang::arg_match0(
     quote_style,
-    values = c("necessary", "always", "non_numeric")
+    values = c("necessary", "always", "non_numeric", "never")
   )
 
   if (!missing(quote)) {
     lifecycle::deprecate_warn(
       when = "0.14.0",
-      what = "sink_csv_polars(quote)",
+      what = "sink_csv(quote)",
       details = "Use `quote_char` instead."
     )
     quote_char <- quote
@@ -273,7 +275,7 @@ sink_csv <- function(
   if (!missing(null_values)) {
     lifecycle::deprecate_warn(
       when = "0.14.0",
-      what = "sink_csv_polars(null_values)",
+      what = "sink_csv(null_values)",
       details = "Use `null_value` instead."
     )
     if (missing(null_value)) {

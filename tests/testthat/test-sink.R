@@ -14,6 +14,14 @@ test_that("basic behavior with CSV", {
   expect_equal(read.csv(dest), mtcars, ignore_attr = TRUE)
 })
 
+test_that("sink_csv accepts the 'never' quote style", {
+  dest <- tempfile(fileext = ".csv")
+  as_polars_lf(tibble(x = c("a,b", "c"))) |>
+    sink_csv(dest, quote_style = "never")
+
+  expect_equal(readLines(dest), c("x", "a,b", "c"))
+})
+
 test_that("deprecated args in sink_csv()", {
   dest <- tempfile(fileext = ".csv")
   dat <- as_polars_lf(mtcars)

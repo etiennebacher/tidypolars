@@ -74,6 +74,8 @@ indistinguishable from a record with one empty field).
 \item \code{"non_numeric"}: This puts quotes around all fields that are non-numeric.
 Namely, when writing a field that does not parse as a valid float or integer,
 then quotes will be used even if they aren't strictly necessary.
+\item \code{"never"}: This never puts quotes around fields, even if that results in
+invalid CSV data (e.g. by not quoting strings containing the separator).
 }}
 
 \item{maintain_order}{Whether maintain the order the data was processed
