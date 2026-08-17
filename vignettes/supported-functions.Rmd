@@ -210,6 +210,8 @@ out <- tribble(
         "`tidypolars` cannot use several timezones in a single column, while `lubridate::force_tz()` can.",
       Package == "`dplyr`" & Function == "`near`" ~
         "tidypolars errors if `x` and `y` have different lengths, dplyr doesn't.",
+      Package == "`dplyr`" & Function == "`if_else`" ~
+        "The `missing` argument is supported, but `ptype` and `size` are not.",
       Package == "`dplyr`" & Function == "`row_number`" ~
         "Doesn't work when `x` is missing.",
       Package == "`dplyr`" & Function %in% c("`recode_values`", "`replace_values`") ~

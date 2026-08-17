@@ -874,7 +874,14 @@
           is_between(lower_bound = 2, upper_bound = 4, closed = "both"),
         co = pl$coalesce(pl$col("num"), pl$lit(0)),
         nr = (pl$col("num") - pl$lit(4))$abs() < 1.49011611938477e-08,
-        ie = pl$when(pl$col("num") > pl$lit(0))$
+        ie = pl$when((pl$col("num") > pl$lit(0))$is_null())$
+          then(pl$lit(NA))$
+          when(pl$col("num") > pl$lit(0))$
+          then(pl$lit("pos"))$
+          otherwise(pl$lit("neg")),
+        ie_missing = pl$when((pl$col("num") > pl$lit(0))$is_null())$
+          then(pl$lit("unknown"))$
+          when(pl$col("num") > pl$lit(0))$
           then(pl$lit("pos"))$
           otherwise(pl$lit("neg"))
       )
