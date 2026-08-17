@@ -60,6 +60,9 @@
 * Fix `distinct()` on grouped data to include grouping variables in the distinct keys,
   retain grouping columns, and preserve grouping metadata (#376, @Yousa-Mirage).
 
+* Fix `duplicated_rows()` on grouped data to use grouping variables in duplicate
+  detection and preserve grouping metadata (#400, @Yousa-Mirage).
+
 * Fix `seq()` to correctly handle descending sequences, negative steps,
   single-value results, and `by = 0` consistently with base R (#377, @Yousa-Mirage).
 

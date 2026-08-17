@@ -120,4 +120,25 @@ test_that("distinct() respects groups", {
   )
 })
 
+test_that("duplicated_rows() respects groups", {
+  test_df <- tibble(
+    g = c("a", "a", "b", "b"),
+    x = c(1, 1, 1, 2)
+  )
+  test_pl <- as_polars_lf(test_df) |>
+    group_by(g, maintain_order = TRUE)
+  expected <- test_df |>
+    filter(n() > 1, .by = c(g, x)) |>
+    group_by(g)
+
+  expect_equal_lazy(
+    duplicated_rows(test_pl, x),
+    expected
+  )
+  expect_equal_lazy(
+    duplicated_rows(test_pl, x) |> summarize(n = n()),
+    expected |> summarize(n = n())
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
