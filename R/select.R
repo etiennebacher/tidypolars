@@ -19,18 +19,30 @@
 #' select(pl_iris, foo1 = Sepal.Length, Sepal.Width)
 select.polars_data_frame <- function(.data, ...) {
   .data <- tag_frame(.data, substitute(.data))
+  grps <- attributes(.data)$pl_grps
+  mo <- attributes(.data)$maintain_grp_order %||% FALSE
   dots <- get_dots(...)
   with_renaming <- !is.null(names(dots))
   vars <- tidyselect_dots(.data, ..., with_renaming = with_renaming)
 
   # named means that we allow renaming in dots
   if (is_named(vars)) {
+    data_names <- names(.data)
+    selected_names <- data_names[unname(vars)]
+    missing_grps <- setdiff(grps, selected_names)
+    vars <- c(setNames(match(missing_grps, data_names), missing_grps), vars)
+    grps <- names(vars)[match(grps, c(missing_grps, selected_names))]
+
     out <- .data[, unname(vars), drop = FALSE]
     ls <- as.list(names(vars))
     names(ls) <- names(out)
     out <- out$rename(!!!ls)
   } else {
+    vars <- c(setdiff(grps, vars), vars)
     out <- .data$select(!!!vars)
+  }
+  if (length(grps) > 0) {
+    out <- group_by(out, all_of(grps), maintain_order = mo)
   }
   add_tidypolars_class(out)
 }

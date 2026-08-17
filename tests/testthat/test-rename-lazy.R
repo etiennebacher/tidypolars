@@ -60,4 +60,62 @@ test_that("rename_with works with custom function", {
   )
 })
 
+test_that("rename() preserves groups", {
+  test_df <- tibble(
+    g = c("a", "a", "b", "b"),
+    h = c(1, 2, 1, 2),
+    x = 1:4
+  )
+  test_pl <- as_polars_lf(test_df) |>
+    group_by(g, h, maintain_order = TRUE)
+  test_df <- group_by(test_df, g, h)
+
+  expect_equal_lazy(
+    rename(test_pl, g2 = g),
+    rename(test_df, g2 = g)
+  )
+  expect_equal_lazy(
+    rename(test_pl, g2 = g, h2 = h),
+    rename(test_df, g2 = g, h2 = h)
+  )
+  expect_equal_lazy(
+    rename(test_pl, x2 = x),
+    rename(test_df, x2 = x)
+  )
+
+  expect_equal_lazy(
+    rename(test_pl, g2 = g) |> summarize(mean = mean(x)),
+    rename(test_df, g2 = g) |> summarize(mean = mean(x))
+  )
+})
+
+test_that("rename_with() preserves groups", {
+  test_df <- tibble(
+    g = c("a", "a", "b", "b"),
+    h = c(1, 2, 1, 2),
+    x = 1:4
+  )
+  test_pl <- as_polars_lf(test_df) |>
+    group_by(g, h, maintain_order = TRUE)
+  test_df <- group_by(test_df, g, h)
+
+  expect_equal_lazy(
+    rename_with(test_pl, toupper, g),
+    rename_with(test_df, toupper, g)
+  )
+  expect_equal_lazy(
+    rename_with(test_pl, toupper, c(g, h)),
+    rename_with(test_df, toupper, c(g, h))
+  )
+  expect_equal_lazy(
+    rename_with(test_pl, toupper, x),
+    rename_with(test_df, toupper, x)
+  )
+
+  expect_equal_lazy(
+    rename_with(test_pl, toupper, g) |> summarize(mean = mean(x)),
+    rename_with(test_df, toupper, g) |> summarize(mean = mean(x))
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)

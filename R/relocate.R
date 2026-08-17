@@ -38,6 +38,8 @@ relocate.polars_data_frame <- function(
   .after = NULL
 ) {
   .data <- tag_frame(.data, substitute(.data))
+  grps <- attributes(.data)$pl_grps
+  mo <- attributes(.data)$maintain_grp_order %||% FALSE
   if (!missing(.before) && !missing(.after)) {
     cli_abort(
       "You can specify either {.code .before} or {.code .after} but not both."
@@ -94,6 +96,9 @@ relocate.polars_data_frame <- function(
   }
 
   out <- .data$select(!!!new_order)
+  if (length(grps) > 0) {
+    out <- group_by(out, all_of(grps), maintain_order = mo)
+  }
   add_tidypolars_class(out)
 }
 

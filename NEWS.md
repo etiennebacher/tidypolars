@@ -26,6 +26,9 @@
 
 ## Bug fixes
 
+* Fix `select()`, `rename()`, `rename_with()`, and `relocate()` to preserve
+  grouping metadata and update renamed grouping variables (#400, @Yousa-Mirage).
+
 * Fix the function name in deprecation warnings from `sink_csv()` (#393, @Yousa-Mirage).
 
 * Fix grouped `slice_head()`, `slice_tail()`, and `slice_sample()` for zero-size
