@@ -47,13 +47,13 @@ test_that("basic behavior of if_else() works", {
 })
 
 test_that("missing conditions work", {
-  test <- tibble(
+  test_df <- tibble(
     condition = c(TRUE, NA, FALSE),
     true = c(1, 2, 3),
     false = c(4, 5, 6),
     missing = c(7, 8, 9)
   )
-  test_pl <- as_polars_df(test)
+  test_pl <- as_polars_df(test_df)
 
   expect_equal(
     test_pl |>
@@ -65,7 +65,7 @@ test_that("missing conditions work", {
         explicit = if_else(condition, true, false, missing = missing),
         positional = if_else(condition, true, false, missing)
       ),
-    test |>
+    test_df |>
       mutate(
         base = ifelse(condition, true, false),
         base_qualified = base::ifelse(condition, true, false),
