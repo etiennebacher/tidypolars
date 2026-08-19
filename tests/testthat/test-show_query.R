@@ -695,7 +695,8 @@ test_that("translated dplyr functions: between, coalesce, near, if_else", {
       bt = between(int, 2, 4),
       co = coalesce(num, 0),
       nr = near(num, 4),
-      ie = if_else(num > 0, "pos", "neg")
+      ie = if_else(num > 0, "pos", "neg"),
+      ie_missing = if_else(num > 0, "pos", "neg", missing = "unknown")
     )
 
   expect_snapshot(show_query(query))

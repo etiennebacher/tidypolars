@@ -513,7 +513,9 @@ translate <- function(
         "ifelse" = ,
         "dplyr::if_else" = ,
         "if_else" = {
-          args <- call_args(expr)
+          is_if_else <- name %in% c("dplyr::if_else", "if_else")
+          fn <- if (is_if_else) dplyr::if_else else base::ifelse
+          args <- call_args(call_match(expr, fn))
           args$.data <- .data
           args[["__tidypolars__new_vars"]] <- as.list(new_vars)
           args[["__tidypolars__env"]] <- env

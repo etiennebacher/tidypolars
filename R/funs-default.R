@@ -171,7 +171,7 @@ pl_floor <- function(x) {
   x$floor()
 }
 
-pl_ifelse <- function(test, yes, no, .data, ...) {
+pl_ifelse <- function(test, yes, no, .data, ..., missing = NULL) {
   check_empty_dots(...)
   env <- env_from_dots(...)
   expr_uses_col <- expr_uses_col_from_dots(...)
@@ -202,7 +202,21 @@ pl_ifelse <- function(test, yes, no, .data, ...) {
     caller = caller,
     expr_uses_col = expr_uses_col
   )
-  pl$when(test)$then(yes)$otherwise(no)
+  missing_expr <- enexpr(missing)
+  if (is_null(missing_expr)) {
+    missing_expr <- pl$lit(NA)
+  } else {
+    missing_expr <- translate_expr(
+      .data,
+      missing_expr,
+      new_vars = new_vars,
+      env = env,
+      caller = caller,
+      expr_uses_col = expr_uses_col
+    )
+  }
+
+  pl$when(test$is_null())$then(missing_expr)$when(test)$then(yes)$otherwise(no)
 }
 
 pl_is.finite <- function(x) {
