@@ -82,16 +82,16 @@ test_that("missing conditions work", {
 })
 
 test_that("ifelse() rejects the missing argument", {
-  test <- tibble(condition = c(TRUE, NA, FALSE))
-  test_pl <- as_polars_lf(test)
+  test_df <- tibble(condition = c(TRUE, NA, FALSE))
+  test_pl <- as_polars_lf(test_df)
 
   expect_both_error(
     test_pl |> mutate(out = ifelse(condition, 1, 0, missing = 2)),
-    test |> mutate(out = ifelse(condition, 1, 0, missing = 2))
+    test_df |> mutate(out = ifelse(condition, 1, 0, missing = 2))
   )
   expect_both_error(
     test_pl |> mutate(out = ifelse(condition, 1, 0, 2)),
-    test |> mutate(out = ifelse(condition, 1, 0, missing = 2))
+    test_df |> mutate(out = ifelse(condition, 1, 0, 2))
   )
 })
 
