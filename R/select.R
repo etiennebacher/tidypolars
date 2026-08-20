@@ -25,13 +25,16 @@ select.polars_data_frame <- function(.data, ...) {
   with_renaming <- !is.null(names(dots))
   vars <- tidyselect_dots(.data, ..., with_renaming = with_renaming)
 
-  # named means that we allow renaming in dots
+  # A named `vars` maps output names to source column positions and therefore
+  # indicates that at least one selected column is being renamed.
   if (is_named(vars)) {
     data_names <- names(.data)
     selected_names <- data_names[unname(vars)]
+
+    # Like dplyr, always keep grouping columns in a selection, even when they
+    # are not explicitly selected. Add missing groups before applying renames.
     missing_grps <- setdiff(grps, selected_names)
     vars <- c(setNames(match(missing_grps, data_names), missing_grps), vars)
-    grps <- names(vars)[match(grps, c(missing_grps, selected_names))]
 
     out <- .data[, unname(vars), drop = FALSE]
     ls <- as.list(names(vars))
@@ -42,6 +45,11 @@ select.polars_data_frame <- function(.data, ...) {
     out <- .data$select(!!!vars)
   }
   if (length(grps) > 0) {
+    # Named selections can rename grouping columns. Map the original group
+    # names to their output names before restoring the grouping metadata.
+    if (is_named(vars)) {
+      grps <- names(vars)[match(grps, c(missing_grps, selected_names))]
+    }
     out <- group_by(out, all_of(grps), maintain_order = mo)
   }
   add_tidypolars_class(out)

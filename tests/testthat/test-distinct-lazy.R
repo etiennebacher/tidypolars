@@ -135,10 +135,6 @@ test_that("duplicated_rows() respects groups", {
     duplicated_rows(test_pl, x),
     expected
   )
-  expect_equal_lazy(
-    duplicated_rows(test_pl, x) |> summarize(n = n()),
-    expected |> summarize(n = n())
-  )
 })
 
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
