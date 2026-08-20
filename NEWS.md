@@ -26,6 +26,8 @@
 
 * Added support for the `missing` argument in `if_else()` (#399, @Yousa-Mirage).
 
+* Added support for rowwise operations of `sd()` (#398, @Yousa-Mirage).
+
 ## Bug fixes
 
 * `ifelse()` and `if_else()` now return missing values when their condition is

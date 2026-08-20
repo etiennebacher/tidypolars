@@ -151,6 +151,14 @@ test_that("invalid na.rm arguments error", {
     summarize(test_pl, out = mean(x, na.rm = flag), .by = grp),
     error = TRUE
   )
+
+  withr::with_options(
+    list(tidypolars_unknown_args = "error"),
+    expect_both_error(
+      summarize(test_pl, out = sd(x, extra = TRUE)),
+      summarize(test_df, out = sd(x, extra = TRUE))
+    )
+  )
 })
 
 test_that("length() works", {
