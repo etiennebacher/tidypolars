@@ -31,6 +31,16 @@
 * `ifelse()` and `if_else()` now return missing values when their condition is
   missing, consistent with base R and dplyr (#399, @Yousa-Mirage).
 
+* Added support for covariance and missing-value strategies in `var()`
+  (#398, @Yousa-Mirage).
+
+* Fix positional argument handling in `sum()`, `max()`, `min()`, and `var()` so
+  arguments are interpreted consistently with base R (#398,
+  @Yousa-Mirage).
+
+* Invalid `na.rm` arguments in summary functions are no longer silently
+  ignored (#398, @Yousa-Mirage).
+
 * Fix the function name in deprecation warnings from `sink_csv()` (#393, @Yousa-Mirage).
 
 * Fix grouped `slice_head()`, `slice_tail()`, and `slice_sample()` for zero-size

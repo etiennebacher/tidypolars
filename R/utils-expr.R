@@ -1074,11 +1074,7 @@ check_rowwise_dots <- function(...) {
   if (isTRUE(is_rowwise)) {
     out <- pl$concat_list(!!!dots)
   } else {
-    if (is.list(dots)) {
-      out <- dots[[1]]
-    } else {
-      out <- dots
-    }
+    out <- dots
   }
   list(is_rowwise = is_rowwise, expr = out)
 }
@@ -1188,7 +1184,10 @@ check_timezone <- function(tz, empty_allowed = FALSE) {
 
 check_allowed_rowwise <- function(name, env) {
   shortlist <- c(
-    paste0("pl_", c("mean", "median", "min", "max", "sum", "all", "any")),
+    paste0(
+      "pl_",
+      c("mean", "median", "min", "max", "sum", "all", "any")
+    ),
     "!"
   )
   if (!name %in% shortlist) {

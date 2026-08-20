@@ -28,6 +28,127 @@ test_that("which.min() and which.max() work", {
   )
 })
 
+test_that("summary functions handle positional arguments", {
+  test_df <- tibble(
+    grp = rep(c("a", "b"), each = 6),
+    x = c(1, 2, 3, 4, 5, 100, 2, 3, 4, 5, 6, 200),
+    y = c(6, 5, 4, 3, 2, 1, 7, 6, 5, 4, 3, 2)
+  )
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    test_pl |>
+      summarize(
+        total = sum(x, y, 1),
+        maximum = max(x, y, 150),
+        minimum = min(x, y, 0),
+        covariance = var(x, y),
+        .by = grp
+      ) |>
+      arrange(grp),
+    test_df |>
+      summarize(
+        total = sum(x, y, 1),
+        maximum = max(x, y, 150),
+        minimum = min(x, y, 0),
+        covariance = var(x, y),
+        .by = grp
+      )
+  )
+
+  expect_equal(
+    test_pl |>
+      mutate(
+        total = sum(x, y, 1),
+        maximum = max(x, y, 150),
+        minimum = min(x, y, 0)
+      ),
+    test_df |>
+      mutate(
+        total = sum(x, y, 1),
+        maximum = max(x, y, 150),
+        minimum = min(x, y, 0)
+      )
+  )
+})
+
+test_that("summary functions handle na.rm and var() handles use", {
+  test_df <- tibble(
+    grp = rep(c("a", "b"), each = 3),
+    x = c(1, NA, 3, 4, 5, NA),
+    y = c(3, 2, 1, NA, 2, 3)
+  )
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    test_pl |>
+      summarize(
+        total = sum(x, y, na.rm = TRUE),
+        maximum = max(x, y, na.rm = TRUE),
+        minimum = min(x, y, na.rm = TRUE),
+        average = mean(x, na.rm = TRUE),
+        median = median(x, TRUE),
+        std_dev = sd(x, TRUE),
+        variance = var(x, NULL, TRUE),
+        covariance = var(x, y, TRUE, "pairwise.complete.obs"),
+        .by = grp
+      ) |>
+      arrange(grp),
+    test_df |>
+      summarize(
+        total = sum(x, y, na.rm = TRUE),
+        maximum = max(x, y, na.rm = TRUE),
+        minimum = min(x, y, na.rm = TRUE),
+        average = mean(x, na.rm = TRUE),
+        median = median(x, TRUE),
+        std_dev = sd(x, TRUE),
+        variance = var(x, NULL, TRUE),
+        covariance = var(x, y, TRUE, "pairwise.complete.obs"),
+        .by = grp
+      )
+  )
+})
+
+test_that("invalid na.rm arguments error", {
+  test_df <- tibble(
+    grp = rep(1:2, each = 3),
+    x = c(1, NA, 3, 4, 5, NA),
+    flag = rep(c(TRUE, FALSE, TRUE), 2)
+  )
+  test_pl <- as_polars_df(test_df)
+
+  expect_error(
+    summarize(test_pl, out = sum(x, na.rm = flag), .by = grp),
+    "`na.rm` must be"
+  )
+  expect_error(
+    summarize(test_pl, out = max(x, na.rm = flag), .by = grp),
+    "`na.rm` must be"
+  )
+  expect_error(
+    summarize(test_pl, out = min(x, na.rm = flag), .by = grp),
+    "`na.rm` must be"
+  )
+  expect_error(
+    summarize(test_pl, out = median(x, na.rm = flag), .by = grp),
+    "`na.rm` must be"
+  )
+  expect_error(
+    summarize(test_pl, out = sd(x, na.rm = flag), .by = grp),
+    "`na.rm` must be"
+  )
+  expect_error(
+    summarize(test_pl, out = var(x, na.rm = flag), .by = grp),
+    "`na.rm` must be"
+  )
+
+  # mean.default() also uses isTRUE() and silently ignores invalid na.rm values.
+  expect_snapshot(
+    summarize(test_pl, out = mean(x, na.rm = flag), .by = grp),
+    error = TRUE
+  )
+})
+
 test_that("length() works", {
   test_df <- tibble(
     x = c("a", "a", "a", "b", "b"),
