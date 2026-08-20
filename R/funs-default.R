@@ -271,15 +271,29 @@ pl_max <- function(..., na.rm = FALSE) {
   )
 }
 
-pl_mean <- function(x, na.rm = FALSE, ...) {
+pl_mean <- function(x, trim = 0, na.rm = FALSE, ...) {
   check_empty_dots(...)
+  trim <- polars_expr_to_r(trim)
+  check_number_decimal(trim)
   na.rm <- polars_expr_to_r(na.rm)
   check_bool(na.rm)
   x <- check_rowwise(x, ...)
   is_rowwise <- isTRUE(x$is_rowwise)
   expr <- if (is_rowwise) pl$element() else x$expr
 
-  out <- expr$mean()
+  if (na.rm && trim > 0 && trim < 0.5) {
+    expr <- expr$drop_nulls()
+  }
+  if (trim <= 0) {
+    out <- expr$mean()
+  } else if (trim >= 0.5) {
+    out <- expr$median()
+  } else {
+    out <- expr$sort()$slice(
+      (expr$len() * trim)$floor()$cast(pl$Int64),
+      expr$len() - 2 * (expr$len() * trim)$floor()$cast(pl$Int64)
+    )$mean()
+  }
   if (!na.rm) {
     out <- pl$when(expr$has_nulls())$then(NA)$otherwise(out)
   }

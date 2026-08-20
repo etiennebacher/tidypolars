@@ -46,6 +46,7 @@ test_that("summary functions handle positional arguments", {
         total = sum(x, y, 1),
         maximum = max(x, y, 150),
         minimum = min(x, y, 0),
+        trimmed = mean(x, 0.1, FALSE),
         covariance = var(x, y),
         .by = grp
       ) |>
@@ -55,6 +56,7 @@ test_that("summary functions handle positional arguments", {
         total = sum(x, y, 1),
         maximum = max(x, y, 150),
         minimum = min(x, y, 0),
+        trimmed = mean(x, 0.1, FALSE),
         covariance = var(x, y),
         .by = grp
       )
@@ -90,7 +92,7 @@ test_that("summary functions handle na.rm and var() handles use", {
         total = sum(x, y, na.rm = TRUE),
         maximum = max(x, y, na.rm = TRUE),
         minimum = min(x, y, na.rm = TRUE),
-        average = mean(x, na.rm = TRUE),
+        average = mean(x, 0, TRUE),
         median = median(x, TRUE),
         std_dev = sd(x, TRUE),
         variance = var(x, NULL, TRUE),
@@ -103,7 +105,7 @@ test_that("summary functions handle na.rm and var() handles use", {
         total = sum(x, y, na.rm = TRUE),
         maximum = max(x, y, na.rm = TRUE),
         minimum = min(x, y, na.rm = TRUE),
-        average = mean(x, na.rm = TRUE),
+        average = mean(x, 0, TRUE),
         median = median(x, TRUE),
         std_dev = sd(x, TRUE),
         variance = var(x, NULL, TRUE),
