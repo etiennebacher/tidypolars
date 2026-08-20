@@ -1295,22 +1295,29 @@
           is_between(lower_bound = 2, upper_bound = 4, closed = "both"),
         co = pl$coalesce(pl$col("num"), pl$lit(0)),
         nr = (pl$col("num") - pl$lit(4))$abs() < 1.49011611938477e-08,
-        ie = pl$when(pl$col("num") > pl$lit(0))$
+        ie = pl$when((pl$col("num") > pl$lit(0))$is_null())$
+          then(pl$lit(NA))$
+          when(pl$col("num") > pl$lit(0))$
+          then(pl$lit("pos"))$
+          otherwise(pl$lit("neg")),
+        ie_missing = pl$when((pl$col("num") > pl$lit(0))$is_null())$
+          then(pl$lit("unknown"))$
+          when(pl$col("num") > pl$lit(0))$
           then(pl$lit("pos"))$
           otherwise(pl$lit("neg"))
       )
-      shape: (5, 12)
-      ┌──────┬─────┬─────┬─────────────┬───┬───────┬──────┬───────┬─────┐
-      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ bt    ┆ co   ┆ nr    ┆ ie  │
-      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---   ┆ ---  ┆ ---   ┆ --- │
-      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ bool  ┆ f64  ┆ bool  ┆ str │
-      ╞══════╪═════╪═════╪═════════════╪═══╪═══════╪══════╪═══════╪═════╡
-      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ true  ┆ 1.5  ┆ false ┆ pos │
-      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ true  ┆ -2.3 ┆ false ┆ neg │
-      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ false ┆ 4.0  ┆ true  ┆ pos │
-      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ false ┆ 0.0  ┆ null  ┆ neg │
-      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ true  ┆ 6.7  ┆ false ┆ pos │
-      └──────┴─────┴─────┴─────────────┴───┴───────┴──────┴───────┴─────┘
+      shape: (5, 13)
+      ┌──────┬─────┬─────┬─────────────┬───┬──────┬───────┬──────┬────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ co   ┆ nr    ┆ ie   ┆ ie_missing │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---  ┆ ---   ┆ ---  ┆ ---        │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ f64  ┆ bool  ┆ str  ┆ str        │
+      ╞══════╪═════╪═════╪═════════════╪═══╪══════╪═══════╪══════╪════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 1.5  ┆ false ┆ pos  ┆ pos        │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ -2.3 ┆ false ┆ neg  ┆ neg        │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 4.0  ┆ true  ┆ pos  ┆ pos        │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 0.0  ┆ null  ┆ null ┆ unknown    │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 6.7  ┆ false ┆ pos  ┆ pos        │
+      └──────┴─────┴─────┴─────────────┴───┴──────┴───────┴──────┴────────────┘
 
 # translated dplyr functions: case_when (with and without default)
 

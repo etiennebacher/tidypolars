@@ -24,10 +24,15 @@
 
 * Allow `quote_style = "never"` in `sink_csv()` (#393, @Yousa-Mirage).
 
+* Added support for the `missing` argument in `if_else()` (#399, @Yousa-Mirage).
+
 ## Bug fixes
 
 * Fix `select()`, `rename()`, `rename_with()`, and `relocate()` to preserve
   grouping metadata and update renamed grouping variables (#400, @Yousa-Mirage).
+
+* `ifelse()` and `if_else()` now return missing values when their condition is
+  missing, consistent with base R and dplyr (#399, @Yousa-Mirage).
 
 * Fix the function name in deprecation warnings from `sink_csv()` (#393, @Yousa-Mirage).
 
