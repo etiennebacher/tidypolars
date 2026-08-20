@@ -36,7 +36,7 @@
 * Added support for covariance and missing-value strategies in `var()`
   (#398, @Yousa-Mirage).
 
-* Fix positional argument handling in `sum()`, `max()`, `min()`, and `var()` so 
+* Fix positional argument handling in `sum()`, `max()`, `min()`, and `var()` so
   arguments are interpreted consistently with base R (#398,
   @Yousa-Mirage).
 
