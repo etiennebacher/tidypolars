@@ -1,3 +1,12 @@
+# invalid na.rm arguments error
+
+    Code
+      current$collect()
+    Condition
+      Error in `summarize()`:
+      ! Error while running function `mean()` in Polars.
+      x `na.rm` must be `TRUE` or `FALSE`, not a <polars_expr> object.
+
 # unique() works
 
     Code

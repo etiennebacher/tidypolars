@@ -1,3 +1,12 @@
+# invalid na.rm arguments error
+
+    Code
+      summarize(test_pl, out = mean(x, na.rm = flag), .by = grp)
+    Condition
+      Error in `summarize()`:
+      ! Error while running function `mean()` in Polars.
+      x `na.rm` must be `TRUE` or `FALSE`, not a <polars_expr> object.
+
 # unique() works
 
     Code
