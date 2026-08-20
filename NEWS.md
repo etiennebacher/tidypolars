@@ -26,7 +26,7 @@
 
 * Added support for the `missing` argument in `if_else()` (#399, @Yousa-Mirage).
 
-* Added support for `trim` in `mean()` (#398, @Yousa-Mirage).
+* Added support for `trim` in `mean()` (#402, @Yousa-Mirage).
 
 ## Bug fixes
 
