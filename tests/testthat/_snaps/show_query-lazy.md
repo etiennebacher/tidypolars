@@ -1165,16 +1165,27 @@
         an = (pl$col("int") > pl$lit(4))$any(ignore_nulls = FALSE),
         na = pl$col("num")$has_nulls(),
         wmn = (pl$col("num")$arg_min() + 1)$first(),
-        wmx = (pl$col("num")$arg_max() + 1)$first()
+        wmx = (pl$col("num")$arg_max() + 1)$first(),
+        sm = pl$col("int")$sum() + pl$col("num")$sum() + pl$lit(1)$sum(),
+        mx = pl$max_horizontal(
+          pl$col("int")$max(),
+          pl$col("num")$max(),
+          pl$lit(10)$max()
+        ),
+        mn = pl$min_horizontal(
+          pl$col("int")$min(),
+          pl$col("num")$min(),
+          pl$lit(0)$min()
+        )
       )
-      shape: (1, 5)
-      ┌──────┬──────┬──────┬─────┬─────┐
-      │ al   ┆ an   ┆ na   ┆ wmn ┆ wmx │
-      │ ---  ┆ ---  ┆ ---  ┆ --- ┆ --- │
-      │ bool ┆ bool ┆ bool ┆ f64 ┆ f64 │
-      ╞══════╪══════╪══════╪═════╪═════╡
-      │ true ┆ true ┆ true ┆ 2.0 ┆ 5.0 │
-      └──────┴──────┴──────┴─────┴─────┘
+      shape: (1, 8)
+      ┌──────┬──────┬──────┬─────┬─────┬──────┬──────┬──────┐
+      │ al   ┆ an   ┆ na   ┆ wmn ┆ wmx ┆ sm   ┆ mx   ┆ mn   │
+      │ ---  ┆ ---  ┆ ---  ┆ --- ┆ --- ┆ ---  ┆ ---  ┆ ---  │
+      │ bool ┆ bool ┆ bool ┆ f64 ┆ f64 ┆ f64  ┆ f64  ┆ f64  │
+      ╞══════╪══════╪══════╪═════╪═════╪══════╪══════╪══════╡
+      │ true ┆ true ┆ true ┆ 2.0 ┆ 5.0 ┆ 25.9 ┆ 10.0 ┆ -2.3 │
+      └──────┴──────┴──────┴─────┴─────┴──────┴──────┴──────┘
 
 # translated base functions: string manipulation
 
@@ -1491,16 +1502,50 @@
           otherwise(pl$col("int")$std(ddof = 1)),
         v = pl$when(pl$col("int")$has_nulls())$
           then(NA)$
-          otherwise(pl$col("int")$var(ddof = 1))
+          otherwise(pl$col("int")$var(ddof = 1)),
+        cv = pl$when(
+          pl$col("int")$
+            filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null())$
+            len() <
+            2
+        )$
+          then(NA)$
+          otherwise(
+            (
+              (
+                pl$col("int")$
+                  filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null()) -
+                  pl$col("int")$
+                    filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null())$
+                    mean()
+              ) *
+                (
+                  pl$col("num")$
+                    filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null()) -
+                    pl$col("num")$
+                      filter(
+                        pl$col("int")$is_not_null() & pl$col("num")$is_not_null()
+                      )$
+                      mean()
+                )
+            )$
+              sum()/
+              (
+                pl$col("int")$
+                  filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null())$
+                  len() -
+                  1
+              )
+          )
       )
-      shape: (1, 3)
-      ┌──────┬──────────┬─────┐
-      │ md   ┆ s        ┆ v   │
-      │ ---  ┆ ---      ┆ --- │
-      │ f64  ┆ f64      ┆ f64 │
-      ╞══════╪══════════╪═════╡
-      │ 2.75 ┆ 1.581139 ┆ 2.5 │
-      └──────┴──────────┴─────┘
+      shape: (1, 4)
+      ┌──────┬──────────┬─────┬──────────┐
+      │ md   ┆ s        ┆ v   ┆ cv       │
+      │ ---  ┆ ---      ┆ --- ┆ ---      │
+      │ f64  ┆ f64      ┆ f64 ┆ f64      │
+      ╞══════╪══════════╪═════╪══════════╡
+      │ 2.75 ┆ 1.581139 ┆ 2.5 ┆ 0.716667 │
+      └──────┴──────────┴─────┴──────────┘
 
 # translated stringr functions: detection
 
