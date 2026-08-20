@@ -26,6 +26,8 @@
 
 * Added support for the `missing` argument in `if_else()` (#399, @Yousa-Mirage).
 
+* Added support for `trim` in `mean()` (#398, @Yousa-Mirage).
+
 ## Bug fixes
 
 * `ifelse()` and `if_else()` now return missing values when their condition is
@@ -34,8 +36,8 @@
 * Added support for covariance and missing-value strategies in `var()`
   (#398, @Yousa-Mirage).
 
-* Fix positional argument handling in `sum()`, `max()`, `min()`, and `var()` so
-  arguments are interpreted consistently with base R (#398,
+* Fix positional argument handling in `sum()`, `max()`, `min()`, `mean()`, and
+  `var()` so arguments are interpreted consistently with base R (#398,
   @Yousa-Mirage).
 
 * Invalid `na.rm` arguments in summary functions are no longer silently
