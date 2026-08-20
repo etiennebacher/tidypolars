@@ -26,7 +26,7 @@
 
 * Added support for the `missing` argument in `if_else()` (#399, @Yousa-Mirage).
 
-* Added support for rowwise operations of `sd()` (#398, @Yousa-Mirage).
+* Added support for rowwise operations of `sd()` (#401, @Yousa-Mirage).
 
 ## Bug fixes
 
