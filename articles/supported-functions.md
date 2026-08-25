@@ -87,7 +87,7 @@ original functions and of their translation by `tidypolars`.
 | `dplyr` | `first` |  |
 | `dplyr` | `group_keys` |  |
 | `dplyr` | `group_vars` |  |
-| `dplyr` | `if_else` |  |
+| `dplyr` | `if_else` | The arguments `ptype` and `size` are not supported. |
 | `dplyr` | `lag` |  |
 | `dplyr` | `lead` |  |
 | `dplyr` | `last` |  |
