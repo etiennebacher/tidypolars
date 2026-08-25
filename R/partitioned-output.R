@@ -72,7 +72,7 @@ partition_by_key <- function(
     when = "0.16.0",
     what = "partition_by_key()",
     details = "Please use `partition_by(key = )` instead.",
-    always = TRUE,
+    always = TRUE
   )
 
   suppressWarnings(
@@ -97,7 +97,7 @@ partition_by_max_size <- function(
     when = "0.16.0",
     what = "partition_by_max_size()",
     details = "Please use `partition_by(max_rows_per_file = )` instead.",
-    always = TRUE,
+    always = TRUE
   )
   suppressWarnings(
     pl$PartitionMaxSize(

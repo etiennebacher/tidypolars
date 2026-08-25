@@ -75,7 +75,7 @@ test_that("error cases work", {
   )
   expect_both_error(
     pull(test_pl, mpg, drat, hp),
-    pull(test_df, mpg, drat, hp),
+    pull(test_df, mpg, drat, hp)
   )
   expect_snapshot_lazy(
     pull(test_pl, mpg, drat, hp),

@@ -1180,7 +1180,7 @@ check_timezone <- function(tz, empty_allowed = FALSE) {
   }
 
   if (!tz %in% OlsonNames()) {
-    cli_abort("Unrecognized time zone: {.val {tz}}", )
+    cli_abort("Unrecognized time zone: {.val {tz}}")
   }
 
   tz

@@ -96,7 +96,7 @@ compute.polars_lazy_frame <- function(
       details = c(
         i = "Use `engine = \"streaming\"` for the new streaming mode.",
         i = "Use `engine = \"in-memory\"` for non-streaming mode."
-      ),
+      )
     )
     if (isTRUE(streaming)) {
       engine <- "streaming"
@@ -166,7 +166,7 @@ collect.polars_lazy_frame <- function(
       details = c(
         i = "Use `engine = \"streaming\"` for the new streaming mode.",
         i = "Use `engine = \"in-memory\"` for non-streaming mode."
-      ),
+      )
     )
     if (isTRUE(streaming)) {
       engine <- "streaming"

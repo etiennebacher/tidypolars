@@ -285,7 +285,7 @@ read_csv_polars <- function(
     lifecycle::deprecate_warn(
       when = "0.14.0",
       what = "read_csv_polars(dtypes)",
-      details = "Use `schema_overrides` instead.",
+      details = "Use `schema_overrides` instead."
     )
     schema_overrides <- dtypes
   }
@@ -293,7 +293,7 @@ read_csv_polars <- function(
     lifecycle::deprecate_warn(
       when = "0.14.0",
       what = "read_csv_polars(reuse_downloaded)",
-      details = "This argument has no replacement.",
+      details = "This argument has no replacement."
     )
   }
 
@@ -365,7 +365,7 @@ scan_csv_polars <- function(
     lifecycle::deprecate_warn(
       when = "0.14.0",
       what = "scan_csv_polars(dtypes)",
-      details = "Use `schema_overrides` instead.",
+      details = "Use `schema_overrides` instead."
     )
     schema_overrides <- dtypes
   }
@@ -373,7 +373,7 @@ scan_csv_polars <- function(
     lifecycle::deprecate_warn(
       when = "0.14.0",
       what = "scan_csv_polars(reuse_downloaded)",
-      details = "This argument has no replacement.",
+      details = "This argument has no replacement."
     )
   }
 
@@ -494,7 +494,7 @@ read_ndjson_polars <- function(
     lifecycle::deprecate_warn(
       when = "0.14.0",
       what = "read_ndjson_polars(reuse_downloaded)",
-      details = "This argument has no replacement.",
+      details = "This argument has no replacement."
     )
   }
 
@@ -533,7 +533,7 @@ scan_ndjson_polars <- function(
     lifecycle::deprecate_warn(
       when = "0.14.0",
       what = "scan_ndjson_polars(reuse_downloaded)",
-      details = "This argument has no replacement.",
+      details = "This argument has no replacement."
     )
   }
 
@@ -636,7 +636,7 @@ read_ipc_polars <- function(
     lifecycle::deprecate_warn(
       when = "0.14.0",
       what = "read_ipc_polars(memory_map)",
-      details = "This argument has no replacement.",
+      details = "This argument has no replacement."
     )
   }
 
@@ -671,7 +671,7 @@ scan_ipc_polars <- function(
     lifecycle::deprecate_warn(
       when = "0.14.0",
       what = "scan_ipc_polars(memory_map)",
-      details = "This argument has no replacement.",
+      details = "This argument has no replacement."
     )
   }
 
