@@ -12,7 +12,7 @@ test_that("basic behavior works", {
   test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample.int(5, )
+    value = sample.int(5)
   )
   test_pl <- as_polars_df(test_df)
 
@@ -73,7 +73,7 @@ test_that("errors with unknown vars", {
   test_pl <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample.int(5, )
+    value = sample.int(5)
   )
 
   expect_snapshot(
@@ -94,7 +94,7 @@ test_that("using .by_group = TRUE on grouped data works", {
   test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample.int(5, )
+    value = sample.int(5)
   )
   test_grp <- group_by(test_df, x1)
   test_pl <- as_polars_df(test_df)
@@ -116,7 +116,7 @@ test_that("returns grouped output if input was grouped", {
   test_pl <- pl$DataFrame(
     x1 = c("a", "a", "b", "a", "c"),
     x2 = c(2, 1, 5, 3, 1),
-    value = sample.int(5, )
+    value = sample.int(5)
   )
   test_grp <- group_by(test_pl, x1)
   expect_equal(

@@ -29,7 +29,7 @@
 #'     cols = starts_with("wk"),
 #'     names_to = "week",
 #'     names_prefix = "wk",
-#'     values_to = "rank",
+#'     values_to = "rank"
 #'   )
 pivot_longer.polars_data_frame <- function(
   data,

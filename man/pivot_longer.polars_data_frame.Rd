@@ -68,7 +68,7 @@ pl_billboard |>
     cols = starts_with("wk"),
     names_to = "week",
     names_prefix = "wk",
-    values_to = "rank",
+    values_to = "rank"
   )
 \dontshow{\}) # examplesIf}
 }

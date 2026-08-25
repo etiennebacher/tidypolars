@@ -126,5 +126,5 @@ expect_snapshot_lazy <- function(current, ...) {
 }
 
 expect_is_tidypolars <- function(x) {
-  testthat::expect_true(inherits(x, "tidypolars"))
+  testthat::expect_s3_class(x, "tidypolars")
 }
