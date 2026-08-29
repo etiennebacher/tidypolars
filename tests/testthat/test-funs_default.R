@@ -28,6 +28,33 @@ test_that("which.min() and which.max() work", {
   )
 })
 
+test_that("mean() handles trim", {
+  test_df <- tibble(
+    grp = rep(c("a", "b"), each = 7),
+    x = c(1, 2, 3, 4, 5, 100, NA, 2, 3, 4, 5, 6, 200, NA)
+  )
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    test_pl |>
+      summarize(
+        trimmed = mean(x, trim = 0.2),
+        trimmed_na_rm = mean(x, trim = 0.2, na.rm = TRUE),
+        trimmed_positional = mean(x, 0.2, TRUE),
+        .by = grp
+      ) |>
+      arrange(grp),
+    test_df |>
+      summarize(
+        trimmed = mean(x, trim = 0.2),
+        trimmed_na_rm = mean(x, trim = 0.2, na.rm = TRUE),
+        trimmed_positional = mean(x, 0.2, TRUE),
+        .by = grp
+      ) |>
+      arrange(grp)
+  )
+})
+
 test_that("length() works", {
   test_df <- tibble(
     x = c("a", "a", "a", "b", "b"),
