@@ -58,6 +58,7 @@ polars
 pre
 prefiltered
 regexes
+rowwise
 subplans
 tibble
 tidyr

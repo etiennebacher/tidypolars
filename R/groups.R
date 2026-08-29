@@ -39,7 +39,7 @@ group_by.polars_data_frame <- function(
   .data <- tag_frame(.data, substitute(.data))
   if (isFALSE(.drop)) {
     cli_abort(
-      "{.pkg tidypolars} doesn't support {.code .drop = FALSE} in {.fn group_by}.",
+      "{.pkg tidypolars} doesn't support {.code .drop = FALSE} in {.fn group_by}."
     )
   }
 

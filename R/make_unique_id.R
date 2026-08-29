@@ -20,7 +20,7 @@ make_unique_id <- function(.data, ..., new_col = "hash") {
       "This has no guarantee of giving the same results across Polars versions.",
       "It has no replacement in `tidypolars`."
     ),
-    always = TRUE,
+    always = TRUE
   )
   check_polars_data(.data)
   if (new_col %in% names(.data)) {
