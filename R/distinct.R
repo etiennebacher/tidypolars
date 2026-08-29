@@ -68,10 +68,18 @@ distinct.polars_lazy_frame <- distinct.polars_data_frame
 
 duplicated_rows <- function(.data, ...) {
   .data <- tag_frame(.data, substitute(.data))
+  grps <- attributes(.data)$pl_grps
+  mo <- attributes(.data)$maintain_grp_order %||% FALSE
+
   vars <- tidyselect_dots(.data, ...)
   if (length(vars) == 0) {
     vars <- names(.data)
+  } else {
+    vars <- unique(c(grps, vars))
   }
   out <- .data$filter(pl$struct(vars)$is_duplicated())
+  if (length(grps) > 0) {
+    out <- group_by(out, all_of(grps), maintain_order = mo)
+  }
   add_tidypolars_class(out)
 }

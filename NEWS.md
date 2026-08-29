@@ -32,6 +32,9 @@
 
 ## Bug fixes
 
+* Fix `select()`, `rename()`, `rename_with()`, and `relocate()` to preserve
+  grouping metadata and update renamed grouping variables (#400, @Yousa-Mirage).
+
 * `ifelse()` and `if_else()` now return missing values when their condition is
   missing, consistent with base R and dplyr (#399, @Yousa-Mirage).
 
@@ -65,6 +68,9 @@
 
 * Fix `distinct()` on grouped data to include grouping variables in the distinct keys,
   retain grouping columns, and preserve grouping metadata (#376, @Yousa-Mirage).
+
+* Fix `duplicated_rows()` on grouped data to use grouping variables in duplicate
+  detection and preserve grouping metadata (#400, @Yousa-Mirage).
 
 * Fix `seq()` to correctly handle descending sequences, negative steps,
   single-value results, and `by = 0` consistently with base R (#377, @Yousa-Mirage).

@@ -198,4 +198,37 @@ test_that("renaming in select works", {
   )
 })
 
+test_that("select() preserves groups", {
+  test_df <- tibble(
+    g = c("a", "a", "b", "b"),
+    h = c(1, 2, 1, 2),
+    x = 1:4
+  )
+  test_pl <- as_polars_lf(test_df) |>
+    group_by(g, h, maintain_order = TRUE)
+  test_df <- group_by(test_df, g, h)
+
+  expect_equal_lazy(
+    select(test_pl, x),
+    select(test_df, x)
+  )
+  expect_equal_lazy(
+    select(test_pl, x, g),
+    select(test_df, x, g)
+  )
+  expect_equal_lazy(
+    select(test_pl, -g),
+    select(test_df, -g)
+  )
+  expect_equal_lazy(
+    select(test_pl, x, g2 = g),
+    select(test_df, x, g2 = g)
+  )
+
+  expect_equal_lazy(
+    select(test_pl, x) |> summarize(mean = mean(x)),
+    select(test_df, x) |> summarize(mean = mean(x))
+  )
+})
+
 Sys.setenv('TIDYPOLARS_TEST' = FALSE)
