@@ -30,6 +30,9 @@
 
 * Added support for `trim` in `mean()` (#402, @Yousa-Mirage).
 
+* Added support for covariance and missing-value strategies in `var()`
+  (#398, #404, @Yousa-Mirage).
+
 ## Bug fixes
 
 * Fix `select()`, `rename()`, `rename_with()`, and `relocate()` to preserve
