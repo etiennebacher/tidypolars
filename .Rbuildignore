@@ -20,3 +20,5 @@
 
 ^test\.R$
 ^test\.r$
+^AGENTS\.md$
+^CLAUDE\.md$
