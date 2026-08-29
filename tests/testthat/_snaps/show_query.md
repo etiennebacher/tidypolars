@@ -468,7 +468,7 @@
         )$
         head(n = 6L)
 
-# vignette 'R and Polars expressions': unsupported argument is dropped
+# vignette 'R and Polars expressions': mean() trim argument is kept
 
     Code
       show_query(query)
@@ -477,7 +477,7 @@
         with_columns(
           x = pl$when(pl$col("mpg")$has_nulls())$
             then(NA)$
-            otherwise(pl$col("mpg")$mean())
+            otherwise(pl$col("mpg")$median())
         )
 
 # vignette 'R and Polars expressions': external object in filter

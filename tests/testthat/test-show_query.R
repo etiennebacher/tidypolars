@@ -394,12 +394,10 @@ test_that("vignette 'Getting started': who pipeline", {
   expect_equal(replay_query(query), query)
 })
 
-test_that("vignette 'R and Polars expressions': unsupported argument is dropped", {
-  query <- suppressWarnings(
-    mtcars |>
-      as_polars_df() |>
-      mutate(x = mean(mpg, trim = 2))
-  )
+test_that("vignette 'R and Polars expressions': mean() trim argument is kept", {
+  query <- mtcars |>
+    as_polars_df() |>
+    mutate(x = mean(mpg, trim = 2))
 
   expect_snapshot(show_query(query))
   expect_equal(replay_query(query), query)
