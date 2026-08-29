@@ -32,6 +32,19 @@ test_that("which.min() and which.max() work", {
   )
 })
 
+test_that("sd() handles unknown arguments in strict mode", {
+  test_df <- tibble(x = 1:3)
+  test_pl <- as_polars_lf(test_df)
+
+  withr::with_options(
+    list(tidypolars_unknown_args = "error"),
+    expect_both_error(
+      summarize(test_pl, out = sd(x, extra = TRUE)),
+      summarize(test_df, out = sd(x, extra = TRUE))
+    )
+  )
+})
+
 test_that("mean() handles trim", {
   test_df <- tibble(
     grp = rep(c("a", "b"), each = 7),

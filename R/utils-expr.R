@@ -1188,7 +1188,7 @@ check_timezone <- function(tz, empty_allowed = FALSE) {
 
 check_allowed_rowwise <- function(name, env) {
   shortlist <- c(
-    paste0("pl_", c("mean", "median", "min", "max", "sum", "all", "any")),
+    paste0("pl_", c("mean", "median", "min", "max", "sd", "sum", "all", "any")),
     "!"
   )
   if (!name %in% shortlist) {
@@ -1196,7 +1196,7 @@ check_allowed_rowwise <- function(name, env) {
       c(
         "x" = "Can't use function {.fn {name}} in rowwise mode.",
         "i" = "For now, {.fn rowwise} only works on the following functions:",
-        "i" = "{.fn mean}, {.fn median}, {.fn min}, {.fn max}, {.fn sum}, {.fn all}, {.fn any}"
+        "i" = "{.fn mean}, {.fn median}, {.fn min}, {.fn max}, {.fn sd}, {.fn sum}, {.fn all}, {.fn any}"
       ),
       call = env
     )

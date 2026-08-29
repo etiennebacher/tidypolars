@@ -15,12 +15,14 @@ test_that("basic behavior with statistical functions works", {
         median = median(c(x, y, z)),
         min = min(c(x, y, z)),
         max = max(c(x, y, z)),
+        sd = sd(c(x, y, z)),
         mean2 = mean(c(x, y, z), na.rm = TRUE),
         trimmed_mean2 = mean(c(x, y, z, 10, 100), 0.2, TRUE),
         sum2 = sum(c(x, y, z), na.rm = TRUE),
         median2 = median(c(x, y, z), na.rm = TRUE),
         min2 = min(c(x, y, z), na.rm = TRUE),
-        max2 = max(c(x, y, z), na.rm = TRUE)
+        max2 = max(c(x, y, z), na.rm = TRUE),
+        sd2 = sd(c(x, y, z), na.rm = TRUE)
       ),
     test_df |>
       mutate(
@@ -30,12 +32,14 @@ test_that("basic behavior with statistical functions works", {
         median = median(c(x, y, z)),
         min = min(c(x, y, z)),
         max = max(c(x, y, z)),
+        sd = sd(c(x, y, z)),
         mean2 = mean(c(x, y, z), na.rm = TRUE),
         trimmed_mean2 = mean(c(x, y, z, 10, 100), 0.2, TRUE),
         sum2 = sum(c(x, y, z), na.rm = TRUE),
         median2 = median(c(x, y, z), na.rm = TRUE),
         min2 = min(c(x, y, z), na.rm = TRUE),
-        max2 = max(c(x, y, z), na.rm = TRUE)
+        max2 = max(c(x, y, z), na.rm = TRUE),
+        sd2 = sd(c(x, y, z), na.rm = TRUE)
       ),
     ignore_attr = TRUE
   )
