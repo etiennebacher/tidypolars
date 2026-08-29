@@ -28,6 +28,8 @@
 
 * Added support for rowwise operations of `sd()` (#401, @Yousa-Mirage).
 
+* Added support for `trim` in `mean()` (#402, @Yousa-Mirage).
+
 ## Bug fixes
 
 * `ifelse()` and `if_else()` now return missing values when their condition is
