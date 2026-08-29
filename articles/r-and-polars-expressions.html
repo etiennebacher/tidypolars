@@ -165,26 +165,24 @@ this argument and warns the user:</p>
 <span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://pola-rs.github.io/r-polars/man/as_polars_df.html" class="external-link">as_polars_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">mpg</span>, trim <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: <span style="color: #0000BB;">tidypolars</span> doesn't know how to use some arguments of `mean()`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The following argument(s) will be ignored: <span style="color: #0000BB;">"trim"</span>.</span></span>
 <span><span class="co">#&gt; shape: (32, 12)</span></span>
-<span><span class="co">#&gt; ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────────┐</span></span>
-<span><span class="co">#&gt; │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ x         │</span></span>
-<span><span class="co">#&gt; │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---       │</span></span>
-<span><span class="co">#&gt; │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ f64       │</span></span>
-<span><span class="co">#&gt; ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═══════════╡</span></span>
-<span><span class="co">#&gt; │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 20.090625 │</span></span>
-<span><span class="co">#&gt; │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 20.090625 │</span></span>
-<span><span class="co">#&gt; │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 20.090625 │</span></span>
-<span><span class="co">#&gt; │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ 20.090625 │</span></span>
-<span><span class="co">#&gt; │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ 20.090625 │</span></span>
-<span><span class="co">#&gt; │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …         │</span></span>
-<span><span class="co">#&gt; │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ 20.090625 │</span></span>
-<span><span class="co">#&gt; │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ 20.090625 │</span></span>
-<span><span class="co">#&gt; │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ 20.090625 │</span></span>
-<span><span class="co">#&gt; │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ 20.090625 │</span></span>
-<span><span class="co">#&gt; │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ 20.090625 │</span></span>
-<span><span class="co">#&gt; └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────────┘</span></span></code></pre></div>
+<span><span class="co">#&gt; ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬──────┐</span></span>
+<span><span class="co">#&gt; │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ x    │</span></span>
+<span><span class="co">#&gt; │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---  │</span></span>
+<span><span class="co">#&gt; │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ f64  │</span></span>
+<span><span class="co">#&gt; ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪══════╡</span></span>
+<span><span class="co">#&gt; │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 19.2 │</span></span>
+<span><span class="co">#&gt; │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 19.2 │</span></span>
+<span><span class="co">#&gt; │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 19.2 │</span></span>
+<span><span class="co">#&gt; │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ 19.2 │</span></span>
+<span><span class="co">#&gt; │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ 19.2 │</span></span>
+<span><span class="co">#&gt; │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …    │</span></span>
+<span><span class="co">#&gt; │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ 19.2 │</span></span>
+<span><span class="co">#&gt; │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ 19.2 │</span></span>
+<span><span class="co">#&gt; │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ 19.2 │</span></span>
+<span><span class="co">#&gt; │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ 19.2 │</span></span>
+<span><span class="co">#&gt; │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ 19.2 │</span></span>
+<span><span class="co">#&gt; └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴──────┘</span></span></code></pre></div>
 <p>This behavior <a href="https://tidypolars.etiennebacher.com/reference/tidypolars-options.html">can
 be changed</a> to throw an error instead.</p>
 </div>
