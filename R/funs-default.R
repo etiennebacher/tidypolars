@@ -419,25 +419,22 @@ pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
   out
 }
 
-pl_sd <- function(x, na.rm = FALSE) {
+pl_sd <- function(x, na.rm = FALSE, ...) {
+  check_empty_dots(...)
   na.rm <- polars_expr_to_r(na.rm)
-  x <- check_rowwise(x)
-  if (isTRUE(x$is_rowwise)) {
-    if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$std(ddof = 1))$explode(empty_as_null = TRUE)
-    } else {
-      x$expr$list$eval(
-        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(
-          pl$element()$std(ddof = 1)
-        )
-      )$explode(empty_as_null = TRUE)
-    }
+  check_bool(na.rm)
+  x <- check_rowwise(x, ...)
+  is_rowwise <- isTRUE(x$is_rowwise)
+  expr <- if (is_rowwise) pl$element() else x$expr
+  out <- expr$std(ddof = 1)
+  if (!na.rm) {
+    out <- pl$when(expr$has_nulls())$then(NA)$otherwise(out)
+  }
+
+  if (is_rowwise) {
+    x$expr$list$eval(out)$explode(empty_as_null = TRUE)
   } else {
-    if (isTRUE(na.rm)) {
-      x$expr$std(ddof = 1)
-    } else {
-      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$std(ddof = 1))
-    }
+    out
   }
 }
 
