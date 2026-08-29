@@ -34,6 +34,7 @@ Imports:
     lifecycle,
     polars (>= 1.14.0),
     rlang (>= 1.1.0),
+    stats,
     tidyr,
     tidyselect,
     utils,

@@ -9,6 +9,7 @@
 #' @import rlang
 #' @import cli
 #' @importFrom utils head tail
+#' @importFrom stats setNames
 ## usethis namespace: end
 NULL
 

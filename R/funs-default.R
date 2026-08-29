@@ -271,16 +271,31 @@ pl_max <- function(..., na.rm = FALSE) {
   )
 }
 
-pl_mean <- function(x, na.rm = FALSE, ...) {
+pl_mean <- function(x, trim = 0, na.rm = FALSE, ...) {
   check_empty_dots(...)
+  trim <- polars_expr_to_r(trim)
+  check_number_decimal(trim)
   na.rm <- polars_expr_to_r(na.rm)
   check_bool(na.rm)
   x <- check_rowwise(x, ...)
   is_rowwise <- isTRUE(x$is_rowwise)
   expr <- if (is_rowwise) pl$element() else x$expr
+  na_rm <- isTRUE(na.rm)
 
-  out <- expr$mean()
-  if (!na.rm) {
+  if (na_rm && trim > 0 && trim < 0.5) {
+    expr <- expr$drop_nulls()
+  }
+  if (trim <= 0) {
+    out <- expr$mean()
+  } else if (trim >= 0.5) {
+    out <- expr$median()
+  } else {
+    out <- expr$sort()$slice(
+      (expr$len() * trim)$floor()$cast(pl$Int64),
+      expr$len() - 2 * (expr$len() * trim)$floor()$cast(pl$Int64)
+    )$mean()
+  }
+  if (!na_rm) {
     out <- pl$when(expr$has_nulls())$then(NA)$otherwise(out)
   }
 
@@ -412,12 +427,22 @@ pl_sample <- function(x, size = NULL, replace = FALSE, ...) {
   out
 }
 
-pl_sd <- function(x, na.rm = FALSE) {
+pl_sd <- function(x, na.rm = FALSE, ...) {
+  check_empty_dots(...)
   na.rm <- polars_expr_to_r(na.rm)
   check_bool(na.rm)
-  out <- x$std(ddof = 1)
+  x <- check_rowwise(x, ...)
+  is_rowwise <- isTRUE(x$is_rowwise)
+  expr <- if (is_rowwise) pl$element() else x$expr
+  out <- expr$std(ddof = 1)
   if (!na.rm) {
-    out <- pl$when(x$has_nulls())$then(NA)$otherwise(out)
+    out <- pl$when(expr$has_nulls())$then(NA)$otherwise(out)
+  }
+
+  if (is_rowwise) {
+    x$expr$list$eval(out)$explode(empty_as_null = TRUE)
+  } else {
+    out
   }
   out
 }

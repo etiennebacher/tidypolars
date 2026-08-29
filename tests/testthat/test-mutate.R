@@ -299,7 +299,7 @@ test_that("warning if unknown argument", {
   test_pl <- as_polars_df(test_df)
 
   expect_warning(
-    mutate(test_pl, foo = mean(Sepal.Length, unknown = 1)),
+    mutate(test_pl, foo = mean(Sepal.Length, extra = TRUE)),
     "doesn't know how to use some arguments"
   )
 })

@@ -32,6 +32,46 @@ test_that("which.min() and which.max() work", {
   )
 })
 
+test_that("sd() handles unknown arguments in strict mode", {
+  test_df <- tibble(x = 1:3)
+  test_pl <- as_polars_lf(test_df)
+
+  withr::with_options(
+    list(tidypolars_unknown_args = "error"),
+    expect_both_error(
+      summarize(test_pl, out = sd(x, extra = TRUE)),
+      summarize(test_df, out = sd(x, extra = TRUE))
+    )
+  )
+})
+
+test_that("mean() handles trim", {
+  test_df <- tibble(
+    grp = rep(c("a", "b"), each = 7),
+    x = c(1, 2, 3, 4, 5, 100, NA, 2, 3, 4, 5, 6, 200, NA)
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |>
+      summarize(
+        trimmed = mean(x, trim = 0.2),
+        trimmed_na_rm = mean(x, trim = 0.2, na.rm = TRUE),
+        trimmed_positional = mean(x, 0.2, TRUE),
+        .by = grp
+      ) |>
+      arrange(grp),
+    test_df |>
+      summarize(
+        trimmed = mean(x, trim = 0.2),
+        trimmed_na_rm = mean(x, trim = 0.2, na.rm = TRUE),
+        trimmed_positional = mean(x, 0.2, TRUE),
+        .by = grp
+      ) |>
+      arrange(grp)
+  )
+})
+
 test_that("summary functions handle positional arguments", {
   test_df <- tibble(
     grp = rep(c("a", "b"), each = 6),
