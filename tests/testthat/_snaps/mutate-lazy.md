@@ -1,23 +1,23 @@
 # scalar value works
 
     Code
-      collect(current)
+      compute(current)
     Condition
-      Error in `collect()`:
+      Error in `compute()`:
       ! lengths don't match: can't broadcast Series 'Sepal.Width' of length 2 to length 150
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
-      Error in `collect()`:
+      Error in `compute()`:
       ! lengths don't match: can't broadcast Series 'Sepal.Width' of length 2 to length 150
 
 # custom function that doesn't return Polars expression
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `foo()` in Polars.
@@ -26,7 +26,7 @@
 # argument .keep works
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! `.keep` must be one of "all", "used", "unused", or "none", not "foo".
@@ -34,7 +34,7 @@
 # arguments .before and .after error consistently
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `relocate()`:
       ! Can't select columns that don't exist.
@@ -43,7 +43,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `relocate()`:
       ! Can't select columns that don't exist.
@@ -52,7 +52,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `relocate()`:
       ! You can specify either `.before` or `.after` but not both.
@@ -60,7 +60,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `relocate()`:
       ! Can't select columns that don't exist.

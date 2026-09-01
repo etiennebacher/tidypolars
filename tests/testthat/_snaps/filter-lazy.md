@@ -1,7 +1,7 @@
 # error message when using =
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `filter()`:
       ! We detected a named input.
@@ -11,7 +11,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `filter()`:
       ! We detected a named input.
@@ -21,7 +21,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `filter()`:
       ! We detected a named input.
@@ -31,25 +31,25 @@
 # Polars runtime errors only show the root message
 
     Code
-      collect(current)
+      compute(current)
     Condition
-      Error in `collect()`:
+      Error in `compute()`:
       ! cannot compare string with numeric type (f64)
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
-      Error in `collect()`:
+      Error in `compute()`:
       ! cannot compare string with numeric type (f64)
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
-      Error in `collect()`:
+      Error in `compute()`:
       ! regex error: regex parse error:
       a{2,1}
       ^^^^^

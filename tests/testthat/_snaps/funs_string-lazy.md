@@ -1,7 +1,7 @@
 # paste with groups and collapse
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `paste()` in Polars.
@@ -10,7 +10,7 @@
 # length functions work
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `nchar()` in Polars.
@@ -19,7 +19,7 @@
 # pad functions work
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! `str_pad()` doesn't work with a Polars object when `side = "both"`.
@@ -27,7 +27,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! `str_pad()` doesn't work with a Polars object when `use_width = FALSE`.
@@ -35,7 +35,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! `str_pad()` doesn't work with a Polars object when `pad` has a length greater than 1.
@@ -43,7 +43,7 @@
 # word functions work
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! `word()` doesn't work with a Polars object when `start` or `end` has a length greater than 1.
@@ -51,7 +51,7 @@
 # split functions work
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `str_split_i()` in Polars.
@@ -60,7 +60,7 @@
 # trunc functions work
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `str_trunc()` in Polars.
@@ -69,7 +69,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `str_trunc()` in Polars.
@@ -78,7 +78,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `str_trunc()` in Polars.
@@ -87,7 +87,7 @@
 # stringr::str_replace_na works
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `str_replace_na()` in Polars.
@@ -96,7 +96,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `str_replace_na()` in Polars.
@@ -105,7 +105,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `str_replace_na()` in Polars.

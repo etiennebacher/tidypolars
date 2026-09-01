@@ -1,7 +1,7 @@
 # error if not all elements don't have the same class
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `bind_cols_polars()`:
       ! All elements in `...` must be of the same class (either all Polars DataFrames or all Polars LazyFrames).
@@ -9,7 +9,7 @@
 # arg .name_repair works
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `bind_cols_polars()`:
       ! Names must be unique.
@@ -19,7 +19,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `bind_cols_polars()`:
       ! Argument `.name_repair = "minimal"` doesn't work on Polars Data/LazyFrames.
@@ -28,7 +28,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `bind_cols_polars()`:
       ! `.name_repair` must be one of "unique", "universal", "check_unique", or "minimal", not "blahblah".

@@ -1,7 +1,7 @@
 # names_prefix works
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `pivot_wider()`:
       ! `names_prefix` must be a single string or `NULL`, not a character vector.
@@ -9,7 +9,7 @@
 # error when overwriting existing column
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `pivot_wider()`:
       ! This operation would generate column name(s) that already exist: a.
@@ -17,9 +17,9 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
-      Error in `collect()`:
+      Error in `compute()`:
       ! Duplicated column(s): column 'a_c' is duplicate
       Resolved plan until failure:
       ---> FAILED HERE RESOLVING THIS_NODE <---
@@ -31,7 +31,7 @@
 # `names_from` must be supplied if `name` isn't in data
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `pivot_wider()`:
       ! Can't select columns that don't exist.
@@ -40,7 +40,7 @@
 # `values_from` must be supplied if `value` isn't in data
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `pivot_wider()`:
       ! Can't select columns that don't exist.
@@ -49,7 +49,7 @@
 # `names_from` must identify at least 1 column
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `pivot_wider()`:
       ! Must select at least one variable in `names_from`.
@@ -57,7 +57,7 @@
 # `values_from` must identify at least 1 column
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `pivot_wider()`:
       ! Must select at least one variable in `values_from`.
@@ -65,7 +65,7 @@
 # `id_cols` can't select columns from `names_from` or `values_from`
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `pivot_wider()`:
       ! `id_cols` can't select a column already selected by `names_from`.
@@ -74,7 +74,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `pivot_wider()`:
       ! `id_cols` can't select a column already selected by `values_from`.
@@ -83,7 +83,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `pivot_wider()`:
       ! `id_cols` can't select a column already selected by `names_from`.
@@ -92,7 +92,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `pivot_wider()`:
       ! `id_cols` can't select a column already selected by `values_from`.
@@ -101,7 +101,7 @@
 # dots must be empty
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `pivot_wider()`:
       ! `...` must be empty.

@@ -1,7 +1,7 @@
 # tidypolars_unknown_args: basic behavior works
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `sample()` in Polars.
@@ -11,7 +11,7 @@
 # tidypolars_fallback_to_r: basic behavior works
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error:
       ! object 'y' not found

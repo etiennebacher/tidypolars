@@ -1,7 +1,7 @@
 # using dollar sign works
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! object 'bar' not found
@@ -9,9 +9,9 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
-      Error in `collect()`:
+      Error in `compute()`:
       ! not found: unable to find column "bar"; valid columns: ["x", "y", "z"]
       Resolved plan until failure:
       ---> FAILED HERE RESOLVING 'with_columns' <---
@@ -22,7 +22,7 @@
 # using [[ sign works
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! object 'bar' not found
@@ -30,9 +30,9 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
-      Error in `collect()`:
+      Error in `compute()`:
       ! not found: unable to find column "bar"; valid columns: ["x", "y", "z"]
       Resolved plan until failure:
       ---> FAILED HERE RESOLVING 'with_columns' <---

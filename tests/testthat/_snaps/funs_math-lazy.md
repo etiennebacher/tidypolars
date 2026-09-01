@@ -1,9 +1,9 @@
 # log() works with base
 
     Code
-      collect(current)
+      compute(current)
     Condition
-      Error in `collect()`:
+      Error in `compute()`:
       ! not found: unable to find column "3"; valid columns: ["x"]
       Did you mean "x"?
       Resolved plan until failure:
@@ -15,7 +15,7 @@
 # sort errors when na.last is absent or NA
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `sort()` in Polars.
@@ -24,7 +24,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `sort()` in Polars.
@@ -33,7 +33,7 @@
 # rank error when na.last is not in TRUE/FALSE/keep
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `rank()` in Polars.
@@ -42,7 +42,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `rank()` in Polars.
@@ -51,7 +51,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `rank()` in Polars.

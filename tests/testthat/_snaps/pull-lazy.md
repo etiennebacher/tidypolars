@@ -1,7 +1,7 @@
 # error cases work
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `pull()`:
       ! `pull()` can only extract one column. You tried to extract 2.
@@ -9,7 +9,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `pull()`:
       ! Arguments in `...` must be used.

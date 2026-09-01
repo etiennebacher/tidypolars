@@ -1,7 +1,7 @@
 # n_distinct() works
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `summarize()`:
       ! Error while running function `n_distinct()` in Polars.
@@ -10,7 +10,7 @@
 # nth() work
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `summarize()`:
       ! Error while running function `nth()` in Polars.
@@ -19,7 +19,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `summarize()`:
       ! Error while running function `nth()` in Polars.
@@ -28,7 +28,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `summarize()`:
       ! Error while running function `nth()` in Polars.
@@ -37,25 +37,25 @@
 # na_if() works
 
     Code
-      collect(current)
+      compute(current)
     Condition
-      Error in `collect()`:
+      Error in `compute()`:
       ! lengths don't match: cannot evaluate two Series of different lengths (5 and 2)
       Error originated in expression: '[(col("x")) == (Series[literal])]'
 
 # near() works
 
     Code
-      collect(current)
+      compute(current)
     Condition
-      Error in `collect()`:
+      Error in `compute()`:
       ! lengths don't match: cannot evaluate two Series of different lengths (3 and 2)
       Error originated in expression: '[(col("x")) - (Series[literal])]'
 
 #  when_all() and when_any() work
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `when_any()` in Polars.
@@ -64,7 +64,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `when_any()` in Polars.
@@ -73,7 +73,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `when_all()` in Polars.
@@ -82,7 +82,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `when_all()` in Polars.
@@ -91,7 +91,7 @@
 # replace_values() - basic usage
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `replace_values()` in Polars.
@@ -100,7 +100,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `replace_values()` in Polars.
@@ -109,7 +109,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `replace_values()` in Polars.
@@ -118,7 +118,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `replace_values()` in Polars.
@@ -127,7 +127,7 @@
 # recode_values() - basic usage
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `recode_values()` in Polars.
@@ -136,7 +136,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `recode_values()` in Polars.
@@ -145,7 +145,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `recode_values()` in Polars.
@@ -154,7 +154,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `recode_values()` in Polars.

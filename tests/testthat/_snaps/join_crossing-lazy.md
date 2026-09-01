@@ -1,7 +1,7 @@
 # unsupported args throw warning
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `cross_join()`:
       ! Argument `copy` is not supported by tidypolars.
@@ -10,7 +10,7 @@
 # dots must be empty
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `cross_join()`:
       ! `...` must be empty.
@@ -18,7 +18,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Warning in `cross_join()`:
       Argument `copy` is not supported by tidypolars.

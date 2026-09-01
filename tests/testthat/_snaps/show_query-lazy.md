@@ -1,7 +1,7 @@
 # basic behavior works
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         sort(
@@ -16,51 +16,63 @@
           keep = "first",
           maintain_order = TRUE
         )
-      # A tibble: 6 x 11
-          mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
-        <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-      1  24.4     4  147.    62  3.69  3.19  20       1     0     4     2
-      2  21.4     4  121    109  4.11  2.78  18.6     1     1     4     2
-      3  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1
-      4  21       6  160    110  3.9   2.62  16.5     0     1     4     4
-      5  10.4     8  472    205  2.93  5.25  18.0     0     0     3     4
-      6  15.8     8  351    264  4.22  3.17  14.5     0     1     5     4
+      shape: (6, 11)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬─────┬──────┬──────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ --- ┆ ---  ┆ ---  │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64 ┆ f64  ┆ f64  │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪═════╪══════╪══════╡
+      │ 24.4 ┆ 4.0 ┆ 146.7 ┆ 62.0  ┆ … ┆ 1.0 ┆ 0.0 ┆ 4.0  ┆ 2.0  │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 1.0 ┆ 4.0  ┆ 2.0  │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 0.0 ┆ 3.0  ┆ 1.0  │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 4.0  ┆ 4.0  │
+      │ 10.4 ┆ 8.0 ┆ 472.0 ┆ 205.0 ┆ … ┆ 0.0 ┆ 0.0 ┆ 3.0  ┆ 4.0  │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 4.0  │
+      └──────┴─────┴───────┴───────┴───┴─────┴─────┴──────┴──────┘
 
 # head()/tail() start recording when they are the first verb
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         head(n = 6L)
-      # A tibble: 6 x 11
-          mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
-        <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-      1  21       6   160   110  3.9   2.62  16.5     0     1     4     4
-      2  21       6   160   110  3.9   2.88  17.0     0     1     4     4
-      3  22.8     4   108    93  3.85  2.32  18.6     1     1     4     1
-      4  21.4     6   258   110  3.08  3.22  19.4     1     0     3     1
-      5  18.7     8   360   175  3.15  3.44  17.0     0     0     3     2
-      6  18.1     6   225   105  2.76  3.46  20.2     1     0     3     1
+      shape: (6, 11)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬─────┬──────┬──────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ --- ┆ ---  ┆ ---  │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64 ┆ f64  ┆ f64  │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪═════╪══════╪══════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 4.0  ┆ 4.0  │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 4.0  ┆ 4.0  │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 1.0 ┆ 4.0  ┆ 1.0  │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 0.0 ┆ 3.0  ┆ 1.0  │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 0.0 ┆ 3.0  ┆ 2.0  │
+      │ 18.1 ┆ 6.0 ┆ 225.0 ┆ 105.0 ┆ … ┆ 1.0 ┆ 0.0 ┆ 3.0  ┆ 1.0  │
+      └──────┴─────┴───────┴───────┴───┴─────┴─────┴──────┴──────┘
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         tail(n = 3)
-      # A tibble: 3 x 11
-          mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
-        <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-      1  19.7     6   145   175  3.62  2.77  15.5     0     1     5     6
-      2  15       8   301   335  3.54  3.57  14.6     0     1     5     8
-      3  21.4     4   121   109  4.11  2.78  18.6     1     1     4     2
+      shape: (3, 11)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬─────┬──────┬──────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ --- ┆ ---  ┆ ---  │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64 ┆ f64  ┆ f64  │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪═════╪══════╪══════╡
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 6.0  │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 0.0 ┆ 1.0 ┆ 5.0  ┆ 8.0  │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 1.0 ┆ 4.0  ┆ 2.0  │
+      └──────┴─────┴───────┴───────┴───┴─────┴─────┴──────┴──────┘
 
 # show_query() works with group_by() and summarize()
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         group_by(
@@ -72,17 +84,21 @@
             then(NA)$
             otherwise(pl$col("mpg")$mean())
         )
-      # A tibble: 3 x 2
-          cyl mean_mpg
-        <dbl>    <dbl>
-      1     6     19.7
-      2     4     26.7
-      3     8     15.1
+      shape: (3, 2)
+      ┌─────┬───────────┐
+      │ cyl ┆ mean_mpg  │
+      │ --- ┆ ---       │
+      │ f64 ┆ f64       │
+      ╞═════╪═══════════╡
+      │ 6.0 ┆ 19.742857 │
+      │ 4.0 ┆ 26.663636 │
+      │ 8.0 ┆ 15.1      │
+      └─────┴───────────┘
 
 # show_query() works with joins and shows the query of both inputs
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         select("cyl", "mpg")$
@@ -102,25 +118,29 @@
           coalesce = TRUE
         )$
         select("cyl", "mpg", "mean_mpg")
-      # A tibble: 32 x 3
-           cyl   mpg mean_mpg
-         <dbl> <dbl>    <dbl>
-       1     6  21       19.7
-       2     6  21       19.7
-       3     4  22.8     26.7
-       4     6  21.4     19.7
-       5     8  18.7     15.1
-       6     6  18.1     19.7
-       7     8  14.3     15.1
-       8     4  24.4     26.7
-       9     4  22.8     26.7
-      10     6  19.2     19.7
-      # i 22 more rows
+      shape: (32, 3)
+      ┌─────┬──────┬───────────┐
+      │ cyl ┆ mpg  ┆ mean_mpg  │
+      │ --- ┆ ---  ┆ ---       │
+      │ f64 ┆ f64  ┆ f64       │
+      ╞═════╪══════╪═══════════╡
+      │ 6.0 ┆ 21.0 ┆ 19.742857 │
+      │ 6.0 ┆ 21.0 ┆ 19.742857 │
+      │ 4.0 ┆ 22.8 ┆ 26.663636 │
+      │ 6.0 ┆ 21.4 ┆ 19.742857 │
+      │ 8.0 ┆ 18.7 ┆ 15.1      │
+      │ …   ┆ …    ┆ …         │
+      │ 4.0 ┆ 30.4 ┆ 26.663636 │
+      │ 8.0 ┆ 15.8 ┆ 15.1      │
+      │ 6.0 ┆ 19.7 ┆ 19.742857 │
+      │ 8.0 ┆ 15.0 ┆ 15.1      │
+      │ 4.0 ┆ 21.4 ┆ 26.663636 │
+      └─────┴──────┴───────────┘
 
 # show_query() works with across()
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
@@ -131,25 +151,29 @@
             then(NA)$
             otherwise(pl$col("am")$mean())
         )
-      # A tibble: 32 x 11
-           mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
-         <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-       1  20.1     6  160    110  3.9   2.62  16.5     0 0.406     4     4
-       2  20.1     6  160    110  3.9   2.88  17.0     0 0.406     4     4
-       3  20.1     4  108     93  3.85  2.32  18.6     1 0.406     4     1
-       4  20.1     6  258    110  3.08  3.22  19.4     1 0.406     3     1
-       5  20.1     8  360    175  3.15  3.44  17.0     0 0.406     3     2
-       6  20.1     6  225    105  2.76  3.46  20.2     1 0.406     3     1
-       7  20.1     8  360    245  3.21  3.57  15.8     0 0.406     3     4
-       8  20.1     4  147.    62  3.69  3.19  20       1 0.406     4     2
-       9  20.1     4  141.    95  3.92  3.15  22.9     1 0.406     4     2
-      10  20.1     6  168.   123  3.92  3.44  18.3     1 0.406     4     4
-      # i 22 more rows
+      shape: (32, 11)
+      ┌───────────┬─────┬───────┬───────┬───┬─────┬─────────┬──────┬──────┐
+      │ mpg       ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ vs  ┆ am      ┆ gear ┆ carb │
+      │ ---       ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---     ┆ ---  ┆ ---  │
+      │ f64       ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64     ┆ f64  ┆ f64  │
+      ╞═══════════╪═════╪═══════╪═══════╪═══╪═════╪═════════╪══════╪══════╡
+      │ 20.090625 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 0.40625 ┆ 4.0  ┆ 4.0  │
+      │ 20.090625 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 0.40625 ┆ 4.0  ┆ 4.0  │
+      │ 20.090625 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 0.40625 ┆ 4.0  ┆ 1.0  │
+      │ 20.090625 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 0.40625 ┆ 3.0  ┆ 1.0  │
+      │ 20.090625 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 0.40625 ┆ 3.0  ┆ 2.0  │
+      │ …         ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …       ┆ …    ┆ …    │
+      │ 20.090625 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 0.40625 ┆ 5.0  ┆ 2.0  │
+      │ 20.090625 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 0.0 ┆ 0.40625 ┆ 5.0  ┆ 4.0  │
+      │ 20.090625 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 0.40625 ┆ 5.0  ┆ 6.0  │
+      │ 20.090625 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 0.0 ┆ 0.40625 ┆ 5.0  ┆ 8.0  │
+      │ 20.090625 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 0.40625 ┆ 4.0  ┆ 2.0  │
+      └───────────┴─────┴───────┴───────┴───┴─────┴─────────┴──────┴──────┘
 
 # show_query() records magrittr pipe translations
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(tibble(x = 1:3))$
         with_columns(
@@ -165,133 +189,161 @@
               closed = "both"
             )
         )
-      # A tibble: 3 x 3
-            x rounded in_range
-        <int>   <int> <lgl>   
-      1     1       1 TRUE    
-      2     2       2 TRUE    
-      3     3       3 TRUE    
+      shape: (3, 3)
+      ┌─────┬─────────┬──────────┐
+      │ x   ┆ rounded ┆ in_range │
+      │ --- ┆ ---     ┆ ---      │
+      │ i32 ┆ i32     ┆ bool     │
+      ╞═════╪═════════╪══════════╡
+      │ 1   ┆ 1       ┆ true     │
+      │ 2   ┆ 2       ┆ true     │
+      │ 3   ┆ 3       ┆ true     │
+      └─────┴─────────┴──────────┘
 
 # user-defined functions returning polars expressions are recorded
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(mpg_std = pl_standardize(pl$col("mpg")))$
         select("mpg_std")
-      # A tibble: 32 x 1
-         mpg_std
-           <dbl>
-       1   0.151
-       2   0.151
-       3   0.450
-       4   0.217
-       5  -0.231
-       6  -0.330
-       7  -0.961
-       8   0.715
-       9   0.450
-      10  -0.148
-      # i 22 more rows
+      shape: (32, 1)
+      ┌───────────┐
+      │ mpg_std   │
+      │ ---       │
+      │ f64       │
+      ╞═══════════╡
+      │ 0.150885  │
+      │ 0.150885  │
+      │ 0.449543  │
+      │ 0.217253  │
+      │ -0.230735 │
+      │ …         │
+      │ 1.710547  │
+      │ -0.711907 │
+      │ -0.064813 │
+      │ -0.844644 │
+      │ 0.217253  │
+      └───────────┘
 
 # long vectors are truncated in the query
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
           foo = pl$col("mpg")$is_in(pl$lit(large)$implode(), nulls_equal = TRUE)
         )
-      # A tibble: 32 x 12
-           mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb foo  
-         <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <lgl>
-       1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 FALSE
-       2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 FALSE
-       3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 FALSE
-       4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 FALSE
-       5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 FALSE
-       6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 FALSE
-       7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 FALSE
-       8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 FALSE
-       9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 FALSE
-      10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 FALSE
-      # i 22 more rows
+      shape: (32, 12)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ foo   │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---   │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ bool  │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═══════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ false │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ false │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ false │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ false │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ false │
+      │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …     │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ false │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ false │
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ false │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ false │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ false │
+      └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────┘
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
           foo = pl$col("mpg")$is_in(pl$lit(runif(200))$implode(), nulls_equal = TRUE)
         )
-      # A tibble: 32 x 12
-           mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb foo  
-         <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <lgl>
-       1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 FALSE
-       2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 FALSE
-       3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 FALSE
-       4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 FALSE
-       5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 FALSE
-       6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 FALSE
-       7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 FALSE
-       8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 FALSE
-       9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 FALSE
-      10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 FALSE
-      # i 22 more rows
+      shape: (32, 12)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ foo   │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---   │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ bool  │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═══════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ false │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ false │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ false │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ false │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ false │
+      │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …     │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ false │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ false │
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ false │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ false │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ false │
+      └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────┘
 
 # count() doesn't record a `NULL` in sort() when input isn't grouped
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         group_by(am = pl$col("am"))$
         len()$
         rename(len = "n")$
         sort("am")
-      # A tibble: 2 x 2
-           am     n
-        <dbl> <dbl>
-      1     0    19
-      2     1    13
+      shape: (2, 2)
+      ┌─────┬─────┐
+      │ am  ┆ n   │
+      │ --- ┆ --- │
+      │ f64 ┆ u32 │
+      ╞═════╪═════╡
+      │ 0.0 ┆ 19  │
+      │ 1.0 ┆ 13  │
+      └─────┴─────┘
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         group_by(am = pl$col("am"))$
         len()$
         rename(len = "n")$
         sort("am")
-      # A tibble: 2 x 2
-           am     n
-        <dbl> <dbl>
-      1     0    19
-      2     1    13
+      shape: (2, 2)
+      ┌─────┬─────┐
+      │ am  ┆ n   │
+      │ --- ┆ --- │
+      │ f64 ┆ u32 │
+      ╞═════╪═════╡
+      │ 0.0 ┆ 19  │
+      │ 1.0 ┆ 13  │
+      └─────┴─────┘
 
 # non-syntactic argument names are backquoted in the query
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         filter(pl$col("cyl") > pl$lit(4))$
         select(pl$len()$alias("n"))
-      # A tibble: 1 x 1
-            n
-        <dbl>
-      1    21
+      shape: (1, 1)
+      ┌─────┐
+      │ n   │
+      │ --- │
+      │ u32 │
+      ╞═════╡
+      │ 21  │
+      └─────┘
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Output
       test_pl$pivot(
         values = "v",
@@ -304,15 +356,19 @@
           `4.0` = "4",
           `5.0` = "5"
         )
-      # A tibble: 1 x 3
-           id   `4`   `5`
-        <dbl> <dbl> <dbl>
-      1     1    10    20
+      shape: (1, 3)
+      ┌─────┬──────┬──────┐
+      │ id  ┆ 4    ┆ 5    │
+      │ --- ┆ ---  ┆ ---  │
+      │ f64 ┆ f64  ┆ f64  │
+      ╞═════╪══════╪══════╡
+      │ 1.0 ┆ 10.0 ┆ 20.0 │
+      └─────┴──────┴──────┘
 
 # the input data is not modified by the recording
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `show_query()`:
       ! No polars query was recorded for this object because it didn't go through tidypolars functions.
@@ -321,7 +377,7 @@
 # the error mentions recording only when the option is FALSE
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `show_query()`:
       ! No polars query was recorded for this object because it didn't go through tidypolars functions.
@@ -330,7 +386,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `show_query()`:
       ! No polars query was recorded for this object because the option `tidypolars_record_query` is `FALSE`.
@@ -340,7 +396,7 @@
 # show_query() rejects extra arguments
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `show_query()`:
       ! `...` must be empty.
@@ -350,7 +406,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `show_query()`:
       ! `...` must be empty.
@@ -361,7 +417,7 @@
 # the query is wrapped at the console width
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
@@ -369,14 +425,18 @@
           am = pl$when(pl$col("am")$has_nulls())$then(NA)$otherwise(pl$col("am")$mean())
         )$
         filter(pl$col("cyl") == pl$lit(4) & pl$col("am") == pl$lit(1))
-      # A tibble: 0 x 11
-      # i 11 variables: mpg <dbl>, cyl <dbl>, disp <dbl>, hp <dbl>, drat <dbl>,
-      #   wt <dbl>, qsec <dbl>, vs <dbl>, am <dbl>, gear <dbl>, carb <dbl>
+      shape: (0, 11)
+      ┌─────┬─────┬──────┬─────┬───┬─────┬─────┬──────┬──────┐
+      │ mpg ┆ cyl ┆ disp ┆ hp  ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │
+      │ --- ┆ --- ┆ ---  ┆ --- ┆   ┆ --- ┆ --- ┆ ---  ┆ ---  │
+      │ f64 ┆ f64 ┆ f64  ┆ f64 ┆   ┆ f64 ┆ f64 ┆ f64  ┆ f64  │
+      ╞═════╪═════╪══════╪═════╪═══╪═════╪═════╪══════╪══════╡
+      └─────┴─────┴──────┴─────┴───┴─────┴─────┴──────┴──────┘
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
@@ -395,22 +455,26 @@
           pl$col("cyl") == pl$lit(4) &
             pl$col("am") == pl$lit(1)
         )
-      # A tibble: 0 x 11
-      # i 11 variables: mpg <dbl>, cyl <dbl>, disp <dbl>, hp <dbl>, drat <dbl>,
-      #   wt <dbl>, qsec <dbl>, vs <dbl>, am <dbl>, gear <dbl>, carb <dbl>
+      shape: (0, 11)
+      ┌─────┬─────┬──────┬─────┬───┬─────┬─────┬──────┬──────┐
+      │ mpg ┆ cyl ┆ disp ┆ hp  ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │
+      │ --- ┆ --- ┆ ---  ┆ --- ┆   ┆ --- ┆ --- ┆ ---  ┆ ---  │
+      │ f64 ┆ f64 ┆ f64  ┆ f64 ┆   ┆ f64 ┆ f64 ┆ f64  ┆ f64  │
+      ╞═════╪═════╪══════╪═════╪═══╪═════╪═════╪══════╪══════╡
+      └─────┴─────┴──────┴─────┴───┴─────┴─────┴──────┴──────┘
 
 # errors in the pipeline are not affected by the recording
 
     Code
-      collect(current)
+      compute(current)
     Condition
-      Error in `collect()`:
+      Error in `compute()`:
       ! conversion from `str` to `i32` failed in column 'char1' for 2 out of 2 values: ["a", "b"]
 
 # option tidypolars_record_query = FALSE disables the recording
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `show_query()`:
       ! No polars query was recorded for this object because the option `tidypolars_record_query` is `FALSE`.
@@ -420,18 +484,22 @@
 # the input name falls back to a placeholder when it is too long
 
     Code
-      collect(current)
+      compute(current)
     Output
       `<data>`$filter(pl$col("x") == pl$lit(1))
-      # A tibble: 1 x 7
-            x     y  zzzz  aaaa  bbbb  cccc  dddd
-        <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-      1     1     2     3     4     5     6     7
+      shape: (1, 7)
+      ┌─────┬─────┬──────┬──────┬──────┬──────┬──────┐
+      │ x   ┆ y   ┆ zzzz ┆ aaaa ┆ bbbb ┆ cccc ┆ dddd │
+      │ --- ┆ --- ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  │
+      │ f64 ┆ f64 ┆ f64  ┆ f64  ┆ f64  ┆ f64  ┆ f64  │
+      ╞═════╪═════╪══════╪══════╪══════╪══════╪══════╡
+      │ 1.0 ┆ 2.0 ┆ 3.0  ┆ 4.0  ┆ 5.0  ┆ 6.0  ┆ 7.0  │
+      └─────┴─────┴──────┴──────┴──────┴──────┴──────┘
 
 # data.frame arguments with non-syntactic names are rebuilt faithfully
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(dat)$
         pivot(
@@ -445,74 +513,91 @@
           a = "a",
           b = "b"
         )
-      # A tibble: 1 x 3
-           id     a     b
-        <dbl> <dbl> <dbl>
-      1     1    10    20
+      shape: (1, 3)
+      ┌─────┬──────┬──────┐
+      │ id  ┆ a    ┆ b    │
+      │ --- ┆ ---  ┆ ---  │
+      │ f64 ┆ f64  ┆ f64  │
+      ╞═════╪══════╪══════╡
+      │ 1.0 ┆ 10.0 ┆ 20.0 │
+      └─────┴──────┴──────┘
 
 # long vectors that deparse compactly are kept in the query
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
           foo = pl$col("mpg")$is_in(pl$lit(1:200)$implode(), nulls_equal = TRUE)
         )
-      # A tibble: 32 x 12
-           mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb foo  
-         <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <lgl>
-       1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 TRUE 
-       2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 TRUE 
-       3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 FALSE
-       4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 FALSE
-       5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 FALSE
-       6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 FALSE
-       7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 FALSE
-       8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 FALSE
-       9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 FALSE
-      10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 FALSE
-      # i 22 more rows
+      shape: (32, 12)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ foo   │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---   │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ bool  │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═══════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ true  │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ true  │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ false │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ false │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ false │
+      │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …     │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ false │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ false │
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ false │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ true  │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ false │
+      └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────┘
 
 # values too long to display fall back to the code producing them
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(data.frame(txt = "a"))$
         filter(pl$col("txt") == pl$lit(strrep("a", 400)))
-      # A tibble: 0 x 1
-      # i 1 variable: txt <chr>
+      shape: (0, 1)
+      ┌─────┐
+      │ txt │
+      │ --- │
+      │ str │
+      ╞═════╡
+      └─────┘
 
 # the source of a value is only used when it is short enough
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
           foo = pl$col("mpg")$
             is_in(pl$lit(`<numeric of length 200>`)$implode(), nulls_equal = TRUE)
         )
-      # A tibble: 32 x 12
-           mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb foo  
-         <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <lgl>
-       1  21       6  160    110  3.9   2.62  16.5     0     1     4     4 FALSE
-       2  21       6  160    110  3.9   2.88  17.0     0     1     4     4 FALSE
-       3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1 FALSE
-       4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1 FALSE
-       5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 FALSE
-       6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 FALSE
-       7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 FALSE
-       8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2 FALSE
-       9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2 FALSE
-      10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 FALSE
-      # i 22 more rows
+      shape: (32, 12)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ foo   │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---   │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ bool  │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═══════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ false │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ false │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ false │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ false │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ false │
+      │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …     │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ false │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ false │
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ false │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ false │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ false │
+      └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────┘
 
 # arguments that don't fit on a line are wrapped too
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
@@ -538,25 +623,29 @@
                   std(ddof = 1)
               )
         )
-      # A tibble: 32 x 12
-           mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb      z
-         <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>
-       1  21       6  160    110  3.9   2.62  16.5     0     1     4     4  0.151
-       2  21       6  160    110  3.9   2.88  17.0     0     1     4     4  0.151
-       3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1  0.450
-       4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1  0.217
-       5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2 -0.231
-       6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1 -0.330
-       7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4 -0.961
-       8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2  0.715
-       9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2  0.450
-      10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4 -0.148
-      # i 22 more rows
+      shape: (32, 12)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ z         │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---       │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ f64       │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪═══════════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 0.150885  │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 0.150885  │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 0.449543  │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ 0.217253  │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ -0.230735 │
+      │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …         │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ 1.710547  │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ -0.711907 │
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ -0.064813 │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ -0.844644 │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ 0.217253  │
+      └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴───────────┘
 
 # a long value that is not a method call is left on its own line
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(data.frame(txt = "x"))$
         filter(
@@ -565,13 +654,18 @@
               "abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
             )
         )
-      # A tibble: 0 x 1
-      # i 1 variable: txt <chr>
+      shape: (0, 1)
+      ┌─────┐
+      │ txt │
+      │ --- │
+      │ str │
+      ╞═════╡
+      └─────┘
 
 # vignette 'Getting started': who pipeline
 
     Code
-      collect(current)
+      compute(current)
     Output
       who_pl$filter(pl$col("year") > pl$lit(1990))$
         drop_nulls("newrel_f3544")$
@@ -597,21 +691,25 @@
           newrel_f65 = "NEWREL_F65"
         )$
         head(n = 6L)
-      # A tibble: 6 x 9
-        ISO3   YEAR NEWREL_F014 NEWREL_F1524 NEWREL_F2534 NEWREL_F3544 NEWREL_F4554
-        <chr> <dbl>       <dbl>        <dbl>        <dbl>        <dbl>        <dbl>
-      1 AGO    2013         626         2644         2480         1671          991
-      2 AIA    2013           0            0            0            0            0
-      3 ALB    2013           5           28           34           13           18
-      4 AND    2013           0            0            0            1            0
-      5 ARE    2013           5            4            9            3            3
-      6 ARG    2013         431          927          808          537          395
-      # i 2 more variables: NEWREL_F5564 <dbl>, NEWREL_F65 <dbl>
+      shape: (6, 9)
+      ┌──────┬────────┬─────────────┬────────────┬───┬────────────┬────────────┬────────────┬────────────┐
+      │ ISO3 ┆ YEAR   ┆ NEWREL_F014 ┆ NEWREL_F15 ┆ … ┆ NEWREL_F35 ┆ NEWREL_F45 ┆ NEWREL_F55 ┆ NEWREL_F65 │
+      │ ---  ┆ ---    ┆ ---         ┆ 24         ┆   ┆ 44         ┆ 54         ┆ 64         ┆ ---        │
+      │ str  ┆ f64    ┆ f64         ┆ ---        ┆   ┆ ---        ┆ ---        ┆ ---        ┆ f64        │
+      │      ┆        ┆             ┆ f64        ┆   ┆ f64        ┆ f64        ┆ f64        ┆            │
+      ╞══════╪════════╪═════════════╪════════════╪═══╪════════════╪════════════╪════════════╪════════════╡
+      │ AGO  ┆ 2013.0 ┆ 626.0       ┆ 2644.0     ┆ … ┆ 1671.0     ┆ 991.0      ┆ 481.0      ┆ 314.0      │
+      │ AIA  ┆ 2013.0 ┆ 0.0         ┆ 0.0        ┆ … ┆ 0.0        ┆ 0.0        ┆ 0.0        ┆ 0.0        │
+      │ ALB  ┆ 2013.0 ┆ 5.0         ┆ 28.0       ┆ … ┆ 13.0       ┆ 18.0       ┆ 14.0       ┆ 34.0       │
+      │ AND  ┆ 2013.0 ┆ 0.0         ┆ 0.0        ┆ … ┆ 1.0        ┆ 0.0        ┆ 0.0        ┆ 0.0        │
+      │ ARE  ┆ 2013.0 ┆ 5.0         ┆ 4.0        ┆ … ┆ 3.0        ┆ 3.0        ┆ 1.0        ┆ 6.0        │
+      │ ARG  ┆ 2013.0 ┆ 431.0       ┆ 927.0      ┆ … ┆ 537.0      ┆ 395.0      ┆ 307.0      ┆ 374.0      │
+      └──────┴────────┴─────────────┴────────────┴───┴────────────┴────────────┴────────────┴────────────┘
 
 # vignette 'R and Polars expressions': mean() trim argument is kept
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
@@ -619,85 +717,101 @@
             then(NA)$
             otherwise(pl$col("mpg")$median())
         )
-      # A tibble: 32 x 12
-           mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb     x
-         <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-       1  21       6  160    110  3.9   2.62  16.5     0     1     4     4  19.2
-       2  21       6  160    110  3.9   2.88  17.0     0     1     4     4  19.2
-       3  22.8     4  108     93  3.85  2.32  18.6     1     1     4     1  19.2
-       4  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1  19.2
-       5  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2  19.2
-       6  18.1     6  225    105  2.76  3.46  20.2     1     0     3     1  19.2
-       7  14.3     8  360    245  3.21  3.57  15.8     0     0     3     4  19.2
-       8  24.4     4  147.    62  3.69  3.19  20       1     0     4     2  19.2
-       9  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2  19.2
-      10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4  19.2
-      # i 22 more rows
+      shape: (32, 12)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬──────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ x    │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---  │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ f64  │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪══════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 19.2 │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 110.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 4.0  ┆ 19.2 │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 19.2 │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 110.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ 19.2 │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 175.0 ┆ … ┆ 0.0 ┆ 3.0  ┆ 2.0  ┆ 19.2 │
+      │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …    │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ 19.2 │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 264.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 4.0  ┆ 19.2 │
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 175.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 6.0  ┆ 19.2 │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 335.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 8.0  ┆ 19.2 │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ 19.2 │
+      └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴──────┘
 
 # vignette 'R and Polars expressions': external object in filter
 
     Code
-      collect(current)
+      compute(current)
     Output
       pl$LazyFrame(foo = c(2, 1, 2))$
         filter(pl$col("foo") >= pl$lit(1:3))
-      # A tibble: 1 x 1
-          foo
-        <dbl>
-      1     2
+      shape: (1, 1)
+      ┌─────┐
+      │ foo │
+      │ --- │
+      │ f64 │
+      ╞═════╡
+      │ 2.0 │
+      └─────┘
 
 # show_query() example: grouped mutate with .by
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         filter(pl$col("cyl") == pl$lit(4))$
         with_columns(mpg2 = (pl$col("mpg") * pl$lit(2))$over("am"))
-      # A tibble: 11 x 12
-           mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb  mpg2
-         <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-       1  22.8     4 108      93  3.85  2.32  18.6     1     1     4     1  45.6
-       2  24.4     4 147.     62  3.69  3.19  20       1     0     4     2  48.8
-       3  22.8     4 141.     95  3.92  3.15  22.9     1     0     4     2  45.6
-       4  32.4     4  78.7    66  4.08  2.2   19.5     1     1     4     1  64.8
-       5  30.4     4  75.7    52  4.93  1.62  18.5     1     1     4     2  60.8
-       6  33.9     4  71.1    65  4.22  1.84  19.9     1     1     4     1  67.8
-       7  21.5     4 120.     97  3.7   2.46  20.0     1     0     3     1  43  
-       8  27.3     4  79      66  4.08  1.94  18.9     1     1     4     1  54.6
-       9  26       4 120.     91  4.43  2.14  16.7     0     1     5     2  52  
-      10  30.4     4  95.1   113  3.77  1.51  16.9     1     1     5     2  60.8
-      11  21.4     4 121     109  4.11  2.78  18.6     1     1     4     2  42.8
+      shape: (11, 12)
+      ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬──────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ hp    ┆ … ┆ am  ┆ gear ┆ carb ┆ mpg2 │
+      │ ---  ┆ --- ┆ ---   ┆ ---   ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---  │
+      │ f64  ┆ f64 ┆ f64   ┆ f64   ┆   ┆ f64 ┆ f64  ┆ f64  ┆ f64  │
+      ╞══════╪═════╪═══════╪═══════╪═══╪═════╪══════╪══════╪══════╡
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 93.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 45.6 │
+      │ 24.4 ┆ 4.0 ┆ 146.7 ┆ 62.0  ┆ … ┆ 0.0 ┆ 4.0  ┆ 2.0  ┆ 48.8 │
+      │ 22.8 ┆ 4.0 ┆ 140.8 ┆ 95.0  ┆ … ┆ 0.0 ┆ 4.0  ┆ 2.0  ┆ 45.6 │
+      │ 32.4 ┆ 4.0 ┆ 78.7  ┆ 66.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 64.8 │
+      │ 30.4 ┆ 4.0 ┆ 75.7  ┆ 52.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ 60.8 │
+      │ …    ┆ …   ┆ …     ┆ …     ┆ … ┆ …   ┆ …    ┆ …    ┆ …    │
+      │ 21.5 ┆ 4.0 ┆ 120.1 ┆ 97.0  ┆ … ┆ 0.0 ┆ 3.0  ┆ 1.0  ┆ 43.0 │
+      │ 27.3 ┆ 4.0 ┆ 79.0  ┆ 66.0  ┆ … ┆ 1.0 ┆ 4.0  ┆ 1.0  ┆ 54.6 │
+      │ 26.0 ┆ 4.0 ┆ 120.3 ┆ 91.0  ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ 52.0 │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 113.0 ┆ … ┆ 1.0 ┆ 5.0  ┆ 2.0  ┆ 60.8 │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 109.0 ┆ … ┆ 1.0 ┆ 4.0  ┆ 2.0  ┆ 42.8 │
+      └──────┴─────┴───────┴───────┴───┴─────┴──────┴──────┴──────┘
 
 # mutate() example: logical operation and overwriting a column
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(iris)$
         with_columns(
           big = pl$col("Sepal.Width") > pl$col("Sepal.Length"),
           Sepal.Width = pl$col("Sepal.Width") * pl$lit(2)
         )
-      # A tibble: 150 x 6
-         Sepal.Length Sepal.Width Petal.Length Petal.Width Species big  
-                <dbl>       <dbl>        <dbl>       <dbl> <fct>   <lgl>
-       1          5.1         7            1.4         0.2 setosa  FALSE
-       2          4.9         6            1.4         0.2 setosa  FALSE
-       3          4.7         6.4          1.3         0.2 setosa  FALSE
-       4          4.6         6.2          1.5         0.2 setosa  FALSE
-       5          5           7.2          1.4         0.2 setosa  FALSE
-       6          5.4         7.8          1.7         0.4 setosa  FALSE
-       7          4.6         6.8          1.4         0.3 setosa  FALSE
-       8          5           6.8          1.5         0.2 setosa  FALSE
-       9          4.4         5.8          1.4         0.2 setosa  FALSE
-      10          4.9         6.2          1.5         0.1 setosa  FALSE
-      # i 140 more rows
+      shape: (150, 6)
+      ┌──────────────┬─────────────┬──────────────┬─────────────┬───────────┬───────┐
+      │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ Species   ┆ big   │
+      │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---       ┆ ---   │
+      │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ cat       ┆ bool  │
+      ╞══════════════╪═════════════╪══════════════╪═════════════╪═══════════╪═══════╡
+      │ 5.1          ┆ 7.0         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ false │
+      │ 4.9          ┆ 6.0         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ false │
+      │ 4.7          ┆ 6.4         ┆ 1.3          ┆ 0.2         ┆ setosa    ┆ false │
+      │ 4.6          ┆ 6.2         ┆ 1.5          ┆ 0.2         ┆ setosa    ┆ false │
+      │ 5.0          ┆ 7.2         ┆ 1.4          ┆ 0.2         ┆ setosa    ┆ false │
+      │ …            ┆ …           ┆ …            ┆ …           ┆ …         ┆ …     │
+      │ 6.7          ┆ 6.0         ┆ 5.2          ┆ 2.3         ┆ virginica ┆ false │
+      │ 6.3          ┆ 5.0         ┆ 5.0          ┆ 1.9         ┆ virginica ┆ false │
+      │ 6.5          ┆ 6.0         ┆ 5.2          ┆ 2.0         ┆ virginica ┆ false │
+      │ 6.2          ┆ 6.8         ┆ 5.4          ┆ 2.3         ┆ virginica ┆ false │
+      │ 5.9          ┆ 6.0         ┆ 5.1          ┆ 1.8         ┆ virginica ┆ false │
+      └──────────────┴─────────────┴──────────────┴─────────────┴───────────┴───────┘
 
 # mutate() example: across() with a list of functions and .names
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(iris)$
         with_columns(
@@ -714,54 +828,58 @@
             then(NA)$
             otherwise(pl$col("Sepal.Width")$std(ddof = 1))
         )
-      # A tibble: 150 x 9
-         Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-                <dbl>       <dbl>        <dbl>       <dbl> <fct>  
-       1          5.1         3.5          1.4         0.2 setosa 
-       2          4.9         3            1.4         0.2 setosa 
-       3          4.7         3.2          1.3         0.2 setosa 
-       4          4.6         3.1          1.5         0.2 setosa 
-       5          5           3.6          1.4         0.2 setosa 
-       6          5.4         3.9          1.7         0.4 setosa 
-       7          4.6         3.4          1.4         0.3 setosa 
-       8          5           3.4          1.5         0.2 setosa 
-       9          4.4         2.9          1.4         0.2 setosa 
-      10          4.9         3.1          1.5         0.1 setosa 
-      # i 140 more rows
-      # i 4 more variables: mean_of_Sepal.Length <dbl>, sd_of_Sepal.Length <dbl>,
-      #   mean_of_Sepal.Width <dbl>, sd_of_Sepal.Width <dbl>
+      shape: (150, 9)
+      ┌───────────┬───────────┬───────────┬───────────┬───┬───────────┬───────────┬───────────┬──────────┐
+      │ Sepal.Len ┆ Sepal.Wid ┆ Petal.Len ┆ Petal.Wid ┆ … ┆ mean_of_S ┆ sd_of_Sep ┆ mean_of_S ┆ sd_of_Se │
+      │ gth       ┆ th        ┆ gth       ┆ th        ┆   ┆ epal.Leng ┆ al.Length ┆ epal.Widt ┆ pal.Widt │
+      │ ---       ┆ ---       ┆ ---       ┆ ---       ┆   ┆ th        ┆ ---       ┆ h         ┆ h        │
+      │ f64       ┆ f64       ┆ f64       ┆ f64       ┆   ┆ ---       ┆ f64       ┆ ---       ┆ ---      │
+      │           ┆           ┆           ┆           ┆   ┆ f64       ┆           ┆ f64       ┆ f64      │
+      ╞═══════════╪═══════════╪═══════════╪═══════════╪═══╪═══════════╪═══════════╪═══════════╪══════════╡
+      │ 5.1       ┆ 3.5       ┆ 1.4       ┆ 0.2       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ 4.9       ┆ 3.0       ┆ 1.4       ┆ 0.2       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ 4.7       ┆ 3.2       ┆ 1.3       ┆ 0.2       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ 4.6       ┆ 3.1       ┆ 1.5       ┆ 0.2       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ 5.0       ┆ 3.6       ┆ 1.4       ┆ 0.2       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ …         ┆ …         ┆ …         ┆ …         ┆ … ┆ …         ┆ …         ┆ …         ┆ …        │
+      │ 6.7       ┆ 3.0       ┆ 5.2       ┆ 2.3       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ 6.3       ┆ 2.5       ┆ 5.0       ┆ 1.9       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ 6.5       ┆ 3.0       ┆ 5.2       ┆ 2.0       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ 6.2       ┆ 3.4       ┆ 5.4       ┆ 2.3       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      │ 5.9       ┆ 3.0       ┆ 5.1       ┆ 1.8       ┆ … ┆ 5.843333  ┆ 0.828066  ┆ 3.057333  ┆ 0.435866 │
+      └───────────┴───────────┴───────────┴───────────┴───┴───────────┴───────────┴───────────┴──────────┘
 
 # filter() example: grouped filter with .by
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(dplyr::starwars)$
         select("name", "mass", "gender")$
         filter((pl$col("mass") > pl$col("mass")$mean())$over("gender"))
-      # A tibble: 15 x 3
-         name                    mass gender   
-         <chr>                  <dbl> <chr>    
-       1 Darth Vader            136   masculine
-       2 Owen Lars              120   masculine
-       3 Beru Whitesun Lars      75   feminine 
-       4 Chewbacca              112   masculine
-       5 Jabba Desilijic Tiure 1358   masculine
-       6 Jek Tono Porkins       110   <NA>     
-       7 IG-88                  140   masculine
-       8 Bossk                  113   masculine
-       9 Ayla Secura             55   feminine 
-      10 Gregar Typho            85   <NA>     
-      11 Luminara Unduli         56.2 feminine 
-      12 Zam Wesell              55   feminine 
-      13 Shaak Ti                57   feminine 
-      14 Grievous               159   masculine
-      15 Tarfful                136   masculine
+      shape: (15, 3)
+      ┌───────────────────────┬────────┬───────────┐
+      │ name                  ┆ mass   ┆ gender    │
+      │ ---                   ┆ ---    ┆ ---       │
+      │ str                   ┆ f64    ┆ str       │
+      ╞═══════════════════════╪════════╪═══════════╡
+      │ Darth Vader           ┆ 136.0  ┆ masculine │
+      │ Owen Lars             ┆ 120.0  ┆ masculine │
+      │ Beru Whitesun Lars    ┆ 75.0   ┆ feminine  │
+      │ Chewbacca             ┆ 112.0  ┆ masculine │
+      │ Jabba Desilijic Tiure ┆ 1358.0 ┆ masculine │
+      │ …                     ┆ …      ┆ …         │
+      │ Luminara Unduli       ┆ 56.2   ┆ feminine  │
+      │ Zam Wesell            ┆ 55.0   ┆ feminine  │
+      │ Shaak Ti              ┆ 57.0   ┆ feminine  │
+      │ Grievous              ┆ 159.0  ┆ masculine │
+      │ Tarfful               ┆ 136.0  ┆ masculine │
+      └───────────────────────┴────────┴───────────┘
 
 # pivot_longer() example: relig_income
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(tidyr::relig_income)$
         unpivot(
@@ -773,25 +891,29 @@
           variable_name = "income",
           value_name = "count"
         )
-      # A tibble: 180 x 3
-         religion                income count
-         <chr>                   <chr>  <dbl>
-       1 Agnostic                <$10k     27
-       2 Atheist                 <$10k     12
-       3 Buddhist                <$10k     27
-       4 Catholic                <$10k    418
-       5 Don’t know/refused      <$10k     15
-       6 Evangelical Prot        <$10k    575
-       7 Hindu                   <$10k      1
-       8 Historically Black Prot <$10k    228
-       9 Jehovah's Witness       <$10k     20
-      10 Jewish                  <$10k     19
-      # i 170 more rows
+      shape: (180, 3)
+      ┌───────────────────────┬────────────────────┬───────┐
+      │ religion              ┆ income             ┆ count │
+      │ ---                   ┆ ---                ┆ ---   │
+      │ str                   ┆ str                ┆ f64   │
+      ╞═══════════════════════╪════════════════════╪═══════╡
+      │ Agnostic              ┆ <$10k              ┆ 27.0  │
+      │ Atheist               ┆ <$10k              ┆ 12.0  │
+      │ Buddhist              ┆ <$10k              ┆ 27.0  │
+      │ Catholic              ┆ <$10k              ┆ 418.0 │
+      │ Don’t know/refused    ┆ <$10k              ┆ 15.0  │
+      │ …                     ┆ …                  ┆ …     │
+      │ Orthodox              ┆ Don't know/refused ┆ 73.0  │
+      │ Other Christian       ┆ Don't know/refused ┆ 18.0  │
+      │ Other Faiths          ┆ Don't know/refused ┆ 71.0  │
+      │ Other World Religions ┆ Don't know/refused ┆ 8.0   │
+      │ Unaffiliated          ┆ Don't know/refused ┆ 597.0 │
+      └───────────────────────┴────────────────────┴───────┘
 
 # separate() example: split on a dot
 
     Code
-      collect(current)
+      compute(current)
     Output
       polars::pl$LazyFrame(x = c(NA, "x.y", "x.z", "y.z"))$
         with_columns(
@@ -803,18 +925,22 @@
             struct$unnest()
         )$
         drop("x")
-      # A tibble: 4 x 2
-        foo   foo2 
-        <chr> <chr>
-      1 <NA>  <NA> 
-      2 x     y    
-      3 x     z    
-      4 y     z    
+      shape: (4, 2)
+      ┌──────┬──────┐
+      │ foo  ┆ foo2 │
+      │ ---  ┆ ---  │
+      │ str  ┆ str  │
+      ╞══════╪══════╡
+      │ null ┆ null │
+      │ x    ┆ y    │
+      │ x    ┆ z    │
+      │ y    ┆ z    │
+      └──────┴──────┘
 
 # unite() example: combine columns with a separator
 
     Code
-      collect(current)
+      compute(current)
     Output
       polars::pl$LazyFrame(
         year = 2009:2011,
@@ -831,69 +957,85 @@
         )$
         drop(c("year", "month", "day"))$
         select("date")
-      # A tibble: 3 x 1
-        date      
-        <chr>     
-      1 2009-10-11
-      2 2010-11-22
-      3 2011-12-28
+      shape: (3, 1)
+      ┌────────────┐
+      │ date       │
+      │ ---        │
+      │ str        │
+      ╞════════════╡
+      │ 2009-10-11 │
+      │ 2010-11-22 │
+      │ 2011-12-28 │
+      └────────────┘
 
 # relocate() example: move columns with .after
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         select(
           "mpg", "cyl", "disp", "drat", "wt", "qsec", "am", "gear", "hp", "vs", "carb"
         )
-      # A tibble: 32 x 11
-           mpg   cyl  disp  drat    wt  qsec    am  gear    hp    vs  carb
-         <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-       1  21       6  160   3.9   2.62  16.5     1     4   110     0     4
-       2  21       6  160   3.9   2.88  17.0     1     4   110     0     4
-       3  22.8     4  108   3.85  2.32  18.6     1     4    93     1     1
-       4  21.4     6  258   3.08  3.22  19.4     0     3   110     1     1
-       5  18.7     8  360   3.15  3.44  17.0     0     3   175     0     2
-       6  18.1     6  225   2.76  3.46  20.2     0     3   105     1     1
-       7  14.3     8  360   3.21  3.57  15.8     0     3   245     0     4
-       8  24.4     4  147.  3.69  3.19  20       0     4    62     1     2
-       9  22.8     4  141.  3.92  3.15  22.9     0     4    95     1     2
-      10  19.2     6  168.  3.92  3.44  18.3     0     4   123     1     4
-      # i 22 more rows
+      shape: (32, 11)
+      ┌──────┬─────┬───────┬──────┬───┬──────┬───────┬─────┬──────┐
+      │ mpg  ┆ cyl ┆ disp  ┆ drat ┆ … ┆ gear ┆ hp    ┆ vs  ┆ carb │
+      │ ---  ┆ --- ┆ ---   ┆ ---  ┆   ┆ ---  ┆ ---   ┆ --- ┆ ---  │
+      │ f64  ┆ f64 ┆ f64   ┆ f64  ┆   ┆ f64  ┆ f64   ┆ f64 ┆ f64  │
+      ╞══════╪═════╪═══════╪══════╪═══╪══════╪═══════╪═════╪══════╡
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 3.9  ┆ … ┆ 4.0  ┆ 110.0 ┆ 0.0 ┆ 4.0  │
+      │ 21.0 ┆ 6.0 ┆ 160.0 ┆ 3.9  ┆ … ┆ 4.0  ┆ 110.0 ┆ 0.0 ┆ 4.0  │
+      │ 22.8 ┆ 4.0 ┆ 108.0 ┆ 3.85 ┆ … ┆ 4.0  ┆ 93.0  ┆ 1.0 ┆ 1.0  │
+      │ 21.4 ┆ 6.0 ┆ 258.0 ┆ 3.08 ┆ … ┆ 3.0  ┆ 110.0 ┆ 1.0 ┆ 1.0  │
+      │ 18.7 ┆ 8.0 ┆ 360.0 ┆ 3.15 ┆ … ┆ 3.0  ┆ 175.0 ┆ 0.0 ┆ 2.0  │
+      │ …    ┆ …   ┆ …     ┆ …    ┆ … ┆ …    ┆ …     ┆ …   ┆ …    │
+      │ 30.4 ┆ 4.0 ┆ 95.1  ┆ 3.77 ┆ … ┆ 5.0  ┆ 113.0 ┆ 1.0 ┆ 2.0  │
+      │ 15.8 ┆ 8.0 ┆ 351.0 ┆ 4.22 ┆ … ┆ 5.0  ┆ 264.0 ┆ 0.0 ┆ 4.0  │
+      │ 19.7 ┆ 6.0 ┆ 145.0 ┆ 3.62 ┆ … ┆ 5.0  ┆ 175.0 ┆ 0.0 ┆ 6.0  │
+      │ 15.0 ┆ 8.0 ┆ 301.0 ┆ 3.54 ┆ … ┆ 5.0  ┆ 335.0 ┆ 0.0 ┆ 8.0  │
+      │ 21.4 ┆ 4.0 ┆ 121.0 ┆ 4.11 ┆ … ┆ 4.0  ┆ 109.0 ┆ 1.0 ┆ 2.0  │
+      └──────┴─────┴───────┴──────┴───┴──────┴───────┴─────┴──────┘
 
 # slice example: slice_head() and slice_tail()
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(iris)$
         head(3)
-      # A tibble: 3 x 5
-        Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-               <dbl>       <dbl>        <dbl>       <dbl> <fct>  
-      1          5.1         3.5          1.4         0.2 setosa 
-      2          4.9         3            1.4         0.2 setosa 
-      3          4.7         3.2          1.3         0.2 setosa 
+      shape: (3, 5)
+      ┌──────────────┬─────────────┬──────────────┬─────────────┬─────────┐
+      │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ Species │
+      │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---     │
+      │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ cat     │
+      ╞══════════════╪═════════════╪══════════════╪═════════════╪═════════╡
+      │ 5.1          ┆ 3.5         ┆ 1.4          ┆ 0.2         ┆ setosa  │
+      │ 4.9          ┆ 3.0         ┆ 1.4          ┆ 0.2         ┆ setosa  │
+      │ 4.7          ┆ 3.2         ┆ 1.3          ┆ 0.2         ┆ setosa  │
+      └──────────────┴─────────────┴──────────────┴─────────────┴─────────┘
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Output
       as_polars_lf(iris)$
         tail(3)
-      # A tibble: 3 x 5
-        Sepal.Length Sepal.Width Petal.Length Petal.Width Species  
-               <dbl>       <dbl>        <dbl>       <dbl> <fct>    
-      1          6.5         3            5.2         2   virginica
-      2          6.2         3.4          5.4         2.3 virginica
-      3          5.9         3            5.1         1.8 virginica
+      shape: (3, 5)
+      ┌──────────────┬─────────────┬──────────────┬─────────────┬───────────┐
+      │ Sepal.Length ┆ Sepal.Width ┆ Petal.Length ┆ Petal.Width ┆ Species   │
+      │ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---       │
+      │ f64          ┆ f64         ┆ f64          ┆ f64         ┆ cat       │
+      ╞══════════════╪═════════════╪══════════════╪═════════════╪═══════════╡
+      │ 6.5          ┆ 3.0         ┆ 5.2          ┆ 2.0         ┆ virginica │
+      │ 6.2          ┆ 3.4         ┆ 5.4          ┆ 2.3         ┆ virginica │
+      │ 5.9          ┆ 3.0         ┆ 5.1          ┆ 1.8         ┆ virginica │
+      └──────────────┴─────────────┴──────────────┴─────────────┴───────────┘
 
 # translated base functions: maths and rounding
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         a = pl$col("num")$abs(),
@@ -906,21 +1048,23 @@
         h = pl$col("num")$floor(),
         i = pl$col("num")$truncate(decimals = 0)
       )
-      # A tibble: 5 x 17
-          num   int grp   txt   lgl1  lgl2  date       time                    a     b
-        <dbl> <int> <chr> <chr> <lgl> <lgl> <date>     <dttm>              <dbl> <dbl>
-      1   1.5     2 a     Hell~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00   1.5  1.41
-      2  -2.3     3 a     foo ~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00   2.3  1.73
-      3   4       1 b     BAZ   TRUE  FALSE 2019-12-01 2019-12-01 23:59:00   4    1   
-      4  NA       5 b     <NA>  NA    FALSE 2022-03-10 2022-03-10 00:00:00  NA    2.24
-      5   6.7     4 a     a1b2  FALSE TRUE  2020-07-04 2020-07-04 12:15:00   6.7  2   
-      # i 7 more variables: c <dbl>, d <dbl>, e <dbl>, f <dbl>, g <dbl>, h <dbl>,
-      #   i <dbl>
+      shape: (5, 17)
+      ┌──────┬─────┬─────┬─────────────┬───┬──────┬──────┬──────┬──────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ f    ┆ g    ┆ h    ┆ i    │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---  ┆ ---  ┆ ---  ┆ ---  │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ f64  ┆ f64  ┆ f64  ┆ f64  │
+      ╞══════╪═════╪═════╪═════════════╪═══╪══════╪══════╪══════╪══════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 1.5  ┆ 2.0  ┆ 1.0  ┆ 1.0  │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ -2.3 ┆ -2.0 ┆ -3.0 ┆ -2.0 │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 4.0  ┆ 4.0  ┆ 4.0  ┆ 4.0  │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ null ┆ null ┆ null ┆ null │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 6.7  ┆ 7.0  ┆ 6.0  ┆ 6.0  │
+      └──────┴─────┴─────┴─────────────┴───┴──────┴──────┴──────┴──────┘
 
 # translated base functions: trigonometry
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         a = pl$col("num")$cos(),
@@ -933,21 +1077,23 @@
         h = pl$col("num")$sinh(),
         i = pl$col("num")$tanh()
       )
-      # A tibble: 5 x 17
-          num   int grp   txt       lgl1  lgl2  date       time                      a
-        <dbl> <int> <chr> <chr>     <lgl> <lgl> <date>     <dttm>                <dbl>
-      1   1.5     2 a     Hello Wo~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00  0.0707
-      2  -2.3     3 a     foo bar   FALSE TRUE  2021-06-30 2021-06-30 14:00:00 -0.666 
-      3   4       1 b     BAZ       TRUE  FALSE 2019-12-01 2019-12-01 23:59:00 -0.654 
-      4  NA       5 b     <NA>      NA    FALSE 2022-03-10 2022-03-10 00:00:00 NA     
-      5   6.7     4 a     a1b2      FALSE TRUE  2020-07-04 2020-07-04 12:15:00  0.914 
-      # i 8 more variables: b <dbl>, c <dbl>, d <dbl>, e <dbl>, f <dbl>, g <dbl>,
-      #   h <dbl>, i <dbl>
+      shape: (5, 17)
+      ┌──────┬─────┬─────┬─────────────┬───┬───────────┬────────────┬────────────┬───────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ f         ┆ g          ┆ h          ┆ i         │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---       ┆ ---        ┆ ---        ┆ ---       │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ f64       ┆ f64        ┆ f64        ┆ f64       │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═══════════╪════════════╪════════════╪═══════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 0.982794  ┆ 2.35241    ┆ 2.129279   ┆ 0.905148  │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ -1.160669 ┆ 5.037221   ┆ -4.936962  ┆ -0.980096 │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 1.325818  ┆ 27.308233  ┆ 27.289917  ┆ 0.999329  │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ null      ┆ null       ┆ null       ┆ null      │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 1.422636  ┆ 406.203528 ┆ 406.202297 ┆ 0.999997  │
+      └──────┴─────┴─────┴─────────────┴───┴───────────┴────────────┴────────────┴───────────┘
 
 # translated base functions: cumulative and diff
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         cs = pl$when(pl$col("int")$is_null()$cum_max())$
@@ -962,20 +1108,23 @@
         rv = pl$col("int")$reverse(),
         df = pl$col("int") - pl$col("int")$shift(1)
       )
-      # A tibble: 5 x 13
-          num   int grp   txt   lgl1  lgl2  date       time                   cs  cmin
-        <dbl> <int> <chr> <chr> <lgl> <lgl> <date>     <dttm>              <int> <int>
-      1   1.5     2 a     Hell~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00     2     2
-      2  -2.3     3 a     foo ~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00     5     2
-      3   4       1 b     BAZ   TRUE  FALSE 2019-12-01 2019-12-01 23:59:00     6     1
-      4  NA       5 b     <NA>  NA    FALSE 2022-03-10 2022-03-10 00:00:00    11     1
-      5   6.7     4 a     a1b2  FALSE TRUE  2020-07-04 2020-07-04 12:15:00    15     1
-      # i 3 more variables: cmax <int>, rv <int>, df <int>
+      shape: (5, 13)
+      ┌──────┬─────┬─────┬─────────────┬───┬──────┬──────┬─────┬──────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ cmin ┆ cmax ┆ rv  ┆ df   │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---  ┆ ---  ┆ --- ┆ ---  │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ i32  ┆ i32  ┆ i32 ┆ i32  │
+      ╞══════╪═════╪═════╪═════════════╪═══╪══════╪══════╪═════╪══════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2    ┆ 2    ┆ 4   ┆ null │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2    ┆ 3    ┆ 5   ┆ 1    │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 1    ┆ 3    ┆ 1   ┆ -2   │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 1    ┆ 5    ┆ 3   ┆ 4    │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 1    ┆ 5    ┆ 2   ┆ -1   │
+      └──────┴─────┴─────┴─────────────┴───┴──────┴──────┴─────┴──────┘
 
 # translated base functions: anyDuplicated and duplicated
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         dup = pl$col("grp")$is_first_distinct()$not() &
@@ -991,20 +1140,23 @@
         )$
           fill_null(0)
       )
-      # A tibble: 5 x 10
-          num   int grp   txt         lgl1  lgl2  date       time                dup  
-        <dbl> <int> <chr> <chr>       <lgl> <lgl> <date>     <dttm>              <lgl>
-      1   1.5     2 a     Hello World TRUE  TRUE  2020-01-15 2020-01-15 08:30:00 FALSE
-      2  -2.3     3 a     foo bar     FALSE TRUE  2021-06-30 2021-06-30 14:00:00 FALSE
-      3   4       1 b     BAZ         TRUE  FALSE 2019-12-01 2019-12-01 23:59:00 FALSE
-      4  NA       5 b     <NA>        NA    FALSE 2022-03-10 2022-03-10 00:00:00 TRUE 
-      5   6.7     4 a     a1b2        FALSE TRUE  2020-07-04 2020-07-04 12:15:00 FALSE
-      # i 1 more variable: any_dup <dbl>
+      shape: (5, 10)
+      ┌──────┬─────┬─────┬─────────────┬───┬────────────┬─────────────────────────┬───────┬─────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ date       ┆ time                    ┆ dup   ┆ any_dup │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---        ┆ ---                     ┆ ---   ┆ ---     │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ date       ┆ datetime[ms, UTC]       ┆ bool  ┆ f64     │
+      ╞══════╪═════╪═════╪═════════════╪═══╪════════════╪═════════════════════════╪═══════╪═════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 ┆ 2020-01-15 08:30:00 UTC ┆ false ┆ 4.0     │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 ┆ 2021-06-30 14:00:00 UTC ┆ false ┆ 4.0     │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 ┆ 2019-12-01 23:59:00 UTC ┆ false ┆ 4.0     │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 ┆ 2022-03-10 00:00:00 UTC ┆ true  ┆ 4.0     │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 ┆ 2020-07-04 12:15:00 UTC ┆ false ┆ 4.0     │
+      └──────┴─────┴─────┴─────────────┴───┴────────────┴─────────────────────────┴───────┴─────────┘
 
 # translated base functions: aggregations in summarize()
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$select(
         al = (pl$col("int") > pl$lit(0))$all(ignore_nulls = FALSE),
@@ -1013,15 +1165,19 @@
         wmn = (pl$col("num")$arg_min() + 1)$first(),
         wmx = (pl$col("num")$arg_max() + 1)$first()
       )
-      # A tibble: 1 x 5
-        al    an    na      wmn   wmx
-        <lgl> <lgl> <lgl> <dbl> <dbl>
-      1 TRUE  TRUE  TRUE      2     5
+      shape: (1, 5)
+      ┌──────┬──────┬──────┬─────┬─────┐
+      │ al   ┆ an   ┆ na   ┆ wmn ┆ wmx │
+      │ ---  ┆ ---  ┆ ---  ┆ --- ┆ --- │
+      │ bool ┆ bool ┆ bool ┆ f64 ┆ f64 │
+      ╞══════╪══════╪══════╪═════╪═════╡
+      │ true ┆ true ┆ true ┆ 2.0 ┆ 5.0 │
+      └──────┴──────┴──────┴─────┴─────┘
 
 # translated base functions: string manipulation
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         n = pl$col("txt")$str$len_chars(),
@@ -1039,40 +1195,46 @@
           separator = "-"
         )
       )
-      # A tibble: 5 x 13
-          num   int grp   txt   lgl1  lgl2  date       time                    n up   
-        <dbl> <int> <chr> <chr> <lgl> <lgl> <date>     <dttm>              <dbl> <chr>
-      1   1.5     2 a     Hell~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00    11 HELL~
-      2  -2.3     3 a     foo ~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00     7 FOO ~
-      3   4       1 b     BAZ   TRUE  FALSE 2019-12-01 2019-12-01 23:59:00     3 BAZ  
-      4  NA       5 b     <NA>  NA    FALSE 2022-03-10 2022-03-10 00:00:00    NA <NA> 
-      5   6.7     4 a     a1b2  FALSE TRUE  2020-07-04 2020-07-04 12:15:00     4 A1B2 
-      # i 3 more variables: lo <chr>, p0 <chr>, p <chr>
+      shape: (5, 13)
+      ┌──────┬─────┬─────┬─────────────┬───┬─────────────┬─────────────┬─────┬─────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ up          ┆ lo          ┆ p0  ┆ p   │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---         ┆ ---         ┆ --- ┆ --- │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ str         ┆ str         ┆ str ┆ str │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═════════════╪═════════════╪═════╪═════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ HELLO WORLD ┆ hello world ┆ a_2 ┆ a-2 │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ FOO BAR     ┆ foo bar     ┆ a_3 ┆ a-3 │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ BAZ         ┆ baz         ┆ b_1 ┆ b-1 │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ null        ┆ null        ┆ b_5 ┆ b-5 │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ A1B2        ┆ a1b2        ┆ a_4 ┆ a-4 │
+      └──────┴─────┴─────┴─────────────┴───┴─────────────┴─────────────┴─────┴─────┘
 
 # translated base functions: type conversions
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         ch = pl$col("int")$cast(pl$String, strict = FALSE),
         nu = (pl$col("grp") == pl$lit("a"))$cast(pl$Float64, strict = FALSE),
         lg = (pl$col("int") - pl$lit(1))$cast(pl$Boolean, strict = FALSE)
       )
-      # A tibble: 5 x 11
-          num   int grp   txt   lgl1  lgl2  date       time                ch       nu
-        <dbl> <int> <chr> <chr> <lgl> <lgl> <date>     <dttm>              <chr> <dbl>
-      1   1.5     2 a     Hell~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00 2         1
-      2  -2.3     3 a     foo ~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00 3         1
-      3   4       1 b     BAZ   TRUE  FALSE 2019-12-01 2019-12-01 23:59:00 1         0
-      4  NA       5 b     <NA>  NA    FALSE 2022-03-10 2022-03-10 00:00:00 5         0
-      5   6.7     4 a     a1b2  FALSE TRUE  2020-07-04 2020-07-04 12:15:00 4         1
-      # i 1 more variable: lg <lgl>
+      shape: (5, 11)
+      ┌──────┬─────┬─────┬─────────────┬───┬─────────────────────────┬─────┬─────┬───────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ time                    ┆ ch  ┆ nu  ┆ lg    │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---                     ┆ --- ┆ --- ┆ ---   │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ datetime[ms, UTC]       ┆ str ┆ f64 ┆ bool  │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═════════════════════════╪═════╪═════╪═══════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 08:30:00 UTC ┆ 2   ┆ 1.0 ┆ true  │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 14:00:00 UTC ┆ 3   ┆ 1.0 ┆ true  │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 23:59:00 UTC ┆ 1   ┆ 0.0 ┆ false │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 00:00:00 UTC ┆ 5   ┆ 0.0 ┆ true  │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 12:15:00 UTC ┆ 4   ┆ 1.0 ┆ true  │
+      └──────┴─────┴─────┴─────────────┴───┴─────────────────────────┴─────┴─────┴───────┘
 
 # translated base functions: is.* checks
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         na = pl$col("num")$is_null(),
@@ -1086,38 +1248,45 @@
           then(pl$lit(FALSE))$
           otherwise(pl$col("num")$is_nan())
       )
-      # A tibble: 5 x 12
-          num   int grp   txt   lgl1  lgl2  date       time                na    fin  
-        <dbl> <int> <chr> <chr> <lgl> <lgl> <date>     <dttm>              <lgl> <lgl>
-      1   1.5     2 a     Hell~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00 FALSE TRUE 
-      2  -2.3     3 a     foo ~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00 FALSE TRUE 
-      3   4       1 b     BAZ   TRUE  FALSE 2019-12-01 2019-12-01 23:59:00 FALSE TRUE 
-      4  NA       5 b     <NA>  NA    FALSE 2022-03-10 2022-03-10 00:00:00 TRUE  FALSE
-      5   6.7     4 a     a1b2  FALSE TRUE  2020-07-04 2020-07-04 12:15:00 FALSE TRUE 
-      # i 2 more variables: inf <lgl>, nan <lgl>
+      shape: (5, 12)
+      ┌──────┬─────┬─────┬─────────────┬───┬───────┬───────┬───────┬───────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ na    ┆ fin   ┆ inf   ┆ nan   │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---   ┆ ---   ┆ ---   ┆ ---   │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ bool  ┆ bool  ┆ bool  ┆ bool  │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═══════╪═══════╪═══════╪═══════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ false ┆ true  ┆ false ┆ false │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ false ┆ true  ┆ false ┆ false │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ false ┆ true  ┆ false ┆ false │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ true  ┆ false ┆ false ┆ false │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ false ┆ true  ┆ false ┆ false │
+      └──────┴─────┴─────┴─────────────┴───┴───────┴───────┴───────┴───────┘
 
 # translated base functions: %in% and %notin%
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         ins = pl$col("grp")$is_in(pl$lit("a")$implode(), nulls_equal = TRUE),
         notin = pl$col("grp")$is_in(pl$lit("a")$implode(), nulls_equal = TRUE)$not()
       )
-      # A tibble: 5 x 10
-          num   int grp   txt   lgl1  lgl2  date       time                ins   notin
-        <dbl> <int> <chr> <chr> <lgl> <lgl> <date>     <dttm>              <lgl> <lgl>
-      1   1.5     2 a     Hell~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00 TRUE  FALSE
-      2  -2.3     3 a     foo ~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00 TRUE  FALSE
-      3   4       1 b     BAZ   TRUE  FALSE 2019-12-01 2019-12-01 23:59:00 FALSE TRUE 
-      4  NA       5 b     <NA>  NA    FALSE 2022-03-10 2022-03-10 00:00:00 FALSE TRUE 
-      5   6.7     4 a     a1b2  FALSE TRUE  2020-07-04 2020-07-04 12:15:00 TRUE  FALSE
+      shape: (5, 10)
+      ┌──────┬─────┬─────┬─────────────┬───┬────────────┬─────────────────────────┬───────┬───────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ date       ┆ time                    ┆ ins   ┆ notin │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---        ┆ ---                     ┆ ---   ┆ ---   │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ date       ┆ datetime[ms, UTC]       ┆ bool  ┆ bool  │
+      ╞══════╪═════╪═════╪═════════════╪═══╪════════════╪═════════════════════════╪═══════╪═══════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 ┆ 2020-01-15 08:30:00 UTC ┆ true  ┆ false │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 ┆ 2021-06-30 14:00:00 UTC ┆ true  ┆ false │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 ┆ 2019-12-01 23:59:00 UTC ┆ false ┆ true  │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 ┆ 2022-03-10 00:00:00 UTC ┆ false ┆ true  │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 ┆ 2020-07-04 12:15:00 UTC ┆ true  ┆ false │
+      └──────┴─────┴─────┴─────────────┴───┴────────────┴─────────────────────────┴───────┴───────┘
 
 # translated dplyr functions: between, coalesce, near, if_else
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         bt = pl$col("int")$
@@ -1135,20 +1304,23 @@
           then(pl$lit("pos"))$
           otherwise(pl$lit("neg"))
       )
-      # A tibble: 5 x 13
-          num   int grp   txt   lgl1  lgl2  date       time                bt       co
-        <dbl> <int> <chr> <chr> <lgl> <lgl> <date>     <dttm>              <lgl> <dbl>
-      1   1.5     2 a     Hell~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00 TRUE    1.5
-      2  -2.3     3 a     foo ~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00 TRUE   -2.3
-      3   4       1 b     BAZ   TRUE  FALSE 2019-12-01 2019-12-01 23:59:00 FALSE   4  
-      4  NA       5 b     <NA>  NA    FALSE 2022-03-10 2022-03-10 00:00:00 FALSE   0  
-      5   6.7     4 a     a1b2  FALSE TRUE  2020-07-04 2020-07-04 12:15:00 TRUE    6.7
-      # i 3 more variables: nr <lgl>, ie <chr>, ie_missing <chr>
+      shape: (5, 13)
+      ┌──────┬─────┬─────┬─────────────┬───┬──────┬───────┬──────┬────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ co   ┆ nr    ┆ ie   ┆ ie_missing │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---  ┆ ---   ┆ ---  ┆ ---        │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ f64  ┆ bool  ┆ str  ┆ str        │
+      ╞══════╪═════╪═════╪═════════════╪═══╪══════╪═══════╪══════╪════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 1.5  ┆ false ┆ pos  ┆ pos        │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ -2.3 ┆ false ┆ neg  ┆ neg        │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 4.0  ┆ true  ┆ pos  ┆ pos        │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 0.0  ┆ null  ┆ null ┆ unknown    │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 6.7  ┆ false ┆ pos  ┆ pos        │
+      └──────┴─────┴─────┴─────────────┴───┴──────┴───────┴──────┴────────────┘
 
 # translated dplyr functions: case_when (with and without default)
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         with_default = pl$when(pl$col("int") > pl$lit(3))$
@@ -1160,20 +1332,28 @@
           then(pl$lit("mid"))$
           otherwise(pl$lit(NA))
       )
-      # A tibble: 5 x 10
-          num   int grp   txt         lgl1  lgl2  date       time               
-        <dbl> <int> <chr> <chr>       <lgl> <lgl> <date>     <dttm>             
-      1   1.5     2 a     Hello World TRUE  TRUE  2020-01-15 2020-01-15 08:30:00
-      2  -2.3     3 a     foo bar     FALSE TRUE  2021-06-30 2021-06-30 14:00:00
-      3   4       1 b     BAZ         TRUE  FALSE 2019-12-01 2019-12-01 23:59:00
-      4  NA       5 b     <NA>        NA    FALSE 2022-03-10 2022-03-10 00:00:00
-      5   6.7     4 a     a1b2        FALSE TRUE  2020-07-04 2020-07-04 12:15:00
-      # i 2 more variables: with_default <chr>, no_default <chr>
+      shape: (5, 10)
+      ┌──────┬─────┬─────┬─────────────┬───┬────────────┬────────────────────┬──────────────┬────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ date       ┆ time               ┆ with_default ┆ no_default │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---        ┆ ---                ┆ ---          ┆ ---        │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ date       ┆ datetime[ms, UTC]  ┆ str          ┆ str        │
+      ╞══════╪═════╪═════╪═════════════╪═══╪════════════╪════════════════════╪══════════════╪════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 ┆ 2020-01-15         ┆ lo           ┆ mid        │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 08:30:00 UTC       ┆              ┆            │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 ┆ 2021-06-30         ┆ lo           ┆ mid        │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 14:00:00 UTC       ┆              ┆            │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 ┆ 2019-12-01         ┆ lo           ┆ null       │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 23:59:00 UTC       ┆              ┆            │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 ┆ 2022-03-10         ┆ hi           ┆ hi         │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 00:00:00 UTC       ┆              ┆            │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 ┆ 2020-07-04         ┆ hi           ┆ hi         │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 12:15:00 UTC       ┆              ┆            │
+      └──────┴─────┴─────┴─────────────┴───┴────────────┴────────────────────┴──────────────┴────────────┘
 
 # translated dplyr functions: case_match (with and without default)
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         with_default = pl$when(pl$col("grp")$is_in(pl$lit("a")$implode()))$
@@ -1185,20 +1365,28 @@
           then(pl$lit("B"))$
           otherwise(pl$lit(NA))
       )
-      # A tibble: 5 x 10
-          num   int grp   txt         lgl1  lgl2  date       time               
-        <dbl> <int> <chr> <chr>       <lgl> <lgl> <date>     <dttm>             
-      1   1.5     2 a     Hello World TRUE  TRUE  2020-01-15 2020-01-15 08:30:00
-      2  -2.3     3 a     foo bar     FALSE TRUE  2021-06-30 2021-06-30 14:00:00
-      3   4       1 b     BAZ         TRUE  FALSE 2019-12-01 2019-12-01 23:59:00
-      4  NA       5 b     <NA>        NA    FALSE 2022-03-10 2022-03-10 00:00:00
-      5   6.7     4 a     a1b2        FALSE TRUE  2020-07-04 2020-07-04 12:15:00
-      # i 2 more variables: with_default <chr>, no_default <chr>
+      shape: (5, 10)
+      ┌──────┬─────┬─────┬─────────────┬───┬────────────┬────────────────────┬──────────────┬────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ date       ┆ time               ┆ with_default ┆ no_default │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---        ┆ ---                ┆ ---          ┆ ---        │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ date       ┆ datetime[ms, UTC]  ┆ str          ┆ str        │
+      ╞══════╪═════╪═════╪═════════════╪═══╪════════════╪════════════════════╪══════════════╪════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 ┆ 2020-01-15         ┆ A            ┆ A          │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 08:30:00 UTC       ┆              ┆            │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 ┆ 2021-06-30         ┆ A            ┆ A          │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 14:00:00 UTC       ┆              ┆            │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 ┆ 2019-12-01         ┆ Z            ┆ B          │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 23:59:00 UTC       ┆              ┆            │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 ┆ 2022-03-10         ┆ Z            ┆ B          │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 00:00:00 UTC       ┆              ┆            │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 ┆ 2020-07-04         ┆ A            ┆ A          │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 12:15:00 UTC       ┆              ┆            │
+      └──────┴─────┴─────┴─────────────┴───┴────────────┴────────────────────┴──────────────┴────────────┘
 
 # translated dplyr functions: recode_values, replace_values, replace_when
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         rc = pl$col("grp")$replace_strict(old = "a", new = "AA", default = NA),
@@ -1207,38 +1395,45 @@
           then(pl$lit(0L))$
           otherwise(pl$col("int"))
       )
-      # A tibble: 5 x 11
-          num   int grp   txt   lgl1  lgl2  date       time                rc    rv   
-        <dbl> <int> <chr> <chr> <lgl> <lgl> <date>     <dttm>              <chr> <chr>
-      1   1.5     2 a     Hell~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00 AA    a    
-      2  -2.3     3 a     foo ~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00 AA    a    
-      3   4       1 b     BAZ   TRUE  FALSE 2019-12-01 2019-12-01 23:59:00 <NA>  BB   
-      4  NA       5 b     <NA>  NA    FALSE 2022-03-10 2022-03-10 00:00:00 <NA>  BB   
-      5   6.7     4 a     a1b2  FALSE TRUE  2020-07-04 2020-07-04 12:15:00 AA    a    
-      # i 1 more variable: rw <int>
+      shape: (5, 11)
+      ┌──────┬─────┬─────┬─────────────┬───┬─────────────────────────┬──────┬─────┬─────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ time                    ┆ rc   ┆ rv  ┆ rw  │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---                     ┆ ---  ┆ --- ┆ --- │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ datetime[ms, UTC]       ┆ str  ┆ str ┆ i32 │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═════════════════════════╪══════╪═════╪═════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 08:30:00 UTC ┆ AA   ┆ a   ┆ 2   │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 14:00:00 UTC ┆ AA   ┆ a   ┆ 3   │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 23:59:00 UTC ┆ null ┆ BB  ┆ 1   │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 00:00:00 UTC ┆ null ┆ BB  ┆ 0   │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 12:15:00 UTC ┆ AA   ┆ a   ┆ 0   │
+      └──────┴─────┴─────┴─────────────┴───┴─────────────────────────┴──────┴─────┴─────┘
 
 # translated dplyr functions: when_all and when_any
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         wall = pl$all_horizontal(pl$col("lgl1"), pl$col("lgl2")),
         wany = pl$any_horizontal(pl$col("lgl1"), pl$col("lgl2"))
       )
-      # A tibble: 5 x 10
-          num   int grp   txt   lgl1  lgl2  date       time                wall  wany 
-        <dbl> <int> <chr> <chr> <lgl> <lgl> <date>     <dttm>              <lgl> <lgl>
-      1   1.5     2 a     Hell~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00 TRUE  TRUE 
-      2  -2.3     3 a     foo ~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00 FALSE TRUE 
-      3   4       1 b     BAZ   TRUE  FALSE 2019-12-01 2019-12-01 23:59:00 FALSE TRUE 
-      4  NA       5 b     <NA>  NA    FALSE 2022-03-10 2022-03-10 00:00:00 FALSE NA   
-      5   6.7     4 a     a1b2  FALSE TRUE  2020-07-04 2020-07-04 12:15:00 FALSE TRUE 
+      shape: (5, 10)
+      ┌──────┬─────┬─────┬─────────────┬───┬────────────┬─────────────────────────┬───────┬──────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ date       ┆ time                    ┆ wall  ┆ wany │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---        ┆ ---                     ┆ ---   ┆ ---  │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ date       ┆ datetime[ms, UTC]       ┆ bool  ┆ bool │
+      ╞══════╪═════╪═════╪═════════════╪═══╪════════════╪═════════════════════════╪═══════╪══════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 ┆ 2020-01-15 08:30:00 UTC ┆ true  ┆ true │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 ┆ 2021-06-30 14:00:00 UTC ┆ false ┆ true │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 ┆ 2019-12-01 23:59:00 UTC ┆ false ┆ true │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 ┆ 2022-03-10 00:00:00 UTC ┆ false ┆ null │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 ┆ 2020-07-04 12:15:00 UTC ┆ false ┆ true │
+      └──────┴─────┴─────┴─────────────┴───┴────────────┴─────────────────────────┴───────┴──────┘
 
 # translated dplyr functions: window functions
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         lg = pl$col("int")$shift(1),
@@ -1248,20 +1443,23 @@
         mr = pl$col("int")$rank(method = "min"),
         ci = pl$struct(pl$col("grp"))$rle_id() + 1
       )
-      # A tibble: 5 x 14
-          num   int grp   txt   lgl1  lgl2  date       time                   lg    ld
-        <dbl> <int> <chr> <chr> <lgl> <lgl> <date>     <dttm>              <int> <int>
-      1   1.5     2 a     Hell~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00    NA     1
-      2  -2.3     3 a     foo ~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00     2     5
-      3   4       1 b     BAZ   TRUE  FALSE 2019-12-01 2019-12-01 23:59:00     3     4
-      4  NA       5 b     <NA>  NA    FALSE 2022-03-10 2022-03-10 00:00:00     1    NA
-      5   6.7     4 a     a1b2  FALSE TRUE  2020-07-04 2020-07-04 12:15:00     5    NA
-      # i 4 more variables: rn <dbl>, dr <dbl>, mr <dbl>, ci <dbl>
+      shape: (5, 14)
+      ┌──────┬─────┬─────┬─────────────┬───┬─────┬─────┬─────┬─────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ rn  ┆ dr  ┆ mr  ┆ ci  │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ --- ┆ --- ┆ --- ┆ --- │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ i64 ┆ u32 ┆ u32 ┆ f64 │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═════╪═════╪═════╪═════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 1   ┆ 2   ┆ 2   ┆ 1.0 │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2   ┆ 3   ┆ 3   ┆ 1.0 │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 3   ┆ 1   ┆ 1   ┆ 2.0 │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 4   ┆ 5   ┆ 5   ┆ 2.0 │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 5   ┆ 4   ┆ 4   ┆ 3.0 │
+      └──────┴─────┴─────┴─────────────┴───┴─────┴─────┴─────┴─────┘
 
 # translated dplyr functions: reducers in summarize()
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$select(
         f = pl$col("grp")$first(),
@@ -1270,15 +1468,19 @@
         cnt = pl$len(),
         nd = pl$struct(pl$col("grp"))$n_unique()
       )
-      # A tibble: 1 x 5
-        f     l     nt      cnt    nd
-        <chr> <chr> <chr> <dbl> <dbl>
-      1 a     a     a         5     2
+      shape: (1, 5)
+      ┌─────┬─────┬─────┬─────┬─────┐
+      │ f   ┆ l   ┆ nt  ┆ cnt ┆ nd  │
+      │ --- ┆ --- ┆ --- ┆ --- ┆ --- │
+      │ str ┆ str ┆ str ┆ u32 ┆ u32 │
+      ╞═════╪═════╪═════╪═════╪═════╡
+      │ a   ┆ a   ┆ a   ┆ 5   ┆ 2   │
+      └─────┴─────┴─────┴─────┴─────┘
 
 # translated stats functions: median, sd, var
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$select(
         md = pl$col("num")$median(),
@@ -1289,15 +1491,19 @@
           then(NA)$
           otherwise(pl$col("int")$var(ddof = 1))
       )
-      # A tibble: 1 x 3
-           md     s     v
-        <dbl> <dbl> <dbl>
-      1  2.75  1.58   2.5
+      shape: (1, 3)
+      ┌──────┬──────────┬─────┐
+      │ md   ┆ s        ┆ v   │
+      │ ---  ┆ ---      ┆ --- │
+      │ f64  ┆ f64      ┆ f64 │
+      ╞══════╪══════════╪═════╡
+      │ 2.75 ┆ 1.581139 ┆ 2.5 │
+      └──────┴──────────┴─────┘
 
 # translated stringr functions: detection
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         det = pl$col("txt")$str$contains("o", literal = FALSE),
@@ -1306,80 +1512,107 @@
         st = pl$col("txt")$str$contains("^(H)"),
         en = pl$col("txt")$str$contains("(d)$")
       )
-      # A tibble: 5 x 13
-          num   int grp   txt   lgl1  lgl2  date       time                det     len
-        <dbl> <int> <chr> <chr> <lgl> <lgl> <date>     <dttm>              <lgl> <dbl>
-      1   1.5     2 a     Hell~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00 TRUE     11
-      2  -2.3     3 a     foo ~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00 TRUE      7
-      3   4       1 b     BAZ   TRUE  FALSE 2019-12-01 2019-12-01 23:59:00 FALSE     3
-      4  NA       5 b     <NA>  NA    FALSE 2022-03-10 2022-03-10 00:00:00 NA       NA
-      5   6.7     4 a     a1b2  FALSE TRUE  2020-07-04 2020-07-04 12:15:00 FALSE     4
-      # i 3 more variables: ct <dbl>, st <lgl>, en <lgl>
+      shape: (5, 13)
+      ┌──────┬─────┬─────┬─────────────┬───┬──────┬──────┬───────┬───────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ len  ┆ ct   ┆ st    ┆ en    │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---  ┆ ---  ┆ ---   ┆ ---   │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ u32  ┆ u32  ┆ bool  ┆ bool  │
+      ╞══════╪═════╪═════╪═════════════╪═══╪══════╪══════╪═══════╪═══════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 11   ┆ 2    ┆ true  ┆ true  │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 7    ┆ 2    ┆ false ┆ false │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 3    ┆ 0    ┆ false ┆ false │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ null ┆ null ┆ null  ┆ null  │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 4    ┆ 0    ┆ false ┆ false │
+      └──────┴─────┴─────┴─────────────┴───┴──────┴──────┴───────┴───────┘
 
 # translated stringr functions: replacement
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         rp = pl$col("txt")$str$replace("o", "0", literal = FALSE),
         rpa = pl$col("txt")$str$replace_all("o", "0", literal = FALSE),
         rm = pl$col("txt")$str$replace("o", "")
       )
-      # A tibble: 5 x 11
-          num   int grp   txt   lgl1  lgl2  date       time                rp    rpa  
-        <dbl> <int> <chr> <chr> <lgl> <lgl> <date>     <dttm>              <chr> <chr>
-      1   1.5     2 a     Hell~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00 Hell~ Hell~
-      2  -2.3     3 a     foo ~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00 f0o ~ f00 ~
-      3   4       1 b     BAZ   TRUE  FALSE 2019-12-01 2019-12-01 23:59:00 BAZ   BAZ  
-      4  NA       5 b     <NA>  NA    FALSE 2022-03-10 2022-03-10 00:00:00 <NA>  <NA> 
-      5   6.7     4 a     a1b2  FALSE TRUE  2020-07-04 2020-07-04 12:15:00 a1b2  a1b2 
-      # i 1 more variable: rm <chr>
+      shape: (5, 11)
+      ┌──────┬─────┬─────┬─────────────┬───┬────────────────────┬─────────────┬─────────────┬────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ time               ┆ rp          ┆ rpa         ┆ rm         │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---                ┆ ---         ┆ ---         ┆ ---        │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ datetime[ms, UTC]  ┆ str         ┆ str         ┆ str        │
+      ╞══════╪═════╪═════╪═════════════╪═══╪════════════════════╪═════════════╪═════════════╪════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15         ┆ Hell0 World ┆ Hell0 W0rld ┆ Hell World │
+      │      ┆     ┆     ┆             ┆   ┆ 08:30:00 UTC       ┆             ┆             ┆            │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30         ┆ f0o bar     ┆ f00 bar     ┆ fo bar     │
+      │      ┆     ┆     ┆             ┆   ┆ 14:00:00 UTC       ┆             ┆             ┆            │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01         ┆ BAZ         ┆ BAZ         ┆ BAZ        │
+      │      ┆     ┆     ┆             ┆   ┆ 23:59:00 UTC       ┆             ┆             ┆            │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10         ┆ null        ┆ null        ┆ null       │
+      │      ┆     ┆     ┆             ┆   ┆ 00:00:00 UTC       ┆             ┆             ┆            │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04         ┆ a1b2        ┆ a1b2        ┆ a1b2       │
+      │      ┆     ┆     ┆             ┆   ┆ 12:15:00 UTC       ┆             ┆             ┆            │
+      └──────┴─────┴─────┴─────────────┴───┴────────────────────┴─────────────┴─────────────┴────────────┘
 
 # translated stringr functions: case
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         up = pl$col("txt")$str$to_uppercase(),
         lo = pl$col("txt")$str$to_lowercase(),
         ti = pl$col("txt")$str$to_titlecase()
       )
-      # A tibble: 5 x 11
-          num   int grp   txt   lgl1  lgl2  date       time                up    lo   
-        <dbl> <int> <chr> <chr> <lgl> <lgl> <date>     <dttm>              <chr> <chr>
-      1   1.5     2 a     Hell~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00 HELL~ hell~
-      2  -2.3     3 a     foo ~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00 FOO ~ foo ~
-      3   4       1 b     BAZ   TRUE  FALSE 2019-12-01 2019-12-01 23:59:00 BAZ   baz  
-      4  NA       5 b     <NA>  NA    FALSE 2022-03-10 2022-03-10 00:00:00 <NA>  <NA> 
-      5   6.7     4 a     a1b2  FALSE TRUE  2020-07-04 2020-07-04 12:15:00 A1B2  a1b2 
-      # i 1 more variable: ti <chr>
+      shape: (5, 11)
+      ┌──────┬─────┬─────┬─────────────┬───┬───────────────────┬─────────────┬─────────────┬─────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ time              ┆ up          ┆ lo          ┆ ti          │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---               ┆ ---         ┆ ---         ┆ ---         │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ datetime[ms, UTC] ┆ str         ┆ str         ┆ str         │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═══════════════════╪═════════════╪═════════════╪═════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15        ┆ HELLO WORLD ┆ hello world ┆ Hello World │
+      │      ┆     ┆     ┆             ┆   ┆ 08:30:00 UTC      ┆             ┆             ┆             │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30        ┆ FOO BAR     ┆ foo bar     ┆ Foo Bar     │
+      │      ┆     ┆     ┆             ┆   ┆ 14:00:00 UTC      ┆             ┆             ┆             │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01        ┆ BAZ         ┆ baz         ┆ Baz         │
+      │      ┆     ┆     ┆             ┆   ┆ 23:59:00 UTC      ┆             ┆             ┆             │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10        ┆ null        ┆ null        ┆ null        │
+      │      ┆     ┆     ┆             ┆   ┆ 00:00:00 UTC      ┆             ┆             ┆             │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04        ┆ A1B2        ┆ a1b2        ┆ A1B2        │
+      │      ┆     ┆     ┆             ┆   ┆ 12:15:00 UTC      ┆             ┆             ┆             │
+      └──────┴─────┴─────┴─────────────┴───┴───────────────────┴─────────────┴─────────────┴─────────────┘
 
 # translated stringr functions: padding and trimming
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         pd = pl$col("txt")$str$pad_start(length = 10, fill_char = " "),
         tr = pl$col("txt")$str$strip_chars(),
         sq = pl$col("txt")$str$replace_all("\\s+", " ")$str$strip_chars()
       )
-      # A tibble: 5 x 11
-          num   int grp   txt   lgl1  lgl2  date       time                pd    tr   
-        <dbl> <int> <chr> <chr> <lgl> <lgl> <date>     <dttm>              <chr> <chr>
-      1   1.5     2 a     Hell~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00 "Hel~ Hell~
-      2  -2.3     3 a     foo ~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00 "   ~ foo ~
-      3   4       1 b     BAZ   TRUE  FALSE 2019-12-01 2019-12-01 23:59:00 "   ~ BAZ  
-      4  NA       5 b     <NA>  NA    FALSE 2022-03-10 2022-03-10 00:00:00  <NA> <NA> 
-      5   6.7     4 a     a1b2  FALSE TRUE  2020-07-04 2020-07-04 12:15:00 "   ~ a1b2 
-      # i 1 more variable: sq <chr>
+      shape: (5, 11)
+      ┌──────┬─────┬─────┬─────────────┬───┬───────────────────┬─────────────┬─────────────┬─────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ time              ┆ pd          ┆ tr          ┆ sq          │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---               ┆ ---         ┆ ---         ┆ ---         │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ datetime[ms, UTC] ┆ str         ┆ str         ┆ str         │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═══════════════════╪═════════════╪═════════════╪═════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15        ┆ Hello World ┆ Hello World ┆ Hello World │
+      │      ┆     ┆     ┆             ┆   ┆ 08:30:00 UTC      ┆             ┆             ┆             │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30        ┆    foo bar  ┆ foo bar     ┆ foo bar     │
+      │      ┆     ┆     ┆             ┆   ┆ 14:00:00 UTC      ┆             ┆             ┆             │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01        ┆        BAZ  ┆ BAZ         ┆ BAZ         │
+      │      ┆     ┆     ┆             ┆   ┆ 23:59:00 UTC      ┆             ┆             ┆             │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10        ┆ null        ┆ null        ┆ null        │
+      │      ┆     ┆     ┆             ┆   ┆ 00:00:00 UTC      ┆             ┆             ┆             │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04        ┆       a1b2  ┆ a1b2        ┆ a1b2        │
+      │      ┆     ┆     ┆             ┆   ┆ 12:15:00 UTC      ┆             ┆             ┆             │
+      └──────┴─────┴─────┴─────────────┴───┴───────────────────┴─────────────┴─────────────┴─────────────┘
 
 # translated stringr functions: extraction
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         ex = pl$col("txt")$str$extract(pl$lit("[a-z]+"), group_index = 0),
@@ -1392,20 +1625,23 @@
           then(pl$lit(NA_character_))$
           otherwise(pl$col("txt")$str$split(" ")$list$slice(0, 1)$list$join(" "))
       )
-      # A tibble: 5 x 11
-          num   int grp   txt   lgl1  lgl2  date       time                ex    spi  
-        <dbl> <int> <chr> <chr> <lgl> <lgl> <date>     <dttm>              <chr> <chr>
-      1   1.5     2 a     Hell~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00 ello  Hello
-      2  -2.3     3 a     foo ~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00 foo   foo  
-      3   4       1 b     BAZ   TRUE  FALSE 2019-12-01 2019-12-01 23:59:00 <NA>  BAZ  
-      4  NA       5 b     <NA>  NA    FALSE 2022-03-10 2022-03-10 00:00:00 <NA>  <NA> 
-      5   6.7     4 a     a1b2  FALSE TRUE  2020-07-04 2020-07-04 12:15:00 a     a1b2 
-      # i 1 more variable: wd <chr>
+      shape: (5, 11)
+      ┌──────┬─────┬─────┬─────────────┬───┬─────────────────────────┬──────┬───────┬───────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ time                    ┆ ex   ┆ spi   ┆ wd    │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---                     ┆ ---  ┆ ---   ┆ ---   │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ datetime[ms, UTC]       ┆ str  ┆ str   ┆ str   │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═════════════════════════╪══════╪═══════╪═══════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 08:30:00 UTC ┆ ello ┆ Hello ┆ Hello │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 14:00:00 UTC ┆ foo  ┆ foo   ┆ foo   │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 23:59:00 UTC ┆ null ┆ BAZ   ┆ BAZ   │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 00:00:00 UTC ┆ null ┆ null  ┆ null  │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 12:15:00 UTC ┆ a    ┆ a1b2  ┆ a1b2  │
+      └──────┴─────┴─────┴─────────────┴───┴─────────────────────────┴──────┴───────┴───────┘
 
 # translated lubridate functions: date components
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         yr = pl$col("date")$dt$year(),
@@ -1428,21 +1664,23 @@
           cast(pl$Int32),
         nd = pl$date(year = 2020, month = pl$col("int"), day = 1)
       )
-      # A tibble: 5 x 18
-          num   int grp   txt   lgl1  lgl2  date       time                   yr    mo
-        <dbl> <int> <chr> <chr> <lgl> <lgl> <date>     <dttm>              <int> <int>
-      1   1.5     2 a     Hell~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00  2020     1
-      2  -2.3     3 a     foo ~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00  2021     6
-      3   4       1 b     BAZ   TRUE  FALSE 2019-12-01 2019-12-01 23:59:00  2019    12
-      4  NA       5 b     <NA>  NA    FALSE 2022-03-10 2022-03-10 00:00:00  2022     3
-      5   6.7     4 a     a1b2  FALSE TRUE  2020-07-04 2020-07-04 12:15:00  2020     7
-      # i 8 more variables: dy <int>, md <int>, wd <int>, yd <int>, q <int>,
-      #   ly <lgl>, dim <int>, nd <date>
+      shape: (5, 18)
+      ┌──────┬─────┬─────┬─────────────┬───┬─────┬───────┬─────┬────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ q   ┆ ly    ┆ dim ┆ nd         │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ --- ┆ ---   ┆ --- ┆ ---        │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ i8  ┆ bool  ┆ i32 ┆ date       │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═════╪═══════╪═════╪════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 1   ┆ true  ┆ 31  ┆ 2020-02-01 │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2   ┆ false ┆ 30  ┆ 2020-03-01 │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 4   ┆ false ┆ 31  ┆ 2020-01-01 │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 1   ┆ false ┆ 31  ┆ 2020-05-01 │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 3   ┆ true  ┆ 31  ┆ 2020-04-01 │
+      └──────┴─────┴─────┴─────────────┴───┴─────┴───────┴─────┴────────────┘
 
 # translated lubridate functions: datetime handling
 
     Code
-      collect(current)
+      compute(current)
     Output
       dat$with_columns(
         dte = pl$col("time")$dt$date(),
@@ -1451,113 +1689,146 @@
         w = pl$col("time")$dt$convert_time_zone("Europe/Paris"),
         f = pl$col("time")$dt$replace_time_zone("Europe/Paris")
       )
-      # A tibble: 5 x 13
-          num   int grp   txt    lgl1  lgl2  date       time                dte       
-        <dbl> <int> <chr> <chr>  <lgl> <lgl> <date>     <dttm>              <date>    
-      1   1.5     2 a     Hello~ TRUE  TRUE  2020-01-15 2020-01-15 08:30:00 2020-01-15
-      2  -2.3     3 a     foo b~ FALSE TRUE  2021-06-30 2021-06-30 14:00:00 2021-06-30
-      3   4       1 b     BAZ    TRUE  FALSE 2019-12-01 2019-12-01 23:59:00 2019-12-01
-      4  NA       5 b     <NA>   NA    FALSE 2022-03-10 2022-03-10 00:00:00 2022-03-10
-      5   6.7     4 a     a1b2   FALSE TRUE  2020-07-04 2020-07-04 12:15:00 2020-07-04
-      # i 4 more variables: am_ <lgl>, pm_ <lgl>, w <dttm>, f <dttm>
+      shape: (5, 13)
+      ┌──────┬─────┬─────┬─────────────┬───┬───────┬───────┬──────────────────────┬──────────────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ am_   ┆ pm_   ┆ w                    ┆ f                    │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---   ┆ ---   ┆ ---                  ┆ ---                  │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ bool  ┆ bool  ┆ datetime[ms,         ┆ datetime[ms,         │
+      │      ┆     ┆     ┆             ┆   ┆       ┆       ┆ Europe/Paris]        ┆ Europe/Paris]        │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═══════╪═══════╪══════════════════════╪══════════════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ true  ┆ false ┆ 2020-01-15 09:30:00  ┆ 2020-01-15 08:30:00  │
+      │      ┆     ┆     ┆             ┆   ┆       ┆       ┆ CET                  ┆ CET                  │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ false ┆ true  ┆ 2021-06-30 16:00:00  ┆ 2021-06-30 14:00:00  │
+      │      ┆     ┆     ┆             ┆   ┆       ┆       ┆ CEST                 ┆ CEST                 │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ false ┆ true  ┆ 2019-12-02 00:59:00  ┆ 2019-12-01 23:59:00  │
+      │      ┆     ┆     ┆             ┆   ┆       ┆       ┆ CET                  ┆ CET                  │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ true  ┆ false ┆ 2022-03-10 01:00:00  ┆ 2022-03-10 00:00:00  │
+      │      ┆     ┆     ┆             ┆   ┆       ┆       ┆ CET                  ┆ CET                  │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ false ┆ true  ┆ 2020-07-04 14:15:00  ┆ 2020-07-04 12:15:00  │
+      │      ┆     ┆     ┆             ┆   ┆       ┆       ┆ CEST                 ┆ CEST                 │
+      └──────┴─────┴─────┴─────────────┴───┴───────┴───────┴──────────────────────┴──────────────────────┘
 
 # check query for fill, replace_na, drop_na
 
     Code
-      collect(current)
+      compute(current)
     Output
       test_pl$with_columns(pl$col("x")$fill_null(strategy = "forward"))
-      # A tibble: 3 x 2
-            x y    
-        <dbl> <chr>
-      1     1 a    
-      2     1 <NA> 
-      3     3 c    
+      shape: (3, 2)
+      ┌─────┬──────┐
+      │ x   ┆ y    │
+      │ --- ┆ ---  │
+      │ f64 ┆ str  │
+      ╞═════╪══════╡
+      │ 1.0 ┆ a    │
+      │ 1.0 ┆ null │
+      │ 3.0 ┆ c    │
+      └─────┴──────┘
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Output
       test_pl$with_columns(
         pl$col("x")$fill_null(0),
         pl$col("y")$replace(NA, "z")
       )
-      # A tibble: 3 x 2
-            x y    
-        <dbl> <chr>
-      1     1 a    
-      2     0 z    
-      3     3 c    
+      shape: (3, 2)
+      ┌─────┬─────┐
+      │ x   ┆ y   │
+      │ --- ┆ --- │
+      │ f64 ┆ str │
+      ╞═════╪═════╡
+      │ 1.0 ┆ a   │
+      │ 0.0 ┆ z   │
+      │ 3.0 ┆ c   │
+      └─────┴─────┘
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Output
       test_pl$drop_nulls()
-      # A tibble: 2 x 2
-            x y    
-        <dbl> <chr>
-      1     1 a    
-      2     3 c    
+      shape: (2, 2)
+      ┌─────┬─────┐
+      │ x   ┆ y   │
+      │ --- ┆ --- │
+      │ f64 ┆ str │
+      ╞═════╪═════╡
+      │ 1.0 ┆ a   │
+      │ 3.0 ┆ c   │
+      └─────┴─────┘
 
 # check query for bind_rows_polars, bind_cols_polars
 
     Code
-      collect(current)
+      compute(current)
     Output
       pl$concat(
         test_pl,
         test_pl,
         how = "diagonal_relaxed"
       )
-      # A tibble: 4 x 1
-            x
-        <dbl>
-      1     1
-      2     2
-      3     1
-      4     2
+      shape: (4, 1)
+      ┌─────┐
+      │ x   │
+      │ --- │
+      │ f64 │
+      ╞═════╡
+      │ 1.0 │
+      │ 2.0 │
+      │ 1.0 │
+      │ 2.0 │
+      └─────┘
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Output
       pl$concat(
         test_pl,
         other_pl,
         how = "horizontal_extend"
       )
-      # A tibble: 2 x 2
-            x y    
-        <dbl> <chr>
-      1     1 a    
-      2     2 b    
+      shape: (2, 2)
+      ┌─────┬─────┐
+      │ x   ┆ y   │
+      │ --- ┆ --- │
+      │ f64 ┆ str │
+      ╞═════╪═════╡
+      │ 1.0 ┆ a   │
+      │ 2.0 ┆ b   │
+      └─────┴─────┘
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Output
       pl$concat(
         test_pl,
         test_pl,
         how = "diagonal_relaxed"
       )
-      # A tibble: 4 x 1
-            x
-        <dbl>
-      1     1
-      2     2
-      3     1
-      4     2
+      shape: (4, 1)
+      ┌─────┐
+      │ x   │
+      │ --- │
+      │ f64 │
+      ╞═════╡
+      │ 1.0 │
+      │ 2.0 │
+      │ 1.0 │
+      │ 2.0 │
+      └─────┘
 
 # check query for complete()
 
     Code
-      collect(current)
+      compute(current)
     Output
       test_pl$select(pl$col("country", "year")$unique()$sort()$implode())$
         explode(
@@ -1577,20 +1848,24 @@
         )$
         with_columns(pl$col("value")$fill_null(99))$
         select("country", "year", "value")
-      # A tibble: 6 x 3
-        country  year value
-        <chr>   <dbl> <dbl>
-      1 France   2019    99
-      2 France   2020     1
-      3 France   2021     2
-      4 UK       2019     3
-      5 UK       2020    99
-      6 UK       2021    99
+      shape: (6, 3)
+      ┌─────────┬────────┬───────┐
+      │ country ┆ year   ┆ value │
+      │ ---     ┆ ---    ┆ ---   │
+      │ str     ┆ f64    ┆ f64   │
+      ╞═════════╪════════╪═══════╡
+      │ France  ┆ 2019.0 ┆ 99.0  │
+      │ France  ┆ 2020.0 ┆ 1.0   │
+      │ France  ┆ 2021.0 ┆ 2.0   │
+      │ UK      ┆ 2019.0 ┆ 3.0   │
+      │ UK      ┆ 2020.0 ┆ 99.0  │
+      │ UK      ┆ 2021.0 ┆ 99.0  │
+      └─────────┴────────┴───────┘
 
 # check query for uncount()
 
     Code
-      collect(current)
+      compute(current)
     Output
       test_pl$with_columns(pl$col("x")$repeat_by(pl$col("n")))$
         explode(
@@ -1598,17 +1873,21 @@
           empty_as_null = TRUE
         )$
         drop("n")
-      # A tibble: 3 x 2
-        x         y
-        <chr> <int>
-      1 a       100
-      2 b       101
-      3 b       101
+      shape: (3, 2)
+      ┌─────┬─────┐
+      │ x   ┆ y   │
+      │ --- ┆ --- │
+      │ str ┆ i32 │
+      ╞═════╪═════╡
+      │ a   ┆ 100 │
+      │ b   ┆ 101 │
+      │ b   ┆ 101 │
+      └─────┴─────┘
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Output
       test_pl$with_columns(pl$col("x")$repeat_by(pl$col("n")))$
         explode(
@@ -1617,17 +1896,21 @@
         )$
         drop("n")$
         with_columns(pl$col("x")$cum_count()$over("x", "y")$alias("id"))
-      # A tibble: 3 x 3
-        x         y    id
-        <chr> <int> <dbl>
-      1 a       100     1
-      2 b       101     1
-      3 b       101     2
+      shape: (3, 3)
+      ┌─────┬─────┬─────┐
+      │ x   ┆ y   ┆ id  │
+      │ --- ┆ --- ┆ --- │
+      │ str ┆ i32 ┆ u32 │
+      ╞═════╪═════╪═════╡
+      │ a   ┆ 100 ┆ 1   │
+      │ b   ┆ 101 ┆ 1   │
+      │ b   ┆ 101 ┆ 2   │
+      └─────┴─────┴─────┘
 
 # check query for rowwise()
 
     Code
-      collect(current)
+      compute(current)
     Output
       test_pl$with_columns(
         total = pl$concat_list(pl$col("x"), pl$col("y"), pl$col("z"))$
@@ -1639,36 +1922,44 @@
           list$eval(pl$element()$mean())$
           explode(empty_as_null = TRUE)
       )
-      # A tibble: 2 x 5
-            x     y     z total   avg
-        <dbl> <dbl> <dbl> <dbl> <dbl>
-      1     2     2     5     9   3  
-      2     2     3    NA    NA   2.5
+      shape: (2, 5)
+      ┌─────┬─────┬──────┬───────┬─────┐
+      │ x   ┆ y   ┆ z    ┆ total ┆ avg │
+      │ --- ┆ --- ┆ ---  ┆ ---   ┆ --- │
+      │ f64 ┆ f64 ┆ f64  ┆ f64   ┆ f64 │
+      ╞═════╪═════╪══════╪═══════╪═════╡
+      │ 2.0 ┆ 2.0 ┆ 5.0  ┆ 9.0   ┆ 3.0 │
+      │ 2.0 ┆ 3.0 ┆ null ┆ null  ┆ 2.5 │
+      └─────┴─────┴──────┴───────┴─────┘
 
 # check query for unnest_longer_polars()
 
     Code
-      collect(current)
+      compute(current)
     Output
       test_pl$explode(
         "values",
         empty_as_null = TRUE
       )$
         drop_nulls("values")
-      # A tibble: 6 x 2
-           id values
-        <int>  <dbl>
-      1     1      1
-      2     1      2
-      3     2      3
-      4     2      4
-      5     2      5
-      6     3      6
+      shape: (6, 2)
+      ┌─────┬────────┐
+      │ id  ┆ values │
+      │ --- ┆ ---    │
+      │ i32 ┆ f64    │
+      ╞═════╪════════╡
+      │ 1   ┆ 1.0    │
+      │ 1   ┆ 2.0    │
+      │ 2   ┆ 3.0    │
+      │ 2   ┆ 4.0    │
+      │ 2   ┆ 5.0    │
+      │ 3   ┆ 6.0    │
+      └─────┴────────┘
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Output
       test_pl$with_row_index(name = "__tidypolars_row_id__")$
         explode(
@@ -1692,40 +1983,48 @@
         drop("__tidypolars_row_id__")$
         drop_nulls("values")$
         rename(values = "val")
-      # A tibble: 6 x 3
-           id   idx   val
-        <int> <dbl> <dbl>
-      1     1     1     1
-      2     1     2     2
-      3     2     1     3
-      4     2     2     4
-      5     2     3     5
-      6     3     1     6
+      shape: (6, 3)
+      ┌─────┬─────┬─────┐
+      │ id  ┆ idx ┆ val │
+      │ --- ┆ --- ┆ --- │
+      │ i32 ┆ u32 ┆ f64 │
+      ╞═════╪═════╪═════╡
+      │ 1   ┆ 1   ┆ 1.0 │
+      │ 1   ┆ 2   ┆ 2.0 │
+      │ 2   ┆ 1   ┆ 3.0 │
+      │ 2   ┆ 2   ┆ 4.0 │
+      │ 2   ┆ 3   ┆ 5.0 │
+      │ 3   ┆ 1   ┆ 6.0 │
+      └─────┴─────┴─────┘
 
 # check query for separate_longer_delim_polars() and separate_longer_position_polars()
 
     Code
-      collect(current)
+      compute(current)
     Output
       test_pl$with_columns(pl$col("x")$cast(pl$String)$str$split(","))$
         explode(
           "x",
           empty_as_null = TRUE
         )
-      # A tibble: 6 x 2
-           id x    
-        <int> <chr>
-      1     1 a    
-      2     1 b    
-      3     1 c    
-      4     2 d    
-      5     2 e    
-      6     3 f    
+      shape: (6, 2)
+      ┌─────┬─────┐
+      │ id  ┆ x   │
+      │ --- ┆ --- │
+      │ i32 ┆ str │
+      ╞═════╪═════╡
+      │ 1   ┆ a   │
+      │ 1   ┆ b   │
+      │ 1   ┆ c   │
+      │ 2   ┆ d   │
+      │ 2   ┆ e   │
+      │ 3   ┆ f   │
+      └─────┴─────┘
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Output
       test_pl$with_columns(pl$col("x")$cast(pl$String)$str$extract_all(".{1,2}"))$
         filter(pl$all_horizontal(pl$col("x")$is_null() | pl$col("x")$list$len() > 0))$
@@ -1733,25 +2032,33 @@
           "x",
           empty_as_null = TRUE
         )
-      # A tibble: 6 x 2
-           id x    
-        <int> <chr>
-      1     1 a,   
-      2     1 b,   
-      3     1 c    
-      4     2 d,   
-      5     2 e    
-      6     3 f    
+      shape: (6, 2)
+      ┌─────┬─────┐
+      │ id  ┆ x   │
+      │ --- ┆ --- │
+      │ i32 ┆ str │
+      ╞═════╪═════╡
+      │ 1   ┆ a,  │
+      │ 1   ┆ b,  │
+      │ 1   ┆ c   │
+      │ 2   ┆ d,  │
+      │ 2   ┆ e   │
+      │ 3   ┆ f   │
+      └─────┴─────┘
 
 # check query for make_unique_id()
 
     Code
-      collect(current)
+      compute(current)
     Output
       test_pl$with_columns(pl$struct(c("x", "y"))$hash()$alias("id"))
-      # A tibble: 2 x 3
-        x         y      id
-        <chr> <dbl>   <dbl>
-      1 a         1 9.40e18
-      2 b         2 6.70e18
+      shape: (2, 3)
+      ┌─────┬─────┬─────────────────────┐
+      │ x   ┆ y   ┆ id                  │
+      │ --- ┆ --- ┆ ---                 │
+      │ str ┆ f64 ┆ u64                 │
+      ╞═════╪═════╪═════════════════════╡
+      │ a   ┆ 1.0 ┆ 9401135652799850258 │
+      │ b   ┆ 2.0 ┆ 6701719201758175205 │
+      └─────┴─────┴─────────────────────┘
 

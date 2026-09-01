@@ -1,7 +1,7 @@
 # error cases work
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `relocate()`:
       ! You can specify either `.before` or `.after` but not both.
@@ -9,7 +9,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `relocate()`:
       ! Can't select columns that don't exist.
@@ -18,7 +18,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `relocate()`:
       ! Can't select columns that don't exist.

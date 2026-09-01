@@ -1,16 +1,16 @@
 # error when different types
 
     Code
-      collect(current)
+      compute(current)
     Condition
-      Error in `collect()`:
+      Error in `compute()`:
       ! cannot compare string with numeric type (f64)
 
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
-      Error in `collect()`:
+      Error in `compute()`:
       ! cannot compare string with numeric type (f64)
 

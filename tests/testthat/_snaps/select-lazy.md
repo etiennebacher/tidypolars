@@ -1,7 +1,7 @@
 # select helpers work
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `select()`:
       i In argument: `all_of(bad_selection)`.
@@ -12,7 +12,7 @@
 ---
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `select()`:
       ! `where()` can only take `is.*()` functions (like `is.numeric()`).
@@ -20,7 +20,7 @@
 # nested `where()` predicates are checked
 
     Code
-      collect(current)
+      compute(current)
     Condition
       Error in `select()`:
       ! `where()` can only take `is.*()` functions (like `is.numeric()`).
