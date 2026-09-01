@@ -27,11 +27,11 @@ scan_ndjson_polars(
   batch_size = NULL,
   n_rows = NULL,
   low_memory = FALSE,
-  rechunk = FALSE,
   row_index_name = NULL,
   row_index_offset = 0,
   ignore_errors = FALSE,
-  reuse_downloaded
+  reuse_downloaded,
+  rechunk
 )
 }
 \arguments{
@@ -41,8 +41,9 @@ for scanning cloud locations, see the \code{storage_options} parameter.}
 \item{...}{These dots are for future extensions and must be empty.}
 
 \item{infer_schema_length}{The maximum number of rows to scan for schema
-inference. If \code{NULL}, the full data may be scanned (this is slow). Set
-\code{infer_schema = FALSE} to read all columns as \code{pl$String}.}
+inference. This applies individually to each file included according to
+\code{infer_schema_files}. If \code{NULL}, the full data may be scanned (this is
+slow). Set \code{infer_schema = FALSE} to read all columns as \code{pl$String}.}
 
 \item{batch_size}{Number of rows to read in each batch.}
 
@@ -50,7 +51,9 @@ inference. If \code{NULL}, the full data may be scanned (this is slow). Set
 
 \item{low_memory}{Reduce memory pressure at the expense of performance.}
 
-\item{rechunk}{Reallocate to contiguous memory when all chunks/files are parsed.}
+\item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
+memory when all chunks/files are parsed. Call \verb{$rechunk()} on the output
+instead.}
 
 \item{row_index_name}{If not \code{NULL}, this will insert a row index column with
 the given name.}
