@@ -87,7 +87,9 @@ datetime types.}
 
 \item{glob}{Expand path given via globbing rules.}
 
-\item{rechunk}{Reallocate to contiguous memory when all chunks/files are parsed.}
+\item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
+memory when all chunks/files are parsed. Call \verb{$rechunk()} on the output
+instead.}
 
 \item{low_memory}{Reduce memory pressure at the expense of performance}
 

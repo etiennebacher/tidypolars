@@ -44,7 +44,9 @@ the given name.}
 \item{row_index_offset}{Offset to start the row index column (only used if
 the name is set by \code{row_index_name}).}
 
-\item{rechunk}{Reallocate to contiguous memory when all chunks/files are parsed.}
+\item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
+memory when all chunks/files are parsed. Call \verb{$rechunk()} on the output
+instead.}
 
 \item{cache}{Cache the result after reading.}
 

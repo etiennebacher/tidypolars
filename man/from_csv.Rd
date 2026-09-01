@@ -108,8 +108,9 @@ check which values might cause an issue.}
 \item{cache}{Cache the result after reading.}
 
 \item{infer_schema_length}{The maximum number of rows to scan for schema
-inference. If \code{NULL}, the full data may be scanned (this is slow). Set
-\code{infer_schema = FALSE} to read all columns as \code{pl$String}.}
+inference. This applies individually to each file included according to
+\code{infer_schema_files}. If \code{NULL}, the full data may be scanned (this is
+slow). Set \code{infer_schema = FALSE} to read all columns as \code{pl$String}.}
 
 \item{n_rows}{Stop reading from the source after reading \code{n_rows}.}
 
@@ -118,7 +119,9 @@ UTF8 values are replaced with "?" characters.}
 
 \item{low_memory}{Reduce memory pressure at the expense of performance.}
 
-\item{rechunk}{Reallocate to contiguous memory when all chunks/files are parsed.}
+\item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
+memory when all chunks/files are parsed. Call \verb{$rechunk()} on the output
+instead.}
 
 \item{skip_rows_after_header}{Skip this number of rows when the header is
 parsed.}
