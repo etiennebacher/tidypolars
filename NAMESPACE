@@ -132,11 +132,15 @@ import(polars)
 import(rlang)
 import(tidyr)
 importFrom(lifecycle,deprecated)
-importFrom(polars,as_polars_df)
-importFrom(polars,as_polars_lf)
-importFrom(polars,is_polars_df)
-importFrom(polars,is_polars_expr)
-importFrom(polars,is_polars_lf)
+importFrom(polars,
+  as_polars_df,
+  as_polars_lf,
+  is_polars_df,
+  is_polars_expr,
+  is_polars_lf
+)
 importFrom(stats,setNames)
-importFrom(utils,head)
-importFrom(utils,tail)
+importFrom(utils,
+  head,
+  tail
+)
