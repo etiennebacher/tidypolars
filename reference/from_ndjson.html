@@ -94,8 +94,9 @@ for scanning cloud locations, see the <code>storage_options</code> parameter.</p
 
 <dt id="arg-infer-schema-length">infer_schema_length<a class="anchor" aria-label="anchor" href="#arg-infer-schema-length"></a></dt>
 <dd><p>The maximum number of rows to scan for schema
-inference. If <code>NULL</code>, the full data may be scanned (this is slow). Set
-<code>infer_schema = FALSE</code> to read all columns as <code>pl$String</code>.</p></dd>
+inference. This applies individually to each file included according to
+<code>infer_schema_files</code>. If <code>NULL</code>, the full data may be scanned (this is
+slow). Set <code>infer_schema = FALSE</code> to read all columns as <code>pl$String</code>.</p></dd>
 
 
 <dt id="arg-batch-size">batch_size<a class="anchor" aria-label="anchor" href="#arg-batch-size"></a></dt>
@@ -111,7 +112,9 @@ inference. If <code>NULL</code>, the full data may be scanned (this is slow). Se
 
 
 <dt id="arg-rechunk">rechunk<a class="anchor" aria-label="anchor" href="#arg-rechunk"></a></dt>
-<dd><p>Reallocate to contiguous memory when all chunks/files are parsed.</p></dd>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Reallocate to contiguous
+memory when all chunks/files are parsed. Call <code>$rechunk()</code> on the output
+instead.</p></dd>
 
 
 <dt id="arg-row-index-name">row_index_name<a class="anchor" aria-label="anchor" href="#arg-row-index-name"></a></dt>

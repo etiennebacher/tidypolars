@@ -49,8 +49,9 @@ scan_ndjson_polars(
 
 - infer_schema_length:
 
-  The maximum number of rows to scan for schema inference. If `NULL`,
-  the full data may be scanned (this is slow). Set
+  The maximum number of rows to scan for schema inference. This applies
+  individually to each file included according to `infer_schema_files`.
+  If `NULL`, the full data may be scanned (this is slow). Set
   `infer_schema = FALSE` to read all columns as `pl$String`.
 
 - batch_size:
@@ -67,7 +68,8 @@ scan_ndjson_polars(
 
 - rechunk:
 
-  Reallocate to contiguous memory when all chunks/files are parsed.
+  **\[deprecated\]** Reallocate to contiguous memory when all
+  chunks/files are parsed. Call `$rechunk()` on the output instead.
 
 - row_index_name:
 

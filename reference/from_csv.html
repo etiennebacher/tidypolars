@@ -181,8 +181,9 @@ check which values might cause an issue.</p></dd>
 
 <dt id="arg-infer-schema-length">infer_schema_length<a class="anchor" aria-label="anchor" href="#arg-infer-schema-length"></a></dt>
 <dd><p>The maximum number of rows to scan for schema
-inference. If <code>NULL</code>, the full data may be scanned (this is slow). Set
-<code>infer_schema = FALSE</code> to read all columns as <code>pl$String</code>.</p></dd>
+inference. This applies individually to each file included according to
+<code>infer_schema_files</code>. If <code>NULL</code>, the full data may be scanned (this is
+slow). Set <code>infer_schema = FALSE</code> to read all columns as <code>pl$String</code>.</p></dd>
 
 
 <dt id="arg-n-rows">n_rows<a class="anchor" aria-label="anchor" href="#arg-n-rows"></a></dt>
@@ -199,7 +200,9 @@ UTF8 values are replaced with "?" characters.</p></dd>
 
 
 <dt id="arg-rechunk">rechunk<a class="anchor" aria-label="anchor" href="#arg-rechunk"></a></dt>
-<dd><p>Reallocate to contiguous memory when all chunks/files are parsed.</p></dd>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Reallocate to contiguous
+memory when all chunks/files are parsed. Call <code>$rechunk()</code> on the output
+instead.</p></dd>
 
 
 <dt id="arg-skip-rows-after-header">skip_rows_after_header<a class="anchor" aria-label="anchor" href="#arg-skip-rows-after-header"></a></dt>
@@ -269,6 +272,9 @@ Deprecated with no replacement.</p></dd>
 <span class="r-in"><span><span class="co"># Import this file as a DataFrame for eager evaluation</span></span></span>
 <span class="r-in"><span><span class="fu">read_csv_polars</span><span class="op">(</span><span class="va">dest</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span><span style="color: #BBBB00;">!</span> The `rechunk` argument is deprecated as of <span style="color: #0000BB;">polars</span> 1.15.0.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Call `$rechunk()` on the output instead.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (32, 11)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────┬─────┬───────┬─────┬───┬─────┬─────┬──────┬──────┐</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ mpg  ┆ cyl ┆ disp  ┆ hp  ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │</span>
@@ -386,17 +392,17 @@ Deprecated with no replacement.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ ---  ┆ --- ┆ ---   ┆ --- ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---                             │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64  ┆ i64 ┆ f64   ┆ i64 ┆   ┆ i64 ┆ i64  ┆ i64  ┆ str                             │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞══════╪═════╪═══════╪═════╪═══╪═════╪══════╪══════╪═════════════════════════════════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1a213ce5bae1/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1a213ce5bae1/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1a213ce5bae1/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1a213ce5bae1/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1a213ce5bae1/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …   ┆ …     ┆ …   ┆ … ┆ …   ┆ …    ┆ …    ┆ …                               │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1a213ce5bae1/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 4    ┆ 2    ┆ output/file1a213ce5bae1/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 5    ┆ 2    ┆ output/file1a213ce5bae1/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1a213ce5bae1/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1a213ce5bae1/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c7e6406919d/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 4    ┆ 2    ┆ output/file1c7e6406919d/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 5    ┆ 2    ┆ output/file1c7e6406919d/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c7e6406919d/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c7e6406919d/output… │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └──────┴─────┴───────┴─────┴───┴─────┴──────┴──────┴─────────────────────────────────┘</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>

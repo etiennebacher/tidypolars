@@ -59,7 +59,8 @@ scan_ipc_polars(
 
 - rechunk:
 
-  Reallocate to contiguous memory when all chunks/files are parsed.
+  **\[deprecated\]** Reallocate to contiguous memory when all
+  chunks/files are parsed. Call `$rechunk()` on the output instead.
 
 - cache:
 

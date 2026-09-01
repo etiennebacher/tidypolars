@@ -136,8 +136,9 @@ scan_csv_polars(
 
 - infer_schema_length:
 
-  The maximum number of rows to scan for schema inference. If `NULL`,
-  the full data may be scanned (this is slow). Set
+  The maximum number of rows to scan for schema inference. This applies
+  individually to each file included according to `infer_schema_files`.
+  If `NULL`, the full data may be scanned (this is slow). Set
   `infer_schema = FALSE` to read all columns as `pl$String`.
 
 - n_rows:
@@ -155,7 +156,8 @@ scan_csv_polars(
 
 - rechunk:
 
-  Reallocate to contiguous memory when all chunks/files are parsed.
+  **\[deprecated\]** Reallocate to contiguous memory when all
+  chunks/files are parsed. Call `$rechunk()` on the output instead.
 
 - skip_rows_after_header:
 
@@ -221,6 +223,9 @@ write.csv(mtcars, dest, row.names = FALSE)
 # Import this file as a DataFrame for eager evaluation
 read_csv_polars(dest) |>
   arrange(mpg)
+#> Warning: ! The `rechunk` argument is deprecated as of polars 1.15.0.
+#> ℹ Call `$rechunk()` on the output instead.
+#> This warning is displayed once every 8 hours.
 #> shape: (32, 11)
 #> ┌──────┬─────┬───────┬─────┬───┬─────┬─────┬──────┬──────┐
 #> │ mpg  ┆ cyl ┆ disp  ┆ hp  ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │
@@ -338,17 +343,17 @@ scan_csv_polars(dest_folder, include_file_paths = "file_path") |>
 #> │ ---  ┆ --- ┆ ---   ┆ --- ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---                             │
 #> │ f64  ┆ i64 ┆ f64   ┆ i64 ┆   ┆ i64 ┆ i64  ┆ i64  ┆ str                             │
 #> ╞══════╪═════╪═══════╪═════╪═══╪═════╪══════╪══════╪═════════════════════════════════╡
-#> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1a213ce5bae1/output… │
-#> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1a213ce5bae1/output… │
-#> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1a213ce5bae1/output… │
-#> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1a213ce5bae1/output… │
-#> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1a213ce5bae1/output… │
+#> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │
+#> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │
+#> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │
+#> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │
+#> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │
 #> │ …    ┆ …   ┆ …     ┆ …   ┆ … ┆ …   ┆ …    ┆ …    ┆ …                               │
-#> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1a213ce5bae1/output… │
-#> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 4    ┆ 2    ┆ output/file1a213ce5bae1/output… │
-#> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 5    ┆ 2    ┆ output/file1a213ce5bae1/output… │
-#> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1a213ce5bae1/output… │
-#> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1a213ce5bae1/output… │
+#> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c7e6406919d/output… │
+#> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 4    ┆ 2    ┆ output/file1c7e6406919d/output… │
+#> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 5    ┆ 2    ┆ output/file1c7e6406919d/output… │
+#> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c7e6406919d/output… │
+#> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c7e6406919d/output… │
 #> └──────┴─────┴───────┴─────┴───┴─────┴──────┴──────┴─────────────────────────────────┘
 
 
