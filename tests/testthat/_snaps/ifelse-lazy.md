@@ -1,20 +1,16 @@
 # error when different types
 
     Code
-      current$collect()
+      collect(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `collect()`:
       ! cannot compare string with numeric type (f64)
 
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `collect()`:
       ! cannot compare string with numeric type (f64)
 

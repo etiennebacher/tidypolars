@@ -3,11 +3,7 @@
     Code
       separate(test_pl, x, into = c("foo", "foo2"), sep = "(")
     Condition
-      Error in `data$with_columns()`:
-      ! Evaluation failed in `$with_columns()`.
-      Caused by error:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `separate()`:
       ! invalid regex pattern in str.split_regex: (
 
 # tidypolars only supports character separator

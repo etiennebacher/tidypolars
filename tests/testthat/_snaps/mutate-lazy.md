@@ -1,27 +1,23 @@
 # scalar value works
 
     Code
-      current$collect()
+      collect(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
-      ! lengths don't match: unable to add a column of length 2 to a DataFrame of height 150
+      Error in `collect()`:
+      ! lengths don't match: can't broadcast Series 'Sepal.Width' of length 2 to length 150
 
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
-      ! lengths don't match: unable to add a column of length 2 to a DataFrame of height 150
+      Error in `collect()`:
+      ! lengths don't match: can't broadcast Series 'Sepal.Width' of length 2 to length 150
 
 # custom function that doesn't return Polars expression
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `foo()` in Polars.
@@ -30,7 +26,7 @@
 # argument .keep works
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! `.keep` must be one of "all", "used", "unused", or "none", not "foo".
@@ -38,7 +34,7 @@
 # arguments .before and .after error consistently
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `relocate()`:
       ! Can't select columns that don't exist.
@@ -47,7 +43,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `relocate()`:
       ! Can't select columns that don't exist.
@@ -56,7 +52,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `relocate()`:
       ! You can specify either `.before` or `.after` but not both.
@@ -64,7 +60,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `relocate()`:
       ! Can't select columns that don't exist.

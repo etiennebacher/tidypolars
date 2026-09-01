@@ -2,7 +2,7 @@ expect_both_error <- function(object, other, ...) {
   polars_error <- FALSE
   polars_res <- tryCatch(
     if (is_polars_lf(object)) {
-      object$collect()
+      object |> collect()
     } else {
       object
     },
@@ -42,7 +42,7 @@ expect_equal_or_both_error <- function(object, other, ...) {
   polars_error <- FALSE
   polars_res <- tryCatch(
     if (is_polars_lf(object)) {
-      object$collect()
+      object |> collect()
     } else {
       object
     },
@@ -84,7 +84,7 @@ expect_equal_or_both_error <- function(object, other, ...) {
 
 expect_colnames <- function(x, y) {
   if (is_polars_lf(x)) {
-    x <- x$collect()
+    x <- x |> collect()
   }
   testthat::expect_equal(x$columns, y)
 }
@@ -115,14 +115,14 @@ expect_equal_lazy <- function(x, y, ...) {
 }
 
 expect_error_lazy <- function(current, pattern = ".*", ...) {
-  testthat::expect_error(current$collect(), pattern, ...)
+  testthat::expect_error(current |> collect(), pattern, ...)
 }
 
 expect_snapshot <- function(...) {
   testthat::expect_snapshot(...)
 }
 expect_snapshot_lazy <- function(current, ...) {
-  testthat::expect_snapshot(current$collect(), ...)
+  testthat::expect_snapshot(current |> collect(), ...)
 }
 
 expect_is_tidypolars <- function(x) {

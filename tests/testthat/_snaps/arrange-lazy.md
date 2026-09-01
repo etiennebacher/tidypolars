@@ -1,7 +1,7 @@
 # errors with unknown vars
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error:
       ! object 'foo' not found
@@ -9,7 +9,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error:
       ! object 'foo' not found
@@ -17,7 +17,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error:
       ! object 'foo' not found

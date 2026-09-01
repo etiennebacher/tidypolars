@@ -1,7 +1,7 @@
 # error if variable doesn't exist
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `drop_na()`:
       ! Can't select columns that don't exist.

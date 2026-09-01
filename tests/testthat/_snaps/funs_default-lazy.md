@@ -1,53 +1,45 @@
 # unique() works
 
     Code
-      current$collect()
+      collect(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
-      ! lengths don't match: unable to add a column of length 4 to a DataFrame of height 5
+      Error in `collect()`:
+      ! lengths don't match: can't broadcast Series 'foo' of length 4 to length 5
 
 # trunc() works
 
     Code
-      current$collect()
+      collect(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `collect()`:
       ! truncation ('to_zero') can only be used on numeric types
 
 # trunc() in tidypolars doesn't support Date/datetime
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Warning:
       tidypolars doesn't know how to use some arguments of `trunc()`.
       i The following argument(s) will be ignored: "units".
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `collect()`:
       ! truncation ('to_zero') can only be used on numeric types
 
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Warning:
       tidypolars doesn't know how to use some arguments of `trunc()`.
       i The following argument(s) will be ignored: "units".
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `collect()`:
       ! truncation ('to_zero') can only be used on numeric types
 
 # sample() validates size
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `sample()` in Polars.
@@ -56,7 +48,7 @@
 # seq_len() works
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `seq_len()` in Polars.
@@ -65,7 +57,7 @@
 # anyNA() works
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `anyNA()` in Polars.
@@ -74,7 +66,7 @@
 # duplicated() validates fromLast
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `duplicated()` in Polars.
@@ -83,7 +75,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `duplicated()` in Polars.
@@ -92,7 +84,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `duplicated()` in Polars.

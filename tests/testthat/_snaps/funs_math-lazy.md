@@ -1,24 +1,21 @@
 # log() works with base
 
     Code
-      current$collect()
+      collect(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `collect()`:
       ! not found: unable to find column "3"; valid columns: ["x"]
-      
       Did you mean "x"?
-      
       Resolved plan until failure:
-      
-      	---> FAILED HERE RESOLVING 'with_columns' <---
-      DF ["x"]; PROJECT */1 COLUMNS: 'with_columns'
+      ---> FAILED HERE RESOLVING 'with_columns' <---
+      DF ["x"]; PROJECT */1 COLUMNS
+      This error occurred with the following context stack:
+      [1] 'with_columns'
 
 # sort errors when na.last is absent or NA
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `sort()` in Polars.
@@ -27,7 +24,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `sort()` in Polars.
@@ -36,7 +33,7 @@
 # rank error when na.last is not in TRUE/FALSE/keep
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `rank()` in Polars.
@@ -45,7 +42,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `rank()` in Polars.
@@ -54,7 +51,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `rank()` in Polars.

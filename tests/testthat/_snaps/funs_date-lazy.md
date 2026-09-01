@@ -1,7 +1,7 @@
 # weekday works
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `wday()` in Polars.
@@ -10,7 +10,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `wday()` in Polars.
@@ -19,7 +19,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `wday()` in Polars.
@@ -28,7 +28,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `wday()` in Polars.
@@ -37,7 +37,7 @@
 # strptime() works
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `strptime()` in Polars.
@@ -46,7 +46,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `strptime()` in Polars.
@@ -55,7 +55,7 @@
 # make_datetime() works
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `make_datetime()` in Polars.
@@ -64,7 +64,7 @@
 # ISOdatetime() works
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `ISOdatetime()` in Polars.
@@ -73,7 +73,7 @@
 # now() errors on invalid timezones
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `now()` in Polars.
@@ -82,7 +82,7 @@
 # errors for durations
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `weeks()` in Polars.
@@ -91,7 +91,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `days()` in Polars.
@@ -100,7 +100,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `hours()` in Polars.
@@ -109,7 +109,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `minutes()` in Polars.
@@ -118,7 +118,7 @@
 # errors for rolling functions
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `rollbackward()` in Polars.
@@ -127,7 +127,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `rollbackward()` in Polars.
@@ -136,7 +136,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `rollforward()` in Polars.
@@ -145,7 +145,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `rollforward()` in Polars.

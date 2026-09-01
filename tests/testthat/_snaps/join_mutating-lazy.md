@@ -1,7 +1,7 @@
 # error if no common variables and and `by` no provided
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `left_join()`:
       ! `by` must be supplied when `x` and `y` have no common variables.
@@ -10,7 +10,7 @@
 # argument suffix works
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `left_join()`:
       ! `suffix` must be of length 2.
@@ -18,7 +18,7 @@
 # suffix + join_by works
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `left_join()`:
       ! `suffix` must be of length 2.
@@ -26,7 +26,7 @@
 # argument relationship works
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `left_join()`:
       ! `relationship` must be one of "one-to-one", "one-to-many", "many-to-one", or "many-to-many", not "foo".
@@ -34,77 +34,63 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `collect()`:
       ! join keys did not fulfill 1:1 validation
 
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `collect()`:
       ! join keys did not fulfill m:1 validation
 
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `collect()`:
       ! join keys did not fulfill 1:1 validation
 
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `collect()`:
       ! join keys did not fulfill m:1 validation
 
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `collect()`:
       ! join keys did not fulfill 1:1 validation
 
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `collect()`:
       ! join keys did not fulfill m:1 validation
 
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `collect()`:
       ! join keys did not fulfill 1:1 validation
 
 # argument na_matches works
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `left_join()`:
       ! `na_matches` must be one of "na" or "never", not "foo".
@@ -112,7 +98,7 @@
 # error if two inputs don't have the same class
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `left_join()`:
       ! `x` and `y` must be either two DataFrames or two LazyFrames.
@@ -120,7 +106,7 @@
 # unsupported args throw warning
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `left_join()`:
       ! Argument `keep` is not supported by tidypolars.
@@ -129,7 +115,7 @@
 # dots must be empty
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `left_join()`:
       ! `...` must be empty.
@@ -139,7 +125,7 @@
 ---
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Warning in `left_join()`:
       Argument `copy` is not supported by tidypolars.

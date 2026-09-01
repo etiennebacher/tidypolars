@@ -1,7 +1,7 @@
 # argument names_prefix works
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `pivot_longer()`:
       ! `names_prefix` must be a single string or `NULL`, not a character vector.
@@ -9,7 +9,7 @@
 # dots must be empty
 
     Code
-      current$collect()
+      collect(current)
     Condition
       Error in `pivot_longer()`:
       ! `...` must be empty.

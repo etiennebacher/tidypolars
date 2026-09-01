@@ -118,7 +118,10 @@ compute.polars_lazy_frame <- function(
     )
   }
 
-  out <- x$collect(optimizations = optimizations, engine = engine)
+  out <- with_polars_errors(x$collect(
+    optimizations = optimizations,
+    engine = engine
+  ))
 
   out <- if (is_grouped) {
     out |>
@@ -188,18 +191,20 @@ collect.polars_lazy_frame <- function(
     )
   }
 
-  x |>
-    as_tibble(
-      optimizations = optimizations,
-      engine = engine,
-      .name_repair = .name_repair,
-      uint8 = uint8,
-      int64 = int64,
-      date = date,
-      time = time,
-      decimal = decimal,
-      as_clock_class = as_clock_class,
-      ambiguous = ambiguous,
-      non_existent = non_existent
-    )
+  with_polars_errors(
+    x |>
+      as_tibble(
+        optimizations = optimizations,
+        engine = engine,
+        .name_repair = .name_repair,
+        uint8 = uint8,
+        int64 = int64,
+        date = date,
+        time = time,
+        decimal = decimal,
+        as_clock_class = as_clock_class,
+        ambiguous = ambiguous,
+        non_existent = non_existent
+      )
+  )
 }
