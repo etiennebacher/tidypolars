@@ -9,8 +9,7 @@ write_ipc_polars(
   file,
   compression = "uncompressed",
   ...,
-  compat_level = "newest",
-  future
+  compat_level = "newest"
 )
 }
 \arguments{
@@ -35,9 +34,6 @@ Arrow implementations. The level can be specified as the name (e.g.,
 compatibility).
 \item \code{"oldest"}: Same as 0 (High compatibility).
 }}
-
-\item{future}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use
-\code{compat_level} instead.}
 }
 \value{
 The input DataFrame.

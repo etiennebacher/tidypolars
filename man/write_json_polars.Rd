@@ -4,20 +4,12 @@
 \alias{write_json_polars}
 \title{Export data to JSON file(s)}
 \usage{
-write_json_polars(.data, file, ..., pretty = FALSE, row_oriented = FALSE)
+write_json_polars(.data, file)
 }
 \arguments{
 \item{.data}{A Polars DataFrame.}
 
 \item{file}{File path to which the result should be written.}
-
-\item{...}{Ignored.}
-
-\item{pretty}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated with no
-replacement.}
-
-\item{row_oriented}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated with no
-replacement.}
 }
 \value{
 The input DataFrame.

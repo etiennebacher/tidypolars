@@ -50,7 +50,6 @@
 #'
 #' @return `compute()` returns a Polars DataFrame, `collect()` returns a tibble.
 #' @export
-#' @seealso [fetch()] for applying a lazy query on a subset of the data.
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' dat_lazy <- polars::as_polars_df(iris)$lazy()
 #'

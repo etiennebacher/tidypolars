@@ -184,10 +184,6 @@ scan_parquet_polars <- function(
 #' `scan_csv_polars()` imports the data as a Polars LazyFrame.
 #'
 #' @inherit polars::pl__scan_csv params details
-#' @param dtypes `r lifecycle::badge("deprecated")` Deprecated,
-#' use `schema_overrides` instead.
-#' @param reuse_downloaded `r lifecycle::badge("deprecated")`
-#' Deprecated with no replacement.
 #'
 #' @rdname from_csv
 #' @name from_csv
@@ -405,9 +401,6 @@ scan_csv_polars <- function(
 #' `scan_ndjson_polars()` imports the data as a Polars LazyFrame.
 #'
 #' @inherit polars::pl__scan_ndjson params details
-#' @param reuse_downloaded `r lifecycle::badge("deprecated")`
-#' Deprecated with no replacement.
-#'
 #'
 #' @rdname from_ndjson
 #' @name from_ndjson
@@ -516,7 +509,7 @@ scan_ndjson_polars <- function(
   row_index_name = NULL,
   row_index_offset = 0,
   ignore_errors = FALSE,
-  rechunkz
+  rechunk
 ) {
   rlang::check_dots_empty()
   if (!missing(rechunk)) {
@@ -547,8 +540,6 @@ scan_ndjson_polars <- function(
 #' `scan_ipc_polars()` imports the data as a Polars LazyFrame.
 #'
 #' @inherit polars::pl__scan_ipc params details
-#' @param memory_map `r lifecycle::badge("deprecated")` Deprecated
-#' with no replacement.
 #'
 #' @rdname from_ipc
 #' @name from_ipc
@@ -617,17 +608,9 @@ read_ipc_polars <- function(
   row_index_offset = 0L,
   cache = TRUE,
   include_file_paths = NULL,
-  memory_map,
   rechunk
 ) {
   rlang::check_dots_empty()
-  if (!missing(memory_map)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "read_ipc_polars(memory_map)",
-      details = "This argument has no replacement."
-    )
-  }
   if (!missing(rechunk)) {
     lifecycle::deprecate_warn(
       when = "0.20.0",
@@ -658,17 +641,9 @@ scan_ipc_polars <- function(
   row_index_offset = 0L,
   cache = TRUE,
   include_file_paths = NULL,
-  memory_map,
   rechunk
 ) {
   rlang::check_dots_empty()
-  if (!missing(memory_map)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "scan_ipc_polars(memory_map)",
-      details = "This argument has no replacement."
-    )
-  }
   if (!missing(rechunk)) {
     lifecycle::deprecate_warn(
       when = "0.20.0",
