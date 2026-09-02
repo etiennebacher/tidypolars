@@ -57,11 +57,11 @@ scan_ndjson_polars() imports the data as a Polars LazyFrame."><meta property="og
 <span>  batch_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n_rows <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  low_memory <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  rechunk <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  row_index_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_index_offset <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  ignore_errors <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  <span class="va">reuse_downloaded</span></span>
+<span>  <span class="va">reuse_downloaded</span>,</span>
+<span>  <span class="va">rechunk</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">scan_ndjson_polars</span><span class="op">(</span></span>
@@ -71,11 +71,11 @@ scan_ndjson_polars() imports the data as a Polars LazyFrame."><meta property="og
 <span>  batch_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n_rows <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  low_memory <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  rechunk <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  row_index_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_index_offset <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  ignore_errors <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  <span class="va">reuse_downloaded</span></span>
+<span>  <span class="va">reuse_downloaded</span>,</span>
+<span>  <span class="va">rechunk</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -111,12 +111,6 @@ slow). Set <code>infer_schema = FALSE</code> to read all columns as <code>pl$Str
 <dd><p>Reduce memory pressure at the expense of performance.</p></dd>
 
 
-<dt id="arg-rechunk">rechunk<a class="anchor" aria-label="anchor" href="#arg-rechunk"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Reallocate to contiguous
-memory when all chunks/files are parsed. Call <code>$rechunk()</code> on the output
-instead.</p></dd>
-
-
 <dt id="arg-row-index-name">row_index_name<a class="anchor" aria-label="anchor" href="#arg-row-index-name"></a></dt>
 <dd><p>If not <code>NULL</code>, this will insert a row index column with
 the given name.</p></dd>
@@ -136,6 +130,12 @@ check which values might cause an issue.</p></dd>
 <dt id="arg-reuse-downloaded">reuse_downloaded<a class="anchor" aria-label="anchor" href="#arg-reuse-downloaded"></a></dt>
 <dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a>
 Deprecated with no replacement.</p></dd>
+
+
+<dt id="arg-rechunk">rechunk<a class="anchor" aria-label="anchor" href="#arg-rechunk"></a></dt>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Reallocate to contiguous
+memory when all chunks/files are parsed. Call <code>$rechunk()</code> on the output
+instead.</p></dd>
 
 </dl></div>
     <div class="section level2">

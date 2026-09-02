@@ -67,7 +67,6 @@ scan_csv_polars() imports the data as a Polars LazyFrame."><meta property="og:im
 <span>  n_rows <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  encoding <span class="op">=</span> <span class="st">"utf8"</span>,</span>
 <span>  low_memory <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  rechunk <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  skip_rows_after_header <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  row_index_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_index_offset <span class="op">=</span> <span class="fl">0</span>,</span>
@@ -77,7 +76,8 @@ scan_csv_polars() imports the data as a Polars LazyFrame."><meta property="og:im
 <span>  truncate_ragged_lines <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  include_file_paths <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">dtypes</span>,</span>
-<span>  <span class="va">reuse_downloaded</span></span>
+<span>  <span class="va">reuse_downloaded</span>,</span>
+<span>  <span class="va">rechunk</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">scan_csv_polars</span><span class="op">(</span></span>
@@ -97,7 +97,6 @@ scan_csv_polars() imports the data as a Polars LazyFrame."><meta property="og:im
 <span>  n_rows <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  encoding <span class="op">=</span> <span class="st">"utf8"</span>,</span>
 <span>  low_memory <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  rechunk <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  skip_rows_after_header <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  row_index_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_index_offset <span class="op">=</span> <span class="fl">0</span>,</span>
@@ -107,7 +106,8 @@ scan_csv_polars() imports the data as a Polars LazyFrame."><meta property="og:im
 <span>  truncate_ragged_lines <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  include_file_paths <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">dtypes</span>,</span>
-<span>  <span class="va">reuse_downloaded</span></span>
+<span>  <span class="va">reuse_downloaded</span>,</span>
+<span>  <span class="va">rechunk</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -199,12 +199,6 @@ UTF8 values are replaced with "?" characters.</p></dd>
 <dd><p>Reduce memory pressure at the expense of performance.</p></dd>
 
 
-<dt id="arg-rechunk">rechunk<a class="anchor" aria-label="anchor" href="#arg-rechunk"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Reallocate to contiguous
-memory when all chunks/files are parsed. Call <code>$rechunk()</code> on the output
-instead.</p></dd>
-
-
 <dt id="arg-skip-rows-after-header">skip_rows_after_header<a class="anchor" aria-label="anchor" href="#arg-skip-rows-after-header"></a></dt>
 <dd><p>Skip this number of rows when the header is
 parsed.</p></dd>
@@ -255,6 +249,12 @@ use <code>schema_overrides</code> instead.</p></dd>
 <dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a>
 Deprecated with no replacement.</p></dd>
 
+
+<dt id="arg-rechunk">rechunk<a class="anchor" aria-label="anchor" href="#arg-rechunk"></a></dt>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Reallocate to contiguous
+memory when all chunks/files are parsed. Call <code>$rechunk()</code> on the output
+instead.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -272,9 +272,6 @@ Deprecated with no replacement.</p></dd>
 <span class="r-in"><span><span class="co"># Import this file as a DataFrame for eager evaluation</span></span></span>
 <span class="r-in"><span><span class="fu">read_csv_polars</span><span class="op">(</span><span class="va">dest</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span><span style="color: #BBBB00;">!</span> The `rechunk` argument is deprecated as of <span style="color: #0000BB;">polars</span> 1.15.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Call `$rechunk()` on the output instead.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shape: (32, 11)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌──────┬─────┬───────┬─────┬───┬─────┬─────┬──────┬──────┐</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ mpg  ┆ cyl ┆ disp  ┆ hp  ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │</span>
@@ -392,17 +389,17 @@ Deprecated with no replacement.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ ---  ┆ --- ┆ ---   ┆ --- ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---                             │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64  ┆ i64 ┆ f64   ┆ i64 ┆   ┆ i64 ┆ i64  ┆ i64  ┆ str                             │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞══════╪═════╪═══════╪═════╪═══╪═════╪══════╪══════╪═════════════════════════════════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …   ┆ …     ┆ …   ┆ … ┆ …   ┆ …    ┆ …    ┆ …                               │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c7e6406919d/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 4    ┆ 2    ┆ output/file1c7e6406919d/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 5    ┆ 2    ┆ output/file1c7e6406919d/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c7e6406919d/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c7e6406919d/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1bd14dd65708/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 4    ┆ 2    ┆ output/file1bd14dd65708/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 5    ┆ 2    ┆ output/file1bd14dd65708/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1bd14dd65708/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1bd14dd65708/output… │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └──────┴─────┴───────┴─────┴───┴─────┴──────┴──────┴─────────────────────────────────┘</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>

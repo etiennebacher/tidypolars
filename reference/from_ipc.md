@@ -13,10 +13,10 @@ read_ipc_polars(
   n_rows = NULL,
   row_index_name = NULL,
   row_index_offset = 0L,
-  rechunk = FALSE,
   cache = TRUE,
   include_file_paths = NULL,
-  memory_map
+  memory_map,
+  rechunk
 )
 
 scan_ipc_polars(
@@ -25,10 +25,10 @@ scan_ipc_polars(
   n_rows = NULL,
   row_index_name = NULL,
   row_index_offset = 0L,
-  rechunk = FALSE,
   cache = TRUE,
   include_file_paths = NULL,
-  memory_map
+  memory_map,
+  rechunk
 )
 ```
 
@@ -57,11 +57,6 @@ scan_ipc_polars(
   Offset to start the row index column (only used if the name is set by
   `row_index_name`).
 
-- rechunk:
-
-  **\[deprecated\]** Reallocate to contiguous memory when all
-  chunks/files are parsed. Call `$rechunk()` on the output instead.
-
 - cache:
 
   Cache the result after reading.
@@ -73,6 +68,11 @@ scan_ipc_polars(
 - memory_map:
 
   **\[deprecated\]** Deprecated with no replacement.
+
+- rechunk:
+
+  **\[deprecated\]** Reallocate to contiguous memory when all
+  chunks/files are parsed. Call `$rechunk()` on the output instead.
 
 ## Value
 

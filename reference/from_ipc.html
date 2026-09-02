@@ -56,10 +56,10 @@ scan_ipc_polars() imports the data as a Polars LazyFrame."><meta property="og:im
 <span>  n_rows <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_index_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_index_offset <span class="op">=</span> <span class="fl">0L</span>,</span>
-<span>  rechunk <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  include_file_paths <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">memory_map</span></span>
+<span>  <span class="va">memory_map</span>,</span>
+<span>  <span class="va">rechunk</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">scan_ipc_polars</span><span class="op">(</span></span>
@@ -68,10 +68,10 @@ scan_ipc_polars() imports the data as a Polars LazyFrame."><meta property="og:im
 <span>  n_rows <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_index_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_index_offset <span class="op">=</span> <span class="fl">0L</span>,</span>
-<span>  rechunk <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  include_file_paths <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">memory_map</span></span>
+<span>  <span class="va">memory_map</span>,</span>
+<span>  <span class="va">rechunk</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -102,12 +102,6 @@ the given name.</p></dd>
 the name is set by <code>row_index_name</code>).</p></dd>
 
 
-<dt id="arg-rechunk">rechunk<a class="anchor" aria-label="anchor" href="#arg-rechunk"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Reallocate to contiguous
-memory when all chunks/files are parsed. Call <code>$rechunk()</code> on the output
-instead.</p></dd>
-
-
 <dt id="arg-cache">cache<a class="anchor" aria-label="anchor" href="#arg-cache"></a></dt>
 <dd><p>Cache the result after reading.</p></dd>
 
@@ -120,6 +114,12 @@ with this name.</p></dd>
 <dt id="arg-memory-map">memory_map<a class="anchor" aria-label="anchor" href="#arg-memory-map"></a></dt>
 <dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Deprecated
 with no replacement.</p></dd>
+
+
+<dt id="arg-rechunk">rechunk<a class="anchor" aria-label="anchor" href="#arg-rechunk"></a></dt>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Reallocate to contiguous
+memory when all chunks/files are parsed. Call <code>$rechunk()</code> on the output
+instead.</p></dd>
 
 </dl></div>
     <div class="section level2">

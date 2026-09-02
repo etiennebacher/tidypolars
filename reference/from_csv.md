@@ -24,7 +24,6 @@ read_csv_polars(
   n_rows = NULL,
   encoding = "utf8",
   low_memory = FALSE,
-  rechunk = TRUE,
   skip_rows_after_header = 0,
   row_index_name = NULL,
   row_index_offset = 0,
@@ -34,7 +33,8 @@ read_csv_polars(
   truncate_ragged_lines = FALSE,
   include_file_paths = NULL,
   dtypes,
-  reuse_downloaded
+  reuse_downloaded,
+  rechunk
 )
 
 scan_csv_polars(
@@ -54,7 +54,6 @@ scan_csv_polars(
   n_rows = NULL,
   encoding = "utf8",
   low_memory = FALSE,
-  rechunk = TRUE,
   skip_rows_after_header = 0,
   row_index_name = NULL,
   row_index_offset = 0,
@@ -64,7 +63,8 @@ scan_csv_polars(
   truncate_ragged_lines = FALSE,
   include_file_paths = NULL,
   dtypes,
-  reuse_downloaded
+  reuse_downloaded,
+  rechunk
 )
 ```
 
@@ -154,11 +154,6 @@ scan_csv_polars(
 
   Reduce memory pressure at the expense of performance.
 
-- rechunk:
-
-  **\[deprecated\]** Reallocate to contiguous memory when all
-  chunks/files are parsed. Call `$rechunk()` on the output instead.
-
 - skip_rows_after_header:
 
   Skip this number of rows when the header is parsed.
@@ -206,6 +201,11 @@ scan_csv_polars(
 
   **\[deprecated\]** Deprecated with no replacement.
 
+- rechunk:
+
+  **\[deprecated\]** Reallocate to contiguous memory when all
+  chunks/files are parsed. Call `$rechunk()` on the output instead.
+
 ## Value
 
 The scan function returns a LazyFrame, the read function returns a
@@ -223,9 +223,6 @@ write.csv(mtcars, dest, row.names = FALSE)
 # Import this file as a DataFrame for eager evaluation
 read_csv_polars(dest) |>
   arrange(mpg)
-#> Warning: ! The `rechunk` argument is deprecated as of polars 1.15.0.
-#> ℹ Call `$rechunk()` on the output instead.
-#> This warning is displayed once every 8 hours.
 #> shape: (32, 11)
 #> ┌──────┬─────┬───────┬─────┬───┬─────┬─────┬──────┬──────┐
 #> │ mpg  ┆ cyl ┆ disp  ┆ hp  ┆ … ┆ vs  ┆ am  ┆ gear ┆ carb │
@@ -343,17 +340,17 @@ scan_csv_polars(dest_folder, include_file_paths = "file_path") |>
 #> │ ---  ┆ --- ┆ ---   ┆ --- ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---                             │
 #> │ f64  ┆ i64 ┆ f64   ┆ i64 ┆   ┆ i64 ┆ i64  ┆ i64  ┆ str                             │
 #> ╞══════╪═════╪═══════╪═════╪═══╪═════╪══════╪══════╪═════════════════════════════════╡
-#> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │
-#> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │
-#> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │
-#> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │
-#> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c7e6406919d/output… │
+#> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │
+#> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │
+#> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │
+#> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │
+#> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │
 #> │ …    ┆ …   ┆ …     ┆ …   ┆ … ┆ …   ┆ …    ┆ …    ┆ …                               │
-#> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c7e6406919d/output… │
-#> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 4    ┆ 2    ┆ output/file1c7e6406919d/output… │
-#> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 5    ┆ 2    ┆ output/file1c7e6406919d/output… │
-#> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c7e6406919d/output… │
-#> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c7e6406919d/output… │
+#> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1bd14dd65708/output… │
+#> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 4    ┆ 2    ┆ output/file1bd14dd65708/output… │
+#> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 5    ┆ 2    ┆ output/file1bd14dd65708/output… │
+#> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1bd14dd65708/output… │
+#> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1bd14dd65708/output… │
 #> └──────┴─────┴───────┴─────┴───┴─────┴──────┴──────┴─────────────────────────────────┘
 
 

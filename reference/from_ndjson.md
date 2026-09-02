@@ -14,11 +14,11 @@ read_ndjson_polars(
   batch_size = NULL,
   n_rows = NULL,
   low_memory = FALSE,
-  rechunk = FALSE,
   row_index_name = NULL,
   row_index_offset = 0,
   ignore_errors = FALSE,
-  reuse_downloaded
+  reuse_downloaded,
+  rechunk
 )
 
 scan_ndjson_polars(
@@ -28,11 +28,11 @@ scan_ndjson_polars(
   batch_size = NULL,
   n_rows = NULL,
   low_memory = FALSE,
-  rechunk = FALSE,
   row_index_name = NULL,
   row_index_offset = 0,
   ignore_errors = FALSE,
-  reuse_downloaded
+  reuse_downloaded,
+  rechunk
 )
 ```
 
@@ -66,11 +66,6 @@ scan_ndjson_polars(
 
   Reduce memory pressure at the expense of performance.
 
-- rechunk:
-
-  **\[deprecated\]** Reallocate to contiguous memory when all
-  chunks/files are parsed. Call `$rechunk()` on the output instead.
-
 - row_index_name:
 
   If not `NULL`, this will insert a row index column with the given
@@ -90,6 +85,11 @@ scan_ndjson_polars(
 - reuse_downloaded:
 
   **\[deprecated\]** Deprecated with no replacement.
+
+- rechunk:
+
+  **\[deprecated\]** Reallocate to contiguous memory when all
+  chunks/files are parsed. Call `$rechunk()` on the output instead.
 
 ## Value
 
