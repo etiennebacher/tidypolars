@@ -1,3 +1,12 @@
+# var() doesn't work with `use = 'all.obs'`
+
+    Code
+      compute(current)
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `var()` in Polars.
+      x tidypolars doesn't support `use = "all.obs"`.
+
 # unique() works
 
     Code

@@ -72,6 +72,16 @@ test_that("mean() handles trim", {
   )
 })
 
+test_that("var() doesn't work with `use = 'all.obs'`", {
+  test_df <- tibble(x = c(1, NA, 3, 4, 5, NA))
+  test_pl <- as_polars_lf(test_df)
+
+  expect_snapshot_lazy(
+    mutate(test_pl, foo = var(x, use = "all.obs")),
+    error = TRUE
+  )
+})
+
 test_that("length() works", {
   test_df <- tibble(
     x = c("a", "a", "a", "b", "b"),

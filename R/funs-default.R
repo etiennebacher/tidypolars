@@ -560,14 +560,71 @@ pl_unique <- function(x, ...) {
   x$unique()
 }
 
-pl_var <- function(x, na.rm = FALSE, ...) {
-  check_empty_dots(...)
+pl_var <- function(x, y = NULL, na.rm = FALSE, use) {
   na.rm <- polars_expr_to_r(na.rm)
-  if (isTRUE(na.rm)) {
-    x$var(ddof = 1)
-  } else {
-    pl$when(x$has_nulls())$then(NA)$otherwise(x$var(ddof = 1))
+  check_bool(na.rm)
+
+  if (
+    identical(y, list(NULL)) ||
+      (is_polars_expr(y) && isTRUE(y$meta$eq(pl$lit(NULL))))
+  ) {
+    y <- NULL
   }
+
+  if (missing(use)) {
+    use <- if (na.rm) "na.or.complete" else "everything"
+  } else {
+    use <- polars_expr_to_r(use)
+    check_string(use)
+    use <- arg_match(
+      use,
+      c(
+        "all.obs",
+        "complete.obs",
+        "pairwise.complete.obs",
+        "everything",
+        "na.or.complete"
+      )
+    )
+  }
+
+  # use = 'all.obs' errors in base R if there are missing values, but I can't
+  # determine that from inside the expression.
+  if (use == "all.obs") {
+    cli::cli_abort(
+      "{.pkg tidypolars} doesn't support {.arg use = \"all.obs\"}."
+    )
+  }
+
+  remove_nulls <- use %in%
+    c(
+      "complete.obs",
+      "pairwise.complete.obs",
+      "na.or.complete"
+    )
+
+  if (is.null(y)) {
+    expr <- if (remove_nulls) x$drop_nulls() else x
+    out <- expr$var(ddof = 1)
+    if (!remove_nulls) {
+      out <- pl$when(x$has_nulls())$then(NA)$otherwise(out)
+    }
+    return(out)
+  }
+
+  if (remove_nulls) {
+    complete <- x$is_not_null() & y$is_not_null()
+    x <- x$filter(complete)
+    y <- y$filter(complete)
+  }
+
+  n <- x$len()
+  out <- ((x - x$mean()) * (y - y$mean()))$sum() / (n - 1)
+  out <- pl$when(n < 2)$then(NA)$otherwise(out)
+  if (!remove_nulls) {
+    out <- pl$when(x$has_nulls() | y$has_nulls())$then(NA)$otherwise(out)
+  }
+  out
 }
 
 pl_which.max <- function(x) {
