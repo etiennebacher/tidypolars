@@ -1,7 +1,7 @@
 # var() doesn't work with `use = 'all.obs'`
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `var()` in Polars.
