@@ -31,8 +31,6 @@ read_csv_polars(
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
   include_file_paths = NULL,
-  dtypes,
-  reuse_downloaded,
   rechunk
 )
 
@@ -61,8 +59,6 @@ scan_csv_polars(
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
   include_file_paths = NULL,
-  dtypes,
-  reuse_downloaded,
   rechunk
 )
 }
@@ -143,12 +139,6 @@ DataFrame or LazyFrame.}
 
 \item{include_file_paths}{Include the path of the source file(s) as a column
 with this name.}
-
-\item{dtypes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated,
-use \code{schema_overrides} instead.}
-
-\item{reuse_downloaded}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
-Deprecated with no replacement.}
 
 \item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
 memory when all chunks/files are parsed. Call \verb{$rechunk()} on the output

@@ -14,7 +14,6 @@ read_ipc_polars(
   row_index_offset = 0L,
   cache = TRUE,
   include_file_paths = NULL,
-  memory_map,
   rechunk
 )
 
@@ -26,7 +25,6 @@ scan_ipc_polars(
   row_index_offset = 0L,
   cache = TRUE,
   include_file_paths = NULL,
-  memory_map,
   rechunk
 )
 }
@@ -48,9 +46,6 @@ the name is set by \code{row_index_name}).}
 
 \item{include_file_paths}{Include the path of the source file(s) as a column
 with this name.}
-
-\item{memory_map}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated
-with no replacement.}
 
 \item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
 memory when all chunks/files are parsed. Call \verb{$rechunk()} on the output
