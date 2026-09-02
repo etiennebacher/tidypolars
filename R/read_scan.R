@@ -288,28 +288,11 @@ read_csv_polars <- function(
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
   include_file_paths = NULL,
-  dtypes,
-  reuse_downloaded,
   rechunk
 ) {
   rlang::arg_match0(encoding, values = c("utf8", "utf8-lossy"))
   rlang::check_dots_empty()
 
-  if (!missing(dtypes)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "read_csv_polars(dtypes)",
-      details = "Use `schema_overrides` instead."
-    )
-    schema_overrides <- dtypes
-  }
-  if (!missing(reuse_downloaded)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "read_csv_polars(reuse_downloaded)",
-      details = "This argument has no replacement."
-    )
-  }
   if (!missing(rechunk)) {
     lifecycle::deprecate_warn(
       when = "0.20.0",
@@ -374,28 +357,11 @@ scan_csv_polars <- function(
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
   include_file_paths = NULL,
-  dtypes,
-  reuse_downloaded,
   rechunk
 ) {
   rlang::arg_match0(encoding, values = c("utf8", "utf8-lossy"))
   rlang::check_dots_empty()
 
-  if (!missing(dtypes)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "scan_csv_polars(dtypes)",
-      details = "Use `schema_overrides` instead."
-    )
-    schema_overrides <- dtypes
-  }
-  if (!missing(reuse_downloaded)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "scan_csv_polars(reuse_downloaded)",
-      details = "This argument has no replacement."
-    )
-  }
   if (!missing(rechunk)) {
     lifecycle::deprecate_warn(
       when = "0.20.0",
@@ -512,17 +478,9 @@ read_ndjson_polars <- function(
   rechunk = FALSE,
   row_index_name = NULL,
   row_index_offset = 0,
-  ignore_errors = FALSE,
-  reuse_downloaded
+  ignore_errors = FALSE
 ) {
   rlang::check_dots_empty()
-  if (!missing(reuse_downloaded)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "read_ndjson_polars(reuse_downloaded)",
-      details = "This argument has no replacement."
-    )
-  }
   if (!missing(rechunk)) {
     lifecycle::deprecate_warn(
       when = "0.20.0",
@@ -558,17 +516,9 @@ scan_ndjson_polars <- function(
   row_index_name = NULL,
   row_index_offset = 0,
   ignore_errors = FALSE,
-  reuse_downloaded,
-  rechunk
+  rechunkz
 ) {
   rlang::check_dots_empty()
-  if (!missing(reuse_downloaded)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "scan_ndjson_polars(reuse_downloaded)",
-      details = "This argument has no replacement."
-    )
-  }
   if (!missing(rechunk)) {
     lifecycle::deprecate_warn(
       when = "0.20.0",
