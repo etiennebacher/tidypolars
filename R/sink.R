@@ -182,10 +182,6 @@ sink_parquet <- function(
 #'   then quotes will be used even if they aren't strictly necessary.
 #' * `"never"`: This never puts quotes around fields, even if that results in
 #'   invalid CSV data (e.g. by not quoting strings containing the separator).
-#' @param quote `r lifecycle::badge("deprecated")` Deprecated, use `quote_char`
-#' instead.
-#' @param null_values `r lifecycle::badge("deprecated")` Deprecated, use
-#' `null_value` instead.
 #'
 #' @inherit sink_parquet params details return
 #' @export
@@ -249,9 +245,7 @@ sink_csv <- function(
   simplify_expression = TRUE,
   slice_pushdown = TRUE,
   no_optimization = FALSE,
-  mkdir = FALSE,
-  quote,
-  null_values
+  mkdir = FALSE
 ) {
   check_dots_empty()
   if (!is_polars_lf(.data)) {
@@ -262,26 +256,6 @@ sink_csv <- function(
     quote_style,
     values = c("necessary", "always", "non_numeric", "never")
   )
-
-  if (!missing(quote)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "sink_csv(quote)",
-      details = "Use `quote_char` instead."
-    )
-    quote_char <- quote
-  }
-
-  if (!missing(null_values)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "sink_csv(null_values)",
-      details = "Use `null_value` instead."
-    )
-    if (missing(null_value)) {
-      null_value <- null_values
-    }
-  }
 
   if (isTRUE(no_optimization)) {
     optimizations <- pl$QueryOptFlags()$no_optimizations()

@@ -50,7 +50,6 @@
 #'
 #' @return `compute()` returns a Polars DataFrame, `collect()` returns a tibble.
 #' @export
-#' @seealso [fetch()] for applying a lazy query on a subset of the data.
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
 #' dat_lazy <- polars::as_polars_df(iris)$lazy()
 #'
@@ -80,29 +79,13 @@ compute.polars_lazy_frame <- function(
   comm_subexpr_elim = TRUE,
   cluster_with_columns = TRUE,
   no_optimization = FALSE,
-  engine = c("auto", "in-memory", "streaming"),
-  streaming = FALSE
+  engine = c("auto", "in-memory", "streaming")
 ) {
   x <- tag_frame(x, substitute(x))
   check_dots_empty()
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order %||% FALSE
   is_grouped <- !is.null(grps)
-
-  if (!missing(streaming)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "compute(streaming)",
-      details = c(
-        i = "Use `engine = \"streaming\"` for the new streaming mode.",
-        i = "Use `engine = \"in-memory\"` for non-streaming mode."
-      )
-    )
-    if (isTRUE(streaming)) {
-      engine <- "streaming"
-    }
-    if (isFALSE(streaming)) engine <- "in-memory"
-  }
 
   if (isTRUE(no_optimization)) {
     optimizations <- pl$QueryOptFlags()$no_optimizations()
@@ -118,7 +101,10 @@ compute.polars_lazy_frame <- function(
     )
   }
 
-  out <- x$collect(optimizations = optimizations, engine = engine)
+  out <- with_polars_errors(x$collect(
+    optimizations = optimizations,
+    engine = engine
+  ))
 
   out <- if (is_grouped) {
     out |>
@@ -145,7 +131,6 @@ collect.polars_lazy_frame <- function(
   cluster_with_columns = TRUE,
   no_optimization = FALSE,
   engine = c("auto", "in-memory", "streaming"),
-  streaming = FALSE,
   .name_repair = "check_unique",
   uint8 = "integer",
   int64 = "double",
@@ -158,21 +143,6 @@ collect.polars_lazy_frame <- function(
 ) {
   x <- tag_frame(x, substitute(x))
   check_dots_empty()
-
-  if (!missing(streaming)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "collect(streaming)",
-      details = c(
-        i = "Use `engine = \"streaming\"` for the new streaming mode.",
-        i = "Use `engine = \"in-memory\"` for non-streaming mode."
-      )
-    )
-    if (isTRUE(streaming)) {
-      engine <- "streaming"
-    }
-    if (isFALSE(streaming)) engine <- "in-memory"
-  }
 
   if (isTRUE(no_optimization)) {
     optimizations <- pl$QueryOptFlags()$no_optimizations()
@@ -188,18 +158,20 @@ collect.polars_lazy_frame <- function(
     )
   }
 
-  x |>
-    as_tibble(
-      optimizations = optimizations,
-      engine = engine,
-      .name_repair = .name_repair,
-      uint8 = uint8,
-      int64 = int64,
-      date = date,
-      time = time,
-      decimal = decimal,
-      as_clock_class = as_clock_class,
-      ambiguous = ambiguous,
-      non_existent = non_existent
-    )
+  with_polars_errors(
+    x |>
+      as_tibble(
+        optimizations = optimizations,
+        engine = engine,
+        .name_repair = .name_repair,
+        uint8 = uint8,
+        int64 = int64,
+        date = date,
+        time = time,
+        decimal = decimal,
+        as_clock_class = as_clock_class,
+        ambiguous = ambiguous,
+        non_existent = non_existent
+      )
+  )
 }

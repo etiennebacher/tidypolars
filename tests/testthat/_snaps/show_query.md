@@ -158,7 +158,6 @@
         n_rows = NULL,
         encoding = "utf8",
         low_memory = FALSE,
-        rechunk = TRUE,
         skip_rows_after_header = 0,
         row_index_name = NULL,
         row_index_offset = 0,
@@ -1292,7 +1291,6 @@
         hive_schema = NULL,
         try_parse_hive_dates = TRUE,
         glob = TRUE,
-        rechunk = FALSE,
         low_memory = FALSE,
         storage_options = NULL,
         use_statistics = TRUE,
@@ -1313,7 +1311,6 @@
         batch_size = NULL,
         n_rows = NULL,
         low_memory = FALSE,
-        rechunk = FALSE,
         row_index_name = NULL,
         row_index_offset = 0,
         ignore_errors = FALSE
@@ -1342,7 +1339,6 @@
         n_rows = NULL,
         row_index_name = NULL,
         row_index_offset = 0L,
-        rechunk = FALSE,
         cache = TRUE,
         include_file_paths = NULL
       )$

@@ -35,10 +35,15 @@ separate.polars_data_frame <- function(
   }
   col <- deparse(substitute(col))
 
-  data <- data$with_columns(
-    pl$col(col)$cast(pl$String)$str$split(sep, literal = FALSE)$list$to_struct(
-      upper_bound = length(into)
-    )$struct$rename_fields(into)$struct$unnest()
+  data <- with_polars_errors(
+    data$with_columns(
+      pl$col(col)$cast(pl$String)$str$split(
+        sep,
+        literal = FALSE
+      )$list$to_struct(
+        upper_bound = length(into)
+      )$struct$rename_fields(into)$struct$unnest()
+    )
   )
 
   if (isTRUE(remove)) {

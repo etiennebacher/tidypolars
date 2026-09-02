@@ -17,12 +17,12 @@ read_parquet_polars(
   hive_schema = NULL,
   try_parse_hive_dates = TRUE,
   glob = TRUE,
-  rechunk = TRUE,
   low_memory = FALSE,
   storage_options = NULL,
   use_statistics = TRUE,
   cache = TRUE,
-  include_file_paths = NULL
+  include_file_paths = NULL,
+  rechunk
 )
 
 scan_parquet_polars(
@@ -36,12 +36,12 @@ scan_parquet_polars(
   hive_schema = NULL,
   try_parse_hive_dates = TRUE,
   glob = TRUE,
-  rechunk = FALSE,
   low_memory = FALSE,
   storage_options = NULL,
   use_statistics = TRUE,
   cache = TRUE,
-  include_file_paths = NULL
+  include_file_paths = NULL,
+  rechunk
 )
 }
 \arguments{
@@ -87,8 +87,6 @@ datetime types.}
 
 \item{glob}{Expand path given via globbing rules.}
 
-\item{rechunk}{Reallocate to contiguous memory when all chunks/files are parsed.}
-
 \item{low_memory}{Reduce memory pressure at the expense of performance}
 
 \item{storage_options}{Named vector containing options that indicate how to
@@ -114,6 +112,10 @@ can be skipped from reading.}
 
 \item{include_file_paths}{Include the path of the source file(s) as a column
 with this name.}
+
+\item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
+memory when all chunks/files are parsed. Call \verb{$rechunk()} on the output
+instead.}
 }
 \value{
 The scan function returns a LazyFrame, the read function returns a DataFrame.

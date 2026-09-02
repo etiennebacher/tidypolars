@@ -93,7 +93,6 @@ reference:
   - title: Other Polars functions
     desc: Other Polars-specific functions (most are deprecated).
     contents:
-      - fetch
       - make_unique_id
       - partitioned_output
 

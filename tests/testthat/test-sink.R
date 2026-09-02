@@ -22,34 +22,12 @@ test_that("sink_csv accepts the 'never' quote style", {
   expect_equal(readLines(dest), c("x", "a,b", "c"))
 })
 
-test_that("deprecated args in sink_csv()", {
-  dest <- tempfile(fileext = ".csv")
-  dat <- as_polars_lf(mtcars)
-
-  expect_snapshot({
-    x <- sink_csv(dat, dest, null_values = "a")
-  })
-  expect_snapshot({
-    x <- sink_csv(dat, dest, quote = "a")
-  })
-})
-
-test_that("sink_csv() resolves null_value and null_values correctly", {
+test_that("sink_csv() works with null_value", {
   dat <- as_polars_lf(data.frame(x = c(1, NA), y = c(1, 2)))
 
-  dest_old <- tempfile(fileext = ".csv")
-  expect_warning(
-    sink_csv(dat, dest_old, null_values = "OLD"),
-    "deprecated"
-  )
-  expect_identical(read.csv(dest_old)[2, "x"], "OLD")
-
-  dest_both <- tempfile(fileext = ".csv")
-  expect_warning(
-    sink_csv(dat, dest_both, null_value = "NEW", null_values = "OLD"),
-    "deprecated"
-  )
-  expect_identical(read.csv(dest_both)[2, "x"], "NEW")
+  dest <- tempfile(fileext = ".csv")
+  sink_csv(dat, dest, null_value = "NEW")
+  expect_identical(read.csv(dest)[2, "x"], "NEW")
 })
 
 test_that("basic behavior with parquet", {

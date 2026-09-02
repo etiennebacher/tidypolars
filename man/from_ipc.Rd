@@ -12,10 +12,9 @@ read_ipc_polars(
   n_rows = NULL,
   row_index_name = NULL,
   row_index_offset = 0L,
-  rechunk = FALSE,
   cache = TRUE,
   include_file_paths = NULL,
-  memory_map
+  rechunk
 )
 
 scan_ipc_polars(
@@ -24,10 +23,9 @@ scan_ipc_polars(
   n_rows = NULL,
   row_index_name = NULL,
   row_index_offset = 0L,
-  rechunk = FALSE,
   cache = TRUE,
   include_file_paths = NULL,
-  memory_map
+  rechunk
 )
 }
 \arguments{
@@ -44,15 +42,14 @@ the given name.}
 \item{row_index_offset}{Offset to start the row index column (only used if
 the name is set by \code{row_index_name}).}
 
-\item{rechunk}{Reallocate to contiguous memory when all chunks/files are parsed.}
-
 \item{cache}{Cache the result after reading.}
 
 \item{include_file_paths}{Include the path of the source file(s) as a column
 with this name.}
 
-\item{memory_map}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated
-with no replacement.}
+\item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
+memory when all chunks/files are parsed. Call \verb{$rechunk()} on the output
+instead.}
 }
 \value{
 The scan function returns a LazyFrame, the read function returns a DataFrame.

@@ -1,6 +1,22 @@
 # tidypolars (development)
 
-`tidypolars` requires `polars` >= 1.14.0.
+`tidypolars` requires `polars` >= 1.15.0.
+
+## Breaking changes and deprecations
+
+* The following arguments and functions have been removed (they were deprecated
+  in 0.14.0, released in July 2025) (#406):
+  - in `compute()` and `collect()`: `streaming`;
+  - in `read_csv_polars()` and `scan_csv_polars()`: `dtypes` and `reuse_downloaded`
+  - in `read_ndjson_polars` and `scan_ndjson_polars()`: `reuse_downloaded`
+  - in `read_ipc_polars` and `scan_ipc_polars()`: `memory_map`
+  - in `write_csv_polars()` and `sink_csv()`: `null_values` and `quote`
+  - in `write_ndjson_polars()`: `pretty` and `row_oriented`
+  - in `write_ipc_polars()`: `future`
+  - `fetch()`
+
+* Argument `rechunk` in all `read_*()` and `scan_*()` functions is deprecated and
+  has no effect anymore (#405).
 
 ## New features
 
