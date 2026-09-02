@@ -189,7 +189,6 @@ write_json_polars <- function(.data, file) {
     cli_abort("{.fn write_json_polars} can only be used on a DataFrame.")
   }
 
-  rlang::check_dots_empty()
   .data$write_json(file = file)
 }
 
