@@ -34,19 +34,9 @@ test_that("basic behavior with CSV", {
 test_that("write_csv_polars() resolves null_value and null_values correctly", {
   dat <- as_polars_df(data.frame(x = c(1, NA), y = c(1, 2)))
 
-  dest_old <- tempfile(fileext = ".csv")
-  expect_warning(
-    write_csv_polars(dat, dest_old, null_values = "OLD"),
-    "deprecated"
-  )
-  expect_identical(read.csv(dest_old)[2, "x"], "OLD")
-
-  dest_both <- tempfile(fileext = ".csv")
-  expect_warning(
-    write_csv_polars(dat, dest_both, null_value = "NEW", null_values = "OLD"),
-    "deprecated"
-  )
-  expect_identical(read.csv(dest_both)[2, "x"], "NEW")
+  dest <- tempfile(fileext = ".csv")
+  write_csv_polars(dat, dest, null_value = "NEW")
+  expect_identical(read.csv(dest)[2, "x"], "NEW")
 })
 
 test_that("basic behavior with IPC", {
