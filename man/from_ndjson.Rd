@@ -13,10 +13,10 @@ read_ndjson_polars(
   batch_size = NULL,
   n_rows = NULL,
   low_memory = FALSE,
-  rechunk = FALSE,
   row_index_name = NULL,
   row_index_offset = 0,
-  ignore_errors = FALSE
+  ignore_errors = FALSE,
+  rechunk
 )
 
 scan_ndjson_polars(
@@ -49,10 +49,6 @@ slow). Set \code{infer_schema = FALSE} to read all columns as \code{pl$String}.}
 
 \item{low_memory}{Reduce memory pressure at the expense of performance.}
 
-\item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
-memory when all chunks/files are parsed. Call \verb{$rechunk()} on the output
-instead.}
-
 \item{row_index_name}{If not \code{NULL}, this will insert a row index column with
 the given name.}
 
@@ -62,6 +58,10 @@ the name is set by \code{row_index_name}).}
 \item{ignore_errors}{Keep reading the file even if some lines yield errors.
 You can also use \code{infer_schema = FALSE} to read all columns as UTF8 to
 check which values might cause an issue.}
+
+\item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
+memory when all chunks/files are parsed. Call \verb{$rechunk()} on the output
+instead.}
 }
 \value{
 The scan function returns a LazyFrame, the read function returns a DataFrame.

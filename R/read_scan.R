@@ -296,6 +296,13 @@ read_csv_polars <- function(
       details = "This argument has no replacement."
     )
   }
+  if (!missing(rechunk)) {
+    lifecycle::deprecate_warn(
+      when = "0.20.0",
+      what = "read_csv_polars(rechunk)",
+      details = "This argument has no replacement."
+    )
+  }
 
   scan_csv_polars(
     source = source,
@@ -358,6 +365,13 @@ scan_csv_polars <- function(
   rlang::arg_match0(encoding, values = c("utf8", "utf8-lossy"))
   rlang::check_dots_empty()
 
+  if (!missing(rechunk)) {
+    lifecycle::deprecate_warn(
+      when = "0.20.0",
+      what = "scan_csv_polars(rechunk)",
+      details = "This argument has no replacement."
+    )
+  }
   if (!missing(rechunk)) {
     lifecycle::deprecate_warn(
       when = "0.20.0",
@@ -468,12 +482,19 @@ read_ndjson_polars <- function(
   batch_size = NULL,
   n_rows = NULL,
   low_memory = FALSE,
-  rechunk = FALSE,
   row_index_name = NULL,
   row_index_offset = 0,
-  ignore_errors = FALSE
+  ignore_errors = FALSE,
+  rechunk
 ) {
   rlang::check_dots_empty()
+  if (!missing(rechunk)) {
+    lifecycle::deprecate_warn(
+      when = "0.20.0",
+      what = "read_ndjson_polars(rechunk)",
+      details = "This argument has no replacement."
+    )
+  }
   if (!missing(rechunk)) {
     lifecycle::deprecate_warn(
       when = "0.20.0",
@@ -488,7 +509,6 @@ read_ndjson_polars <- function(
     batch_size = batch_size,
     n_rows = n_rows,
     low_memory = low_memory,
-    rechunk = rechunk,
     row_index_name = row_index_name,
     row_index_offset = row_index_offset,
     ignore_errors = ignore_errors
@@ -512,6 +532,13 @@ scan_ndjson_polars <- function(
   rechunk
 ) {
   rlang::check_dots_empty()
+  if (!missing(rechunk)) {
+    lifecycle::deprecate_warn(
+      when = "0.20.0",
+      what = "scan_ndjson_polars(rechunk)",
+      details = "This argument has no replacement."
+    )
+  }
   if (!missing(rechunk)) {
     lifecycle::deprecate_warn(
       when = "0.20.0",
@@ -618,6 +645,13 @@ read_ipc_polars <- function(
       details = "This argument has no replacement."
     )
   }
+  if (!missing(rechunk)) {
+    lifecycle::deprecate_warn(
+      when = "0.20.0",
+      what = "read_ipc_polars(rechunk)",
+      details = "This argument has no replacement."
+    )
+  }
 
   scan_ipc_polars(
     source = source,
@@ -644,6 +678,13 @@ scan_ipc_polars <- function(
   rechunk
 ) {
   rlang::check_dots_empty()
+  if (!missing(rechunk)) {
+    lifecycle::deprecate_warn(
+      when = "0.20.0",
+      what = "scan_ipc_polars(rechunk)",
+      details = "This argument has no replacement."
+    )
+  }
   if (!missing(rechunk)) {
     lifecycle::deprecate_warn(
       when = "0.20.0",
