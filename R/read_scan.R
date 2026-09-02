@@ -509,11 +509,11 @@ read_ndjson_polars <- function(
   batch_size = NULL,
   n_rows = NULL,
   low_memory = FALSE,
-  rechunk = FALSE,
   row_index_name = NULL,
   row_index_offset = 0,
   ignore_errors = FALSE,
-  reuse_downloaded
+  reuse_downloaded,
+  rechunk
 ) {
   rlang::check_dots_empty()
   if (!missing(reuse_downloaded)) {
@@ -537,7 +537,6 @@ read_ndjson_polars <- function(
     batch_size = batch_size,
     n_rows = n_rows,
     low_memory = low_memory,
-    rechunk = rechunk,
     row_index_name = row_index_name,
     row_index_offset = row_index_offset,
     ignore_errors = ignore_errors

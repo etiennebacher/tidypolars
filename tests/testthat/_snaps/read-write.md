@@ -105,9 +105,6 @@
       Warning:
       The `reuse_downloaded` argument of `read_ndjson_polars()` is deprecated as of tidypolars 0.14.0.
       i This argument has no replacement.
-      Warning:
-      The `rechunk` argument of `scan_ndjson_polars()` is deprecated as of tidypolars 0.20.0.
-      i This argument has no replacement.
 
 ---
 
@@ -125,9 +122,6 @@
     Condition
       Warning:
       The `rechunk` argument of `read_ndjson_polars()` is deprecated as of tidypolars 0.20.0.
-      i This argument has no replacement.
-      Warning:
-      The `rechunk` argument of `scan_ndjson_polars()` is deprecated as of tidypolars 0.20.0.
       i This argument has no replacement.
 
 # deprecated arguments in scan/read_parquet_polars
