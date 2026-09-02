@@ -87,8 +87,7 @@ from Polars to R.</p></li>
 <span>  comm_subexpr_elim <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  cluster_with_columns <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  no_optimization <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  engine <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"auto"</span>, <span class="st">"in-memory"</span>, <span class="st">"streaming"</span><span class="op">)</span>,</span>
-<span>  streaming <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  engine <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"auto"</span>, <span class="st">"in-memory"</span>, <span class="st">"streaming"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'polars_lazy_frame'</span></span>
@@ -105,7 +104,6 @@ from Polars to R.</p></li>
 <span>  cluster_with_columns <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  no_optimization <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  engine <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"auto"</span>, <span class="st">"in-memory"</span>, <span class="st">"streaming"</span><span class="op">)</span>,</span>
-<span>  streaming <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  .name_repair <span class="op">=</span> <span class="st">"check_unique"</span>,</span>
 <span>  uint8 <span class="op">=</span> <span class="st">"integer"</span>,</span>
 <span>  int64 <span class="op">=</span> <span class="st">"double"</span>,</span>
@@ -187,24 +185,20 @@ larger-than-memory data.</p></li>
 </ul></dd>
 
 
-<dt id="arg-streaming">streaming<a class="anchor" aria-label="anchor" href="#arg-streaming"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Deprecated, use <code>engine</code>
-instead.</p></dd>
-
-
 <dt id="arg--name-repair-uint-int-date-time-decimal-as-clock-class-ambiguous-non-existent">.name_repair, uint8, int64, date, time, decimal, as_clock_class, ambiguous, non_existent<a class="anchor" aria-label="anchor" href="#arg--name-repair-uint-int-date-time-decimal-as-clock-class-ambiguous-non-existent"></a></dt>
 <dd><p>Parameters to control the conversion from polars types to R. See
 <code>?polars:::as.data.frame.polars_lazy_frame</code> for explanations and accepted
 values.</p></dd>
 
+
+<dt id="arg-streaming">streaming<a class="anchor" aria-label="anchor" href="#arg-streaming"></a></dt>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Deprecated, use <code>engine</code>
+instead.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p><code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code> returns a Polars DataFrame, <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code> returns a tibble.</p>
-    </div>
-    <div class="section level2">
-    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="fetch.html">fetch()</a></code> for applying a lazy query on a subset of the data.</p></div>
     </div>
 
     <div class="section level2">

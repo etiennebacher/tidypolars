@@ -36,8 +36,7 @@ compute(
   comm_subexpr_elim = TRUE,
   cluster_with_columns = TRUE,
   no_optimization = FALSE,
-  engine = c("auto", "in-memory", "streaming"),
-  streaming = FALSE
+  engine = c("auto", "in-memory", "streaming")
 )
 
 # S3 method for class 'polars_lazy_frame'
@@ -54,7 +53,6 @@ collect(
   cluster_with_columns = TRUE,
   no_optimization = FALSE,
   engine = c("auto", "in-memory", "streaming"),
-  streaming = FALSE,
   .name_repair = "check_unique",
   uint8 = "integer",
   int64 = "double",
@@ -134,10 +132,6 @@ collect(
   - `"streaming"`: Use the streaming engine, usually faster and can
     handle larger-than-memory data.
 
-- streaming:
-
-  **\[deprecated\]** Deprecated, use `engine` instead.
-
 - .name_repair, uint8, int64, date, time, decimal, as_clock_class,
   ambiguous, non_existent:
 
@@ -145,17 +139,16 @@ collect(
   `?polars:::as.data.frame.polars_lazy_frame` for explanations and
   accepted values.
 
+- streaming:
+
+  **\[deprecated\]** Deprecated, use `engine` instead.
+
 ## Value
 
 [`compute()`](https://dplyr.tidyverse.org/reference/compute.html)
 returns a Polars DataFrame,
 [`collect()`](https://dplyr.tidyverse.org/reference/compute.html)
 returns a tibble.
-
-## See also
-
-[`fetch()`](https://tidypolars.etiennebacher.com/reference/fetch.md) for
-applying a lazy query on a subset of the data.
 
 ## Examples
 

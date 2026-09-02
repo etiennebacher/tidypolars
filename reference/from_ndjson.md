@@ -17,7 +17,6 @@ read_ndjson_polars(
   row_index_name = NULL,
   row_index_offset = 0,
   ignore_errors = FALSE,
-  reuse_downloaded,
   rechunk
 )
 
@@ -31,7 +30,6 @@ scan_ndjson_polars(
   row_index_name = NULL,
   row_index_offset = 0,
   ignore_errors = FALSE,
-  reuse_downloaded,
   rechunk
 )
 ```
@@ -81,10 +79,6 @@ scan_ndjson_polars(
   Keep reading the file even if some lines yield errors. You can also
   use `infer_schema = FALSE` to read all columns as UTF8 to check which
   values might cause an issue.
-
-- reuse_downloaded:
-
-  **\[deprecated\]** Deprecated with no replacement.
 
 - rechunk:
 

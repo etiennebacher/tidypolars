@@ -30,9 +30,7 @@ sink_csv(
   simplify_expression = TRUE,
   slice_pushdown = TRUE,
   no_optimization = FALSE,
-  mkdir = FALSE,
-  quote,
-  null_values
+  mkdir = FALSE
 )
 ```
 
@@ -152,14 +150,6 @@ sink_csv(
 
   Recursively create all the directories in the path.
 
-- quote:
-
-  **\[deprecated\]** Deprecated, use `quote_char` instead.
-
-- null_values:
-
-  **\[deprecated\]** Deprecated, use `null_value` instead.
-
 ## Value
 
 The input LazyFrame.
@@ -209,7 +199,7 @@ sink_csv(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
 #> Warning: `partition_by_key()` was deprecated in tidypolars 0.16.0.
 #> ℹ Please use `partition_by(key = )` instead.
 fs::dir_tree(out_path)
-#> /tmp/RtmpIIjV4o/file1bd149c60a9
+#> /tmp/Rtmpe463JP/file1c3853ee10de
 #> ├── am=0.0
 #> │   ├── cyl=4.0
 #> │   │   └── 00000000.csv
@@ -231,7 +221,7 @@ sink_csv(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
 #> Warning: `partition_by_max_size()` was deprecated in tidypolars 0.16.0.
 #> ℹ Please use `partition_by(max_rows_per_file = )` instead.
 fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-#> /tmp/RtmpIIjV4o/file1bd14810f99c
+#> /tmp/Rtmpe463JP/file1c38115a9ebd
 #> ├── 00000000.csv
 #> ├── 00000001.csv
 #> ├── 00000002.csv

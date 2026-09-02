@@ -76,9 +76,7 @@ crashes because of too small memory.</p>
 <span>  simplify_expression <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  slice_pushdown <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  no_optimization <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  mkdir <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  <span class="va">quote</span>,</span>
-<span>  <span class="va">null_values</span></span>
+<span>  mkdir <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -196,16 +194,6 @@ is <code>TRUE</code>).</p></dd>
 <dt id="arg-mkdir">mkdir<a class="anchor" aria-label="anchor" href="#arg-mkdir"></a></dt>
 <dd><p>Recursively create all the directories in the path.</p></dd>
 
-
-<dt id="arg-quote">quote<a class="anchor" aria-label="anchor" href="#arg-quote"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Deprecated, use <code>quote_char</code>
-instead.</p></dd>
-
-
-<dt id="arg-null-values">null_values<a class="anchor" aria-label="anchor" href="#arg-null-values"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Deprecated, use
-<code>null_value</code> instead.</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -259,7 +247,7 @@ number of rows. See <code><a href="partitioned_output.html">partition_by()</a></
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`partition_by_key()` was deprecated in tidypolars 0.16.0.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `partition_by(key = )` instead.</span>
 <span class="r-in"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">out_path</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpIIjV4o/file1bd149c60a9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/Rtmpe463JP/file1c3853ee10de</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── <span style="color: #0000BB; font-weight: bold;">am=0.0</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │   ├── <span style="color: #0000BB; font-weight: bold;">cyl=4.0</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │   │   └── 00000000.csv</span>
@@ -281,7 +269,7 @@ number of rows. See <code><a href="partitioned_output.html">partition_by()</a></
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`partition_by_max_size()` was deprecated in tidypolars 0.16.0.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `partition_by(max_rows_per_file = )` instead.</span>
 <span class="r-in"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">out_path</span><span class="op">)</span> <span class="co"># mtcars has 32 rows so we have 7 output files</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpIIjV4o/file1bd14810f99c</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/Rtmpe463JP/file1c38115a9ebd</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000000.csv</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000001.csv</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000002.csv</span>

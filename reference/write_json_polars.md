@@ -5,7 +5,7 @@ Export data to JSON file(s)
 ## Usage
 
 ``` r
-write_json_polars(.data, file, ..., pretty = FALSE, row_oriented = FALSE)
+write_json_polars(.data, file)
 ```
 
 ## Arguments
@@ -17,18 +17,6 @@ write_json_polars(.data, file, ..., pretty = FALSE, row_oriented = FALSE)
 - file:
 
   File path to which the result should be written.
-
-- ...:
-
-  Ignored.
-
-- pretty:
-
-  **\[deprecated\]** Deprecated with no replacement.
-
-- row_oriented:
-
-  **\[deprecated\]** Deprecated with no replacement.
 
 ## Value
 

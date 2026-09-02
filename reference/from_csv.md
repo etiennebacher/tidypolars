@@ -32,8 +32,6 @@ read_csv_polars(
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
   include_file_paths = NULL,
-  dtypes,
-  reuse_downloaded,
   rechunk
 )
 
@@ -62,8 +60,6 @@ scan_csv_polars(
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
   include_file_paths = NULL,
-  dtypes,
-  reuse_downloaded,
   rechunk
 )
 ```
@@ -192,14 +188,6 @@ scan_csv_polars(
 - include_file_paths:
 
   Include the path of the source file(s) as a column with this name.
-
-- dtypes:
-
-  **\[deprecated\]** Deprecated, use `schema_overrides` instead.
-
-- reuse_downloaded:
-
-  **\[deprecated\]** Deprecated with no replacement.
 
 - rechunk:
 
@@ -340,17 +328,17 @@ scan_csv_polars(dest_folder, include_file_paths = "file_path") |>
 #> │ ---  ┆ --- ┆ ---   ┆ --- ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---                             │
 #> │ f64  ┆ i64 ┆ f64   ┆ i64 ┆   ┆ i64 ┆ i64  ┆ i64  ┆ str                             │
 #> ╞══════╪═════╪═══════╪═════╪═══╪═════╪══════╪══════╪═════════════════════════════════╡
-#> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │
-#> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │
-#> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │
-#> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │
-#> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │
+#> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c381d1956c9/output… │
+#> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c381d1956c9/output… │
+#> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c381d1956c9/output… │
+#> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c381d1956c9/output… │
+#> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c381d1956c9/output… │
 #> │ …    ┆ …   ┆ …     ┆ …   ┆ … ┆ …   ┆ …    ┆ …    ┆ …                               │
-#> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1bd14dd65708/output… │
-#> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 4    ┆ 2    ┆ output/file1bd14dd65708/output… │
-#> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 5    ┆ 2    ┆ output/file1bd14dd65708/output… │
-#> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1bd14dd65708/output… │
-#> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1bd14dd65708/output… │
+#> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c381d1956c9/output… │
+#> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 4    ┆ 2    ┆ output/file1c381d1956c9/output… │
+#> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 5    ┆ 2    ┆ output/file1c381d1956c9/output… │
+#> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c381d1956c9/output… │
+#> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c381d1956c9/output… │
 #> └──────┴─────┴───────┴─────┴───┴─────┴──────┴──────┴─────────────────────────────────┘
 
 

@@ -502,9 +502,8 @@
     [`write_ipc_polars()`](https://tidypolars.etiennebacher.com/reference/write_ipc_polars.md):
     - `future` -\> `compat_level`
 
-- [`fetch()`](https://tidypolars.etiennebacher.com/reference/fetch.md)
-  is deprecated, use [`head()`](https://rdrr.io/r/utils/head.html)
-  before
+- `fetch()` is deprecated, use
+  [`head()`](https://rdrr.io/r/utils/head.html) before
   [`collect()`](https://dplyr.tidyverse.org/reference/compute.html)
   instead
   ([\#194](https://github.com/etiennebacher/tidypolars/issues/194)).
@@ -937,7 +936,7 @@
 - New argument `cluster_with_columns` in
   [`collect()`](https://dplyr.tidyverse.org/reference/compute.html),
   [`compute()`](https://dplyr.tidyverse.org/reference/compute.html), and
-  [`fetch()`](https://tidypolars.etiennebacher.com/reference/fetch.md).
+  `fetch()`.
 
 - Add a global option `tidypolars_unknown_args` to control what happens
   when `tidypolars` doesn’t know how to handle an argument in a
@@ -1435,8 +1434,7 @@
 
 ### New features
 
-- Rename `pl_fetch()` to
-  [`fetch()`](https://tidypolars.etiennebacher.com/reference/fetch.md).
+- Rename `pl_fetch()` to `fetch()`.
 
 - New functions supported: `describe()`,
   [`sink_csv()`](https://tidypolars.etiennebacher.com/reference/sink_csv.md),
@@ -1485,8 +1483,7 @@
   [`sink_parquet()`](https://tidypolars.etiennebacher.com/reference/sink_parquet.md)
   ([\#38](https://github.com/etiennebacher/tidypolars/issues/38)).
 
-- Support
-  [`fetch()`](https://tidypolars.etiennebacher.com/reference/fetch.md)
+- Support `fetch()`
   ([\#42](https://github.com/etiennebacher/tidypolars/issues/42)).
 
 - Support for additional `stringr` functions:

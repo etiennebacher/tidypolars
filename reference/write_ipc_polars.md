@@ -10,8 +10,7 @@ write_ipc_polars(
   file,
   compression = "uncompressed",
   ...,
-  compat_level = "newest",
-  future
+  compat_level = "newest"
 )
 ```
 
@@ -49,10 +48,6 @@ write_ipc_polars(
     (Low compatibility).
 
   - `"oldest"`: Same as 0 (High compatibility).
-
-- future:
-
-  **\[deprecated\]** Deprecated, use `compat_level` instead.
 
 ## Value
 

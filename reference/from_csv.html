@@ -75,8 +75,6 @@ scan_csv_polars() imports the data as a Polars LazyFrame."><meta property="og:im
 <span>  raise_if_empty <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  truncate_ragged_lines <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  include_file_paths <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">dtypes</span>,</span>
-<span>  <span class="va">reuse_downloaded</span>,</span>
 <span>  <span class="va">rechunk</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -105,8 +103,6 @@ scan_csv_polars() imports the data as a Polars LazyFrame."><meta property="og:im
 <span>  raise_if_empty <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  truncate_ragged_lines <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  include_file_paths <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">dtypes</span>,</span>
-<span>  <span class="va">reuse_downloaded</span>,</span>
 <span>  <span class="va">rechunk</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -238,16 +234,6 @@ DataFrame or LazyFrame.</p></dd>
 <dt id="arg-include-file-paths">include_file_paths<a class="anchor" aria-label="anchor" href="#arg-include-file-paths"></a></dt>
 <dd><p>Include the path of the source file(s) as a column
 with this name.</p></dd>
-
-
-<dt id="arg-dtypes">dtypes<a class="anchor" aria-label="anchor" href="#arg-dtypes"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Deprecated,
-use <code>schema_overrides</code> instead.</p></dd>
-
-
-<dt id="arg-reuse-downloaded">reuse_downloaded<a class="anchor" aria-label="anchor" href="#arg-reuse-downloaded"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a>
-Deprecated with no replacement.</p></dd>
 
 
 <dt id="arg-rechunk">rechunk<a class="anchor" aria-label="anchor" href="#arg-rechunk"></a></dt>
@@ -389,17 +375,17 @@ instead.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ ---  ┆ --- ┆ ---   ┆ --- ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---                             │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ f64  ┆ i64 ┆ f64   ┆ i64 ┆   ┆ i64 ┆ i64  ┆ i64  ┆ str                             │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞══════╪═════╪═══════╪═════╪═══╪═════╪══════╪══════╪═════════════════════════════════╡</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1bd14dd65708/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c381d1956c9/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c381d1956c9/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c381d1956c9/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c381d1956c9/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c381d1956c9/output… │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ …    ┆ …   ┆ …     ┆ …   ┆ … ┆ …   ┆ …    ┆ …    ┆ …                               │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1bd14dd65708/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 4    ┆ 2    ┆ output/file1bd14dd65708/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 5    ┆ 2    ┆ output/file1bd14dd65708/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1bd14dd65708/output… │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1bd14dd65708/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c381d1956c9/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 4    ┆ 2    ┆ output/file1c381d1956c9/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 5    ┆ 2    ┆ output/file1c381d1956c9/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c381d1956c9/output… │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c381d1956c9/output… │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └──────┴─────┴───────┴─────┴───┴─────┴──────┴──────┴─────────────────────────────────┘</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>

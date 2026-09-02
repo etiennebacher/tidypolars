@@ -186,14 +186,8 @@ Other functions or S3 methods.
 
 Other Polars-specific functions (most are deprecated).
 
-- [`fetch()`](https://tidypolars.etiennebacher.com/reference/fetch.md)
-  **\[deprecated\]** :
-
-  Fetch `n` rows of a LazyFrame
-
 - [`make_unique_id()`](https://tidypolars.etiennebacher.com/reference/make_unique_id.md)
   **\[deprecated\]** : Create a column with unique id per row values
-
 - [`partition_by()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
   [`partition_by_key()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
   [`partition_by_max_size()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)

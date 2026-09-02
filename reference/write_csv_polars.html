@@ -62,9 +62,7 @@
 <span>  time_format <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  float_precision <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  null_value <span class="op">=</span> <span class="st">""</span>,</span>
-<span>  quote_style <span class="op">=</span> <span class="st">"necessary"</span>,</span>
-<span>  <span class="va">quote</span>,</span>
-<span>  <span class="va">null_values</span></span>
+<span>  quote_style <span class="op">=</span> <span class="st">"necessary"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -149,16 +147,6 @@ then quotes will be used even if they aren`t strictly necessary.</p></li>
 <li><p><code>"never"</code>: This never puts quotes around fields, even if that results in
 invalid CSV data (e.g. by not quoting strings containing the separator).</p></li>
 </ul></dd>
-
-
-<dt id="arg-quote">quote<a class="anchor" aria-label="anchor" href="#arg-quote"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Deprecated, use <code>quote_char</code>
-instead.</p></dd>
-
-
-<dt id="arg-null-values">null_values<a class="anchor" aria-label="anchor" href="#arg-null-values"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Deprecated, use
-<code>null_value</code> instead.</p></dd>
 
 </dl></div>
     <div class="section level2">

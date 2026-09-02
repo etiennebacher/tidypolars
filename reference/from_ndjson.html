@@ -60,7 +60,6 @@ scan_ndjson_polars() imports the data as a Polars LazyFrame."><meta property="og
 <span>  row_index_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_index_offset <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  ignore_errors <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  <span class="va">reuse_downloaded</span>,</span>
 <span>  <span class="va">rechunk</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -74,7 +73,6 @@ scan_ndjson_polars() imports the data as a Polars LazyFrame."><meta property="og
 <span>  row_index_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  row_index_offset <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  ignore_errors <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  <span class="va">reuse_downloaded</span>,</span>
 <span>  <span class="va">rechunk</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -125,11 +123,6 @@ the name is set by <code>row_index_name</code>).</p></dd>
 <dd><p>Keep reading the file even if some lines yield errors.
 You can also use <code>infer_schema = FALSE</code> to read all columns as UTF8 to
 check which values might cause an issue.</p></dd>
-
-
-<dt id="arg-reuse-downloaded">reuse_downloaded<a class="anchor" aria-label="anchor" href="#arg-reuse-downloaded"></a></dt>
-<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a>
-Deprecated with no replacement.</p></dd>
 
 
 <dt id="arg-rechunk">rechunk<a class="anchor" aria-label="anchor" href="#arg-rechunk"></a></dt>

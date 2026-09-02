@@ -20,9 +20,7 @@ write_csv_polars(
   time_format = NULL,
   float_precision = NULL,
   null_value = "",
-  quote_style = "necessary",
-  quote,
-  null_values
+  quote_style = "necessary"
 )
 ```
 
@@ -108,14 +106,6 @@ write_csv_polars(
   - `"never"`: This never puts quotes around fields, even if that
     results in invalid CSV data (e.g. by not quoting strings containing
     the separator).
-
-- quote:
-
-  **\[deprecated\]** Deprecated, use `quote_char` instead.
-
-- null_values:
-
-  **\[deprecated\]** Deprecated, use `null_value` instead.
 
 ## Value
 

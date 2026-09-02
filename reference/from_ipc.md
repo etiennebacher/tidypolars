@@ -15,7 +15,6 @@ read_ipc_polars(
   row_index_offset = 0L,
   cache = TRUE,
   include_file_paths = NULL,
-  memory_map,
   rechunk
 )
 
@@ -27,7 +26,6 @@ scan_ipc_polars(
   row_index_offset = 0L,
   cache = TRUE,
   include_file_paths = NULL,
-  memory_map,
   rechunk
 )
 ```
@@ -64,10 +62,6 @@ scan_ipc_polars(
 - include_file_paths:
 
   Include the path of the source file(s) as a column with this name.
-
-- memory_map:
-
-  **\[deprecated\]** Deprecated with no replacement.
 
 - rechunk:
 
