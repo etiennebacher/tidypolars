@@ -1074,11 +1074,7 @@ check_rowwise_dots <- function(...) {
   if (isTRUE(is_rowwise)) {
     out <- pl$concat_list(!!!dots)
   } else {
-    if (is.list(dots)) {
-      out <- dots[[1]]
-    } else {
-      out <- dots
-    }
+    out <- dots
   }
   list(is_rowwise = is_rowwise, expr = out)
 }

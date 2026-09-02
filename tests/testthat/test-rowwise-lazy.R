@@ -26,7 +26,11 @@ test_that("basic behavior with statistical functions works", {
         median2 = median(c(x, y, z), na.rm = TRUE),
         min2 = min(c(x, y, z), na.rm = TRUE),
         max2 = max(c(x, y, z), na.rm = TRUE),
-        sd2 = sd(c(x, y, z), na.rm = TRUE)
+        sd2 = sd(c(x, y, z), na.rm = TRUE),
+        sum_args = sum(x, y, 1, na.rm = TRUE),
+        min_args = min(x, y, 0, na.rm = TRUE),
+        max_args = max(x, y, 10, na.rm = TRUE),
+        sd_args = sd(x, y, 10, na.rm = TRUE)
       ),
     test_df |>
       mutate(
@@ -43,7 +47,11 @@ test_that("basic behavior with statistical functions works", {
         median2 = median(c(x, y, z), na.rm = TRUE),
         min2 = min(c(x, y, z), na.rm = TRUE),
         max2 = max(c(x, y, z), na.rm = TRUE),
-        sd2 = sd(c(x, y, z), na.rm = TRUE)
+        sd2 = sd(c(x, y, z), na.rm = TRUE),
+        sum_args = sum(x, y, 1, na.rm = TRUE),
+        min_args = min(x, y, 0, na.rm = TRUE),
+        max_args = max(x, y, 10, na.rm = TRUE),
+        sd_args = sd(x, y, 10, na.rm = TRUE)
       ),
     ignore_attr = TRUE
   )
