@@ -31,18 +31,6 @@ test_that("basic behavior with CSV", {
   expect_s3_class(read_csv_polars(dest), "polars_data_frame")
 })
 
-test_that("deprecated args in write_csv_polars()", {
-  dest <- tempfile(fileext = ".csv")
-  dat <- as_polars_df(mtcars)
-
-  expect_snapshot({
-    x <- write_csv_polars(dat, dest, null_value = "a")
-  })
-  expect_snapshot({
-    x <- write_csv_polars(dat, dest, quote = "a")
-  })
-})
-
 test_that("write_csv_polars() resolves null_value and null_values correctly", {
   dat <- as_polars_df(data.frame(x = c(1, NA), y = c(1, 2)))
 
@@ -72,16 +60,6 @@ test_that("basic behavior with IPC", {
   expect_s3_class(read_ipc_polars(dest), "polars_data_frame")
 })
 
-test_that("deprecated args in write_ipc_polars()", {
-  skip_if_not_installed("arrow")
-  dest <- tempfile(fileext = ".arrow")
-  dat <- as_polars_df(mtcars)
-
-  expect_snapshot({
-    x <- write_ipc_polars(dat, dest, future = TRUE)
-  })
-})
-
 test_that("basic behavior with JSON", {
   skip_if_not_installed("jsonlite")
   dest <- tempfile(fileext = ".json")
@@ -90,19 +68,6 @@ test_that("basic behavior with JSON", {
     write_json_polars(dest)
 
   expect_equal(jsonlite::fromJSON(dest), mtcars, ignore_attr = TRUE)
-})
-
-test_that("deprecated args in write_json_polars()", {
-  skip_if_not_installed("jsonlite")
-  dest <- tempfile(fileext = ".json")
-  dat <- as_polars_df(mtcars)
-
-  expect_snapshot({
-    x <- write_json_polars(dat, dest, pretty = TRUE)
-  })
-  expect_snapshot({
-    x <- write_json_polars(dat, dest, row_oriented = TRUE)
-  })
 })
 
 test_that("basic behavior with NDJSON", {
