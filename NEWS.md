@@ -1,6 +1,11 @@
 # tidypolars (development)
 
-`tidypolars` requires `polars` >= 1.14.0.
+`tidypolars` requires `polars` >= 1.15.0.
+
+## Deprecations
+
+* Argument `rechunk` in all `read_*()` and `scan_*()` functions is deprecated and
+  has no effect anymore (#405).
 
 ## New features
 

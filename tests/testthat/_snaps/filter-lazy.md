@@ -1,7 +1,7 @@
 # error message when using =
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `filter()`:
       ! We detected a named input.
@@ -11,7 +11,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `filter()`:
       ! We detected a named input.
@@ -21,7 +21,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `filter()`:
       ! We detected a named input.
@@ -31,33 +31,27 @@
 # Polars runtime errors only show the root message
 
     Code
-      current$collect()
+      compute(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `compute()`:
       ! cannot compare string with numeric type (f64)
 
 ---
 
     Code
-      current$collect()
+      compute(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `compute()`:
       ! cannot compare string with numeric type (f64)
 
 ---
 
     Code
-      current$collect()
+      compute(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `compute()`:
       ! regex error: regex parse error:
-          a{2,1}
-           ^^^^^
+      a{2,1}
+      ^^^^^
       error: invalid repetition count range, the start must be <= the end
 

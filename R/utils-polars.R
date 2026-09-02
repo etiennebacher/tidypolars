@@ -27,6 +27,9 @@ with_polars_errors <- function(expr, call = caller_env()) {
         e <- e$parent
       }
       error <- paste(c(conditionMessage(e), e$body), collapse = "\n")
+      # Polars adds a message "This error occurred in the following expression...",
+      # which is helpful for Python users but just confusing for tidypolars users.
+      error <- gsub("\\s+This error occurred in.*", "", error)
       # cli collapses newlines into spaces, so we use cli's hard line breaks instead (\f)
       error <- gsub("\n+", "\f", error)
       cli_abort("{error}", call = call)

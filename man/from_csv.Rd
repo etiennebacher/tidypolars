@@ -23,7 +23,6 @@ read_csv_polars(
   n_rows = NULL,
   encoding = "utf8",
   low_memory = FALSE,
-  rechunk = TRUE,
   skip_rows_after_header = 0,
   row_index_name = NULL,
   row_index_offset = 0,
@@ -33,7 +32,8 @@ read_csv_polars(
   truncate_ragged_lines = FALSE,
   include_file_paths = NULL,
   dtypes,
-  reuse_downloaded
+  reuse_downloaded,
+  rechunk
 )
 
 scan_csv_polars(
@@ -53,7 +53,6 @@ scan_csv_polars(
   n_rows = NULL,
   encoding = "utf8",
   low_memory = FALSE,
-  rechunk = TRUE,
   skip_rows_after_header = 0,
   row_index_name = NULL,
   row_index_offset = 0,
@@ -63,7 +62,8 @@ scan_csv_polars(
   truncate_ragged_lines = FALSE,
   include_file_paths = NULL,
   dtypes,
-  reuse_downloaded
+  reuse_downloaded,
+  rechunk
 )
 }
 \arguments{
@@ -119,10 +119,6 @@ UTF8 values are replaced with "?" characters.}
 
 \item{low_memory}{Reduce memory pressure at the expense of performance.}
 
-\item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
-memory when all chunks/files are parsed. Call \verb{$rechunk()} on the output
-instead.}
-
 \item{skip_rows_after_header}{Skip this number of rows when the header is
 parsed.}
 
@@ -153,6 +149,10 @@ use \code{schema_overrides} instead.}
 
 \item{reuse_downloaded}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 Deprecated with no replacement.}
+
+\item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
+memory when all chunks/files are parsed. Call \verb{$rechunk()} on the output
+instead.}
 }
 \value{
 The scan function returns a LazyFrame, the read function returns a DataFrame.

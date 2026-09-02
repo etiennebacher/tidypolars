@@ -4,7 +4,7 @@
       mutate(test_pl, foo = unique(y))
     Condition
       Error in `mutate()`:
-      ! lengths don't match: unable to add a column of length 4 to a DataFrame of height 5
+      ! lengths don't match: can't broadcast Series 'foo' of length 4 to length 5
 
 # trunc() works
 

@@ -1,7 +1,7 @@
 # basic behavior works
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         sort(
@@ -33,7 +33,7 @@
 # head()/tail() start recording when they are the first verb
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         head(n = 6L)
@@ -54,7 +54,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         tail(n = 3)
@@ -72,7 +72,7 @@
 # show_query() works with group_by() and summarize()
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         group_by(
@@ -98,7 +98,7 @@
 # show_query() works with joins and shows the query of both inputs
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         select("cyl", "mpg")$
@@ -140,7 +140,7 @@
 # show_query() works with across()
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
@@ -173,7 +173,7 @@
 # show_query() records magrittr pipe translations
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(tibble(x = 1:3))$
         with_columns(
@@ -203,7 +203,7 @@
 # user-defined functions returning polars expressions are recorded
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(mpg_std = pl_standardize(pl$col("mpg")))$
@@ -230,7 +230,7 @@
 # long vectors are truncated in the query
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
@@ -258,7 +258,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
@@ -286,7 +286,7 @@
 # count() doesn't record a `NULL` in sort() when input isn't grouped
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         group_by(am = pl$col("am"))$
@@ -306,7 +306,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         group_by(am = pl$col("am"))$
@@ -326,7 +326,7 @@
 # non-syntactic argument names are backquoted in the query
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         filter(pl$col("cyl") > pl$lit(4))$
@@ -343,7 +343,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Output
       test_pl$pivot(
         values = "v",
@@ -368,7 +368,7 @@
 # the input data is not modified by the recording
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `show_query()`:
       ! No polars query was recorded for this object because it didn't go through tidypolars functions.
@@ -377,7 +377,7 @@
 # the error mentions recording only when the option is FALSE
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `show_query()`:
       ! No polars query was recorded for this object because it didn't go through tidypolars functions.
@@ -386,7 +386,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `show_query()`:
       ! No polars query was recorded for this object because the option `tidypolars_record_query` is `FALSE`.
@@ -396,7 +396,7 @@
 # show_query() rejects extra arguments
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `show_query()`:
       ! `...` must be empty.
@@ -406,7 +406,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `show_query()`:
       ! `...` must be empty.
@@ -417,7 +417,7 @@
 # the query is wrapped at the console width
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
@@ -436,7 +436,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
@@ -466,17 +466,15 @@
 # errors in the pipeline are not affected by the recording
 
     Code
-      current$collect()
+      compute(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `compute()`:
       ! conversion from `str` to `i32` failed in column 'char1' for 2 out of 2 values: ["a", "b"]
 
 # option tidypolars_record_query = FALSE disables the recording
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `show_query()`:
       ! No polars query was recorded for this object because the option `tidypolars_record_query` is `FALSE`.
@@ -486,7 +484,7 @@
 # the input name falls back to a placeholder when it is too long
 
     Code
-      current$collect()
+      compute(current)
     Output
       `<data>`$filter(pl$col("x") == pl$lit(1))
       shape: (1, 7)
@@ -501,7 +499,7 @@
 # data.frame arguments with non-syntactic names are rebuilt faithfully
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(dat)$
         pivot(
@@ -527,7 +525,7 @@
 # long vectors that deparse compactly are kept in the query
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
@@ -555,7 +553,7 @@
 # values too long to display fall back to the code producing them
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(data.frame(txt = "a"))$
         filter(pl$col("txt") == pl$lit(strrep("a", 400)))
@@ -570,7 +568,7 @@
 # the source of a value is only used when it is short enough
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
@@ -599,7 +597,7 @@
 # arguments that don't fit on a line are wrapped too
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
@@ -647,7 +645,7 @@
 # a long value that is not a method call is left on its own line
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(data.frame(txt = "x"))$
         filter(
@@ -667,7 +665,7 @@
 # vignette 'Getting started': who pipeline
 
     Code
-      current$collect()
+      compute(current)
     Output
       who_pl$filter(pl$col("year") > pl$lit(1990))$
         drop_nulls("newrel_f3544")$
@@ -711,7 +709,7 @@
 # vignette 'R and Polars expressions': mean() trim argument is kept
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         with_columns(
@@ -741,7 +739,7 @@
 # vignette 'R and Polars expressions': external object in filter
 
     Code
-      current$collect()
+      compute(current)
     Output
       pl$LazyFrame(foo = c(2, 1, 2))$
         filter(pl$col("foo") >= pl$lit(1:3))
@@ -757,7 +755,7 @@
 # show_query() example: grouped mutate with .by
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         filter(pl$col("cyl") == pl$lit(4))$
@@ -784,7 +782,7 @@
 # mutate() example: logical operation and overwriting a column
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(iris)$
         with_columns(
@@ -813,7 +811,7 @@
 # mutate() example: across() with a list of functions and .names
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(iris)$
         with_columns(
@@ -854,7 +852,7 @@
 # filter() example: grouped filter with .by
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(dplyr::starwars)$
         select("name", "mass", "gender")$
@@ -881,7 +879,7 @@
 # pivot_longer() example: relig_income
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(tidyr::relig_income)$
         unpivot(
@@ -915,7 +913,7 @@
 # separate() example: split on a dot
 
     Code
-      current$collect()
+      compute(current)
     Output
       polars::pl$LazyFrame(x = c(NA, "x.y", "x.z", "y.z"))$
         with_columns(
@@ -942,7 +940,7 @@
 # unite() example: combine columns with a separator
 
     Code
-      current$collect()
+      compute(current)
     Output
       polars::pl$LazyFrame(
         year = 2009:2011,
@@ -973,7 +971,7 @@
 # relocate() example: move columns with .after
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(mtcars)$
         select(
@@ -1001,7 +999,7 @@
 # slice example: slice_head() and slice_tail()
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(iris)$
         head(3)
@@ -1019,7 +1017,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Output
       as_polars_lf(iris)$
         tail(3)
@@ -1037,7 +1035,7 @@
 # translated base functions: maths and rounding
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         a = pl$col("num")$abs(),
@@ -1066,7 +1064,7 @@
 # translated base functions: trigonometry
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         a = pl$col("num")$cos(),
@@ -1095,7 +1093,7 @@
 # translated base functions: cumulative and diff
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         cs = pl$when(pl$col("int")$is_null()$cum_max())$
@@ -1126,7 +1124,7 @@
 # translated base functions: anyDuplicated and duplicated
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         dup = pl$col("grp")$is_first_distinct()$not() &
@@ -1158,7 +1156,7 @@
 # translated base functions: aggregations in summarize()
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$select(
         al = (pl$col("int") > pl$lit(0))$all(ignore_nulls = FALSE),
@@ -1179,7 +1177,7 @@
 # translated base functions: string manipulation
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         n = pl$col("txt")$str$len_chars(),
@@ -1213,7 +1211,7 @@
 # translated base functions: type conversions
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         ch = pl$col("int")$cast(pl$String, strict = FALSE),
@@ -1236,7 +1234,7 @@
 # translated base functions: is.* checks
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         na = pl$col("num")$is_null(),
@@ -1266,7 +1264,7 @@
 # translated base functions: %in% and %notin%
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         ins = pl$col("grp")$is_in(pl$lit("a")$implode(), nulls_equal = TRUE),
@@ -1288,7 +1286,7 @@
 # translated dplyr functions: between, coalesce, near, if_else
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         bt = pl$col("int")$
@@ -1322,7 +1320,7 @@
 # translated dplyr functions: case_when (with and without default)
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         with_default = pl$when(pl$col("int") > pl$lit(3))$
@@ -1355,7 +1353,7 @@
 # translated dplyr functions: case_match (with and without default)
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         with_default = pl$when(pl$col("grp")$is_in(pl$lit("a")$implode()))$
@@ -1388,7 +1386,7 @@
 # translated dplyr functions: recode_values, replace_values, replace_when
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         rc = pl$col("grp")$replace_strict(old = "a", new = "AA", default = NA),
@@ -1413,7 +1411,7 @@
 # translated dplyr functions: when_all and when_any
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         wall = pl$all_horizontal(pl$col("lgl1"), pl$col("lgl2")),
@@ -1435,7 +1433,7 @@
 # translated dplyr functions: window functions
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         lg = pl$col("int")$shift(1),
@@ -1461,7 +1459,7 @@
 # translated dplyr functions: reducers in summarize()
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$select(
         f = pl$col("grp")$first(),
@@ -1482,7 +1480,7 @@
 # translated stats functions: median, sd, var
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$select(
         md = pl$col("num")$median(),
@@ -1505,7 +1503,7 @@
 # translated stringr functions: detection
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         det = pl$col("txt")$str$contains("o", literal = FALSE),
@@ -1530,7 +1528,7 @@
 # translated stringr functions: replacement
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         rp = pl$col("txt")$str$replace("o", "0", literal = FALSE),
@@ -1558,7 +1556,7 @@
 # translated stringr functions: case
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         up = pl$col("txt")$str$to_uppercase(),
@@ -1586,7 +1584,7 @@
 # translated stringr functions: padding and trimming
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         pd = pl$col("txt")$str$pad_start(length = 10, fill_char = " "),
@@ -1614,7 +1612,7 @@
 # translated stringr functions: extraction
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         ex = pl$col("txt")$str$extract(pl$lit("[a-z]+"), group_index = 0),
@@ -1643,7 +1641,7 @@
 # translated lubridate functions: date components
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         yr = pl$col("date")$dt$year(),
@@ -1682,7 +1680,7 @@
 # translated lubridate functions: datetime handling
 
     Code
-      current$collect()
+      compute(current)
     Output
       dat$with_columns(
         dte = pl$col("time")$dt$date(),
@@ -1713,7 +1711,7 @@
 # check query for fill, replace_na, drop_na
 
     Code
-      current$collect()
+      compute(current)
     Output
       test_pl$with_columns(pl$col("x")$fill_null(strategy = "forward"))
       shape: (3, 2)
@@ -1730,7 +1728,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Output
       test_pl$with_columns(
         pl$col("x")$fill_null(0),
@@ -1750,7 +1748,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Output
       test_pl$drop_nulls()
       shape: (2, 2)
@@ -1766,7 +1764,7 @@
 # check query for bind_rows_polars, bind_cols_polars
 
     Code
-      current$collect()
+      compute(current)
     Output
       pl$concat(
         test_pl,
@@ -1788,7 +1786,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Output
       pl$concat(
         test_pl,
@@ -1808,7 +1806,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Output
       pl$concat(
         test_pl,
@@ -1830,7 +1828,7 @@
 # check query for complete()
 
     Code
-      current$collect()
+      compute(current)
     Output
       test_pl$select(pl$col("country", "year")$unique()$sort()$implode())$
         explode(
@@ -1867,7 +1865,7 @@
 # check query for uncount()
 
     Code
-      current$collect()
+      compute(current)
     Output
       test_pl$with_columns(pl$col("x")$repeat_by(pl$col("n")))$
         explode(
@@ -1889,7 +1887,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Output
       test_pl$with_columns(pl$col("x")$repeat_by(pl$col("n")))$
         explode(
@@ -1912,7 +1910,7 @@
 # check query for rowwise()
 
     Code
-      current$collect()
+      compute(current)
     Output
       test_pl$with_columns(
         total = pl$concat_list(pl$col("x"), pl$col("y"), pl$col("z"))$
@@ -1937,7 +1935,7 @@
 # check query for unnest_longer_polars()
 
     Code
-      current$collect()
+      compute(current)
     Output
       test_pl$explode(
         "values",
@@ -1961,7 +1959,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Output
       test_pl$with_row_index(name = "__tidypolars_row_id__")$
         explode(
@@ -2002,7 +2000,7 @@
 # check query for separate_longer_delim_polars() and separate_longer_position_polars()
 
     Code
-      current$collect()
+      compute(current)
     Output
       test_pl$with_columns(pl$col("x")$cast(pl$String)$str$split(","))$
         explode(
@@ -2026,7 +2024,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Output
       test_pl$with_columns(pl$col("x")$cast(pl$String)$str$extract_all(".{1,2}"))$
         filter(pl$all_horizontal(pl$col("x")$is_null() | pl$col("x")$list$len() > 0))$
@@ -2051,7 +2049,7 @@
 # check query for make_unique_id()
 
     Code
-      current$collect()
+      compute(current)
     Output
       test_pl$with_columns(pl$struct(c("x", "y"))$hash()$alias("id"))
       shape: (2, 3)
