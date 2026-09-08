@@ -181,7 +181,7 @@ pivot_wider.polars_data_frame <- function(
 
   out <- if (!is.null(values_fill)) {
     new_data$with_columns(
-      pl$col(!!!new_cols)$fill_null(values_fill)
+      pl$col(new_cols)$fill_null(values_fill)
     )
   } else {
     new_data
