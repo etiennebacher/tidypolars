@@ -58,10 +58,6 @@ the name is set by \code{row_index_name}).}
 \item{ignore_errors}{Keep reading the file even if some lines yield errors.
 You can also use \code{infer_schema = FALSE} to read all columns as UTF8 to
 check which values might cause an issue.}
-
-\item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
-memory when all chunks/files are parsed. Call \verb{$rechunk()} on the output
-instead.}
 }
 \value{
 The scan function returns a LazyFrame, the read function returns a DataFrame.

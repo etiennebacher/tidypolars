@@ -112,10 +112,6 @@ can be skipped from reading.}
 
 \item{include_file_paths}{Include the path of the source file(s) as a column
 with this name.}
-
-\item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
-memory when all chunks/files are parsed. Call \verb{$rechunk()} on the output
-instead.}
 }
 \value{
 The scan function returns a LazyFrame, the read function returns a DataFrame.
