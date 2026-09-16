@@ -1,7 +1,7 @@
 # make_unique_id() is deprecated
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Warning:
       `make_unique_id()` was deprecated in tidypolars 0.16.0.

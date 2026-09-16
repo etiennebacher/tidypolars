@@ -19,9 +19,7 @@ write_csv_polars(
   time_format = NULL,
   float_precision = NULL,
   null_value = "",
-  quote_style = "necessary",
-  quote,
-  null_values
+  quote_style = "necessary"
 )
 }
 \arguments{
@@ -75,12 +73,6 @@ then quotes will be used even if they aren`t strictly necessary.
 \item \code{"never"}: This never puts quotes around fields, even if that results in
 invalid CSV data (e.g. by not quoting strings containing the separator).
 }}
-
-\item{quote}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use \code{quote_char}
-instead.}
-
-\item{null_values}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use
-\code{null_value} instead.}
 }
 \value{
 The input DataFrame.

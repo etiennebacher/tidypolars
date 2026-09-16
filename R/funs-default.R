@@ -559,8 +559,7 @@ pl_unique <- function(x, ...) {
   x$unique()
 }
 
-pl_var <- function(x, y = NULL, na.rm = FALSE, use, ...) {
-  check_empty_dots(...)
+pl_var <- function(x, y = NULL, na.rm = FALSE, use) {
   na.rm <- polars_expr_to_r(na.rm)
   check_bool(na.rm)
 
@@ -576,7 +575,7 @@ pl_var <- function(x, y = NULL, na.rm = FALSE, use, ...) {
   } else {
     use <- polars_expr_to_r(use)
     check_string(use)
-    use <- match.arg(
+    use <- arg_match(
       use,
       c(
         "all.obs",
@@ -585,6 +584,14 @@ pl_var <- function(x, y = NULL, na.rm = FALSE, use, ...) {
         "everything",
         "na.or.complete"
       )
+    )
+  }
+
+  # use = 'all.obs' errors in base R if there are missing values, but I can't
+  # determine that from inside the expression.
+  if (use == "all.obs") {
+    cli::cli_abort(
+      "{.pkg tidypolars} doesn't support {.arg use = \"all.obs\"}."
     )
   }
 

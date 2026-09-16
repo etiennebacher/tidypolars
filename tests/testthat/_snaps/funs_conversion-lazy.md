@@ -1,27 +1,23 @@
 # basic behavior works
 
     Code
-      current$collect()
+      compute(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `compute()`:
       ! conversion from `str` to `i32` failed in column 'char1' for 3 out of 3 values: ["a", "a", "b"]
 
 ---
 
     Code
-      current$collect()
+      compute(current)
     Condition
-      Error in `current$collect()`:
-      ! Evaluation failed in `$collect()`.
-      Caused by error:
+      Error in `compute()`:
       ! conversion from `str` to `i32` failed in column 'char2' for 1 out of 3 values: ["3.5"]
 
 # as.Date() works for character columns
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `as.Date()` in Polars.

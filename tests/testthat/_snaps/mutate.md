@@ -4,7 +4,7 @@
       mutate(test_pl, Sepal.Width = 1:2)
     Condition
       Error in `mutate()`:
-      ! lengths don't match: unable to add a column of length 2 to a DataFrame of height 150
+      ! lengths don't match: can't broadcast Series 'Sepal.Width' of length 2 to length 150
 
 ---
 
@@ -12,7 +12,7 @@
       mutate(test_pl, Sepal.Width = letters[1:2])
     Condition
       Error in `mutate()`:
-      ! lengths don't match: unable to add a column of length 2 to a DataFrame of height 150
+      ! lengths don't match: can't broadcast Series 'Sepal.Width' of length 2 to length 150
 
 # custom function that doesn't return Polars expression
 

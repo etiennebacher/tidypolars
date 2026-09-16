@@ -1,7 +1,7 @@
 # error messages when error in known function is good
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `min_rank()` in Polars.
@@ -10,7 +10,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while running function `dplyr::min_rank()` in Polars.
@@ -19,7 +19,7 @@
 # missing variables in ranges produce errors
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while translating `x %in% missing_lower:4`.
@@ -29,7 +29,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `mutate()`:
       ! Error while translating `x %notin% missing_lower:4`.
@@ -39,7 +39,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `filter()`:
       ! Error while translating `x %in% missing_lower:4`.

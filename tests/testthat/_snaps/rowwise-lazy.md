@@ -1,7 +1,7 @@
 # can only use rowwise() on a subset of functions
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `mutate()`:
       x Can't use function `pl_range()` in rowwise mode.
@@ -11,7 +11,7 @@
 # can't apply rowwise on grouped data, and vice versa
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `rowwise()`:
       ! Cannot use `rowwise()` on grouped data.
@@ -19,7 +19,7 @@
 ---
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `group_by()`:
       ! Cannot use `group_by()` if `rowwise()` is also used.

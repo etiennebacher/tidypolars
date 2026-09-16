@@ -98,7 +98,6 @@ export(as_polars_lf)
 export(bind_cols_polars)
 export(bind_rows_polars)
 export(duplicated_rows)
-export(fetch)
 export(is_polars_df)
 export(is_polars_expr)
 export(is_polars_lf)
@@ -132,11 +131,15 @@ import(polars)
 import(rlang)
 import(tidyr)
 importFrom(lifecycle,deprecated)
-importFrom(polars,as_polars_df)
-importFrom(polars,as_polars_lf)
-importFrom(polars,is_polars_df)
-importFrom(polars,is_polars_expr)
-importFrom(polars,is_polars_lf)
+importFrom(polars,
+  as_polars_df,
+  as_polars_lf,
+  is_polars_df,
+  is_polars_expr,
+  is_polars_lf
+)
 importFrom(stats,setNames)
-importFrom(utils,head)
-importFrom(utils,tail)
+importFrom(utils,
+  head,
+  tail
+)

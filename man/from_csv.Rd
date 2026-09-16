@@ -23,7 +23,6 @@ read_csv_polars(
   n_rows = NULL,
   encoding = "utf8",
   low_memory = FALSE,
-  rechunk = TRUE,
   skip_rows_after_header = 0,
   row_index_name = NULL,
   row_index_offset = 0,
@@ -32,8 +31,7 @@ read_csv_polars(
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
   include_file_paths = NULL,
-  dtypes,
-  reuse_downloaded
+  rechunk
 )
 
 scan_csv_polars(
@@ -53,7 +51,6 @@ scan_csv_polars(
   n_rows = NULL,
   encoding = "utf8",
   low_memory = FALSE,
-  rechunk = TRUE,
   skip_rows_after_header = 0,
   row_index_name = NULL,
   row_index_offset = 0,
@@ -62,8 +59,7 @@ scan_csv_polars(
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
   include_file_paths = NULL,
-  dtypes,
-  reuse_downloaded
+  rechunk
 )
 }
 \arguments{
@@ -108,8 +104,9 @@ check which values might cause an issue.}
 \item{cache}{Cache the result after reading.}
 
 \item{infer_schema_length}{The maximum number of rows to scan for schema
-inference. If \code{NULL}, the full data may be scanned (this is slow). Set
-\code{infer_schema = FALSE} to read all columns as \code{pl$String}.}
+inference. This applies individually to each file included according to
+\code{infer_schema_files}. If \code{NULL}, the full data may be scanned (this is
+slow). Set \code{infer_schema = FALSE} to read all columns as \code{pl$String}.}
 
 \item{n_rows}{Stop reading from the source after reading \code{n_rows}.}
 
@@ -117,8 +114,6 @@ inference. If \code{NULL}, the full data may be scanned (this is slow). Set
 UTF8 values are replaced with "?" characters.}
 
 \item{low_memory}{Reduce memory pressure at the expense of performance.}
-
-\item{rechunk}{Reallocate to contiguous memory when all chunks/files are parsed.}
 
 \item{skip_rows_after_header}{Skip this number of rows when the header is
 parsed.}
@@ -145,11 +140,9 @@ DataFrame or LazyFrame.}
 \item{include_file_paths}{Include the path of the source file(s) as a column
 with this name.}
 
-\item{dtypes}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated,
-use \code{schema_overrides} instead.}
-
-\item{reuse_downloaded}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
-Deprecated with no replacement.}
+\item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
+memory when all chunks/files are parsed. Call \verb{$rechunk()} on the output
+instead.}
 }
 \value{
 The scan function returns a LazyFrame, the read function returns a DataFrame.

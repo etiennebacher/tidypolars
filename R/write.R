@@ -34,10 +34,6 @@
 #'   then quotes will be used even if they aren`t strictly necessary.
 #' * `"never"`: This never puts quotes around fields, even if that results in
 #'   invalid CSV data (e.g. by not quoting strings containing the separator).
-#' @param quote `r lifecycle::badge("deprecated")` Deprecated, use `quote_char`
-#' instead.
-#' @param null_values `r lifecycle::badge("deprecated")` Deprecated, use
-#' `null_value` instead.
 #'
 #' @inherit sink_parquet details
 #' @return The input DataFrame.
@@ -65,32 +61,10 @@ write_csv_polars <- function(
   time_format = NULL,
   float_precision = NULL,
   null_value = "",
-  quote_style = "necessary",
-  quote,
-  null_values
+  quote_style = "necessary"
 ) {
   if (!is_polars_df(.data)) {
     cli_abort("{.fn write_csv_polars} can only be used on a DataFrame.")
-  }
-
-  if (!missing(quote)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "write_csv_polars(quote)",
-      details = "Use `quote_char` instead."
-    )
-    quote_char <- quote
-  }
-
-  if (!missing(null_values)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "write_csv_polars(null_values)",
-      details = "Use `null_value` instead."
-    )
-    if (missing(null_value)) {
-      null_value <- null_values
-    }
   }
 
   rlang::arg_match0(
@@ -199,10 +173,6 @@ write_ndjson_polars <- function(.data, file) {
 #' Export data to JSON file(s)
 #'
 #' @inheritParams write_csv_polars
-#' @param pretty `r lifecycle::badge("deprecated")` Deprecated with no
-#' replacement.
-#' @param row_oriented `r lifecycle::badge("deprecated")` Deprecated with no
-#' replacement.
 #'
 #' @inherit write_csv_polars return
 #' @export
@@ -214,34 +184,10 @@ write_ndjson_polars <- function(.data, file) {
 #'   write_json_polars(dest)
 #'
 #' jsonlite::fromJSON(dest)
-write_json_polars <- function(
-  .data,
-  file,
-  ...,
-  pretty = FALSE,
-  row_oriented = FALSE
-) {
+write_json_polars <- function(.data, file) {
   if (!is_polars_df(.data)) {
     cli_abort("{.fn write_json_polars} can only be used on a DataFrame.")
   }
-
-  if (!missing(pretty)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "write_json_polars(pretty)",
-      details = "`pretty` doesn't have a replacement."
-    )
-  }
-
-  if (!missing(row_oriented)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "write_json_polars(row_oriented)",
-      details = "`row_oriented` doesn't have a replacement."
-    )
-  }
-
-  rlang::check_dots_empty()
 
   .data$write_json(file = file)
 }
@@ -262,8 +208,6 @@ write_json_polars <- function(
 #' - `"newest"` (default): Use the highest level, currently same as 1 (Low
 #'   compatibility).
 #' - `"oldest"`: Same as 0 (High compatibility).
-#' @param future `r lifecycle::badge("deprecated")` Deprecated, use
-#' `compat_level` instead.
 #'
 #' @inherit sink_parquet details
 #' @inherit write_csv_polars return
@@ -273,32 +217,14 @@ write_ipc_polars <- function(
   file,
   compression = "uncompressed",
   ...,
-  compat_level = "newest",
-  future
+  compat_level = "newest"
 ) {
   if (!is_polars_df(.data)) {
     cli_abort("{.fn write_ipc_polars} can only be used on a DataFrame.")
   }
 
-  if (!missing(future)) {
-    lifecycle::deprecate_warn(
-      when = "0.14.0",
-      what = "write_ipc_polars(future)",
-      details = "Use `compat_level` instead."
-    )
-    compat_level <- if (isTRUE(future)) {
-      "newest"
-    } else {
-      "oldest"
-    }
-  }
-
   rlang::arg_match0(compression, values = c("uncompressed", "zstd", "lz4"))
   rlang::check_dots_empty()
 
-  .data$write_ipc(
-    file,
-    compression = compression,
-    compat_level = compat_level
-  )
+  .data$write_ipc(file, compression = compression, compat_level = compat_level)
 }

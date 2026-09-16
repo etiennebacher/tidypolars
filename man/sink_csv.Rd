@@ -27,9 +27,7 @@ sink_csv(
   simplify_expression = TRUE,
   slice_pushdown = TRUE,
   no_optimization = FALSE,
-  mkdir = FALSE,
-  quote,
-  null_values
+  mkdir = FALSE
 )
 }
 \arguments{
@@ -103,12 +101,6 @@ is \code{TRUE}).}
 \code{simplify_expression}. Default is \code{FALSE}.}
 
 \item{mkdir}{Recursively create all the directories in the path.}
-
-\item{quote}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use \code{quote_char}
-instead.}
-
-\item{null_values}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use
-\code{null_value} instead.}
 }
 \value{
 The input LazyFrame.

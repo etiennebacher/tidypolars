@@ -17,8 +17,7 @@
   comm_subexpr_elim = TRUE,
   cluster_with_columns = TRUE,
   no_optimization = FALSE,
-  engine = c("auto", "in-memory", "streaming"),
-  streaming = FALSE
+  engine = c("auto", "in-memory", "streaming")
 )
 
 \method{collect}{polars_lazy_frame}(
@@ -34,7 +33,6 @@
   cluster_with_columns = TRUE,
   no_optimization = FALSE,
   engine = c("auto", "in-memory", "streaming"),
-  streaming = FALSE,
   .name_repair = "check_unique",
   uint8 = "integer",
   int64 = "double",
@@ -90,12 +88,12 @@ engine will be selected for most cases.
 larger-than-memory data.
 }}
 
-\item{streaming}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use \code{engine}
-instead.}
-
 \item{.name_repair, uint8, int64, date, time, decimal, as_clock_class, ambiguous, non_existent}{Parameters to control the conversion from polars types to R. See
 \code{?polars:::as.data.frame.polars_lazy_frame} for explanations and accepted
 values.}
+
+\item{streaming}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use \code{engine}
+instead.}
 }
 \value{
 \code{compute()} returns a Polars DataFrame, \code{collect()} returns a tibble.
@@ -133,7 +131,4 @@ dat_lazy |>
   filter(between(Sepal.Length, 5, 6)) |>
   collect()
 \dontshow{\}) # examplesIf}
-}
-\seealso{
-\code{\link[=fetch]{fetch()}} for applying a lazy query on a subset of the data.
 }

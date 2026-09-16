@@ -1,13 +1,3 @@
-# deprecated arguments in compute()
-
-    Code
-      x <- compute(test_pl, streaming = TRUE)
-    Condition
-      Warning:
-      The `streaming` argument of `compute()` is deprecated as of tidypolars 0.14.0.
-      i Use `engine = "streaming"` for the new streaming mode.
-      i Use `engine = "in-memory"` for non-streaming mode.
-
 # can't collect non-LazyFrame object
 
     Code

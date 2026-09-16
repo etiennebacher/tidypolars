@@ -7,13 +7,22 @@
       ! Error while running function `mean()` in Polars.
       x `na.rm` must be `TRUE` or `FALSE`, not a <polars_expr> object.
 
+# var() doesn't work with `use = 'all.obs'`
+
+    Code
+      mutate(test_pl, foo = var(x, use = "all.obs"))
+    Condition
+      Error in `mutate()`:
+      ! Error while running function `var()` in Polars.
+      x tidypolars doesn't support `use = "all.obs"`.
+
 # unique() works
 
     Code
       mutate(test_pl, foo = unique(y))
     Condition
       Error in `mutate()`:
-      ! lengths don't match: unable to add a column of length 4 to a DataFrame of height 5
+      ! lengths don't match: can't broadcast Series 'foo' of length 4 to length 5
 
 # trunc() works
 
