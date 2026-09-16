@@ -57,9 +57,8 @@
 * `ifelse()` and `if_else()` now return missing values when their condition is
   missing, consistent with base R and dplyr (#399, @Yousa-Mirage).
 
-* Fix positional argument handling in `sum()`, `max()`, `min()`, and `var()` so
-  arguments are interpreted consistently with base R (#398,
-  @Yousa-Mirage).
+* Fix multiple-argument handling in `sum()`, `max()`, and `min()`, including
+  calls with no data arguments (#398, @Yousa-Mirage).
 
 * Invalid `na.rm` arguments in summary functions are no longer silently
   ignored (#398, @Yousa-Mirage).

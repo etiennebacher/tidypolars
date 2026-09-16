@@ -254,6 +254,9 @@ pl_max <- function(..., na.rm = FALSE) {
   na.rm <- polars_expr_to_r(na.rm)
   check_bool(na.rm)
   x <- check_rowwise_dots(...)
+  if (length(x$expr) == 0) {
+    return(pl$lit(-Inf))
+  }
   if (isTRUE(x$is_rowwise)) {
     element <- pl$element()
     out <- element$max()
@@ -329,6 +332,9 @@ pl_min <- function(..., na.rm = FALSE) {
   na.rm <- polars_expr_to_r(na.rm)
   check_bool(na.rm)
   x <- check_rowwise_dots(...)
+  if (length(x$expr) == 0) {
+    return(pl$lit(Inf))
+  }
   if (isTRUE(x$is_rowwise)) {
     element <- pl$element()
     out <- element$min()
@@ -523,6 +529,9 @@ pl_sum <- function(..., na.rm = FALSE) {
   na.rm <- polars_expr_to_r(na.rm)
   check_bool(na.rm)
   x <- check_rowwise_dots(...)
+  if (length(x$expr) == 0) {
+    return(pl$lit(0L))
+  }
   if (isTRUE(x$is_rowwise)) {
     element <- pl$element()
     out <- element$sum()

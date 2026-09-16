@@ -1,7 +1,7 @@
 # invalid na.rm arguments error
 
     Code
-      current$collect()
+      compute(current)
     Condition
       Error in `summarize()`:
       ! Error while running function `mean()` in Polars.
