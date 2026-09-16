@@ -444,7 +444,6 @@ pl_sd <- function(x, na.rm = FALSE, ...) {
   } else {
     out
   }
-  out
 }
 
 pl_seq <- function(from = 1, to = 1, by = NULL, ...) {
