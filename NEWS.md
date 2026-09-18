@@ -54,6 +54,8 @@
 
 ## Bug fixes
 
+* Support dynamic expressions in `:` ranges and `seq_len()` (#409, @Yousa-Mirage).
+
 * Fix `select()`, `rename()`, `rename_with()`, and `relocate()` to preserve
   grouping metadata and update renamed grouping variables (#400, @Yousa-Mirage).
 
