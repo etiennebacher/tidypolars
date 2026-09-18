@@ -444,6 +444,51 @@ test_that("seq_len() works", {
   )
 })
 
+test_that("sequences can use the current group size", {
+  test_df <- tibble(g = c("a", "b", "a", "a"))
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |> mutate(i = seq_len(n()), j = 1:n(), k = n():1),
+    test_df |> mutate(i = seq_len(n()), j = 1:n(), k = n():1)
+  )
+  expect_equal_lazy(
+    test_pl |> group_by(g) |> mutate(i = seq_len(n()), j = 1:n(), k = n():1),
+    test_df |> group_by(g) |> mutate(i = seq_len(n()), j = 1:n(), k = n():1)
+  )
+  expect_equal_lazy(
+    test_pl |> mutate(i = seq_len(n()), j = 1:n(), k = n():1, .by = g),
+    test_df |> mutate(i = seq_len(n()), j = 1:n(), k = n():1, .by = g)
+  )
+  offset <- 0L
+  expect_equal_lazy(
+    test_pl |> mutate(i = seq_len(dplyr::n()), j = offset:(n() - 1L), .by = g),
+    test_df |> mutate(i = seq_len(dplyr::n()), j = offset:(n() - 1L), .by = g)
+  )
+  expect_both_error(
+    test_pl |> mutate(i = seq_len(-n())),
+    test_df |> mutate(i = seq_len(-n()))
+  )
+})
+
+test_that("sequences preserve empty input semantics", {
+  test_df <- tibble(g = character())
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |> mutate(i = seq_len(n())),
+    test_df |> mutate(i = seq_len(n()))
+  )
+  expect_equal_lazy(
+    test_pl |> mutate(i = seq_len(n()), .by = g),
+    test_df |> mutate(i = seq_len(n()), .by = g)
+  )
+  expect_both_error(
+    test_pl |> mutate(i = 1:n()),
+    test_df |> mutate(i = 1:n())
+  )
+})
+
 test_that("anyNA() works", {
   test_df <- tibble(x = 1:4, y = c(1:3, NA))
   test_pl <- as_polars_lf(test_df)

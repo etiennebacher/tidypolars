@@ -108,6 +108,32 @@
             )
         )
 
+# sequences using group sizes can be replayed
+
+    Code
+      show_query(query)
+    Output
+      test_pl$with_columns(
+        i = pl$int_range(
+          start = 1,
+          end = pl$when(pl$len() >= 0)$then(pl$len() + 1)$otherwise(NA),
+          step = 1
+        )$
+          over("g"),
+        j = (
+          pl$lit(1) +
+            pl$int_range(start = 0, end = (pl$len() - pl$lit(1))$abs()$floor() + 1L) *
+              pl$when(pl$len() >= pl$lit(1))$then(1L)$otherwise(-1L)
+        )$
+          over("g"),
+        k = (
+          pl$len() +
+            pl$int_range(start = 0, end = (pl$lit(1) - pl$len())$abs()$floor() + 1L) *
+              pl$when(pl$lit(1) >= pl$len())$then(1L)$otherwise(-1L)
+        )$
+          over("g")
+      )
+
 # user-defined functions returning polars expressions are recorded
 
     Code
