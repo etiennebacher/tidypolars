@@ -54,7 +54,7 @@
 
 ## Bug fixes
 
-* `seq_len(n())` and `1:n()` now support generating row numbers within groups.
+* Support dynamic expressions in `:` ranges and `seq_len()` (#409, @Yousa-Mirage).
 
 * Fix `select()`, `rename()`, `rename_with()`, and `relocate()` to preserve
   grouping metadata and update renamed grouping variables (#400, @Yousa-Mirage).
