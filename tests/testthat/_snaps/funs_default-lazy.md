@@ -13,7 +13,7 @@
       compute(current)
     Condition
       Error in `compute()`:
-      ! lengths don't match: can't broadcast Series 'foo' of length 4 to length 5
+      ! lengths don't match: zip node received non-equal length inputs
 
 # trunc() works
 

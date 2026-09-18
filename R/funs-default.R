@@ -715,13 +715,19 @@ is_duplicated <- function(x, incomparables, fromLast) {
   if (is_polars_expr(incomparables)) {
     # `incomparables` couldn't be converted back to an R vector (e.g. it is
     # a translated call like `as.Date("2024-01-01")`).
-    incomparable <- x$is_in(incomparables$implode(), nulls_equal = TRUE)
+    incomparable <- x$is_in(
+      incomparables$implode()$cast(pl$dtype_of(x)$wrap_in_list()),
+      nulls_equal = TRUE
+    )
   } else if (is.logical(incomparables) && all(is.na(incomparables))) {
     # `pl$lit(list(NA))` is List(Boolean) and can't be used in is_in()
     # with a non-boolean column.
     incomparable <- x$is_null()
   } else {
-    incomparable <- x$is_in(pl$lit(list(incomparables)), nulls_equal = TRUE)
+    incomparable <- x$is_in(
+      pl$lit(list(incomparables))$cast(pl$dtype_of(x)$wrap_in_list()),
+      nulls_equal = TRUE
+    )
   }
 
   dupes & incomparable$not()
