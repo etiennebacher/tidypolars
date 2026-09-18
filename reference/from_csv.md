@@ -19,8 +19,8 @@ read_csv_polars(
   schema_overrides = NULL,
   null_values = NULL,
   ignore_errors = FALSE,
-  cache = FALSE,
   infer_schema_length = 100,
+  infer_schema_files = 10,
   n_rows = NULL,
   encoding = "utf8",
   low_memory = FALSE,
@@ -32,6 +32,7 @@ read_csv_polars(
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
   include_file_paths = NULL,
+  cache,
   rechunk
 )
 
@@ -47,8 +48,8 @@ scan_csv_polars(
   schema_overrides = NULL,
   null_values = NULL,
   ignore_errors = FALSE,
-  cache = FALSE,
   infer_schema_length = 100,
+  infer_schema_files = 10,
   n_rows = NULL,
   encoding = "utf8",
   low_memory = FALSE,
@@ -60,6 +61,7 @@ scan_csv_polars(
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
   include_file_paths = NULL,
+  cache,
   rechunk
 )
 ```
@@ -106,13 +108,11 @@ scan_csv_polars(
   Provide the schema. This means that polars doesn't do schema
   inference. This argument expects the complete schema, whereas
   `schema_overrides` can be used to partially overwrite a schema. This
-  must be a list. Names of list elements are used to match to inferred
-  columns.
+  must be a list.
 
 - schema_overrides:
 
-  Overwrite dtypes during inference. This must be a list. Names of list
-  elements are used to match to inferred columns.
+  Overwrite dtypes during inference. This must be a list.
 
 - null_values:
 
@@ -126,16 +126,20 @@ scan_csv_polars(
   use `infer_schema = FALSE` to read all columns as UTF8 to check which
   values might cause an issue.
 
-- cache:
-
-  Cache the result after reading.
-
 - infer_schema_length:
 
   The maximum number of rows to scan for schema inference. This applies
   individually to each file included according to `infer_schema_files`.
   If `NULL`, the full data may be scanned (this is slow). Set
   `infer_schema = FALSE` to read all columns as `pl$String`.
+
+- infer_schema_files:
+
+  **\[experimental\]** How many files to use when inferring the schema.
+  In Polars 1.16, omitting this argument and setting it to `NULL` uses
+  all files. Starting with Polars 2.0, the default will be 10 files. Use
+  `infer_schema_files = 10` to opt into the new default or
+  `infer_schema_files = NULL` to keep using all files.
 
 - n_rows:
 
@@ -179,25 +183,49 @@ scan_csv_polars(
 - raise_if_empty:
 
   If `FALSE`, parsing an empty file returns an empty DataFrame or
-  LazyFrame.
+  LazyFrame. Omitting this argument is deprecated because the default
+  changes conditionally in Polars 2.0: it will be `FALSE` when
+  `has_header = FALSE` and `schema` is supplied, and `TRUE` otherwise.
+  Pass an explicit value to select the desired behavior.
 
 - truncate_ragged_lines:
 
-  Truncate lines that are longer than the schema.
+  Truncate lines that are longer than the schema. Its default is
+  unchanged in Polars 1.16. In Polars 2.0, the default will be
+  determined together with the `extra_columns` CSV option.
 
 - include_file_paths:
 
   Include the path of the source file(s) as a column with this name.
 
+- cache:
+
+  **\[deprecated\]** Cache the result after reading.
+
 - rechunk:
 
   **\[deprecated\]** Reallocate to contiguous memory when all
-  chunks/files are parsed. Call `$rechunk()` on the output instead.
+  chunks/files are parsed.
 
 ## Value
 
 The scan function returns a LazyFrame, the read function returns a
 DataFrame.
+
+## Details
+
+In Polars 1.16, `schema` is matched by position regardless of names. In
+Polars 2.0, when `has_header = TRUE`, `schema` is matched by name and
+every schema field name must match a header name. When
+`has_header = FALSE`, `schema` is matched by position and its length
+must match the input width. Empty string names remain valid; `NA` names
+are invalid.
+
+Named `schema_overrides` elements are matched by name, while unnamed
+elements are treated as empty string names. In Polars 2.0, an object
+without a `names` attribute remains position-based, while names are
+matched to input columns. Empty string names remain valid; `NA` names
+are invalid.
 
 ## Examples
 
@@ -328,17 +356,17 @@ scan_csv_polars(dest_folder, include_file_paths = "file_path") |>
 #> │ ---  ┆ --- ┆ ---   ┆ --- ┆   ┆ --- ┆ ---  ┆ ---  ┆ ---                             │
 #> │ f64  ┆ i64 ┆ f64   ┆ i64 ┆   ┆ i64 ┆ i64  ┆ i64  ┆ str                             │
 #> ╞══════╪═════╪═══════╪═════╪═══╪═════╪══════╪══════╪═════════════════════════════════╡
-#> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c122ad70d2f/output… │
-#> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c122ad70d2f/output… │
-#> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c122ad70d2f/output… │
-#> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c122ad70d2f/output… │
-#> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1c122ad70d2f/output… │
+#> │ 10.4 ┆ 8   ┆ 472.0 ┆ 205 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1a8fc809c90/output_… │
+#> │ 10.4 ┆ 8   ┆ 460.0 ┆ 215 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1a8fc809c90/output_… │
+#> │ 13.3 ┆ 8   ┆ 350.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1a8fc809c90/output_… │
+#> │ 14.3 ┆ 8   ┆ 360.0 ┆ 245 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1a8fc809c90/output_… │
+#> │ 14.7 ┆ 8   ┆ 440.0 ┆ 230 ┆ … ┆ 0   ┆ 3    ┆ 4    ┆ output/file1a8fc809c90/output_… │
 #> │ …    ┆ …   ┆ …     ┆ …   ┆ … ┆ …   ┆ …    ┆ …    ┆ …                               │
-#> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c122ad70d2f/output… │
-#> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 4    ┆ 2    ┆ output/file1c122ad70d2f/output… │
-#> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 5    ┆ 2    ┆ output/file1c122ad70d2f/output… │
-#> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c122ad70d2f/output… │
-#> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1c122ad70d2f/output… │
+#> │ 27.3 ┆ 4   ┆ 79.0  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1a8fc809c90/output_… │
+#> │ 30.4 ┆ 4   ┆ 75.7  ┆ 52  ┆ … ┆ 1   ┆ 4    ┆ 2    ┆ output/file1a8fc809c90/output_… │
+#> │ 30.4 ┆ 4   ┆ 95.1  ┆ 113 ┆ … ┆ 1   ┆ 5    ┆ 2    ┆ output/file1a8fc809c90/output_… │
+#> │ 32.4 ┆ 4   ┆ 78.7  ┆ 66  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1a8fc809c90/output_… │
+#> │ 33.9 ┆ 4   ┆ 71.1  ┆ 65  ┆ … ┆ 1   ┆ 4    ┆ 1    ┆ output/file1a8fc809c90/output_… │
 #> └──────┴─────┴───────┴─────┴───┴─────┴──────┴──────┴─────────────────────────────────┘
 
 

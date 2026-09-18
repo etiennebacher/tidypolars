@@ -13,8 +13,8 @@ read_ipc_polars(
   n_rows = NULL,
   row_index_name = NULL,
   row_index_offset = 0L,
-  cache = TRUE,
   include_file_paths = NULL,
+  cache,
   rechunk
 )
 
@@ -24,8 +24,8 @@ scan_ipc_polars(
   n_rows = NULL,
   row_index_name = NULL,
   row_index_offset = 0L,
-  cache = TRUE,
   include_file_paths = NULL,
+  cache,
   rechunk
 )
 ```
@@ -55,13 +55,14 @@ scan_ipc_polars(
   Offset to start the row index column (only used if the name is set by
   `row_index_name`).
 
-- cache:
-
-  Cache the result after reading.
-
 - include_file_paths:
 
   Include the path of the source file(s) as a column with this name.
+
+- cache:
+
+  **\[deprecated\]** The Polars 2.0 streaming readers do not use the
+  file cache, and this argument has no direct replacement.
 
 - rechunk:
 
