@@ -920,7 +920,7 @@
           pl$col("x")$
             cast(pl$String)$
             str$split("\\.", literal = FALSE)$
-            list$to_struct(upper_bound = 2L)$
+            list$to_struct(fields = c("__tidypolars_TMP_1__", "__tidypolars_TMP_2__"))$
             struct$rename_fields(c("foo", "foo2"))$
             struct$unnest()
         )$
@@ -949,7 +949,7 @@
       )$
         with_columns(
           pl$concat_str(
-            pl$col("year", "month", "day")$fill_null("NA"),
+            pl$col(c("year", "month", "day"))$fill_null("NA"),
             separator = "-",
             ignore_nulls = TRUE
           )$
@@ -1875,7 +1875,7 @@
     Code
       compute(current)
     Output
-      test_pl$select(pl$col("country", "year")$unique()$sort()$implode())$
+      test_pl$select(pl$col(c("country", "year"))$unique()$sort()$implode())$
         explode(
           "country",
           empty_as_null = TRUE

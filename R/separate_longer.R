@@ -102,7 +102,7 @@ separate_longer_delim_polars <- function(
 
   # Cast to string and split each column by delimiter, converting to list
   out <- data$with_columns(
-    pl$col(!!!col_names)$cast(pl$String)$str$split(delim)
+    pl$col(col_names)$cast(pl$String)$str$split(delim)
   )
 
   # Handle multi-column broadcasting and validation
@@ -153,12 +153,12 @@ separate_longer_position_polars <- function(
   # Pattern: .{1,width} matches 1 to width characters (greedy)
   pattern <- paste0(".{1,", width, "}")
   out <- data$with_columns(
-    pl$col(!!!col_names)$cast(pl$String)$str$extract_all(pattern)
+    pl$col(col_names)$cast(pl$String)$str$extract_all(pattern)
   )
 
   # Handle keep_empty
   if (!keep_empty) {
-    cols <- pl$col(!!!col_names)
+    cols <- pl$col(col_names)
     condition <- cols$is_null() | cols$list$len() > 0
     out <- out$filter(pl$all_horizontal(condition))
   }

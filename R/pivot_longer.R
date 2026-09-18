@@ -68,7 +68,7 @@ pivot_longer.polars_data_frame <- function(
 
   if (!is.null(names_prefix)) {
     out <- out$with_columns(
-      pl$col(!!!names_to)$str$replace(paste0("^", names_prefix), "")
+      pl$col(names_to)$str$replace(paste0("^", names_prefix), "")
     )
   }
 

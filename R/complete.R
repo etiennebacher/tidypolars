@@ -110,10 +110,10 @@ complete.polars_data_frame <- function(
   } else {
     if (isTRUE(is_grouped)) {
       chain <- data$group_by(grps, .maintain_order = mo)$agg(
-        pl$col(!!!unnamed_dots)$unique()$sort()
+        pl$col(unnamed_dots)$unique()$sort()
       )
     } else {
-      chain <- data$select(pl$col(!!!unnamed_dots)$unique()$sort()$implode())
+      chain <- data$select(pl$col(unnamed_dots)$unique()$sort()$implode())
     }
   }
 

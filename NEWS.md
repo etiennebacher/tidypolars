@@ -1,6 +1,6 @@
 # tidypolars (development)
 
-`tidypolars` requires `polars` >= 1.15.0.
+`tidypolars` requires `polars` >= 1.16.0.
 
 ## Breaking changes and deprecations
 
@@ -48,6 +48,9 @@
 
 * Added support for covariance and missing-value strategies in `var()`
   (#398, #404, @Yousa-Mirage).
+
+* New argument `infer_schema_files` in `scan_csv_polars()` and
+  `read_csv_polars()` (#407).
 
 ## Bug fixes
 
