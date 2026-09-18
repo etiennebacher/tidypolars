@@ -176,19 +176,23 @@ mutate.polars_data_frame <- function(
     )
 
     if (length(sub) > 0) {
-      if (is_grouped) {
-        sub <- lapply(sub, \(x) {
-          order_by <- attributes(x)[["order_by"]]
-          if (!is.null(order_by)) {
-            if (!is.list(order_by)) {
-              order_by <- list(order_by)
-            }
+      sub <- lapply(sub, \(x) {
+        order_by <- attributes(x)[["order_by"]]
+        if (!is.null(order_by)) {
+          if (!is.list(order_by)) {
+            order_by <- list(order_by)
+          }
+          if (is_grouped) {
             x$over(!!!grp_names, order_by = order_by)
           } else {
-            x$over(!!!grp_names)
+            x$over(pl$lit(TRUE), order_by = order_by)
           }
-        })
-      }
+        } else if (is_grouped) {
+          x$over(!!!grp_names)
+        } else {
+          x
+        }
+      })
       .data <- with_polars_errors(.data$with_columns(!!!sub))
       current_names <- c(current_names, setdiff(names(sub), current_names))
     }
