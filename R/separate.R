@@ -41,7 +41,7 @@ separate.polars_data_frame <- function(
         sep,
         literal = FALSE
       )$list$to_struct(
-        upper_bound = length(into)
+        fields = paste0("__tidypolars_TMP_", seq_len(length(into)), "__")
       )$struct$rename_fields(into)$struct$unnest()
     )
   )

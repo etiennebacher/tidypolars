@@ -85,10 +85,10 @@ test_that("deprecated arguments in scan/read_csv_polars", {
   x <- write_csv_polars(dat_pl, dest)
 
   expect_snapshot({
-    x <- scan_csv_polars(dest, rechunk = TRUE)
+    x <- scan_csv_polars(dest, rechunk = TRUE, cache = TRUE)
   })
   expect_snapshot({
-    x <- read_csv_polars(dest, rechunk = TRUE)
+    x <- read_csv_polars(dest, rechunk = TRUE, cache = TRUE)
   })
 })
 
@@ -98,10 +98,10 @@ test_that("deprecated arguments in scan/read_ipc_polars", {
   x <- write_ipc_polars(dat_pl, dest)
 
   expect_snapshot({
-    new_dat <- scan_ipc_polars(dest, rechunk = TRUE)
+    new_dat <- scan_ipc_polars(dest, rechunk = TRUE, cache = TRUE)
   })
   expect_snapshot({
-    new_dat <- read_ipc_polars(dest, rechunk = TRUE)
+    new_dat <- read_ipc_polars(dest, rechunk = TRUE, cache = TRUE)
   })
 })
 

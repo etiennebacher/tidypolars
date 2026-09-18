@@ -18,8 +18,8 @@ read_csv_polars(
   schema_overrides = NULL,
   null_values = NULL,
   ignore_errors = FALSE,
-  cache = FALSE,
   infer_schema_length = 100,
+  infer_schema_files = 10,
   n_rows = NULL,
   encoding = "utf8",
   low_memory = FALSE,
@@ -31,6 +31,7 @@ read_csv_polars(
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
   include_file_paths = NULL,
+  cache,
   rechunk
 )
 
@@ -46,8 +47,8 @@ scan_csv_polars(
   schema_overrides = NULL,
   null_values = NULL,
   ignore_errors = FALSE,
-  cache = FALSE,
   infer_schema_length = 100,
+  infer_schema_files = 10,
   n_rows = NULL,
   encoding = "utf8",
   low_memory = FALSE,
@@ -59,6 +60,7 @@ scan_csv_polars(
   raise_if_empty = TRUE,
   truncate_ragged_lines = FALSE,
   include_file_paths = NULL,
+  cache,
   rechunk
 )
 }
@@ -88,10 +90,10 @@ will be parsed at this offset.}
 \item{schema}{Provide the schema. This means that polars doesn't do schema
 inference. This argument expects the complete schema, whereas
 \code{schema_overrides} can be used to partially overwrite a schema. This must be
-a list. Names of list elements are used to match to inferred columns.}
+a list.}
 
 \item{schema_overrides}{Overwrite dtypes during inference. This must be a
-list. Names of list elements are used to match to inferred columns.}
+list.}
 
 \item{null_values}{Character vector specifying the values to interpret as
 \code{NA} values. It can be named, in which case names specify the columns in
@@ -101,12 +103,16 @@ which this replacement must be made (e.g. \code{c(col1 = "a")}).}
 You can also use \code{infer_schema = FALSE} to read all columns as UTF8 to
 check which values might cause an issue.}
 
-\item{cache}{Cache the result after reading.}
-
 \item{infer_schema_length}{The maximum number of rows to scan for schema
 inference. This applies individually to each file included according to
 \code{infer_schema_files}. If \code{NULL}, the full data may be scanned (this is
 slow). Set \code{infer_schema = FALSE} to read all columns as \code{pl$String}.}
+
+\item{infer_schema_files}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} How many
+files to use when inferring the schema. In Polars 1.16, omitting this
+argument and setting it to \code{NULL} uses all files. Starting with Polars 2.0,
+the default will be 10 files. Use \code{infer_schema_files = 10} to opt into the
+new default or \code{infer_schema_files = NULL} to keep using all files.}
 
 \item{n_rows}{Stop reading from the source after reading \code{n_rows}.}
 
@@ -133,16 +139,22 @@ encountering a file with Windows line endings (\code{"\r\n"}), one can go with t
 default \code{"\n"}. The extra \code{"\r"} will be removed when processed.}
 
 \item{raise_if_empty}{If \code{FALSE}, parsing an empty file returns an empty
-DataFrame or LazyFrame.}
+DataFrame or LazyFrame. Omitting this argument is deprecated because the
+default changes conditionally in Polars 2.0: it will be \code{FALSE} when
+\code{has_header = FALSE} and \code{schema} is supplied, and \code{TRUE} otherwise. Pass an
+explicit value to select the desired behavior.}
 
-\item{truncate_ragged_lines}{Truncate lines that are longer than the schema.}
+\item{truncate_ragged_lines}{Truncate lines that are longer than the schema.
+Its default is unchanged in Polars 1.16. In Polars 2.0, the default will be
+determined together with the \code{extra_columns} CSV option.}
 
 \item{include_file_paths}{Include the path of the source file(s) as a column
 with this name.}
 
+\item{cache}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Cache the result after reading.}
+
 \item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
-memory when all chunks/files are parsed. Call \verb{$rechunk()} on the output
-instead.}
+memory when all chunks/files are parsed.}
 }
 \value{
 The scan function returns a LazyFrame, the read function returns a DataFrame.
@@ -151,6 +163,18 @@ The scan function returns a LazyFrame, the read function returns a DataFrame.
 \code{read_csv_polars()} imports the data as a Polars DataFrame.
 
 \code{scan_csv_polars()} imports the data as a Polars LazyFrame.
+}
+\details{
+In Polars 1.16, \code{schema} is matched by position regardless of names. In
+Polars 2.0, when \code{has_header = TRUE}, \code{schema} is matched by name and every
+schema field name must match a header name. When \code{has_header = FALSE},
+\code{schema} is matched by position and its length must match the input width.
+Empty string names remain valid; \code{NA} names are invalid.
+
+Named \code{schema_overrides} elements are matched by name, while unnamed elements
+are treated as empty string names. In Polars 2.0, an object without a \code{names}
+attribute remains position-based, while names are matched to input columns.
+Empty string names remain valid; \code{NA} names are invalid.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("withr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
