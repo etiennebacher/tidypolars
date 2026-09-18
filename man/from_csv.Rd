@@ -146,6 +146,11 @@ and \code{FALSE} otherwise.}
 
 \item{include_file_paths}{Include the path of the source file(s) as a column
 with this name.}
+
+\item{cache}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Cache the result after reading.}
+
+\item{rechunk}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Reallocate to contiguous
+memory when all chunks/files are parsed.}
 }
 \value{
 The scan function returns a LazyFrame, the read function returns a DataFrame.

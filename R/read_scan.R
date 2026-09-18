@@ -6,6 +6,7 @@
 #' `scan_parquet_polars()` imports the data as a Polars LazyFrame.
 #'
 #' @inherit polars::pl__scan_parquet params details
+#' @inheritParams from_csv
 #'
 #' @rdname from_parquet
 #' @name from_parquet
@@ -184,6 +185,9 @@ scan_parquet_polars <- function(
 #' `scan_csv_polars()` imports the data as a Polars LazyFrame.
 #'
 #' @inherit polars::pl__scan_csv params details
+#' @param cache `r lifecycle::badge("deprecated")` Cache the result after reading.
+#' @param rechunk `r lifecycle::badge("deprecated")` Reallocate to contiguous
+#' memory when all chunks/files are parsed.
 #'
 #' @rdname from_csv
 #' @name from_csv
@@ -413,6 +417,7 @@ scan_csv_polars <- function(
 #' `scan_ndjson_polars()` imports the data as a Polars LazyFrame.
 #'
 #' @inherit polars::pl__scan_ndjson params details
+#' @inheritParams from_csv
 #'
 #' @rdname from_ndjson
 #' @name from_ndjson
@@ -550,6 +555,7 @@ scan_ndjson_polars <- function(
 #' `scan_ipc_polars()` imports the data as a Polars LazyFrame.
 #'
 #' @inherit polars::pl__scan_ipc params details
+#' @inheritParams from_csv
 #'
 #' @rdname from_ipc
 #' @name from_ipc
