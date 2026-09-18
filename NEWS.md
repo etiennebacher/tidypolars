@@ -49,6 +49,9 @@
 * Added support for covariance and missing-value strategies in `var()`
   (#398, #404, @Yousa-Mirage).
 
+* New argument `infer_schema_files` in `scan_csv_polars()` and
+  `read_csv_polars()` (#407).
+
 ## Bug fixes
 
 * Fix `select()`, `rename()`, `rename_with()`, and `relocate()` to preserve
