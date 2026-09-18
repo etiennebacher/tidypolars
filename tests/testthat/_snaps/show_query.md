@@ -153,8 +153,8 @@
         schema_overrides = NULL,
         null_values = NULL,
         ignore_errors = FALSE,
-        cache = FALSE,
         infer_schema_length = 100,
+        infer_schema_files = NULL,
         n_rows = NULL,
         encoding = "utf8",
         low_memory = FALSE,
@@ -1339,7 +1339,6 @@
         n_rows = NULL,
         row_index_name = NULL,
         row_index_offset = 0L,
-        cache = TRUE,
         include_file_paths = NULL
       )$
         select("mpg")
