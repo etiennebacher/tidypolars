@@ -154,7 +154,7 @@
         null_values = NULL,
         ignore_errors = FALSE,
         infer_schema_length = 100,
-        infer_schema_files = NULL,
+        infer_schema_files = 10,
         n_rows = NULL,
         encoding = "utf8",
         low_memory = FALSE,
