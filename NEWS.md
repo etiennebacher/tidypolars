@@ -54,6 +54,9 @@
 
 ## Bug fixes
 
+* `complete()` now preserves zero-row inputs instead of adding a row containing
+  only missing values (#410, @Yousa-Mirage).
+
 * Fix `select()`, `rename()`, `rename_with()`, and `relocate()` to preserve
   grouping metadata and update renamed grouping variables (#400, @Yousa-Mirage).
 
