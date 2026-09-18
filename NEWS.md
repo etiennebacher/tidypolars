@@ -55,7 +55,7 @@
 ## Bug fixes
 
 * `add_count()` without grouping expressions now preserves existing `n` columns
-  by choosing an unused count column name and informing the user.
+  by choosing an unused count name and informing the user (#408, @Yousa-Mirage).
 
 * Fix `select()`, `rename()`, `rename_with()`, and `relocate()` to preserve
   grouping metadata and update renamed grouping variables (#400, @Yousa-Mirage).
