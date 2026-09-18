@@ -54,6 +54,9 @@
 
 ## Bug fixes
 
+* Fix ungrouped `lag()` and `lead()` to respect `order_by` in `mutate()`
+  (#413, @Yousa-Mirage).
+
 * Fix `select()`, `rename()`, `rename_with()`, and `relocate()` to preserve
   grouping metadata and update renamed grouping variables (#400, @Yousa-Mirage).
 
@@ -76,8 +79,6 @@
   (#384).
 
 * Fix `%>%` with unnamed arguments and nested `.` placeholders (#390, @Yousa-Mirage).
-
-* Fix ungrouped `lag()` and `lead()` to respect `order_by` in `mutate()`.
 
 * R expressions using `:` now resolve local variables from the calling environment (#381, @Yousa-Mirage).
 
