@@ -13,15 +13,20 @@ pl_case_match_dplyr <- function(x, ...) {
 
   out <- NULL
   for (i in seq_along(from_to$from)) {
-    lhs <- from_to$from[[i]] |>
-      as_lit_expr()
-    rhs <- from_to$to[[i]] |>
-      as_lit_expr()
+    lhs <- from_to$from[[i]]
+    rhs <- from_to$to[[i]] |> as_lit_expr()
+    lhs_r <- polars_expr_to_r(lhs)
+    lhs_is_na <- is.logical(lhs_r) && length(lhs_r) > 0 && all(is.na(lhs_r))
+    condition <- if (lhs_is_na) {
+      x$is_null()
+    } else {
+      x$is_in(as_lit_expr(lhs)$implode(), nulls_equal = TRUE)
+    }
 
     if (is.null(out)) {
-      out <- pl$when(x$is_in(lhs$implode()))$then(rhs)
+      out <- pl$when(condition)$then(rhs)
     } else {
-      out <- out$when(x$is_in(lhs$implode()))$then(rhs)
+      out <- out$when(condition)$then(rhs)
     }
   }
   otw <- from_to$default |>
