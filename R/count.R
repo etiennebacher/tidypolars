@@ -116,7 +116,7 @@ count.polars_data_frame <- function(
     if (is_grouped) {
       out <- out$sort(
         name,
-        grps,
+        !!!grps,
         !!!names(polars_exprs),
         descending = c(TRUE, rep(FALSE, length(grps) + length(polars_exprs)))
       )
@@ -210,13 +210,15 @@ add_count.polars_data_frame <- function(
     polars_exprs <- unlist(polars_exprs, recursive = FALSE)
   }
 
+  name <- check_count_name(x, names(x), name)
+
   if (length(polars_exprs) == 0) {
     if (is_grouped) {
       out <- x$with_columns(pl$len()$over(!!!grps)$alias(name))
       if (isTRUE(sort)) {
         out <- out$sort(
           name,
-          grps,
+          !!!grps,
           descending = c(TRUE, rep(FALSE, length(grps)))
         )
       }
@@ -234,8 +236,6 @@ add_count.polars_data_frame <- function(
       names()
     names(polars_exprs) <- new_names
   }
-
-  name <- check_count_name(x, names(x), name)
 
   x <- x$with_columns(!!!polars_exprs)
 
@@ -256,7 +256,7 @@ add_count.polars_data_frame <- function(
     if (is_grouped) {
       out <- out$sort(
         name,
-        grps,
+        !!!grps,
         !!!names(polars_exprs),
         descending = c(TRUE, rep(FALSE, length(grps) + length(polars_exprs)))
       )
