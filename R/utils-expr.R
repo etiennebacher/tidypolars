@@ -1074,10 +1074,14 @@ check_rowwise_dots <- function(...) {
   dots[["__tidypolars__expr_uses_col"]] <- NULL
   dots[["__tidypolars__caller"]] <- NULL
   dots <- unlist(dots)
-  if (isTRUE(is_rowwise) && length(dots) > 0) {
+  if (isTRUE(is_rowwise)) {
     out <- pl$concat_list(!!!dots)
   } else {
-    out <- dots
+    if (is.list(dots)) {
+      out <- dots[[1]]
+    } else {
+      out <- dots
+    }
   }
   list(is_rowwise = is_rowwise, expr = out)
 }
