@@ -57,6 +57,9 @@
 * Fix grouped `count()` and `add_count()` sorting with multiple grouping variables
   (#412, @Yousa-Mirage).
 
+* Fix ungrouped `lag()` and `lead()` to respect `order_by` in `mutate()`
+  (#413, @Yousa-Mirage).
+
 * Fix `select()`, `rename()`, `rename_with()`, and `relocate()` to preserve
   grouping metadata and update renamed grouping variables (#400, @Yousa-Mirage).
 
