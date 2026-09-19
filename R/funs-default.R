@@ -482,6 +482,11 @@ pl_seq <- function(from = 1, to = 1, by = NULL, ...) {
 
 pl_seq_len <- function(length.out) {
   length.out <- polars_expr_to_r(length.out)
+  if (is_polars_expr(length.out)) {
+    # Dynamic expressions like `seq_len(n() - 2L)` may produce negative lengths
+    end <- pl$when(length.out >= 0)$then(length.out + 1)$otherwise(NA)
+    return(pl$int_range(start = 1, end = end, step = 1))
+  }
   check_number_whole(length.out)
 
   if (length.out < 0) {

@@ -462,7 +462,28 @@ translate <- function(
           return(polars_constant(unlist(expr)))
         },
         ":" = {
-          return(eval_tidy(expr, env = caller))
+          # Keep ordinary R ranges in the caller environment, but translate
+          # data-dependent endpoints such as `n()` when R cannot evaluate them.
+          out <- try(eval_tidy(expr, env = caller), silent = TRUE)
+          if (!inherits(out, "try-error")) {
+            return(out)
+          }
+
+          bounds <- lapply(
+            as.list(expr[-1]),
+            translate,
+            .data = .data,
+            new_vars = new_vars,
+            env = env,
+            caller = caller,
+            expr_uses_col = expr_uses_col
+          )
+          from <- as_lit_expr(bounds[[1]])
+          to <- as_lit_expr(bounds[[2]])
+          step <- pl$when(to >= from)$then(1L)$otherwise(-1L)
+          size <- (to - from)$abs()$floor() + 1L
+
+          return(from + pl$int_range(start = 0, end = size) * step)
         },
         # Both sides can contain arbitrary R code that we evaluate in the caller
         # environment (e.g. `x %in% lower:upper`).

@@ -107,6 +107,15 @@ test_that("show_query() records magrittr pipe translations", {
   expect_equal(replay_query(query), query)
 })
 
+test_that("sequences using group sizes can be replayed", {
+  test_pl <- tibble(g = c("a", "b", "a")) |> as_polars_df()
+  query <- test_pl |>
+    mutate(i = seq_len(n()), j = 1:n(), k = n():1, .by = g)
+
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
 test_that("user-defined functions returning polars expressions are recorded", {
   pl_standardize <- function(x) {
     (x - x$mean()) / x$std()

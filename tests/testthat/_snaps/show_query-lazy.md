@@ -200,6 +200,42 @@
       │ 3   ┆ 3       ┆ true     │
       └─────┴─────────┴──────────┘
 
+# sequences using group sizes can be replayed
+
+    Code
+      compute(current)
+    Output
+      test_pl$with_columns(
+        i = pl$int_range(
+          start = 1,
+          end = pl$when(pl$len() >= 0)$then(pl$len() + 1)$otherwise(NA),
+          step = 1
+        )$
+          over("g"),
+        j = (
+          pl$lit(1) +
+            pl$int_range(start = 0, end = (pl$len() - pl$lit(1))$abs()$floor() + 1L) *
+              pl$when(pl$len() >= pl$lit(1))$then(1L)$otherwise(-1L)
+        )$
+          over("g"),
+        k = (
+          pl$len() +
+            pl$int_range(start = 0, end = (pl$lit(1) - pl$len())$abs()$floor() + 1L) *
+              pl$when(pl$lit(1) >= pl$len())$then(1L)$otherwise(-1L)
+        )$
+          over("g")
+      )
+      shape: (3, 4)
+      ┌─────┬─────┬─────┬─────┐
+      │ g   ┆ i   ┆ j   ┆ k   │
+      │ --- ┆ --- ┆ --- ┆ --- │
+      │ str ┆ i64 ┆ f64 ┆ i64 │
+      ╞═════╪═════╪═════╪═════╡
+      │ a   ┆ 1   ┆ 1.0 ┆ 2   │
+      │ b   ┆ 1   ┆ 1.0 ┆ 1   │
+      │ a   ┆ 2   ┆ 2.0 ┆ 1   │
+      └─────┴─────┴─────┴─────┘
+
 # user-defined functions returning polars expressions are recorded
 
     Code

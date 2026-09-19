@@ -54,6 +54,8 @@
 
 ## Bug fixes
 
+* Support dynamic expressions in `:` ranges and `seq_len()` (#409, @Yousa-Mirage).
+
 * `add_count()` without grouping expressions now preserves existing `n` columns
   by choosing an unused count name and informing the user (#408, @Yousa-Mirage).
 
