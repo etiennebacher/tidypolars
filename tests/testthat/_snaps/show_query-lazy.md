@@ -1833,11 +1833,11 @@
       test_pl$select(pl$col(c("country", "year"))$unique()$sort()$implode())$
         explode(
           "country",
-          empty_as_null = TRUE
+          empty_as_null = FALSE
         )$
         explode(
           "year",
-          empty_as_null = TRUE
+          empty_as_null = FALSE
         )$
         join(
           test_pl,
