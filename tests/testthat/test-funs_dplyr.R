@@ -340,6 +340,17 @@ test_that("row_number() works", {
 
 test_that("lag() works", {
   test_df <- tibble(
+    x = 1:6,
+    t = c(1L, 5L, 3L, 6L, 2L, 4L)
+  )
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    test_pl |> mutate(x_lag = dplyr::lag(x, order_by = t)),
+    test_df |> mutate(x_lag = dplyr::lag(x, order_by = t))
+  )
+
+  test_df <- tibble(
     g = c(1, 1, 1, 1, 2, 2, 2, 2),
     t = c(1, 2, 3, 4, 4, 1, 2, 3),
     x = c(10, 20, 30, 40, 10, 20, 30, 40)
@@ -387,6 +398,17 @@ test_that("lag() works", {
 })
 
 test_that("lead() works", {
+  test_df <- tibble(
+    x = 1:6,
+    t = c(1L, 5L, 3L, 6L, 2L, 4L)
+  )
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    test_pl |> mutate(x_lead = dplyr::lead(x, order_by = t)),
+    test_df |> mutate(x_lead = dplyr::lead(x, order_by = t))
+  )
+
   test_df <- tibble(
     g = c(1, 1, 1, 1, 2, 2, 2, 2),
     t = c(1, 2, 3, 4, 4, 1, 2, 3),
