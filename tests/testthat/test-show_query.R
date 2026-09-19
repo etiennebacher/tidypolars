@@ -820,9 +820,19 @@ test_that("translated stringr functions: case", {
   query <- dat |>
     mutate(
       up = str_to_upper(txt),
-      lo = str_to_lower(txt),
-      ti = str_to_title(txt)
+      lo = str_to_lower(txt)
     )
+
+  expect_snapshot(show_query(query))
+  expect_equal(replay_query(query), query)
+})
+
+test_that("translated stringr functions: title case", {
+  skip_if_not(polars::polars_info()$features$nightly)
+
+  dat <- tp_test_frame()
+  query <- dat |>
+    mutate(ti = str_to_title(txt))
 
   expect_snapshot(show_query(query))
   expect_equal(replay_query(query), query)
