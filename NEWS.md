@@ -54,6 +54,9 @@
 
 ## Bug fixes
 
+* Fix ungrouped `lag()` and `lead()` to respect `order_by` in `mutate()`
+  (#413, @Yousa-Mirage).
+
 * Fix `select()`, `rename()`, `rename_with()`, and `relocate()` to preserve
   grouping metadata and update renamed grouping variables (#400, @Yousa-Mirage).
 
