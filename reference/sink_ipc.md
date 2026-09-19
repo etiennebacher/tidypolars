@@ -149,7 +149,7 @@ sink_ipc(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
 #> Warning: `partition_by_key()` was deprecated in tidypolars 0.16.0.
 #> ℹ Please use `partition_by(key = )` instead.
 fs::dir_tree(out_path)
-#> /tmp/RtmpAOJ0Nc/file18fe59643e77
+#> /tmp/RtmpN32M9L/file190011efacd3
 #> ├── am=0.0
 #> │   ├── cyl=4.0
 #> │   │   └── 00000000.ipc
@@ -171,7 +171,7 @@ sink_ipc(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
 #> Warning: `partition_by_max_size()` was deprecated in tidypolars 0.16.0.
 #> ℹ Please use `partition_by(max_rows_per_file = )` instead.
 fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-#> /tmp/RtmpAOJ0Nc/file18fe76c51b2a
+#> /tmp/RtmpN32M9L/file1900297b73fa
 #> ├── 00000000.ipc
 #> ├── 00000001.ipc
 #> ├── 00000002.ipc
