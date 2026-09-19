@@ -49,13 +49,25 @@
 * Added support for covariance and missing-value strategies in `var()`
   (#398, #404, @Yousa-Mirage).
 
+* New argument `infer_schema_files` in `scan_csv_polars()` and
+  `read_csv_polars()` (#407).
+
 ## Bug fixes
+
+* Fix ungrouped `lag()` and `lead()` to respect `order_by` in `mutate()`
+  (#413, @Yousa-Mirage).
 
 * Fix `select()`, `rename()`, `rename_with()`, and `relocate()` to preserve
   grouping metadata and update renamed grouping variables (#400, @Yousa-Mirage).
 
 * `ifelse()` and `if_else()` now return missing values when their condition is
   missing, consistent with base R and dplyr (#399, @Yousa-Mirage).
+
+* Fix multiple-argument handling in `sum()`, `max()`, and `min()`, including
+  calls with no data arguments (#398, @Yousa-Mirage).
+
+* Invalid `na.rm` arguments in summary functions are no longer silently
+  ignored (#398, @Yousa-Mirage).
 
 * Fix the function name in deprecation warnings from `sink_csv()` (#393, @Yousa-Mirage).
 
