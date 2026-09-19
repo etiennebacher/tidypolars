@@ -54,7 +54,7 @@
 
 ## Bug fixes
 
-* Fix `arrange()` with a mix of columns and scalar literal expressions.
+* Fix `arrange()` with a mix of columns and scalar literal expressions (#414, @Yousa-Mirage).
 
 * Fix `select()`, `rename()`, `rename_with()`, and `relocate()` to preserve
   grouping metadata and update renamed grouping variables (#400, @Yousa-Mirage).
