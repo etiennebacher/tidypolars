@@ -27,23 +27,23 @@ test_that("moved to first positions if no .before or .after", {
 })
 
 test_that("columns can be renamed while relocating", {
-  test <- tibble(x = 1:3, n = 4:6, z = 7:9)
-  test_pl <- as_polars_df(test)
+  test_df <- tibble(x = 1:3, n = 4:6, z = 7:9)
+  test_pl <- as_polars_df(test_df)
 
   expect_equal(
     test_pl |> relocate(x, y = n),
-    test |> relocate(x, y = n)
+    test_df |> relocate(x, y = n)
   )
 
   expect_equal(
     test_pl |> group_by(n) |> relocate(y = n),
-    test |> group_by(n) |> relocate(y = n)
+    test_df |> group_by(n) |> relocate(y = n)
   )
 
   lookup <- c(y = "n")
   expect_equal(
     test_pl |> relocate(all_of(lookup)),
-    test |> relocate(all_of(lookup))
+    test_df |> relocate(all_of(lookup))
   )
 })
 
