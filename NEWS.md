@@ -54,6 +54,18 @@
 
 ## Bug fixes
 
+* `add_count()` without grouping expressions now preserves existing `n` columns
+  by choosing an unused count name and informing the user (#408, @Yousa-Mirage).
+
+* `complete()` now preserves zero-row inputs instead of adding a row containing
+  only missing values (#410, @Yousa-Mirage).
+
+* Fix grouped `count()` and `add_count()` sorting with multiple grouping variables
+  (#412, @Yousa-Mirage).
+
+* Fix ungrouped `lag()` and `lead()` to respect `order_by` in `mutate()`
+  (#413, @Yousa-Mirage).
+
 * Fix `select()`, `rename()`, `rename_with()`, and `relocate()` to preserve
   grouping metadata and update renamed grouping variables (#400, @Yousa-Mirage).
 
@@ -73,6 +85,9 @@
 
 * Fix `relocate()` to use the leftmost and rightmost selected columns for
   `.before` and `.after` for consistency with `dplyr` (#392, @Yousa-Mirage).
+
+* Fix `relocate()` to support renaming columns while moving them
+  (#415, @Yousa-Mirage).
 
 * Multiple fixes to improve compatibility with `stringr` for the following functions:
   `fixed()`, `regex()`, `str_extract_all()`, `str_pad()`, `str_split()`, `str_split_i()`,

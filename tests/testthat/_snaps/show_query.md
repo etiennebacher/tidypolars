@@ -1058,9 +1058,15 @@
     Output
       dat$with_columns(
         up = pl$col("txt")$str$to_uppercase(),
-        lo = pl$col("txt")$str$to_lowercase(),
-        ti = pl$col("txt")$str$to_titlecase()
+        lo = pl$col("txt")$str$to_lowercase()
       )
+
+# translated stringr functions: title case
+
+    Code
+      show_query(query)
+    Output
+      dat$with_columns(ti = pl$col("txt")$str$to_titlecase())
 
 # translated stringr functions: padding and trimming
 
@@ -1195,11 +1201,11 @@
       test_pl$select(pl$col(c("country", "year"))$unique()$sort()$implode())$
         explode(
           "country",
-          empty_as_null = TRUE
+          empty_as_null = FALSE
         )$
         explode(
           "year",
-          empty_as_null = TRUE
+          empty_as_null = FALSE
         )$
         join(
           test_pl,

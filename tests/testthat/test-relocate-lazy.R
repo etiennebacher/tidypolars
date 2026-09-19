@@ -30,6 +30,27 @@ test_that("moved to first positions if no .before or .after", {
   )
 })
 
+test_that("columns can be renamed while relocating", {
+  test_df <- tibble(x = 1:3, n = 4:6, z = 7:9)
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |> relocate(x, y = n),
+    test_df |> relocate(x, y = n)
+  )
+
+  expect_equal_lazy(
+    test_pl |> group_by(n) |> relocate(y = n),
+    test_df |> group_by(n) |> relocate(y = n)
+  )
+
+  lookup <- c(y = "n")
+  expect_equal_lazy(
+    test_pl |> relocate(all_of(lookup)),
+    test_df |> relocate(all_of(lookup))
+  )
+})
+
 test_that(".before and .after can be quoted or unquoted", {
   test_df <- as_tibble(mtcars)
   test_pl <- as_polars_lf(test_df)
