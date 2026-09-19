@@ -30,6 +30,16 @@ test_that("basic behavior works", {
   )
 })
 
+test_that("complete preserves zero-row inputs", {
+  test_df <- tibble(k = integer(), v = character())
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    test_pl |> complete(k, v),
+    test_df |> complete(k, v)
+  )
+})
+
 test_that("works on grouped data", {
   test_df <- tibble(
     g = c("a", "b", "a"),

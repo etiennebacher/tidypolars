@@ -1596,26 +1596,44 @@
     Output
       dat$with_columns(
         up = pl$col("txt")$str$to_uppercase(),
-        lo = pl$col("txt")$str$to_lowercase(),
-        ti = pl$col("txt")$str$to_titlecase()
+        lo = pl$col("txt")$str$to_lowercase()
       )
-      shape: (5, 11)
-      ┌──────┬─────┬─────┬─────────────┬───┬───────────────────┬─────────────┬─────────────┬─────────────┐
-      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ time              ┆ up          ┆ lo          ┆ ti          │
-      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---               ┆ ---         ┆ ---         ┆ ---         │
-      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ datetime[ms, UTC] ┆ str         ┆ str         ┆ str         │
-      ╞══════╪═════╪═════╪═════════════╪═══╪═══════════════════╪═════════════╪═════════════╪═════════════╡
-      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15        ┆ HELLO WORLD ┆ hello world ┆ Hello World │
-      │      ┆     ┆     ┆             ┆   ┆ 08:30:00 UTC      ┆             ┆             ┆             │
-      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30        ┆ FOO BAR     ┆ foo bar     ┆ Foo Bar     │
-      │      ┆     ┆     ┆             ┆   ┆ 14:00:00 UTC      ┆             ┆             ┆             │
-      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01        ┆ BAZ         ┆ baz         ┆ Baz         │
-      │      ┆     ┆     ┆             ┆   ┆ 23:59:00 UTC      ┆             ┆             ┆             │
-      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10        ┆ null        ┆ null        ┆ null        │
-      │      ┆     ┆     ┆             ┆   ┆ 00:00:00 UTC      ┆             ┆             ┆             │
-      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04        ┆ A1B2        ┆ a1b2        ┆ A1B2        │
-      │      ┆     ┆     ┆             ┆   ┆ 12:15:00 UTC      ┆             ┆             ┆             │
-      └──────┴─────┴─────┴─────────────┴───┴───────────────────┴─────────────┴─────────────┴─────────────┘
+      shape: (5, 10)
+      ┌──────┬─────┬─────┬─────────────┬───┬────────────┬────────────────────┬─────────────┬─────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ date       ┆ time               ┆ up          ┆ lo          │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---        ┆ ---                ┆ ---         ┆ ---         │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ date       ┆ datetime[ms, UTC]  ┆ str         ┆ str         │
+      ╞══════╪═════╪═════╪═════════════╪═══╪════════════╪════════════════════╪═════════════╪═════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ 2020-01-15 ┆ 2020-01-15         ┆ HELLO WORLD ┆ hello world │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 08:30:00 UTC       ┆             ┆             │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ 2021-06-30 ┆ 2021-06-30         ┆ FOO BAR     ┆ foo bar     │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 14:00:00 UTC       ┆             ┆             │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ 2019-12-01 ┆ 2019-12-01         ┆ BAZ         ┆ baz         │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 23:59:00 UTC       ┆             ┆             │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ 2022-03-10 ┆ 2022-03-10         ┆ null        ┆ null        │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 00:00:00 UTC       ┆             ┆             │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ 2020-07-04 ┆ 2020-07-04         ┆ A1B2        ┆ a1b2        │
+      │      ┆     ┆     ┆             ┆   ┆            ┆ 12:15:00 UTC       ┆             ┆             │
+      └──────┴─────┴─────┴─────────────┴───┴────────────┴────────────────────┴─────────────┴─────────────┘
+
+# translated stringr functions: title case
+
+    Code
+      compute(current)
+    Output
+      dat$with_columns(ti = pl$col("txt")$str$to_titlecase())
+      shape: (5, 9)
+      ┌──────┬─────┬─────┬─────────────┬───┬───────┬────────────┬─────────────────────────┬─────────────┐
+      │ num  ┆ int ┆ grp ┆ txt         ┆ … ┆ lgl2  ┆ date       ┆ time                    ┆ ti          │
+      │ ---  ┆ --- ┆ --- ┆ ---         ┆   ┆ ---   ┆ ---        ┆ ---                     ┆ ---         │
+      │ f64  ┆ i32 ┆ str ┆ str         ┆   ┆ bool  ┆ date       ┆ datetime[ms, UTC]       ┆ str         │
+      ╞══════╪═════╪═════╪═════════════╪═══╪═══════╪════════════╪═════════════════════════╪═════════════╡
+      │ 1.5  ┆ 2   ┆ a   ┆ Hello World ┆ … ┆ true  ┆ 2020-01-15 ┆ 2020-01-15 08:30:00 UTC ┆ Hello World │
+      │ -2.3 ┆ 3   ┆ a   ┆ foo bar     ┆ … ┆ true  ┆ 2021-06-30 ┆ 2021-06-30 14:00:00 UTC ┆ Foo Bar     │
+      │ 4.0  ┆ 1   ┆ b   ┆ BAZ         ┆ … ┆ false ┆ 2019-12-01 ┆ 2019-12-01 23:59:00 UTC ┆ Baz         │
+      │ null ┆ 5   ┆ b   ┆ null        ┆ … ┆ false ┆ 2022-03-10 ┆ 2022-03-10 00:00:00 UTC ┆ null        │
+      │ 6.7  ┆ 4   ┆ a   ┆ a1b2        ┆ … ┆ true  ┆ 2020-07-04 ┆ 2020-07-04 12:15:00 UTC ┆ A1B2        │
+      └──────┴─────┴─────┴─────────────┴───┴───────┴────────────┴─────────────────────────┴─────────────┘
 
 # translated stringr functions: padding and trimming
 
@@ -1869,11 +1887,11 @@
       test_pl$select(pl$col(c("country", "year"))$unique()$sort()$implode())$
         explode(
           "country",
-          empty_as_null = TRUE
+          empty_as_null = FALSE
         )$
         explode(
           "year",
-          empty_as_null = TRUE
+          empty_as_null = FALSE
         )$
         join(
           test_pl,
