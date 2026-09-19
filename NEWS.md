@@ -54,6 +54,9 @@
 
 ## Bug fixes
 
+* `add_count()` without grouping expressions now preserves existing `n` columns
+  by choosing an unused count name and informing the user (#408, @Yousa-Mirage).
+
 * `complete()` now preserves zero-row inputs instead of adding a row containing
   only missing values (#410, @Yousa-Mirage).
 

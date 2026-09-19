@@ -221,6 +221,35 @@ test_that("message if overwriting variable", {
   )
 })
 
+test_that("add_count without expressions preserves existing count columns", {
+  test_df <- tibble(g = c(1, 1, 2), n = c(10L, 20L, 30L))
+  test_pl <- as_polars_lf(test_df)
+
+  expect_message(
+    expect_equal_lazy(
+      test_pl |> add_count(),
+      test_df |> add_count() |> suppressMessages()
+    ),
+    "Storing counts in `nn`, as `n` already present in input."
+  )
+
+  expect_message(
+    expect_equal_lazy(
+      test_pl |> mutate(nn = 1L) |> add_count(),
+      test_df |> mutate(nn = 1L) |> add_count() |> suppressMessages()
+    ),
+    "Storing counts in `nnn`, as `n` already present in input."
+  )
+
+  expect_message(
+    expect_equal_lazy(
+      test_pl |> group_by(g) |> add_count(sort = TRUE),
+      test_df |> group_by(g) |> add_count(sort = TRUE) |> suppressMessages()
+    ),
+    "Storing counts in `nn`, as `n` already present in input."
+  )
+})
+
 test_that("count() on grouping variables", {
   df <- tibble(year = c(1, 1, 2, 2), vals = 1:4)
   df_pl <- as_polars_lf(df)

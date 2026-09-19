@@ -210,6 +210,8 @@ add_count.polars_data_frame <- function(
     polars_exprs <- unlist(polars_exprs, recursive = FALSE)
   }
 
+  name <- check_count_name(x, names(x), name)
+
   if (length(polars_exprs) == 0) {
     if (is_grouped) {
       out <- x$with_columns(pl$len()$over(!!!grps)$alias(name))
@@ -234,8 +236,6 @@ add_count.polars_data_frame <- function(
       names()
     names(polars_exprs) <- new_names
   }
-
-  name <- check_count_name(x, names(x), name)
 
   x <- x$with_columns(!!!polars_exprs)
 
