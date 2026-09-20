@@ -85,68 +85,58 @@ pl_desc_dplyr <- function(x) {
   x
 }
 
-check_lag_lead_n <- function(n, env) {
+pl_shift_dplyr <- function(x, n, default, order_by, direction, env) {
   n <- polars_expr_to_r(n)
-  check_number_whole(n, call = env)
-  if (n < 0) {
-    cli_abort("{.code n} must be positive.", call = env)
-  }
-  vctrs::vec_cast(n, integer(), call = env)
-}
+  check_number_whole(n, min = 0, call = env)
+  n <- vctrs::vec_cast(n, integer(), call = env)
+  default <- polars_expr_to_r(default)
+  order_by <- polars_expr_to_r(order_by)
 
-lag_lead_dtype <- function(x, env) {
-  # Infer the expression type from the input schema without evaluating it.
-  if (
-    !is_polars_expr(x) ||
-      !is.environment(env) ||
-      !exists(".data", env, inherits = FALSE)
-  ) {
-    return(NULL)
-  }
+  if (!is.null(default) && !is_polars_expr(default)) {
+    vctrs::vec_check_size(default, size = 1L, call = env)
 
-  data <- env[[".data"]]
-  name <- "__tidypolars_lag_lead_dtype__"
-  schema <- tryCatch(
-    (if (is_polars_lf(data)) data else data$lazy())$select(
-      x$alias(name)
-    )$collect_schema(),
-    error = function(e) NULL
-  )
-  if (is.null(schema)) {
-    return(NULL)
-  }
-  schema[[name]]
-}
-
-check_lag_lead_default <- function(default, x, env) {
-  if (is.null(default) || is_polars_expr(default)) {
-    return(default)
-  }
-  vctrs::vec_check_size(default, size = 1L, call = env)
-
-  dtype <- lag_lead_dtype(x, env)
-  ptype <- if (inherits(dtype, "polars_dtype_string")) {
-    character()
-  } else if (inherits(dtype, "polars_dtype_boolean")) {
-    logical()
-  } else if (inherits(dtype, "polars_dtype_float")) {
-    double()
-  } else if (inherits(dtype, "polars_dtype_integer")) {
-    integer()
-  } else {
-    NULL
-  }
-
-  if (!is.null(ptype)) {
-    default <- vctrs::vec_cast(
-      default,
-      ptype,
-      x_arg = "default",
-      to_arg = "x",
-      call = env
+    # Infer basic types without collecting data. Unresolved expressions (such
+    # as newly created columns) and other types retain Polars' casting behavior.
+    dtype <- tryCatch(
+      {
+        data <- env[[".data"]]
+        data <- if (is_polars_lf(data)) data else data$lazy()
+        data$select(x)$collect_schema()[[1L]]
+      },
+      error = function(e) NULL
     )
+    ptype <- if (inherits(dtype, "polars_dtype_string")) {
+      character()
+    } else if (inherits(dtype, "polars_dtype_boolean")) {
+      logical()
+    } else if (inherits(dtype, "polars_dtype_float")) {
+      double()
+    } else if (inherits(dtype, "polars_dtype_integer")) {
+      integer()
+    } else {
+      NULL
+    }
+
+    if (!is.null(ptype)) {
+      default <- vctrs::vec_cast(
+        default,
+        ptype,
+        x_arg = "default",
+        to_arg = "x",
+        call = env
+      )
+    }
   }
-  default
+
+  out <- if (is.null(default)) {
+    x$shift(direction * n)
+  } else {
+    x$shift(direction * n, fill_value = as_lit_expr(default))
+  }
+  if (!is.null(order_by)) {
+    attr(out, "order_by") <- order_by
+  }
+  out
 }
 
 pl_first_dplyr <- function(x, ...) {
@@ -155,21 +145,15 @@ pl_first_dplyr <- function(x, ...) {
 }
 
 pl_lag_dplyr <- function(x, n = 1, default = NULL, order_by = NULL, ...) {
-  env <- env_from_dots(...)
   check_empty_dots(...)
-  n <- check_lag_lead_n(n, env)
-  default <- polars_expr_to_r(default)
-  default <- check_lag_lead_default(default, x, env)
-  order_by <- polars_expr_to_r(order_by)
-  if (!is.null(default)) {
-    out <- x$shift(n, fill_value = as_lit_expr(default))
-  } else {
-    out <- x$shift(n)
-  }
-  if (!is.null(order_by)) {
-    attr(out, "order_by") <- order_by
-  }
-  out
+  pl_shift_dplyr(
+    x,
+    n,
+    default,
+    order_by,
+    direction = 1L,
+    env = env_from_dots(...)
+  )
 }
 
 pl_last_dplyr <- function(x, ...) {
@@ -178,21 +162,15 @@ pl_last_dplyr <- function(x, ...) {
 }
 
 pl_lead_dplyr <- function(x, n = 1, default = NULL, order_by = NULL, ...) {
-  env <- env_from_dots(...)
   check_empty_dots(...)
-  n <- check_lag_lead_n(n, env)
-  default <- polars_expr_to_r(default)
-  default <- check_lag_lead_default(default, x, env)
-  order_by <- polars_expr_to_r(order_by)
-  if (!is.null(default)) {
-    out <- x$shift(-n, fill_value = as_lit_expr(default))
-  } else {
-    out <- x$shift(-n)
-  }
-  if (!is.null(order_by)) {
-    attr(out, "order_by") <- order_by
-  }
-  out
+  pl_shift_dplyr(
+    x,
+    n,
+    default,
+    order_by,
+    direction = -1L,
+    env = env_from_dots(...)
+  )
 }
 
 pl_min_rank_dplyr <- function(x) {
