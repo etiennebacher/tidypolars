@@ -85,9 +85,25 @@ pl_desc_dplyr <- function(x) {
   x
 }
 
-pl_first_dplyr <- function(x, ...) {
-  check_empty_dots(...)
-  x$first()
+pl_first_dplyr <- function(
+  x,
+  order_by = NULL,
+  default = NULL,
+  na_rm = FALSE,
+  ...
+) {
+  if (missing(order_by) && missing(default) && missing(na_rm)) {
+    check_empty_dots(...)
+    return(x$first())
+  }
+  pl_nth_dplyr(
+    x,
+    1L,
+    order_by = order_by,
+    default = default,
+    na_rm = na_rm,
+    ...
+  )
 }
 
 pl_lag_dplyr <- function(x, n = 1, default = NULL, order_by = NULL, ...) {
@@ -106,9 +122,25 @@ pl_lag_dplyr <- function(x, n = 1, default = NULL, order_by = NULL, ...) {
   out
 }
 
-pl_last_dplyr <- function(x, ...) {
-  check_empty_dots(...)
-  x$last()
+pl_last_dplyr <- function(
+  x,
+  order_by = NULL,
+  default = NULL,
+  na_rm = FALSE,
+  ...
+) {
+  if (missing(order_by) && missing(default) && missing(na_rm)) {
+    check_empty_dots(...)
+    return(x$last())
+  }
+  pl_nth_dplyr(
+    x,
+    -1L,
+    order_by = order_by,
+    default = default,
+    na_rm = na_rm,
+    ...
+  )
 }
 
 pl_lead_dplyr <- function(x, n = 1, default = NULL, order_by = NULL, ...) {
@@ -168,7 +200,14 @@ pl_near_dplyr <- function(x, y, tol = .Machine$double.eps^0.5) {
   (x - y)$abs() < tol
 }
 
-pl_nth_dplyr <- function(x, n, ...) {
+pl_nth_dplyr <- function(
+  x,
+  n,
+  order_by = NULL,
+  default = NULL,
+  na_rm = FALSE,
+  ...
+) {
   check_empty_dots(...)
   n <- polars_expr_to_r(n)
   if (length(n) > 1) {
@@ -178,15 +217,70 @@ pl_nth_dplyr <- function(x, n, ...) {
     )
   }
   check_number_whole(n, allow_na = FALSE)
+  na_rm <- polars_expr_to_r(na_rm)
+  check_bool(na_rm)
+
+  # The translator wraps explicit NULL arguments in a list.
+  if (
+    identical(order_by, list(NULL)) ||
+      (is_polars_expr(order_by) && order_by$meta$eq(pl$lit(NULL)))
+  ) {
+    order_by <- NULL
+  }
+  if (
+    identical(default, list(NULL)) ||
+      (is_polars_expr(default) && default$meta$eq(pl$lit(NULL)))
+  ) {
+    default <- NULL
+  }
+
+  if (!is.null(order_by)) {
+    descending <- isTRUE(attr(order_by, "descending"))
+    # Sort NaN keys alongside nulls, while preserving strings such as "NaN".
+    order_by <- pl$when(nth_is_missing(order_by))$then(pl$lit(NULL))$otherwise(
+      order_by
+    )
+    x <- x$sort_by(
+      order_by,
+      descending = descending,
+      nulls_last = TRUE,
+      maintain_order = TRUE
+    )
+  }
+  if (na_rm) {
+    x <- x$drop_nulls()$drop_nans()
+  }
 
   # 0-indexed
-  if (n > 0) {
-    n <- n - 1
+  index <- if (n > 0) {
+    n - 1
   } else if (n == 0) {
     # R's zero index is always out of bounds; preserve the input dtype.
-    n <- x$len()
+    x$len()
+  } else {
+    n
   }
-  x$get(n, null_on_oob = TRUE)
+  out <- x$get(index, null_on_oob = TRUE)
+
+  # Require a scalar default and use it only out of bounds, preserving selected NAs.
+  if (!is.null(default)) {
+    default_r <- polars_expr_to_r(default)
+    if (!is_polars_expr(default_r)) {
+      vctrs::vec_check_size(default_r, size = 1L)
+    }
+    # Enforce scalar size for column-dependent defaults at execution time too.
+    default <- as_lit_expr(default)$reshape(1L)$get(0)
+    out_of_bounds <- if (n == 0) pl$lit(TRUE) else x$len() < abs(n)
+    out <- pl$when(out_of_bounds)$then(default)$otherwise(out)
+  }
+  out
+}
+
+nth_is_missing <- function(x) {
+  # is_nan() rejects non-numeric inputs. Only floating-point NaNs are missing;
+  # a string containing "NaN" must remain an ordinary value.
+  is_float <- pl$dtype_of(x)$matches(polars::cs$float())
+  x$is_null() | (is_float & x$cast(pl$Float64, strict = FALSE)$is_nan())
 }
 
 pl_recode_values_dplyr <- function(
