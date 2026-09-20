@@ -85,6 +85,60 @@ pl_desc_dplyr <- function(x) {
   x
 }
 
+pl_shift_dplyr <- function(x, n, default, order_by, direction, env) {
+  n <- polars_expr_to_r(n)
+  check_number_whole(n, min = 0, call = env)
+  n <- vctrs::vec_cast(n, integer(), call = env)
+  default <- polars_expr_to_r(default)
+  order_by <- polars_expr_to_r(order_by)
+
+  if (!is.null(default) && !is_polars_expr(default)) {
+    vctrs::vec_check_size(default, size = 1L, call = env)
+
+    # Infer basic types without collecting data. Unresolved expressions (such
+    # as newly created columns) and other types retain Polars' casting behavior.
+    dtype <- tryCatch(
+      {
+        data <- env[[".data"]]
+        data <- if (is_polars_lf(data)) data else data$lazy()
+        data$select(x)$collect_schema()[[1L]]
+      },
+      error = function(e) NULL
+    )
+    ptype <- if (inherits(dtype, "polars_dtype_string")) {
+      character()
+    } else if (inherits(dtype, "polars_dtype_boolean")) {
+      logical()
+    } else if (inherits(dtype, "polars_dtype_float")) {
+      double()
+    } else if (inherits(dtype, "polars_dtype_integer")) {
+      integer()
+    } else {
+      NULL
+    }
+
+    if (!is.null(ptype)) {
+      default <- vctrs::vec_cast(
+        default,
+        ptype,
+        x_arg = "default",
+        to_arg = "x",
+        call = env
+      )
+    }
+  }
+
+  out <- if (is.null(default)) {
+    x$shift(direction * n)
+  } else {
+    x$shift(direction * n, fill_value = as_lit_expr(default))
+  }
+  if (!is.null(order_by)) {
+    attr(out, "order_by") <- order_by
+  }
+  out
+}
+
 pl_first_dplyr <- function(x, ...) {
   check_empty_dots(...)
   x$first()
@@ -92,18 +146,14 @@ pl_first_dplyr <- function(x, ...) {
 
 pl_lag_dplyr <- function(x, n = 1, default = NULL, order_by = NULL, ...) {
   check_empty_dots(...)
-  n <- polars_expr_to_r(n)
-  default <- polars_expr_to_r(default)
-  order_by <- polars_expr_to_r(order_by)
-  if (!is.null(default)) {
-    out <- x$shift(n, fill_value = default)
-  } else {
-    out <- x$shift(n)
-  }
-  if (!is.null(order_by)) {
-    attr(out, "order_by") <- order_by
-  }
-  out
+  pl_shift_dplyr(
+    x,
+    n,
+    default,
+    order_by,
+    direction = 1L,
+    env = env_from_dots(...)
+  )
 }
 
 pl_last_dplyr <- function(x, ...) {
@@ -113,18 +163,14 @@ pl_last_dplyr <- function(x, ...) {
 
 pl_lead_dplyr <- function(x, n = 1, default = NULL, order_by = NULL, ...) {
   check_empty_dots(...)
-  n <- polars_expr_to_r(n)
-  default <- polars_expr_to_r(default)
-  order_by <- polars_expr_to_r(order_by)
-  if (!is.null(default)) {
-    out <- x$shift(-n, fill_value = default)
-  } else {
-    out <- x$shift(-n)
-  }
-  if (!is.null(order_by)) {
-    attr(out, "order_by") <- order_by
-  }
-  out
+  pl_shift_dplyr(
+    x,
+    n,
+    default,
+    order_by,
+    direction = -1L,
+    env = env_from_dots(...)
+  )
 }
 
 pl_min_rank_dplyr <- function(x) {

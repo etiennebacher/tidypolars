@@ -54,6 +54,9 @@
 
 ## Bug fixes
 
+* `lag()` and `lead()` now validate `n` and `default` consistently with dplyr
+  (#422, @Yousa-Mirage).
+
 * `add_count()` without grouping expressions now preserves existing `n` columns
   by choosing an unused count name and informing the user (#408, @Yousa-Mirage).
 

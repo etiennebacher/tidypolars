@@ -766,7 +766,7 @@
           then(pl$lit(NA))$
           otherwise(pl$col("int")$cum_max()),
         rv = pl$col("int")$reverse(),
-        df = pl$col("int") - pl$col("int")$shift(1)
+        df = pl$col("int") - pl$col("int")$shift(1L)
       )
 
 # translated base functions: anyDuplicated and duplicated
@@ -946,8 +946,8 @@
       show_query(query)
     Output
       dat$with_columns(
-        lg = pl$col("int")$shift(1),
-        ld = pl$col("int")$shift(-2),
+        lg = pl$col("int")$shift(1L),
+        ld = pl$col("int")$shift(-2L),
         rn = pl$int_range(start = 1, pl$len() + 1),
         dr = pl$col("int")$rank(method = "dense"),
         mr = pl$col("int")$rank(method = "min"),
