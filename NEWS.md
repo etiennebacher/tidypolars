@@ -54,11 +54,8 @@
 
 ## Bug fixes
 
-* `nth()` now returns a typed missing value for zero or out-of-bounds positions,
-  including empty inputs, and recycles scalar results in grouped and ungrouped
-  `mutate()`. Unsupported arguments such as `order_by`, `default`, and `na_rm`
-  now warn or error according to `tidypolars_unknown_args` instead of being
-  silently ignored (@Yousa-Mirage).
+* `nth()` now handles zero and out-of-bounds positions and recycles scalar
+  results in `mutate()` (#418, @Yousa-Mirage).
 
 * `add_count()` without grouping expressions now preserves existing `n` columns
   by choosing an unused count name and informing the user (#408, @Yousa-Mirage).
