@@ -121,6 +121,29 @@ test_that("evaluation of external objects works", {
   )
 })
 
+test_that("missing values in %in% conditions work", {
+  test_df <- tibble(x = c("a", NA_character_, "b"))
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    # jarl-ignore equals_na: Test intentional %in% expressions
+    test_pl |> mutate(y = case_when(x %in% NA ~ 1L, .default = 2L)),
+    # jarl-ignore equals_na: Test intentional %in% expressions
+    test_df |> mutate(y = case_when(x %in% NA ~ 1L, .default = 2L))
+  )
+
+  expect_equal_lazy(
+    test_pl |>
+      mutate(
+        y = case_when(x %in% c("a", NA_character_) ~ 1L, .default = 2L)
+      ),
+    test_df |>
+      mutate(
+        y = case_when(x %in% c("a", NA_character_) ~ 1L, .default = 2L)
+      )
+  )
+})
+
 test_that("some errors", {
   test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),
