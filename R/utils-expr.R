@@ -477,8 +477,7 @@ translate <- function(
                 env = env,
                 caller = caller,
                 expr_uses_col = expr_uses_col
-              ) |>
-                as_lit_expr()
+              )
               rhs <- translate(
                 expr[[3]],
                 .data = .data,
@@ -486,12 +485,29 @@ translate <- function(
                 env = env,
                 caller = caller,
                 expr_uses_col = expr_uses_col
-              ) |>
-                as_lit_expr()
+              )
+
+              lhs_r <- polars_expr_to_r(lhs)
+              rhs_r <- polars_expr_to_r(rhs)
+              lhs_is_na <- is.logical(lhs_r) &&
+                length(lhs_r) == 1 &&
+                is.na(lhs_r)
+              rhs_is_na <- is.logical(rhs_r) &&
+                length(rhs_r) > 0 &&
+                all(is.na(rhs_r))
+              lhs <- as_lit_expr(lhs)
+              rhs <- as_lit_expr(rhs)
+
               if (is.list(rhs)) {
                 rhs <- unlist(rhs)
               }
-              lhs$is_in(rhs$implode(), nulls_equal = TRUE)
+              if (rhs_is_na) {
+                lhs$is_null()
+              } else if (lhs_is_na) {
+                rhs$is_null()$any()
+              } else {
+                lhs$is_in(rhs$implode(), nulls_equal = TRUE)
+              }
             },
             error = function(e) {
               if (inherits(e, "rlang_error")) {

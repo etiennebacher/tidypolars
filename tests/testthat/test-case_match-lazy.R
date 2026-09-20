@@ -97,6 +97,27 @@ test_that("basic behavior works", {
   )
 })
 
+test_that("missing values can be matched", {
+  test_df <- tibble(x = c("a", NA_character_, "b"))
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |>
+      mutate(y = case_match(x, "a" ~ 1L, NA ~ 2L, .default = 99L)),
+    test_df |>
+      mutate(y = case_match(x, "a" ~ 1L, NA ~ 2L, .default = 99L)) |>
+      suppressWarnings()
+  )
+
+  expect_equal_lazy(
+    test_pl |>
+      mutate(y = case_match(x, c("a", NA_character_) ~ 1L, .default = 2L)),
+    test_df |>
+      mutate(y = case_match(x, c("a", NA_character_) ~ 1L, .default = 2L)) |>
+      suppressWarnings()
+  )
+})
+
 test_that("some errors", {
   test_df <- tibble(
     x1 = c("a", "a", "b", "a", "c"),

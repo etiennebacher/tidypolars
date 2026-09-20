@@ -91,6 +91,20 @@ test_that("%in operator works", {
   )
 })
 
+test_that("%in% works with untyped NA", {
+  test_df <- tibble(x = c("a", NA_character_, "b"))
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    # jarl-ignore equals_na: Test intentional %in% expressions
+    # jarl-ignore any_is_na: Test intentional %in% expressions
+    test_pl |> mutate(in_rhs = x %in% NA, in_lhs = NA %in% x),
+    # jarl-ignore equals_na: Test intentional %in% expressions
+    # jarl-ignore any_is_na: Test intentional %in% expressions
+    test_df |> mutate(in_rhs = x %in% NA, in_lhs = NA %in% x)
+  )
+})
+
 test_that("can overwrite existin variables", {
   test_df <- as_tibble(iris)
   test_pl <- as_polars_df(test_df)

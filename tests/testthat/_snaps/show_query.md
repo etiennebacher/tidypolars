@@ -907,12 +907,16 @@
       show_query(query)
     Output
       dat$with_columns(
-        with_default = pl$when(pl$col("grp")$is_in(pl$lit("a")$implode()))$
+        with_default = pl$when(
+          pl$col("grp")$is_in(pl$lit("a")$implode(), nulls_equal = TRUE)
+        )$
           then(pl$lit("A"))$
           otherwise(pl$lit("Z")),
-        no_default = pl$when(pl$col("grp")$is_in(pl$lit("a")$implode()))$
+        no_default = pl$when(
+          pl$col("grp")$is_in(pl$lit("a")$implode(), nulls_equal = TRUE)
+        )$
           then(pl$lit("A"))$
-          when(pl$col("grp")$is_in(pl$lit("b")$implode()))$
+          when(pl$col("grp")$is_in(pl$lit("b")$implode(), nulls_equal = TRUE))$
           then(pl$lit("B"))$
           otherwise(pl$lit(NA))
       )
