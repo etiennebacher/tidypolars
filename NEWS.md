@@ -55,7 +55,7 @@
 ## Bug fixes
 
 * `case_match()` and `%in%` now match missing values consistently with dplyr
-  (#420, @Yousa-Mirage).
+  (#421, @Yousa-Mirage).
 
 * `add_count()` without grouping expressions now preserves existing `n` columns
   by choosing an unused count name and informing the user (#408, @Yousa-Mirage).
