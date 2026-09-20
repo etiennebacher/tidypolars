@@ -85,18 +85,84 @@ pl_desc_dplyr <- function(x) {
   x
 }
 
+check_lag_lead_n <- function(n, env) {
+  n <- polars_expr_to_r(n)
+  check_number_whole(n, call = env)
+  if (n < 0) {
+    cli_abort("{.code n} must be positive.", call = env)
+  }
+  vctrs::vec_cast(n, integer(), call = env)
+}
+
+lag_lead_dtype <- function(x, env) {
+  # Infer the expression type from the input schema without evaluating it.
+  if (
+    !is_polars_expr(x) ||
+      !is.environment(env) ||
+      !exists(".data", env, inherits = FALSE)
+  ) {
+    return(NULL)
+  }
+
+  data <- env[[".data"]]
+  name <- "__tidypolars_lag_lead_dtype__"
+  schema <- tryCatch(
+    (if (is_polars_lf(data)) data else data$lazy())$select(
+      x$alias(name)
+    )$collect_schema(),
+    error = function(e) NULL
+  )
+  if (is.null(schema)) {
+    return(NULL)
+  }
+  schema[[name]]
+}
+
+check_lag_lead_default <- function(default, x, env) {
+  if (is.null(default) || is_polars_expr(default)) {
+    return(default)
+  }
+  vctrs::vec_check_size(default, size = 1L, call = env)
+
+  dtype <- lag_lead_dtype(x, env)
+  ptype <- if (inherits(dtype, "polars_dtype_string")) {
+    character()
+  } else if (inherits(dtype, "polars_dtype_boolean")) {
+    logical()
+  } else if (inherits(dtype, "polars_dtype_float")) {
+    double()
+  } else if (inherits(dtype, "polars_dtype_integer")) {
+    integer()
+  } else {
+    NULL
+  }
+
+  if (!is.null(ptype)) {
+    default <- vctrs::vec_cast(
+      default,
+      ptype,
+      x_arg = "default",
+      to_arg = "x",
+      call = env
+    )
+  }
+  default
+}
+
 pl_first_dplyr <- function(x, ...) {
   check_empty_dots(...)
   x$first()
 }
 
 pl_lag_dplyr <- function(x, n = 1, default = NULL, order_by = NULL, ...) {
+  env <- env_from_dots(...)
   check_empty_dots(...)
-  n <- polars_expr_to_r(n)
+  n <- check_lag_lead_n(n, env)
   default <- polars_expr_to_r(default)
+  default <- check_lag_lead_default(default, x, env)
   order_by <- polars_expr_to_r(order_by)
   if (!is.null(default)) {
-    out <- x$shift(n, fill_value = default)
+    out <- x$shift(n, fill_value = as_lit_expr(default))
   } else {
     out <- x$shift(n)
   }
@@ -112,12 +178,14 @@ pl_last_dplyr <- function(x, ...) {
 }
 
 pl_lead_dplyr <- function(x, n = 1, default = NULL, order_by = NULL, ...) {
+  env <- env_from_dots(...)
   check_empty_dots(...)
-  n <- polars_expr_to_r(n)
+  n <- check_lag_lead_n(n, env)
   default <- polars_expr_to_r(default)
+  default <- check_lag_lead_default(default, x, env)
   order_by <- polars_expr_to_r(order_by)
   if (!is.null(default)) {
-    out <- x$shift(-n, fill_value = default)
+    out <- x$shift(-n, fill_value = as_lit_expr(default))
   } else {
     out <- x$shift(-n)
   }

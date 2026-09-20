@@ -452,6 +452,53 @@ test_that("lead() works", {
   )
 })
 
+test_that("lag() and lead() validate arguments", {
+  test_df <- tibble(x = 1:4)
+  test_pl <- as_polars_df(test_df)
+
+  expect_both_error(
+    test_pl |> mutate(y = dplyr::lag(x, n = -1)),
+    test_df |> mutate(y = dplyr::lag(x, n = -1))
+  )
+  expect_both_error(
+    test_pl |> mutate(y = dplyr::lag(x, n = 1.5)),
+    test_df |> mutate(y = dplyr::lag(x, n = 1.5))
+  )
+  expect_both_error(
+    test_pl |> mutate(y = dplyr::lag(x, n = Inf)),
+    test_df |> mutate(y = dplyr::lag(x, n = Inf))
+  )
+  expect_both_error(
+    test_pl |> mutate(y = dplyr::lead(x, n = -1)),
+    test_df |> mutate(y = dplyr::lead(x, n = -1))
+  )
+
+  expect_equal(
+    test_pl |> mutate(y = dplyr::lag(x, n = 0)),
+    test_df |> mutate(y = dplyr::lag(x, n = 0))
+  )
+  expect_equal(
+    test_pl |> mutate(y = dplyr::lead(x, n = 0)),
+    test_df |> mutate(y = dplyr::lead(x, n = 0))
+  )
+
+  test_df <- tibble(x = c("a", "b"))
+  test_pl <- as_polars_df(test_df)
+
+  expect_both_error(
+    test_pl |> mutate(y = dplyr::lag(x, default = 99)),
+    test_df |> mutate(y = dplyr::lag(x, default = 99))
+  )
+  expect_equal(
+    test_pl |> mutate(y = dplyr::lag(x, default = "z")),
+    test_df |> mutate(y = dplyr::lag(x, default = "z"))
+  )
+  expect_both_error(
+    test_pl |> mutate(y = dplyr::lag(x, default = c("z", "w"))),
+    test_df |> mutate(y = dplyr::lag(x, default = c("z", "w")))
+  )
+})
+
 test_that("near() works", {
   test_df <- tibble(
     x = c(sqrt(2)^2, 0.1, NA),
