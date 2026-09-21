@@ -962,7 +962,7 @@
       dat$select(
         f = pl$col("grp")$first(),
         l = pl$col("grp")$last(),
-        nt = pl$col("grp")$gather(1),
+        nt = pl$col("grp")$get(1, null_on_oob = TRUE),
         cnt = pl$len(),
         nd = pl$struct(pl$col("grp"))$n_unique()
       )

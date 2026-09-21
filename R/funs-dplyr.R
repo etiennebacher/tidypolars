@@ -169,6 +169,7 @@ pl_near_dplyr <- function(x, y, tol = .Machine$double.eps^0.5) {
 }
 
 pl_nth_dplyr <- function(x, n, ...) {
+  check_empty_dots(...)
   n <- polars_expr_to_r(n)
   if (length(n) > 1) {
     cli_abort(
@@ -181,8 +182,11 @@ pl_nth_dplyr <- function(x, n, ...) {
   # 0-indexed
   if (n > 0) {
     n <- n - 1
+  } else if (n == 0) {
+    # R's zero index is always out of bounds; preserve the input dtype.
+    n <- x$len()
   }
-  x$gather(n)
+  x$get(n, null_on_oob = TRUE)
 }
 
 pl_recode_values_dplyr <- function(

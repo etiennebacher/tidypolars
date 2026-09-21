@@ -139,15 +139,6 @@ test_that("nth() work", {
     test_df |> summarize(foo = nth(x, -1))
   )
 
-  # TODO: Requires null_on_oob argument in gather/get
-  # https://github.com/pola-rs/polars/issues/15240
-  # expect_equal(
-  #   test_pl |>
-  #     summarize(foo = nth(x, 1000)),
-  #   test_df |>
-  #     summarize(foo = nth(x, 1000))
-  # )
-
   expect_both_error(
     test_pl |> summarize(foo = nth(x, 2:3)),
     test_df |> summarize(foo = nth(x, 2:3))
@@ -173,6 +164,49 @@ test_that("nth() work", {
     error = TRUE
   )
 })
+
+patrick::with_parameters_test_that(
+  "nth() always preserves types",
+  {
+    test_df <- tibble(x = x)
+    test_pl <- as_polars_df(test_df)
+
+    expect_equal(
+      test_pl |> summarize(y = nth(x, n)),
+      test_df |> summarize(y = nth(x, n))
+    )
+    expect_equal(
+      test_pl |> filter(FALSE) |> summarize(y = nth(x, 1)),
+      test_df |> filter(FALSE) |> summarize(y = nth(x, 1))
+    )
+  },
+  .cases = tidyr::crossing(
+    x = list(1:3, c(1, NA_real_, 3), letters[1:3], as.Date("2024-01-01") + 0:2),
+    n = c(0L, 4L, -4L)
+  )
+)
+
+patrick::with_parameters_test_that(
+  "nth() broadcasts scalars within and without groups for n={n}",
+  {
+    test_df <- tibble(x = c(30, NA_real_, 10), g = c("a", "a", "b"))
+    test_pl <- as_polars_df(test_df)
+
+    expect_equal(
+      test_pl |> mutate(y = nth(x, n)),
+      test_df |> mutate(y = nth(x, n))
+    )
+    expect_equal(
+      test_pl |> mutate(y = nth(x, n), .by = g),
+      test_df |> mutate(y = nth(x, n), .by = g)
+    )
+    expect_equal(
+      test_pl |> summarize(y = nth(x, n), .by = g) |> arrange(g),
+      test_df |> summarize(y = nth(x, n), .by = g) |> arrange(g)
+    )
+  },
+  n = c(0L, 1L, 2L, -1L, -2L, 4L, -4L)
+)
 
 test_that("na_if() works", {
   test_df <- tibble(

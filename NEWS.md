@@ -54,6 +54,9 @@
 
 ## Bug fixes
 
+* `nth()` now handles zero and out-of-bounds positions and recycles scalar
+  results in `mutate()` (#418, @Yousa-Mirage).
+
 * `add_count()` without grouping expressions now preserves existing `n` columns
   by choosing an unused count name and informing the user (#408, @Yousa-Mirage).
 
