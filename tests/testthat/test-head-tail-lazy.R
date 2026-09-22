@@ -49,10 +49,6 @@ test_that("tail() selects the last rows", {
 test_that("negative n excludes rows from the opposite end", {
   test_df <- as_tibble(iris) |> mutate(Species = as.character(Species))
   test_pl <- as_polars_lf(test_df)
-  skip_if(
-    is_polars_lf(test_pl),
-    "Polars LazyFrames do not support negative n now."
-  )
 
   expect_equal_lazy(
     head(test_pl, -10),
@@ -78,6 +74,8 @@ test_that("head() and tail() preserve empty inputs", {
 
   expect_equal_lazy(head(test_pl), head(test_df))
   expect_equal_lazy(tail(test_pl), tail(test_df))
+  expect_equal_lazy(head(test_pl, -10), head(test_df, -10))
+  expect_equal_lazy(tail(test_pl, -10), tail(test_df, -10))
 })
 
 test_that("head() preserves groups", {
@@ -89,6 +87,10 @@ test_that("head() preserves groups", {
     test_df |> group_by(Species) |> head(30)
   )
   expect_equal_lazy(
+    test_pl |> group_by(Species) |> head(-30),
+    test_df |> group_by(Species) |> head(-30)
+  )
+  expect_equal_lazy(
     test_pl |>
       group_by(Species, maintain_order = TRUE) |>
       head(30) |>
@@ -96,6 +98,16 @@ test_that("head() preserves groups", {
     test_df |>
       group_by(Species) |>
       head(30) |>
+      summarise(n = n())
+  )
+  expect_equal_lazy(
+    test_pl |>
+      group_by(Species, maintain_order = TRUE) |>
+      head(-30) |>
+      summarise(n = n()),
+    test_df |>
+      group_by(Species) |>
+      head(-30) |>
       summarise(n = n())
   )
 })
@@ -109,6 +121,10 @@ test_that("tail() preserves groups", {
     test_df |> group_by(Species) |> tail(30)
   )
   expect_equal_lazy(
+    test_pl |> group_by(Species) |> tail(-30),
+    test_df |> group_by(Species) |> tail(-30)
+  )
+  expect_equal_lazy(
     test_pl |>
       group_by(Species, maintain_order = TRUE) |>
       tail(30) |>
@@ -116,6 +132,16 @@ test_that("tail() preserves groups", {
     test_df |>
       group_by(Species) |>
       tail(30) |>
+      summarise(n = n())
+  )
+  expect_equal_lazy(
+    test_pl |>
+      group_by(Species, maintain_order = TRUE) |>
+      tail(-30) |>
+      summarise(n = n()),
+    test_df |>
+      group_by(Species) |>
+      tail(-30) |>
       summarise(n = n())
   )
 })

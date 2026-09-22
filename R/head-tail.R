@@ -1,6 +1,3 @@
-# TODO: Negative n is not yet supported by r-polars LazyFrame head()/tail().
-# Wait for upstream support before enabling the negative-n lazy tests.
-
 # Needed for show_query(). This has to shadow polars' exports, otherwise there
 # are cases where we cannot record the query at any time, e.g.:
 # mtcars |> as_polars_df() |> head() |> show_query()
@@ -10,7 +7,11 @@ head.polars_data_frame <- function(x, n = 6L, ...) {
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order %||% FALSE
 
-  out <- x$head(n = n)
+  out <- if (is_polars_lf(x) && isTRUE(n < 0)) {
+    x$reverse()$slice(-n)$reverse()
+  } else {
+    x$head(n = n)
+  }
 
   if (!is.null(grps)) {
     out <- group_by(out, all_of(grps), maintain_order = mo)
@@ -27,7 +28,11 @@ tail.polars_data_frame <- function(x, n = 6L, ...) {
   grps <- attributes(x)$pl_grps
   mo <- attributes(x)$maintain_grp_order %||% FALSE
 
-  out <- x$tail(n = n)
+  out <- if (is_polars_lf(x) && isTRUE(n < 0)) {
+    x$slice(-n)
+  } else {
+    x$tail(n = n)
+  }
 
   if (!is.null(grps)) {
     out <- group_by(out, all_of(grps), maintain_order = mo)
