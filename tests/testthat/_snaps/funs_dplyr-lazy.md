@@ -40,8 +40,7 @@
       compute(current)
     Condition
       Error in `compute()`:
-      ! lengths don't match: cannot evaluate two Series of different lengths (5 and 2)
-      Error originated in expression: '[(col("x")) == (Series[literal])]'
+      ! lengths don't match: zip node received non-equal length inputs
 
 # near() works
 
@@ -49,8 +48,7 @@
       compute(current)
     Condition
       Error in `compute()`:
-      ! lengths don't match: cannot evaluate two Series of different lengths (3 and 2)
-      Error originated in expression: '[(col("x")) - (Series[literal])]'
+      ! lengths don't match: zip node received non-equal length inputs
 
 #  when_all() and when_any() work
 

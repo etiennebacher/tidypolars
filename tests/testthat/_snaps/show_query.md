@@ -117,26 +117,6 @@
         with_columns(mpg_std = pl_standardize(pl$col("mpg")))$
         select("mpg_std")
 
-# long vectors are truncated in the query
-
-    Code
-      show_query(query)
-    Output
-      as_polars_df(mtcars)$
-        with_columns(
-          foo = pl$col("mpg")$is_in(pl$lit(large)$implode(), nulls_equal = TRUE)
-        )
-
----
-
-    Code
-      show_query(query)
-    Output
-      as_polars_df(mtcars)$
-        with_columns(
-          foo = pl$col("mpg")$is_in(pl$lit(runif(200))$implode(), nulls_equal = TRUE)
-        )
-
 # `NULL` arguments are kept in the query
 
     Code
@@ -365,16 +345,6 @@
           b = "b"
         )
 
-# long vectors that deparse compactly are kept in the query
-
-    Code
-      show_query(query)
-    Output
-      as_polars_df(mtcars)$
-        with_columns(
-          foo = pl$col("mpg")$is_in(pl$lit(1:200)$implode(), nulls_equal = TRUE)
-        )
-
 # values too long to display fall back to the code producing them
 
     Code
@@ -382,17 +352,6 @@
     Output
       as_polars_df(data.frame(txt = "a"))$
         filter(pl$col("txt") == pl$lit(strrep("a", 400)))
-
-# the source of a value is only used when it is short enough
-
-    Code
-      show_query(query)
-    Output
-      as_polars_df(mtcars)$
-        with_columns(
-          foo = pl$col("mpg")$
-            is_in(pl$lit(`<numeric of length 200>`)$implode(), nulls_equal = TRUE)
-        )
 
 # arguments that don't fit on a line are wrapped too
 
@@ -789,19 +748,6 @@
           fill_null(0)
       )
 
-# translated base functions: aggregations in summarize()
-
-    Code
-      show_query(query)
-    Output
-      dat$select(
-        al = (pl$col("int") > pl$lit(0))$all(ignore_nulls = FALSE),
-        an = (pl$col("int") > pl$lit(4))$any(ignore_nulls = FALSE),
-        na = pl$col("num")$has_nulls(),
-        wmn = (pl$col("num")$arg_min() + 1)$first(),
-        wmx = (pl$col("num")$arg_max() + 1)$first()
-      )
-
 # translated base functions: string manipulation
 
     Code
@@ -853,16 +799,6 @@
           otherwise(pl$col("num")$is_nan())
       )
 
-# translated base functions: %in% and %notin%
-
-    Code
-      show_query(query)
-    Output
-      dat$with_columns(
-        ins = pl$col("grp")$is_in(pl$lit("a")$implode(), nulls_equal = TRUE),
-        notin = pl$col("grp")$is_in(pl$lit("a")$implode(), nulls_equal = TRUE)$not()
-      )
-
 # translated dplyr functions: between, coalesce, near, if_else
 
     Code
@@ -898,22 +834,6 @@
           then(pl$lit("hi"))$
           when(pl$col("int") > pl$lit(1))$
           then(pl$lit("mid"))$
-          otherwise(pl$lit(NA))
-      )
-
-# translated dplyr functions: case_match (with and without default)
-
-    Code
-      show_query(query)
-    Output
-      dat$with_columns(
-        with_default = pl$when(pl$col("grp")$is_in(pl$lit("a")$implode()))$
-          then(pl$lit("A"))$
-          otherwise(pl$lit("Z")),
-        no_default = pl$when(pl$col("grp")$is_in(pl$lit("a")$implode()))$
-          then(pl$lit("A"))$
-          when(pl$col("grp")$is_in(pl$lit("b")$implode()))$
-          then(pl$lit("B"))$
           otherwise(pl$lit(NA))
       )
 
@@ -979,7 +899,41 @@
           otherwise(pl$col("int")$std(ddof = 1)),
         v = pl$when(pl$col("int")$has_nulls())$
           then(NA)$
-          otherwise(pl$col("int")$var(ddof = 1))
+          otherwise(pl$col("int")$var(ddof = 1)),
+        cv = pl$when(
+          pl$col("int")$
+            filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null())$
+            len() <
+            2
+        )$
+          then(NA)$
+          otherwise(
+            (
+              (
+                pl$col("int")$
+                  filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null()) -
+                  pl$col("int")$
+                    filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null())$
+                    mean()
+              ) *
+                (
+                  pl$col("num")$
+                    filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null()) -
+                    pl$col("num")$
+                      filter(
+                        pl$col("int")$is_not_null() & pl$col("num")$is_not_null()
+                      )$
+                      mean()
+                )
+            )$
+              sum()/
+              (
+                pl$col("int")$
+                  filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null())$
+                  len() -
+                  1
+              )
+          )
       )
 
 # translated stringr functions: detection
@@ -1067,9 +1021,9 @@
         ly = pl$col("date")$dt$is_leap_year(),
         dim = pl$when(pl$col("date")$is_null())$
           then(NA)$
-          when(pl$col("date")$dt$month()$is_in(list(c(1, 3, 5, 7, 8, 10, 12))))$
+          when(pl$col("date")$dt$month()$is_in(list(c(1L, 3L, 5L, 7L, 8L, 10L, 12L))))$
           then(31)$
-          when(pl$col("date")$dt$month()$is_in(list(c(4, 6, 9, 11))))$
+          when(pl$col("date")$dt$month()$is_in(list(c(4L, 6L, 9L, 11L))))$
           then(30)$
           when(pl$col("date")$dt$month() == 2 & pl$col("date")$dt$is_leap_year())$
           then(29)$
