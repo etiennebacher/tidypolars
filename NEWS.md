@@ -54,6 +54,8 @@
 
 ## Bug fixes
 
+* Preserve grouping metadata for `head()` and `tail()` (#424, @Yousa-Mirage).
+
 * `nth()` now handles zero and out-of-bounds positions and recycles scalar
   results in `mutate()` (#418, @Yousa-Mirage).
 
