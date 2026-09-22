@@ -54,6 +54,9 @@
 
 ## Bug fixes
 
+* `group_by()` without variables now clears the existing group, consistent with
+  `dplyr` (#423, @Yousa-Mirage).
+
 * `nth()` now handles zero and out-of-bounds positions and recycles scalar
   results in `mutate()` (#418, @Yousa-Mirage).
 
