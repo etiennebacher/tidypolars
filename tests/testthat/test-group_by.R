@@ -21,3 +21,21 @@ test_that("group_by() doesn't support named expressions, #233", {
     error = TRUE
   )
 })
+
+test_that("group_by() with no variables clears groups", {
+  test_df <- as_tibble(iris)
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    test_pl |> group_by(Species) |> group_by() |> group_vars(),
+    test_df |> group_by(Species) |> group_by() |> group_vars()
+  )
+  expect_equal(
+    test_pl |> group_by(Species) |> group_by() |> summarise(n = n()),
+    test_df |> group_by(Species) |> group_by() |> summarise(n = n())
+  )
+  expect_equal(
+    test_pl |> group_by(Species) |> group_by(.add = TRUE) |> group_vars(),
+    test_df |> group_by(Species) |> group_by(.add = TRUE) |> group_vars()
+  )
+})
