@@ -95,9 +95,9 @@ test_that("first() works", {
     test_df |> summarize(foo = first(x), .by = grp)
   )
 
-  expect_warning(
-    test_pl |> summarize(foo = first(x, order_by = "bar")),
-    "doesn't know how to use some arguments"
+  expect_equal_lazy(
+    test_pl |> summarize(foo = first(x, order_by = grp)),
+    test_df |> summarize(foo = first(x, order_by = grp))
   )
 })
 
@@ -119,9 +119,9 @@ test_that("last() works", {
     test_df |> summarize(foo = last(x), .by = grp)
   )
 
-  expect_warning(
-    test_pl |> summarize(foo = last(x, order_by = "bar")),
-    "doesn't know how to use some arguments"
+  expect_equal_lazy(
+    test_pl |> summarize(foo = last(x, order_by = grp)),
+    test_df |> summarize(foo = last(x, order_by = grp))
   )
 })
 
@@ -211,6 +211,229 @@ patrick::with_parameters_test_that(
   },
   n = c(0L, 1L, 2L, -1L, -2L, 4L, -4L)
 )
+
+patrick::with_parameters_test_that(
+  "nth(), first(), and last() support ordering and defaults with n={n}, na_rm={na_rm}",
+  {
+    test_df <- tibble(
+      x = c(NA_real_, 30, 10, 20, NaN, NA_real_, NaN),
+      ord = c(2, 1, 1, NA_real_, NaN, 2, 1),
+      grp = c(rep("a", 5), "b", "b")
+    )
+    test_pl <- as_polars_lf(test_df)
+
+    expect_equal_lazy(
+      test_pl |>
+        summarize(
+          f = first(x, order_by = ord, default = 99, na_rm = na_rm),
+          l = last(x, order_by = ord, default = 99, na_rm = na_rm),
+          y = nth(x, n, order_by = ord, default = 99, na_rm = na_rm)
+        ),
+      test_df |>
+        summarize(
+          f = first(x, order_by = ord, default = 99, na_rm = na_rm),
+          l = last(x, order_by = ord, default = 99, na_rm = na_rm),
+          y = nth(x, n, order_by = ord, default = 99, na_rm = na_rm)
+        )
+    )
+    expect_equal_lazy(
+      test_pl |>
+        mutate(
+          f = first(x, order_by = ord, default = 99, na_rm = na_rm),
+          l = last(x, order_by = ord, default = 99, na_rm = na_rm),
+          y = nth(x, n, order_by = ord, default = 99, na_rm = na_rm),
+          .by = grp
+        ),
+      test_df |>
+        mutate(
+          f = first(x, order_by = ord, default = 99, na_rm = na_rm),
+          l = last(x, order_by = ord, default = 99, na_rm = na_rm),
+          y = nth(x, n, order_by = ord, default = 99, na_rm = na_rm),
+          .by = grp
+        )
+    )
+    expect_equal_lazy(
+      test_pl |>
+        summarize(
+          y = nth(x, n, order_by = ord, default = 99, na_rm = na_rm),
+          .by = grp
+        ) |>
+        arrange(grp),
+      test_df |>
+        summarize(
+          y = nth(x, n, order_by = ord, default = 99, na_rm = na_rm),
+          .by = grp
+        ) |>
+        arrange(grp)
+    )
+  },
+  .cases = tidyr::crossing(
+    n = c(-8L, -2L, -1L, 0L, 1L, 2L, 8L),
+    na_rm = c(FALSE, TRUE)
+  )
+)
+
+patrick::with_parameters_test_that(
+  "nth(), first(), and last() handle missing values and empty inputs across types",
+  {
+    test_df <- tibble(x = x)
+    test_pl <- as_polars_lf(test_df)
+
+    expect_equal_lazy(
+      test_pl |>
+        summarize(
+          f = first(x, na_rm = TRUE),
+          l = last(x, na_rm = TRUE),
+          y = nth(x, 2, na_rm = TRUE),
+          missing = first(x, default = default),
+          beyond = nth(x, 10, default = default)
+        ),
+      test_df |>
+        summarize(
+          f = first(x, na_rm = TRUE),
+          l = last(x, na_rm = TRUE),
+          y = nth(x, 2, na_rm = TRUE),
+          missing = first(x, default = default),
+          beyond = nth(x, 10, default = default)
+        )
+    )
+    expect_equal_lazy(
+      test_pl |>
+        filter(FALSE) |>
+        summarize(
+          f = first(x, default = default, na_rm = TRUE),
+          l = last(x, default = default, na_rm = TRUE),
+          y = nth(x, 0, default = default, na_rm = TRUE)
+        ),
+      test_df |>
+        filter(FALSE) |>
+        summarize(
+          f = first(x, default = default, na_rm = TRUE),
+          l = last(x, default = default, na_rm = TRUE),
+          y = nth(x, 0, default = default, na_rm = TRUE)
+        )
+    )
+  },
+  .cases = tibble(
+    x = list(
+      c(NA_integer_, 3L, 1L),
+      c(NA_real_, NaN, 3, 1),
+      c(NA_character_, "NaN", "a"),
+      c(NA, TRUE, FALSE),
+      as.Date(c(NA, "2024-01-03", "2024-01-01"))
+    ),
+    default = list(99L, 99, "fallback", TRUE, as.Date("2000-01-01"))
+  )
+)
+
+patrick::with_parameters_test_that(
+  "nth(), first(), and last() use Polars default type coercion: {type}",
+  {
+    test_df <- tibble(x = x)
+    test_pl <- as_polars_lf(test_df)
+
+    # dplyr rejects these mixed types. Explicitly coerce its inputs to the
+    # documented Polars common type before comparing values and output types.
+    test_df <- test_df |> mutate(x = cast(x))
+    reference_default <- cast(default)
+
+    expect_type(
+      test_pl |> summarize(y = first(x, default = default)) |> pull(y),
+      typeof(reference_default)
+    )
+    expect_type(
+      test_pl |> summarize(y = nth(x, 5, default = default)) |> pull(y),
+      typeof(reference_default)
+    )
+
+    expect_equal_lazy(
+      test_pl |>
+        summarize(
+          f = first(x, default = default),
+          l = last(x, default = default),
+          missing = nth(x, 2, default = default),
+          beyond = nth(x, 5, default = default)
+        ),
+      test_df |>
+        summarize(
+          f = first(x, default = reference_default),
+          l = last(x, default = reference_default),
+          missing = nth(x, 2, default = reference_default),
+          beyond = nth(x, 5, default = reference_default)
+        )
+    )
+    expect_equal_lazy(
+      test_pl |>
+        filter(FALSE) |>
+        summarize(
+          f = first(x, default = default),
+          l = last(x, default = default),
+          y = nth(x, 0, default = default)
+        ),
+      test_df |>
+        filter(FALSE) |>
+        summarize(
+          f = first(x, default = reference_default),
+          l = last(x, default = reference_default),
+          y = nth(x, 0, default = reference_default)
+        )
+    )
+  },
+  .cases = tibble(
+    type = c("integer/double", "integer/character", "character/integer"),
+    x = list(
+      c(1L, NA_integer_, 3L),
+      c(1L, NA_integer_, 3L),
+      c("a", NA_character_, "c")
+    ),
+    default = list(99.5, "fallback", 99L),
+    cast = list(as.double, as.character, as.character)
+  )
+)
+
+test_that("nth() supports explicit NULL and expression arguments", {
+  test_df <- tibble(x = c(NA_real_, 30, 10), ord = c(3, 2, 1))
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |>
+      mutate(
+        f = first(x, order_by = NULL, default = NULL, na_rm = FALSE),
+        l = last(x, order_by = -ord, na_rm = TRUE),
+        descending = first(x, order_by = desc(ord), na_rm = TRUE),
+        y = nth(x + 1, 10, default = max(ord))
+      ),
+    test_df |>
+      mutate(
+        f = first(x, order_by = NULL, default = NULL, na_rm = FALSE),
+        l = last(x, order_by = -ord, na_rm = TRUE),
+        descending = first(x, order_by = desc(ord), na_rm = TRUE),
+        y = nth(x + 1, 10, default = max(ord))
+      )
+  )
+})
+
+test_that("nth() validates optional argument sizes and flags", {
+  test_df <- tibble(x = c(NA_real_, 2, 1))
+  test_pl <- as_polars_lf(test_df)
+
+  expect_both_error(
+    test_pl |> summarize(y = nth(x, 1, default = 1:2)),
+    test_df |> summarize(y = nth(x, 1, default = 1:2))
+  )
+  expect_both_error(
+    test_pl |> summarize(y = nth(x, 1, default = x)),
+    test_df |> summarize(y = nth(x, 1, default = x))
+  )
+  expect_both_error(
+    test_pl |> summarize(y = first(x, order_by = 1)),
+    test_df |> summarize(y = first(x, order_by = 1))
+  )
+  expect_both_error(
+    test_pl |> summarize(y = last(x, na_rm = NA)),
+    test_df |> summarize(y = last(x, na_rm = NA))
+  )
+})
 
 test_that("na_if() works", {
   test_df <- tibble(
