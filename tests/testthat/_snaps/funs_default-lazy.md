@@ -1,3 +1,12 @@
+# invalid na.rm arguments error
+
+    Code
+      compute(current)
+    Condition
+      Error in `summarize()`:
+      ! Error while running function `mean()` in Polars.
+      x `na.rm` must be `TRUE` or `FALSE`, not a <polars_expr> object.
+
 # var() doesn't work with `use = 'all.obs'`
 
     Code
@@ -13,7 +22,7 @@
       compute(current)
     Condition
       Error in `compute()`:
-      ! lengths don't match: can't broadcast Series 'foo' of length 4 to length 5
+      ! lengths don't match: zip node received non-equal length inputs
 
 # trunc() works
 

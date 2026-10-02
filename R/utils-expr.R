@@ -491,7 +491,10 @@ translate <- function(
               if (is.list(rhs)) {
                 rhs <- unlist(rhs)
               }
-              lhs$is_in(rhs$implode(), nulls_equal = TRUE)
+              lhs$is_in(
+                rhs$implode()$cast(pl$dtype_of(lhs)$wrap_in_list()),
+                nulls_equal = TRUE
+              )
             },
             error = function(e) {
               if (inherits(e, "rlang_error")) {

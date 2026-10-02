@@ -13,17 +13,18 @@ test_that("basic behavior works", {
   expect_is_tidypolars(complete(test_pl, country, year))
 
   expect_equal_lazy(
-    complete(test_pl, country, year),
+    complete(test_pl, country, year) |> arrange(country, year),
     complete(test_df, country, year)
   )
 
   expect_equal_lazy(
-    complete(test_pl, country, year),
+    complete(test_pl, country, year) |> arrange(country, year),
     complete(test_df, country, year)
   )
 
   expect_equal_lazy(
-    complete(test_pl, country, year, fill = list(value = 99)),
+    complete(test_pl, country, year, fill = list(value = 99)) |>
+      arrange(country, year),
     complete(test_df, country, year, fill = list(value = 99))
   )
 
@@ -56,7 +57,7 @@ test_that("works on grouped data", {
   test_pl_grp <- group_by(test_pl, g)
 
   expect_equal_lazy(
-    complete(test_pl_grp, a, b) |> arrange(g),
+    complete(test_pl_grp, a, b) |> arrange(g, a, b),
     complete(test_grp, a, b)
   )
 
@@ -76,7 +77,9 @@ test_that("argument 'explicit' works", {
   test_pl <- as_polars_lf(test_df)
 
   expect_equal_lazy(
-    test_pl |> complete(g, a, fill = list(b = "foo", c = 1), explicit = FALSE),
+    test_pl |>
+      complete(g, a, fill = list(b = "foo", c = 1), explicit = FALSE) |>
+      arrange(g, a, b),
     test_df |> complete(g, a, fill = list(b = "foo", c = 1), explicit = FALSE)
   )
 
