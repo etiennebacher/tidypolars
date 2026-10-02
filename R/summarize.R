@@ -61,7 +61,8 @@ summarize.polars_data_frame <- function(
     .data = .data_for_translation,
     ...,
     env = rlang::current_env(),
-    caller = rlang::caller_env()
+    caller = rlang::caller_env(),
+    auto_name = TRUE
   )
 
   polars_exprs <- lapply(polars_exprs, \(x) {

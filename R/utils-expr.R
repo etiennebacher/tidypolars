@@ -19,6 +19,8 @@
 #' @param env Environment of the function from which this expression is called
 #' (`filter()`, `mutate()` or `summarize()`).
 #' @param caller User environment in which the function is called.
+#' @param auto_name If `TRUE`, unnamed expressions (except `across()` calls)
+#' are named after their deparsed expression.
 #'
 #' @noRd
 #'
@@ -26,10 +28,13 @@
 #' created variables, then the list will contains sublists, one per `$with_columns()`
 #' call to make.
 
-translate_dots <- function(.data, ..., env, caller) {
+translate_dots <- function(.data, ..., env, caller, auto_name = FALSE) {
   dots <- enquos(...)
   if (length(dots) == 0) {
     return()
+  }
+  if (isTRUE(auto_name)) {
+    dots <- add_missing_names(dots)
   }
   dots <- lapply(dots, quo_squash)
   new_vars <- c()
@@ -1201,4 +1206,16 @@ check_allowed_rowwise <- function(name, env) {
       call = env
     )
   }
+}
+
+add_missing_names <- function(x) {
+  x_names <- names(x)
+  for (i in which(x_names == "")) {
+    expr <- quo_get_expr(x[[i]])
+    if (!(is_call(expr) && safe_deparse(expr[[1]]) == "across")) {
+      x_names[i] <- as_label(x[[i]])
+    }
+  }
+  names(x) <- x_names
+  x
 }
