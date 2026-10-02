@@ -52,6 +52,9 @@
 * New argument `infer_schema_files` in `scan_csv_polars()` and
   `read_csv_polars()` (#407).
 
+* `mutate()` and `summarize()` now accepts unnamed expressions and use the quoted
+  expression as column name (#426).
+
 ## Bug fixes
 
 * Preserve grouping metadata for `head()` and `tail()` (#424, @Yousa-Mirage).

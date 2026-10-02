@@ -126,7 +126,8 @@ mutate.polars_data_frame <- function(
     .data = .data,
     ...,
     env = rlang::current_env(),
-    caller = rlang::caller_env()
+    caller = rlang::caller_env(),
+    auto_name = TRUE
   )
 
   used <- c()
