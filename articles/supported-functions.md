@@ -84,17 +84,17 @@ original functions and of their translation by `tidypolars`.
 | `dplyr` | `coalesce` |  |
 | `dplyr` | `consecutive_id` |  |
 | `dplyr` | `dense_rank` |  |
-| `dplyr` | `first` |  |
+| `dplyr` | `first` | The `default` argument uses Polars type coercion rules, which may change the output type instead of rejecting incompatible values as dplyr does. |
 | `dplyr` | `group_keys` |  |
 | `dplyr` | `group_vars` |  |
 | `dplyr` | `if_else` | The arguments `ptype` and `size` are not supported. |
 | `dplyr` | `lag` |  |
 | `dplyr` | `lead` |  |
-| `dplyr` | `last` |  |
+| `dplyr` | `last` | The `default` argument uses Polars type coercion rules, which may change the output type instead of rejecting incompatible values as dplyr does. |
 | `dplyr` | `min_rank` |  |
 | `dplyr` | `n` |  |
 | `dplyr` | `near` | tidypolars errors if `x` and `y` have different lengths, dplyr doesn’t. |
-| `dplyr` | `nth` |  |
+| `dplyr` | `nth` | The `default` argument uses Polars type coercion rules, which may change the output type instead of rejecting incompatible values as dplyr does. |
 | `dplyr` | `n_distinct` |  |
 | `dplyr` | `recode_values` | The `dplyr` functions will error if the type of the replacement doesn’t match the type of the column (for instance trying to replace a character with an integer). This works in `tidypolars`. |
 | `dplyr` | `replace_values` | The `dplyr` functions will error if the type of the replacement doesn’t match the type of the column (for instance trying to replace a character with an integer). This works in `tidypolars`. |
