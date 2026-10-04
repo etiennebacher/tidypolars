@@ -960,8 +960,8 @@
       show_query(query)
     Output
       dat$select(
-        f = pl$col("grp")$first(),
-        l = pl$col("grp")$last(),
+        f = pl$col("grp")$get(0, null_on_oob = TRUE),
+        l = pl$col("grp")$get(-1L, null_on_oob = TRUE),
         nt = pl$col("grp")$get(1, null_on_oob = TRUE),
         cnt = pl$len(),
         nd = pl$struct(pl$col("grp"))$n_unique()
