@@ -92,10 +92,6 @@ pl_first_dplyr <- function(
   na_rm = FALSE,
   ...
 ) {
-  if (missing(order_by) && missing(default) && missing(na_rm)) {
-    check_empty_dots(...)
-    return(x$first())
-  }
   pl_nth_dplyr(
     x,
     1L,
@@ -129,10 +125,6 @@ pl_last_dplyr <- function(
   na_rm = FALSE,
   ...
 ) {
-  if (missing(order_by) && missing(default) && missing(na_rm)) {
-    check_empty_dots(...)
-    return(x$last())
-  }
   pl_nth_dplyr(
     x,
     -1L,
