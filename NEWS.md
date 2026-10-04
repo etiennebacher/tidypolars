@@ -20,6 +20,9 @@
 
 ## New features
 
+* Added support for the `order_by`, `default`, and `na_rm` arguments in
+  `first()`, `last()`, and `nth()` (#419, @Yousa-Mirage).
+
 * Clearer error messages in many cases (#370).
 
 * Added support for `show_query()` to print the pure `polars` code that is equivalent to the
