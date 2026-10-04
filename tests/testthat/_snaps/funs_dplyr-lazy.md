@@ -34,6 +34,41 @@
       ! Error while running function `nth()` in Polars.
       x `n` must be a whole number, not the number 1.5.
 
+# nth() validates optional argument sizes and flags
+
+    Code
+      compute(current)
+    Condition
+      Error in `summarize()`:
+      ! Error while running function `nth()` in Polars.
+      x `default` must have size 1, not size 2.
+
+---
+
+    Code
+      compute(current)
+    Condition
+      Error in `compute()`:
+      ! cannot reshape array of size 3 into shape (1)
+
+---
+
+    Code
+      compute(current)
+    Condition
+      Error in `compute()`:
+      ! lengths don't match: `sort_by` produced different length (1) than the Series that has to be sorted (3)
+      Error originated in expression: 'col("x").sort_by(by=[.when([(1.0.is_null()) | ([(true) & (1.0.is_nan())])]).then(null.cast(Float64)).otherwise(1.0)], sort_option=SortMultipleOptions { descending: [false], nulls_last: [true], multithreaded: true, maintain_order: true, limit: None })'
+
+---
+
+    Code
+      compute(current)
+    Condition
+      Error in `summarize()`:
+      ! Error while running function `last()` in Polars.
+      x `na_rm` must be `TRUE` or `FALSE`, not `NA`.
+
 # na_if() works
 
     Code

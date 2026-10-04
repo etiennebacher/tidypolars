@@ -258,7 +258,7 @@ pl_nth_dplyr <- function(
   if (!is.null(default)) {
     default_r <- polars_expr_to_r(default)
     if (!is_polars_expr(default_r)) {
-      vctrs::vec_check_size(default_r, size = 1L)
+      vctrs::vec_check_size(default_r, size = 1L, arg = "default")
     }
     # Enforce scalar size for column-dependent defaults at execution time too.
     default <- as_lit_expr(default)$reshape(1L)$get(0)

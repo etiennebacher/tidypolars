@@ -417,17 +417,33 @@ test_that("nth() validates optional argument sizes and flags", {
   test_df <- tibble(x = c(NA_real_, 2, 1))
   test_pl <- as_polars_lf(test_df)
 
+  expect_snapshot_lazy(
+    test_pl |> summarize(y = nth(x, 1, default = 1:2)),
+    error = TRUE
+  )
   expect_both_error(
     test_pl |> summarize(y = nth(x, 1, default = 1:2)),
     test_df |> summarize(y = nth(x, 1, default = 1:2))
+  )
+  expect_snapshot_lazy(
+    test_pl |> summarize(y = nth(x, 1, default = x)),
+    error = TRUE
   )
   expect_both_error(
     test_pl |> summarize(y = nth(x, 1, default = x)),
     test_df |> summarize(y = nth(x, 1, default = x))
   )
+  expect_snapshot_lazy(
+    test_pl |> summarize(y = first(x, order_by = 1)),
+    error = TRUE
+  )
   expect_both_error(
     test_pl |> summarize(y = first(x, order_by = 1)),
     test_df |> summarize(y = first(x, order_by = 1))
+  )
+  expect_snapshot_lazy(
+    test_pl |> summarize(y = last(x, na_rm = NA)),
+    error = TRUE
   )
   expect_both_error(
     test_pl |> summarize(y = last(x, na_rm = NA)),
