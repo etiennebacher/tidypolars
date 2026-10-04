@@ -19,9 +19,17 @@ pl_case_match_dplyr <- function(x, ...) {
       as_lit_expr()
 
     if (is.null(out)) {
-      out <- pl$when(x$is_in(lhs$implode()))$then(rhs)
+      out <- pl$when(
+        x$is_in(
+          lhs$implode()$cast(pl$dtype_of(x)$wrap_in_list())
+        )
+      )$then(rhs)
     } else {
-      out <- out$when(x$is_in(lhs$implode()))$then(rhs)
+      out <- out$when(
+        x$is_in(
+          lhs$implode()$cast(pl$dtype_of(x)$wrap_in_list())
+        )
+      )$then(rhs)
     }
   }
   otw <- from_to$default |>
