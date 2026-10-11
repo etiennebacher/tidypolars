@@ -84,7 +84,7 @@ test_that("show_query() works with group_by() and summarize()", {
 test_that("show_query() works with joins and shows the query of both inputs", {
   lhs <- as_polars_lf(mtcars) |> select(cyl, mpg)
   rhs <- as_polars_lf(mtcars) |> summarize(mean_mpg = mean(mpg), .by = cyl)
-  query <- left_join(lhs, rhs, by = "cyl")
+  query <- left_join(lhs, rhs, by = "cyl") |> arrange(cyl, mpg)
 
   expect_snapshot_lazy(show_query(query))
   expect_equal_lazy(replay_query(query), query)
@@ -947,7 +947,8 @@ test_that("check query for complete()", {
     value = c(1, 2, 3)
   ))
 
-  query <- complete(test_pl, country, year, fill = list(value = 99))
+  query <- complete(test_pl, country, year, fill = list(value = 99)) |>
+    arrange(country, year)
   expect_snapshot_lazy(show_query(query))
   expect_equal_lazy(replay_query(query), query)
 })

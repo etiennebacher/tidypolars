@@ -17,8 +17,8 @@ test_that("basic behavior works", {
   expect_is_tidypolars(cross_join(test_pl, test2_pl))
 
   expect_equal_lazy(
-    cross_join(test_pl, test2_pl),
-    cross_join(test_df, test2)
+    cross_join(test_pl, test2_pl) |> arrange(origin, destination),
+    cross_join(test_df, test2) |> arrange(origin, destination)
   )
 })
 

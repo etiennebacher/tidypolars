@@ -71,7 +71,13 @@
           validate = "m:m",
           coalesce = TRUE
         )$
-        select("cyl", "mpg", "mean_mpg")
+        select("cyl", "mpg", "mean_mpg")$
+        sort(
+          pl$col("cyl"),
+          pl$col("mpg"),
+          descending = c(FALSE, FALSE),
+          nulls_last = TRUE
+        )
 
 # show_query() works with across()
 
@@ -1250,7 +1256,13 @@
           coalesce = TRUE
         )$
         with_columns(pl$col("value")$fill_null(99))$
-        select("country", "year", "value")
+        select("country", "year", "value")$
+        sort(
+          pl$col("country"),
+          pl$col("year"),
+          descending = c(FALSE, FALSE),
+          nulls_last = TRUE
+        )
 
 # check query for uncount()
 
