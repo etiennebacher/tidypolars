@@ -127,12 +127,12 @@
       │ 6.0 ┆ 21.0 ┆ 19.742857 │
       │ 6.0 ┆ 21.0 ┆ 19.742857 │
       │ 4.0 ┆ 22.8 ┆ 26.663636 │
-      │ 6.0 ┆ 21.4 ┆ 19.742857 │
       │ 8.0 ┆ 18.7 ┆ 15.1      │
+      │ 6.0 ┆ 21.4 ┆ 19.742857 │
       │ …   ┆ …    ┆ …         │
-      │ 4.0 ┆ 30.4 ┆ 26.663636 │
-      │ 8.0 ┆ 15.8 ┆ 15.1      │
-      │ 6.0 ┆ 19.7 ┆ 19.742857 │
+      │ 8.0 ┆ 15.5 ┆ 15.1      │
+      │ 8.0 ┆ 15.2 ┆ 15.1      │
+      │ 8.0 ┆ 13.3 ┆ 15.1      │
       │ 8.0 ┆ 15.0 ┆ 15.1      │
       │ 4.0 ┆ 21.4 ┆ 26.663636 │
       └─────┴──────┴───────────┘
@@ -234,7 +234,11 @@
     Output
       as_polars_lf(mtcars)$
         with_columns(
-          foo = pl$col("mpg")$is_in(pl$lit(large)$implode(), nulls_equal = TRUE)
+          foo = pl$col("mpg")$
+            is_in(
+              pl$lit(large)$implode()$cast(pl$dtype_of(pl$col("mpg"))$wrap_in_list()),
+              nulls_equal = TRUE
+            )
         )
       shape: (32, 12)
       ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
@@ -262,7 +266,13 @@
     Output
       as_polars_lf(mtcars)$
         with_columns(
-          foo = pl$col("mpg")$is_in(pl$lit(runif(200))$implode(), nulls_equal = TRUE)
+          foo = pl$col("mpg")$
+            is_in(
+              pl$lit(runif(200))$
+                implode()$
+                cast(pl$dtype_of(pl$col("mpg"))$wrap_in_list()),
+              nulls_equal = TRUE
+            )
         )
       shape: (32, 12)
       ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
@@ -469,7 +479,7 @@
       compute(current)
     Condition
       Error in `compute()`:
-      ! conversion from `str` to `i32` failed in column 'char1' for 2 out of 2 values: ["a", "b"]
+      ! conversion from `str` to `i32` failed in column 'char1' for 1 out of 1 values: ["a"]
 
 # option tidypolars_record_query = FALSE disables the recording
 
@@ -529,7 +539,11 @@
     Output
       as_polars_lf(mtcars)$
         with_columns(
-          foo = pl$col("mpg")$is_in(pl$lit(1:200)$implode(), nulls_equal = TRUE)
+          foo = pl$col("mpg")$
+            is_in(
+              pl$lit(1:200)$implode()$cast(pl$dtype_of(pl$col("mpg"))$wrap_in_list()),
+              nulls_equal = TRUE
+            )
         )
       shape: (32, 12)
       ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
@@ -573,7 +587,12 @@
       as_polars_lf(mtcars)$
         with_columns(
           foo = pl$col("mpg")$
-            is_in(pl$lit(`<numeric of length 200>`)$implode(), nulls_equal = TRUE)
+            is_in(
+              pl$lit(`<numeric of length 200>`)$
+                implode()$
+                cast(pl$dtype_of(pl$col("mpg"))$wrap_in_list()),
+              nulls_equal = TRUE
+            )
         )
       shape: (32, 12)
       ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
@@ -899,13 +918,13 @@
       ╞═══════════════════════╪════════════════════╪═══════╡
       │ Agnostic              ┆ <$10k              ┆ 27.0  │
       │ Atheist               ┆ <$10k              ┆ 12.0  │
-      │ Buddhist              ┆ <$10k              ┆ 27.0  │
-      │ Catholic              ┆ <$10k              ┆ 418.0 │
-      │ Don’t know/refused    ┆ <$10k              ┆ 15.0  │
+      │ Agnostic              ┆ $10-20k            ┆ 34.0  │
+      │ Atheist               ┆ $10-20k            ┆ 27.0  │
+      │ Agnostic              ┆ $20-30k            ┆ 60.0  │
       │ …                     ┆ …                  ┆ …     │
-      │ Orthodox              ┆ Don't know/refused ┆ 73.0  │
-      │ Other Christian       ┆ Don't know/refused ┆ 18.0  │
-      │ Other Faiths          ┆ Don't know/refused ┆ 71.0  │
+      │ Unaffiliated          ┆ $100-150k          ┆ 321.0 │
+      │ Other World Religions ┆ >150k              ┆ 4.0   │
+      │ Unaffiliated          ┆ >150k              ┆ 258.0 │
       │ Other World Religions ┆ Don't know/refused ┆ 8.0   │
       │ Unaffiliated          ┆ Don't know/refused ┆ 597.0 │
       └───────────────────────┴────────────────────┴───────┘
@@ -1164,26 +1183,18 @@
         na = pl$col("num")$has_nulls(),
         wmn = (pl$col("num")$arg_min() + 1)$first(),
         wmx = (pl$col("num")$arg_max() + 1)$first(),
-        sm = pl$col("int")$sum() + pl$col("num")$sum() + pl$lit(1)$sum(),
-        mx = pl$max_horizontal(
-          pl$col("int")$max(),
-          pl$col("num")$max(),
-          pl$lit(10)$max()
-        ),
-        mn = pl$min_horizontal(
-          pl$col("int")$min(),
-          pl$col("num")$min(),
-          pl$lit(0)$min()
-        )
+        sm = pl$col("int")$sum(),
+        mx = pl$col("int")$max(),
+        mn = pl$col("int")$min()
       )
       shape: (1, 8)
-      ┌──────┬──────┬──────┬─────┬─────┬──────┬──────┬──────┐
-      │ al   ┆ an   ┆ na   ┆ wmn ┆ wmx ┆ sm   ┆ mx   ┆ mn   │
-      │ ---  ┆ ---  ┆ ---  ┆ --- ┆ --- ┆ ---  ┆ ---  ┆ ---  │
-      │ bool ┆ bool ┆ bool ┆ f64 ┆ f64 ┆ f64  ┆ f64  ┆ f64  │
-      ╞══════╪══════╪══════╪═════╪═════╪══════╪══════╪══════╡
-      │ true ┆ true ┆ true ┆ 2.0 ┆ 5.0 ┆ 25.9 ┆ 10.0 ┆ -2.3 │
-      └──────┴──────┴──────┴─────┴─────┴──────┴──────┴──────┘
+      ┌──────┬──────┬──────┬─────┬─────┬─────┬─────┬─────┐
+      │ al   ┆ an   ┆ na   ┆ wmn ┆ wmx ┆ sm  ┆ mx  ┆ mn  │
+      │ ---  ┆ ---  ┆ ---  ┆ --- ┆ --- ┆ --- ┆ --- ┆ --- │
+      │ bool ┆ bool ┆ bool ┆ f64 ┆ f64 ┆ i32 ┆ i32 ┆ i32 │
+      ╞══════╪══════╪══════╪═════╪═════╪═════╪═════╪═════╡
+      │ true ┆ true ┆ true ┆ 2.0 ┆ 5.0 ┆ 15  ┆ 5   ┆ 1   │
+      └──────┴──────┴──────┴─────┴─────┴─────┴─────┴─────┘
 
 # translated base functions: string manipulation
 
@@ -1278,8 +1289,17 @@
       compute(current)
     Output
       dat$with_columns(
-        ins = pl$col("grp")$is_in(pl$lit("a")$implode(), nulls_equal = TRUE),
-        notin = pl$col("grp")$is_in(pl$lit("a")$implode(), nulls_equal = TRUE)$not()
+        ins = pl$col("grp")$
+          is_in(
+            pl$lit("a")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list()),
+            nulls_equal = TRUE
+          ),
+        notin = pl$col("grp")$
+          is_in(
+            pl$lit("a")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list()),
+            nulls_equal = TRUE
+          )$
+          not()
       )
       shape: (5, 10)
       ┌──────┬─────┬─────┬─────────────┬───┬────────────┬─────────────────────────┬───────┬───────┐
@@ -1367,12 +1387,27 @@
       compute(current)
     Output
       dat$with_columns(
-        with_default = pl$when(pl$col("grp")$is_in(pl$lit("a")$implode()))$
+        with_default = pl$when(
+          pl$col("grp")$
+            is_in(
+              pl$lit("a")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list())
+            )
+        )$
           then(pl$lit("A"))$
           otherwise(pl$lit("Z")),
-        no_default = pl$when(pl$col("grp")$is_in(pl$lit("a")$implode()))$
+        no_default = pl$when(
+          pl$col("grp")$
+            is_in(
+              pl$lit("a")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list())
+            )
+        )$
           then(pl$lit("A"))$
-          when(pl$col("grp")$is_in(pl$lit("b")$implode()))$
+          when(
+            pl$col("grp")$
+              is_in(
+                pl$lit("b")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list())
+              )
+          )$
           then(pl$lit("B"))$
           otherwise(pl$lit(NA))
       )
@@ -1717,9 +1752,9 @@
         ly = pl$col("date")$dt$is_leap_year(),
         dim = pl$when(pl$col("date")$is_null())$
           then(NA)$
-          when(pl$col("date")$dt$month()$is_in(list(c(1, 3, 5, 7, 8, 10, 12))))$
+          when(pl$col("date")$dt$month()$is_in(list(c(1L, 3L, 5L, 7L, 8L, 10L, 12L))))$
           then(31)$
-          when(pl$col("date")$dt$month()$is_in(list(c(4, 6, 9, 11))))$
+          when(pl$col("date")$dt$month()$is_in(list(c(4L, 6L, 9L, 11L))))$
           then(30)$
           when(pl$col("date")$dt$month() == 2 & pl$col("date")$dt$is_leap_year())$
           then(29)$
@@ -1917,12 +1952,12 @@
       │ ---     ┆ ---    ┆ ---   │
       │ str     ┆ f64    ┆ f64   │
       ╞═════════╪════════╪═══════╡
-      │ France  ┆ 2019.0 ┆ 99.0  │
-      │ France  ┆ 2020.0 ┆ 1.0   │
-      │ France  ┆ 2021.0 ┆ 2.0   │
-      │ UK      ┆ 2019.0 ┆ 3.0   │
-      │ UK      ┆ 2020.0 ┆ 99.0  │
       │ UK      ┆ 2021.0 ┆ 99.0  │
+      │ UK      ┆ 2020.0 ┆ 99.0  │
+      │ France  ┆ 2020.0 ┆ 1.0   │
+      │ France  ┆ 2019.0 ┆ 99.0  │
+      │ UK      ┆ 2019.0 ┆ 3.0   │
+      │ France  ┆ 2021.0 ┆ 2.0   │
       └─────────┴────────┴───────┘
 
 # check query for uncount()
@@ -2121,7 +2156,7 @@
       │ --- ┆ --- ┆ ---                 │
       │ str ┆ f64 ┆ u64                 │
       ╞═════╪═════╪═════════════════════╡
-      │ a   ┆ 1.0 ┆ 9401135652799850258 │
-      │ b   ┆ 2.0 ┆ 6701719201758175205 │
+      │ a   ┆ 1.0 ┆ 7644163247338747735 │
+      │ b   ┆ 2.0 ┆ 5124371781196344834 │
       └─────┴─────┴─────────────────────┘
 

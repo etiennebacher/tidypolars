@@ -117,6 +117,36 @@
         with_columns(mpg_std = pl_standardize(pl$col("mpg")))$
         select("mpg_std")
 
+# long vectors are truncated in the query
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          foo = pl$col("mpg")$
+            is_in(
+              pl$lit(large)$implode()$cast(pl$dtype_of(pl$col("mpg"))$wrap_in_list()),
+              nulls_equal = TRUE
+            )
+        )
+
+---
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          foo = pl$col("mpg")$
+            is_in(
+              pl$lit(runif(200))$
+                implode()$
+                cast(pl$dtype_of(pl$col("mpg"))$wrap_in_list()),
+              nulls_equal = TRUE
+            )
+        )
+
 # `NULL` arguments are kept in the query
 
     Code
@@ -345,6 +375,20 @@
           b = "b"
         )
 
+# long vectors that deparse compactly are kept in the query
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          foo = pl$col("mpg")$
+            is_in(
+              pl$lit(1:200)$implode()$cast(pl$dtype_of(pl$col("mpg"))$wrap_in_list()),
+              nulls_equal = TRUE
+            )
+        )
+
 # values too long to display fall back to the code producing them
 
     Code
@@ -352,6 +396,22 @@
     Output
       as_polars_df(data.frame(txt = "a"))$
         filter(pl$col("txt") == pl$lit(strrep("a", 400)))
+
+# the source of a value is only used when it is short enough
+
+    Code
+      show_query(query)
+    Output
+      as_polars_df(mtcars)$
+        with_columns(
+          foo = pl$col("mpg")$
+            is_in(
+              pl$lit(`<numeric of length 200>`)$
+                implode()$
+                cast(pl$dtype_of(pl$col("mpg"))$wrap_in_list()),
+              nulls_equal = TRUE
+            )
+        )
 
 # arguments that don't fit on a line are wrapped too
 
@@ -748,6 +808,22 @@
           fill_null(0)
       )
 
+# translated base functions: aggregations in summarize()
+
+    Code
+      show_query(query)
+    Output
+      dat$select(
+        al = (pl$col("int") > pl$lit(0))$all(ignore_nulls = FALSE),
+        an = (pl$col("int") > pl$lit(4))$any(ignore_nulls = FALSE),
+        na = pl$col("num")$has_nulls(),
+        wmn = (pl$col("num")$arg_min() + 1)$first(),
+        wmx = (pl$col("num")$arg_max() + 1)$first(),
+        sm = pl$col("int")$sum(),
+        mx = pl$col("int")$max(),
+        mn = pl$col("int")$min()
+      )
+
 # translated base functions: string manipulation
 
     Code
@@ -799,6 +875,25 @@
           otherwise(pl$col("num")$is_nan())
       )
 
+# translated base functions: %in% and %notin%
+
+    Code
+      show_query(query)
+    Output
+      dat$with_columns(
+        ins = pl$col("grp")$
+          is_in(
+            pl$lit("a")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list()),
+            nulls_equal = TRUE
+          ),
+        notin = pl$col("grp")$
+          is_in(
+            pl$lit("a")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list()),
+            nulls_equal = TRUE
+          )$
+          not()
+      )
+
 # translated dplyr functions: between, coalesce, near, if_else
 
     Code
@@ -834,6 +929,37 @@
           then(pl$lit("hi"))$
           when(pl$col("int") > pl$lit(1))$
           then(pl$lit("mid"))$
+          otherwise(pl$lit(NA))
+      )
+
+# translated dplyr functions: case_match (with and without default)
+
+    Code
+      show_query(query)
+    Output
+      dat$with_columns(
+        with_default = pl$when(
+          pl$col("grp")$
+            is_in(
+              pl$lit("a")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list())
+            )
+        )$
+          then(pl$lit("A"))$
+          otherwise(pl$lit("Z")),
+        no_default = pl$when(
+          pl$col("grp")$
+            is_in(
+              pl$lit("a")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list())
+            )
+        )$
+          then(pl$lit("A"))$
+          when(
+            pl$col("grp")$
+              is_in(
+                pl$lit("b")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list())
+              )
+          )$
+          then(pl$lit("B"))$
           otherwise(pl$lit(NA))
       )
 

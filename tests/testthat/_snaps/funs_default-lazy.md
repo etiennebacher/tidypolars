@@ -1,12 +1,3 @@
-# invalid na.rm arguments error
-
-    Code
-      compute(current)
-    Condition
-      Error in `summarize()`:
-      ! Error while running function `mean()` in Polars.
-      x `na.rm` must be `TRUE` or `FALSE`, not a <polars_expr> object.
-
 # var() doesn't work with `use = 'all.obs'`
 
     Code
@@ -30,7 +21,7 @@
       compute(current)
     Condition
       Error in `compute()`:
-      ! truncation ('to_zero') can only be used on numeric types
+      ! truncation ('to_zero') operation not supported for dtype `str` (expected: numeric)
 
 # trunc() in tidypolars doesn't support Date/datetime
 
@@ -41,7 +32,7 @@
       tidypolars doesn't know how to use some arguments of `trunc()`.
       i The following argument(s) will be ignored: "units".
       Error in `compute()`:
-      ! truncation ('to_zero') can only be used on numeric types
+      ! truncation ('to_zero') operation not supported for dtype `date` (expected: numeric)
 
 ---
 
@@ -52,7 +43,7 @@
       tidypolars doesn't know how to use some arguments of `trunc()`.
       i The following argument(s) will be ignored: "units".
       Error in `compute()`:
-      ! truncation ('to_zero') can only be used on numeric types
+      ! truncation ('to_zero') operation not supported for dtype `datetime[ms]` (expected: numeric)
 
 # sample() validates size
 

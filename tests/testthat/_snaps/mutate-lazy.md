@@ -4,7 +4,7 @@
       compute(current)
     Condition
       Error in `compute()`:
-      ! lengths don't match: can't broadcast Series 'Sepal.Width' of length 2 to length 150
+      ! lengths don't match: zip node received non-equal length inputs
 
 ---
 
@@ -12,7 +12,7 @@
       compute(current)
     Condition
       Error in `compute()`:
-      ! lengths don't match: can't broadcast Series 'Sepal.Width' of length 2 to length 150
+      ! lengths don't match: zip node received non-equal length inputs
 
 # custom function that doesn't return Polars expression
 

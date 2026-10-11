@@ -4,7 +4,7 @@
       compute(current)
     Condition
       Error in `compute()`:
-      ! conversion from `str` to `f64` failed in column 'literal' for 1 out of 1 values: ["a"]
+      ! Invalid operation: conversion from `str` to `f64` failed in column 'literal' for 1 out of 1 values: ["a"]
 
 ---
 
@@ -12,5 +12,5 @@
       compute(current)
     Condition
       Error in `compute()`:
-      ! conversion from `str` to `f64` failed in column 'literal' for 1 out of 1 values: ["unknown"]
+      ! Invalid operation: conversion from `str` to `f64` failed in column 'literal' for 1 out of 1 values: ["unknown"]
 
