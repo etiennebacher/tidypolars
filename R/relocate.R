@@ -59,10 +59,16 @@ relocate.polars_data_frame <- function(
     where <- "AFTER"
   }
 
-  vars <- tidyselect_dots(.data, ...)
+  vars <- tidyselect_dots(.data, ..., with_renaming = TRUE)
   if (length(vars) == 0) {
     return(add_tidypolars_class(.data))
   }
+
+  selected_names <- names_data[unname(vars)]
+  renamed <- names(vars) != selected_names
+  new_names <- as.list(names(vars)[renamed])
+  names(new_names) <- selected_names[renamed]
+  vars <- selected_names
 
   not_moving <- setdiff(names_data, vars)
 
@@ -96,6 +102,14 @@ relocate.polars_data_frame <- function(
   }
 
   out <- .data$select(!!!new_order)
+  if (length(new_names) > 0) {
+    groups_to_rename <- grps %in% names(new_names)
+    grps[groups_to_rename] <- unlist(
+      new_names[grps[groups_to_rename]],
+      use.names = FALSE
+    )
+    out <- out$rename(!!!new_names)
+  }
   if (length(grps) > 0) {
     out <- group_by(out, all_of(grps), maintain_order = mo)
   }

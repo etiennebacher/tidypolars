@@ -118,7 +118,7 @@ complete.polars_data_frame <- function(
   }
 
   for (i in seq_along(unnamed_dots)) {
-    chain <- chain$explode(unnamed_dots[i], empty_as_null = TRUE)
+    chain <- chain$explode(unnamed_dots[i], empty_as_null = FALSE)
   }
 
   for (i in seq_along(named_dots)) {

@@ -204,3 +204,21 @@ test_that("empty expressions", {
     test_df |> summarize(.by = grp)
   )
 })
+
+test_that("expressions can be unnamed, #425", {
+  test_df <- tibble(x = 1, y = 2)
+  test_pl <- as_polars_df(test_df)
+
+  expect_equal(
+    summarize(test_pl, mean(y)),
+    summarize(test_df, mean(y))
+  )
+  expect_equal(
+    summarize(test_pl, z = 3, mean(y)),
+    summarize(test_df, z = 3, mean(y))
+  )
+  expect_equal(
+    summarize(test_pl, mean(y), z = 3),
+    summarize(test_df, mean(y), z = 3)
+  )
+})

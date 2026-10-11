@@ -61,6 +61,30 @@ test_that("count works on grouped data", {
   )
 })
 
+test_that("sort works with multiple grouping variables", {
+  test_df <- tibble(
+    g1 = c("a", "a", "b", "b"),
+    g2 = c(1L, 2L, 1L, 1L),
+    x = 1:4
+  )
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |> group_by(g1, g2) |> count(x, sort = TRUE),
+    test_df |> group_by(g1, g2) |> count(x, sort = TRUE)
+  )
+
+  expect_equal_lazy(
+    test_pl |> group_by(g1, g2) |> add_count(sort = TRUE),
+    test_df |> group_by(g1, g2) |> add_count(sort = TRUE)
+  )
+
+  expect_equal_lazy(
+    test_pl |> group_by(g1, g2) |> add_count(g1, sort = TRUE),
+    test_df |> group_by(g1, g2) |> add_count(g1, sort = TRUE)
+  )
+})
+
 test_that("count works with expressions", {
   test_df <- as_tibble(mtcars)
   test_pl <- as_polars_lf(test_df)
@@ -194,6 +218,35 @@ test_that("message if overwriting variable", {
       test_df |> mutate(n = 1, nn = 1) |> add_count(cyl) |> suppressMessages()
     ),
     "Storing counts in `nnn`, as `n` already present in input."
+  )
+})
+
+test_that("add_count without expressions preserves existing count columns", {
+  test_df <- tibble(g = c(1, 1, 2), n = c(10L, 20L, 30L))
+  test_pl <- as_polars_lf(test_df)
+
+  expect_message(
+    expect_equal_lazy(
+      test_pl |> add_count(),
+      test_df |> add_count() |> suppressMessages()
+    ),
+    "Storing counts in `nn`, as `n` already present in input."
+  )
+
+  expect_message(
+    expect_equal_lazy(
+      test_pl |> mutate(nn = 1L) |> add_count(),
+      test_df |> mutate(nn = 1L) |> add_count() |> suppressMessages()
+    ),
+    "Storing counts in `nnn`, as `n` already present in input."
+  )
+
+  expect_message(
+    expect_equal_lazy(
+      test_pl |> group_by(g) |> add_count(sort = TRUE),
+      test_df |> group_by(g) |> add_count(sort = TRUE) |> suppressMessages()
+    ),
+    "Storing counts in `nn`, as `n` already present in input."
   )
 })
 

@@ -61,7 +61,7 @@ group_by.polars_data_frame <- function(
   }
 
   if (length(vars) == 0) {
-    return(.data)
+    return(ungroup(.data))
   }
   # need to clone, otherwise the data gets attributes, even if unassigned
   .data2 <- .data$clone()

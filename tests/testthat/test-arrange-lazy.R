@@ -212,6 +212,10 @@ test_that("arrange() works with literals, #295", {
     test_df |> arrange(1)
   )
   expect_equal_lazy(
+    test_pl |> arrange(x, "a"),
+    test_df |> arrange(x, "a")
+  )
+  expect_equal_lazy(
     test_pl |> arrange(c(1, 3, 2)),
     test_df |> arrange(c(1, 3, 2))
   )

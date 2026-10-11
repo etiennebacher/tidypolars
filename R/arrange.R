@@ -40,14 +40,6 @@ arrange.polars_data_frame <- function(.data, ..., .by_group = FALSE) {
     caller = rlang::caller_env()
   )
 
-  descending <- vapply(
-    polars_exprs,
-    function(x) {
-      attr(x, "descending") %||% FALSE
-    },
-    FUN.VALUE = logical(1L)
-  )
-
   # We want to allow sort expressions of length 1 (e.g. `arrange("a")`). This
   # isn't doing anything on the sort but dplyr allows it.
   polars_exprs <- lapply(seq_along(polars_exprs), function(x) {
@@ -62,6 +54,14 @@ arrange.polars_data_frame <- function(.data, ..., .by_group = FALSE) {
     }
   }) |>
     Filter(Negate(is.null), x = _)
+
+  descending <- vapply(
+    polars_exprs,
+    function(x) {
+      attr(x, "descending") %||% FALSE
+    },
+    FUN.VALUE = logical(1L)
+  )
 
   if (is_grouped && isTRUE(.by_group)) {
     to_sort_with <- c(grps, polars_exprs)

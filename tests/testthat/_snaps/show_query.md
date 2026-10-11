@@ -880,9 +880,9 @@
       show_query(query)
     Output
       dat$select(
-        f = pl$col("grp")$first(),
-        l = pl$col("grp")$last(),
-        nt = pl$col("grp")$gather(1),
+        f = pl$col("grp")$get(0, null_on_oob = TRUE),
+        l = pl$col("grp")$get(-1L, null_on_oob = TRUE),
+        nt = pl$col("grp")$get(1, null_on_oob = TRUE),
         cnt = pl$len(),
         nd = pl$struct(pl$col("grp"))$n_unique()
       )
@@ -967,9 +967,15 @@
     Output
       dat$with_columns(
         up = pl$col("txt")$str$to_uppercase(),
-        lo = pl$col("txt")$str$to_lowercase(),
-        ti = pl$col("txt")$str$to_titlecase()
+        lo = pl$col("txt")$str$to_lowercase()
       )
+
+# translated stringr functions: title case
+
+    Code
+      show_query(query)
+    Output
+      dat$with_columns(ti = pl$col("txt")$str$to_titlecase())
 
 # translated stringr functions: padding and trimming
 
@@ -1104,11 +1110,11 @@
       test_pl$select(pl$col(c("country", "year"))$unique()$sort()$implode())$
         explode(
           "country",
-          empty_as_null = TRUE
+          empty_as_null = FALSE
         )$
         explode(
           "year",
-          empty_as_null = TRUE
+          empty_as_null = FALSE
         )$
         join(
           test_pl,
