@@ -250,25 +250,28 @@ pl_log10 <- function(x) {
   x$log10()
 }
 
-pl_max <- function(x, na.rm = FALSE, ...) {
-  check_empty_dots(...)
+pl_max <- function(..., na.rm = FALSE) {
   na.rm <- polars_expr_to_r(na.rm)
-  x <- check_rowwise(x, ...)
-  if (isTRUE(x$is_rowwise)) {
-    if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$max())$explode(empty_as_null = TRUE)
-    } else {
-      x$expr$list$eval(
-        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(pl$element()$max())
-      )$explode(empty_as_null = TRUE)
-    }
-  } else {
-    if (isTRUE(na.rm)) {
-      x$expr$max()
-    } else {
-      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$max())
-    }
+  check_bool(na.rm)
+  x <- check_rowwise_dots(...)
+  if (length(x$expr) == 0) {
+    return(pl$lit(-Inf))
   }
+  if (isTRUE(x$is_rowwise)) {
+    element <- pl$element()
+    out <- element$max()
+    if (!na.rm) {
+      out <- pl$when(element$has_nulls())$then(NA)$otherwise(out)
+    }
+    return(x$expr$list$eval(out)$explode(empty_as_null = TRUE))
+  }
+
+  aggregate_exprs(
+    x$expr,
+    \(x) x$max(),
+    \(x) pl$max_horizontal(!!!x),
+    na.rm
+  )
 }
 
 pl_mean <- function(x, trim = 0, na.rm = FALSE, ...) {
@@ -276,6 +279,7 @@ pl_mean <- function(x, trim = 0, na.rm = FALSE, ...) {
   trim <- polars_expr_to_r(trim)
   check_number_decimal(trim)
   na.rm <- polars_expr_to_r(na.rm)
+  check_bool(na.rm)
   x <- check_rowwise(x, ...)
   is_rowwise <- isTRUE(x$is_rowwise)
   expr <- if (is_rowwise) pl$element() else x$expr
@@ -308,45 +312,44 @@ pl_mean <- function(x, trim = 0, na.rm = FALSE, ...) {
 pl_median <- function(x, na.rm = FALSE, ...) {
   check_empty_dots(...)
   na.rm <- polars_expr_to_r(na.rm)
+  check_bool(na.rm)
   x <- check_rowwise(x, ...)
-  if (isTRUE(x$is_rowwise)) {
-    if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$median())$explode(empty_as_null = TRUE)
-    } else {
-      x$expr$list$eval(
-        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(
-          pl$element()$median()
-        )
-      )$explode(empty_as_null = TRUE)
-    }
+  is_rowwise <- isTRUE(x$is_rowwise)
+  expr <- if (is_rowwise) pl$element() else x$expr
+  out <- expr$median()
+  if (!na.rm) {
+    out <- pl$when(expr$has_nulls())$then(NA)$otherwise(out)
+  }
+
+  if (is_rowwise) {
+    x$expr$list$eval(out)$explode(empty_as_null = TRUE)
   } else {
-    if (isTRUE(na.rm)) {
-      x$expr$median()
-    } else {
-      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$median())
-    }
+    out
   }
 }
 
-pl_min <- function(x, na.rm = FALSE, ...) {
-  check_empty_dots(...)
+pl_min <- function(..., na.rm = FALSE) {
   na.rm <- polars_expr_to_r(na.rm)
-  x <- check_rowwise(x, ...)
-  if (isTRUE(x$is_rowwise)) {
-    if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$min())$explode(empty_as_null = TRUE)
-    } else {
-      x$expr$list$eval(
-        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(pl$element()$min())
-      )$explode(empty_as_null = TRUE)
-    }
-  } else {
-    if (isTRUE(na.rm)) {
-      x$expr$min()
-    } else {
-      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$min())
-    }
+  check_bool(na.rm)
+  x <- check_rowwise_dots(...)
+  if (length(x$expr) == 0) {
+    return(pl$lit(Inf))
   }
+  if (isTRUE(x$is_rowwise)) {
+    element <- pl$element()
+    out <- element$min()
+    if (!na.rm) {
+      out <- pl$when(element$has_nulls())$then(NA)$otherwise(out)
+    }
+    return(x$expr$list$eval(out)$explode(empty_as_null = TRUE))
+  }
+
+  aggregate_exprs(
+    x$expr,
+    \(x) x$min(),
+    \(x) pl$min_horizontal(!!!x),
+    na.rm
+  )
 }
 
 pl_rank <- function(x, na.last = TRUE, ties.method = "average", ...) {
@@ -524,22 +527,26 @@ pl_sqrt <- function(x) {
 
 pl_sum <- function(..., na.rm = FALSE) {
   na.rm <- polars_expr_to_r(na.rm)
+  check_bool(na.rm)
   x <- check_rowwise_dots(...)
-  if (isTRUE(x$is_rowwise)) {
-    if (isTRUE(na.rm)) {
-      x$expr$list$eval(pl$element()$sum())$explode(empty_as_null = TRUE)
-    } else {
-      x$expr$list$eval(
-        pl$when(pl$element()$has_nulls())$then(NA)$otherwise(pl$element()$sum())
-      )$explode(empty_as_null = TRUE)
-    }
-  } else {
-    if (isTRUE(na.rm)) {
-      x$expr$sum()
-    } else {
-      pl$when(x$expr$has_nulls())$then(NA)$otherwise(x$expr$sum())
-    }
+  if (length(x$expr) == 0) {
+    return(pl$lit(0L))
   }
+  if (isTRUE(x$is_rowwise)) {
+    element <- pl$element()
+    out <- element$sum()
+    if (!na.rm) {
+      out <- pl$when(element$has_nulls())$then(NA)$otherwise(out)
+    }
+    return(x$expr$list$eval(out)$explode(empty_as_null = TRUE))
+  }
+
+  aggregate_exprs(
+    x$expr,
+    \(x) x$sum(),
+    \(x) Reduce(`+`, x),
+    na.rm
+  )
 }
 
 pl_tan <- function(x) {
@@ -636,6 +643,18 @@ pl_which.min <- function(x) {
 }
 
 # Utils ---------------------------------------------------
+
+aggregate_exprs <- function(exprs, aggregate, combine, na.rm) {
+  values <- lapply(exprs, aggregate)
+  out <- if (length(values) == 1) values[[1]] else combine(values)
+
+  if (na.rm) {
+    return(out)
+  }
+
+  has_nulls <- Reduce(`|`, lapply(exprs, \(x) x$has_nulls()))
+  pl$when(has_nulls)$then(NA)$otherwise(out)
+}
 
 # Extract the "from" and "to" components from the dots in replace_/recode_*()
 extract_from_to <- function(dots, env) {
