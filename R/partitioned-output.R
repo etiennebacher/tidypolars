@@ -4,17 +4,9 @@
 #' `r lifecycle::badge("experimental")`
 #'
 #' Partitioning schemes are used to write multiple files with `sink_*()` and
-#' `write_*_polars()` functions.
-#'
-#' - `partition_by()`: Configuration for writing to multiple output files.
-#'   Supports partitioning by key, file size limits, or both.
-#'
-#' The following functions are deprecated and will be removed in a future release:
-#'
-#' - `r lifecycle::badge("deprecated")` `partition_by_key()`: use
-#'   `partition_by(key = ...)` instead.
-#' - `r lifecycle::badge("deprecated")` `partition_by_max_size()`: use
-#'   `partition_by(max_rows_per_file = ...)` instead.
+#' `write_*_polars()` functions. `partition_by()` allows to configure the
+#' the writing process to multiple output files. It supports partitioning by
+#' key, file size limits, or both.
 #'
 #' @inheritParams rlang::args_dots_empty
 #' @param base_path The base path for the output files. Use the `mkdir` option
@@ -31,14 +23,7 @@
 #' number of bytes to write to each file, or `NULL`. This is measured as the
 #' estimated size of the DataFrame in memory. Defaults to approximately 4GB when
 #' `key` is specified without `max_rows_per_file`, otherwise unlimited.
-#' @param by `r lifecycle::badge("deprecated")` Something can be coerced to a
-#' list of Polars expressions. Used to partition by. Use the `key` property of
-#' `partition_by()` instead.
-#' @param max_size `r lifecycle::badge("deprecated")` An integer-ish value
-#' indicating the maximum size in rows of each of the generated files. Use the
-#' `max_rows_per_file` property of `partition_by()` instead.
 #'
-#' @name partitioned_output
 #' @export
 partition_by <- function(
   base_path,
@@ -55,38 +40,5 @@ partition_by <- function(
     include_key = include_key,
     max_rows_per_file = max_rows_per_file,
     approximate_bytes_per_file = approximate_bytes_per_file
-  )
-}
-
-#' @name partitioned_output
-#' @export
-partition_by_key <- function(
-  base_path,
-  ...,
-  by,
-  include_key = TRUE
-) {
-  check_dots_empty()
-
-  lifecycle::deprecate_stop(
-    when = "0.16.0",
-    what = "partition_by_key()",
-    with = "partition_by(key = )"
-  )
-}
-
-#' @rdname partitioned_output
-#' @export
-partition_by_max_size <- function(
-  base_path,
-  ...,
-  max_size
-) {
-  check_dots_empty()
-
-  lifecycle::deprecate_stop(
-    when = "0.16.0",
-    what = "partition_by_max_size()",
-    with = "partition_by(max_rows_per_file = )"
   )
 }
