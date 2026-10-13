@@ -1689,8 +1689,11 @@
         wd = pl$when(
           pl$lit(1L) > pl$col("txt")$str$split(" ")$list$len()$cast(pl$Int64)
         )$
-          then(pl$lit(NA_character_))$
-          otherwise(pl$col("txt")$str$split(" ")$list$slice(0, 1)$list$join(" "))
+          then(pl$lit(NULL))$
+          otherwise(pl$col("txt")$str$split(" "))$
+          list$slice(0, 1)$
+          list$eval(pl$element()$cast(pl$String))$
+          list$join(" ")
       )
       shape: (5, 11)
       ┌──────┬─────┬─────┬─────────────┬───┬─────────────────────────┬──────┬───────┬───────┐
