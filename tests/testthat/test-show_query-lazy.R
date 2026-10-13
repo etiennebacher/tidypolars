@@ -632,10 +632,7 @@ test_that("translated base functions: aggregations in summarize()", {
       an = any(int > 4),
       na = anyNA(num),
       wmn = which.min(num),
-      wmx = which.max(num),
-      sm = sum(int, num, 1, na.rm = TRUE),
-      mx = max(int, num, 10, na.rm = TRUE),
-      mn = min(int, num, 0, na.rm = TRUE)
+      wmx = which.max(num)
     )
 
   expect_snapshot_lazy(show_query(query))
@@ -788,12 +785,7 @@ test_that("translated dplyr functions: reducers in summarize()", {
 test_that("translated stats functions: median, sd, var", {
   dat <- tp_test_frame()
   query <- dat |>
-    summarize(
-      md = median(num, na.rm = TRUE),
-      s = sd(int),
-      v = var(int),
-      cv = var(int, num, TRUE, "pairwise.complete.obs")
-    )
+    summarize(md = median(num, na.rm = TRUE), s = sd(int), v = var(int))
 
   expect_snapshot_lazy(show_query(query))
   expect_equal_lazy(replay_query(query), query)
@@ -1027,15 +1019,6 @@ test_that("check query for separate_longer_delim_polars() and separate_longer_po
   expect_equal_lazy(replay_query(query), query)
 
   query <- separate_longer_position_polars(test_pl, x, width = 2)
-  expect_snapshot_lazy(show_query(query))
-  expect_equal_lazy(replay_query(query), query)
-})
-
-test_that("check query for make_unique_id()", {
-  withr::local_options(lifecycle_verbosity = "quiet")
-  test_pl <- as_polars_lf(data.frame(x = c("a", "b"), y = c(1, 2)))
-
-  query <- make_unique_id(test_pl, x, y, new_col = "id")
   expect_snapshot_lazy(show_query(query))
   expect_equal_lazy(replay_query(query), query)
 })

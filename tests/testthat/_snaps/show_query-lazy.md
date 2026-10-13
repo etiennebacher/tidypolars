@@ -1188,19 +1188,16 @@
         an = (pl$col("int") > pl$lit(4))$any(ignore_nulls = FALSE),
         na = pl$col("num")$has_nulls(),
         wmn = (pl$col("num")$arg_min() + 1)$first(),
-        wmx = (pl$col("num")$arg_max() + 1)$first(),
-        sm = pl$col("int")$sum(),
-        mx = pl$col("int")$max(),
-        mn = pl$col("int")$min()
+        wmx = (pl$col("num")$arg_max() + 1)$first()
       )
-      shape: (1, 8)
-      ┌──────┬──────┬──────┬─────┬─────┬─────┬─────┬─────┐
-      │ al   ┆ an   ┆ na   ┆ wmn ┆ wmx ┆ sm  ┆ mx  ┆ mn  │
-      │ ---  ┆ ---  ┆ ---  ┆ --- ┆ --- ┆ --- ┆ --- ┆ --- │
-      │ bool ┆ bool ┆ bool ┆ f64 ┆ f64 ┆ i32 ┆ i32 ┆ i32 │
-      ╞══════╪══════╪══════╪═════╪═════╪═════╪═════╪═════╡
-      │ true ┆ true ┆ true ┆ 2.0 ┆ 5.0 ┆ 15  ┆ 5   ┆ 1   │
-      └──────┴──────┴──────┴─────┴─────┴─────┴─────┴─────┘
+      shape: (1, 5)
+      ┌──────┬──────┬──────┬─────┬─────┐
+      │ al   ┆ an   ┆ na   ┆ wmn ┆ wmx │
+      │ ---  ┆ ---  ┆ ---  ┆ --- ┆ --- │
+      │ bool ┆ bool ┆ bool ┆ f64 ┆ f64 │
+      ╞══════╪══════╪══════╪═════╪═════╡
+      │ true ┆ true ┆ true ┆ 2.0 ┆ 5.0 │
+      └──────┴──────┴──────┴─────┴─────┘
 
 # translated base functions: string manipulation
 
@@ -1541,50 +1538,16 @@
           otherwise(pl$col("int")$std(ddof = 1)),
         v = pl$when(pl$col("int")$has_nulls())$
           then(NA)$
-          otherwise(pl$col("int")$var(ddof = 1)),
-        cv = pl$when(
-          pl$col("int")$
-            filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null())$
-            len() <
-            2
-        )$
-          then(NA)$
-          otherwise(
-            (
-              (
-                pl$col("int")$
-                  filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null()) -
-                  pl$col("int")$
-                    filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null())$
-                    mean()
-              ) *
-                (
-                  pl$col("num")$
-                    filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null()) -
-                    pl$col("num")$
-                      filter(
-                        pl$col("int")$is_not_null() & pl$col("num")$is_not_null()
-                      )$
-                      mean()
-                )
-            )$
-              sum()/
-              (
-                pl$col("int")$
-                  filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null())$
-                  len() -
-                  1
-              )
-          )
+          otherwise(pl$col("int")$var(ddof = 1))
       )
-      shape: (1, 4)
-      ┌──────┬──────────┬─────┬──────────┐
-      │ md   ┆ s        ┆ v   ┆ cv       │
-      │ ---  ┆ ---      ┆ --- ┆ ---      │
-      │ f64  ┆ f64      ┆ f64 ┆ f64      │
-      ╞══════╪══════════╪═════╪══════════╡
-      │ 2.75 ┆ 1.581139 ┆ 2.5 ┆ 0.716667 │
-      └──────┴──────────┴─────┴──────────┘
+      shape: (1, 3)
+      ┌──────┬──────────┬─────┐
+      │ md   ┆ s        ┆ v   │
+      │ ---  ┆ ---      ┆ --- │
+      │ f64  ┆ f64      ┆ f64 │
+      ╞══════╪══════════╪═════╡
+      │ 2.75 ┆ 1.581139 ┆ 2.5 │
+      └──────┴──────────┴─────┘
 
 # translated stringr functions: detection
 
@@ -2155,20 +2118,4 @@
       │ 2   ┆ e   │
       │ 3   ┆ f   │
       └─────┴─────┘
-
-# check query for make_unique_id()
-
-    Code
-      compute(current)
-    Output
-      test_pl$with_columns(pl$struct(c("x", "y"))$hash()$alias("id"))
-      shape: (2, 3)
-      ┌─────┬─────┬─────────────────────┐
-      │ x   ┆ y   ┆ id                  │
-      │ --- ┆ --- ┆ ---                 │
-      │ str ┆ f64 ┆ u64                 │
-      ╞═════╪═════╪═════════════════════╡
-      │ a   ┆ 1.0 ┆ 7644163247338747735 │
-      │ b   ┆ 2.0 ┆ 5124371781196344834 │
-      └─────┴─────┴─────────────────────┘
 

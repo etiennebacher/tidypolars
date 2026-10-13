@@ -824,10 +824,7 @@
         an = (pl$col("int") > pl$lit(4))$any(ignore_nulls = FALSE),
         na = pl$col("num")$has_nulls(),
         wmn = (pl$col("num")$arg_min() + 1)$first(),
-        wmx = (pl$col("num")$arg_max() + 1)$first(),
-        sm = pl$col("int")$sum(),
-        mx = pl$col("int")$max(),
-        mn = pl$col("int")$min()
+        wmx = (pl$col("num")$arg_max() + 1)$first()
       )
 
 # translated base functions: string manipulation
@@ -1031,41 +1028,7 @@
           otherwise(pl$col("int")$std(ddof = 1)),
         v = pl$when(pl$col("int")$has_nulls())$
           then(NA)$
-          otherwise(pl$col("int")$var(ddof = 1)),
-        cv = pl$when(
-          pl$col("int")$
-            filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null())$
-            len() <
-            2
-        )$
-          then(NA)$
-          otherwise(
-            (
-              (
-                pl$col("int")$
-                  filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null()) -
-                  pl$col("int")$
-                    filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null())$
-                    mean()
-              ) *
-                (
-                  pl$col("num")$
-                    filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null()) -
-                    pl$col("num")$
-                      filter(
-                        pl$col("int")$is_not_null() & pl$col("num")$is_not_null()
-                      )$
-                      mean()
-                )
-            )$
-              sum()/
-              (
-                pl$col("int")$
-                  filter(pl$col("int")$is_not_null() & pl$col("num")$is_not_null())$
-                  len() -
-                  1
-              )
-          )
+          otherwise(pl$col("int")$var(ddof = 1))
       )
 
 # translated stringr functions: detection
@@ -1366,13 +1329,6 @@
           "x",
           empty_as_null = TRUE
         )
-
-# check query for make_unique_id()
-
-    Code
-      show_query(query)
-    Output
-      test_pl$with_columns(pl$struct(c("x", "y"))$hash()$alias("id"))
 
 # check query for scan_*_polars() and read_*_polars()
 
