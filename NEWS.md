@@ -16,8 +16,10 @@
   - `fetch()`
 
 * `partition_by_key()` and `partition_by_max_size()`, deprecated in 0.16.0, are
-  now defunct. Use the arguments `key` and `max_rows_per_file` in `partition_by()`
+  now removed. Use the arguments `key` and `max_rows_per_file` in `partition_by()`
   instead (#416).
+
+* `make_unique_id()`, deprecated in 0.16.0, is now removed (#416).
 
 * Argument `rechunk` in all `read_*()` and `scan_*()` functions is deprecated and
   has no effect anymore (#405).
