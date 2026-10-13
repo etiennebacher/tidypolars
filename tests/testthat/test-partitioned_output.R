@@ -109,104 +109,96 @@ test_that("partition_by() + max_rows_per_file works", {
   expect_snapshot(fs::dir_tree(out_path), transform = remove_temp_path)
 })
 
-test_that("partition_by_key() is deprecated", {
+test_that("partition_by_key() is defunct", {
   skip_if_not_installed("fs")
 
   my_lf <- as_polars_lf(mtcars)
 
   out_path <- withr::local_tempdir()
-  expect_warning(
+  expect_snapshot(
     sink_csv(
       my_lf,
       partition_by_key(out_path, by = c("am", "cyl")),
       mkdir = TRUE
     ),
-    "deprecated"
+    error = TRUE
   )
-  expect_snapshot(fs::dir_tree(out_path), transform = remove_temp_path)
 
   out_path <- withr::local_tempdir()
-  expect_warning(
+  expect_snapshot(
     sink_ipc(
       my_lf,
       partition_by_key(out_path, by = c("am", "cyl")),
       mkdir = TRUE
     ),
-    "deprecated"
+    error = TRUE
   )
-  expect_snapshot(fs::dir_tree(out_path), transform = remove_temp_path)
 
   out_path <- withr::local_tempdir()
-  expect_warning(
+  expect_snapshot(
     sink_ndjson(
       my_lf,
       partition_by_key(out_path, by = c("am", "cyl")),
       mkdir = TRUE
     ),
-    "deprecated"
+    error = TRUE
   )
-  expect_snapshot(fs::dir_tree(out_path), transform = remove_temp_path)
 
   out_path <- withr::local_tempdir()
-  expect_warning(
+  expect_snapshot(
     sink_parquet(
       my_lf,
       partition_by_key(out_path, by = c("am", "cyl")),
       mkdir = TRUE
     ),
-    "deprecated"
+    error = TRUE
   )
-  expect_snapshot(fs::dir_tree(out_path), transform = remove_temp_path)
 })
 
-test_that("partition_by_max_size() is deprecated", {
+test_that("partition_by_max_size() is defunct", {
   skip_if_not_installed("fs")
 
   my_lf <- as_polars_lf(mtcars)
 
   out_path <- withr::local_tempdir()
-  expect_warning(
+  expect_snapshot(
     sink_csv(
       my_lf,
       partition_by_max_size(out_path, max_size = 5),
       mkdir = TRUE
     ),
-    "deprecated"
+    error = TRUE
   )
-  expect_snapshot(fs::dir_tree(out_path), transform = remove_temp_path)
 
   out_path <- withr::local_tempdir()
-  expect_warning(
+  expect_snapshot(
     sink_ipc(
       my_lf,
       partition_by_max_size(out_path, max_size = 5),
       mkdir = TRUE
     ),
-    "deprecated"
+    error = TRUE
   )
-  expect_snapshot(fs::dir_tree(out_path), transform = remove_temp_path)
 
   out_path <- withr::local_tempdir()
-  expect_warning(
+  expect_snapshot(
     sink_ndjson(
       my_lf,
       partition_by_max_size(out_path, max_size = 5),
       mkdir = TRUE
     ),
-    "deprecated"
+    error = TRUE
   )
-  expect_snapshot(fs::dir_tree(out_path), transform = remove_temp_path)
 
   out_path <- withr::local_tempdir()
-  expect_warning(
+  expect_snapshot(
     sink_parquet(
       my_lf,
       partition_by_max_size(out_path, max_size = 5),
       mkdir = TRUE
     ),
-    "deprecated"
+    error = TRUE
   )
-  expect_snapshot(fs::dir_tree(out_path), transform = remove_temp_path)
 })
 
 rm(remove_temp_path)

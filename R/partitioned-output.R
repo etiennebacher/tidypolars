@@ -68,19 +68,10 @@ partition_by_key <- function(
 ) {
   check_dots_empty()
 
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     when = "0.16.0",
     what = "partition_by_key()",
-    details = "Please use `partition_by(key = )` instead.",
-    always = TRUE
-  )
-
-  suppressWarnings(
-    pl$PartitionByKey(
-      base_path = base_path,
-      by = by,
-      include_key = include_key
-    )
+    with = "partition_by(key = )"
   )
 }
 
@@ -93,16 +84,9 @@ partition_by_max_size <- function(
 ) {
   check_dots_empty()
 
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     when = "0.16.0",
     what = "partition_by_max_size()",
-    details = "Please use `partition_by(max_rows_per_file = )` instead.",
-    always = TRUE
-  )
-  suppressWarnings(
-    pl$PartitionMaxSize(
-      base_path = base_path,
-      max_size = max_size
-    )
+    with = "partition_by(max_rows_per_file = )"
   )
 }
