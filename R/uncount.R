@@ -31,34 +31,7 @@ uncount.polars_data_frame <- function(
   ...,
   .remove = TRUE,
   .id = NULL
-) {
-  data <- tag_frame(data, substitute(data))
-  check_dots_empty()
-  weights_quo <- enquo(weights)
-  repeat_expr <- translate_expr(
-    data,
-    weights_quo,
-    new_vars = NULL,
-    env = rlang::current_env()
-  )
-
-  out <- data$with_columns(pl$col("x")$repeat_by(repeat_expr))$explode(
-    pl$col("x"),
-    empty_as_null = TRUE
-  )
-
-  if (isTRUE(.remove) && repeat_expr$meta$output_name() != "literal") {
-    out <- out$drop(repeat_expr$meta$output_name())
-  }
-
-  if (!is.null(.id)) {
-    out <- out$with_columns(
-      (pl$col(names(out)[1])$cum_count()$over(!!!names(out)))$alias(.id)
-    )
-  }
-
-  add_tidypolars_class(out)
-}
+) {}
 
 #' @rdname uncount.polars_data_frame
 #' @export
