@@ -119,60 +119,24 @@ test_that("weights are validated before expansion", {
   )
   test_pl <- as_polars_lf(test_df)
 
-  expect_both_error(
-    uncount(test_pl, missing),
-    uncount(test_df, missing)
-  )
-  expect_both_error(
-    uncount(test_pl, fraction),
-    uncount(test_df, fraction)
-  )
-  expect_both_error(
-    uncount(test_pl, negative),
-    uncount(test_df, negative)
-  )
-  expect_both_error(
-    uncount(test_pl, infinite),
-    uncount(test_df, infinite)
-  )
-  expect_both_error(
-    uncount(test_pl, nan),
-    uncount(test_df, nan)
-  )
-  expect_both_error(
-    uncount(test_pl, text),
-    uncount(test_df, text)
-  )
-  expect_both_error(
-    uncount(test_pl, oversized),
-    uncount(test_df, oversized)
-  )
-  expect_both_error(
-    uncount(test_pl, c(1L, 2L, 3L)),
-    uncount(test_df, c(1L, 2L, 3L))
-  )
+  expect_snapshot_lazy(uncount(test_pl, missing), error = TRUE)
+  expect_snapshot_lazy(uncount(test_pl, fraction), error = TRUE)
+  expect_snapshot_lazy(uncount(test_pl, negative), error = TRUE)
+  expect_snapshot_lazy(uncount(test_pl, infinite), error = TRUE)
+  expect_snapshot_lazy(uncount(test_pl, nan), error = TRUE)
+  expect_snapshot_lazy(uncount(test_pl, text), error = TRUE)
+  expect_snapshot_lazy(uncount(test_pl, oversized), error = TRUE)
+  expect_snapshot_lazy(uncount(test_pl, c(1L, 2L, 3L)), error = TRUE)
 })
 
 test_that("control arguments are validated", {
   test_df <- tibble(value = "a", n = 2L)
   test_pl <- as_polars_lf(test_df)
 
-  expect_both_error(
-    uncount(test_pl, n, .remove = NA),
-    uncount(test_df, n, .remove = NA)
-  )
-  expect_both_error(
-    uncount(test_pl, n, .remove = 1),
-    uncount(test_df, n, .remove = 1)
-  )
-  expect_both_error(
-    uncount(test_pl, n, .id = ""),
-    uncount(test_df, n, .id = "")
-  )
-  expect_both_error(
-    uncount(test_pl, n, .id = c("a", "b")),
-    uncount(test_df, n, .id = c("a", "b"))
-  )
+  expect_snapshot_lazy(uncount(test_pl, n, .remove = NA), error = TRUE)
+  expect_snapshot_lazy(uncount(test_pl, n, .remove = 1), error = TRUE)
+  expect_snapshot_lazy(uncount(test_pl, n, .id = ""), error = TRUE)
+  expect_snapshot_lazy(uncount(test_pl, n, .id = c("a", "b")), error = TRUE)
 })
 
 test_that("id replacement and temporary names preserve other columns", {
