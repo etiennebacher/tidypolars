@@ -1183,8 +1183,7 @@
           pl$int_ranges(
             0L,
             pl$when(
-              pl$col("__tidypolars_uncount__")$cast(pl$Float64)$is_not_null() &
-                pl$col("__tidypolars_uncount__")$cast(pl$Float64)$is_finite() &
+              pl$col("__tidypolars_uncount__")$cast(pl$Float64)$is_finite() &
                 pl$col("__tidypolars_uncount__")$cast(pl$Float64) >= 0 &
                 pl$col("__tidypolars_uncount__")$cast(pl$Float64) <= 2147483647L &
                 pl$col("__tidypolars_uncount__")$cast(pl$Float64) ==
@@ -1215,8 +1214,7 @@
           pl$int_ranges(
             0L,
             pl$when(
-              pl$col("__tidypolars_uncount__")$cast(pl$Float64)$is_not_null() &
-                pl$col("__tidypolars_uncount__")$cast(pl$Float64)$is_finite() &
+              pl$col("__tidypolars_uncount__")$cast(pl$Float64)$is_finite() &
                 pl$col("__tidypolars_uncount__")$cast(pl$Float64) >= 0 &
                 pl$col("__tidypolars_uncount__")$cast(pl$Float64) <= 2147483647L &
                 pl$col("__tidypolars_uncount__")$cast(pl$Float64) ==

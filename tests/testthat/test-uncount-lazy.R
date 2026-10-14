@@ -56,6 +56,27 @@ test_that("works with expression", {
   )
 })
 
+test_that("weights respect the calling environment", {
+  test_df <- tibble(value = c("a", "b"), n = c(1L, 2L))
+  test_pl <- as_polars_lf(test_df)
+  multiplier <- 2L
+
+  expect_equal_lazy(
+    uncount(test_pl, n * multiplier),
+    uncount(test_df, n * multiplier)
+  )
+  expect_equal_lazy(
+    uncount(test_pl, n * .env$multiplier),
+    uncount(test_df, n * .env$multiplier)
+  )
+
+  expand <- function(data, weights) uncount(data, {{ weights }})
+  expect_equal_lazy(
+    expand(test_pl, n * .env$multiplier),
+    expand(test_df, n * .env$multiplier)
+  )
+})
+
 test_that("ids restart for identical rows and missing values", {
   test_df <- tibble(value = c("a", "b", NA), n = c(2L, 2L, 2L))
   test_pl <- as_polars_lf(test_df)

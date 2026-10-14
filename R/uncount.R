@@ -47,10 +47,7 @@ uncount.polars_data_frame <- function(
   while (temp %in% c(names(data), .id)) {
     temp <- paste0("_", temp)
   }
-  out <- eval_tidy(
-    expr((!!mutate)(!!data, !!temp := !!weights_quo)),
-    env = quo_get_env(weights_quo)
-  )
+  out <- mutate(data, !!temp := !!weights_quo)
   # The weights are now in temp; avoid repeating a column that will be removed.
   if (.remove && quo_is_symbol(weights_quo)) {
     weight_name <- as_string(get_expr(weights_quo))
@@ -61,22 +58,19 @@ uncount.polars_data_frame <- function(
   dtype <- out$collect_schema()[[temp]]
   if (
     !dtype$is_numeric() &&
-      !inherits(dtype, "polars_dtype_boolean") &&
-      !inherits(dtype, "polars_dtype_null")
+      !inherits(dtype, c("polars_dtype_boolean", "polars_dtype_null"))
   ) {
     cli_abort("{.arg weights} must be numeric or logical.")
   }
   weights_expr <- pl$col(temp)$cast(pl$Float64)
-  valid <- weights_expr$is_not_null()$and(
-    weights_expr$is_finite()
-  )$and(
+  valid <- weights_expr$is_finite()$and(
     weights_expr$ge(0)
   )$and(
     weights_expr$le(.Machine$integer.max)
   )$and(
     weights_expr$eq(weights_expr$floor())
   )
-  # A strict unsigned cast rejects the sentinel for every invalid weight.
+  # False and null predicates both select the sentinel, rejected by the cast.
   # Check before casting: integer casts alone silently truncate fractions.
   weights_expr <- pl$when(valid)$then(weights_expr)$otherwise(-1)$cast(
     pl$UInt32
