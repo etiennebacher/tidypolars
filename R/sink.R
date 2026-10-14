@@ -135,16 +135,18 @@ sink_parquet <- function(
     )
   }
 
-  .data$sink_parquet(
-    path = path,
-    compression = compression,
-    compression_level = compression_level,
-    statistics = statistics,
-    row_group_size = row_group_size,
-    data_page_size = data_page_size,
-    maintain_order = maintain_order,
-    mkdir = mkdir,
-    optimizations = optimizations
+  with_polars_errors(
+    .data$sink_parquet(
+      path = path,
+      compression = compression,
+      compression_level = compression_level,
+      statistics = statistics,
+      row_group_size = row_group_size,
+      data_page_size = data_page_size,
+      maintain_order = maintain_order,
+      mkdir = mkdir,
+      optimizations = optimizations
+    )
   )
 }
 
@@ -268,23 +270,25 @@ sink_csv <- function(
     )
   }
 
-  .data$sink_csv(
-    path = path,
-    include_bom = include_bom,
-    include_header = include_header,
-    separator = separator,
-    line_terminator = line_terminator,
-    quote_char = quote_char,
-    batch_size = batch_size,
-    datetime_format = datetime_format,
-    date_format = date_format,
-    time_format = time_format,
-    float_precision = float_precision,
-    null_value = null_value,
-    quote_style = quote_style,
-    maintain_order = maintain_order,
-    optimizations = optimizations,
-    mkdir = mkdir
+  with_polars_errors(
+    .data$sink_csv(
+      path = path,
+      include_bom = include_bom,
+      include_header = include_header,
+      separator = separator,
+      line_terminator = line_terminator,
+      quote_char = quote_char,
+      batch_size = batch_size,
+      datetime_format = datetime_format,
+      date_format = date_format,
+      time_format = time_format,
+      float_precision = float_precision,
+      null_value = null_value,
+      quote_style = quote_style,
+      maintain_order = maintain_order,
+      optimizations = optimizations,
+      mkdir = mkdir
+    )
   )
 }
 
@@ -371,14 +375,15 @@ sink_ipc <- function(
       slice_pushdown = slice_pushdown
     )
   }
-
-  .data$sink_ipc(
-    path = path,
-    compat_level = compat_level,
-    compression = compression,
-    maintain_order = maintain_order,
-    optimizations = optimizations,
-    mkdir = mkdir
+  with_polars_errors(
+    .data$sink_ipc(
+      path = path,
+      compat_level = compat_level,
+      compression = compression,
+      maintain_order = maintain_order,
+      optimizations = optimizations,
+      mkdir = mkdir
+    )
   )
 }
 
@@ -455,10 +460,12 @@ sink_ndjson <- function(
     )
   }
 
-  .data$sink_ndjson(
-    path = path,
-    maintain_order = maintain_order,
-    optimizations = optimizations,
-    mkdir = mkdir
+  with_polars_errors(
+    .data$sink_ndjson(
+      path = path,
+      maintain_order = maintain_order,
+      optimizations = optimizations,
+      mkdir = mkdir
+    )
   )
 }

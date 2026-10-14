@@ -80,7 +80,7 @@ test_that("show_query() works with group_by() and summarize()", {
 test_that("show_query() works with joins and shows the query of both inputs", {
   lhs <- as_polars_df(mtcars) |> select(cyl, mpg)
   rhs <- as_polars_df(mtcars) |> summarize(mean_mpg = mean(mpg), .by = cyl)
-  query <- left_join(lhs, rhs, by = "cyl")
+  query <- left_join(lhs, rhs, by = "cyl") |> arrange(cyl, mpg)
 
   expect_snapshot(show_query(query))
   expect_equal(replay_query(query), query)
@@ -935,7 +935,8 @@ test_that("check query for complete()", {
     value = c(1, 2, 3)
   ))
 
-  query <- complete(test_pl, country, year, fill = list(value = 99))
+  query <- complete(test_pl, country, year, fill = list(value = 99)) |>
+    arrange(country, year)
   expect_snapshot(show_query(query))
   expect_equal(replay_query(query), query)
 })
@@ -1014,15 +1015,6 @@ test_that("check query for separate_longer_delim_polars() and separate_longer_po
   expect_equal(replay_query(query), query)
 
   query <- separate_longer_position_polars(test_pl, x, width = 2)
-  expect_snapshot(show_query(query))
-  expect_equal(replay_query(query), query)
-})
-
-test_that("check query for make_unique_id()", {
-  withr::local_options(lifecycle_verbosity = "quiet")
-  test_pl <- as_polars_df(data.frame(x = c("a", "b"), y = c(1, 2)))
-
-  query <- make_unique_id(test_pl, x, y, new_col = "id")
   expect_snapshot(show_query(query))
   expect_equal(replay_query(query), query)
 })

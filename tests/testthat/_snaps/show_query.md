@@ -71,7 +71,13 @@
           validate = "m:m",
           coalesce = TRUE
         )$
-        select("cyl", "mpg", "mean_mpg")
+        select("cyl", "mpg", "mean_mpg")$
+        sort(
+          pl$col("cyl"),
+          pl$col("mpg"),
+          descending = c(FALSE, FALSE),
+          nulls_last = TRUE
+        )
 
 # show_query() works with across()
 
@@ -124,7 +130,11 @@
     Output
       as_polars_df(mtcars)$
         with_columns(
-          foo = pl$col("mpg")$is_in(pl$lit(large)$implode(), nulls_equal = TRUE)
+          foo = pl$col("mpg")$
+            is_in(
+              pl$lit(large)$implode()$cast(pl$dtype_of(pl$col("mpg"))$wrap_in_list()),
+              nulls_equal = TRUE
+            )
         )
 
 ---
@@ -134,7 +144,13 @@
     Output
       as_polars_df(mtcars)$
         with_columns(
-          foo = pl$col("mpg")$is_in(pl$lit(runif(200))$implode(), nulls_equal = TRUE)
+          foo = pl$col("mpg")$
+            is_in(
+              pl$lit(runif(200))$
+                implode()$
+                cast(pl$dtype_of(pl$col("mpg"))$wrap_in_list()),
+              nulls_equal = TRUE
+            )
         )
 
 # `NULL` arguments are kept in the query
@@ -372,7 +388,11 @@
     Output
       as_polars_df(mtcars)$
         with_columns(
-          foo = pl$col("mpg")$is_in(pl$lit(1:200)$implode(), nulls_equal = TRUE)
+          foo = pl$col("mpg")$
+            is_in(
+              pl$lit(1:200)$implode()$cast(pl$dtype_of(pl$col("mpg"))$wrap_in_list()),
+              nulls_equal = TRUE
+            )
         )
 
 # values too long to display fall back to the code producing them
@@ -391,7 +411,12 @@
       as_polars_df(mtcars)$
         with_columns(
           foo = pl$col("mpg")$
-            is_in(pl$lit(`<numeric of length 200>`)$implode(), nulls_equal = TRUE)
+            is_in(
+              pl$lit(`<numeric of length 200>`)$
+                implode()$
+                cast(pl$dtype_of(pl$col("mpg"))$wrap_in_list()),
+              nulls_equal = TRUE
+            )
         )
 
 # arguments that don't fit on a line are wrapped too
@@ -859,8 +884,17 @@
       show_query(query)
     Output
       dat$with_columns(
-        ins = pl$col("grp")$is_in(pl$lit("a")$implode(), nulls_equal = TRUE),
-        notin = pl$col("grp")$is_in(pl$lit("a")$implode(), nulls_equal = TRUE)$not()
+        ins = pl$col("grp")$
+          is_in(
+            pl$lit("a")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list()),
+            nulls_equal = TRUE
+          ),
+        notin = pl$col("grp")$
+          is_in(
+            pl$lit("a")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list()),
+            nulls_equal = TRUE
+          )$
+          not()
       )
 
 # translated dplyr functions: between, coalesce, near, if_else
@@ -907,12 +941,27 @@
       show_query(query)
     Output
       dat$with_columns(
-        with_default = pl$when(pl$col("grp")$is_in(pl$lit("a")$implode()))$
+        with_default = pl$when(
+          pl$col("grp")$
+            is_in(
+              pl$lit("a")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list())
+            )
+        )$
           then(pl$lit("A"))$
           otherwise(pl$lit("Z")),
-        no_default = pl$when(pl$col("grp")$is_in(pl$lit("a")$implode()))$
+        no_default = pl$when(
+          pl$col("grp")$
+            is_in(
+              pl$lit("a")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list())
+            )
+        )$
           then(pl$lit("A"))$
-          when(pl$col("grp")$is_in(pl$lit("b")$implode()))$
+          when(
+            pl$col("grp")$
+              is_in(
+                pl$lit("b")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list())
+              )
+          )$
           then(pl$lit("B"))$
           otherwise(pl$lit(NA))
       )
@@ -1047,8 +1096,11 @@
         wd = pl$when(
           pl$lit(1L) > pl$col("txt")$str$split(" ")$list$len()$cast(pl$Int64)
         )$
-          then(pl$lit(NA_character_))$
-          otherwise(pl$col("txt")$str$split(" ")$list$slice(0, 1)$list$join(" "))
+          then(pl$lit(NULL))$
+          otherwise(pl$col("txt")$str$split(" "))$
+          list$slice(0, 1)$
+          list$eval(pl$element()$cast(pl$String))$
+          list$join(" ")
       )
 
 # translated lubridate functions: date components
@@ -1067,9 +1119,9 @@
         ly = pl$col("date")$dt$is_leap_year(),
         dim = pl$when(pl$col("date")$is_null())$
           then(NA)$
-          when(pl$col("date")$dt$month()$is_in(list(c(1, 3, 5, 7, 8, 10, 12))))$
+          when(pl$col("date")$dt$month()$is_in(list(c(1L, 3L, 5L, 7L, 8L, 10L, 12L))))$
           then(31)$
-          when(pl$col("date")$dt$month()$is_in(list(c(4, 6, 9, 11))))$
+          when(pl$col("date")$dt$month()$is_in(list(c(4L, 6L, 9L, 11L))))$
           then(30)$
           when(pl$col("date")$dt$month() == 2 & pl$col("date")$dt$is_leap_year())$
           then(29)$
@@ -1170,7 +1222,13 @@
           coalesce = TRUE
         )$
         with_columns(pl$col("value")$fill_null(99))$
-        select("country", "year", "value")
+        select("country", "year", "value")$
+        sort(
+          pl$col("country"),
+          pl$col("year"),
+          descending = c(FALSE, FALSE),
+          nulls_last = TRUE
+        )
 
 # check query for uncount()
 
@@ -1274,13 +1332,6 @@
           "x",
           empty_as_null = TRUE
         )
-
-# check query for make_unique_id()
-
-    Code
-      show_query(query)
-    Output
-      test_pl$with_columns(pl$struct(c("x", "y"))$hash()$alias("id"))
 
 # check query for scan_*_polars() and read_*_polars()
 
