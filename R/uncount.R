@@ -35,10 +35,12 @@ uncount.polars_data_frame <- function(
   .id = NULL
 ) {
   data <- tag_frame(data, substitute(data))
+
   check_dots_empty()
   check_required(weights)
   check_bool(.remove)
   check_name(.id, allow_null = TRUE)
+
   weights_quo <- enquo(weights)
   grps <- attributes(data)$pl_grps
   mo <- attributes(data)$maintain_grp_order %||% FALSE
@@ -49,6 +51,7 @@ uncount.polars_data_frame <- function(
     temp <- paste0("_", temp)
   }
   out <- mutate(data, !!temp := !!weights_quo)
+
   # The weights are now in temp; avoid repeating a column that will be removed.
   if (.remove && quo_is_symbol(weights_quo)) {
     weight_name <- as_string(get_expr(weights_quo))
@@ -56,6 +59,10 @@ uncount.polars_data_frame <- function(
       out <- out$drop(weight_name)
     }
   }
+
+  # Below we check the type of the weights column by polars cast to avoid
+  # unexpected truncation or processing wrongly. This is likely inefficient,
+  # but I haven't thought of a better way yet.
   dtype <- out$collect_schema()[[temp]]
   if (
     is.null(dtype) ||
@@ -77,6 +84,7 @@ uncount.polars_data_frame <- function(
   weights_expr <- pl$when(valid)$then(weights_expr)$otherwise(-1)$cast(
     pl$UInt32
   )$cast(pl$Int32)
+
   # Exploding only the copy indices duplicates all other columns unchanged.
   out <- with_polars_errors(
     out$with_columns(
@@ -87,7 +95,10 @@ uncount.polars_data_frame <- function(
   if (!is.null(.id)) {
     out <- out$with_columns((pl$col(temp) + 1L)$alias(.id))
   }
+
   out <- out$drop(temp)
+
+  # Reapply grouping information
   if (!is.null(grps)) {
     grps <- intersect(grps, names(out))
     if (is_empty(grps)) {
@@ -96,6 +107,7 @@ uncount.polars_data_frame <- function(
       out <- group_by(out, all_of(grps), maintain_order = mo)
     }
   }
+
   add_tidypolars_class(out)
 }
 
