@@ -27,6 +27,7 @@ concurrency:
 jobs:
   codecov:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}

@@ -32,6 +32,7 @@ concurrency:
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
