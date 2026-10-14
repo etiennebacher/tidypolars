@@ -429,14 +429,18 @@ test_that("nth() validates optional argument sizes and flags", {
     test_pl |> summarize(y = nth(x, 1, default = x)),
     test_df |> summarize(y = nth(x, 1, default = x))
   )
-  expect_snapshot(
-    test_pl |> summarize(y = first(x, order_by = 1)),
-    error = TRUE
-  )
-  expect_both_error(
-    test_pl |> summarize(y = first(x, order_by = 1)),
-    test_df |> summarize(y = first(x, order_by = 1))
-  )
+  # TODO: remove this if condition when https://github.com/pola-rs/polars/issues/29760
+  # is fixed
+  if (Sys.getenv("TIDYPOLARS_TEST") != "TRUE") {
+    expect_snapshot(
+      test_pl |> summarize(y = first(x, order_by = 1)),
+      error = TRUE
+    )
+    expect_both_error(
+      test_pl |> summarize(y = first(x, order_by = 1)),
+      test_df |> summarize(y = first(x, order_by = 1))
+    )
+  }
   expect_snapshot(
     test_pl |> summarize(y = last(x, na_rm = NA)),
     error = TRUE
