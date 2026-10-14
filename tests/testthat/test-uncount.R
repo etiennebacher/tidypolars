@@ -174,7 +174,21 @@ test_that("weights are validated before expansion", {
     uncount(test_df, c(1L, 2L, 3L))
   )
 
+  # The error message is hard to read now. Perhaps we can find a
+  # more general error-handling solution for LazyFrame.
   expect_snapshot(uncount(test_pl, missing), error = TRUE)
+})
+
+test_that("weights must be supplied and cannot evaluate to NULL", {
+  test_df <- tibble(value = "a", n = 2L)
+  test_pl <- as_polars_df(test_df)
+
+  expect_both_error(
+    uncount(test_pl),
+    uncount(test_df)
+  )
+  expect_snapshot(uncount(test_pl), error = TRUE)
+  expect_snapshot(uncount(test_pl, NULL), error = TRUE)
 })
 
 test_that("control arguments are validated", {
@@ -259,6 +273,26 @@ test_that("weights use group context and retained groups survive", {
   expect_equal(
     uncount(test_pl, n) |> summarise(total = n()) |> arrange(g),
     uncount(test_df, n) |> summarise(total = n()) |> arrange(g)
+  )
+})
+
+test_that("removing the last grouping column ungroups the result", {
+  test_df <- tibble(value = c("a", "b"), n = c(1L, 2L))
+  test_pl <- as_polars_df(test_df)
+  test_df <- group_by(test_df, n)
+  test_pl <- group_by(test_pl, n, maintain_order = TRUE)
+
+  expect_equal(
+    uncount(test_pl, n),
+    uncount(test_df, n)
+  )
+  expect_equal(
+    uncount(test_pl, n) |> summarise(total = n()),
+    uncount(test_df, n) |> summarise(total = n())
+  )
+  expect_equal(
+    group_vars(uncount(test_pl, n, .remove = FALSE)),
+    group_vars(uncount(test_df, n, .remove = FALSE))
   )
 })
 
