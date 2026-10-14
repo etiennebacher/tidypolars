@@ -4,12 +4,14 @@
 #' is the opposite of `count()`.
 #'
 #' @param data A Polars Data/LazyFrame
-#' @param weights A vector of weights. Evaluated in the context of `data`.
+#' @param weights Nonnegative, integer-valued weights evaluated in the context
+#'   of `data`, within groups for grouped data. Zero weights remove rows.
 #' @inheritParams rlang::check_dots_empty0
 #' @param .remove If `TRUE`, and weights is the name of a column in data, then
 #' this column is removed.
-#' @param .id Supply a string to create a new variable which gives a unique
-#' identifier for each created row.
+#' @param .id Supply a string to create a variable numbering the copies of
+#'   each original row, starting at one. An existing column is overwritten.
+#' @return A Data/LazyFrame with rows repeated in their original order.
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -33,28 +35,77 @@ uncount.polars_data_frame <- function(
   .id = NULL
 ) {
   data <- tag_frame(data, substitute(data))
+
   check_dots_empty()
+  check_required(weights)
+  check_bool(.remove)
+  check_name(.id, allow_null = TRUE)
+
   weights_quo <- enquo(weights)
-  repeat_expr <- translate_expr(
-    data,
-    weights_quo,
-    new_vars = NULL,
-    env = rlang::current_env()
-  )
+  grps <- attributes(data)$pl_grps
+  mo <- attributes(data)$maintain_grp_order %||% FALSE
 
-  out <- data$with_columns(pl$col("x")$repeat_by(repeat_expr))$explode(
-    pl$col("x"),
-    empty_as_null = TRUE
-  )
+  # Follow mutate()'s collision handling without overwriting any user column.
+  temp <- "__tidypolars_uncount__"
+  while (temp %in% c(names(data), .id)) {
+    temp <- paste0("_", temp)
+  }
+  out <- mutate(data, !!temp := !!weights_quo)
 
-  if (isTRUE(.remove) && repeat_expr$meta$output_name() != "literal") {
-    out <- out$drop(repeat_expr$meta$output_name())
+  # The weights are now in temp; avoid repeating a column that will be removed.
+  if (.remove && quo_is_symbol(weights_quo)) {
+    weight_name <- as_string(get_expr(weights_quo))
+    if (weight_name %in% names(data)) {
+      out <- out$drop(weight_name)
+    }
   }
 
+  # Below we check the type of the weights column by polars cast to avoid
+  # unexpected truncation or processing wrongly. This is likely inefficient,
+  # but I haven't thought of a better way yet.
+  dtype <- out$collect_schema()[[temp]]
+  if (
+    is.null(dtype) ||
+      (!dtype$is_numeric() &&
+        !inherits(dtype, c("polars_dtype_boolean", "polars_dtype_null")))
+  ) {
+    cli_abort("{.arg weights} must be numeric or logical.")
+  }
+  weights_expr <- pl$col(temp)$cast(pl$Float64)
+  valid <- weights_expr$is_finite()$and(
+    weights_expr$ge(0)
+  )$and(
+    weights_expr$le(.Machine$integer.max)
+  )$and(
+    weights_expr$eq(weights_expr$floor())
+  )
+  # False and null predicates both select the sentinel, rejected by the cast.
+  # Check before casting: integer casts alone silently truncate fractions.
+  weights_expr <- pl$when(valid)$then(weights_expr)$otherwise(-1)$cast(
+    pl$UInt32
+  )$cast(pl$Int32)
+
+  # Exploding only the copy indices duplicates all other columns unchanged.
+  out <- with_polars_errors(
+    out$with_columns(
+      pl$int_ranges(0L, weights_expr, dtype = pl$Int32)$alias(temp)
+    )$explode(temp, empty_as_null = FALSE)
+  )
+
   if (!is.null(.id)) {
-    out <- out$with_columns(
-      (pl$col(names(out)[1])$cum_count()$over(!!!names(out)))$alias(.id)
-    )
+    out <- out$with_columns((pl$col(temp) + 1L)$alias(.id))
+  }
+
+  out <- out$drop(temp)
+
+  # Reapply grouping information
+  if (!is.null(grps)) {
+    grps <- intersect(grps, names(out))
+    if (is_empty(grps)) {
+      out <- ungroup(out)
+    } else {
+      out <- group_by(out, all_of(grps), maintain_order = mo)
+    }
   }
 
   add_tidypolars_class(out)
