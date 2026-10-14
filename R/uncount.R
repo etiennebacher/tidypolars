@@ -36,6 +36,7 @@ uncount.polars_data_frame <- function(
 ) {
   data <- tag_frame(data, substitute(data))
   check_dots_empty()
+  check_required(weights)
   check_bool(.remove)
   check_name(.id, allow_null = TRUE)
   weights_quo <- enquo(weights)
@@ -57,8 +58,9 @@ uncount.polars_data_frame <- function(
   }
   dtype <- out$collect_schema()[[temp]]
   if (
-    !dtype$is_numeric() &&
-      !inherits(dtype, c("polars_dtype_boolean", "polars_dtype_null"))
+    is.null(dtype) ||
+      (!dtype$is_numeric() &&
+        !inherits(dtype, c("polars_dtype_boolean", "polars_dtype_null")))
   ) {
     cli_abort("{.arg weights} must be numeric or logical.")
   }
@@ -87,11 +89,12 @@ uncount.polars_data_frame <- function(
   }
   out <- out$drop(temp)
   if (!is.null(grps)) {
-    out <- group_by(
-      out,
-      all_of(intersect(grps, names(out))),
-      maintain_order = mo
-    )
+    grps <- intersect(grps, names(out))
+    if (is_empty(grps)) {
+      out <- ungroup(out)
+    } else {
+      out <- group_by(out, all_of(grps), maintain_order = mo)
+    }
   }
   add_tidypolars_class(out)
 }
