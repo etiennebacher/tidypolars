@@ -13,8 +13,7 @@
 \item{data}{A Polars Data/LazyFrame}
 
 \item{weights}{Nonnegative, integer-valued weights evaluated in the context
-of \code{data}, within groups for grouped data. Zero weights remove rows.
-Missing, infinite, and fractional weights are not allowed.}
+of \code{data}, within groups for grouped data. Zero weights remove rows.}
 
 \item{...}{Dots which should be empty.}
 
@@ -30,10 +29,6 @@ A Data/LazyFrame with rows repeated in their original order.
 \description{
 This duplicates rows according to a weighting variable (or expression). This
 is the opposite of \code{count()}.
-}
-\details{
-LazyFrames validate weights when the query is executed. Validation
-uses an R callback on the weight column; other columns remain in Polars.
 }
 \examples{
 \dontshow{if (require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}

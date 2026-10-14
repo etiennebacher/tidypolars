@@ -6,15 +6,12 @@
 #' @param data A Polars Data/LazyFrame
 #' @param weights Nonnegative, integer-valued weights evaluated in the context
 #'   of `data`, within groups for grouped data. Zero weights remove rows.
-#'   Missing, infinite, and fractional weights are not allowed.
 #' @inheritParams rlang::check_dots_empty0
 #' @param .remove If `TRUE`, and weights is the name of a column in data, then
 #' this column is removed.
 #' @param .id Supply a string to create a variable numbering the copies of
 #'   each original row, starting at one. An existing column is overwritten.
 #' @return A Data/LazyFrame with rows repeated in their original order.
-#' @details LazyFrames validate weights when the query is executed. Validation
-#'   uses an R callback on the weight column; other columns remain in Polars.
 #'
 #' @export
 #' @examplesIf require("dplyr", quietly = TRUE) && require("tidyr", quietly = TRUE)
@@ -54,10 +51,36 @@ uncount.polars_data_frame <- function(
     expr((!!mutate)(!!data, !!temp := !!weights_quo)),
     env = quo_get_env(weights_quo)
   )
-  weights_expr <- pl$col(temp)$map_batches(
-    function(s) getFromNamespace("uncount_weights", "tidypolars")(s),
-    return_dtype = pl$Int32
+  # The weights are now in temp; avoid repeating a column that will be removed.
+  if (.remove && quo_is_symbol(weights_quo)) {
+    weight_name <- as_string(get_expr(weights_quo))
+    if (weight_name %in% names(data)) {
+      out <- out$drop(weight_name)
+    }
+  }
+  dtype <- out$collect_schema()[[temp]]
+  if (
+    !dtype$is_numeric() &&
+      !inherits(dtype, "polars_dtype_boolean") &&
+      !inherits(dtype, "polars_dtype_null")
+  ) {
+    cli_abort("{.arg weights} must be numeric or logical.")
+  }
+  weights_expr <- pl$col(temp)$cast(pl$Float64)
+  valid <- weights_expr$is_not_null()$and(
+    weights_expr$is_finite()
+  )$and(
+    weights_expr$ge(0)
+  )$and(
+    weights_expr$le(.Machine$integer.max)
+  )$and(
+    weights_expr$eq(weights_expr$floor())
   )
+  # A strict unsigned cast rejects the sentinel for every invalid weight.
+  # Check before casting: integer casts alone silently truncate fractions.
+  weights_expr <- pl$when(valid)$then(weights_expr)$otherwise(-1)$cast(
+    pl$UInt32
+  )$cast(pl$Int32)
   # Exploding only the copy indices duplicates all other columns unchanged.
   out <- with_polars_errors(
     out$with_columns(
@@ -65,12 +88,6 @@ uncount.polars_data_frame <- function(
     )$explode(temp, empty_as_null = FALSE)
   )
 
-  if (.remove && quo_is_symbol(weights_quo)) {
-    weight_name <- as_string(get_expr(weights_quo))
-    if (weight_name %in% names(data)) {
-      out <- out$drop(weight_name)
-    }
-  }
   if (!is.null(.id)) {
     out <- out$with_columns((pl$col(temp) + 1L)$alias(.id))
   }
@@ -88,15 +105,3 @@ uncount.polars_data_frame <- function(
 #' @rdname uncount.polars_data_frame
 #' @export
 uncount.polars_lazy_frame <- uncount.polars_data_frame
-
-# A single-expression callback also keeps recorded Polars queries replayable.
-uncount_weights <- function(s) {
-  weights <- vctrs::vec_cast(s$to_r_vector(), integer(), x_arg = "weights")
-  if (anyNA(weights)) {
-    cli_abort("{.arg weights} can't be missing.")
-  }
-  if (any(weights < 0L)) {
-    cli_abort("{.arg weights} must be nonnegative.")
-  }
-  weights
-}

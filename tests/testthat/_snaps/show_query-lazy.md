@@ -1886,14 +1886,22 @@
       compute(current)
     Output
       test_pl$with_columns(`__tidypolars_uncount__` = pl$col("n"))$
+        drop("n")$
         with_columns(
           pl$int_ranges(
             0L,
-            pl$col("__tidypolars_uncount__")$
-              map_batches(
-                function(s) tidypolars:::uncount_weights(s),
-                return_dtype = pl$Int32
-              ),
+            pl$when(
+              pl$col("__tidypolars_uncount__")$cast(pl$Float64)$is_not_null() &
+                pl$col("__tidypolars_uncount__")$cast(pl$Float64)$is_finite() &
+                pl$col("__tidypolars_uncount__")$cast(pl$Float64) >= 0 &
+                pl$col("__tidypolars_uncount__")$cast(pl$Float64) <= 2147483647L &
+                pl$col("__tidypolars_uncount__")$cast(pl$Float64) ==
+                  pl$col("__tidypolars_uncount__")$cast(pl$Float64)$floor()
+            )$
+              then(pl$col("__tidypolars_uncount__")$cast(pl$Float64))$
+              otherwise(-1)$
+              cast(pl$UInt32)$
+              cast(pl$Int32),
             dtype = pl$Int32
           )$
             alias("__tidypolars_uncount__")
@@ -1902,7 +1910,6 @@
           "__tidypolars_uncount__",
           empty_as_null = FALSE
         )$
-        drop("n")$
         drop("__tidypolars_uncount__")
       shape: (3, 2)
       ┌─────┬─────┐
@@ -1921,14 +1928,22 @@
       compute(current)
     Output
       test_pl$with_columns(`__tidypolars_uncount__` = pl$col("n"))$
+        drop("n")$
         with_columns(
           pl$int_ranges(
             0L,
-            pl$col("__tidypolars_uncount__")$
-              map_batches(
-                function(s) tidypolars:::uncount_weights(s),
-                return_dtype = pl$Int32
-              ),
+            pl$when(
+              pl$col("__tidypolars_uncount__")$cast(pl$Float64)$is_not_null() &
+                pl$col("__tidypolars_uncount__")$cast(pl$Float64)$is_finite() &
+                pl$col("__tidypolars_uncount__")$cast(pl$Float64) >= 0 &
+                pl$col("__tidypolars_uncount__")$cast(pl$Float64) <= 2147483647L &
+                pl$col("__tidypolars_uncount__")$cast(pl$Float64) ==
+                  pl$col("__tidypolars_uncount__")$cast(pl$Float64)$floor()
+            )$
+              then(pl$col("__tidypolars_uncount__")$cast(pl$Float64))$
+              otherwise(-1)$
+              cast(pl$UInt32)$
+              cast(pl$Int32),
             dtype = pl$Int32
           )$
             alias("__tidypolars_uncount__")
@@ -1937,7 +1952,6 @@
           "__tidypolars_uncount__",
           empty_as_null = FALSE
         )$
-        drop("n")$
         with_columns((pl$col("__tidypolars_uncount__") + 1L)$alias("id"))$
         drop("__tidypolars_uncount__")
       shape: (3, 3)

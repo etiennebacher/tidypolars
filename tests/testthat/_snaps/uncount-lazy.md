@@ -4,63 +4,7 @@
       compute(current)
     Condition
       Error in `compute()`:
-      ! User function raised an error
-
----
-
-    Code
-      compute(current)
-    Condition
-      Error in `compute()`:
-      ! User function raised an error
-
----
-
-    Code
-      compute(current)
-    Condition
-      Error in `compute()`:
-      ! User function raised an error
-
----
-
-    Code
-      compute(current)
-    Condition
-      Error in `compute()`:
-      ! User function raised an error
-
----
-
-    Code
-      compute(current)
-    Condition
-      Error in `compute()`:
-      ! User function raised an error
-
----
-
-    Code
-      compute(current)
-    Condition
-      Error in `compute()`:
-      ! User function raised an error
-
----
-
-    Code
-      compute(current)
-    Condition
-      Error in `compute()`:
-      ! User function raised an error
-
----
-
-    Code
-      compute(current)
-    Condition
-      Error in `compute()`:
-      ! lengths don't match: can't broadcast Series '__tidypolars_uncount__' of length 3 to length 2
+      ! conversion from `f64` to `u32` failed in column '__tidypolars_uncount__' for 1 out of 2 values: [-1.0]
 
 # control arguments are validated
 
@@ -76,21 +20,5 @@
       compute(current)
     Condition
       Error in `uncount()`:
-      ! `.remove` must be `TRUE` or `FALSE`, not the number 1.
-
----
-
-    Code
-      compute(current)
-    Condition
-      Error in `uncount()`:
       ! `.id` must be a valid name or `NULL`, not the empty string "".
-
----
-
-    Code
-      compute(current)
-    Condition
-      Error in `uncount()`:
-      ! `.id` must be a valid name or `NULL`, not a character vector.
 
