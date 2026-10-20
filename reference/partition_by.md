@@ -3,19 +3,9 @@
 **\[experimental\]**
 
 Partitioning schemes are used to write multiple files with `sink_*()`
-and `write_*_polars()` functions.
-
-- `partition_by()`: Configuration for writing to multiple output files.
-  Supports partitioning by key, file size limits, or both.
-
-The following functions are deprecated and will be removed in a future
-release:
-
-- **\[deprecated\]** `partition_by_key()`: use `partition_by(key = ...)`
-  instead.
-
-- **\[deprecated\]** `partition_by_max_size()`: use
-  `partition_by(max_rows_per_file = ...)` instead.
+and `write_*_polars()` functions. `partition_by()` allows to configure
+the the writing process to multiple output files. It supports
+partitioning by key, file size limits, or both.
 
 ## Usage
 
@@ -28,10 +18,6 @@ partition_by(
   max_rows_per_file = NULL,
   approximate_bytes_per_file = NULL
 )
-
-partition_by_key(base_path, ..., by, include_key = TRUE)
-
-partition_by_max_size(base_path, ..., max_size)
 ```
 
 ## Arguments
@@ -68,15 +54,3 @@ partition_by_max_size(base_path, ..., max_size)
   to each file, or `NULL`. This is measured as the estimated size of the
   DataFrame in memory. Defaults to approximately 4GB when `key` is
   specified without `max_rows_per_file`, otherwise unlimited.
-
-- by:
-
-  **\[deprecated\]** Something can be coerced to a list of Polars
-  expressions. Used to partition by. Use the `key` property of
-  `partition_by()` instead.
-
-- max_size:
-
-  **\[deprecated\]** An integer-ish value indicating the maximum size in
-  rows of each of the generated files. Use the `max_rows_per_file`
-  property of `partition_by()` instead.

@@ -402,13 +402,9 @@ Other functions or S3 methods.
 
 ## Other Polars functions
 
-Other Polars-specific functions (most are deprecated).
+Other Polars-specific functions.
 
-- [`make_unique_id()`](https://tidypolars.etiennebacher.com/reference/make_unique_id.md)
-  **\[deprecated\]** : Create a column with unique id per row values
-- [`partition_by()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
-  [`partition_by_key()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
-  [`partition_by_max_size()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
+- [`partition_by()`](https://tidypolars.etiennebacher.com/reference/partition_by.md)
   **\[experimental\]** : Helper functions to export data as a
   partitioned output
 

@@ -83,7 +83,7 @@ scan_ndjson_polars(
 - rechunk:
 
   **\[deprecated\]** Reallocate to contiguous memory when all
-  chunks/files are parsed. Call `$rechunk()` on the output instead.
+  chunks/files are parsed.
 
 ## Value
 

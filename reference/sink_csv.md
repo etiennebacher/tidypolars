@@ -161,7 +161,7 @@ The input LazyFrame.
 It is possible to export data to multiple files based on various
 parameters, such as the values of some variables, or such that each file
 has a maximum number of rows. See
-[`partition_by()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
+[`partition_by()`](https://tidypolars.etiennebacher.com/reference/partition_by.md)
 for more details.
 
 ## Examples
@@ -195,11 +195,9 @@ my_lf <- as_polars_lf(mtcars)
 
 # Split the LazyFrame by key(s) and write each split to a different file:
 out_path <- withr::local_tempdir()
-sink_csv(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
-#> Warning: `partition_by_key()` was deprecated in tidypolars 0.16.0.
-#> ℹ Please use `partition_by(key = )` instead.
+sink_csv(my_lf, partition_by(out_path, key = c("am", "cyl")), mkdir = TRUE)
 fs::dir_tree(out_path)
-#> /tmp/RtmpRszNbC/file18836b4770ad
+#> /tmp/RtmpemwpmO/file1b61301358ca
 #> ├── am=0.0
 #> │   ├── cyl=4.0
 #> │   │   └── 00000000.csv
@@ -217,11 +215,9 @@ fs::dir_tree(out_path)
 
 # Split the LazyFrame by max number of rows per file:
 out_path <- withr::local_tempdir()
-sink_csv(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
-#> Warning: `partition_by_max_size()` was deprecated in tidypolars 0.16.0.
-#> ℹ Please use `partition_by(max_rows_per_file = )` instead.
+sink_csv(my_lf, partition_by(out_path, max_rows_per_file = 5), mkdir = TRUE)
 fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-#> /tmp/RtmpRszNbC/file18835659a0b2
+#> /tmp/RtmpemwpmO/file1b616e7d895a
 #> ├── 00000000.csv
 #> ├── 00000001.csv
 #> ├── 00000002.csv

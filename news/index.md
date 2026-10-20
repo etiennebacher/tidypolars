@@ -146,19 +146,15 @@
   - `describe_plan()` and `describe_optimized_plan()`, use
     `explain(optimized = TRUE/FALSE)` instead.
 
-- [`make_unique_id()`](https://tidypolars.etiennebacher.com/reference/make_unique_id.md)
-  is deprecated and will be removed in a future version. This is because
-  the underlying Polars function isn’t guaranteed to give the same
-  results across different versions. This function doesn’t have a
-  replacement in `tidypolars`
+- `make_unique_id()` is deprecated and will be removed in a future
+  version. This is because the underlying Polars function isn’t
+  guaranteed to give the same results across different versions. This
+  function doesn’t have a replacement in `tidypolars`
   ([\#304](https://github.com/etiennebacher/tidypolars/issues/304)).
 
-- In
-  [`partition_by_key()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
-  and
-  [`partition_by_max_size()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
-  (both already deprecated in 0.16.0), the argument
-  `per_partition_sort_by` has been removed
+- In `partition_by_key()` and `partition_by_max_size()` (both already
+  deprecated in 0.16.0), the argument `per_partition_sort_by` has been
+  removed
   ([\#322](https://github.com/etiennebacher/tidypolars/issues/322)).
 
 ### New features
@@ -295,16 +291,15 @@
   ([\#298](https://github.com/etiennebacher/tidypolars/issues/298))
 
 - New (experimental) function
-  [`partition_by()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
+  [`partition_by()`](https://tidypolars.etiennebacher.com/reference/partition_by.md)
   to write partitioned output in `sink_*()` and `write_*_polars()`. The
   following functions are deprecated and will be removed in a future
   release
   ([\#299](https://github.com/etiennebacher/tidypolars/issues/299)):
 
-  - [`partition_by_key()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
-    can be replaced with `partition_by(key =)`
-  - [`partition_by_max_size()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
-    can be replaced with `partition_by(max_rows_per_file =)`
+  - `partition_by_key()` can be replaced with `partition_by(key =)`
+  - `partition_by_max_size()` can be replaced with
+    `partition_by(max_rows_per_file =)`
 
 ### Changes
 
@@ -347,11 +342,8 @@
   the folder(s) specified in the path(s) to files
   ([\#236](https://github.com/etiennebacher/tidypolars/issues/236)).
 
-- New functions
-  [`partition_by_key()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
-  and
-  [`partition_by_max_size()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
-  that can be used in the `path` argument of `sink_*()` functions. Those
+- New functions `partition_by_key()` and `partition_by_max_size()` that
+  can be used in the `path` argument of `sink_*()` functions. Those
   enable writing a LazyFrame to several files as partitioned output. See
   more details in `?sink_parquet()`
   ([\#237](https://github.com/etiennebacher/tidypolars/issues/237)).

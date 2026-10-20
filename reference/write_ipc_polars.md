@@ -60,5 +60,5 @@ The input DataFrame.
 It is possible to export data to multiple files based on various
 parameters, such as the values of some variables, or such that each file
 has a maximum number of rows. See
-[`partition_by()`](https://tidypolars.etiennebacher.com/reference/partitioned_output.md)
+[`partition_by()`](https://tidypolars.etiennebacher.com/reference/partition_by.md)
 for more details.
