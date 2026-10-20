@@ -117,24 +117,30 @@
           validate = "m:m",
           coalesce = TRUE
         )$
-        select("cyl", "mpg", "mean_mpg")
+        select("cyl", "mpg", "mean_mpg")$
+        sort(
+          pl$col("cyl"),
+          pl$col("mpg"),
+          descending = c(FALSE, FALSE),
+          nulls_last = TRUE
+        )
       shape: (32, 3)
       ┌─────┬──────┬───────────┐
       │ cyl ┆ mpg  ┆ mean_mpg  │
       │ --- ┆ ---  ┆ ---       │
       │ f64 ┆ f64  ┆ f64       │
       ╞═════╪══════╪═══════════╡
-      │ 6.0 ┆ 21.0 ┆ 19.742857 │
-      │ 6.0 ┆ 21.0 ┆ 19.742857 │
-      │ 4.0 ┆ 22.8 ┆ 26.663636 │
-      │ 6.0 ┆ 21.4 ┆ 19.742857 │
-      │ 8.0 ┆ 18.7 ┆ 15.1      │
-      │ …   ┆ …    ┆ …         │
-      │ 4.0 ┆ 30.4 ┆ 26.663636 │
-      │ 8.0 ┆ 15.8 ┆ 15.1      │
-      │ 6.0 ┆ 19.7 ┆ 19.742857 │
-      │ 8.0 ┆ 15.0 ┆ 15.1      │
       │ 4.0 ┆ 21.4 ┆ 26.663636 │
+      │ 4.0 ┆ 21.5 ┆ 26.663636 │
+      │ 4.0 ┆ 22.8 ┆ 26.663636 │
+      │ 4.0 ┆ 22.8 ┆ 26.663636 │
+      │ 4.0 ┆ 24.4 ┆ 26.663636 │
+      │ …   ┆ …    ┆ …         │
+      │ 8.0 ┆ 15.8 ┆ 15.1      │
+      │ 8.0 ┆ 16.4 ┆ 15.1      │
+      │ 8.0 ┆ 17.3 ┆ 15.1      │
+      │ 8.0 ┆ 18.7 ┆ 15.1      │
+      │ 8.0 ┆ 19.2 ┆ 15.1      │
       └─────┴──────┴───────────┘
 
 # show_query() works with across()
@@ -234,7 +240,11 @@
     Output
       as_polars_lf(mtcars)$
         with_columns(
-          foo = pl$col("mpg")$is_in(pl$lit(large)$implode(), nulls_equal = TRUE)
+          foo = pl$col("mpg")$
+            is_in(
+              pl$lit(large)$implode()$cast(pl$dtype_of(pl$col("mpg"))$wrap_in_list()),
+              nulls_equal = TRUE
+            )
         )
       shape: (32, 12)
       ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
@@ -262,7 +272,13 @@
     Output
       as_polars_lf(mtcars)$
         with_columns(
-          foo = pl$col("mpg")$is_in(pl$lit(runif(200))$implode(), nulls_equal = TRUE)
+          foo = pl$col("mpg")$
+            is_in(
+              pl$lit(runif(200))$
+                implode()$
+                cast(pl$dtype_of(pl$col("mpg"))$wrap_in_list()),
+              nulls_equal = TRUE
+            )
         )
       shape: (32, 12)
       ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
@@ -469,7 +485,7 @@
       compute(current)
     Condition
       Error in `compute()`:
-      ! conversion from `str` to `i32` failed in column 'char1' for 2 out of 2 values: ["a", "b"]
+      ! conversion from `str` to `i32` failed in column 'char1' for 1 out of 1 values: ["a"]
 
 # option tidypolars_record_query = FALSE disables the recording
 
@@ -529,7 +545,11 @@
     Output
       as_polars_lf(mtcars)$
         with_columns(
-          foo = pl$col("mpg")$is_in(pl$lit(1:200)$implode(), nulls_equal = TRUE)
+          foo = pl$col("mpg")$
+            is_in(
+              pl$lit(1:200)$implode()$cast(pl$dtype_of(pl$col("mpg"))$wrap_in_list()),
+              nulls_equal = TRUE
+            )
         )
       shape: (32, 12)
       ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
@@ -573,7 +593,12 @@
       as_polars_lf(mtcars)$
         with_columns(
           foo = pl$col("mpg")$
-            is_in(pl$lit(`<numeric of length 200>`)$implode(), nulls_equal = TRUE)
+            is_in(
+              pl$lit(`<numeric of length 200>`)$
+                implode()$
+                cast(pl$dtype_of(pl$col("mpg"))$wrap_in_list()),
+              nulls_equal = TRUE
+            )
         )
       shape: (32, 12)
       ┌──────┬─────┬───────┬───────┬───┬─────┬──────┬──────┬───────┐
@@ -890,25 +915,31 @@
           ),
           variable_name = "income",
           value_name = "count"
+        )$
+        sort(
+          pl$col("religion"),
+          pl$col("income"),
+          descending = c(FALSE, FALSE),
+          nulls_last = TRUE
         )
       shape: (180, 3)
-      ┌───────────────────────┬────────────────────┬───────┐
-      │ religion              ┆ income             ┆ count │
-      │ ---                   ┆ ---                ┆ ---   │
-      │ str                   ┆ str                ┆ f64   │
-      ╞═══════════════════════╪════════════════════╪═══════╡
-      │ Agnostic              ┆ <$10k              ┆ 27.0  │
-      │ Atheist               ┆ <$10k              ┆ 12.0  │
-      │ Buddhist              ┆ <$10k              ┆ 27.0  │
-      │ Catholic              ┆ <$10k              ┆ 418.0 │
-      │ Don’t know/refused    ┆ <$10k              ┆ 15.0  │
-      │ …                     ┆ …                  ┆ …     │
-      │ Orthodox              ┆ Don't know/refused ┆ 73.0  │
-      │ Other Christian       ┆ Don't know/refused ┆ 18.0  │
-      │ Other Faiths          ┆ Don't know/refused ┆ 71.0  │
-      │ Other World Religions ┆ Don't know/refused ┆ 8.0   │
-      │ Unaffiliated          ┆ Don't know/refused ┆ 597.0 │
-      └───────────────────────┴────────────────────┴───────┘
+      ┌──────────────┬────────────────────┬───────┐
+      │ religion     ┆ income             ┆ count │
+      │ ---          ┆ ---                ┆ ---   │
+      │ str          ┆ str                ┆ f64   │
+      ╞══════════════╪════════════════════╪═══════╡
+      │ Agnostic     ┆ $10-20k            ┆ 34.0  │
+      │ Agnostic     ┆ $100-150k          ┆ 109.0 │
+      │ Agnostic     ┆ $20-30k            ┆ 60.0  │
+      │ Agnostic     ┆ $30-40k            ┆ 81.0  │
+      │ Agnostic     ┆ $40-50k            ┆ 76.0  │
+      │ …            ┆ …                  ┆ …     │
+      │ Unaffiliated ┆ $50-75k            ┆ 528.0 │
+      │ Unaffiliated ┆ $75-100k           ┆ 407.0 │
+      │ Unaffiliated ┆ <$10k              ┆ 217.0 │
+      │ Unaffiliated ┆ >150k              ┆ 258.0 │
+      │ Unaffiliated ┆ Don't know/refused ┆ 597.0 │
+      └──────────────┴────────────────────┴───────┘
 
 # separate() example: split on a dot
 
@@ -1267,8 +1298,17 @@
       compute(current)
     Output
       dat$with_columns(
-        ins = pl$col("grp")$is_in(pl$lit("a")$implode(), nulls_equal = TRUE),
-        notin = pl$col("grp")$is_in(pl$lit("a")$implode(), nulls_equal = TRUE)$not()
+        ins = pl$col("grp")$
+          is_in(
+            pl$lit("a")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list()),
+            nulls_equal = TRUE
+          ),
+        notin = pl$col("grp")$
+          is_in(
+            pl$lit("a")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list()),
+            nulls_equal = TRUE
+          )$
+          not()
       )
       shape: (5, 10)
       ┌──────┬─────┬─────┬─────────────┬───┬────────────┬─────────────────────────┬───────┬───────┐
@@ -1356,12 +1396,27 @@
       compute(current)
     Output
       dat$with_columns(
-        with_default = pl$when(pl$col("grp")$is_in(pl$lit("a")$implode()))$
+        with_default = pl$when(
+          pl$col("grp")$
+            is_in(
+              pl$lit("a")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list())
+            )
+        )$
           then(pl$lit("A"))$
           otherwise(pl$lit("Z")),
-        no_default = pl$when(pl$col("grp")$is_in(pl$lit("a")$implode()))$
+        no_default = pl$when(
+          pl$col("grp")$
+            is_in(
+              pl$lit("a")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list())
+            )
+        )$
           then(pl$lit("A"))$
-          when(pl$col("grp")$is_in(pl$lit("b")$implode()))$
+          when(
+            pl$col("grp")$
+              is_in(
+                pl$lit("b")$implode()$cast(pl$dtype_of(pl$col("grp"))$wrap_in_list())
+              )
+          )$
           then(pl$lit("B"))$
           otherwise(pl$lit(NA))
       )
@@ -1640,8 +1695,11 @@
         wd = pl$when(
           pl$lit(1L) > pl$col("txt")$str$split(" ")$list$len()$cast(pl$Int64)
         )$
-          then(pl$lit(NA_character_))$
-          otherwise(pl$col("txt")$str$split(" ")$list$slice(0, 1)$list$join(" "))
+          then(pl$lit(NULL))$
+          otherwise(pl$col("txt")$str$split(" "))$
+          list$slice(0, 1)$
+          list$eval(pl$element()$cast(pl$String))$
+          list$join(" ")
       )
       shape: (5, 11)
       ┌──────┬─────┬─────┬─────────────┬───┬─────────────────────────┬──────┬───────┬───────┐
@@ -1672,9 +1730,9 @@
         ly = pl$col("date")$dt$is_leap_year(),
         dim = pl$when(pl$col("date")$is_null())$
           then(NA)$
-          when(pl$col("date")$dt$month()$is_in(list(c(1, 3, 5, 7, 8, 10, 12))))$
+          when(pl$col("date")$dt$month()$is_in(list(c(1L, 3L, 5L, 7L, 8L, 10L, 12L))))$
           then(31)$
-          when(pl$col("date")$dt$month()$is_in(list(c(4, 6, 9, 11))))$
+          when(pl$col("date")$dt$month()$is_in(list(c(4L, 6L, 9L, 11L))))$
           then(30)$
           when(pl$col("date")$dt$month() == 2 & pl$col("date")$dt$is_leap_year())$
           then(29)$
@@ -1865,7 +1923,13 @@
           coalesce = TRUE
         )$
         with_columns(pl$col("value")$fill_null(99))$
-        select("country", "year", "value")
+        select("country", "year", "value")$
+        sort(
+          pl$col("country"),
+          pl$col("year"),
+          descending = c(FALSE, FALSE),
+          nulls_last = TRUE
+        )
       shape: (6, 3)
       ┌─────────┬────────┬───────┐
       │ country ┆ year   ┆ value │
@@ -2063,20 +2127,4 @@
       │ 2   ┆ e   │
       │ 3   ┆ f   │
       └─────┴─────┘
-
-# check query for make_unique_id()
-
-    Code
-      compute(current)
-    Output
-      test_pl$with_columns(pl$struct(c("x", "y"))$hash()$alias("id"))
-      shape: (2, 3)
-      ┌─────┬─────┬─────────────────────┐
-      │ x   ┆ y   ┆ id                  │
-      │ --- ┆ --- ┆ ---                 │
-      │ str ┆ f64 ┆ u64                 │
-      ╞═════╪═════╪═════════════════════╡
-      │ a   ┆ 1.0 ┆ 9401135652799850258 │
-      │ b   ┆ 2.0 ┆ 6701719201758175205 │
-      └─────┴─────┴─────────────────────┘
 

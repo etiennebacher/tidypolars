@@ -685,7 +685,17 @@ pl_word_stringr <- function(string, start = 1L, end = start, sep = " ", ...) {
   } else {
     max(as.integer(end) - offset, 0)
   }
-  out <- words$list$slice(offset, n_taken)$list$join(sep)
-
-  pl$when(out_of_bounds)$then(pl$lit(NA_character_))$otherwise(out)
+  # Mask the list first and slice outside of when/then. Polars fails when
+  # list$slice() has column-dependent arguments inside a when/then branch, cf
+  # https://github.com/pola-rs/polars/issues/29925
+  out <- pl$when(out_of_bounds)$then(pl$lit(NULL))$otherwise(words)
+  # In eager mode, slicing an all-null list column gives List(Null), which
+  # list$join() rejects. The cast inside list$eval() isn't optimized away,
+  # unlike a cast on the list itself.
+  # https://github.com/pola-rs/polars/issues/29926
+  out$list$slice(offset, n_taken)$list$eval(pl$element()$cast(
+    pl$String
+  ))$list$join(
+    sep
+  )
 }

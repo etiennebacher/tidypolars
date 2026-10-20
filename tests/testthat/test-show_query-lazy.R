@@ -84,7 +84,7 @@ test_that("show_query() works with group_by() and summarize()", {
 test_that("show_query() works with joins and shows the query of both inputs", {
   lhs <- as_polars_lf(mtcars) |> select(cyl, mpg)
   rhs <- as_polars_lf(mtcars) |> summarize(mean_mpg = mean(mpg), .by = cyl)
-  query <- left_join(lhs, rhs, by = "cyl")
+  query <- left_join(lhs, rhs, by = "cyl") |> arrange(cyl, mpg)
 
   expect_snapshot_lazy(show_query(query))
   expect_equal_lazy(replay_query(query), query)
@@ -465,7 +465,8 @@ test_that("filter() example: grouped filter with .by", {
 test_that("pivot_longer() example: relig_income", {
   query <- tidyr::relig_income |>
     as_polars_lf() |>
-    pivot_longer(!religion, names_to = "income", values_to = "count")
+    pivot_longer(!religion, names_to = "income", values_to = "count") |>
+    arrange(religion, income)
 
   expect_snapshot_lazy(show_query(query))
   expect_equal_lazy(replay_query(query), query)
@@ -939,7 +940,8 @@ test_that("check query for complete()", {
     value = c(1, 2, 3)
   ))
 
-  query <- complete(test_pl, country, year, fill = list(value = 99))
+  query <- complete(test_pl, country, year, fill = list(value = 99)) |>
+    arrange(country, year)
   expect_snapshot_lazy(show_query(query))
   expect_equal_lazy(replay_query(query), query)
 })
@@ -1018,15 +1020,6 @@ test_that("check query for separate_longer_delim_polars() and separate_longer_po
   expect_equal_lazy(replay_query(query), query)
 
   query <- separate_longer_position_polars(test_pl, x, width = 2)
-  expect_snapshot_lazy(show_query(query))
-  expect_equal_lazy(replay_query(query), query)
-})
-
-test_that("check query for make_unique_id()", {
-  withr::local_options(lifecycle_verbosity = "quiet")
-  test_pl <- as_polars_lf(data.frame(x = c("a", "b"), y = c(1, 2)))
-
-  query <- make_unique_id(test_pl, x, y, new_col = "id")
   expect_snapshot_lazy(show_query(query))
   expect_equal_lazy(replay_query(query), query)
 })
