@@ -915,25 +915,31 @@
           ),
           variable_name = "income",
           value_name = "count"
+        )$
+        sort(
+          pl$col("religion"),
+          pl$col("income"),
+          descending = c(FALSE, FALSE),
+          nulls_last = TRUE
         )
       shape: (180, 3)
-      ┌───────────────────────┬────────────────────┬───────┐
-      │ religion              ┆ income             ┆ count │
-      │ ---                   ┆ ---                ┆ ---   │
-      │ str                   ┆ str                ┆ f64   │
-      ╞═══════════════════════╪════════════════════╪═══════╡
-      │ Agnostic              ┆ <$10k              ┆ 27.0  │
-      │ Atheist               ┆ <$10k              ┆ 12.0  │
-      │ Agnostic              ┆ $10-20k            ┆ 34.0  │
-      │ Atheist               ┆ $10-20k            ┆ 27.0  │
-      │ Agnostic              ┆ $20-30k            ┆ 60.0  │
-      │ …                     ┆ …                  ┆ …     │
-      │ Unaffiliated          ┆ $100-150k          ┆ 321.0 │
-      │ Other World Religions ┆ >150k              ┆ 4.0   │
-      │ Unaffiliated          ┆ >150k              ┆ 258.0 │
-      │ Other World Religions ┆ Don't know/refused ┆ 8.0   │
-      │ Unaffiliated          ┆ Don't know/refused ┆ 597.0 │
-      └───────────────────────┴────────────────────┴───────┘
+      ┌──────────────┬────────────────────┬───────┐
+      │ religion     ┆ income             ┆ count │
+      │ ---          ┆ ---                ┆ ---   │
+      │ str          ┆ str                ┆ f64   │
+      ╞══════════════╪════════════════════╪═══════╡
+      │ Agnostic     ┆ $10-20k            ┆ 34.0  │
+      │ Agnostic     ┆ $100-150k          ┆ 109.0 │
+      │ Agnostic     ┆ $20-30k            ┆ 60.0  │
+      │ Agnostic     ┆ $30-40k            ┆ 81.0  │
+      │ Agnostic     ┆ $40-50k            ┆ 76.0  │
+      │ …            ┆ …                  ┆ …     │
+      │ Unaffiliated ┆ $50-75k            ┆ 528.0 │
+      │ Unaffiliated ┆ $75-100k           ┆ 407.0 │
+      │ Unaffiliated ┆ <$10k              ┆ 217.0 │
+      │ Unaffiliated ┆ >150k              ┆ 258.0 │
+      │ Unaffiliated ┆ Don't know/refused ┆ 597.0 │
+      └──────────────┴────────────────────┴───────┘
 
 # separate() example: split on a dot
 

@@ -461,7 +461,8 @@ test_that("filter() example: grouped filter with .by", {
 test_that("pivot_longer() example: relig_income", {
   query <- tidyr::relig_income |>
     as_polars_df() |>
-    pivot_longer(!religion, names_to = "income", values_to = "count")
+    pivot_longer(!religion, names_to = "income", values_to = "count") |>
+    arrange(religion, income)
 
   expect_snapshot(show_query(query))
   expect_equal(replay_query(query), query)

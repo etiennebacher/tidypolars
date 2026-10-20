@@ -576,6 +576,12 @@
           ),
           variable_name = "income",
           value_name = "count"
+        )$
+        sort(
+          pl$col("religion"),
+          pl$col("income"),
+          descending = c(FALSE, FALSE),
+          nulls_last = TRUE
         )
 
 # separate() example: split on a dot
