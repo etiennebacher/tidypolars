@@ -148,12 +148,12 @@ my_lf <- as_polars_lf(mtcars)
 
 # Split the LazyFrame by key(s) and write each split to a different file:
 out_path <- withr::local_tempdir()
-sink_csv(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
+sink_csv(my_lf, partition_by(out_path, key = c("am", "cyl")), mkdir = TRUE)
 fs::dir_tree(out_path)
 
 # Split the LazyFrame by max number of rows per file:
 out_path <- withr::local_tempdir()
-sink_csv(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
+sink_csv(my_lf, partition_by(out_path, max_rows_per_file = 5), mkdir = TRUE)
 fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
 \dontshow{\}) # examplesIf}
 }

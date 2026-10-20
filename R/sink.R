@@ -93,12 +93,12 @@
 #'
 #' # Split the LazyFrame by key(s) and write each split to a different file:
 #' out_path <- withr::local_tempdir()
-#' sink_parquet(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
+#' sink_parquet(my_lf, partition_by(out_path, key = c("am", "cyl")), mkdir = TRUE)
 #' fs::dir_tree(out_path)
 #'
 #' # Split the LazyFrame by max number of rows per file:
 #' out_path <- withr::local_tempdir()
-#' sink_parquet(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
+#' sink_parquet(my_lf, partition_by(out_path, max_rows_per_file = 5), mkdir = TRUE)
 #' fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
 sink_parquet <- function(
   .data,
@@ -217,12 +217,12 @@ sink_parquet <- function(
 #'
 #' # Split the LazyFrame by key(s) and write each split to a different file:
 #' out_path <- withr::local_tempdir()
-#' sink_csv(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
+#' sink_csv(my_lf, partition_by(out_path, key = c("am", "cyl")), mkdir = TRUE)
 #' fs::dir_tree(out_path)
 #'
 #' # Split the LazyFrame by max number of rows per file:
 #' out_path <- withr::local_tempdir()
-#' sink_csv(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
+#' sink_csv(my_lf, partition_by(out_path, max_rows_per_file = 5), mkdir = TRUE)
 #' fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
 sink_csv <- function(
   .data,
@@ -336,12 +336,12 @@ sink_csv <- function(
 #'
 #' # Split the LazyFrame by key(s) and write each split to a different file:
 #' out_path <- withr::local_tempdir()
-#' sink_ipc(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
+#' sink_ipc(my_lf, partition_by(out_path, key = c("am", "cyl")), mkdir = TRUE)
 #' fs::dir_tree(out_path)
 #'
 #' # Split the LazyFrame by max number of rows per file:
 #' out_path <- withr::local_tempdir()
-#' sink_ipc(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
+#' sink_ipc(my_lf, partition_by(out_path, max_rows_per_file = 5), mkdir = TRUE)
 #' fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
 sink_ipc <- function(
   .data,
@@ -424,12 +424,12 @@ sink_ipc <- function(
 #'
 #' # Split the LazyFrame by key(s) and write each split to a different file:
 #' out_path <- withr::local_tempdir()
-#' sink_ndjson(my_lf, partition_by_key(out_path, by = c("am", "cyl")), mkdir = TRUE)
+#' sink_ndjson(my_lf, partition_by(out_path, key = c("am", "cyl")), mkdir = TRUE)
 #' fs::dir_tree(out_path)
 #'
 #' # Split the LazyFrame by max number of rows per file:
 #' out_path <- withr::local_tempdir()
-#' sink_ndjson(my_lf, partition_by_max_size(out_path, max_size = 5), mkdir = TRUE)
+#' sink_ndjson(my_lf, partition_by(out_path, max_rows_per_file = 5), mkdir = TRUE)
 #' fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
 sink_ndjson <- function(
   .data,
