@@ -1,5 +1,302 @@
 # Changelog
 
+## tidypolars 0.20.0
+
+`tidypolars` requires `polars` \>= 2.0.0.
+
+### Breaking changes and deprecations
+
+- The following arguments and functions have been removed (they were
+  deprecated in 0.14.0, released in July 2025)
+  ([\#406](https://github.com/etiennebacher/tidypolars/issues/406)):
+
+  - in [`compute()`](https://dplyr.tidyverse.org/reference/compute.html)
+    and
+    [`collect()`](https://dplyr.tidyverse.org/reference/compute.html):
+    `streaming`;
+  - in
+    [`read_csv_polars()`](https://tidypolars.etiennebacher.com/reference/from_csv.md)
+    and
+    [`scan_csv_polars()`](https://tidypolars.etiennebacher.com/reference/from_csv.md):
+    `dtypes` and `reuse_downloaded`
+  - in `read_ndjson_polars` and
+    [`scan_ndjson_polars()`](https://tidypolars.etiennebacher.com/reference/from_ndjson.md):
+    `reuse_downloaded`
+  - in `read_ipc_polars` and
+    [`scan_ipc_polars()`](https://tidypolars.etiennebacher.com/reference/from_ipc.md):
+    `memory_map`
+  - in
+    [`write_csv_polars()`](https://tidypolars.etiennebacher.com/reference/write_csv_polars.md)
+    and
+    [`sink_csv()`](https://tidypolars.etiennebacher.com/reference/sink_csv.md):
+    `null_values` and `quote`
+  - in
+    [`write_ndjson_polars()`](https://tidypolars.etiennebacher.com/reference/write_ndjson_polars.md):
+    `pretty` and `row_oriented`
+  - in
+    [`write_ipc_polars()`](https://tidypolars.etiennebacher.com/reference/write_ipc_polars.md):
+    `future`
+  - `fetch()`
+
+- `partition_by_key()` and `partition_by_max_size()`, deprecated in
+  0.16.0, are now removed. Use the arguments `key` and
+  `max_rows_per_file` in
+  [`partition_by()`](https://tidypolars.etiennebacher.com/reference/partition_by.md)
+  instead
+  ([\#416](https://github.com/etiennebacher/tidypolars/issues/416)).
+
+- `make_unique_id()`, deprecated in 0.16.0, is now removed
+  ([\#416](https://github.com/etiennebacher/tidypolars/issues/416)).
+
+- Argument `rechunk` in all `read_*()` and `scan_*()` functions is
+  deprecated and has no effect anymore
+  ([\#405](https://github.com/etiennebacher/tidypolars/issues/405)).
+
+### New features
+
+- Added support for the `order_by`, `default`, and `na_rm` arguments in
+  [`first()`](https://dplyr.tidyverse.org/reference/nth.html),
+  [`last()`](https://dplyr.tidyverse.org/reference/nth.html), and
+  [`nth()`](https://dplyr.tidyverse.org/reference/nth.html)
+  ([\#419](https://github.com/etiennebacher/tidypolars/issues/419),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Clearer error messages in many cases
+  ([\#370](https://github.com/etiennebacher/tidypolars/issues/370)).
+
+- Added support for
+  [`show_query()`](https://dplyr.tidyverse.org/reference/explain.html)
+  to print the pure `polars` code that is equivalent to the query
+  ([\#369](https://github.com/etiennebacher/tidypolars/issues/369)).
+
+- Added support for
+  [`anyDuplicated()`](https://rdrr.io/r/base/duplicated.html), and for
+  the `incomparables` and `fromLast` arguments of
+  [`duplicated()`](https://rdrr.io/r/base/duplicated.html)
+  ([\#375](https://github.com/etiennebacher/tidypolars/issues/375),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Improved the performance of
+  [`pivot_longer()`](https://tidyr.tidyverse.org/reference/pivot_longer.html)
+  by no longer sorting its output
+  ([\#395](https://github.com/etiennebacher/tidypolars/issues/395),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Added support for the `name` argument in
+  [`pull()`](https://dplyr.tidyverse.org/reference/pull.html)
+  ([\#391](https://github.com/etiennebacher/tidypolars/issues/391),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Allow
+  [`slice_sample()`](https://dplyr.tidyverse.org/reference/slice.html)
+  with `n > nrow(data)` and `prop > 1`
+  ([\#394](https://github.com/etiennebacher/tidypolars/issues/394),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Allow `parallel = "prefiltered"` in
+  [`scan_parquet_polars()`](https://tidypolars.etiennebacher.com/reference/from_parquet.md)
+  and
+  [`read_parquet_polars()`](https://tidypolars.etiennebacher.com/reference/from_parquet.md)
+  ([\#393](https://github.com/etiennebacher/tidypolars/issues/393),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Allow `quote_style = "never"` in
+  [`sink_csv()`](https://tidypolars.etiennebacher.com/reference/sink_csv.md)
+  ([\#393](https://github.com/etiennebacher/tidypolars/issues/393),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Added support for the `missing` argument in
+  [`if_else()`](https://dplyr.tidyverse.org/reference/if_else.html)
+  ([\#399](https://github.com/etiennebacher/tidypolars/issues/399),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Added support for rowwise operations of
+  [`sd()`](https://rdrr.io/r/stats/sd.html)
+  ([\#401](https://github.com/etiennebacher/tidypolars/issues/401),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Added support for `trim` in
+  [`mean()`](https://rdrr.io/r/base/mean.html)
+  ([\#402](https://github.com/etiennebacher/tidypolars/issues/402),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Added support for covariance and missing-value strategies in
+  [`var()`](https://rdrr.io/r/stats/cor.html)
+  ([\#398](https://github.com/etiennebacher/tidypolars/issues/398),
+  [\#404](https://github.com/etiennebacher/tidypolars/issues/404),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- New argument `infer_schema_files` in
+  [`scan_csv_polars()`](https://tidypolars.etiennebacher.com/reference/from_csv.md)
+  and
+  [`read_csv_polars()`](https://tidypolars.etiennebacher.com/reference/from_csv.md)
+  ([\#407](https://github.com/etiennebacher/tidypolars/issues/407)).
+
+- [`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html) and
+  [`summarize()`](https://dplyr.tidyverse.org/reference/summarise.html)
+  now accepts unnamed expressions and use the quoted expression as
+  column name
+  ([\#426](https://github.com/etiennebacher/tidypolars/issues/426)).
+
+### Bug fixes
+
+- Preserve grouping metadata for
+  [`head()`](https://rdrr.io/r/utils/head.html) and
+  [`tail()`](https://rdrr.io/r/utils/head.html)
+  ([\#424](https://github.com/etiennebacher/tidypolars/issues/424),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- [`group_by()`](https://dplyr.tidyverse.org/reference/group_by.html)
+  without variables now clears the existing group, consistent with
+  `dplyr`
+  ([\#423](https://github.com/etiennebacher/tidypolars/issues/423),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- [`nth()`](https://dplyr.tidyverse.org/reference/nth.html) now handles
+  zero and out-of-bounds positions and recycles scalar results in
+  [`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html)
+  ([\#418](https://github.com/etiennebacher/tidypolars/issues/418),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- [`add_count()`](https://dplyr.tidyverse.org/reference/count.html)
+  without grouping expressions now preserves existing `n` columns by
+  choosing an unused count name and informing the user
+  ([\#408](https://github.com/etiennebacher/tidypolars/issues/408),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- [`complete()`](https://tidyr.tidyverse.org/reference/complete.html)
+  now preserves zero-row inputs instead of adding a row containing only
+  missing values
+  ([\#410](https://github.com/etiennebacher/tidypolars/issues/410),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Fix grouped
+  [`count()`](https://dplyr.tidyverse.org/reference/count.html) and
+  [`add_count()`](https://dplyr.tidyverse.org/reference/count.html)
+  sorting with multiple grouping variables
+  ([\#412](https://github.com/etiennebacher/tidypolars/issues/412),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Fix ungrouped
+  [`lag()`](https://dplyr.tidyverse.org/reference/lead-lag.html) and
+  [`lead()`](https://dplyr.tidyverse.org/reference/lead-lag.html) to
+  respect `order_by` in
+  [`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html)
+  ([\#413](https://github.com/etiennebacher/tidypolars/issues/413),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Fix [`select()`](https://dplyr.tidyverse.org/reference/select.html),
+  [`rename()`](https://dplyr.tidyverse.org/reference/rename.html),
+  [`rename_with()`](https://dplyr.tidyverse.org/reference/rename.html),
+  and
+  [`relocate()`](https://dplyr.tidyverse.org/reference/relocate.html) to
+  preserve grouping metadata and update renamed grouping variables
+  ([\#400](https://github.com/etiennebacher/tidypolars/issues/400),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- [`ifelse()`](https://rdrr.io/r/base/ifelse.html) and
+  [`if_else()`](https://dplyr.tidyverse.org/reference/if_else.html) now
+  return missing values when their condition is missing, consistent with
+  base R and dplyr
+  ([\#399](https://github.com/etiennebacher/tidypolars/issues/399),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Fix the function name in deprecation warnings from
+  [`sink_csv()`](https://tidypolars.etiennebacher.com/reference/sink_csv.md)
+  ([\#393](https://github.com/etiennebacher/tidypolars/issues/393),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Fix grouped
+  [`slice_head()`](https://dplyr.tidyverse.org/reference/slice.html),
+  [`slice_tail()`](https://dplyr.tidyverse.org/reference/slice.html),
+  and
+  [`slice_sample()`](https://dplyr.tidyverse.org/reference/slice.html)
+  for zero-size samples
+  ([\#394](https://github.com/etiennebacher/tidypolars/issues/394),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Fix
+  [`relocate()`](https://dplyr.tidyverse.org/reference/relocate.html) to
+  use the leftmost and rightmost selected columns for `.before` and
+  `.after` for consistency with `dplyr`
+  ([\#392](https://github.com/etiennebacher/tidypolars/issues/392),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Fix
+  [`relocate()`](https://dplyr.tidyverse.org/reference/relocate.html) to
+  support renaming columns while moving them
+  ([\#415](https://github.com/etiennebacher/tidypolars/issues/415),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Multiple fixes to improve compatibility with `stringr` for the
+  following functions:
+  [`fixed()`](https://stringr.tidyverse.org/reference/modifiers.html),
+  [`regex()`](https://stringr.tidyverse.org/reference/modifiers.html),
+  [`str_extract_all()`](https://stringr.tidyverse.org/reference/str_extract.html),
+  [`str_pad()`](https://stringr.tidyverse.org/reference/str_pad.html),
+  [`str_split()`](https://stringr.tidyverse.org/reference/str_split.html),
+  [`str_split_i()`](https://stringr.tidyverse.org/reference/str_split.html),
+  [`str_trunc()`](https://stringr.tidyverse.org/reference/str_trunc.html),
+  [`word()`](https://stringr.tidyverse.org/reference/word.html).
+  ([\#384](https://github.com/etiennebacher/tidypolars/issues/384))
+
+- [`grepl()`](https://rdrr.io/r/base/grep.html) now returns `FALSE` for
+  `NA` inputs, like base R (it used to return `NA`)
+  ([\#384](https://github.com/etiennebacher/tidypolars/issues/384)).
+
+- Fix `%>%` with unnamed arguments and nested `.` placeholders
+  ([\#390](https://github.com/etiennebacher/tidypolars/issues/390),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- R expressions using `:` now resolve local variables from the calling
+  environment
+  ([\#381](https://github.com/etiennebacher/tidypolars/issues/381),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Fix [`where()`](https://tidyselect.r-lib.org/reference/where.html)
+  when nested in [`c()`](https://rdrr.io/r/base/c.html) or interacting
+  with various boolean operators
+  ([\#379](https://github.com/etiennebacher/tidypolars/issues/379),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- [`arrange()`](https://dplyr.tidyverse.org/reference/arrange.html) no
+  longer modifies its input, which could cause unary `-` expressions in
+  later operations to produce incorrect results
+  ([\#374](https://github.com/etiennebacher/tidypolars/issues/374),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- [`arrange()`](https://dplyr.tidyverse.org/reference/arrange.html) now
+  errors consistently with `dplyr` when unary `-` is applied to
+  unsupported types such as character columns
+  ([\#374](https://github.com/etiennebacher/tidypolars/issues/374),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Fix
+  [`distinct()`](https://dplyr.tidyverse.org/reference/distinct.html) on
+  grouped data to include grouping variables in the distinct keys,
+  retain grouping columns, and preserve grouping metadata
+  ([\#376](https://github.com/etiennebacher/tidypolars/issues/376),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Fix
+  [`duplicated_rows()`](https://tidypolars.etiennebacher.com/reference/distinct.polars_data_frame.md)
+  on grouped data to use grouping variables in duplicate detection and
+  preserve grouping metadata
+  ([\#400](https://github.com/etiennebacher/tidypolars/issues/400),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Fix [`seq()`](https://rdrr.io/r/base/seq.html) to correctly handle
+  descending sequences, negative steps, single-value results, and
+  `by = 0` consistently with base R
+  ([\#377](https://github.com/etiennebacher/tidypolars/issues/377),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
+- Fix [`pull()`](https://dplyr.tidyverse.org/reference/pull.html) to
+  support negative column indices and default to the last column,
+  consistently with `dplyr`
+  ([\#391](https://github.com/etiennebacher/tidypolars/issues/391),
+  [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
+
 ## tidypolars 0.19.0
 
 `tidypolars` requires `polars` \>= 1.13.0.

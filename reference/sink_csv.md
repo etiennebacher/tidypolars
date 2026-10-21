@@ -197,7 +197,7 @@ my_lf <- as_polars_lf(mtcars)
 out_path <- withr::local_tempdir()
 sink_csv(my_lf, partition_by(out_path, key = c("am", "cyl")), mkdir = TRUE)
 fs::dir_tree(out_path)
-#> /tmp/RtmpemwpmO/file1b61301358ca
+#> /tmp/RtmpGlx8m2/file199a102fab22
 #> ├── am=0.0
 #> │   ├── cyl=4.0
 #> │   │   └── 00000000.csv
@@ -217,7 +217,7 @@ fs::dir_tree(out_path)
 out_path <- withr::local_tempdir()
 sink_csv(my_lf, partition_by(out_path, max_rows_per_file = 5), mkdir = TRUE)
 fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-#> /tmp/RtmpemwpmO/file1b616e7d895a
+#> /tmp/RtmpGlx8m2/file199a37841661
 #> ├── 00000000.csv
 #> ├── 00000001.csv
 #> ├── 00000002.csv
