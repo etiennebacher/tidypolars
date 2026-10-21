@@ -41,7 +41,7 @@ crashes because of too small memory."><meta property="og:image" content="https:/
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Stream output to a CSV file</h1>
-      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/tidypolars/blob/v0.20.0/R/sink.R" class="external-link"><code>R/sink.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/etiennebacher/tidypolars/blob/main/R/sink.R" class="external-link"><code>R/sink.R</code></a></small>
       <div class="d-none name"><code>sink_csv.Rd</code></div>
     </div>
 
@@ -245,7 +245,7 @@ number of rows. See <code><a href="partition_by.html">partition_by()</a></code> 
 <span class="r-in"><span><span class="va">out_path</span> <span class="op">&lt;-</span> <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_tempfile.html" class="external-link">local_tempdir</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">sink_csv</span><span class="op">(</span><span class="va">my_lf</span>, <span class="fu"><a href="partition_by.html">partition_by</a></span><span class="op">(</span><span class="va">out_path</span>, key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"am"</span>, <span class="st">"cyl"</span><span class="op">)</span><span class="op">)</span>, mkdir <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">out_path</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpGlx8m2/file199a102fab22</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpYp1QdO/file1a544c78896e</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── <span style="color: #0000BB; font-weight: bold;">am=0.0</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │   ├── <span style="color: #0000BB; font-weight: bold;">cyl=4.0</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │   │   └── 00000000.csv</span>
@@ -265,7 +265,7 @@ number of rows. See <code><a href="partition_by.html">partition_by()</a></code> 
 <span class="r-in"><span><span class="va">out_path</span> <span class="op">&lt;-</span> <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_tempfile.html" class="external-link">local_tempdir</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">sink_csv</span><span class="op">(</span><span class="va">my_lf</span>, <span class="fu"><a href="partition_by.html">partition_by</a></span><span class="op">(</span><span class="va">out_path</span>, max_rows_per_file <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>, mkdir <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span><span class="op">(</span><span class="va">out_path</span><span class="op">)</span> <span class="co"># mtcars has 32 rows so we have 7 output files</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpGlx8m2/file199a37841661</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpYp1QdO/file1a546dec8557</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000000.csv</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000001.csv</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├── 00000002.csv</span>

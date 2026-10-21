@@ -171,7 +171,7 @@ my_lf <- as_polars_lf(mtcars)
 out_path <- withr::local_tempdir()
 sink_parquet(my_lf, partition_by(out_path, key = c("am", "cyl")), mkdir = TRUE)
 fs::dir_tree(out_path)
-#> /tmp/RtmpGlx8m2/file199a1ae09d9b
+#> /tmp/RtmpYp1QdO/file1a54301bac46
 #> ├── am=0.0
 #> │   ├── cyl=4.0
 #> │   │   └── 00000000.parquet
@@ -191,7 +191,7 @@ fs::dir_tree(out_path)
 out_path <- withr::local_tempdir()
 sink_parquet(my_lf, partition_by(out_path, max_rows_per_file = 5), mkdir = TRUE)
 fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-#> /tmp/RtmpGlx8m2/file199a7529d485
+#> /tmp/RtmpYp1QdO/file1a543ed8f164
 #> ├── 00000000.parquet
 #> ├── 00000001.parquet
 #> ├── 00000002.parquet
