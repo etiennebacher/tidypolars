@@ -943,8 +943,6 @@ test_that("check query for complete()", {
 })
 
 test_that("check query for uncount()", {
-  # The frame must contain a column named "x" because `uncount()` hardcodes
-  # `pl$col("x")`. The snapshot below will change when this is fixed.
   test_pl <- as_polars_df(data.frame(
     x = c("a", "b"),
     y = 100:101,

@@ -12,15 +12,19 @@
 \arguments{
 \item{data}{A Polars Data/LazyFrame}
 
-\item{weights}{A vector of weights. Evaluated in the context of \code{data}.}
+\item{weights}{Nonnegative, integer-valued weights evaluated in the context
+of \code{data}, within groups for grouped data. Zero weights remove rows.}
 
 \item{...}{Dots which should be empty.}
 
 \item{.remove}{If \code{TRUE}, and weights is the name of a column in data, then
 this column is removed.}
 
-\item{.id}{Supply a string to create a new variable which gives a unique
-identifier for each created row.}
+\item{.id}{Supply a string to create a variable numbering the copies of
+each original row, starting at one. An existing column is overwritten.}
+}
+\value{
+A Data/LazyFrame with rows repeated in their original order.
 }
 \description{
 This duplicates rows according to a weighting variable (or expression). This
