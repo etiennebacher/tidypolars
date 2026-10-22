@@ -6,6 +6,14 @@
 
 ### Breaking changes and deprecations
 
+- Following the change in `polars` 2.0.0, `tidypolars` now uses the
+  streaming engine by default. The streaming engine doesn’t guarantee
+  the row order of the output, meaning that you should not rely on the
+  output row order to stay identical. To ensure that, you need to
+  explicitly call
+  [`arrange()`](https://dplyr.tidyverse.org/reference/arrange.html) at
+  the end.
+
 - The following arguments and functions have been removed (they were
   deprecated in 0.14.0, released in July 2025)
   ([\#406](https://github.com/etiennebacher/tidypolars/issues/406)):

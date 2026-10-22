@@ -27,7 +27,7 @@ from Polars to R.
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.20.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.20.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -177,11 +177,12 @@ unions (default is <code>TRUE</code>).</p></dd>
 
 <dt id="arg-engine">engine<a class="anchor" aria-label="anchor" href="#arg-engine"></a></dt>
 <dd><p>The engine name to use for processing the query. One of the
-followings:</p><ul><li><p><code>"auto"</code> (default): Select the engine automatically. The <code>"in-memory"</code>
-engine will be selected for most cases.</p></li>
+followings:</p><ul><li><p><code>"auto"</code> (default): Select the engine automatically. As of <code>tidypolars</code> 0.20.0,
+the <code>"streaming"</code> engine will be used by default.</p></li>
 <li><p><code>"in-memory"</code>: Use the in-memory engine.</p></li>
 <li><p><code>"streaming"</code>: Use the streaming engine, usually faster and can handle
-larger-than-memory data.</p></li>
+larger-than-memory data. This doesn't guarantee the row order of the output,
+so you need to explicitly sort your data if you a specific row order.</p></li>
 </ul></dd>
 
 

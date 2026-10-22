@@ -124,13 +124,16 @@ collect(
   The engine name to use for processing the query. One of the
   followings:
 
-  - `"auto"` (default): Select the engine automatically. The
-    `"in-memory"` engine will be selected for most cases.
+  - `"auto"` (default): Select the engine automatically. As of
+    `tidypolars` 0.20.0, the `"streaming"` engine will be used by
+    default.
 
   - `"in-memory"`: Use the in-memory engine.
 
   - `"streaming"`: Use the streaming engine, usually faster and can
-    handle larger-than-memory data.
+    handle larger-than-memory data. This doesn't guarantee the row order
+    of the output, so you need to explicitly sort your data if you a
+    specific row order.
 
 - .name_repair, uint8, int64, date, time, decimal, as_clock_class,
   ambiguous, non_existent:

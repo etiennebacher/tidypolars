@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidypolars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.20.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.20.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,8 @@
 <p><code>tidypolars</code> requires <code>polars</code> &gt;= 2.0.0.</p>
 <div class="section level3">
 <h3 id="breaking-changes-and-deprecations-0-20-0">Breaking changes and deprecations<a class="anchor" aria-label="anchor" href="#breaking-changes-and-deprecations-0-20-0"></a></h3>
-<ul><li>
+<ul><li><p>Following the change in <code>polars</code> 2.0.0, <code>tidypolars</code> now uses the streaming engine by default. The streaming engine doesn’t guarantee the row order of the output, meaning that you should not rely on the output row order to stay identical. To ensure that, you need to explicitly call <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange()</a></code> at the end.</p></li>
+<li>
 <p>The following arguments and functions have been removed (they were deprecated in 0.14.0, released in July 2025) (<a href="https://github.com/etiennebacher/tidypolars/issues/406" class="external-link">#406</a>):</p>
 <ul><li>in <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">compute()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect()</a></code>: <code>streaming</code>;</li>
 <li>in <code><a href="../reference/from_csv.html">read_csv_polars()</a></code> and <code><a href="../reference/from_csv.html">scan_csv_polars()</a></code>: <code>dtypes</code> and <code>reuse_downloaded</code>
