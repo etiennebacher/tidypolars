@@ -125,7 +125,7 @@ my_lf <- as_polars_lf(mtcars)
 out_path <- withr::local_tempdir()
 sink_ndjson(my_lf, partition_by(out_path, key = c("am", "cyl")), mkdir = TRUE)
 fs::dir_tree(out_path)
-#> /tmp/RtmpRGB8zv/file1a9a3f94bef4
+#> /tmp/Rtmp8qm32T/file19727fd276f9
 #> ├── am=0.0
 #> │   ├── cyl=4.0
 #> │   │   └── 00000000.jsonl
@@ -145,7 +145,7 @@ fs::dir_tree(out_path)
 out_path <- withr::local_tempdir()
 sink_ndjson(my_lf, partition_by(out_path, max_rows_per_file = 5), mkdir = TRUE)
 fs::dir_tree(out_path) # mtcars has 32 rows so we have 7 output files
-#> /tmp/RtmpRGB8zv/file1a9ac5a8c20
+#> /tmp/Rtmp8qm32T/file1972200f9ade
 #> ├── 00000000.jsonl
 #> ├── 00000001.jsonl
 #> ├── 00000002.jsonl
