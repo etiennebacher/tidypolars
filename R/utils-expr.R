@@ -260,7 +260,7 @@ translate <- function(
 
   switch(
     typeof(expr),
-    "NULL" = return(list(NULL)),
+    "NULL" = list(NULL),
     character = ,
     logical = ,
     integer = ,
@@ -609,11 +609,11 @@ translate <- function(
           rhs <- expr[[3]]
           replace_dot <- function(expr, replacement) {
             if (is.symbol(expr) && identical(expr, sym("."))) {
-              return(replacement)
+              replacement
             } else if (is.call(expr)) {
               as.call(lapply(expr, replace_dot, replacement = replacement))
             } else {
-              return(expr)
+              expr
             }
           }
 
@@ -932,7 +932,7 @@ add_pkg_suffix <- function(name, known_ops, user_defined) {
     pkg <- tryCatch(
       ns_env_name(as_function(name)),
       error = function(e) {
-        return(NULL)
+        NULL
       }
     )
   }

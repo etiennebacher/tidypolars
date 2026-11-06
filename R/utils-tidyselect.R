@@ -92,7 +92,7 @@ build_data_context <- function(.data, ..., cols = NULL) {
       data.frame(matrix(ncol = length(names(.data)), nrow = 0)),
       names(.data)
     )
-    return(out)
+    out
   } else {
     .data$slice(offset = 0, length = 0) |>
       as_tibble()
