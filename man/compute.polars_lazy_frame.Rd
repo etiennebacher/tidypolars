@@ -92,9 +92,6 @@ so you need to explicitly sort your data if you a specific row order.
 \item{.name_repair, uint8, int64, date, time, decimal, as_clock_class, ambiguous, non_existent}{Parameters to control the conversion from polars types to R. See
 \code{?polars:::as.data.frame.polars_lazy_frame} for explanations and accepted
 values.}
-
-\item{streaming}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated, use \code{engine}
-instead.}
 }
 \value{
 \code{compute()} returns a Polars DataFrame, \code{collect()} returns a tibble.

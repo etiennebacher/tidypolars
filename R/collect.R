@@ -42,8 +42,6 @@
 #'   larger-than-memory data. This doesn't guarantee the row order of the output,
 #'   so you need to explicitly sort your data if you a specific row order.
 #' @inheritParams slice_tail.polars_data_frame
-#' @param streaming `r lifecycle::badge("deprecated")` Deprecated, use `engine`
-#' instead.
 #'
 #' @param .name_repair,uint8,int64,date,time,decimal,as_clock_class,ambiguous,non_existent Parameters to control the conversion from polars types to R. See
 #' `?polars:::as.data.frame.polars_lazy_frame` for explanations and accepted
