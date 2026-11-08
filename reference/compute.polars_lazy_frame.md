@@ -142,10 +142,6 @@ collect(
   `?polars:::as.data.frame.polars_lazy_frame` for explanations and
   accepted values.
 
-- streaming:
-
-  **\[deprecated\]** Deprecated, use `engine` instead.
-
 ## Value
 
 [`compute()`](https://dplyr.tidyverse.org/reference/compute.html)
