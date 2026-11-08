@@ -235,6 +235,16 @@ pl_nth_dplyr <- function(
   }
 
   if (!is.null(order_by)) {
+    if (
+      is_polars_expr(order_by) &&
+        order_by$meta$is_literal() &&
+        pl$select(order_by)$height == 1L
+    ) {
+      cli_abort(
+        "{.code order_by} must have the same size as {.code x}, not size 1.",
+        call = env_from_dots(...)
+      )
+    }
     descending <- isTRUE(attr(order_by, "descending"))
     # Sort NaN keys alongside nulls, while preserving strings such as "NaN".
     order_by <- pl$when(nth_is_missing(order_by))$then(pl$lit(NULL))$otherwise(

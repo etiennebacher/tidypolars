@@ -57,6 +57,15 @@
       compute(current)
     Condition
       Error in `summarize()`:
+      ! Error while running function `first()` in Polars.
+      x `order_by` must have the same size as `x`, not size 1.
+
+---
+
+    Code
+      compute(current)
+    Condition
+      Error in `summarize()`:
       ! Error while running function `last()` in Polars.
       x `na_rm` must be `TRUE` or `FALSE`, not `NA`.
 

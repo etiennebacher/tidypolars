@@ -54,6 +54,15 @@
 ---
 
     Code
+      summarize(test_pl, y = first(x, order_by = 1))
+    Condition
+      Error in `summarize()`:
+      ! Error while running function `first()` in Polars.
+      x `order_by` must have the same size as `x`, not size 1.
+
+---
+
+    Code
       summarize(test_pl, y = last(x, na_rm = NA))
     Condition
       Error in `summarize()`:
