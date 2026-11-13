@@ -1241,25 +1241,59 @@
     Code
       show_query(query)
     Output
-      test_pl$with_columns(pl$col("x")$repeat_by(pl$col("n")))$
-        explode(
-          pl$col("x"),
-          empty_as_null = TRUE
+      test_pl$with_columns(
+        pl$int_ranges(
+          0L,
+          pl$when(
+            pl$col("n")$cast(pl$Float64)$is_finite() &
+              pl$col("n")$cast(pl$Float64) >= 0 &
+              pl$col("n")$cast(pl$Float64) <= 2147483647L &
+              pl$col("n")$cast(pl$Float64) == pl$col("n")$cast(pl$Float64)$floor()
+          )$
+            then(pl$col("n")$cast(pl$Float64))$
+            otherwise(-1)$
+            cast(pl$UInt32)$
+            cast(pl$Int32),
+          dtype = pl$Int32
         )$
-        drop("n")
+          alias("__tidypolars_uncount__")
+      )$
+        drop("n")$
+        explode(
+          "__tidypolars_uncount__",
+          empty_as_null = FALSE
+        )$
+        drop("__tidypolars_uncount__")
 
 ---
 
     Code
       show_query(query)
     Output
-      test_pl$with_columns(pl$col("x")$repeat_by(pl$col("n")))$
-        explode(
-          pl$col("x"),
-          empty_as_null = TRUE
+      test_pl$with_columns(
+        pl$int_ranges(
+          0L,
+          pl$when(
+            pl$col("n")$cast(pl$Float64)$is_finite() &
+              pl$col("n")$cast(pl$Float64) >= 0 &
+              pl$col("n")$cast(pl$Float64) <= 2147483647L &
+              pl$col("n")$cast(pl$Float64) == pl$col("n")$cast(pl$Float64)$floor()
+          )$
+            then(pl$col("n")$cast(pl$Float64))$
+            otherwise(-1)$
+            cast(pl$UInt32)$
+            cast(pl$Int32),
+          dtype = pl$Int32
         )$
+          alias("__tidypolars_uncount__")
+      )$
         drop("n")$
-        with_columns(pl$col("x")$cum_count()$over("x", "y")$alias("id"))
+        explode(
+          "__tidypolars_uncount__",
+          empty_as_null = FALSE
+        )$
+        with_columns((pl$col("__tidypolars_uncount__") + 1L)$alias("id"))$
+        drop("__tidypolars_uncount__")
 
 # check query for rowwise()
 
