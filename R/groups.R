@@ -52,8 +52,30 @@ group_by.polars_data_frame <- function(
     )
   }
 
-  disallow_named_expressions(...)
-  vars <- tidyselect_dots(.data, ...)
+  # Like dplyr, expressions (e.g. `x > 0`) are first computed as new columns.
+  # Unlike dplyr, tidyselect calls (e.g. `starts_with()`) are still allowed.
+  dots <- enquos(..., .ignore_empty = "all")
+  is_computed <- vapply(
+    seq_along(dots),
+    \(i) {
+      expr <- quo_get_expr(dots[[i]])
+      names2(dots)[i] != "" ||
+        (is_call(expr) &&
+          !is_call(expr, c(":", "-", "!", "&", "|", "c", "(")) &&
+          !is_call(
+            expr,
+            getNamespaceExports("tidyselect"),
+            ns = c("", "tidyselect")
+          ))
+    },
+    logical(1)
+  )
+  if (any(is_computed)) {
+    dots <- quos_auto_name(dots)
+    .data <- mutate(.data, !!!dots[is_computed])
+    dots[is_computed] <- quos(!!!syms(names(dots)[is_computed]))
+  }
+  vars <- tidyselect_dots(.data, !!!unname(dots))
 
   if (isTRUE(.add)) {
     existing_groups <- attributes(.data)$pl_grps

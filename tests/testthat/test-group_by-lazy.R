@@ -13,16 +13,57 @@ test_that("Arg `.drop` is not supported in group_by()", {
   )
 })
 
-test_that("group_by() doesn't support named expressions, #233", {
-  # tidypolars-specific (tidypolars doesn't support named expressions in group_by)
+test_that("group_by() works with expressions, #233, #345", {
   test_df <- as_tibble(iris)
   test_pl <- as_polars_lf(test_df)
 
-  expect_snapshot_lazy(
+  expect_equal_lazy(
     test_pl |>
       group_by(is_present = !is.na(Sepal.Length)) |>
       count(),
-    error = TRUE
+    test_df |>
+      group_by(is_present = !is.na(Sepal.Length)) |>
+      count()
+  )
+  expect_equal_lazy(
+    test_pl |>
+      group_by(Sepal.Length > 5, Species) |>
+      count(),
+    test_df |>
+      group_by(Sepal.Length > 5, Species) |>
+      count()
+  )
+  expect_equal_lazy(
+    test_pl |>
+      group_by(Species) |>
+      group_by(Sepal.Length > 5, .add = TRUE) |>
+      count(),
+    test_df |>
+      group_by(Species) |>
+      group_by(Sepal.Length > 5, .add = TRUE) |>
+      count()
+  )
+  # overwrite existing column
+  expect_equal_lazy(
+    test_pl |>
+      group_by(Sepal.Length = round(Sepal.Length)) |>
+      count(),
+    test_df |>
+      group_by(Sepal.Length = round(Sepal.Length)) |>
+      count()
+  )
+})
+
+test_that("group_by() still accepts tidyselect calls with expressions", {
+  # tidypolars-specific (dplyr requires pick() or across() for tidyselect)
+  test_df <- as_tibble(iris)
+  test_pl <- as_polars_lf(test_df)
+
+  expect_equal_lazy(
+    test_pl |>
+      group_by(starts_with("Spec"), Sepal.Length > 5) |>
+      group_vars(),
+    c("Species", "Sepal.Length > 5")
   )
 })
 

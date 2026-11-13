@@ -31,6 +31,9 @@
 
 ## New features
 
+* `group_by()` now accepts expressions, e.g. `group_by(x > 0)` or
+  `group_by(is_pos = x > 0)`.
+
 * Added support for the `order_by`, `default`, and `na_rm` arguments in
   `first()`, `last()`, and `nth()` (#419, @Yousa-Mirage).
 

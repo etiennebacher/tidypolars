@@ -149,14 +149,3 @@ check_unsupported_arg <- function(...) {
   }
 }
 
-disallow_named_expressions <- function(...) {
-  if (!is.null(...names())) {
-    fn_name <- call_match(sys.call(sys.parent()), sys.function(sys.parent())) |>
-      call_name() |>
-      gsub("\\.polars_(data|lazy)_frame", "", x = _)
-    cli_abort(
-      "{.pkg tidypolars} doesn't support named expressions in {.fn {fn_name}}.",
-      call = caller_env()
-    )
-  }
-}

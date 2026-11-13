@@ -58,6 +58,9 @@ tidyselect_new_vars <- function(.cols, new_vars) {
 }
 
 find_where_calls <- function(expr) {
+  if (is_quosure(expr)) {
+    expr <- quo_get_expr(expr)
+  }
   if (!is_call(expr)) {
     return(list())
   }
