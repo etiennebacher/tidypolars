@@ -140,6 +140,10 @@
 * Fix `pull()` to support negative column indices and default to the last column,
   consistently with `dplyr` (#391, @Yousa-Mirage).
 
+* Expressions forwarded through a wrapper function with `{{ }}` or `...` now
+  look up external variables in the environment where the expression was
+  written, and not in the wrapper function.
+
 
 # tidypolars 0.19.0
 
