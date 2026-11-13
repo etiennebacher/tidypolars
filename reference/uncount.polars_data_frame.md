@@ -22,7 +22,8 @@ uncount(data, weights, ..., .remove = TRUE, .id = NULL)
 
 - weights:
 
-  A vector of weights. Evaluated in the context of `data`.
+  Nonnegative, integer-valued weights evaluated in the context of
+  `data`, within groups for grouped data. Zero weights remove rows.
 
 - ...:
 
@@ -35,8 +36,12 @@ uncount(data, weights, ..., .remove = TRUE, .id = NULL)
 
 - .id:
 
-  Supply a string to create a new variable which gives a unique
-  identifier for each created row.
+  Supply a string to create a variable numbering the copies of each
+  original row, starting at one. An existing column is overwritten.
+
+## Value
+
+A Data/LazyFrame with rows repeated in their original order.
 
 ## Examples
 
@@ -70,7 +75,7 @@ uncount(test, n, .id = "id")
 #> ┌─────┬─────┬─────┐
 #> │ x   ┆ y   ┆ id  │
 #> │ --- ┆ --- ┆ --- │
-#> │ str ┆ i32 ┆ u32 │
+#> │ str ┆ i32 ┆ i32 │
 #> ╞═════╪═════╪═════╡
 #> │ a   ┆ 100 ┆ 1   │
 #> │ b   ┆ 101 ┆ 1   │

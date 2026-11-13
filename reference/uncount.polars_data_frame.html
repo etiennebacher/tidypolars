@@ -66,7 +66,8 @@ is the opposite of <code><a href="https://dplyr.tidyverse.org/reference/count.ht
 
 
 <dt id="arg-weights">weights<a class="anchor" aria-label="anchor" href="#arg-weights"></a></dt>
-<dd><p>A vector of weights. Evaluated in the context of <code>data</code>.</p></dd>
+<dd><p>Nonnegative, integer-valued weights evaluated in the context
+of <code>data</code>, within groups for grouped data. Zero weights remove rows.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -79,10 +80,14 @@ this column is removed.</p></dd>
 
 
 <dt id="arg--id">.id<a class="anchor" aria-label="anchor" href="#arg--id"></a></dt>
-<dd><p>Supply a string to create a new variable which gives a unique
-identifier for each created row.</p></dd>
+<dd><p>Supply a string to create a variable numbering the copies of
+each original row, starting at one. An existing column is overwritten.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>A Data/LazyFrame with rows repeated in their original order.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -115,7 +120,7 @@ identifier for each created row.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ┌─────┬─────┬─────┐</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ x   ┆ y   ┆ id  │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ --- ┆ --- ┆ --- │</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ str ┆ i32 ┆ u32 │</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ str ┆ i32 ┆ i32 │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ╞═════╪═════╪═════╡</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ a   ┆ 100 ┆ 1   │</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> │ b   ┆ 101 ┆ 1   │</span>
