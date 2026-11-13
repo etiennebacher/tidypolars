@@ -346,69 +346,46 @@ pl_str_sub_stringr <- function(string, start, end = NULL) {
     len_string + end + 1
   )$otherwise(2000)
 
-  pl$
-
-  when(string$is_null() | start$is_null() | (end$is_null() & !end_is_null))$
-    then(pl$lit(NA_character_))$
-
-  when(start > 0 & start > len_string & end > 0 & end > len_string)$
-    then(pl$lit(""))$
-
-  when(start_is_zero & end_is_zero)$
-    then(pl$lit(""))$
-
-  when(start_is_zero & end_is_null)$
-    then(string)$
-
-  when(!start_is_zero & start >= 0 & end < 0 & end$abs() > len_string)$
-    then(pl$lit(""))$
-
-  when(start_is_zero & end > 0 & end <= len_string)$
-    then(string$str$slice(0, foo2))$
-
-  when(start_is_zero & end > 0 & end > len_string)$
-    then(string)$
-
-  when(start_is_zero & end < 0 & end$abs() <= len_string)$
-    then(string$str$slice(0, foo6))$
-
-  when(start_is_zero & end < 0 & end$abs() > len_string)$
-    then(pl$lit(""))$
-
-  when(start >= 0 & end_is_null)$
-    then(string$str$slice(start, foo3))$
-
-  when(start < 0 & end_is_null & start$abs() >= len_string)$
-    then(string$str$slice(0, len_string))$
-
-  when(start < 0 & end_is_null & start$abs() < len_string)$
-    then(string$str$slice(len_string + start + 1, start$abs()))$
-
-  when(start >= 0 & start <= end & end <= len_string)$
-    then(string$str$slice(start, length))$
-
-  when(start < 0 & start$abs() < len_string & end > 0)$
-    then(pl$lit(""))$
-
-  when(start < 0 & start$abs() >= len_string & end > 0)$
-    then(string$str$slice(0, foo4))$
-
-  when(start < end & end < 0 & start$abs() <= len_string)$
-    then(string$str$slice(len_string + start + 1, foo))$
-
-  when(start >= 0 & end < 0 & end$abs() <= len_string)$
-    then(string$str$slice(start, foo5))$
-
-  when(start > 0 & end_is_zero)$
-    then(pl$lit(""))$
-
-  when(start < 0 & end < 0 & start$abs() > len_string & end$abs() > len_string)$
-    then(pl$lit(""))$
-
-  when(start < 0 & end_is_zero & start$abs() > len_string)$
-    then(pl$lit(""))$
-
-  when(start > 0 & end > 0 & start > end)$then(pl$lit(""))
+  pl$when(
+    string$is_null() | start$is_null() | (end$is_null() & !end_is_null)
+  )$then(pl$lit(NA_character_))$when(
+    start > 0 & start > len_string & end > 0 & end > len_string
+  )$then(pl$lit(""))$when(start_is_zero & end_is_zero)$then(pl$lit(""))$when(
+    start_is_zero & end_is_null
+  )$then(string)$when(
+    !start_is_zero & start >= 0 & end < 0 & end$abs() > len_string
+  )$then(pl$lit(""))$when(
+    start_is_zero & end > 0 & end <= len_string
+  )$then(string$str$slice(0, foo2))$when(
+    start_is_zero & end > 0 & end > len_string
+  )$then(string)$when(
+    start_is_zero & end < 0 & end$abs() <= len_string
+  )$then(string$str$slice(0, foo6))$when(
+    start_is_zero & end < 0 & end$abs() > len_string
+  )$then(pl$lit(""))$when(start >= 0 & end_is_null)$then(string$str$slice(
+    start,
+    foo3
+  ))$when(
+    start < 0 & end_is_null & start$abs() >= len_string
+  )$then(string$str$slice(0, len_string))$when(
+    start < 0 & end_is_null & start$abs() < len_string
+  )$then(string$str$slice(len_string + start + 1, start$abs()))$when(
+    start >= 0 & start <= end & end <= len_string
+  )$then(string$str$slice(start, length))$when(
+    start < 0 & start$abs() < len_string & end > 0
+  )$then(pl$lit(""))$when(
+    start < 0 & start$abs() >= len_string & end > 0
+  )$then(string$str$slice(0, foo4))$when(
+    start < end & end < 0 & start$abs() <= len_string
+  )$then(string$str$slice(len_string + start + 1, foo))$when(
+    start >= 0 & end < 0 & end$abs() <= len_string
+  )$then(string$str$slice(start, foo5))$when(
+    start > 0 & end_is_zero
+  )$then(pl$lit(""))$when(
+    start < 0 & end < 0 & start$abs() > len_string & end$abs() > len_string
+  )$then(pl$lit(""))$when(
+    start < 0 & end_is_zero & start$abs() > len_string
+  )$then(pl$lit(""))$when(start > 0 & end > 0 & start > end)$then(pl$lit(""))
 }
 
 pl_substr <- function(x, start, stop) {
@@ -458,51 +435,32 @@ pl_substr <- function(x, start, stop) {
     stop
   )$otherwise(2000)
 
-  pl$
-
-  when(x$is_null() | start$is_null() | stop$is_null())$
-    then(pl$lit(NA_character_))$
-
-  when(start >= 0 & stop > len_string)$
-    then(x$str$slice(start, foo3))$
-
-  when(start_is_zero & stop > 0 & stop$abs() <= len_string)$
-    then(x$str$slice(0, foo6))$
-
-  when(start_is_zero & stop_is_zero)$
-    then(pl$lit(""))$
-
-  when(start_is_zero & stop < 0 & stop$abs() > len_string)$
-    then(pl$lit(""))$
-
-  when(start_is_zero & stop$abs() > len_string)$
-    then(x$str$slice(0, len_string))$
-
-  when(start < 0 & stop <= 0)$
-    then(pl$lit(""))$
-
-  when(start > 0 & stop <= 0)$
-    then(pl$lit(""))$
-
-  when(start >= 0 & start <= stop & stop <= len_string)$
-    then(x$str$slice(start, length))$
-
-  when(start < 0 & stop > 0)$
-    then(x$str$slice(0, foo4))$
-
-  when(start < stop & stop < 0 & start$abs() <= len_string)$
-    then(x$str$slice(len_string + start + 1, foo))$
-
-  when(start >= 0 & stop < 0 & stop$abs() <= len_string)$
-    then(x$str$slice(start, foo5))$
-
-  when(start > 0 & stop_is_zero)$
-    then(pl$lit(""))$
-
-  when(start < 0 & stop < 0 & start$abs() > len_string & stop$abs() > len_string)$
-    then(pl$lit(""))$
-
-  when(start > 0 & stop > 0 & start > stop)$then(pl$lit(""))
+  pl$when(x$is_null() | start$is_null() | stop$is_null())$then(pl$lit(
+    NA_character_
+  ))$when(start >= 0 & stop > len_string)$then(x$str$slice(start, foo3))$when(
+    start_is_zero & stop > 0 & stop$abs() <= len_string
+  )$then(x$str$slice(0, foo6))$when(start_is_zero & stop_is_zero)$then(pl$lit(
+    ""
+  ))$when(start_is_zero & stop < 0 & stop$abs() > len_string)$then(pl$lit(
+    ""
+  ))$when(start_is_zero & stop$abs() > len_string)$then(x$str$slice(
+    0,
+    len_string
+  ))$when(start < 0 & stop <= 0)$then(pl$lit(""))$when(
+    start > 0 & stop <= 0
+  )$then(pl$lit(""))$when(
+    start >= 0 & start <= stop & stop <= len_string
+  )$then(x$str$slice(start, length))$when(
+    start < 0 & stop > 0
+  )$then(x$str$slice(0, foo4))$when(
+    start < stop & stop < 0 & start$abs() <= len_string
+  )$then(x$str$slice(len_string + start + 1, foo))$when(
+    start >= 0 & stop < 0 & stop$abs() <= len_string
+  )$then(x$str$slice(start, foo5))$when(start > 0 & stop_is_zero)$then(pl$lit(
+    ""
+  ))$when(
+    start < 0 & stop < 0 & start$abs() > len_string & stop$abs() > len_string
+  )$then(pl$lit(""))$when(start > 0 & stop > 0 & start > stop)$then(pl$lit(""))
 }
 
 # I would need `$splitn()` for cases where n is not Inf, but it returns a struct
@@ -685,7 +643,17 @@ pl_word_stringr <- function(string, start = 1L, end = start, sep = " ", ...) {
   } else {
     max(as.integer(end) - offset, 0)
   }
-  out <- words$list$slice(offset, n_taken)$list$join(sep)
-
-  pl$when(out_of_bounds)$then(pl$lit(NA_character_))$otherwise(out)
+  # Mask the list first and slice outside of when/then. Polars fails when
+  # list$slice() has column-dependent arguments inside a when/then branch, cf
+  # https://github.com/pola-rs/polars/issues/29925
+  out <- pl$when(out_of_bounds)$then(pl$lit(NULL))$otherwise(words)
+  # In eager mode, slicing an all-null list column gives List(Null), which
+  # list$join() rejects. The cast inside list$eval() isn't optimized away,
+  # unlike a cast on the list itself.
+  # https://github.com/pola-rs/polars/issues/29926
+  out$list$slice(offset, n_taken)$list$eval(pl$element()$cast(
+    pl$String
+  ))$list$join(
+    sep
+  )
 }

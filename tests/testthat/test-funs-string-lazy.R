@@ -254,7 +254,9 @@ test_that("str_pad() works", {
 test_that("str_dup() works", {
   for_all(
     tests = 20,
-    string = character_(any_na = TRUE),
+    # TODO: need to use len >= 2 because of https://github.com/pola-rs/polars/issues/29924
+    # Remove when fixed.
+    string = character_(len = c(2, 10), any_na = TRUE),
     # Very high numbers crash the session, I guess because of stringr
     times = numeric_bounded(-10000, 10000, any_na = TRUE),
     property = function(string, times) {
@@ -272,7 +274,9 @@ test_that("str_dup() works", {
 test_that("str_sub() works", {
   for_all(
     tests = 40,
-    string = character_(any_na = TRUE),
+    # TODO: need to use len >= 2 because of https://github.com/pola-rs/polars/issues/29924
+    # Remove when fixed.
+    string = character_(len = c(2, 10), any_na = TRUE),
     start = numeric_(any_na = TRUE),
     end = numeric_(any_na = TRUE),
     property = function(string, start, end) {

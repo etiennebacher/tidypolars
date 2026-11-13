@@ -39,14 +39,14 @@ test_that("basic behavior works", {
   expect_is_tidypolars(inner_join(test_pl, test2_pl))
 
   expect_equal_lazy(
-    left_join(test_pl, test2_pl),
-    left_join(test_df, test2_df)
+    left_join(test_pl, test2_pl) |> arrange(x),
+    left_join(test_df, test2_df) |> arrange(x)
   )
 
   # TODO? I don't think this is a big deal
   expect_equal_lazy(
-    right_join(test_pl, test2_pl) |> select(x, y, z, z2),
-    right_join(test_df, test2_df)
+    right_join(test_pl, test2_pl) |> select(x, y, z, z2) |> arrange(x),
+    right_join(test_df, test2_df) |> arrange(x)
   )
 
   # TODO? I don't think this is a big deal and not specifying the row order in
@@ -57,8 +57,8 @@ test_that("basic behavior works", {
   )
 
   expect_equal_lazy(
-    inner_join(test_pl, test2_pl),
-    inner_join(test_df, test2_df)
+    inner_join(test_pl, test2_pl) |> arrange(x),
+    inner_join(test_df, test2_df) |> arrange(x)
   )
 })
 
@@ -79,8 +79,8 @@ test_that("natural joins preserve x column order", {
   test2_pl <- as_polars_lf(test2_df)
 
   expect_equal_lazy(
-    left_join(test_pl, test2_pl),
-    left_join(test_df, test2_df)
+    left_join(test_pl, test2_pl) |> arrange(id),
+    left_join(test_df, test2_df) |> arrange(id)
   )
 })
 
@@ -99,23 +99,23 @@ test_that("works if join by different variable names", {
   test2_pl <- as_polars_lf(test2_df)
 
   expect_equal_lazy(
-    left_join(test_pl, test2_pl, join_by(x == x2, y == y2)),
-    left_join(test_df, test2_df, join_by(x == x2, y == y2))
+    left_join(test_pl, test2_pl, join_by(x == x2, y == y2)) |> arrange(x),
+    left_join(test_df, test2_df, join_by(x == x2, y == y2)) |> arrange(x)
   )
 
   expect_equal_lazy(
-    left_join(test_pl, test2_pl, c("x" = "x2", "y" = "y2")),
-    left_join(test_df, test2_df, c("x" = "x2", "y" = "y2"))
+    left_join(test_pl, test2_pl, c("x" = "x2", "y" = "y2")) |> arrange(x),
+    left_join(test_df, test2_df, c("x" = "x2", "y" = "y2")) |> arrange(x)
   )
 
   expect_equal_lazy(
-    right_join(test_pl, test2_pl, join_by(x == x2, y == y2)),
-    right_join(test_df, test2_df, join_by(x == x2, y == y2))
+    right_join(test_pl, test2_pl, join_by(x == x2, y == y2)) |> arrange(x),
+    right_join(test_df, test2_df, join_by(x == x2, y == y2)) |> arrange(x)
   )
 
   expect_equal_lazy(
-    right_join(test_pl, test2_pl, c("x" = "x2", "y" = "y2")),
-    right_join(test_df, test2_df, c("x" = "x2", "y" = "y2"))
+    right_join(test_pl, test2_pl, c("x" = "x2", "y" = "y2")) |> arrange(x),
+    right_join(test_df, test2_df, c("x" = "x2", "y" = "y2")) |> arrange(x)
   )
 })
 
@@ -132,8 +132,8 @@ test_that("right_join preserves key names and suffix ownership, #350", {
   test2_pl <- as_polars_lf(test2_df)
 
   expect_equal_lazy(
-    right_join(test_pl, test2_pl, by = "x"),
-    right_join(test_df, test2_df, by = "x")
+    right_join(test_pl, test2_pl, by = "x") |> arrange(x),
+    right_join(test_df, test2_df, by = "x") |> arrange(x)
   )
 
   expect_equal_lazy(
@@ -142,13 +142,15 @@ test_that("right_join preserves key names and suffix ownership, #350", {
       test2_pl,
       by = join_by(x),
       suffix = c(".left", ".right")
-    ),
+    ) |>
+      arrange(x),
     right_join(
       test_df,
       test2_df,
       by = join_by(x),
       suffix = c(".left", ".right")
-    )
+    ) |>
+      arrange(x)
   )
 
   test3_df <- tibble(
@@ -158,13 +160,13 @@ test_that("right_join preserves key names and suffix ownership, #350", {
   test3_pl <- as_polars_lf(test3_df)
 
   expect_equal_lazy(
-    right_join(test_pl, test3_pl, by = c("x" = "y")),
-    right_join(test_df, test3_df, by = c("x" = "y"))
+    right_join(test_pl, test3_pl, by = c("x" = "y")) |> arrange(x),
+    right_join(test_df, test3_df, by = c("x" = "y")) |> arrange(x)
   )
 
   expect_equal_lazy(
-    right_join(test_pl, test3_pl, by = join_by(x == y)),
-    right_join(test_df, test3_df, by = join_by(x == y))
+    right_join(test_pl, test3_pl, by = join_by(x == y)) |> arrange(x),
+    right_join(test_df, test3_df, by = join_by(x == y)) |> arrange(x)
   )
 })
 
@@ -235,13 +237,25 @@ test_that("argument suffix works", {
   test2_pl <- as_polars_lf(test2_df)
 
   expect_equal_lazy(
-    left_join(test_pl, test2_pl, by = c("x", "y")),
-    left_join(test_df, test2_df, by = c("x", "y"))
+    left_join(test_pl, test2_pl, by = c("x", "y")) |> arrange(x),
+    left_join(test_df, test2_df, by = c("x", "y")) |> arrange(x)
   )
 
   expect_equal_lazy(
-    left_join(test_pl, test2_pl, by = c("x", "y"), suffix = c(".hi", ".hello")),
-    left_join(test_df, test2_df, by = c("x", "y"), suffix = c(".hi", ".hello"))
+    left_join(
+      test_pl,
+      test2_pl,
+      by = c("x", "y"),
+      suffix = c(".hi", ".hello")
+    ) |>
+      arrange(x),
+    left_join(
+      test_df,
+      test2_df,
+      by = c("x", "y"),
+      suffix = c(".hi", ".hello")
+    ) |>
+      arrange(x)
   )
 
   expect_both_error(
@@ -269,8 +283,8 @@ test_that("suffix + join_by works", {
   test2_pl <- as_polars_lf(test2_df)
 
   expect_equal_lazy(
-    left_join(test_pl, test2_pl, by = join_by(x, y)),
-    left_join(test_df, test2_df, by = join_by(x, y))
+    left_join(test_pl, test2_pl, by = join_by(x, y)) |> arrange(x),
+    left_join(test_df, test2_df, by = join_by(x, y)) |> arrange(x)
   )
   expect_equal_lazy(
     left_join(
@@ -278,13 +292,15 @@ test_that("suffix + join_by works", {
       test2_pl,
       by = join_by(x, y),
       suffix = c(".hi", ".hello")
-    ),
+    ) |>
+      arrange(x),
     left_join(
       test_df,
       test2_df,
       by = join_by(x, y),
       suffix = c(".hi", ".hello")
-    )
+    ) |>
+      arrange(x)
   )
   expect_both_error(
     left_join(test_pl, test2_pl, by = join_by(x, y), suffix = c(".hi")),
@@ -424,13 +440,15 @@ test_that("argument relationship works", {
       country_year_pl,
       join_by(iso),
       relationship = "one-to-many"
-    ),
+    ) |>
+      arrange(iso, year),
     right_join(
       country,
       country_year,
       join_by(iso),
       relationship = "one-to-many"
-    )
+    ) |>
+      arrange(iso, year)
   )
 
   expect_equal_lazy(
@@ -439,13 +457,15 @@ test_that("argument relationship works", {
       country_year,
       join_by(iso),
       relationship = "one-to-many"
-    ),
+    ) |>
+      arrange(iso, year),
     left_join(
       country_pl,
       country_year_pl,
       join_by(iso),
       relationship = "one-to-many"
-    )
+    ) |>
+      arrange(iso, year)
   )
 
   expect_equal_lazy(
@@ -454,13 +474,15 @@ test_that("argument relationship works", {
       country_year,
       join_by(iso),
       relationship = "many-to-many"
-    ),
+    ) |>
+      arrange(iso, year),
     left_join(
       country_pl,
       country_year_pl,
       join_by(iso),
       relationship = "many-to-many"
-    )
+    ) |>
+      arrange(iso, year)
   )
 })
 
@@ -476,14 +498,14 @@ test_that("argument na_matches works", {
   )
 
   expect_equal_lazy(
-    left_join(test_pl, test2_pl, "a"),
-    left_join(test_df, test2_df, "a")
+    left_join(test_pl, test2_pl, "a") |> arrange(val),
+    left_join(test_df, test2_df, "a") |> arrange(val)
   )
 
   # This cannot be compared to dplyr because polars always matches on NaN (this
   # is documented in the description of `na_matches` in ?left_join).
   expect_equal_lazy(
-    left_join(test_pl, test2_pl, "a", na_matches = "never"),
+    left_join(test_pl, test2_pl, "a", na_matches = "never") |> arrange(val),
     pl$LazyFrame(
       a = c(1, NA, NA, NaN),
       val = 1:4,
@@ -494,7 +516,7 @@ test_that("argument na_matches works", {
   # when doing full join, the result differs from dplyr because 1) row order is
   # not the same (NA go at the end) and 2) NaN are matched anyway (see above)
   expect_equal_lazy(
-    full_join(test_pl, test2_pl, "a"),
+    full_join(test_pl, test2_pl, "a") |> arrange(val2, val),
     pl$LazyFrame(
       a = c(1, 2, NA, NA, NaN),
       val = c(1L, NA, 2L, 3L, 4L),
@@ -504,7 +526,8 @@ test_that("argument na_matches works", {
 
   # See above
   expect_equal_lazy(
-    full_join(test_pl, test2_pl, "a", na_matches = "never"),
+    full_join(test_pl, test2_pl, "a", na_matches = "never") |>
+      arrange(val2, val),
     pl$LazyFrame(
       a = c(1, 2, NA, NaN, NA, NA),
       val = c(1L, NA, NA, 4L, 2L, 3L),
@@ -542,8 +565,10 @@ test_that("unsupported args throw warning", {
 
   expect_warning(
     expect_equal_lazy(
-      left_join(test_pl, test2_pl, by = "country", copy = TRUE),
-      left_join(test_df, test2_df, by = "country", copy = TRUE)
+      left_join(test_pl, test2_pl, by = "country", copy = TRUE) |>
+        arrange(country),
+      left_join(test_df, test2_df, by = "country", copy = TRUE) |>
+        arrange(country)
     ),
     "Argument `copy` is not supported by"
   )

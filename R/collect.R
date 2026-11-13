@@ -35,14 +35,13 @@
 #' `simplify_expression`. Default is `FALSE`.
 #' @param engine The engine name to use for processing the query. One of the
 #' followings:
-#' - `"auto"` (default): Select the engine automatically. The `"in-memory"`
-#'   engine will be selected for most cases.
+#' - `"auto"` (default): Select the engine automatically. As of `tidypolars` 0.20.0,
+#'   the `"streaming"` engine will be used by default.
 #' - `"in-memory"`: Use the in-memory engine.
 #' - `"streaming"`: Use the streaming engine, usually faster and can handle
-#'   larger-than-memory data.
+#'   larger-than-memory data. This doesn't guarantee the row order of the output,
+#'   so you need to explicitly sort your data if you a specific row order.
 #' @inheritParams slice_tail.polars_data_frame
-#' @param streaming `r lifecycle::badge("deprecated")` Deprecated, use `engine`
-#' instead.
 #'
 #' @param .name_repair,uint8,int64,date,time,decimal,as_clock_class,ambiguous,non_existent Parameters to control the conversion from polars types to R. See
 #' `?polars:::as.data.frame.polars_lazy_frame` for explanations and accepted

@@ -261,7 +261,7 @@ translate <- function(
 
   switch(
     typeof(expr),
-    "NULL" = return(list(NULL)),
+    "NULL" = list(NULL),
     character = ,
     logical = ,
     integer = ,
@@ -497,7 +497,10 @@ translate <- function(
               if (is.list(rhs)) {
                 rhs <- unlist(rhs)
               }
-              lhs$is_in(rhs$implode(), nulls_equal = TRUE)
+              lhs$is_in(
+                rhs$implode()$cast(pl$dtype_of(lhs)$wrap_in_list()),
+                nulls_equal = TRUE
+              )
             },
             error = function(e) {
               if (inherits(e, "rlang_error")) {
@@ -607,11 +610,11 @@ translate <- function(
           rhs <- expr[[3]]
           replace_dot <- function(expr, replacement) {
             if (is.symbol(expr) && identical(expr, sym("."))) {
-              return(replacement)
+              replacement
             } else if (is.call(expr)) {
               as.call(lapply(expr, replace_dot, replacement = replacement))
             } else {
-              return(expr)
+              expr
             }
           }
 
@@ -930,7 +933,7 @@ add_pkg_suffix <- function(name, known_ops, user_defined) {
     pkg <- tryCatch(
       ns_env_name(as_function(name)),
       error = function(e) {
-        return(NULL)
+        NULL
       }
     )
   }

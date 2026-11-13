@@ -10,3 +10,6 @@ extend-skipped-functions = ["translate_dots"]
 
 [lint.missing_argument]
 extend-skipped-functions = ["pl$DataFrame", "pl$LazyFrame"]
+
+[lint.undesirable_operator]
+operators = ["->>", ":::"]

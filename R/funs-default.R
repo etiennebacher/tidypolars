@@ -388,12 +388,10 @@ pl_rank <- function(x, na.last = TRUE, ties.method = "average", ...) {
   if (isTRUE(na.last)) {
     # Keep value ranks unchanged and append NAs as distinct ranks at the end.
     n_non_null <- x$len() - n_null
-    return(pl$when(is_null)$then(n_non_null + null_rank)$otherwise(out))
-  }
-
-  if (isFALSE(na.last)) {
+    pl$when(is_null)$then(n_non_null + null_rank)$otherwise(out)
+  } else {
     # Put NAs first with distinct ranks, then shift value ranks by NA count.
-    return(pl$when(is_null)$then(null_rank)$otherwise(out + n_null))
+    pl$when(is_null)$then(null_rank)$otherwise(out + n_null)
   }
 }
 

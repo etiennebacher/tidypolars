@@ -20,8 +20,8 @@ test_that("basic inequality join works", {
 
   by <- join_by(company == id, year >= since)
   expect_equal_lazy(
-    inner_join(transactions_pl, companies_pl, by),
-    inner_join(transactions, companies, by)
+    inner_join(transactions_pl, companies_pl, by) |> arrange(year, since),
+    inner_join(transactions, companies, by) |> arrange(year, since)
   )
 })
 
@@ -180,8 +180,12 @@ test_that("all common columns are used in join conditions", {
   y_pl <- as_polars_lf(y)
 
   expect_equal_lazy(
-    x_pl |> inner_join(y_pl, by = join_by(id, between(t, start, end))),
-    x |> inner_join(y, by = join_by(id, between(t, start, end)))
+    x_pl |>
+      inner_join(y_pl, by = join_by(id, between(t, start, end))) |>
+      arrange(t),
+    x |>
+      inner_join(y, by = join_by(id, between(t, start, end))) |>
+      arrange(t)
   )
 })
 

@@ -57,8 +57,8 @@
       summarize(test_pl, y = first(x, order_by = 1))
     Condition
       Error in `summarize()`:
-      ! lengths don't match: `sort_by` produced different length (1) than the Series that has to be sorted (3)
-      Error originated in expression: 'col("x").sort_by(by=[.when([(1.0.is_null()) | ([(true) & (1.0.is_nan())])]).then(null.cast(Float64)).otherwise(1.0)], sort_option=SortMultipleOptions { descending: [false], nulls_last: [true], multithreaded: true, maintain_order: true, limit: None })'
+      ! Error while running function `first()` in Polars.
+      x `order_by` must have the same size as `x`, not size 1.
 
 ---
 

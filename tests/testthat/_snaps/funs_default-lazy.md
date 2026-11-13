@@ -13,7 +13,7 @@
       compute(current)
     Condition
       Error in `compute()`:
-      ! lengths don't match: can't broadcast Series 'foo' of length 4 to length 5
+      ! lengths don't match: zip node received non-equal length inputs
 
 # trunc() works
 
@@ -21,7 +21,7 @@
       compute(current)
     Condition
       Error in `compute()`:
-      ! truncation ('to_zero') can only be used on numeric types
+      ! truncation ('to_zero') operation not supported for dtype `str` (expected: numeric)
 
 # trunc() in tidypolars doesn't support Date/datetime
 
@@ -32,7 +32,7 @@
       tidypolars doesn't know how to use some arguments of `trunc()`.
       i The following argument(s) will be ignored: "units".
       Error in `compute()`:
-      ! truncation ('to_zero') can only be used on numeric types
+      ! truncation ('to_zero') operation not supported for dtype `date` (expected: numeric)
 
 ---
 
@@ -43,7 +43,7 @@
       tidypolars doesn't know how to use some arguments of `trunc()`.
       i The following argument(s) will be ignored: "units".
       Error in `compute()`:
-      ! truncation ('to_zero') can only be used on numeric types
+      ! truncation ('to_zero') operation not supported for dtype `datetime[ms]` (expected: numeric)
 
 # sample() validates size
 

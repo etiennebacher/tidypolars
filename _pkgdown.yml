@@ -91,10 +91,9 @@ reference:
       - tidypolars_options
 
   - title: Other Polars functions
-    desc: Other Polars-specific functions (most are deprecated).
+    desc: Other Polars-specific functions.
     contents:
-      - make_unique_id
-      - partitioned_output
+      - partition_by
 
   - title: Advanced
     desc: Functions for very specific usage.

@@ -119,7 +119,7 @@ get_arg <- function(name, position, expr, env) {
 check_fns_is_list <- function(fns, caller) {
   tr <- tryCatch(
     rlang::eval_tidy(fns, env = caller),
-    error = function(e) return(fns)
+    error = function(e) fns
   )
   if (!is.list(tr)) {
     return(fns)

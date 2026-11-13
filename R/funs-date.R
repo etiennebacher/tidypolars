@@ -421,9 +421,9 @@ pl_pm_lubridate <- function(x) {
 
 pl_days_in_month_lubridate <- function(x) {
   pl$when(x$is_null())$then(NA)$when(
-    x$dt$month()$is_in(list(c(1, 3, 5, 7, 8, 10, 12)))
+    x$dt$month()$is_in(list(c(1L, 3L, 5L, 7L, 8L, 10L, 12L)))
   )$then(31)$when(
-    x$dt$month()$is_in(list(c(4, 6, 9, 11)))
+    x$dt$month()$is_in(list(c(4L, 6L, 9L, 11L)))
   )$then(30)$when(x$dt$month() == 2 & x$dt$is_leap_year())$then(29)$otherwise(
     28
   )$cast(pl$Int32)

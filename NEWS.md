@@ -1,8 +1,13 @@
-# tidypolars (development)
+# tidypolars 0.20.0
 
-`tidypolars` requires `polars` >= 1.16.0.
+`tidypolars` requires `polars` >= 2.0.0.
 
 ## Breaking changes and deprecations
+
+* Following the change in `polars` 2.0.0, `tidypolars` now uses the streaming engine
+  by default. The streaming engine doesn't guarantee the row order of the output,
+  meaning that you should not rely on the row order without explicitly sorting your 
+  data with `arrange()`.
 
 * The following arguments and functions have been removed (they were deprecated
   in 0.14.0, released in July 2025) (#406):
@@ -14,6 +19,12 @@
   - in `write_ndjson_polars()`: `pretty` and `row_oriented`
   - in `write_ipc_polars()`: `future`
   - `fetch()`
+
+* `partition_by_key()` and `partition_by_max_size()`, deprecated in 0.16.0, are
+  now removed. Use the arguments `key` and `max_rows_per_file` in `partition_by()`
+  instead (#416).
+
+* `make_unique_id()`, deprecated in 0.16.0, is now removed (#416).
 
 * Argument `rechunk` in all `read_*()` and `scan_*()` functions is deprecated and
   has no effect anymore (#405).
