@@ -4,7 +4,7 @@
       uncount(test_pl, missing)
     Condition
       Error in `uncount()`:
-      ! conversion from `f64` to `u32` failed in column '__tidypolars_uncount__' for 1 out of 2 values: [-1.0]
+      ! conversion from `f64` to `u32` failed in column 'missing' for 1 out of 2 values: [-1.0]
 
 # weights must be supplied and cannot evaluate to NULL
 

@@ -45,33 +45,42 @@ uncount.polars_data_frame <- function(
   grps <- attributes(data)$pl_grps
   mo <- attributes(data)$maintain_grp_order %||% FALSE
 
-  # Follow mutate()'s collision handling without overwriting any user column.
+  schema <- data$collect_schema()
+
   temp <- "__tidypolars_uncount__"
-  while (temp %in% c(names(data), .id)) {
+  while (temp %in% c(names(schema), .id)) {
     temp <- paste0("_", temp)
   }
-  out <- mutate(data, !!temp := !!weights_quo)
 
-  # The weights are now in temp; avoid repeating a column that will be removed.
-  if (.remove && quo_is_symbol(weights_quo)) {
-    weight_name <- as_string(get_expr(weights_quo))
-    if (weight_name %in% names(data)) {
-      out <- out$drop(weight_name)
-    }
+  weights_expr <- translate_dots(
+    data,
+    !!weights_quo,
+    env = current_env(),
+    caller = caller_env()
+  )[[1]]
+
+  if (!is.null(grps)) {
+    weights_expr <- weights_expr$over(!!!grps)
   }
 
-  # Below we check the type of the weights column by polars cast to avoid
-  # unexpected truncation or processing wrongly. This is likely inefficient,
-  # but I haven't thought of a better way yet.
-  dtype <- out$collect_schema()[[temp]]
+  # The dtype is needed to reject non-numeric weights. Getting it from an empty
+  # frame with the same schema avoids resolving the query plan of `data` again.
+  empty <- pl$LazyFrame()$select(
+    !!!unname(Map(
+      \(name, dtype) pl$lit(NULL)$cast(dtype)$alias(name),
+      names(schema),
+      schema
+    ))
+  )
+  dtype <- empty$select(weights_expr)$collect_schema()[[1]]
   if (
-    is.null(dtype) ||
-      (!dtype$is_numeric() &&
-        !inherits(dtype, c("polars_dtype_boolean", "polars_dtype_null")))
+    !dtype$is_numeric() &&
+      !inherits(dtype, c("polars_dtype_boolean", "polars_dtype_null"))
   ) {
     cli_abort("{.arg weights} must be numeric or logical.")
   }
-  weights_expr <- pl$col(temp)$cast(pl$Float64)
+
+  weights_expr <- weights_expr$cast(pl$Float64)
   valid <- weights_expr$is_finite()$and(
     weights_expr$ge(0)
   )$and(
@@ -85,11 +94,21 @@ uncount.polars_data_frame <- function(
     pl$UInt32
   )$cast(pl$Int32)
 
+  to_drop <- character(0)
+  if (.remove && quo_is_symbol(weights_quo)) {
+    weight_name <- as_string(get_expr(weights_quo))
+    if (weight_name %in% names(schema)) {
+      to_drop <- weight_name
+      grps <- setdiff(grps, weight_name)
+    }
+  }
+
   # Exploding only the copy indices duplicates all other columns unchanged.
+  # Drop before exploding to avoid repeating a column that will be removed.
   out <- with_polars_errors(
-    out$with_columns(
+    data$with_columns(
       pl$int_ranges(0L, weights_expr, dtype = pl$Int32)$alias(temp)
-    )$explode(temp, empty_as_null = FALSE)
+    )$drop(to_drop)$explode(temp, empty_as_null = FALSE)
   )
 
   if (!is.null(.id)) {
@@ -98,14 +117,11 @@ uncount.polars_data_frame <- function(
 
   out <- out$drop(temp)
 
-  # Reapply grouping information
-  if (!is.null(grps)) {
-    grps <- intersect(grps, names(out))
-    if (is_empty(grps)) {
-      out <- ungroup(out)
-    } else {
-      out <- group_by(out, all_of(grps), maintain_order = mo)
-    }
+  # Polars methods drop the grouping attributes. Set them back directly since
+  # group_by() would resolve the schema again.
+  if (!is_empty(grps)) {
+    attr(out, "pl_grps") <- grps
+    attr(out, "maintain_grp_order") <- mo
   }
 
   add_tidypolars_class(out)
