@@ -303,6 +303,11 @@
   ([\#391](https://github.com/etiennebacher/tidypolars/issues/391),
   [@Yousa-Mirage](https://github.com/Yousa-Mirage)).
 
+- Expressions forwarded through a wrapper function with `{{ }}` or `...`
+  now look up external variables in the environment where the expression
+  was written, and not in the wrapper function
+  ([\#429](https://github.com/etiennebacher/tidypolars/issues/429)).
+
 ## tidypolars 0.19.0
 
 `tidypolars` requires `polars` \>= 1.13.0.
