@@ -1,3 +1,12 @@
+# invalid na.rm arguments error
+
+    Code
+      compute(current)
+    Condition
+      Error in `summarize()`:
+      ! Error while running function `mean()` in Polars.
+      x `na.rm` must be `TRUE` or `FALSE`, not a <polars_expr> object.
+
 # var() doesn't work with `use = 'all.obs'`
 
     Code
