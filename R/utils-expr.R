@@ -36,12 +36,13 @@ translate_dots <- function(.data, ..., env, caller, auto_name = FALSE) {
   if (isTRUE(auto_name)) {
     dots <- add_missing_names(dots)
   }
-  dots <- lapply(dots, quo_squash)
   new_vars <- c()
   called_from_arrange <- attr(.data, "called_from_arrange") %||% FALSE
 
   out <- lapply(seq_along(dots), \(x) {
-    expr <- dots[[x]]
+    # Forwarded expressions must resolve variables in their original environment.
+    expr_env <- quo_get_env(dots[[x]])
+    expr <- quo_squash(dots[[x]])
 
     # Using a multiplication here ensures that we support `-x` when `x` is a bool
     # column and that we error on `-x` when `x` is a character column, like `dplyr`.
@@ -54,7 +55,7 @@ translate_dots <- function(.data, ..., env, caller, auto_name = FALSE) {
       expr,
       new_vars = new_vars,
       env = env,
-      caller = caller
+      caller = if (identical(expr_env, empty_env())) caller else expr_env
     )
     new_vars <<- c(new_vars, names(dots)[x])
     tmp
